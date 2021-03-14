@@ -1,0 +1,87 @@
+stages:
+  - build
+  - test
+  - analysis
+  - release
+  - deploy
+
+build:
+  stage: build
+  image: core.harbor.thuni-h.com/library/java-protoc:v2
+  cache:
+    paths:
+      - .gradle/caches/
+      - .gradle/wrapper/
+  before_script:
+    - export GRADLE_USER_HOME=$PWD/.gradle
+  script:
+    - ./gradlew clean build jacocoTestReport copyDependencies
+    - mv build/libs/*.jar build/app.jar
+  artifacts:
+    paths:
+      - build/app.jar
+    expire_in: 7 days
+
+test:
+  stage: test
+  image: core.harbor.thuni-h.com/library/java-protoc:v2
+  cache:
+    paths:
+      - .gradle/caches/
+      - .gradle/wrapper/
+  before_script:
+    - export GRADLE_USER_HOME=$PWD/.gradle
+  script:
+    - ./gradlew clean build jacocoTestReport copyDependencies
+  artifacts:
+    paths:
+      - build
+    expire_in: 1 days
+  only:
+    - merge_requests
+    - master
+
+sonarqube:
+  stage: analysis
+  image: core.harbor.thuni-h.com/library/gitlab-sonar-scanner
+  dependencies:
+    - test
+  cache:
+    paths:
+      - .gradle/caches/
+      - .gradle/wrapper/
+  script:
+    - gitlab-sonar-scanner \
+      -Dsonar.coverage.jacoco.xmlReportPaths=build/reports/Coverage.xml \
+      -Dsonar.qualitygate.wait=true
+  only:
+    - merge_requests
+    - master
+  allow_failure: true
+
+# 构建镜像
+release:
+  stage: release
+  dependencies:
+    - build
+  image: docker:latest
+  services:
+    - docker:dind
+  variables:
+    DOCKER_HOST: tcp://localhost:2375
+    CI_REGISTRY_IMAGE: $CI_REGISTRY/$CI_PROJECT_NAMESPACE/${CI_PROJECT_NAME}
+  before_script:
+    - export CI_REGISTRY_DEFAULT_TAG=$CI_BUILD_REF_NAME-${CI_BUILD_REF:0:8}
+    - export CI_REGISTRY_TAG=${CI_COMMIT_TAG-$CI_REGISTRY_DEFAULT_TAG}
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  script:
+    - docker build --build-arg version_number=$CI_BUILD_ID --pull -f Dockerfile -t $CI_REGISTRY_IMAGE:$CI_REGISTRY_TAG .
+    - docker tag $CI_REGISTRY_IMAGE:$CI_REGISTRY_TAG $CI_REGISTRY_IMAGE:latest
+    - docker push $CI_REGISTRY_IMAGE:$CI_REGISTRY_TAG
+    - docker push $CI_REGISTRY_IMAGE:latest
+    - docker rmi $CI_REGISTRY_IMAGE:$CI_REGISTRY_TAG
+    - docker rmi $CI_REGISTRY_IMAGE:latest
+  when: manual
+  only:
+    - master
+    - tags

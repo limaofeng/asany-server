@@ -1,0 +1,31 @@
+spring:
+  datasource:
+    name: datasource
+    url: jdbc:mysql://${DATABASE_HOST}/${DATABASE_INSTANCE_NAME}?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&useSSL=false
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
+    druid:
+      maxActive: 500
+      initialSize: 20
+      maxWait: 60000
+      minIdle: 1
+  data:
+    mongodb:
+      uri: mongodb://${MONGODB_USER}:${MONGODB_PASSWORD}@${MONGODB_HOST_PORT}
+      database: ${MONGODB_DATABASE_NAME}
+      repositories:
+        type: none
+
+grpc:
+  server:
+    port: 6565
+    address: 0.0.0.0
+  client:
+    GLOBAL:
+      address: static://localhost:6565
+      enableKeepAlive: true
+      keepAliveWithoutCalls: true
+      negotiationType: plaintext
+
+#storage:
+#  url: ${UPLOAD_SERVER_URL}

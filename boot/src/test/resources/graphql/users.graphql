@@ -1,0 +1,21 @@
+query users{
+    users(filter: {username_contains: "meng"}){
+        pageSize
+        totalPage
+        totalCount
+        pageInfo{
+            hasPreviousPage
+        }
+        edges{
+            node{
+                id
+                username
+                password
+                creator
+                modifier
+                createdAt
+                updatedAt
+            }
+        }
+    }
+}

@@ -1,0 +1,16 @@
+### IDEA
+.idea
+*.iml
+*.ipr
+*.iws
+
+### JRebel
+/**/resources/rebel.xml
+
+### Build
+.gradle
+build
+
+### Graphql Plugin
+.graphqlconfig
+schema.graphql
