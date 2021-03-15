@@ -2,10 +2,13 @@ package cn.asany.shanhai.core.service;
 
 import cn.asany.shanhai.core.bean.Model;
 import cn.asany.shanhai.core.bean.ModelField;
+import cn.asany.shanhai.core.bean.ModelMetadata;
+import cn.asany.shanhai.core.bean.enums.ModelStatus;
 import cn.asany.shanhai.core.dao.ModelDao;
 import cn.asany.shanhai.core.dao.ModelFieldDao;
 import cn.asany.shanhai.core.dao.ModelFieldMetadataDao;
 import cn.asany.shanhai.core.dao.ModelMetadataDao;
+import cn.asany.shanhai.core.support.RuntimeJpaRepositoryFactory;
 import cn.asany.shanhai.core.support.RuntimeMetadataRegistry;
 import cn.asany.shanhai.core.utils.HibernateMappingHelper;
 import cn.asany.shanhai.core.utils.ModelUtils;
@@ -34,6 +37,8 @@ public class ModelService {
     private RuntimeMetadataRegistry metadataRegistry;
     @Autowired
     private HibernateMappingHelper hibernateMappingHelper;
+    @Autowired
+    private RuntimeJpaRepositoryFactory jpaRepositoryFactory;
 
     public Pager<Model> findPager(Pager<Model> pager, List<PropertyFilter> filters) {
         return modelDao.findPager(pager, filters);
@@ -60,8 +65,11 @@ public class ModelService {
 
     public void publish(Long id) {
         Model model = modelDao.getOne(id);
+        ModelMetadata metadata = model.getMetadata();
         String xml = hibernateMappingHelper.generateXML(model);
         metadataRegistry.addMapping(xml);
+        metadata.setHbm(xml);
+        model.setStatus(ModelStatus.PUBLISHED);
     }
 
     public Optional<Model> get(long id) {

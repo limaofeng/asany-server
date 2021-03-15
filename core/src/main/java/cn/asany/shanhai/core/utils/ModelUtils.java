@@ -56,7 +56,7 @@ public class ModelUtils {
     }
 
     public static ModelField generatePrimaryKeyField() {
-        return ModelField.builder().name(CONSTANT_FIELD_NAME_ID).type(FieldType.ID).isPrimaryKey(true).metadata(ModelFieldMetadata.builder().build()).build();
+        return ModelField.builder().name(CONSTANT_FIELD_NAME_ID).type(FieldType.ID).isPrimaryKey(true).metadata(FieldType.ID.toUpperCase()).build();
     }
 
     public static List<ModelField> getFields(Model model) {

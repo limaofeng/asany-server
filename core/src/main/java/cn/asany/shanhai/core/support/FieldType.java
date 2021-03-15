@@ -3,9 +3,10 @@ package cn.asany.shanhai.core.support;
 import cn.asany.shanhai.core.bean.ModelFieldMetadata;
 
 public interface FieldType {
-
     String ID = "ID";
     String STRING = "String";
+    String Number = "Number";
+    String Date = "Date";
 
     String getId();
 

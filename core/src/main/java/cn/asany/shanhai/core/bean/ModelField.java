@@ -80,6 +80,15 @@ public class ModelField extends BaseBusEntity {
     @OneToOne(mappedBy = "field", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private ModelFieldMetadata metadata;
 
+    public static class ModelFieldBuilder {
+        private ModelFieldMetadata metadata;
+
+        public ModelFieldBuilder metadata(String columnName) {
+            this.metadata = ModelFieldMetadata.builder().databaseColumnName(columnName).build();
+            return this;
+        }
+    }
+
     @Override
     public String toString() {
         return "ModelField{" +

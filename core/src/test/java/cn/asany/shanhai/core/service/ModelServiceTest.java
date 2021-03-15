@@ -4,6 +4,7 @@ import cn.asany.shanhai.TestApplication;
 import cn.asany.shanhai.core.bean.Model;
 import cn.asany.shanhai.core.bean.ModelField;
 import cn.asany.shanhai.core.support.FieldType;
+import cn.asany.shanhai.core.support.features.SystemFieldsFeature;
 import lombok.extern.slf4j.Slf4j;
 import org.jfantasy.framework.dao.Pager;
 import org.junit.jupiter.api.AfterEach;
@@ -26,10 +27,13 @@ class ModelServiceTest {
 
     @Autowired
     private ModelService modelService;
+    @Autowired
+    private ModelFeatureService modelFeatureService;
 
     @BeforeEach
     void setUp() {
         modelService.clear();
+        modelFeatureService.clear();
     }
 
     @AfterEach
@@ -46,6 +50,7 @@ class ModelServiceTest {
     void save() {
         Model model = Model.builder()
             .name("员工")
+            .features(SystemFieldsFeature.ID)
             .fields(Arrays.asList(ModelField.builder()
                 .name("名称")
                 .type(FieldType.STRING)
@@ -57,6 +62,6 @@ class ModelServiceTest {
 
     @Test
     void publish() {
-        modelService.publish(52L);
+        modelService.publish(223L);
     }
 }

@@ -11,6 +11,11 @@ spring:
       initialSize: 10
       maxWait: 60000
       minIdle: 1
+  redis:
+    database: 0
+    host: api.thuni-h.com
+    port: 30379
+    password: Y0HfNA{PdjSINZyy
 
 grpc:
   server:
