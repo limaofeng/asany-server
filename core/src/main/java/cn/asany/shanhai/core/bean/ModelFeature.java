@@ -22,7 +22,7 @@ public class ModelFeature extends BaseBusEntity {
     @Column(name = "NAME", length = 20)
     private String name;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.REMOVE})
     @JoinTable(name = "SH_MODEL_FEATURE_RELATION", joinColumns = {@JoinColumn(name = "FEATURE_ID")}, inverseJoinColumns = {@JoinColumn(name = "MODEL_ID")}, foreignKey = @ForeignKey(name = "FK_MODEL_FEATURE_RELATION_FID"))
     private List<Model> models;
 

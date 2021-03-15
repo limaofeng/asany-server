@@ -14,7 +14,6 @@ import javax.persistence.EntityManagerFactory;
 import java.io.ByteArrayInputStream;
 import java.util.EnumSet;
 
-@Component
 public class RuntimeMetadataRegistry implements InitializingBean {
 
     @Autowired(required = false)
