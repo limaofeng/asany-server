@@ -1,0 +1,18 @@
+type Query {
+    products(match : String) : [Product]   # a list of products
+}
+
+type Product {
+    id : ID
+    name : String
+    description : String
+    cost : Float
+    tax : Float
+    launchDate(dateFormat : String = "dd, MMM, yyyy") : String
+    user: User
+}
+
+type User {
+    id : ID
+    name : String
+}

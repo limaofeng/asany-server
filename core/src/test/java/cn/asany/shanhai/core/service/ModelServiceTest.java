@@ -3,8 +3,10 @@ package cn.asany.shanhai.core.service;
 import cn.asany.shanhai.TestApplication;
 import cn.asany.shanhai.core.bean.Model;
 import cn.asany.shanhai.core.bean.ModelField;
-import cn.asany.shanhai.core.support.FieldType;
-import cn.asany.shanhai.core.support.features.SystemFieldsFeature;
+import cn.asany.shanhai.core.runners.PresetModelFeatureCommandLineRunner;
+import cn.asany.shanhai.core.support.model.FieldType;
+import cn.asany.shanhai.core.support.model.features.SystemFieldsFeature;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.jfantasy.framework.dao.Pager;
 import org.junit.jupiter.api.AfterEach;
@@ -29,11 +31,15 @@ class ModelServiceTest {
     private ModelService modelService;
     @Autowired
     private ModelFeatureService modelFeatureService;
+    @Autowired
+    private PresetModelFeatureCommandLineRunner runner;
 
+    @SneakyThrows
     @BeforeEach
     void setUp() {
         modelService.clear();
         modelFeatureService.clear();
+        runner.run();
     }
 
     @AfterEach
@@ -62,6 +68,12 @@ class ModelServiceTest {
 
     @Test
     void publish() {
-        modelService.publish(223L);
+        this.save();
+        Pager<Model> pager = modelService.findPager(new Pager<>(), new ArrayList<>());
+        Model model = pager.getPageItems().stream().findFirst().get();
+        modelService.publish(model.getId());
+
+        model = modelService.get(model.getId()).get();
+        log.debug("Hibernate HBM XML:" + model.getMetadata().getHbm());
     }
 }

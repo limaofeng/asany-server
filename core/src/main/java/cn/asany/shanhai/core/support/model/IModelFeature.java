@@ -1,4 +1,4 @@
-package cn.asany.shanhai.core.support;
+package cn.asany.shanhai.core.support.model;
 
 import cn.asany.shanhai.core.bean.ModelField;
 

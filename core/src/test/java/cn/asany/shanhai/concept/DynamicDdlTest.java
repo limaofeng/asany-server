@@ -1,7 +1,8 @@
-package cn.asany.shanhai.core.service;
+package cn.asany.shanhai.concept;
 
 import cn.asany.shanhai.TestApplication;
-import cn.asany.shanhai.core.support.RuntimeMetadataRegistry;
+import cn.asany.shanhai.core.service.SystemFieldFillInterceptor;
+import cn.asany.shanhai.core.support.model.RuntimeMetadataRegistry;
 import lombok.Builder;
 import lombok.Data;
 import org.hibernate.Session;

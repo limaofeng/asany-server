@@ -1,0 +1,15 @@
+type Query{
+{{~#each models}}
+{{~/each}}
+}
+
+{{~#each models}}
+type {{name}} {
+    {{~#idField}}
+    {{name}}: {{graphQLType}}
+    {{~/idField}}
+    {{~#each fields}}
+    {{name}}: {{graphQLType}}
+    {{~/each}}
+}
+{{~/each}}

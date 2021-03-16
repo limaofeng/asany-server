@@ -1,4 +1,7 @@
 spring:
+  jfantasy:
+    sequence:
+      pool-size: 1
   application:
     name: server
   datasource:

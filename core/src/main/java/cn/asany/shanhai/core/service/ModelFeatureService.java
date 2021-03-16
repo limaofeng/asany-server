@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 @Transactional
 public class ModelFeatureService {
@@ -18,5 +20,9 @@ public class ModelFeatureService {
 
     public void clear() {
         modelFeatureDao.deleteAllInBatch();
+    }
+
+    public Optional<ModelFeature> get(String id) {
+        return modelFeatureDao.findById(id);
     }
 }

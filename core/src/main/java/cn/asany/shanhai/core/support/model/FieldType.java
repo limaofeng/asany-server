@@ -1,4 +1,4 @@
-package cn.asany.shanhai.core.support;
+package cn.asany.shanhai.core.support.model;
 
 import cn.asany.shanhai.core.bean.ModelFieldMetadata;
 
@@ -29,7 +29,7 @@ public interface FieldType {
      *
      * @return
      */
-    String getGraphQLType();
+    String getGraphQLType(ModelFieldMetadata metadata);
 
     /**
      * 获取字段设置信息

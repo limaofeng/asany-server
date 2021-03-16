@@ -83,8 +83,8 @@ public class ModelField extends BaseBusEntity {
     public static class ModelFieldBuilder {
         private ModelFieldMetadata metadata;
 
-        public ModelFieldBuilder metadata(String columnName) {
-            this.metadata = ModelFieldMetadata.builder().databaseColumnName(columnName).build();
+        public ModelFieldBuilder metadata(String name, String columnName) {
+            this.metadata = ModelFieldMetadata.builder().name(name).databaseColumnName(columnName).build();
             return this;
         }
     }

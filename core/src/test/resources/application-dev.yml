@@ -1,4 +1,9 @@
 spring:
+  jackson:
+    default-property-inclusion: non_null
+  jfantasy:
+    sequence:
+      pool-size: 1
   application:
     name: server
   datasource:

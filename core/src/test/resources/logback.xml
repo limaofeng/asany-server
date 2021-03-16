@@ -59,6 +59,8 @@
     <logger name="org.hibernate.engine.query.HQLQueryPlan" level="ERROR"/>
     <logger name="org.jfantasy.framework" level="ERROR"/>
 
+    <logger name="cn.asany.shanhai.core" level="DEBUG"/>
+
     <root level="INFO">
         <appender-ref ref="CONSOLE"/>
         <appender-ref ref="INFO_FILE"/>

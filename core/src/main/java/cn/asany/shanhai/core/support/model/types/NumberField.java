@@ -1,22 +1,27 @@
-package cn.asany.shanhai.core.support.types;
+package cn.asany.shanhai.core.support.model.types;
 
 import cn.asany.shanhai.core.bean.ModelFieldMetadata;
-import cn.asany.shanhai.core.support.DatabaseColumn;
-import cn.asany.shanhai.core.support.FieldType;
+import cn.asany.shanhai.core.support.model.DatabaseColumn;
+import cn.asany.shanhai.core.support.model.FieldType;
 import lombok.Data;
 import org.springframework.stereotype.Component;
 
 @Data
 @Component
-public class IdField implements FieldType {
-    private String id = "ID";
-    private String name = "ID";
+public class NumberField implements FieldType {
+    private String id = "Number";
+    private String name = "数字";
     private String javaType = Long.class.getName();
-    private String graphQLType = "ID";
+    private String graphQLType = "Int";
 
     @Override
     public String getJavaType(ModelFieldMetadata metadata) {
         return this.javaType;
+    }
+
+    @Override
+    public String getGraphQLType(ModelFieldMetadata metadata) {
+        return graphQLType;
     }
 
     @Override

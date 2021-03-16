@@ -4,13 +4,13 @@ import cn.asany.shanhai.core.bean.Model;
 import cn.asany.shanhai.core.bean.ModelField;
 import cn.asany.shanhai.core.bean.ModelFieldMetadata;
 import cn.asany.shanhai.core.bean.ModelMetadata;
-import cn.asany.shanhai.core.support.FieldType;
+import cn.asany.shanhai.core.support.model.FieldType;
+import cn.asany.shanhai.core.support.model.IModelFeature;
 import lombok.SneakyThrows;
 import org.jfantasy.framework.util.PinyinUtils;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.common.StringUtil;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -21,7 +21,6 @@ public class ModelUtils {
 
     @SneakyThrows
     public static void inject(Model model) {
-        model.setFields(new ArrayList<>(model.getFields()));
         ModelMetadata metadata = model.getMetadata();
         if (metadata == null) {
             model.setMetadata(metadata = ModelMetadata.builder().model(model).build());
@@ -56,10 +55,18 @@ public class ModelUtils {
     }
 
     public static ModelField generatePrimaryKeyField() {
-        return ModelField.builder().name(CONSTANT_FIELD_NAME_ID).type(FieldType.ID).isPrimaryKey(true).metadata(FieldType.ID.toUpperCase()).build();
+        return ModelField.builder().name(CONSTANT_FIELD_NAME_ID).type(FieldType.ID).isPrimaryKey(true).metadata(FieldType.ID.toLowerCase(), FieldType.ID.toUpperCase()).build();
     }
 
     public static List<ModelField> getFields(Model model) {
         return model.getFields().stream().filter(item -> !item.getIsPrimaryKey()).collect(Collectors.toList());
+    }
+
+    public static void inject(Model model, IModelFeature feature) {
+        List<ModelField> fields = model.getFields();
+        for (ModelField field : feature.fields()) {
+            fields.add(field);
+            field.setModel(model);
+        }
     }
 }

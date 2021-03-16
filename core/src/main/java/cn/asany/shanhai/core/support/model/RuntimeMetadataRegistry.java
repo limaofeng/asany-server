@@ -1,4 +1,4 @@
-package cn.asany.shanhai.core.support;
+package cn.asany.shanhai.core.support.model;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.Metadata;
@@ -8,7 +8,6 @@ import org.hibernate.tool.hbm2ddl.SchemaExport;
 import org.hibernate.tool.schema.TargetType;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityManagerFactory;
 import java.io.ByteArrayInputStream;

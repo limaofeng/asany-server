@@ -1,4 +1,4 @@
-package cn.asany.shanhai.core.support;
+package cn.asany.shanhai.core.support.model;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

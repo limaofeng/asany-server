@@ -1,6 +1,6 @@
-package cn.asany.shanhai.core.support.features;
+package cn.asany.shanhai.core.support.model.features;
 
-import cn.asany.shanhai.core.support.IModelFeature;
+import cn.asany.shanhai.core.support.model.IModelFeature;
 import lombok.Data;
 
 @Data

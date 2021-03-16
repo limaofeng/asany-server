@@ -1,6 +1,8 @@
 package cn.asany.shanhai.core.autoconfigure;
 
-import cn.asany.shanhai.core.support.*;
+import cn.asany.shanhai.core.support.RuntimeJpaRepositoryFactory;
+import cn.asany.shanhai.core.support.graphql.RuntimeGraphQLSchemaFactory;
+import cn.asany.shanhai.core.support.model.*;
 import cn.asany.shanhai.core.utils.HibernateMappingHelper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -10,14 +12,20 @@ import java.util.List;
 
 @Configuration
 @ComponentScan({
-    "cn.asany.shanhai.core.support.types",
-    "cn.asany.shanhai.core.support.features",
+    "cn.asany.shanhai.core.support.model.types",
+    "cn.asany.shanhai.core.support.model.features",
     "cn.asany.shanhai.core.runners",
     "cn.asany.shanhai.core.service",
     "cn.asany.shanhai.core.utils",
+    "cn.asany.shanhai.core.rest",
     "cn.asany.shanhai.core.dao"
 })
 public class ModelAutoConfiguration {
+
+    @Bean
+    public RuntimeGraphQLSchemaFactory buildRuntimeGraphQLSchemaFactory() {
+        return new RuntimeGraphQLSchemaFactory();
+    }
 
     @Bean
     public FieldTypeRegistry buildFieldTypeRegistry(List<FieldType> fieldTypes) {
