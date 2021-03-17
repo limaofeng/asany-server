@@ -68,6 +68,9 @@ public class Model extends BaseBusEntity {
     @OrderBy("sort asc ")
     @OneToMany(mappedBy = "model", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.LAZY)
     private List<ModelField> fields;
+
+    @OneToMany(mappedBy = "model", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.LAZY)
+    private List<ModelEndpoint> endpoints;
     /**
      * 元数据
      */

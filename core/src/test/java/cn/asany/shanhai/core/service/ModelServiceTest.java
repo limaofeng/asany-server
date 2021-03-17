@@ -5,7 +5,7 @@ import cn.asany.shanhai.core.bean.Model;
 import cn.asany.shanhai.core.bean.ModelField;
 import cn.asany.shanhai.core.runners.PresetModelFeatureCommandLineRunner;
 import cn.asany.shanhai.core.support.model.FieldType;
-import cn.asany.shanhai.core.support.model.features.SystemFieldsFeature;
+import cn.asany.shanhai.core.support.model.IModelFeature;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.jfantasy.framework.dao.Pager;
@@ -56,7 +56,7 @@ class ModelServiceTest {
     void save() {
         Model model = Model.builder()
             .name("员工")
-            .features(SystemFieldsFeature.ID)
+            .features(IModelFeature.MASTER_MODEL, IModelFeature.SYSTEM_FIELDS)
             .fields(Arrays.asList(ModelField.builder()
                 .name("名称")
                 .type(FieldType.STRING)
@@ -76,4 +76,5 @@ class ModelServiceTest {
         model = modelService.get(model.getId()).get();
         log.debug("Hibernate HBM XML:" + model.getMetadata().getHbm());
     }
+
 }

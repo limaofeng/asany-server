@@ -5,5 +5,6 @@ import lombok.Data;
 
 @Data
 public class TreeModelFeature implements IModelFeature {
-    private String id = "TreeModel";
+    public static final String ID = "tree";
+    private String id = ID;
 }

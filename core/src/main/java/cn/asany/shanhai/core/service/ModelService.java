@@ -1,9 +1,6 @@
 package cn.asany.shanhai.core.service;
 
-import cn.asany.shanhai.core.bean.Model;
-import cn.asany.shanhai.core.bean.ModelFeature;
-import cn.asany.shanhai.core.bean.ModelField;
-import cn.asany.shanhai.core.bean.ModelMetadata;
+import cn.asany.shanhai.core.bean.*;
 import cn.asany.shanhai.core.bean.enums.ModelStatus;
 import cn.asany.shanhai.core.dao.ModelDao;
 import cn.asany.shanhai.core.dao.ModelFieldDao;
@@ -18,11 +15,13 @@ import lombok.SneakyThrows;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.error.ValidationException;
+import org.jfantasy.framework.util.common.ObjectUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -56,7 +55,8 @@ public class ModelService {
     public Model save(Model model) {
         // 检查 Model Metadata 设置
         ModelUtils.inject(model);
-        model.setFields(new ArrayList<>(model.getFields()));
+        model.setFields(new ArrayList<>((ObjectUtil.defaultValue(model.getFields(), Collections.emptyList()))));
+        model.setEndpoints(new ArrayList<>(ObjectUtil.defaultValue(model.getEndpoints(), Collections.emptyList())));
 
         // 检查主键
         Optional<ModelField> idFieldOptional = ModelUtils.getId(model);

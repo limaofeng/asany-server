@@ -72,7 +72,7 @@ public class ModelField extends BaseBusEntity {
      */
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "MODEL_ID", foreignKey = @ForeignKey(name = "SH_MODEL_FIELD_MODEL_ID"), nullable = false)
+    @JoinColumn(name = "MODEL_ID", foreignKey = @ForeignKey(name = "FK_SH_MODEL_FIELD_MODEL_ID"), nullable = false)
     private Model model;
     /**
      * 元数据

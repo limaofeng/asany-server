@@ -12,7 +12,7 @@ import java.util.List;
 @Data
 @Component
 public class SystemFieldsFeature implements IModelFeature {
-    public static final String ID = "SystemFields";
+    public static final String ID = "system-fields";
     private String id = ID;
 
     @Override

@@ -1,9 +1,6 @@
 package cn.asany.shanhai.core.utils;
 
-import cn.asany.shanhai.core.bean.Model;
-import cn.asany.shanhai.core.bean.ModelField;
-import cn.asany.shanhai.core.bean.ModelFieldMetadata;
-import cn.asany.shanhai.core.bean.ModelMetadata;
+import cn.asany.shanhai.core.bean.*;
 import cn.asany.shanhai.core.support.model.FieldType;
 import cn.asany.shanhai.core.support.model.IModelFeature;
 import lombok.SneakyThrows;
@@ -64,9 +61,17 @@ public class ModelUtils {
 
     public static void inject(Model model, IModelFeature feature) {
         List<ModelField> fields = model.getFields();
+        // 设置 Field
         for (ModelField field : feature.fields()) {
-            fields.add(field);
             field.setModel(model);
+            fields.add(field);
+        }
+
+        List<ModelEndpoint> endpoints = model.getEndpoints();
+        // 设置 Endpoint
+        for (ModelEndpoint endpoint : feature.getEndpoints(model.getMetadata())) {
+            endpoint.setModel(model);
+            endpoints.add(endpoint);
         }
     }
 }
