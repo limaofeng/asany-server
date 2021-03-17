@@ -1,5 +1,6 @@
 type Query{
-{{~#each models}}
+{{~#each queries}}
+    {{name}}: {{returnType}}
 {{~/each}}
 }
 

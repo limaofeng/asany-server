@@ -2,10 +2,7 @@ package cn.asany.shanhai.core.service;
 
 import cn.asany.shanhai.core.bean.*;
 import cn.asany.shanhai.core.bean.enums.ModelStatus;
-import cn.asany.shanhai.core.dao.ModelDao;
-import cn.asany.shanhai.core.dao.ModelFieldDao;
-import cn.asany.shanhai.core.dao.ModelFieldMetadataDao;
-import cn.asany.shanhai.core.dao.ModelMetadataDao;
+import cn.asany.shanhai.core.dao.*;
 import cn.asany.shanhai.core.support.model.ModelFeatureRegistry;
 import cn.asany.shanhai.core.support.RuntimeJpaRepositoryFactory;
 import cn.asany.shanhai.core.support.model.RuntimeMetadataRegistry;
@@ -36,6 +33,8 @@ public class ModelService {
     private ModelFieldDao modelFieldDao;
     @Autowired
     private ModelFieldMetadataDao modelFieldMetadataDao;
+    @Autowired
+    private ModelEndpointDao modelEndpointDao;
     @Autowired
     private RuntimeMetadataRegistry metadataRegistry;
     @Autowired
@@ -97,6 +96,7 @@ public class ModelService {
     }
 
     public void clear() {
+        this.modelEndpointDao.deleteAllInBatch();
         this.modelMetadataDao.deleteAllInBatch();
         this.modelFieldMetadataDao.deleteAllInBatch();
         this.modelFieldDao.deleteAllInBatch();

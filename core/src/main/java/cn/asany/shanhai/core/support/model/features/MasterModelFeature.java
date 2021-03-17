@@ -2,7 +2,9 @@ package cn.asany.shanhai.core.support.model.features;
 
 import cn.asany.shanhai.core.bean.ModelEndpoint;
 import cn.asany.shanhai.core.bean.ModelMetadata;
+import cn.asany.shanhai.core.bean.enums.ModelEndpointType;
 import cn.asany.shanhai.core.support.model.IModelFeature;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.jfantasy.framework.util.common.StringUtil;
 import org.springframework.beans.factory.InitializingBean;
@@ -19,15 +21,15 @@ public class MasterModelFeature implements IModelFeature, InitializingBean {
     public static final String ID = "master";
     private String id = ID;
 
-    private List<RuleAndReplacement> plurals = new ArrayList<RuleAndReplacement>();
+    private List<RuleAndReplacement> plurals = new ArrayList<>();
 
     @Override
     public List<ModelEndpoint> getEndpoints(ModelMetadata metadata) {
         List<ModelEndpoint> endpoints = new ArrayList<>();
-        endpoints.add(ModelEndpoint.builder().name("create" + StringUtil.upperCaseFirst(metadata.getName())).build());
-        endpoints.add(ModelEndpoint.builder().name("update" + StringUtil.upperCaseFirst(metadata.getName())).build());
-        endpoints.add(ModelEndpoint.builder().name(this.pluralize(metadata.getName())).build());
-        endpoints.add(ModelEndpoint.builder().name(metadata.getName()).build());
+        endpoints.add(ModelEndpoint.builder().type(ModelEndpointType.MUTATION).name("create" + StringUtil.upperCaseFirst(metadata.getName())).build());
+        endpoints.add(ModelEndpoint.builder().type(ModelEndpointType.MUTATION).name("update" + StringUtil.upperCaseFirst(metadata.getName())).build());
+        endpoints.add(ModelEndpoint.builder().type(ModelEndpointType.QUERY).name(StringUtil.lowerCaseFirst(this.pluralize(metadata.getName()))).build());
+        endpoints.add(ModelEndpoint.builder().type(ModelEndpointType.QUERY).name(StringUtil.lowerCaseFirst(metadata.getName())).build());
         return endpoints;
     }
 
@@ -35,7 +37,6 @@ public class MasterModelFeature implements IModelFeature, InitializingBean {
         for (RuleAndReplacement rar : plurals) {
             String rule = rar.getRule();
             String replacement = rar.getReplacement();
-
             // Return if we find a match.
             Matcher matcher = Pattern.compile(rule, Pattern.CASE_INSENSITIVE).matcher(word);
             if (matcher.find()) {
@@ -43,7 +44,6 @@ public class MasterModelFeature implements IModelFeature, InitializingBean {
             }
         }
         return word;
-
     }
 
     public void plural(String rule, String replacement) {
@@ -51,7 +51,7 @@ public class MasterModelFeature implements IModelFeature, InitializingBean {
     }
 
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() {
         plural("$", "s");
         plural("s$", "s");
         plural("(ax|test)is$", "$1es");
@@ -72,29 +72,10 @@ public class MasterModelFeature implements IModelFeature, InitializingBean {
         plural("(quiz)$", "$1zes");
     }
 
+    @Data
+    @AllArgsConstructor
     static class RuleAndReplacement {
         private String rule;
         private String replacement;
-
-        public RuleAndReplacement(String rule, String replacement) {
-            this.rule = rule;
-            this.replacement = replacement;
-        }
-
-        public String getReplacement() {
-            return replacement;
-        }
-
-        public void setReplacement(String replacement) {
-            this.replacement = replacement;
-        }
-
-        public String getRule() {
-            return rule;
-        }
-
-        public void setRule(String rule) {
-            this.rule = rule;
-        }
     }
 }

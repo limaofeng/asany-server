@@ -1,7 +1,10 @@
 package cn.asany.shanhai.core.support.graphql;
 
 import cn.asany.shanhai.core.bean.Model;
+import cn.asany.shanhai.core.bean.ModelEndpoint;
+import cn.asany.shanhai.core.bean.enums.ModelEndpointType;
 import cn.asany.shanhai.core.service.ModelService;
+import cn.asany.shanhai.core.utils.TemplateDataOfEndpoint;
 import cn.asany.shanhai.core.utils.TemplateDataOfModel;
 import com.github.jknack.handlebars.Template;
 import lombok.SneakyThrows;
@@ -10,6 +13,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,6 +42,14 @@ public class RuntimeGraphQLSchemaFactory implements InitializingBean {
 
         public TemplateRootData(List<Model> models) {
             this.models = models;
+        }
+
+        public List getQueries() {
+            List<ModelEndpoint> endpoints = new ArrayList<>();
+            for (Model model : this.models) {
+                endpoints.addAll(model.getEndpoints().stream().filter(item -> item.getType() == ModelEndpointType.QUERY).collect(Collectors.toList()));
+            }
+            return endpoints.stream().map(item -> new TemplateDataOfEndpoint(item)).collect(Collectors.toList());
         }
 
         public List<TemplateDataOfModel> getModels() {

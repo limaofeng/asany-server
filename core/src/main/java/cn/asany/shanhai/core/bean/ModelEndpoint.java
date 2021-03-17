@@ -1,5 +1,6 @@
 package cn.asany.shanhai.core.bean;
 
+import cn.asany.shanhai.core.bean.enums.ModelEndpointType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
@@ -25,8 +26,14 @@ public class ModelEndpoint extends BaseBusEntity {
     /**
      * 名称
      */
-    @Column(name = "NAME", length = 100)
+    @Column(name = "NAME", length = 100, nullable = false)
     private String name;
+    /**
+     * 类型
+     */
+    @Enumerated(EnumType.STRING)
+    @Column(name = "TYPE", length = 10, nullable = false)
+    private ModelEndpointType type;
     /**
      * 描述
      */
@@ -44,4 +51,8 @@ public class ModelEndpoint extends BaseBusEntity {
      */
     @Transient
     private String arguments;
+    /**
+     * 返回类型
+     */
+    private String returnType;
 }
