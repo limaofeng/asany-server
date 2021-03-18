@@ -1,8 +1,6 @@
 buildscript {
     repositories {
         maven { url "https://maven.thuni-h.com/repository/maven-public" }
-        maven { url "https://maven.aliyun.com/repository/central" }
-        maven { url "https://maven.aliyun.com/repository/gradle-plugin" }
         mavenCentral()
         mavenLocal()
     }
@@ -12,10 +10,6 @@ plugins {
     id 'idea'
     id "io.spring.dependency-management" version "${PLUGIN_SPRING_DEPENDENCY_MANAGEMENT_VER}"
     id "org.zeroturnaround.gradle.jrebel" version "${PLUGIN_JREBEL_VER}"
-}
-
-repositories {
-    maven { url "https://maven.thuni-h.com/repository/maven-public" }
 }
 
 allprojects {
@@ -29,6 +23,7 @@ allprojects {
 
     repositories {
         maven { url "https://maven.thuni-h.com/repository/maven-public" }
+        maven { url "https://jcenter.bintray.com" }
     }
 
     configurations {
@@ -107,7 +102,6 @@ subprojects {
     dependencies {
         compile "org.jfantasy:jfantasy-core:$LIB_JFAN_VER"
         compile "org.jfantasy:jfantasy-graphql:$LIB_JFAN_VER"
-        compile("com.graphql-java:graphql-java:$LIB_GRAPHQL_JAVA_VER")
         compile "org.mapstruct:mapstruct:${LIB_MAPSTRUCT_VER}"
         compileOnly "org.projectlombok:lombok:${LIB_LOMBOK_VER}"
         annotationProcessor "org.projectlombok:lombok:$LIB_LOMBOK_VER"
@@ -121,7 +115,6 @@ subprojects {
         implementation("org.springframework.boot:spring-boot-starter-test")
         implementation("com.fasterxml.jackson.core:jackson-databind")
         implementation("com.jayway.jsonpath:json-path")
-        compileOnly("com.graphql-java-kickstart:graphql-java-servlet:$LIB_GRAPHQL_SERVLET_VER")
         testImplementation("org.springframework.boot:spring-boot-starter-web")
     }
 

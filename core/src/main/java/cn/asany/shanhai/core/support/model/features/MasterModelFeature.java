@@ -35,13 +35,49 @@ public class MasterModelFeature implements IModelFeature, InitializingBean {
         return endpoint;
     }
 
+    private ModelEndpoint buildUpdateEndpoint(ModelMetadata metadata) {
+        ModelEndpoint endpoint = ModelEndpoint.builder()
+            .type(ModelEndpointType.MUTATION)
+            .code("update" + StringUtil.upperCaseFirst(metadata.getModel().getCode()))
+            .name("修改" + metadata.getModel().getName())
+            .returnType(metadata.getModel())
+            .model(metadata.getModel())
+            .build();
+        endpoint.getReturnType().setEndpoint(endpoint);
+        return endpoint;
+    }
+
+    private ModelEndpoint buildGetEndpoint(ModelMetadata metadata) {
+        ModelEndpoint endpoint = ModelEndpoint.builder()
+            .type(ModelEndpointType.MUTATION)
+            .code(StringUtil.lowerCaseFirst(this.pluralize(metadata.getModel().getCode())))
+            .name("获取" + metadata.getModel().getName())
+            .returnType(metadata.getModel())
+            .model(metadata.getModel())
+            .build();
+        endpoint.getReturnType().setEndpoint(endpoint);
+        return endpoint;
+    }
+
+    private ModelEndpoint buildFindPagerEndpoint(ModelMetadata metadata) {
+        ModelEndpoint endpoint = ModelEndpoint.builder()
+            .type(ModelEndpointType.MUTATION)
+            .code(StringUtil.lowerCaseFirst(metadata.getModel().getCode()))
+            .name(metadata.getModel().getName() + "分页查询")
+            .returnType(metadata.getModel())
+            .model(metadata.getModel())
+            .build();
+        endpoint.getReturnType().setEndpoint(endpoint);
+        return endpoint;
+    }
+
     @Override
     public List<ModelEndpoint> getEndpoints(ModelMetadata metadata) {
         List<ModelEndpoint> endpoints = new ArrayList<>();
         endpoints.add(buildCreateEndpoint(metadata));
-//        endpoints.add(ModelEndpoint.builder().type(ModelEndpointType.MUTATION).name("update" + StringUtil.upperCaseFirst(metadata.getName())).build());
-//        endpoints.add(ModelEndpoint.builder().type(ModelEndpointType.QUERY).name(StringUtil.lowerCaseFirst(this.pluralize(metadata.getName()))).build());
-//        endpoints.add(ModelEndpoint.builder().type(ModelEndpointType.QUERY).name(StringUtil.lowerCaseFirst(metadata.getName())).build());
+        endpoints.add(buildUpdateEndpoint(metadata));
+        endpoints.add(buildGetEndpoint(metadata));
+        endpoints.add(buildFindPagerEndpoint(metadata));
         return endpoints;
     }
 

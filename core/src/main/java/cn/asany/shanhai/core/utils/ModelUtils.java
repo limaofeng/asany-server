@@ -5,6 +5,7 @@ import cn.asany.shanhai.core.bean.enums.ModelType;
 import cn.asany.shanhai.core.service.ModelService;
 import cn.asany.shanhai.core.support.model.FieldType;
 import cn.asany.shanhai.core.support.model.IModelFeature;
+import com.github.stuxuhai.jpinyin.PinyinException;
 import lombok.SneakyThrows;
 import org.jfantasy.framework.error.ValidationException;
 import org.jfantasy.framework.spring.SpringContextUtil;
@@ -29,7 +30,7 @@ public class ModelUtils {
     @SneakyThrows
     public static void inject(Model model) {
         model.setType(ObjectUtil.defaultValue(model.getType(), ModelType.OBJECT));
-        model.setCode(ObjectUtil.defaultValue(model.getCode(), StringUtil.upperCaseFirst(StringUtil.camelCase(PinyinUtils.getAll(model.getName())))));
+        model.setCode(ObjectUtil.defaultValue(model.getCode(), () -> StringUtil.upperCaseFirst(StringUtil.camelCase(PinyinUtils.getAll(model.getName())))));
         model.setFields(new ArrayList<>((ObjectUtil.defaultValue(model.getFields(), Collections.emptyList()))));
         model.setFeatures(new ArrayList<>(ObjectUtil.defaultValue(model.getFeatures(), Collections.emptyList())));
         model.setEndpoints(new ArrayList<>(ObjectUtil.defaultValue(model.getEndpoints(), Collections.emptyList())));
