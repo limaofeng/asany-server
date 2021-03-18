@@ -1,6 +1,7 @@
 package cn.asany.shanhai.core.bean;
 
 import cn.asany.shanhai.core.bean.enums.ModelEndpointType;
+import cn.asany.shanhai.core.utils.ModelUtils;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
@@ -8,6 +9,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Data
 @Builder
@@ -23,6 +25,11 @@ public class ModelEndpoint extends BaseBusEntity {
     @GeneratedValue(generator = "fantasy-sequence")
     @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
     private Long id;
+    /**
+     * 名称
+     */
+    @Column(name = "CODE", length = 100, nullable = false)
+    private String code;
     /**
      * 名称
      */
@@ -49,10 +56,35 @@ public class ModelEndpoint extends BaseBusEntity {
     /**
      * 参数
      */
-    @Transient
-    private String arguments;
+    @OneToMany(mappedBy = "endpoint", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.LAZY)
+    private List<ModelEndpointArgument> arguments;
     /**
      * 返回类型
      */
-    private String returnType;
+    @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
+    @PrimaryKeyJoinColumn
+    private ModelEndpointReturnType returnType;
+
+    public static class ModelEndpointBuilder {
+
+        public ModelEndpointBuilder returnType(Model type) {
+            this.returnType = ModelEndpointReturnType.builder().type(type).build();
+            return this;
+        }
+
+        public ModelEndpointBuilder returnType(String type) {
+            this.returnType = ModelEndpointReturnType.builder().type(ModelUtils.getModelByCode(type)).build();
+            return this;
+        }
+
+        public ModelEndpointBuilder returnType(Boolean multiple, String type) {
+            this.returnType = ModelEndpointReturnType.builder().isList(multiple).type(ModelUtils.getModelByCode(type)).build();
+            return this;
+        }
+
+        public ModelEndpointBuilder returnType(Boolean required, Boolean multiple, String type) {
+            this.returnType = ModelEndpointReturnType.builder().isRequired(required).isList(multiple).type(ModelUtils.getModelByCode(type)).build();
+            return this;
+        }
+    }
 }

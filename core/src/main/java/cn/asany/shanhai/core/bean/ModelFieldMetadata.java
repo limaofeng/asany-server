@@ -23,11 +23,6 @@ public class ModelFieldMetadata implements Serializable {
     @GeneratedValue(generator = "pkGenerator")
     private Long id;
     /**
-     * 实体名称，用于 HQL 名称及 API 名称
-     */
-    @Column(name = "NAME", length = 100)
-    private String name;
-    /**
      * 数据库中的列表名称
      */
     @Column(name = "DATABASE_COLUMN_NAME", length = 100)

@@ -23,13 +23,25 @@ public class MasterModelFeature implements IModelFeature, InitializingBean {
 
     private List<RuleAndReplacement> plurals = new ArrayList<>();
 
+    private ModelEndpoint buildCreateEndpoint(ModelMetadata metadata) {
+        ModelEndpoint endpoint = ModelEndpoint.builder()
+            .type(ModelEndpointType.MUTATION)
+            .code("create" + StringUtil.upperCaseFirst(metadata.getModel().getCode()))
+            .name("新增" + metadata.getModel().getName())
+            .returnType(metadata.getModel())
+            .model(metadata.getModel())
+            .build();
+        endpoint.getReturnType().setEndpoint(endpoint);
+        return endpoint;
+    }
+
     @Override
     public List<ModelEndpoint> getEndpoints(ModelMetadata metadata) {
         List<ModelEndpoint> endpoints = new ArrayList<>();
-        endpoints.add(ModelEndpoint.builder().type(ModelEndpointType.MUTATION).name("create" + StringUtil.upperCaseFirst(metadata.getName())).build());
-        endpoints.add(ModelEndpoint.builder().type(ModelEndpointType.MUTATION).name("update" + StringUtil.upperCaseFirst(metadata.getName())).build());
-        endpoints.add(ModelEndpoint.builder().type(ModelEndpointType.QUERY).name(StringUtil.lowerCaseFirst(this.pluralize(metadata.getName()))).build());
-        endpoints.add(ModelEndpoint.builder().type(ModelEndpointType.QUERY).name(StringUtil.lowerCaseFirst(metadata.getName())).build());
+        endpoints.add(buildCreateEndpoint(metadata));
+//        endpoints.add(ModelEndpoint.builder().type(ModelEndpointType.MUTATION).name("update" + StringUtil.upperCaseFirst(metadata.getName())).build());
+//        endpoints.add(ModelEndpoint.builder().type(ModelEndpointType.QUERY).name(StringUtil.lowerCaseFirst(this.pluralize(metadata.getName()))).build());
+//        endpoints.add(ModelEndpoint.builder().type(ModelEndpointType.QUERY).name(StringUtil.lowerCaseFirst(metadata.getName())).build());
         return endpoints;
     }
 

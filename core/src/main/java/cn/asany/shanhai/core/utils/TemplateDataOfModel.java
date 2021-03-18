@@ -14,7 +14,7 @@ public class TemplateDataOfModel {
     private Model model;
 
     public String getName() {
-        return model.getMetadata().getName();
+        return model.getCode();
     }
 
     public String getDatabaseTableName() {

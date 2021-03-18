@@ -3,6 +3,7 @@ package cn.asany.shanhai.core.service;
 import cn.asany.shanhai.TestApplication;
 import cn.asany.shanhai.core.bean.Model;
 import cn.asany.shanhai.core.bean.ModelField;
+import cn.asany.shanhai.core.runners.PresetModelCommandLineRunner;
 import cn.asany.shanhai.core.runners.PresetModelFeatureCommandLineRunner;
 import cn.asany.shanhai.core.support.model.FieldType;
 import cn.asany.shanhai.core.support.model.IModelFeature;
@@ -19,7 +20,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = TestApplication.class)
@@ -32,14 +32,17 @@ class ModelServiceTest {
     @Autowired
     private ModelFeatureService modelFeatureService;
     @Autowired
-    private PresetModelFeatureCommandLineRunner runner;
+    private PresetModelFeatureCommandLineRunner modelFeatureCommandLineRunner;
+    @Autowired
+    private PresetModelCommandLineRunner modelCommandLineRunner;
 
     @SneakyThrows
     @BeforeEach
     void setUp() {
-        modelService.clear();
         modelFeatureService.clear();
-        runner.run();
+        modelService.clear();
+        modelFeatureCommandLineRunner.run();
+        modelCommandLineRunner.run();
     }
 
     @AfterEach
@@ -55,12 +58,14 @@ class ModelServiceTest {
     @Test
     void save() {
         Model model = Model.builder()
+            .code("Employee")
             .name("员工")
             .features(IModelFeature.MASTER_MODEL, IModelFeature.SYSTEM_FIELDS)
-            .fields(Arrays.asList(ModelField.builder()
+            .fields(ModelField.builder()
+                .code("name")
                 .name("名称")
-                .type(FieldType.STRING)
-                .build()))
+                .type(FieldType.String)
+                .build())
             .build();
         model = modelService.save(model);
         log.debug("新增成功:" + model);

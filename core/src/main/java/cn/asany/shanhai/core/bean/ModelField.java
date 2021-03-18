@@ -1,6 +1,6 @@
 package cn.asany.shanhai.core.bean;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import cn.asany.shanhai.core.utils.ModelUtils;
 import lombok.*;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
@@ -23,6 +23,11 @@ public class ModelField extends BaseBusEntity {
     @TableGenerator(name = "DDM_MODEL_FIELD", table = "sys_sequence", pkColumnName = "gen_name", pkColumnValue = "MODEL_FIELD:id", valueColumnName = "gen_value")
     private Long id;
     /**
+     * 编码 用于 HQL 名称及 API 名称
+     */
+    @Column(name = "CODE", length = 50, unique = true)
+    private String code;
+    /**
      * 名称
      */
     @Column(name = "NAME", length = 50)
@@ -40,28 +45,33 @@ public class ModelField extends BaseBusEntity {
     /**
      * 是否必填
      */
+    @Builder.Default
     @Column(name = "IS_REQUIRED")
-    private Boolean isRequired;
+    private Boolean isRequired = false;
     /**
      * 是否主键
      */
+    @Builder.Default
     @Column(name = "IS_PRIMARY_KEY", length = 10, nullable = false)
-    private Boolean isPrimaryKey;
+    private Boolean isPrimaryKey = false;
     /**
      * 字段类型
      */
-    @Column(name = "FIELD_TYPE", length = 50, nullable = false)
-    private String type;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "TYPE_ID", foreignKey = @ForeignKey(name = "FK_MODEL_FIELD_TID"), nullable = false)
+    private Model type;
     /**
      * 是否唯一
      */
+    @Builder.Default
     @Column(name = "IS_UNIQUE", length = 1)
-    private Boolean isUnique;
+    private Boolean isUnique = false;
     /**
      * 存储值为列表，而不是单个值
      */
+    @Builder.Default
     @Column(name = "IS_LIST", length = 1)
-    private Boolean isList;
+    private Boolean isList = false;
     /**
      * 序号
      */
@@ -70,7 +80,6 @@ public class ModelField extends BaseBusEntity {
     /**
      * 实体
      */
-    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MODEL_ID", foreignKey = @ForeignKey(name = "FK_SH_MODEL_FIELD_MODEL_ID"), nullable = false)
     private Model model;
@@ -83,8 +92,18 @@ public class ModelField extends BaseBusEntity {
     public static class ModelFieldBuilder {
         private ModelFieldMetadata metadata;
 
-        public ModelFieldBuilder metadata(String name, String columnName) {
-            this.metadata = ModelFieldMetadata.builder().name(name).databaseColumnName(columnName).build();
+        public ModelFieldBuilder metadata(String columnName) {
+            this.metadata = ModelFieldMetadata.builder().databaseColumnName(columnName).build();
+            return this;
+        }
+
+        public ModelFieldBuilder type(String id) {
+            this.type = ModelUtils.getModelByCode(id);
+            return this;
+        }
+
+        public ModelFieldBuilder type(Model type) {
+            this.type = type;
             return this;
         }
     }

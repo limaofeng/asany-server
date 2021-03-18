@@ -1,12 +1,16 @@
 package cn.asany.shanhai.core.support.model;
 
+import cn.asany.shanhai.core.bean.Model;
 import cn.asany.shanhai.core.bean.ModelFieldMetadata;
+import cn.asany.shanhai.core.bean.enums.ModelType;
 
 public interface FieldType {
-    String ID = "ID";
-    String STRING = "String";
-    String Number = "Number";
-    String Date = "Date";
+    Model ID = Model.builder().type(ModelType.SCALAR).id(1L).code("ID").name("ID").build();
+    Model Int = Model.builder().type(ModelType.SCALAR).id(2L).code("Int").name("整数型").build();
+    Model Float = Model.builder().type(ModelType.SCALAR).id(3L).code("Float").name("浮点型").build();
+    Model String = Model.builder().type(ModelType.SCALAR).id(4L).code("String").name("字符串").build();
+    Model Boolean = Model.builder().type(ModelType.SCALAR).id(5L).code("Boolean").name("布尔型").build();
+    Model Date = Model.builder().type(ModelType.SCALAR).id(6L).code("Date").name("日期").build();
 
     String getId();
 

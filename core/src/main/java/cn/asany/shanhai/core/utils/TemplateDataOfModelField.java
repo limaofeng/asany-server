@@ -11,7 +11,7 @@ public class TemplateDataOfModelField {
     private ModelField field;
 
     public String getName() {
-        return field.getMetadata().getName();
+        return field.getName();
     }
 
     public String getDatabaseColumnName() {
@@ -20,13 +20,13 @@ public class TemplateDataOfModelField {
 
     public String getJavaType() {
         FieldTypeRegistry registry = SpringContextUtil.getBeanByType(FieldTypeRegistry.class);
-        FieldType type = registry.getType(this.field.getType());
+        FieldType type = registry.getType(this.field.getType().getCode());
         return type.getJavaType(this.field.getMetadata());
     }
 
     public String getGraphQLType() {
         FieldTypeRegistry registry = SpringContextUtil.getBeanByType(FieldTypeRegistry.class);
-        FieldType type = registry.getType(this.field.getType());
+        FieldType type = registry.getType(this.field.getType().getCode());
         return type.getGraphQLType(this.field.getMetadata());
     }
 }

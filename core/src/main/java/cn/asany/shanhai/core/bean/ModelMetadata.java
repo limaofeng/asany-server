@@ -23,12 +23,6 @@ public class ModelMetadata implements Serializable {
     @GenericGenerator(name = "pkGenerator", strategy = "foreign", parameters = {@Parameter(name = "property", value = "model")})
     @GeneratedValue(generator = "pkGenerator")
     private Long id;
-
-    /**
-     * 实体名称，用于 HQL 名称及 API 名称
-     */
-    @Column(name = "NAME", length = 100)
-    private String name;
     /**
      * 数据库名称
      */

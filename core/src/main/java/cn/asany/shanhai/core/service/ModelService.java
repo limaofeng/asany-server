@@ -1,10 +1,14 @@
 package cn.asany.shanhai.core.service;
 
-import cn.asany.shanhai.core.bean.*;
+import cn.asany.shanhai.core.bean.Model;
+import cn.asany.shanhai.core.bean.ModelFeature;
+import cn.asany.shanhai.core.bean.ModelField;
+import cn.asany.shanhai.core.bean.ModelMetadata;
 import cn.asany.shanhai.core.bean.enums.ModelStatus;
+import cn.asany.shanhai.core.bean.enums.ModelType;
 import cn.asany.shanhai.core.dao.*;
-import cn.asany.shanhai.core.support.model.ModelFeatureRegistry;
 import cn.asany.shanhai.core.support.RuntimeJpaRepositoryFactory;
+import cn.asany.shanhai.core.support.model.ModelFeatureRegistry;
 import cn.asany.shanhai.core.support.model.RuntimeMetadataRegistry;
 import cn.asany.shanhai.core.utils.HibernateMappingHelper;
 import cn.asany.shanhai.core.utils.ModelUtils;
@@ -12,13 +16,12 @@ import lombok.SneakyThrows;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.error.ValidationException;
-import org.jfantasy.framework.util.common.ObjectUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -54,8 +57,10 @@ public class ModelService {
     public Model save(Model model) {
         // 检查 Model Metadata 设置
         ModelUtils.inject(model);
-        model.setFields(new ArrayList<>((ObjectUtil.defaultValue(model.getFields(), Collections.emptyList()))));
-        model.setEndpoints(new ArrayList<>(ObjectUtil.defaultValue(model.getEndpoints(), Collections.emptyList())));
+
+        if (model.getType() == ModelType.SCALAR) {
+            return modelDao.save(model);
+        }
 
         // 检查主键
         Optional<ModelField> idFieldOptional = ModelUtils.getId(model);
@@ -91,19 +96,26 @@ public class ModelService {
         modelDao.update(model, false);
     }
 
-    public Optional<Model> get(long id) {
+    public Optional<Model> get(Long id) {
         return modelDao.findById(id);
     }
 
     public void clear() {
-        this.modelEndpointDao.deleteAllInBatch();
-        this.modelMetadataDao.deleteAllInBatch();
-        this.modelFieldMetadataDao.deleteAllInBatch();
-        this.modelFieldDao.deleteAllInBatch();
-        this.modelDao.deleteAllInBatch();
+        List<Model> models = this.modelDao.findAll(Sort.by(Sort.Direction.DESC, "createdAt"));
+        this.modelDao.deleteAll(models);
     }
 
     public List<Model> findAll() {
         return this.modelDao.findAll();
+    }
+
+    public void saveInBatch(Model... models) {
+        for (Model model : models) {
+            this.save(model);
+        }
+    }
+
+    public Optional<Model> findByCode(String code) {
+        return this.modelDao.findOne(Example.of(Model.builder().code(code).build()));
     }
 }

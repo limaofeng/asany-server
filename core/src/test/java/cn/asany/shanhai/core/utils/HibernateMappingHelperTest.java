@@ -28,7 +28,7 @@ class HibernateMappingHelperTest {
     @Test
     @Transactional
     void generateXML() {
-        Optional<Model> model = modelService.get(213L);
+        Optional<Model> model = modelService.get(0L);
         String xml = hibernateMappingHelper.generateXML(model.get());
         System.out.println(xml);
     }

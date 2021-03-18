@@ -1,6 +1,7 @@
 package cn.asany.shanhai.core.bean;
 
 import cn.asany.shanhai.core.bean.enums.ModelStatus;
+import cn.asany.shanhai.core.bean.enums.ModelType;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
@@ -8,6 +9,7 @@ import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.framework.dao.hibernate.converter.StringArrayConverter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,6 +29,17 @@ public class Model extends BaseBusEntity {
     @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
     private Long id;
     /**
+     * 编码 用于 HQL 名称及 API 名称
+     */
+    @Column(name = "CODE", length = 50, unique = true)
+    private String code;
+    /**
+     * 类型
+     */
+    @Enumerated(EnumType.STRING)
+    @Column(name = "TYPE", length = 10)
+    private ModelType type;
+    /**
      * 名称
      */
     @Column(name = "NAME", length = 100)
@@ -37,23 +50,12 @@ public class Model extends BaseBusEntity {
     @Column(name = "DESCRIPTION", length = 200)
     private String description;
     /**
-     * 数据源
-     */
-    @Column(name = "DATA_SOURCE", length = 20)
-    private String dataSource;
-    /**
      * 状态：草稿、发布
      */
     @Enumerated(EnumType.STRING)
     @Column(name = "STATUS", length = 20)
     private ModelStatus status;
-    /**
-     * 是否系统
-     */
-    @Column(name = "IS_SYSTEM")
-    private Boolean isSystem;
-
-//    private List<> relations;
+//    private List<ModelRelation> relations;
     /**
      * 标签
      */
@@ -79,10 +81,30 @@ public class Model extends BaseBusEntity {
     private ModelMetadata metadata;
 
     public static class ModelBuilder {
-        private List<ModelFeature> features;
+        public ModelBuilder metadata(String tableName) {
+            if (this.metadata == null) {
+                this.metadata = ModelMetadata.builder().databaseTableName(tableName).build();
+            } else {
+                this.metadata.setDatabaseTableName(tableName);
+            }
+            return this;
+        }
+
+        public ModelBuilder metadata(ModelMetadata metadata) {
+            this.metadata = metadata;
+            return this;
+        }
 
         public ModelBuilder features(String... features) {
             this.features = Arrays.stream(features).map(id -> ModelFeature.builder().id(id).build()).collect(Collectors.toList());
+            return this;
+        }
+
+        public ModelBuilder fields(ModelField... fields) {
+            if (this.fields == null) {
+                this.fields = new ArrayList<>();
+            }
+            this.fields.addAll(Arrays.asList(fields));
             return this;
         }
     }
@@ -91,10 +113,9 @@ public class Model extends BaseBusEntity {
     public String toString() {
         return "Model{" +
             "id=" + id +
+            ", code='" + code + '\'' +
             ", name='" + name + '\'' +
             ", description='" + description + '\'' +
-            ", dataSource='" + dataSource + '\'' +
-            ", isSystem=" + isSystem +
             ", labels=" + Arrays.toString(labels) +
             ", features=" + features +
             ", fields=" + fields +

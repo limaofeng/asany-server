@@ -1,7 +1,7 @@
 package cn.asany.shanhai.core.utils;
 
 import cn.asany.shanhai.core.bean.ModelEndpoint;
-import cn.asany.shanhai.core.bean.ModelMetadata;
+import cn.asany.shanhai.core.bean.ModelEndpointReturnType;
 import lombok.AllArgsConstructor;
 import org.jfantasy.framework.util.common.StringUtil;
 
@@ -18,8 +18,8 @@ public class TemplateDataOfEndpoint {
     }
 
     public String getReturnType() {
-        ModelMetadata modelMetadata = endpoint.getModel().getMetadata();
-        return StringUtil.upperCaseFirst(modelMetadata.getName());
+        ModelEndpointReturnType returnType = endpoint.getReturnType();
+        return StringUtil.upperCaseFirst(returnType.getType().getCode());
     }
 
 }
