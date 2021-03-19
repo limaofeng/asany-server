@@ -1,5 +1,6 @@
 package cn.asany.shanhai.core.support.model;
 
+import cn.asany.shanhai.core.bean.Model;
 import cn.asany.shanhai.core.bean.ModelEndpoint;
 import cn.asany.shanhai.core.bean.ModelField;
 import cn.asany.shanhai.core.bean.ModelMetadata;
@@ -21,7 +22,11 @@ public interface IModelFeature {
         return Collections.emptyList();
     }
 
-    default List<? extends ModelEndpoint> getEndpoints(ModelMetadata metadata) {
+    default List<Model> getInputTypes(Model model) {
+        return Collections.emptyList();
+    }
+
+    default List<ModelEndpoint> getEndpoints(ModelMetadata metadata) {
         return Collections.emptyList();
     }
 }

@@ -17,7 +17,7 @@ public class PresetModelFeatureCommandLineRunner implements CommandLineRunner {
     public void run(String... args) throws Exception {
         ModelFeature systemFields = ModelFeature.builder().id(IModelFeature.SYSTEM_FIELDS).name("系统字段").build();
         modelFeatureService.save(systemFields);
-        ModelFeature masterModel = ModelFeature.builder().id(IModelFeature.MASTER_MODEL).name("主模块").build();
+        ModelFeature masterModel = ModelFeature.builder().id(IModelFeature.MASTER_MODEL).name("主表").build();
         modelFeatureService.save(masterModel);
     }
 }

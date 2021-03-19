@@ -1,41 +1,41 @@
 package cn.asany.shanhai.core.utils;
 
 import cn.asany.shanhai.core.bean.*;
+import cn.asany.shanhai.core.bean.enums.ModelConnectType;
 import cn.asany.shanhai.core.bean.enums.ModelType;
 import cn.asany.shanhai.core.service.ModelService;
 import cn.asany.shanhai.core.support.model.FieldType;
 import cn.asany.shanhai.core.support.model.IModelFeature;
-import com.github.stuxuhai.jpinyin.PinyinException;
 import lombok.SneakyThrows;
 import org.jfantasy.framework.error.ValidationException;
-import org.jfantasy.framework.spring.SpringContextUtil;
 import org.jfantasy.framework.util.PinyinUtils;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.common.StringUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Component
 public class ModelUtils {
 
-    private static ModelService _modelService;
-
-    private static ModelService modelService() {
-        if (_modelService == null) {
-            _modelService = SpringContextUtil.getBeanByType(ModelService.class);
-        }
-        return _modelService;
-    }
+    @Autowired
+    private ModelService modelService;
 
     @SneakyThrows
-    public static void inject(Model model) {
+    public void inject(Model model) {
         model.setType(ObjectUtil.defaultValue(model.getType(), ModelType.OBJECT));
         model.setCode(ObjectUtil.defaultValue(model.getCode(), () -> StringUtil.upperCaseFirst(StringUtil.camelCase(PinyinUtils.getAll(model.getName())))));
         model.setFields(new ArrayList<>((ObjectUtil.defaultValue(model.getFields(), Collections.emptyList()))));
         model.setFeatures(new ArrayList<>(ObjectUtil.defaultValue(model.getFeatures(), Collections.emptyList())));
         model.setEndpoints(new ArrayList<>(ObjectUtil.defaultValue(model.getEndpoints(), Collections.emptyList())));
+        model.setRelations(new ArrayList<>(ObjectUtil.defaultValue(model.getRelations(), Collections.emptyList())));
 
-        if (model.getType() == ModelType.SCALAR) {
+        if (model.getType() == ModelType.SCALAR || model.getType() == ModelType.INPUT) {
             return;
         }
 
@@ -51,9 +51,13 @@ public class ModelUtils {
     }
 
     @SneakyThrows
-    public static void inject(ModelField field) {
+    public void inject(Model model, ModelField field) {
+        field.setModel(model);
         field.setIsPrimaryKey(ObjectUtil.defaultValue(field.getIsPrimaryKey(), Boolean.FALSE));
         field.setCode(ObjectUtil.defaultValue(field.getCode(), StringUtil.lowerCaseFirst(StringUtil.camelCase(PinyinUtils.getAll(field.getName())))));
+        if (model.getType() != ModelType.OBJECT) {
+            return;
+        }
         ModelFieldMetadata metadata = field.getMetadata();
         if (metadata == null) {
             field.setMetadata(metadata = ModelFieldMetadata.builder().field(field).build());
@@ -65,32 +69,39 @@ public class ModelUtils {
         metadata.setField(field);
     }
 
-    public static Optional<ModelField> getId(Model model) {
+    public Optional<ModelField> getId(Model model) {
         return model.getFields().stream().filter(item -> ObjectUtil.defaultValue(item.getIsPrimaryKey(), Boolean.FALSE)).findAny();
     }
 
-    public static Model getModelByCode(String code) {
-        Optional<Model> optional = modelService().findByCode(code);
+    public Model getModelByCode(String code) {
+        Optional<Model> optional = modelService.findByCode(code);
         if (!optional.isPresent()) {
             throw new ValidationException("MODEL CODE:" + code + "不存在");
         }
         return Model.builder().id(optional.get().getId()).build();
     }
 
-    public static ModelField generatePrimaryKeyField() {
+    public ModelField generatePrimaryKeyField() {
         return ModelField.builder().code(FieldType.ID.getCode().toLowerCase()).name(FieldType.ID.getCode()).type(FieldType.ID).isPrimaryKey(true).build();
     }
 
-    public static List<ModelField> getFields(Model model) {
+    public List<ModelField> getFields(Model model) {
         return model.getFields().stream().filter(item -> !item.getIsPrimaryKey()).collect(Collectors.toList());
     }
 
-    public static void inject(Model model, IModelFeature feature) {
+    public void inject(Model model, IModelFeature feature) {
         List<ModelField> fields = model.getFields();
         // 设置 Field
         for (ModelField field : feature.fields()) {
             field.setModel(model);
             fields.add(field);
+        }
+
+        for (Model type : feature.getInputTypes(model)) {
+            if (!modelService.exists(type.getCode())) {
+                modelService.save(type);
+            }
+            model.connect(type, ModelConnectType.INPUT);
         }
 
         List<ModelEndpoint> endpoints = model.getEndpoints();

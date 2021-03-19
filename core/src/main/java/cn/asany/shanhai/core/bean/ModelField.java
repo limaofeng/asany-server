@@ -3,6 +3,7 @@ package cn.asany.shanhai.core.bean;
 import cn.asany.shanhai.core.utils.ModelUtils;
 import lombok.*;
 import org.jfantasy.framework.dao.BaseBusEntity;
+import org.jfantasy.framework.spring.SpringContextUtil;
 
 import javax.persistence.*;
 
@@ -10,9 +11,9 @@ import javax.persistence.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(of = "id")
 @Entity
-@Table(name = "SH_MODEL_FIELD")
+@Table(name = "SH_MODEL_FIELD", uniqueConstraints = @UniqueConstraint(columnNames = {"MODEL_ID", "CODE"}, name = "UK_MODEL_FIELD_CODE"))
 public class ModelField extends BaseBusEntity {
     /**
      * id主键
@@ -25,7 +26,7 @@ public class ModelField extends BaseBusEntity {
     /**
      * 编码 用于 HQL 名称及 API 名称
      */
-    @Column(name = "CODE", length = 50, unique = true)
+    @Column(name = "CODE", length = 50)
     private String code;
     /**
      * 名称
@@ -98,7 +99,8 @@ public class ModelField extends BaseBusEntity {
         }
 
         public ModelFieldBuilder type(String id) {
-            this.type = ModelUtils.getModelByCode(id);
+            ModelUtils modelUtils = SpringContextUtil.getBeanByType(ModelUtils.class);
+            this.type = modelUtils.getModelByCode(id);
             return this;
         }
 

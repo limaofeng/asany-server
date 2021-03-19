@@ -7,8 +7,10 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
+import org.jfantasy.framework.spring.SpringContextUtil;
 
 import javax.persistence.*;
+import java.util.Arrays;
 import java.util.List;
 
 @Data
@@ -73,17 +75,25 @@ public class ModelEndpoint extends BaseBusEntity {
         }
 
         public ModelEndpointBuilder returnType(String type) {
-            this.returnType = ModelEndpointReturnType.builder().type(ModelUtils.getModelByCode(type)).build();
+            ModelUtils modelUtils = SpringContextUtil.getBeanByType(ModelUtils.class);
+            this.returnType = ModelEndpointReturnType.builder().type(modelUtils.getModelByCode(type)).build();
             return this;
         }
 
         public ModelEndpointBuilder returnType(Boolean multiple, String type) {
-            this.returnType = ModelEndpointReturnType.builder().isList(multiple).type(ModelUtils.getModelByCode(type)).build();
+            ModelUtils modelUtils = SpringContextUtil.getBeanByType(ModelUtils.class);
+            this.returnType = ModelEndpointReturnType.builder().isList(multiple).type(modelUtils.getModelByCode(type)).build();
             return this;
         }
 
         public ModelEndpointBuilder returnType(Boolean required, Boolean multiple, String type) {
-            this.returnType = ModelEndpointReturnType.builder().isRequired(required).isList(multiple).type(ModelUtils.getModelByCode(type)).build();
+            ModelUtils modelUtils = SpringContextUtil.getBeanByType(ModelUtils.class);
+            this.returnType = ModelEndpointReturnType.builder().isRequired(required).isList(multiple).type(modelUtils.getModelByCode(type)).build();
+            return this;
+        }
+
+        public ModelEndpointBuilder arguments(ModelEndpointArgument... arguments) {
+            this.arguments = Arrays.asList(arguments);
             return this;
         }
     }

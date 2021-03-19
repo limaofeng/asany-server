@@ -1,5 +1,6 @@
 package cn.asany.shanhai.core.bean;
 
+import cn.asany.shanhai.core.bean.enums.ModelConnectType;
 import cn.asany.shanhai.core.bean.enums.ModelStatus;
 import cn.asany.shanhai.core.bean.enums.ModelType;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -12,6 +13,7 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Data
@@ -55,7 +57,11 @@ public class Model extends BaseBusEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "STATUS", length = 20)
     private ModelStatus status;
-//    private List<ModelRelation> relations;
+    /**
+     * 关联引用
+     */
+    @OneToMany(mappedBy = "model", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.LAZY)
+    private List<ModelRelation> relations;
     /**
      * 标签
      */
@@ -80,6 +86,18 @@ public class Model extends BaseBusEntity {
     @PrimaryKeyJoinColumn
     private ModelMetadata metadata;
 
+    @Transient
+    public void connect(Model model, ModelConnectType connectType) {
+        if (this.relations == null) {
+            this.relations = new ArrayList<>();
+        }
+        Optional<ModelRelation> optional = this.relations.stream().filter(item -> item.getInverse().getCode().equals(model.getCode()) && item.getRelation().equals(connectType.relation) && item.getType().equals(connectType)).findAny();
+        if (optional.isPresent()) {
+            return;
+        }
+        this.relations.add(ModelRelation.builder().type(connectType.type).relation(connectType.relation).inverse(model).model(this).build());
+    }
+
     public static class ModelBuilder {
         public ModelBuilder metadata(String tableName) {
             if (this.metadata == null) {
@@ -97,6 +115,11 @@ public class Model extends BaseBusEntity {
 
         public ModelBuilder features(String... features) {
             this.features = Arrays.stream(features).map(id -> ModelFeature.builder().id(id).build()).collect(Collectors.toList());
+            return this;
+        }
+
+        public ModelBuilder fields(List<ModelField> fields) {
+            this.fields = fields;
             return this;
         }
 

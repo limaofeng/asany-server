@@ -3,6 +3,7 @@ package cn.asany.shanhai.core.utils;
 import cn.asany.shanhai.core.bean.Model;
 import cn.asany.shanhai.core.bean.ModelField;
 import lombok.AllArgsConstructor;
+import org.jfantasy.framework.spring.SpringContextUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,12 +23,14 @@ public class TemplateDataOfModel {
     }
 
     public TemplateDataOfModelField getIdField() {
-        Optional<ModelField> idFieldOptional = ModelUtils.getId(model);
+        ModelUtils modelUtils = SpringContextUtil.getBeanByType(ModelUtils.class);
+        Optional<ModelField> idFieldOptional = modelUtils.getId(model);
         return new TemplateDataOfModelField(idFieldOptional.get());
     }
 
     public List<TemplateDataOfModelField> getFields() {
-        return ModelUtils.getFields(model).stream().map(item -> new TemplateDataOfModelField(item)).collect(Collectors.toList());
+        ModelUtils modelUtils = SpringContextUtil.getBeanByType(ModelUtils.class);
+        return modelUtils.getFields(model).stream().map(item -> new TemplateDataOfModelField(item)).collect(Collectors.toList());
     }
 
     public List<TemplateDataOfModelQuery> getQueries() {

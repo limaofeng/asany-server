@@ -1,8 +1,11 @@
 package cn.asany.shanhai.core.support.model.features;
 
+import cn.asany.shanhai.core.bean.Model;
 import cn.asany.shanhai.core.bean.ModelEndpoint;
+import cn.asany.shanhai.core.bean.ModelField;
 import cn.asany.shanhai.core.bean.ModelMetadata;
 import cn.asany.shanhai.core.bean.enums.ModelEndpointType;
+import cn.asany.shanhai.core.bean.enums.ModelType;
 import cn.asany.shanhai.core.support.model.IModelFeature;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,9 +14,11 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Data
 @Component
@@ -23,11 +28,42 @@ public class MasterModelFeature implements IModelFeature, InitializingBean {
 
     private List<RuleAndReplacement> plurals = new ArrayList<>();
 
+    @Override
+    public List<ModelEndpoint> getEndpoints(ModelMetadata metadata) {
+        List<ModelEndpoint> endpoints = new ArrayList<>();
+        endpoints.add(buildCreateEndpoint(metadata));
+        endpoints.add(buildUpdateEndpoint(metadata));
+        endpoints.add(buildGetEndpoint(metadata));
+        endpoints.add(buildFindPagerEndpoint(metadata));
+        return endpoints;
+    }
+
+    public Model buildInputType(String code, String name, List<ModelField> fields) {
+        return Model.builder().type(ModelType.INPUT).code(code).name(name).fields(
+            fields.stream().filter(item -> !item.getIsPrimaryKey()).map(item ->
+                ModelField.builder()
+                    .code(item.getCode())
+                    .name(item.getName())
+                    .type(item.getType())
+                    .isPrimaryKey(item.getIsPrimaryKey())
+                    .build())
+                .collect(Collectors.toList())
+        ).build();
+    }
+
+    @Override
+    public List<Model> getInputTypes(Model model) {
+        Model inputTypeOfCreate = this.buildInputType(model.getCode() + "CreateInput", model.getName() + "录入对象", model.getFields());
+        Model inputTypeOfUpdate = this.buildInputType(model.getCode() + "UpdateInput", model.getName() + "更新对象", model.getFields());
+        return new ArrayList<>(Arrays.asList(inputTypeOfCreate, inputTypeOfUpdate));
+    }
+
     private ModelEndpoint buildCreateEndpoint(ModelMetadata metadata) {
         ModelEndpoint endpoint = ModelEndpoint.builder()
             .type(ModelEndpointType.MUTATION)
             .code("create" + StringUtil.upperCaseFirst(metadata.getModel().getCode()))
             .name("新增" + metadata.getModel().getName())
+//            .arguments(ModelEndpointArgument.builder().name("").type("").build())
             .returnType(metadata.getModel())
             .model(metadata.getModel())
             .build();
@@ -71,15 +107,6 @@ public class MasterModelFeature implements IModelFeature, InitializingBean {
         return endpoint;
     }
 
-    @Override
-    public List<ModelEndpoint> getEndpoints(ModelMetadata metadata) {
-        List<ModelEndpoint> endpoints = new ArrayList<>();
-        endpoints.add(buildCreateEndpoint(metadata));
-        endpoints.add(buildUpdateEndpoint(metadata));
-        endpoints.add(buildGetEndpoint(metadata));
-        endpoints.add(buildFindPagerEndpoint(metadata));
-        return endpoints;
-    }
 
     public String pluralize(String word) {
         for (RuleAndReplacement rar : plurals) {
