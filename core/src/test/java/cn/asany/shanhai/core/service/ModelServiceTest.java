@@ -20,6 +20,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = TestApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -75,10 +76,13 @@ class ModelServiceTest {
     void publish() {
         this.save();
         Pager<Model> pager = modelService.findPager(new Pager<>(), new ArrayList<>());
-        Model model = pager.getPageItems().stream().findFirst().get();
+        Optional<Model> optional = pager.getPageItems().stream().findFirst();
+        if (!optional.isPresent()) {
+            return;
+        }
+        Model model = optional.get();
         modelService.publish(model.getId());
 
-        model = modelService.get(model.getId()).get();
         log.debug("Hibernate HBM XML:" + model.getMetadata().getHbm());
     }
 

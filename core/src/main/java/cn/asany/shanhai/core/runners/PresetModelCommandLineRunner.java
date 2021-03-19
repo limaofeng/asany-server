@@ -6,6 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+/**
+ * 初始化 SCALAR
+ *
+ * @author limaofeng
+ */
 @Component
 public class PresetModelCommandLineRunner implements CommandLineRunner {
 
@@ -13,7 +18,7 @@ public class PresetModelCommandLineRunner implements CommandLineRunner {
     private ModelService modelService;
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
         modelService.saveInBatch(
             FieldType.ID,
             FieldType.Int,

@@ -7,6 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+/**
+ * 初始化 Feature
+ *
+ * @author limaofeng
+ */
 @Component
 public class PresetModelFeatureCommandLineRunner implements CommandLineRunner {
 
@@ -14,7 +19,7 @@ public class PresetModelFeatureCommandLineRunner implements CommandLineRunner {
     private ModelFeatureService modelFeatureService;
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
         ModelFeature systemFields = ModelFeature.builder().id(IModelFeature.SYSTEM_FIELDS).name("系统字段").build();
         modelFeatureService.save(systemFields);
         ModelFeature masterModel = ModelFeature.builder().id(IModelFeature.MASTER_MODEL).name("主表").build();
