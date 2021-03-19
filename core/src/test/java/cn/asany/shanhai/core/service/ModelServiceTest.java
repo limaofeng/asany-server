@@ -22,7 +22,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.util.ArrayList;
 
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(classes = TestApplication.class)
+@SpringBootTest(classes = TestApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("dev")
 @Slf4j
 class ModelServiceTest {

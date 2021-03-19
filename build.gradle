@@ -102,19 +102,19 @@ subprojects {
     dependencies {
         compile "org.jfantasy:jfantasy-core:$LIB_JFAN_VER"
         compile "org.jfantasy:jfantasy-graphql:$LIB_JFAN_VER"
-        compile "org.mapstruct:mapstruct:${LIB_MAPSTRUCT_VER}"
-        compileOnly "org.projectlombok:lombok:${LIB_LOMBOK_VER}"
+        compile "org.mapstruct:mapstruct:$LIB_MAPSTRUCT_VER"
+        compileOnly "org.projectlombok:lombok:$LIB_LOMBOK_VER"
         annotationProcessor "org.projectlombok:lombok:$LIB_LOMBOK_VER"
         annotationProcessor "org.mapstruct:mapstruct-processor:$LIB_MAPSTRUCT_VER"
-        annotationProcessor "org.springframework.boot:spring-boot-configuration-processor:${LIB_SPRING_BOOT_VER}"
-        testCompile "com.graphql-java-kickstart:graphql-spring-boot-starter-test:$LIB_GRAPHQL_VER"
-        testCompileOnly "org.projectlombok:lombok:${LIB_LOMBOK_VER}"
+        annotationProcessor "org.springframework.boot:spring-boot-configuration-processor:$LIB_SPRING_BOOT_VER"
+        testCompileOnly "org.projectlombok:lombok:$LIB_LOMBOK_VER"
         testAnnotationProcessor "org.projectlombok:lombok:$LIB_LOMBOK_VER"
         testAnnotationProcessor "org.mapstruct:mapstruct-processor:$LIB_MAPSTRUCT_VER"
         implementation("org.springframework:spring-web")
-        implementation("org.springframework.boot:spring-boot-starter-test")
         implementation("com.fasterxml.jackson.core:jackson-databind")
         implementation("com.jayway.jsonpath:json-path")
+        testImplementation "com.graphql-java-kickstart:graphql-spring-boot-starter-test:$LIB_GRAPHQL_VER"
+        testImplementation("org.springframework.boot:spring-boot-starter-test")
         testImplementation("org.springframework.boot:spring-boot-starter-web")
     }
 
