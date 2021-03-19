@@ -10,7 +10,7 @@ import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.framework.spring.SpringContextUtil;
 
 import javax.persistence.*;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -92,8 +92,19 @@ public class ModelEndpoint extends BaseBusEntity {
             return this;
         }
 
-        public ModelEndpointBuilder arguments(ModelEndpointArgument... arguments) {
-            this.arguments = Arrays.asList(arguments);
+        public ModelEndpointBuilder argument(String name, String type) {
+            if (this.arguments == null) {
+                this.arguments = new ArrayList<>();
+            }
+            this.arguments.add(ModelEndpointArgument.builder().name(name).type(type).build());
+            return this;
+        }
+
+        public ModelEndpointBuilder argument(String name, String type, Object defaultValue) {
+            if (this.arguments == null) {
+                this.arguments = new ArrayList<>();
+            }
+            this.arguments.add(ModelEndpointArgument.builder().name(name).type(type).build());
             return this;
         }
     }

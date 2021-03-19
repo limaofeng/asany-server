@@ -85,6 +85,11 @@ public class ModelService {
             modelUtils.inject(model, field);
         }
 
+        // 检查设置 Endpoint
+        for (ModelEndpoint endpoint : model.getEndpoints()) {
+            modelUtils.inject(model, endpoint);
+        }
+
         // 检查 ModelRelation 设置
         for (ModelRelation relation : model.getRelations()) {
             relation.setModel(model);
@@ -115,6 +120,9 @@ public class ModelService {
         if (model.getType() != ModelType.OBJECT) {
             this.delete(model);
             return;
+        }
+        for (ModelEndpoint endpoint : model.getEndpoints()) {
+            this.modelEndpointDao.delete(endpoint);
         }
         List<Model> inputTypes = model.getRelations().stream().filter(item -> item.getType() == ModelConnectType.INPUT.type && ModelConnectType.INPUT.relation.equals(item.getRelation())).map(item -> item.getInverse()).collect(Collectors.toList());
         for (ModelRelation relation : model.getRelations()) {

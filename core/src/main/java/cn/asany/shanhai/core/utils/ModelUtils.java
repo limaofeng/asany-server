@@ -98,17 +98,23 @@ public class ModelUtils {
         }
 
         for (Model type : feature.getInputTypes(model)) {
-            if (!modelService.exists(type.getCode())) {
-                modelService.save(type);
+            Optional<Model> optional = modelService.findByCode(type.getCode());
+            if (optional.isPresent()) {
+                model.connect(optional.get(), ModelConnectType.INPUT);
+            } else {
+                model.connect(modelService.save(type), ModelConnectType.INPUT);
             }
-            model.connect(type, ModelConnectType.INPUT);
         }
 
-        List<ModelEndpoint> endpoints = model.getEndpoints();
         // 设置 Endpoint
-        for (ModelEndpoint endpoint : feature.getEndpoints(model.getMetadata())) {
-            endpoint.setModel(model);
-            endpoints.add(endpoint);
+        model.getEndpoints().addAll(feature.getEndpoints(model));
+    }
+
+    public void inject(Model model, ModelEndpoint endpoint) {
+        for (ModelEndpointArgument argument : ObjectUtil.defaultValue(endpoint.getArguments(), Collections.<ModelEndpointArgument>emptyList())) {
+            argument.setEndpoint(endpoint);
+            argument.setType(this.getModelByCode(argument.getType().getCode()));
         }
+        endpoint.setModel(model);
     }
 }

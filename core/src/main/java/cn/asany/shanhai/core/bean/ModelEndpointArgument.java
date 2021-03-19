@@ -40,4 +40,11 @@ public class ModelEndpointArgument {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ENDPOINT_ID", foreignKey = @ForeignKey(name = "FK_MODEL_ENDPOINT_ARGUMENT_EID"), nullable = false)
     private ModelEndpoint endpoint;
+
+    public static class ModelEndpointArgumentBuilder {
+        public ModelEndpointArgumentBuilder type(String type) {
+            this.type = Model.builder().code(type).build();
+            return this;
+        }
+    }
 }

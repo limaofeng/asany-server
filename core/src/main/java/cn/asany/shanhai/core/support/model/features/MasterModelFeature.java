@@ -1,11 +1,9 @@
 package cn.asany.shanhai.core.support.model.features;
 
-import cn.asany.shanhai.core.bean.Model;
-import cn.asany.shanhai.core.bean.ModelEndpoint;
-import cn.asany.shanhai.core.bean.ModelField;
-import cn.asany.shanhai.core.bean.ModelMetadata;
+import cn.asany.shanhai.core.bean.*;
 import cn.asany.shanhai.core.bean.enums.ModelEndpointType;
 import cn.asany.shanhai.core.bean.enums.ModelType;
+import cn.asany.shanhai.core.support.model.FieldType;
 import cn.asany.shanhai.core.support.model.IModelFeature;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -29,12 +27,12 @@ public class MasterModelFeature implements IModelFeature, InitializingBean {
     private List<RuleAndReplacement> plurals = new ArrayList<>();
 
     @Override
-    public List<ModelEndpoint> getEndpoints(ModelMetadata metadata) {
+    public List<ModelEndpoint> getEndpoints(Model model) {
         List<ModelEndpoint> endpoints = new ArrayList<>();
-        endpoints.add(buildCreateEndpoint(metadata));
-        endpoints.add(buildUpdateEndpoint(metadata));
-        endpoints.add(buildGetEndpoint(metadata));
-        endpoints.add(buildFindPagerEndpoint(metadata));
+        endpoints.add(buildCreateEndpoint(model));
+        endpoints.add(buildUpdateEndpoint(model));
+        endpoints.add(buildGetEndpoint(model));
+        endpoints.add(buildFindPagerEndpoint(model));
         return endpoints;
     }
 
@@ -51,57 +49,68 @@ public class MasterModelFeature implements IModelFeature, InitializingBean {
         ).build();
     }
 
+    private static String getCreateInputTypeName(Model model) {
+        return model.getCode() + "CreateInput";
+    }
+
+    private static String getUpdateInputTypeName(Model model) {
+        return model.getCode() + "UpdateInput";
+    }
+
     @Override
     public List<Model> getInputTypes(Model model) {
-        Model inputTypeOfCreate = this.buildInputType(model.getCode() + "CreateInput", model.getName() + "录入对象", model.getFields());
-        Model inputTypeOfUpdate = this.buildInputType(model.getCode() + "UpdateInput", model.getName() + "更新对象", model.getFields());
+        Model inputTypeOfCreate = this.buildInputType(getCreateInputTypeName(model), model.getName() + "录入对象", model.getFields());
+        Model inputTypeOfUpdate = this.buildInputType(getUpdateInputTypeName(model), model.getName() + "更新对象", model.getFields());
         return new ArrayList<>(Arrays.asList(inputTypeOfCreate, inputTypeOfUpdate));
     }
 
-    private ModelEndpoint buildCreateEndpoint(ModelMetadata metadata) {
+    private ModelEndpoint buildCreateEndpoint(Model model) {
         ModelEndpoint endpoint = ModelEndpoint.builder()
             .type(ModelEndpointType.MUTATION)
-            .code("create" + StringUtil.upperCaseFirst(metadata.getModel().getCode()))
-            .name("新增" + metadata.getModel().getName())
-//            .arguments(ModelEndpointArgument.builder().name("").type("").build())
-            .returnType(metadata.getModel())
-            .model(metadata.getModel())
+            .code("create" + StringUtil.upperCaseFirst(model.getCode()))
+            .name("新增" + model.getName())
+            .argument("input", getCreateInputTypeName(model))
+            .returnType(model)
+            .model(model)
             .build();
         endpoint.getReturnType().setEndpoint(endpoint);
         return endpoint;
     }
 
-    private ModelEndpoint buildUpdateEndpoint(ModelMetadata metadata) {
+    private ModelEndpoint buildUpdateEndpoint(Model model) {
         ModelEndpoint endpoint = ModelEndpoint.builder()
             .type(ModelEndpointType.MUTATION)
-            .code("update" + StringUtil.upperCaseFirst(metadata.getModel().getCode()))
-            .name("修改" + metadata.getModel().getName())
-            .returnType(metadata.getModel())
-            .model(metadata.getModel())
+            .code("update" + StringUtil.upperCaseFirst(model.getCode()))
+            .name("修改" + model.getName())
+            .argument("id", FieldType.ID.getCode())
+            .argument("input", getUpdateInputTypeName(model))
+            .argument("merge", FieldType.Boolean.getCode(), true)
+            .returnType(model)
+            .model(model)
             .build();
         endpoint.getReturnType().setEndpoint(endpoint);
         return endpoint;
     }
 
-    private ModelEndpoint buildGetEndpoint(ModelMetadata metadata) {
+    private ModelEndpoint buildGetEndpoint(Model model) {
         ModelEndpoint endpoint = ModelEndpoint.builder()
             .type(ModelEndpointType.MUTATION)
-            .code(StringUtil.lowerCaseFirst(this.pluralize(metadata.getModel().getCode())))
-            .name("获取" + metadata.getModel().getName())
-            .returnType(metadata.getModel())
-            .model(metadata.getModel())
+            .code(StringUtil.lowerCaseFirst(this.pluralize(model.getCode())))
+            .name("获取" + model.getName())
+            .returnType(model)
+            .model(model)
             .build();
         endpoint.getReturnType().setEndpoint(endpoint);
         return endpoint;
     }
 
-    private ModelEndpoint buildFindPagerEndpoint(ModelMetadata metadata) {
+    private ModelEndpoint buildFindPagerEndpoint(Model model) {
         ModelEndpoint endpoint = ModelEndpoint.builder()
             .type(ModelEndpointType.MUTATION)
-            .code(StringUtil.lowerCaseFirst(metadata.getModel().getCode()))
-            .name(metadata.getModel().getName() + "分页查询")
-            .returnType(metadata.getModel())
-            .model(metadata.getModel())
+            .code(StringUtil.lowerCaseFirst(model.getCode()))
+            .name(model.getName() + "分页查询")
+            .returnType(model)
+            .model(model)
             .build();
         endpoint.getReturnType().setEndpoint(endpoint);
         return endpoint;
