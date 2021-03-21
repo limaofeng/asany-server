@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = false, of = "id")
 @Entity
 @Table(name = "SH_MODEL")
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
@@ -74,7 +74,7 @@ public class Model extends BaseBusEntity {
     private List<ModelFeature> features;
 
     @OrderBy("sort asc ")
-    @OneToMany(mappedBy = "model", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "model", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE}, fetch = FetchType.LAZY)
     private List<ModelField> fields;
 
     @OneToMany(mappedBy = "model", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.LAZY)
@@ -91,7 +91,7 @@ public class Model extends BaseBusEntity {
         if (this.relations == null) {
             this.relations = new ArrayList<>();
         }
-        Optional<ModelRelation> optional = this.relations.stream().filter(item -> item.getInverse().getCode().equals(model.getCode()) && item.getRelation().equals(connectType.relation) && item.getType().equals(connectType)).findAny();
+        Optional<ModelRelation> optional = this.relations.stream().filter(item -> item.getInverse().getCode().equals(model.getCode()) && item.getRelation().equals(connectType.relation) && item.getType().equals(connectType.type)).findAny();
         if (optional.isPresent()) {
             return;
         }
@@ -115,6 +115,22 @@ public class Model extends BaseBusEntity {
 
         public ModelBuilder features(String... features) {
             this.features = Arrays.stream(features).map(id -> ModelFeature.builder().id(id).build()).collect(Collectors.toList());
+            return this;
+        }
+
+        public ModelBuilder field(Long id, String code, String name, Model type) {
+            if (this.fields == null) {
+                this.fields = new ArrayList<>();
+            }
+            this.fields.add(ModelField.builder().id(id).code(code).name(name).type(type).build());
+            return this;
+        }
+
+        public ModelBuilder field(String code, String name, Model type) {
+            if (this.fields == null) {
+                this.fields = new ArrayList<>();
+            }
+            this.fields.add(ModelField.builder().code(code).name(name).type(type).build());
             return this;
         }
 

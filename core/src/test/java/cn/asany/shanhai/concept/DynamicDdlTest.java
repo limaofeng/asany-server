@@ -1,15 +1,16 @@
 package cn.asany.shanhai.concept;
 
 import cn.asany.shanhai.TestApplication;
-import cn.asany.shanhai.core.service.SystemFieldFillInterceptor;
-import cn.asany.shanhai.core.support.model.RuntimeMetadataRegistry;
+import cn.asany.shanhai.core.support.dao.SystemFieldFillInterceptor;
 import lombok.Builder;
 import lombok.Data;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.boot.Metadata;
+import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.internal.SessionFactoryOptionsBuilder;
+import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.query.Query;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.junit.jupiter.api.Test;
@@ -18,6 +19,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 import javax.persistence.EntityManagerFactory;
+import java.io.ByteArrayInputStream;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -31,8 +33,8 @@ public class DynamicDdlTest {
     @Autowired
     private EntityManagerFactory entityManagerFactory;
 
-    @Autowired
-    private RuntimeMetadataRegistry runtimeMetadataRegistry;
+//    @Autowired
+//    private RuntimeMetadataRegistry runtimeMetadataRegistry;
     /**
      * 运行期的持久化实体没有必要一定表示为像POJO类或JavaBean对象那样的形式。
      * Hibernate也支持动态模型在运行期使用Map）和象DOM4J的树模型那样的实体表示。
@@ -58,10 +60,10 @@ public class DynamicDdlTest {
     @Test
     public void testDynamicDdl() {
         SessionFactory sessionFactory = entityManagerFactory.unwrap(SessionFactory.class);
-//        StandardServiceRegistry serviceRegistry = sessionFactory.getSessionFactoryOptions().getServiceRegistry();
-//        MetadataSources metadataSources = new MetadataSources(serviceRegistry);
-        sessionFactory.getSessionFactoryOptions();
-        Metadata metadata = runtimeMetadataRegistry.addMapping(XML_MAPPING);
+        StandardServiceRegistry serviceRegistry = sessionFactory.getSessionFactoryOptions().getServiceRegistry();
+        MetadataSources metadataSources = new MetadataSources(serviceRegistry);
+        metadataSources.addInputStream(new ByteArrayInputStream(XML_MAPPING.getBytes()));
+        Metadata metadata = metadataSources.buildMetadata();
         //读取映射文件
 
         //创建会话工厂

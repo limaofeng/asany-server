@@ -12,7 +12,7 @@ import java.io.Serializable;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = false, of = "id")
 @Entity
 @Table(name = "SH_MODEL_METADATA")
 @JsonInclude(value = JsonInclude.Include.NON_NULL)

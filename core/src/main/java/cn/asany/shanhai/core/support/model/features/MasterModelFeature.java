@@ -38,12 +38,11 @@ public class MasterModelFeature implements IModelFeature, InitializingBean {
 
     public Model buildInputType(String code, String name, List<ModelField> fields) {
         return Model.builder().type(ModelType.INPUT).code(code).name(name).fields(
-            fields.stream().filter(item -> !item.getIsPrimaryKey()).map(item ->
+            fields.stream().filter(item -> !item.getPrimaryKey() && !item.getSystem()).map(item ->
                 ModelField.builder()
                     .code(item.getCode())
                     .name(item.getName())
                     .type(item.getType())
-                    .isPrimaryKey(item.getIsPrimaryKey())
                     .build())
                 .collect(Collectors.toList())
         ).build();

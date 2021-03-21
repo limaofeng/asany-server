@@ -16,7 +16,7 @@ import javax.persistence.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = false, of = "id")
 @Entity
 @Table(name = "SH_MODEL_RELATION")
 public class ModelRelation extends BaseBusEntity {

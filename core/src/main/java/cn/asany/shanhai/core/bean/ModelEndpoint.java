@@ -17,7 +17,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = false, of = "id")
 @Entity
 @Table(name = "SH_MODEL_ENDPOINT")
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
@@ -82,13 +82,13 @@ public class ModelEndpoint extends BaseBusEntity {
 
         public ModelEndpointBuilder returnType(Boolean multiple, String type) {
             ModelUtils modelUtils = SpringContextUtil.getBeanByType(ModelUtils.class);
-            this.returnType = ModelEndpointReturnType.builder().isList(multiple).type(modelUtils.getModelByCode(type)).build();
+            this.returnType = ModelEndpointReturnType.builder().list(multiple).type(modelUtils.getModelByCode(type)).build();
             return this;
         }
 
         public ModelEndpointBuilder returnType(Boolean required, Boolean multiple, String type) {
             ModelUtils modelUtils = SpringContextUtil.getBeanByType(ModelUtils.class);
-            this.returnType = ModelEndpointReturnType.builder().isRequired(required).isList(multiple).type(modelUtils.getModelByCode(type)).build();
+            this.returnType = ModelEndpointReturnType.builder().required(required).list(multiple).type(modelUtils.getModelByCode(type)).build();
             return this;
         }
 

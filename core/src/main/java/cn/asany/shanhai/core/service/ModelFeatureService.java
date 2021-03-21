@@ -14,6 +14,14 @@ public class ModelFeatureService {
     @Autowired
     private ModelFeatureDao modelFeatureDao;
 
+    public void saveOrUpdate(ModelFeature feature) {
+        if (modelFeatureDao.existsById(feature.getId())) {
+            modelFeatureDao.update(feature, true);
+        } else {
+            modelFeatureDao.save(feature);
+        }
+    }
+
     public void save(ModelFeature feature) {
         modelFeatureDao.save(feature);
     }
@@ -25,4 +33,5 @@ public class ModelFeatureService {
     public Optional<ModelFeature> get(String id) {
         return modelFeatureDao.findById(id);
     }
+
 }

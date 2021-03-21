@@ -1,4 +1,4 @@
-package cn.asany.shanhai.core.service;
+package cn.asany.shanhai.core.support.dao;
 
 import org.hibernate.EmptyInterceptor;
 import org.hibernate.type.Type;

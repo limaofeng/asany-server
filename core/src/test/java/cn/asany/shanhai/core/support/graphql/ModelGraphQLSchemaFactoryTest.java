@@ -9,16 +9,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = TestApplication.class)
 @ActiveProfiles("dev")
 @Slf4j
-class RuntimeGraphQLSchemaFactoryTest {
+class ModelGraphQLSchemaFactoryTest {
 
     @Autowired
-    private RuntimeGraphQLSchemaFactory graphQLSchemaFactory;
+    private ModelGraphQLSchemaFactory graphQLSchemaFactory;
 
     @Test
     void buildScheme() {

@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class RuntimeGraphQLSchemaFactory implements InitializingBean {
+public class ModelGraphQLSchemaFactory implements InitializingBean {
 
     @Autowired
     public ModelService modelService;

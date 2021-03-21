@@ -18,7 +18,7 @@ import javax.persistence.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = false, of = "id")
 @Entity
 @Table(name = "SYS_USER")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})

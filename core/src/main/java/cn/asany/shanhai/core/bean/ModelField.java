@@ -11,10 +11,11 @@ import javax.persistence.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(of = "id")
+@EqualsAndHashCode(callSuper = false, of = "id")
 @Entity
 @Table(name = "SH_MODEL_FIELD", uniqueConstraints = @UniqueConstraint(columnNames = {"MODEL_ID", "CODE"}, name = "UK_MODEL_FIELD_CODE"))
 public class ModelField extends BaseBusEntity {
+
     /**
      * id主键
      */
@@ -48,13 +49,13 @@ public class ModelField extends BaseBusEntity {
      */
     @Builder.Default
     @Column(name = "IS_REQUIRED")
-    private Boolean isRequired = false;
+    private Boolean required = false;
     /**
      * 是否主键
      */
     @Builder.Default
     @Column(name = "IS_PRIMARY_KEY", length = 10, nullable = false)
-    private Boolean isPrimaryKey = false;
+    private Boolean primaryKey = false;
     /**
      * 字段类型
      */
@@ -66,13 +67,20 @@ public class ModelField extends BaseBusEntity {
      */
     @Builder.Default
     @Column(name = "IS_UNIQUE", length = 1)
-    private Boolean isUnique = false;
+    private Boolean unique = false;
     /**
      * 存储值为列表，而不是单个值
      */
     @Builder.Default
     @Column(name = "IS_LIST", length = 1)
-    private Boolean isList = false;
+    private Boolean list = false;
+    /**
+     * 是否系统字段
+     */
+    @Builder.Default
+    @Column(name = "IS_SYSTEM", length = 1)
+    private Boolean system = false;
+
     /**
      * 序号
      */
@@ -87,7 +95,7 @@ public class ModelField extends BaseBusEntity {
     /**
      * 元数据
      */
-    @OneToOne(mappedBy = "field", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @OneToOne(mappedBy = "field", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
     private ModelFieldMetadata metadata;
 
     public static class ModelFieldBuilder {
@@ -117,11 +125,12 @@ public class ModelField extends BaseBusEntity {
             ", name='" + name + '\'' +
             ", description='" + description + '\'' +
             ", defaultValue='" + defaultValue + '\'' +
-            ", isRequired=" + isRequired +
-            ", isPrimaryKey=" + isPrimaryKey +
+            ", required=" + required +
+            ", primaryKey=" + primaryKey +
             ", type='" + type + '\'' +
-            ", isUnique=" + isUnique +
-            ", isList=" + isList +
+            ", unique=" + unique +
+            ", system=" + system +
+            ", list=" + list +
             ", sort=" + sort +
             '}';
     }

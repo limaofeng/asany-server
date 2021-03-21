@@ -1,7 +1,8 @@
 package cn.asany.shanhai.core.autoconfigure;
 
-import cn.asany.shanhai.core.support.RuntimeJpaRepositoryFactory;
-import cn.asany.shanhai.core.support.graphql.RuntimeGraphQLSchemaFactory;
+import cn.asany.shanhai.core.support.dao.ModelJpaRepositoryFactory;
+import cn.asany.shanhai.core.support.dao.ModelSessionFactory;
+import cn.asany.shanhai.core.support.graphql.ModelGraphQLSchemaFactory;
 import cn.asany.shanhai.core.support.model.*;
 import cn.asany.shanhai.core.utils.HibernateMappingHelper;
 import org.springframework.context.annotation.Bean;
@@ -23,8 +24,8 @@ import java.util.List;
 public class ModelAutoConfiguration {
 
     @Bean
-    public RuntimeGraphQLSchemaFactory buildRuntimeGraphQLSchemaFactory() {
-        return new RuntimeGraphQLSchemaFactory();
+    public ModelGraphQLSchemaFactory buildRuntimeGraphQLSchemaFactory() {
+        return new ModelGraphQLSchemaFactory();
     }
 
     @Bean
@@ -35,14 +36,14 @@ public class ModelAutoConfiguration {
     }
 
     @Bean
-    public RuntimeMetadataRegistry buildRuntimeMetadataRegistry() {
-        RuntimeMetadataRegistry registry = new RuntimeMetadataRegistry();
-        return registry;
+    public ModelSessionFactory buildRuntimeSessionFactory() {
+        ModelSessionFactory sessionFactory = new ModelSessionFactory();
+        return sessionFactory;
     }
 
     @Bean
-    public RuntimeJpaRepositoryFactory buildRuntimeJpaRepositoryFactory() {
-        RuntimeJpaRepositoryFactory registry = new RuntimeJpaRepositoryFactory();
+    public ModelJpaRepositoryFactory buildRuntimeJpaRepositoryFactory() {
+        ModelJpaRepositoryFactory registry = new ModelJpaRepositoryFactory();
         return registry;
     }
 

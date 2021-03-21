@@ -10,6 +10,7 @@ import cn.asany.shanhai.core.support.model.IModelFeature;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.jfantasy.framework.dao.Pager;
+import org.jfantasy.framework.util.common.ObjectUtil;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -56,33 +57,42 @@ class ModelServiceTest {
     }
 
 
-    @Test
-    void save() {
+    private Model testEmployee() {
         Model model = Model.builder()
             .code("Employee")
             .name("员工")
+            .field("name", "名称", FieldType.String)
             .features(IModelFeature.MASTER_MODEL, IModelFeature.SYSTEM_FIELDS)
-            .fields(ModelField.builder()
-                .code("name")
-                .name("名称")
-                .type(FieldType.String)
-                .build())
             .build();
-        model = modelService.save(model);
+        return modelService.save(model);
+    }
+
+    @Test
+    void save() {
+        Model model = testEmployee();
         log.debug("新增成功:" + model);
     }
 
     @Test
-    void publish() {
-        this.save();
-        Pager<Model> pager = modelService.findPager(new Pager<>(), new ArrayList<>());
-        Optional<Model> optional = pager.getPageItems().stream().findFirst();
-        if (!optional.isPresent()) {
-            return;
-        }
-        Model model = optional.get();
-        modelService.publish(model.getId());
+    void update() {
+        Model original = this.testEmployee();
+        ModelField nameField = ObjectUtil.find(original.getFields(), "code", "name");
+        Model model = Model.builder()
+            .id(original.getId())
+            .code("Employee")
+            .name("员工")
+            .field(nameField.getId(), "name", "名称", FieldType.String)
+            .field("age", "年龄", FieldType.Int)
+            .features(IModelFeature.MASTER_MODEL, IModelFeature.SYSTEM_FIELDS)
+            .build();
+        model = modelService.update(model);
+    }
 
+    @Test
+    void publish() {
+        Optional<Model> optional = modelService.findByCode("Employee");
+        Model model = optional.orElseGet(() -> this.testEmployee());
+        modelService.publish(model.getId());
         log.debug("Hibernate HBM XML:" + model.getMetadata().getHbm());
     }
 

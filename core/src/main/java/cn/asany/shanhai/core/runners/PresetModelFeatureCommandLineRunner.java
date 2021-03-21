@@ -21,8 +21,8 @@ public class PresetModelFeatureCommandLineRunner implements CommandLineRunner {
     @Override
     public void run(String... args) {
         ModelFeature systemFields = ModelFeature.builder().id(IModelFeature.SYSTEM_FIELDS).name("系统字段").build();
-        modelFeatureService.save(systemFields);
+        modelFeatureService.saveOrUpdate(systemFields);
         ModelFeature masterModel = ModelFeature.builder().id(IModelFeature.MASTER_MODEL).name("主表").build();
-        modelFeatureService.save(masterModel);
+        modelFeatureService.saveOrUpdate(masterModel);
     }
 }

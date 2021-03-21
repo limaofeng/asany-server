@@ -5,11 +5,16 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 
+/**
+ * 接口返回类型
+ *
+ * @author limaofeng
+ */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = false, of = "id")
 @Entity
 @Table(name = "SH_MODEL_ENDPOINT_RETURN_TYPE")
 public class ModelEndpointReturnType {
@@ -23,13 +28,13 @@ public class ModelEndpointReturnType {
      */
     @Builder.Default
     @Column(name = "IS_REQUIRED", length = 1)
-    private Boolean isRequired = false;
+    private Boolean required = false;
     /**
      * 存储值为列表，而不是单个值
      */
     @Builder.Default
     @Column(name = "IS_LIST", length = 1)
-    private Boolean isList = false;
+    private Boolean list = false;
     /**
      * 类型
      */

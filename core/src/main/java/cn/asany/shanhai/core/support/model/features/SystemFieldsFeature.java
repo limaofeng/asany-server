@@ -23,10 +23,10 @@ public class SystemFieldsFeature implements IModelFeature {
     @Override
     public List<ModelField> fields() {
         List<ModelField> fields = new ArrayList<>();
-        fields.add(ModelField.builder().code("creator").name("创建人").type(FieldType.Int).build());
-        fields.add(ModelField.builder().code("createdAt").name("创建时间").type(FieldType.Date).build());
-        fields.add(ModelField.builder().code("updator").name("修改人").type(FieldType.Int).build());
-        fields.add(ModelField.builder().code("updatedAt").name("修改时间").type(FieldType.Date).build());
+        fields.add(ModelField.builder().code("creator").name("创建人").system(true).type(FieldType.Int).build());
+        fields.add(ModelField.builder().code("createdAt").name("创建时间").system(true).type(FieldType.Date).build());
+        fields.add(ModelField.builder().code("updator").name("修改人").system(true).type(FieldType.Int).build());
+        fields.add(ModelField.builder().code("updatedAt").name("修改时间").system(true).type(FieldType.Date).build());
         return fields;
     }
 

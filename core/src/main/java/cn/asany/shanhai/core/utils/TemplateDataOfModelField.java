@@ -11,7 +11,7 @@ public class TemplateDataOfModelField {
     private ModelField field;
 
     public String getName() {
-        return field.getName();
+        return field.getCode();
     }
 
     public String getDatabaseColumnName() {

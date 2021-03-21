@@ -5,15 +5,16 @@ import cn.asany.shanhai.core.bean.enums.ModelConnectType;
 import cn.asany.shanhai.core.bean.enums.ModelStatus;
 import cn.asany.shanhai.core.bean.enums.ModelType;
 import cn.asany.shanhai.core.dao.*;
-import cn.asany.shanhai.core.support.RuntimeJpaRepositoryFactory;
+import cn.asany.shanhai.core.support.dao.ModelJpaRepositoryFactory;
 import cn.asany.shanhai.core.support.model.ModelFeatureRegistry;
-import cn.asany.shanhai.core.support.model.RuntimeMetadataRegistry;
 import cn.asany.shanhai.core.utils.HibernateMappingHelper;
 import cn.asany.shanhai.core.utils.ModelUtils;
 import lombok.SneakyThrows;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.error.ValidationException;
+import org.jfantasy.framework.util.common.ObjectUtil;
+import org.jfantasy.framework.util.common.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Sort;
@@ -39,12 +40,12 @@ public class ModelService {
     private ModelEndpointDao modelEndpointDao;
     @Autowired
     private ModelRelationDao modelRelationDao;
-    @Autowired
-    private RuntimeMetadataRegistry metadataRegistry;
+    //    @Autowired
+//    private RuntimeMetadataRegistry metadataRegistry;
     @Autowired
     private HibernateMappingHelper hibernateMappingHelper;
     @Autowired
-    private RuntimeJpaRepositoryFactory jpaRepositoryFactory;
+    private ModelJpaRepositoryFactory jpaRepositoryFactory;
     @Autowired
     private ModelFeatureService modelFeatureService;
     @Autowired
@@ -59,16 +60,26 @@ public class ModelService {
     @SneakyThrows
     public Model save(Model model) {
         // 检查 Model Metadata 设置
-        modelUtils.inject(model);
+        modelUtils.initialize(model);
 
         if (model.getType() == ModelType.SCALAR) {
             return modelDao.save(model);
         }
 
+        // 检查 ModelField Metadata 设置
+        for (ModelField field : model.getFields()) {
+            modelUtils.install(model, field);
+        }
+
+        if (model.getType() == ModelType.INPUT) {
+            return modelDao.save(model);
+        }
+
         // 检查主键
         Optional<ModelField> idFieldOptional = modelUtils.getId(model);
-        if (model.getType() == ModelType.OBJECT && !idFieldOptional.isPresent()) {
-            model.getFields().add(0, modelUtils.generatePrimaryKeyField());
+        if (!idFieldOptional.isPresent()) {
+            ModelField idField = modelUtils.generatePrimaryKeyField();
+            model.getFields().add(0, modelUtils.install(model, idField));
         }
 
         // 特征处理
@@ -77,17 +88,12 @@ public class ModelService {
             if (!optionalModelFeature.isPresent()) {
                 throw new ValidationException("0000000", String.format("模型特征[%s]不存在", feature.getId()));
             }
-            modelUtils.inject(model, modelFeatureRegistry.get(feature.getId()));
-        }
-
-        // 检查 ModelField Metadata 设置
-        for (ModelField field : model.getFields()) {
-            modelUtils.inject(model, field);
+            modelUtils.install(model, feature);
         }
 
         // 检查设置 Endpoint
         for (ModelEndpoint endpoint : model.getEndpoints()) {
-            modelUtils.inject(model, endpoint);
+            modelUtils.install(model, endpoint);
         }
 
         // 检查 ModelRelation 设置
@@ -98,11 +104,65 @@ public class ModelService {
         return modelDao.save(model);
     }
 
+    public Model update(Model model) {
+        modelUtils.initialize(model);
+
+        if (ObjectUtil.isNull(model.getId()) && StringUtil.isBlank(model.getCode())) {
+            throw new ValidationException("Model 的 [ ID, CODE ] 不能同时为空");
+        }
+        Optional<Model> optionalOriginal = model.getId() != null ? modelDao.findById(model.getId()) : findByCode(model.getCode());
+        if (!optionalOriginal.isPresent()) {
+            throw new ValidationException("Model 的 [ ID = " + model.getId() + ", CODE = " + model.getCode() + " ] 没有查询到对应的数据");
+        }
+        Model original = optionalOriginal.get();
+
+        original.setCode(model.getCode());
+        original.setName(model.getName());
+
+        // 字段处理
+        modelUtils.mergeFields(original, model.getFields());
+
+        if (model.getType() != ModelType.OBJECT) {
+            return this.modelDao.update(original);
+        }
+
+        modelUtils.mergeFeatures(original, model.getFeatures());
+
+        // 字段处理 - 检查约束及元数据初始化
+        for (ModelField field : original.getFields()) {
+            modelUtils.install(original, field);
+        }
+
+        // 检查设置 Endpoint
+//        for (ModelEndpoint endpoint : original.getEndpoints()) {
+//            modelUtils.install(original, endpoint);
+//        }
+
+        // 检查 ModelRelation 设置
+//        for (ModelRelation relation : original.getRelations()) {
+//            relation.setModel(original);
+//        }
+
+//        modelUtils.uninstall();
+
+//        original.getFeatures().stream().map(item -> item.getId());
+//        model.getFeatures().stream().map(item -> item.getId());
+
+        // 特征处理
+//        for (ModelFeature feature : model.getFeatures()) {
+//            Optional<ModelFeature> optionalModelFeature = modelFeatureService.get(feature.getId());
+//            if (!optionalModelFeature.isPresent()) {
+//                throw new ValidationException("0000000", String.format("模型特征[%s]不存在", feature.getId()));
+//            }
+//            modelUtils.install(model, modelFeatureRegistry.get(feature.getId()));
+//        }
+        return this.modelDao.update(original);
+    }
+
     public void publish(Long id) {
         Model model = modelDao.getOne(id);
         ModelMetadata metadata = model.getMetadata();
         String xml = hibernateMappingHelper.generateXML(model);
-        metadataRegistry.addMapping(xml);
         metadata.setHbm(xml);
         model.setStatus(ModelStatus.PUBLISHED);
         this.modelDao.update(model);
@@ -145,9 +205,17 @@ public class ModelService {
         return this.modelDao.findAll();
     }
 
+    public List<Model> findAll(ModelType type) {
+        return this.modelDao.findAll(Example.of(Model.builder().type(type).build()));
+    }
+
     public void saveInBatch(Model... models) {
         for (Model model : models) {
-            this.save(model);
+            if (this.modelDao.existsById(model.getId())) {
+                this.modelDao.update(model, true);
+            } else {
+                this.save(model);
+            }
         }
     }
 
@@ -158,4 +226,6 @@ public class ModelService {
     public boolean exists(String code) {
         return this.modelDao.exists(Example.of(Model.builder().code(code).build()));
     }
+
+
 }
