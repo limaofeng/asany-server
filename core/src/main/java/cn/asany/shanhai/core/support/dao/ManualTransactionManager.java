@@ -9,6 +9,10 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
 
 public class ManualTransactionManager {
 
+    /**
+     * TODO 在 bindSession 的同时，应该将 sessionFactory 缓存到上下文对象中，因为 sessionFactory 可能会动态改变。
+     * 所以 ModelJpaRepository 的 SessionFactory 对象，应该从 上下文对象中 获取
+     */
     private SessionFactory sessionFactory;
 
     public ManualTransactionManager(SessionFactory sessionFactory) {
