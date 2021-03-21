@@ -18,6 +18,7 @@ import java.util.EnumSet;
 
 /**
  * Model SessionFactory
+ *
  * @author limaofeng
  */
 public class ModelSessionFactory implements InitializingBean {
@@ -54,4 +55,11 @@ public class ModelSessionFactory implements InitializingBean {
         return sessionFactory.openSession();
     }
 
+    public Session getCurrentSession() {
+        return sessionFactory.getCurrentSession();
+    }
+
+    public SessionFactory real() {
+        return this.sessionFactory;
+    }
 }
