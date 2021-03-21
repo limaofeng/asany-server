@@ -3,7 +3,6 @@ package cn.asany.shanhai.core.utils;
 import cn.asany.shanhai.core.bean.*;
 import cn.asany.shanhai.core.bean.enums.ModelConnectType;
 import cn.asany.shanhai.core.bean.enums.ModelType;
-import cn.asany.shanhai.core.dao.ModelFeatureDao;
 import cn.asany.shanhai.core.dao.ModelFieldDao;
 import cn.asany.shanhai.core.service.ModelFeatureService;
 import cn.asany.shanhai.core.service.ModelService;
@@ -39,8 +38,6 @@ public class ModelUtils {
     private ModelFeatureRegistry modelFeatureRegistry;
     @Autowired
     private ModelFieldDao modelFieldDao;
-    @Autowired
-    private ModelFeatureDao modelFeatureDao;
 
     private OgnlUtil ognlUtil = OgnlUtil.getInstance();
 
@@ -154,13 +151,12 @@ public class ModelUtils {
             if (ObjectUtil.exists(fields, "code", field.getCode())) {
                 continue;
             }
-            field.setModel(model);
-            fields.add(field);
+            fields.add(this.install(model, field));
         }
 
         for (Model type : feature.getInputTypes(model)) {
             Optional<Model> optional = modelService.findByCode(type.getCode());
-            if (optional.isPresent()) {
+            if (optional.isPresent()) { // 如果之前存在对象，查询填充 ID 字段
                 Model oldType = optional.get();
                 type.setId(oldType.getId());
                 for (ModelField field : type.getFields()) {
@@ -186,8 +182,7 @@ public class ModelUtils {
         for (ModelField field : feature.fields()) {
             this.uninstall(model, field);
         }
-        ModelFeature removeFeature = ObjectUtil.remove(model.getFeatures(), "id", modelFeature.getId());
-        modelFeatureDao.delete(removeFeature);
+        ObjectUtil.remove(model.getFeatures(), "id", modelFeature.getId());
     }
 
     public void install(Model model, ModelEndpoint endpoint) {

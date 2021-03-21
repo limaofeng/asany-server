@@ -83,7 +83,7 @@ class ModelServiceTest {
             .name("员工")
             .field(nameField.getId(), "name", "名称", FieldType.String)
             .field("age", "年龄", FieldType.Int)
-            .features(IModelFeature.MASTER_MODEL, IModelFeature.SYSTEM_FIELDS)
+            .features(IModelFeature.MASTER_MODEL)
             .build();
         model = modelService.update(model);
     }

@@ -119,43 +119,16 @@ public class ModelService {
         original.setCode(model.getCode());
         original.setName(model.getName());
 
-        // 字段处理
+        // 合并字段
         modelUtils.mergeFields(original, model.getFields());
 
         if (model.getType() != ModelType.OBJECT) {
             return this.modelDao.update(original);
         }
 
+        // 合并特征
         modelUtils.mergeFeatures(original, model.getFeatures());
 
-        // 字段处理 - 检查约束及元数据初始化
-        for (ModelField field : original.getFields()) {
-            modelUtils.install(original, field);
-        }
-
-        // 检查设置 Endpoint
-//        for (ModelEndpoint endpoint : original.getEndpoints()) {
-//            modelUtils.install(original, endpoint);
-//        }
-
-        // 检查 ModelRelation 设置
-//        for (ModelRelation relation : original.getRelations()) {
-//            relation.setModel(original);
-//        }
-
-//        modelUtils.uninstall();
-
-//        original.getFeatures().stream().map(item -> item.getId());
-//        model.getFeatures().stream().map(item -> item.getId());
-
-        // 特征处理
-//        for (ModelFeature feature : model.getFeatures()) {
-//            Optional<ModelFeature> optionalModelFeature = modelFeatureService.get(feature.getId());
-//            if (!optionalModelFeature.isPresent()) {
-//                throw new ValidationException("0000000", String.format("模型特征[%s]不存在", feature.getId()));
-//            }
-//            modelUtils.install(model, modelFeatureRegistry.get(feature.getId()));
-//        }
         return this.modelDao.update(original);
     }
 
