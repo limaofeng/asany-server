@@ -5,7 +5,7 @@ import cn.asany.shanhai.core.bean.enums.ModelConnectType;
 import cn.asany.shanhai.core.bean.enums.ModelStatus;
 import cn.asany.shanhai.core.bean.enums.ModelType;
 import cn.asany.shanhai.core.dao.*;
-import cn.asany.shanhai.core.support.dao.ModelJpaRepositoryFactory;
+import cn.asany.shanhai.core.support.dao.ModelRepositoryFactory;
 import cn.asany.shanhai.core.support.model.ModelFeatureRegistry;
 import cn.asany.shanhai.core.utils.HibernateMappingHelper;
 import cn.asany.shanhai.core.utils.ModelUtils;
@@ -21,6 +21,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -45,7 +48,7 @@ public class ModelService {
     @Autowired
     private HibernateMappingHelper hibernateMappingHelper;
     @Autowired
-    private ModelJpaRepositoryFactory jpaRepositoryFactory;
+    private ModelRepositoryFactory jpaRepositoryFactory;
     @Autowired
     private ModelFeatureService modelFeatureService;
     @Autowired
@@ -178,7 +181,8 @@ public class ModelService {
         return this.modelDao.findAll();
     }
 
-    public List<Model> findAll(ModelType type) {
+    public List<Model> findAll(final ModelType... types) {
+        this.modelDao.findAll((Root root, CriteriaQuery query, CriteriaBuilder builder) -> root.get("type").in(types));
         return this.modelDao.findAll(Example.of(Model.builder().type(type).build()));
     }
 

@@ -1,8 +1,7 @@
 package cn.asany.shanhai.core.autoconfigure;
 
-import cn.asany.shanhai.core.support.dao.ModelJpaRepositoryFactory;
+import cn.asany.shanhai.core.support.dao.ModelRepositoryFactory;
 import cn.asany.shanhai.core.support.dao.ModelSessionFactory;
-import cn.asany.shanhai.core.support.graphql.ModelGraphQLSchemaFactory;
 import cn.asany.shanhai.core.support.model.*;
 import cn.asany.shanhai.core.utils.HibernateMappingHelper;
 import org.springframework.context.annotation.Bean;
@@ -42,8 +41,8 @@ public class ModelAutoConfiguration {
     }
 
     @Bean
-    public ModelJpaRepositoryFactory buildRuntimeJpaRepositoryFactory() {
-        ModelJpaRepositoryFactory registry = new ModelJpaRepositoryFactory();
+    public ModelRepositoryFactory buildRuntimeJpaRepositoryFactory() {
+        ModelRepositoryFactory registry = new ModelRepositoryFactory();
         return registry;
     }
 

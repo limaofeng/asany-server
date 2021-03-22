@@ -2,6 +2,7 @@ package cn.asany.shanhai.core.support.dao;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
@@ -11,17 +12,20 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class ModelJpaRepository {
-    protected ModelSessionFactory sessionFactory;
+public class ModelRepository {
     protected String entityName;
 
-    public ModelJpaRepository(String entityName, ModelSessionFactory sessionFactory) {
+    public ModelRepository(String entityName, ModelSessionFactory sessionFactory) {
         this.entityName = entityName;
-        this.sessionFactory = sessionFactory;
     }
 
+    protected SessionFactory getSessionFactory() {
+        return ManualTransactionManager.getCurrentSessionFactory();
+    }
+
+
     protected Session getSession() {
-        return this.sessionFactory.getCurrentSession();
+        return getSessionFactory().getCurrentSession();
     }
 
     public List findBy(String propertyName, Object value) {

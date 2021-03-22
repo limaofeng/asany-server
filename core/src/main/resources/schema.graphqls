@@ -1,0 +1,81 @@
+type Query {
+    # 用户列表
+    models(filter: ModelFilter, page: Int = 1, pageSize: Int = 15, orderBy: OrderBy): ModelConnection
+    # 查询单个用户
+    model(id: ID): Model
+}
+
+type Mutation {
+    createModel(input: ModelCreateInput!): Model
+}
+
+input ModelCreateInput {
+    #登录名
+    username:String
+    #登录密码
+    password:String
+}
+
+input ModelFilter {
+    username_contains: String
+}
+
+type ModelConnection {
+    # 总数据条数
+    totalCount: Int
+    # 每页显示条数
+    pageSize: Int
+    # 总页数
+    totalPage: Int
+    # 当前页
+    currentPage: Int
+    edges: [ModelEdge]
+    #pageInfo: PageInfo
+}
+type ModelEdge{
+    cursor: String
+    node: Model
+}
+
+type Model {
+    id: ID
+    # 编码
+    code: String
+    # 名称
+    name: String
+    # 描述
+    description: String
+    # 字段
+    fields: [ModelField]
+    # 创建人
+    creator: String
+    # 修改人
+    updator: String
+    # 创建时间
+    createdAt: Date
+    # 修改时间
+    updatedAt: Date
+}
+
+type ModelField {
+    id: ID
+    # 名称
+    name: String
+    # 描述
+    description: String
+    # 类型
+    type: Model
+    # 必填
+    required: Boolean
+    # 是否主键
+    primaryKey: Boolean
+    # 是否唯一
+    unique: Boolean
+    # 存储值为列表
+    list: Boolean
+    # 是否为系统字段
+    system: Boolean
+}
+
+scalar Date
+scalar OrderBy

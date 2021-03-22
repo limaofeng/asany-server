@@ -16,11 +16,11 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 class ModelGraphQLSchemaFactoryTest {
 
     @Autowired
-    private ModelGraphQLSchemaFactory graphQLSchemaFactory;
+    private GraphQLServer graphQLServer;
 
     @Test
     void buildScheme() {
-        String scheme = graphQLSchemaFactory.buildScheme();
+        String scheme = graphQLServer.buildScheme();
         log.debug("Scheme: " + scheme);
     }
 }
