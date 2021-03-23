@@ -21,9 +21,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -182,8 +179,7 @@ public class ModelService {
     }
 
     public List<Model> findAll(final ModelType... types) {
-        this.modelDao.findAll((Root root, CriteriaQuery query, CriteriaBuilder builder) -> root.get("type").in(types));
-        return this.modelDao.findAll(Example.of(Model.builder().type(type).build()));
+        return this.modelDao.findAll(PropertyFilter.builder().in("type", types).build());
     }
 
     public void saveInBatch(Model... models) {

@@ -26,7 +26,6 @@ public class ModelFactory {
 
     private GraphQLServer graphQLServer;
 
-
     public void loadDefaultModel() {
         List<Model> models = modelService.findAll(ModelType.OBJECT);
         for (Model model : models) {
@@ -34,9 +33,6 @@ public class ModelFactory {
             modelSessionFactory.addMetadataSource(xml);
         }
         modelSessionFactory.update();
-
-
-
     }
 
     protected void install() {
