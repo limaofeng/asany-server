@@ -9,6 +9,10 @@ import org.jfantasy.framework.util.common.StringUtil;
 public class TemplateDataOfEndpoint {
     private ModelEndpoint endpoint;
 
+    public String getCode() {
+        return endpoint.getCode();
+    }
+
     public String getName() {
         return endpoint.getName();
     }

@@ -11,13 +11,13 @@ type Mutation {
 
 input ModelCreateInput {
     #登录名
-    username:String
+    code: String
     #登录密码
-    password:String
+    name: String
 }
 
 input ModelFilter {
-    username_contains: String
+    name_contains: String
 }
 
 type ModelConnection {

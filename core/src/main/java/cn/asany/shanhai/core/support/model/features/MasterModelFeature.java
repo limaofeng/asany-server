@@ -93,7 +93,7 @@ public class MasterModelFeature implements IModelFeature, InitializingBean {
 
     private ModelEndpoint buildGetEndpoint(Model model) {
         ModelEndpoint endpoint = ModelEndpoint.builder()
-            .type(ModelEndpointType.MUTATION)
+            .type(ModelEndpointType.QUERY)
             .code(StringUtil.lowerCaseFirst(this.pluralize(model.getCode())))
             .name("获取" + model.getName())
             .returnType(model)
@@ -105,7 +105,7 @@ public class MasterModelFeature implements IModelFeature, InitializingBean {
 
     private ModelEndpoint buildFindPagerEndpoint(Model model) {
         ModelEndpoint endpoint = ModelEndpoint.builder()
-            .type(ModelEndpointType.MUTATION)
+            .type(ModelEndpointType.QUERY)
             .code(StringUtil.lowerCaseFirst(model.getCode()))
             .name(model.getName() + "分页查询")
             .returnType(model)

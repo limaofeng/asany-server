@@ -20,8 +20,8 @@ import javax.persistence.*;
 public class ModelEndpointReturnType {
     @Id
     @Column(name = "ENDPOINT_ID", nullable = false, updatable = false, precision = 22, scale = 0)
-    @GenericGenerator(name = "pkGenerator", strategy = "foreign", parameters = {@org.hibernate.annotations.Parameter(name = "property", value = "endpoint")})
-    @GeneratedValue(generator = "pkGenerator")
+    @GenericGenerator(name = "ModelEndpointReturnTypePkGenerator", strategy = "foreign", parameters = {@org.hibernate.annotations.Parameter(name = "property", value = "endpoint")})
+    @GeneratedValue(generator = "ModelEndpointReturnTypePkGenerator")
     private Long id;
     /**
      * 是否必填

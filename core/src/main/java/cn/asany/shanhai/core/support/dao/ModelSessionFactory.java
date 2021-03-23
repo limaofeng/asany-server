@@ -1,5 +1,7 @@
 package cn.asany.shanhai.core.support.dao;
 
+import cn.asany.shanhai.core.bean.Model;
+import cn.asany.shanhai.core.utils.HibernateMappingHelper;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -9,30 +11,40 @@ import org.hibernate.boot.internal.SessionFactoryOptionsBuilder;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.tool.hbm2ddl.SchemaExport;
 import org.hibernate.tool.schema.TargetType;
+import org.jfantasy.framework.spring.SpringContextUtil;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.EntityManagerFactory;
 import java.io.ByteArrayInputStream;
 import java.util.EnumSet;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Model SessionFactory
  *
  * @author limaofeng
  */
-public class ModelSessionFactory implements InitializingBean {
+public class ModelSessionFactory implements InitializingBean, ModelRepositoryFactory {
 
     @Autowired(required = false)
     private EntityManagerFactory entityManagerFactory;
     private SessionFactory sessionFactory;
     private MetadataSources metadataSources;
+    private HibernateMappingHelper hibernateMappingHelper;
+
+    private Map<Long, String> repositoryEntityNameMap = new ConcurrentHashMap<>();
+    private Map<String, ModelRepository> repositoryMap = new ConcurrentHashMap<>();
 
     @Override
     public void afterPropertiesSet() throws Exception {
         SessionFactory sessionFactory = entityManagerFactory.unwrap(SessionFactory.class);
         StandardServiceRegistry serviceRegistry = sessionFactory.getSessionFactoryOptions().getServiceRegistry();
         this.metadataSources = new MetadataSources(serviceRegistry);
+        this.hibernateMappingHelper = new HibernateMappingHelper();
+        this.hibernateMappingHelper.afterPropertiesSet();
         sessionFactory.getSessionFactoryOptions();
     }
 
@@ -61,5 +73,19 @@ public class ModelSessionFactory implements InitializingBean {
 
     public SessionFactory real() {
         return this.sessionFactory;
+    }
+
+    @Override
+    public ModelRepository getRepository(String entityName) {
+        return this.repositoryMap.get(entityName);
+    }
+
+    public ModelRepository buildModelRepository(Model model) {
+        ModelRepository repository;
+        String xml = hibernateMappingHelper.generateXML(model);
+        this.addMetadataSource(xml);
+        repositoryEntityNameMap.put(model.getId(), model.getCode());
+        repositoryMap.put(model.getCode(), repository = new ModelRepository(model, this));
+        return repository;
     }
 }

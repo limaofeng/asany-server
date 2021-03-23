@@ -1,10 +1,15 @@
-type Query{
+type Query {
 {{~#each queries}}
     {{name}}: {{returnType}}
 {{~/each}}
 }
+type Mutation {
+{{~#each mutations}}
+    {{name}}: {{returnType}}
+{{~/each}}
+}
 
-{{~#each models}}
+{{~#each types}}
 type {{name}} {
     {{~#idField}}
     {{name}}: {{graphQLType}}

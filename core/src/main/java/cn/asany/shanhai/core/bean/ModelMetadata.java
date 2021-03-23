@@ -20,8 +20,8 @@ public class ModelMetadata implements Serializable {
 
     @Id
     @Column(name = "MODEL_ID", nullable = false, updatable = false, precision = 22, scale = 0)
-    @GenericGenerator(name = "pkGenerator", strategy = "foreign", parameters = {@Parameter(name = "property", value = "model")})
-    @GeneratedValue(generator = "pkGenerator")
+    @GenericGenerator(name = "ModelMetadataPkGenerator", strategy = "foreign", parameters = {@Parameter(name = "property", value = "model")})
+    @GeneratedValue(generator = "ModelMetadataPkGenerator")
     private Long id;
     /**
      * 数据库名称

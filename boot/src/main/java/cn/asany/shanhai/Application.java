@@ -24,7 +24,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
  */
 @Slf4j
 @Configuration
-@ComponentScan("cn.asany.shanhai.demo")
+@ComponentScan({"cn.asany.shanhai.*.service", "cn.asany.shanhai.*.graphql"})
 @EntityScan({
     "cn.asany.shanhai.*.bean",
 })
@@ -49,7 +49,7 @@ public class Application extends SpringBootServletInitializer {
 
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
-          return builder.sources(Application.class);
+        return builder.sources(Application.class);
     }
 
 }

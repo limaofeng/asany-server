@@ -43,8 +43,6 @@ public class ModelService {
     //    @Autowired
 //    private RuntimeMetadataRegistry metadataRegistry;
     @Autowired
-    private HibernateMappingHelper hibernateMappingHelper;
-    @Autowired
     private ModelRepositoryFactory jpaRepositoryFactory;
     @Autowired
     private ModelFeatureService modelFeatureService;
@@ -135,8 +133,8 @@ public class ModelService {
     public void publish(Long id) {
         Model model = modelDao.getOne(id);
         ModelMetadata metadata = model.getMetadata();
-        String xml = hibernateMappingHelper.generateXML(model);
-        metadata.setHbm(xml);
+//        String xml = hibernateMappingHelper.generateXML(model);
+//        metadata.setHbm(xml);
         model.setStatus(ModelStatus.PUBLISHED);
         this.modelDao.update(model);
     }

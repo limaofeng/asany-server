@@ -23,13 +23,13 @@ public class ModelGraphQLQueryResolver implements GraphQLQueryResolver {
     @Autowired
     private ModelService modelService;
 
-    public ModelConnection users(ModelFilter filter, int page, int pageSize, OrderBy orderBy) {
+    public ModelConnection models(ModelFilter filter, int page, int pageSize, OrderBy orderBy) {
         Pager<Model> pager = new Pager<>(page, pageSize, orderBy);
         filter = ObjectUtil.defaultValue(filter, new ModelFilter());
         return Kit.connection(modelService.findPager(pager, filter.build()), ModelConnection.class);
     }
 
-    public Optional<Model> user(Long id) {
+    public Optional<Model> model(Long id) {
         return modelService.get(id);
     }
 

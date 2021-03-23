@@ -12,8 +12,8 @@ public class ModelGraphQLMutationResolver implements GraphQLMutationResolver {
     @Autowired
     private ModelService modelService;
 
-    public Model createModel(Model model) {
-        return modelService.save(model);
+    public Model createModel(Model input) {
+        return modelService.save(input);
     }
 
 }

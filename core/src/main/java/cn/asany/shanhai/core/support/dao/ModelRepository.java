@@ -1,5 +1,6 @@
 package cn.asany.shanhai.core.support.dao;
 
+import cn.asany.shanhai.core.bean.Model;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -13,10 +14,12 @@ import java.util.List;
 import java.util.Set;
 
 public class ModelRepository {
+    protected Model model;
     protected String entityName;
 
-    public ModelRepository(String entityName, ModelSessionFactory sessionFactory) {
-        this.entityName = entityName;
+    public ModelRepository(Model model, ModelSessionFactory sessionFactory) {
+        this.model = model;
+        this.entityName = model.getCode();
     }
 
     protected SessionFactory getSessionFactory() {

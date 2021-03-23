@@ -4,6 +4,7 @@ import cn.asany.shanhai.core.service.ModelService;
 import cn.asany.shanhai.core.support.model.FieldType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.stereotype.Component;
 
 /**
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Component;
  * @author limaofeng
  */
 @Component
+@ConditionalOnExpression("#{!environment.getProperty(\"spring.profiles.active\").contains(\"test\")}")
 public class PresetModelCommandLineRunner implements CommandLineRunner {
 
     @Autowired

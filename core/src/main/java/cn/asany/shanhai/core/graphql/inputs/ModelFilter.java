@@ -7,9 +7,9 @@ import org.jfantasy.graphql.inputs.QueryFilter;
 @Data
 public class ModelFilter extends QueryFilter {
 
-    @JsonProperty("username_contains")
-    public void setUsernameContains(String value) {
-        builder.contains("username", value);
+    @JsonProperty("name_contains")
+    public void setNameContains(String value) {
+        builder.contains("name", value);
     }
 
 }

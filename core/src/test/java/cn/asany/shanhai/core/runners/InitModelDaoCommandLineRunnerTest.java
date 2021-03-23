@@ -1,6 +1,7 @@
 package cn.asany.shanhai.core.runners;
 
 import cn.asany.shanhai.TestApplication;
+import cn.asany.shanhai.core.bean.Model;
 import cn.asany.shanhai.core.support.dao.ManualTransactionManager;
 import cn.asany.shanhai.core.support.dao.ModelRepository;
 import cn.asany.shanhai.core.support.dao.ModelSessionFactory;
@@ -35,7 +36,7 @@ class InitModelDaoCommandLineRunnerTest {
         ManualTransactionManager transactionManager = new ManualTransactionManager(sessionFactory);
         transactionManager.bindSession();
 
-        ModelRepository modelJpaRepository = new ModelRepository("Employee", sessionFactory);
+        ModelRepository modelJpaRepository = new ModelRepository(Model.builder().code("Employee").build(), sessionFactory);
         List result = modelJpaRepository.findBy("name", "1234");
         System.out.println("resultList: " + result);
 

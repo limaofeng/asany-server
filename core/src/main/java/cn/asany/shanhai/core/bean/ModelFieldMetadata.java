@@ -19,8 +19,8 @@ import java.io.Serializable;
 public class ModelFieldMetadata implements Serializable {
     @Id
     @Column(name = "FIELD_ID", nullable = false, updatable = false, precision = 22, scale = 0)
-    @GenericGenerator(name = "pkGenerator", strategy = "foreign", parameters = {@Parameter(name = "property", value = "field")})
-    @GeneratedValue(generator = "pkGenerator")
+    @GenericGenerator(name = "ModelFieldMetadataPkGenerator", strategy = "foreign", parameters = {@Parameter(name = "property", value = "field")})
+    @GeneratedValue(generator = "ModelFieldMetadataPkGenerator")
     private Long id;
     /**
      * 数据库中的列表名称
