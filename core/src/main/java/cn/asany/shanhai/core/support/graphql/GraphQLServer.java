@@ -4,35 +4,66 @@ import cn.asany.shanhai.core.bean.Model;
 import cn.asany.shanhai.core.bean.ModelEndpoint;
 import cn.asany.shanhai.core.bean.enums.ModelEndpointType;
 import cn.asany.shanhai.core.bean.enums.ModelType;
-import cn.asany.shanhai.core.service.ModelService;
 import cn.asany.shanhai.core.support.dao.ModelRepository;
 import cn.asany.shanhai.core.utils.TemplateDataOfEndpoint;
 import cn.asany.shanhai.core.utils.TemplateDataOfModel;
+import com.github.jknack.handlebars.Options;
 import com.github.jknack.handlebars.Template;
+import graphql.ExecutionResult;
+import graphql.GraphQL;
+import graphql.scalars.ExtendedScalars;
+import graphql.schema.DataFetcher;
+import graphql.schema.GraphQLSchema;
+import graphql.schema.idl.RuntimeWiring;
+import graphql.schema.idl.SchemaGenerator;
+import graphql.schema.idl.SchemaParser;
+import graphql.schema.idl.TypeDefinitionRegistry;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.jfantasy.framework.util.HandlebarsTemplateUtils;
+import org.jfantasy.framework.util.common.StringUtil;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
+import static graphql.schema.idl.RuntimeWiring.newRuntimeWiring;
+
+/**
+ * GraphQL Server
+ *
+ * @author limaofeng
+ */
+@Slf4j
 public class GraphQLServer implements InitializingBean {
 
     private Template template;
 
+    private GraphQL graphQL;
     private String scheme;
     private Map<Long, Model> modelMap = new ConcurrentHashMap<>();
+    private Map<Long, Model> typeMap = new ConcurrentHashMap<>();
+    private Map<Long, Model> inputTypeMap = new ConcurrentHashMap<>();
+    private Map<Long, Model> scalarMap = new ConcurrentHashMap<>();
+    private Map<Long, List<Long>> modeTypeMap = new ConcurrentHashMap<>();
     private Map<Long, List<Long>> modelEndpointMap = new ConcurrentHashMap<>();
     private Map<Long, ModelEndpoint> queries = new ConcurrentHashMap();
+    private Map<ModelEndpoint, DataFetcher> dataFetcherMap = new ConcurrentHashMap();
     private Map<Long, ModelEndpoint> mutations = new ConcurrentHashMap();
 
     @Override
     public void afterPropertiesSet() throws Exception {
+        HandlebarsTemplateUtils.registerHelper("notNull", (String context, Options options) -> {
+            if (StringUtil.isNotBlank(context)) {
+                return options.fn();
+            }
+            return options.inverse();
+        });
         template = HandlebarsTemplateUtils.template("/scheme");
     }
 
@@ -42,10 +73,22 @@ public class GraphQLServer implements InitializingBean {
         List<Model> models = new ArrayList<>(modelMap.values());
         List<ModelEndpoint> queries = new ArrayList<>(this.queries.values());
         List<ModelEndpoint> mutations = new ArrayList<>(this.mutations.values());
-        return scheme = template.apply(new TemplateRootData(models, queries, mutations));
+        List<Model> types = new ArrayList<>(models);
+        types.addAll(this.typeMap.values());
+        List<Model> inputTypes = new ArrayList<>(this.inputTypeMap.values());
+        List<Model> scalars = new ArrayList<>(this.scalarMap.values());
+
+        scheme = template.apply(new TemplateRootData(queries, mutations, types, inputTypes, scalars));
+        log.debug("SCHEME: " + scheme);
+
+        return scheme;
     }
 
-    public void buildResolver(Model model, ModelRepository repository) {
+    public void addModel(Model model, ModelRepository repository) {
+        this.buildResolver(model, repository);
+    }
+
+    private void buildResolver(Model model, ModelRepository repository) {
         List<Long> endpointIds = new ArrayList<>();
         modelMap.put(model.getId(), model);
         modelEndpointMap.put(model.getId(), endpointIds);
@@ -56,23 +99,72 @@ public class GraphQLServer implements InitializingBean {
             } else {
                 mutations.put(endpoint.getId(), endpoint);
             }
-            new ModelDataFetcher(endpoint, repository);
+            dataFetcherMap.put(endpoint, new ModelDataFetcher(endpoint, repository));
+        }
+    }
+
+    public GraphQL buildServer() {
+        SchemaParser schemaParser = new SchemaParser();
+        TypeDefinitionRegistry typeDefinitionRegistry = schemaParser.parse(this.buildScheme());
+
+        RuntimeWiring.Builder runtimeWiringBuilder = newRuntimeWiring();
+        runtimeWiringBuilder.type("Query", builder -> {
+            for (ModelEndpoint endpoint : queries.values()) {
+                builder.dataFetcher(endpoint.getCode(), dataFetcherMap.get(endpoint));
+            }
+            return builder;
+        });
+        runtimeWiringBuilder.scalar(ExtendedScalars.Date);
+        RuntimeWiring runtimeWiring = runtimeWiringBuilder.build();
+        SchemaGenerator schemaGenerator = new SchemaGenerator();
+        GraphQLSchema graphQLSchema = schemaGenerator.makeExecutableSchema(typeDefinitionRegistry, runtimeWiring);
+
+        return this.graphQL = GraphQL.newGraphQL(graphQLSchema).build();
+    }
+
+    public Map<String, Object> execute(String query) {
+        ExecutionResult executionResult = this.graphQL.execute(query);
+
+        Map<String, Object> result = new HashMap<>();
+        if (!executionResult.getErrors().isEmpty()) {
+            result.put("errors", executionResult.getErrors());
+        }
+        result.put("data", executionResult.getData());
+        return result;
+    }
+
+    public void setTypes(List<Model> types) {
+        for (Model type : types) {
+            if (type.getType() == ModelType.TYPE) {
+                typeMap.put(type.getId(), type);
+            } else if (type.getType() == ModelType.INPUT) {
+                inputTypeMap.put(type.getId(), type);
+            } else if (type.getType() == ModelType.SCALAR) {
+                scalarMap.put(type.getId(), type);
+            }
+
+
         }
     }
 
     static class TemplateRootData {
         private final List<ModelEndpoint> queries;
         private final List<ModelEndpoint> mutations;
+        private final List<Model> types;
+        private final List<Model> inputTypes;
+        private final List<Model> scalars;
         private List<Model> models;
 
-        public TemplateRootData(List<Model> models, List<ModelEndpoint> queries, List<ModelEndpoint> mutations) {
-            this.models = models;
+        public TemplateRootData(List<ModelEndpoint> queries, List<ModelEndpoint> mutations, List<Model> types, List<Model> inputTypes, List<Model> scalars) {
+            this.types = types;
+            this.scalars = scalars;
+            this.inputTypes = inputTypes;
             this.queries = queries;
             this.mutations = mutations;
         }
 
         public List getMutations() {
-            return queries.stream().map(item -> new TemplateDataOfEndpoint(item)).collect(Collectors.toList());
+            return mutations.stream().map(item -> new TemplateDataOfEndpoint(item)).collect(Collectors.toList());
         }
 
         public List getQueries() {
@@ -80,7 +172,15 @@ public class GraphQLServer implements InitializingBean {
         }
 
         public List<TemplateDataOfModel> getTypes() {
-            return models.stream().map(item -> new TemplateDataOfModel(item)).collect(Collectors.toList());
+            return types.stream().map(item -> new TemplateDataOfModel(item)).collect(Collectors.toList());
+        }
+
+        public List<TemplateDataOfModel> getInputTypes() {
+            return inputTypes.stream().map(item -> new TemplateDataOfModel(item)).collect(Collectors.toList());
+        }
+
+        public List<TemplateDataOfModel> getScalars() {
+            return scalars.stream().map(item -> new TemplateDataOfModel(item)).collect(Collectors.toList());
         }
     }
 

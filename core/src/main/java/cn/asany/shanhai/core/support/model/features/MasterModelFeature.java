@@ -68,7 +68,7 @@ public class MasterModelFeature implements IModelFeature, InitializingBean {
             .type(ModelEndpointType.MUTATION)
             .code("create" + StringUtil.upperCaseFirst(model.getCode()))
             .name("新增" + model.getName())
-            .argument("input", getCreateInputTypeName(model))
+            .argument("input", getCreateInputTypeName(model), true)
             .returnType(model)
             .model(model)
             .build();
@@ -81,9 +81,9 @@ public class MasterModelFeature implements IModelFeature, InitializingBean {
             .type(ModelEndpointType.MUTATION)
             .code("update" + StringUtil.upperCaseFirst(model.getCode()))
             .name("修改" + model.getName())
-            .argument("id", FieldType.ID.getCode())
-            .argument("input", getUpdateInputTypeName(model))
-            .argument("merge", FieldType.Boolean.getCode(), true)
+            .argument("id", FieldType.ID.getCode(), true)
+            .argument("input", getUpdateInputTypeName(model), true)
+            .argument("merge", FieldType.Boolean.getCode(), "启用合并模式", true)
             .returnType(model)
             .model(model)
             .build();
@@ -94,8 +94,9 @@ public class MasterModelFeature implements IModelFeature, InitializingBean {
     private ModelEndpoint buildGetEndpoint(Model model) {
         ModelEndpoint endpoint = ModelEndpoint.builder()
             .type(ModelEndpointType.QUERY)
-            .code(StringUtil.lowerCaseFirst(this.pluralize(model.getCode())))
+            .code(StringUtil.lowerCaseFirst(model.getCode()))
             .name("获取" + model.getName())
+            .argument("id", FieldType.ID.getCode(), true)
             .returnType(model)
             .model(model)
             .build();
@@ -106,7 +107,7 @@ public class MasterModelFeature implements IModelFeature, InitializingBean {
     private ModelEndpoint buildFindPagerEndpoint(Model model) {
         ModelEndpoint endpoint = ModelEndpoint.builder()
             .type(ModelEndpointType.QUERY)
-            .code(StringUtil.lowerCaseFirst(model.getCode()))
+            .code(StringUtil.lowerCaseFirst(this.pluralize(model.getCode())))
             .name(model.getName() + "分页查询")
             .returnType(model)
             .model(model)

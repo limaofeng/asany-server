@@ -19,7 +19,7 @@ import java.util.List;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false, of = "id")
 @Entity
-@Table(name = "SH_MODEL_ENDPOINT")
+@Table(name = "SH_MODEL_ENDPOINT", uniqueConstraints = @UniqueConstraint(columnNames = {"MODEL_ID", "TYPE", "CODE"}, name = "UK_MODEL_ENDPOINT_KEY"))
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class ModelEndpoint extends BaseBusEntity {
     @Id
@@ -100,11 +100,35 @@ public class ModelEndpoint extends BaseBusEntity {
             return this;
         }
 
-        public ModelEndpointBuilder argument(String name, String type, Object defaultValue) {
+        public ModelEndpointBuilder argument(String name, String type, Boolean required) {
             if (this.arguments == null) {
                 this.arguments = new ArrayList<>();
             }
-            this.arguments.add(ModelEndpointArgument.builder().name(name).type(type).build());
+            this.arguments.add(ModelEndpointArgument.builder().name(name).required(required).type(type).build());
+            return this;
+        }
+
+        public ModelEndpointBuilder argument(String name, String type, String description) {
+            if (this.arguments == null) {
+                this.arguments = new ArrayList<>();
+            }
+            this.arguments.add(ModelEndpointArgument.builder().name(name).description(description).type(type).build());
+            return this;
+        }
+
+        public ModelEndpointBuilder argument(String name, String type, String description, Object defaultValue) {
+            if (this.arguments == null) {
+                this.arguments = new ArrayList<>();
+            }
+            this.arguments.add(ModelEndpointArgument.builder().name(name).description(description).type(type).build());
+            return this;
+        }
+
+        public ModelEndpointBuilder argument(String name, String type, Boolean required, String description, Object defaultValue) {
+            if (this.arguments == null) {
+                this.arguments = new ArrayList<>();
+            }
+            this.arguments.add(ModelEndpointArgument.builder().name(name).required(required).description(description).type(type).build());
             return this;
         }
     }

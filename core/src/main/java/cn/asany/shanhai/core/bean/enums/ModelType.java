@@ -10,6 +10,10 @@ public enum ModelType {
      */
     SCALAR,
     /**
+     * 类型
+     */
+    TYPE,
+    /**
      * 实体
      */
     OBJECT,

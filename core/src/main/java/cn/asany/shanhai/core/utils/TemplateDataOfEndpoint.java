@@ -5,6 +5,9 @@ import cn.asany.shanhai.core.bean.ModelEndpointReturnType;
 import lombok.AllArgsConstructor;
 import org.jfantasy.framework.util.common.StringUtil;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @AllArgsConstructor
 public class TemplateDataOfEndpoint {
     private ModelEndpoint endpoint;
@@ -19,6 +22,14 @@ public class TemplateDataOfEndpoint {
 
     public String getDescription() {
         return endpoint.getDescription();
+    }
+
+    public Boolean getIsArg() {
+        return !endpoint.getArguments().isEmpty();
+    }
+
+    public List<TemplateDataOfEndpointArgument> getArguments() {
+        return endpoint.getArguments().stream().map(item -> new TemplateDataOfEndpointArgument(item)).collect(Collectors.toList());
     }
 
     public String getReturnType() {

@@ -3,14 +3,14 @@
         "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
         "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <hibernate-mapping>
-    <class entity-name="{{name}}" table="{{databaseTableName}}">
+    <class entity-name="{{code}}" table="{{databaseTableName}}">
         {{~#idField}}
-        <id name="{{name}}" type="{{javaType}}" length="64" unsaved-value="null">
+        <id name="{{code}}" type="{{javaType}}" length="64" unsaved-value="null">
             <generator class="fantasy-sequence"/>
         </id>
         {{~/idField}}
         {{~#each fields}}
-        <property type="{{javaType}}" name="{{name}}" column="{{databaseColumnName}}"/>
+        <property type="{{javaType}}" name="{{code}}" column="{{databaseColumnName}}"/>
         {{~/each}}
     </class>
 </hibernate-mapping>

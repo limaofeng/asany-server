@@ -10,8 +10,12 @@ import org.jfantasy.framework.spring.SpringContextUtil;
 public class TemplateDataOfModelField {
     private ModelField field;
 
-    public String getName() {
+    public String getCode() {
         return field.getCode();
+    }
+
+    public String getName() {
+        return field.getName();
     }
 
     public String getDatabaseColumnName() {
@@ -28,5 +32,9 @@ public class TemplateDataOfModelField {
         FieldTypeRegistry registry = SpringContextUtil.getBeanByType(FieldTypeRegistry.class);
         FieldType type = registry.getType(this.field.getType().getCode());
         return type.getGraphQLType(this.field.getMetadata());
+    }
+
+    public String getType() {
+        return getGraphQLType();
     }
 }

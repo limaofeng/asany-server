@@ -30,6 +30,12 @@ public class ModelEndpointArgument {
     @JoinColumn(name = "TYPE_ID", foreignKey = @ForeignKey(name = "FK_MODEL_ENDPOINT_ARGUMENT_TID"), nullable = false)
     private Model type;
     /**
+     * 是否必填
+     */
+    @Builder.Default
+    @Column(name = "IS_REQUIRED")
+    private Boolean required = false;
+    /**
      * 描述
      */
     @Column(name = "DESCRIPTION", length = 200)

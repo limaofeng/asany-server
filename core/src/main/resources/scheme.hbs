@@ -1,21 +1,74 @@
 type Query {
 {{~#each queries}}
-    {{name}}: {{returnType}}
+    {{~#notNull name}}
+    """
+    {{{name}}}
+    """
+    {{~/notNull}}
+    {{code}}{{#isArg}}(
+    {{~#arguments}}
+        {{~#notNull description}}
+        """
+        {{{description}}}
+        """
+        {{~/notNull}}
+        {{name}}: {{type}}{{#required}}!{{/required}}{{#notNull defaultValue}} = {{defaultValue}} {{/notNull}}{{#if @last}}{{else}}, {{/if}}
+    {{~/arguments}}
+    ){{/isArg}}: {{returnType}}
 {{~/each}}
 }
 type Mutation {
 {{~#each mutations}}
-    {{name}}: {{returnType}}
+    {{~#notNull name}}
+    """
+    {{{name}}}
+    """
+    {{~/notNull}}
+    {{code}}{{#isArg}}(
+    {{~#arguments}}
+        {{~#notNull description}}
+        """
+        {{{description}}}
+        """
+        {{~/notNull}}
+        {{name}}: {{type}}{{#required}}!{{/required}}{{#notNull defaultValue}} = {{defaultValue}} {{/notNull}}{{#if @last}}{{else}}, {{/if}}
+    {{~/arguments}}
+    ){{/isArg}}: {{returnType}}
 {{~/each}}
 }
 
 {{~#each types}}
-type {{name}} {
+type {{code}} {
     {{~#idField}}
-    {{name}}: {{graphQLType}}
+    {{~#notNull name}}
+    """
+    {{{name}}}
+    """
+    {{~/notNull}}
+    {{code}}: {{type}}
     {{~/idField}}
     {{~#each fields}}
-    {{name}}: {{graphQLType}}
+    {{~#notNull name}}
+    """
+    {{{name}}}
+    """
+    {{~/notNull}}
+    {{code}}: {{type}}
     {{~/each}}
 }
 {{~/each}}
+
+{{~#each inputTypes}}
+input {{code}} {
+    {{~#each fields}}
+    {{~#notNull name}}
+    """
+    {{{name}}}
+    """
+    {{~/notNull}}
+    {{code}}: {{type}}
+    {{~/each}}
+}
+{{~/each}}
+
+scalar Date

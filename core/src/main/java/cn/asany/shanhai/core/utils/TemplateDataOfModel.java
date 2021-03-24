@@ -14,8 +14,12 @@ import java.util.stream.Collectors;
 public class TemplateDataOfModel {
     private Model model;
 
-    public String getName() {
+    public String getCode() {
         return model.getCode();
+    }
+
+    public String getName() {
+        return model.getName();
     }
 
     public String getDatabaseTableName() {
@@ -25,7 +29,7 @@ public class TemplateDataOfModel {
     public TemplateDataOfModelField getIdField() {
         ModelUtils modelUtils = SpringContextUtil.getBeanByType(ModelUtils.class);
         Optional<ModelField> idFieldOptional = modelUtils.getId(model);
-        return new TemplateDataOfModelField(idFieldOptional.get());
+        return idFieldOptional.map(TemplateDataOfModelField::new).orElse(null);
     }
 
     public List<TemplateDataOfModelField> getFields() {
