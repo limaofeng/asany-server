@@ -53,7 +53,7 @@ public class ModelEndpoint extends BaseBusEntity {
      */
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "MODEL_ID", foreignKey = @ForeignKey(name = "FK_SH_MODEL_ENDPOINT_MID"), nullable = false)
+    @JoinColumn(name = "MODEL_ID", foreignKey = @ForeignKey(name = "FK_MODEL_ENDPOINT_MID"), nullable = false)
     private Model model;
     /**
      * 参数
@@ -66,6 +66,12 @@ public class ModelEndpoint extends BaseBusEntity {
     @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
     @PrimaryKeyJoinColumn
     private ModelEndpointReturnType returnType;
+    /**
+     * 委派
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "DELEGATE_ID", foreignKey = @ForeignKey(name = "FK_MODEL_ENDPOINT_DID"))
+    private ModelEndpointDelegate delegate;
 
     public static class ModelEndpointBuilder {
 

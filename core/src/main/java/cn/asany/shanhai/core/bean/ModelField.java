@@ -90,13 +90,19 @@ public class ModelField extends BaseBusEntity {
      * 实体
      */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "MODEL_ID", foreignKey = @ForeignKey(name = "FK_SH_MODEL_FIELD_MODEL_ID"), nullable = false)
+    @JoinColumn(name = "MODEL_ID", foreignKey = @ForeignKey(name = "FK_MODEL_FIELD_MODEL_ID"), nullable = false)
     private Model model;
     /**
      * 元数据
      */
     @OneToOne(mappedBy = "field", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
     private ModelFieldMetadata metadata;
+    /**
+     * 委派
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "DELEGATE_ID", foreignKey = @ForeignKey(name = "FK_MODEL_FIELD_DID"))
+    private ModelEndpointDelegate delegate;
 
     public static class ModelFieldBuilder {
         private ModelFieldMetadata metadata;

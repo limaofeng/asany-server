@@ -85,6 +85,12 @@ public class Model extends BaseBusEntity {
     @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
     @PrimaryKeyJoinColumn
     private ModelMetadata metadata;
+    /**
+     * 服务
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "SERVICE_ID", foreignKey = @ForeignKey(name = "FK_SH_MODEL_SID"), nullable = false)
+    private NameServer nameServer;
 
     @Transient
     public void connect(Model model, ModelConnectType connectType) {
