@@ -8,13 +8,18 @@ import org.jfantasy.framework.dao.BaseBusEntity;
 
 import javax.persistence.*;
 
+/**
+ * 实体接口委派
+ *
+ * @author limaofeng
+ */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false, of = "id")
 @Entity
-@Table(name = "SH_SERVICE")
+@Table(name = "SH_MODEL_ENDPOINT_DELEGATE")
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class ModelEndpointDelegate extends BaseBusEntity {
     @Id
@@ -47,7 +52,7 @@ public class ModelEndpointDelegate extends BaseBusEntity {
      * 服务
      */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "SERVICE_ID", foreignKey = @ForeignKey(name = "FK_SH_MODEL_SID"), nullable = false)
+    @JoinColumn(name = "SERVICE_ID", foreignKey = @ForeignKey(name = "FK_MODEL_ENDPOINT_DELEGATE_SID"), nullable = false)
     private NameServer nameServer;
 
     static class ModelEndpointDelegateRule {

@@ -89,7 +89,7 @@ public class Model extends BaseBusEntity {
      * 服务
      */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "SERVICE_ID", foreignKey = @ForeignKey(name = "FK_SH_MODEL_SID"), nullable = false)
+    @JoinColumn(name = "SERVICE_ID", foreignKey = @ForeignKey(name = "FK_MODEL_SID"))
     private NameServer nameServer;
 
     @Transient

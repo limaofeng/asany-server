@@ -8,6 +8,11 @@ import org.jfantasy.framework.dao.BaseBusEntity;
 
 import javax.persistence.*;
 
+/**
+ * 服务发现
+ *
+ * @author limaofeng
+ */
 @Data
 @Builder
 @NoArgsConstructor
