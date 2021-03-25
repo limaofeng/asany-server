@@ -13,7 +13,9 @@ import graphql.ExecutionResult;
 import graphql.GraphQL;
 import graphql.scalars.ExtendedScalars;
 import graphql.schema.DataFetcher;
+import graphql.schema.GraphQLScalarType;
 import graphql.schema.GraphQLSchema;
+import graphql.schema.StaticDataFetcher;
 import graphql.schema.idl.RuntimeWiring;
 import graphql.schema.idl.SchemaGenerator;
 import graphql.schema.idl.SchemaParser;
@@ -23,6 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.jfantasy.framework.util.HandlebarsTemplateUtils;
 import org.jfantasy.framework.util.common.StringUtil;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -41,6 +44,11 @@ import static graphql.schema.idl.RuntimeWiring.newRuntimeWiring;
  */
 @Slf4j
 public class GraphQLServer implements InitializingBean {
+
+    @Autowired
+    private ModelDelegateFactory delegateFactory;
+    @Autowired
+    private GraphQLScalarType dateScalar;
 
     private Template template;
 
@@ -99,7 +107,11 @@ public class GraphQLServer implements InitializingBean {
             } else {
                 mutations.put(endpoint.getId(), endpoint);
             }
-            dataFetcherMap.put(endpoint, new ModelDataFetcher(endpoint, repository));
+            if (endpoint.getDelegate() == null) {
+                dataFetcherMap.put(endpoint, new StaticDataFetcher("world"));
+                continue;
+            }
+            dataFetcherMap.put(endpoint, new ModelDataFetcher(delegateFactory.build(model, endpoint, repository, endpoint.getDelegate())));
         }
     }
 
@@ -114,7 +126,7 @@ public class GraphQLServer implements InitializingBean {
             }
             return builder;
         });
-        runtimeWiringBuilder.scalar(ExtendedScalars.Date);
+        runtimeWiringBuilder.scalar(dateScalar);
         RuntimeWiring runtimeWiring = runtimeWiringBuilder.build();
         SchemaGenerator schemaGenerator = new SchemaGenerator();
         GraphQLSchema graphQLSchema = schemaGenerator.makeExecutableSchema(typeDefinitionRegistry, runtimeWiring);

@@ -28,6 +28,12 @@ public class TemplateDataOfModelField {
         return type.getJavaType(this.field.getMetadata());
     }
 
+    public String getHibernateType() {
+        FieldTypeRegistry registry = SpringContextUtil.getBeanByType(FieldTypeRegistry.class);
+        FieldType type = registry.getType(this.field.getType().getCode());
+        return type.getHibernateType(this.field.getMetadata());
+    }
+
     public String getGraphQLType() {
         FieldTypeRegistry registry = SpringContextUtil.getBeanByType(FieldTypeRegistry.class);
         FieldType type = registry.getType(this.field.getType().getCode());

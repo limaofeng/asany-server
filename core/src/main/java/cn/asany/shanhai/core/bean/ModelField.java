@@ -102,7 +102,7 @@ public class ModelField extends BaseBusEntity {
      */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "DELEGATE_ID", foreignKey = @ForeignKey(name = "FK_MODEL_FIELD_DID"))
-    private ModelEndpointDelegate delegate;
+    private ModelDelegate delegate;
 
     public static class ModelFieldBuilder {
         private ModelFieldMetadata metadata;

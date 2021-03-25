@@ -53,6 +53,11 @@ public interface FieldType {
      */
     String getGraphQLType(ModelFieldMetadata metadata);
 
+
+    default String getHibernateType(ModelFieldMetadata metadata) {
+        return getJavaType(metadata);
+    }
+
     /**
      * 获取字段设置信息
      *

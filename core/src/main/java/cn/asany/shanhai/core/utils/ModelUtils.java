@@ -2,10 +2,14 @@ package cn.asany.shanhai.core.utils;
 
 import cn.asany.shanhai.core.bean.*;
 import cn.asany.shanhai.core.bean.enums.ModelConnectType;
+import cn.asany.shanhai.core.bean.enums.ModelDelegateType;
 import cn.asany.shanhai.core.bean.enums.ModelType;
+import cn.asany.shanhai.core.dao.ModelDelegateDao;
 import cn.asany.shanhai.core.dao.ModelFieldDao;
 import cn.asany.shanhai.core.service.ModelFeatureService;
 import cn.asany.shanhai.core.service.ModelService;
+import cn.asany.shanhai.core.support.graphql.resolvers.GraphQLDelegateResolver;
+import cn.asany.shanhai.core.support.graphql.resolvers.mock.MockGraphQLGetQueryResolver;
 import cn.asany.shanhai.core.support.model.FieldType;
 import cn.asany.shanhai.core.support.model.IModelFeature;
 import cn.asany.shanhai.core.support.model.ModelFeatureRegistry;
@@ -19,6 +23,7 @@ import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.common.StringUtil;
 import org.jfantasy.framework.util.ognl.OgnlUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.Column;
@@ -38,6 +43,8 @@ public class ModelUtils {
     private ModelFeatureRegistry modelFeatureRegistry;
     @Autowired
     private ModelFieldDao modelFieldDao;
+    @Autowired
+    private ModelDelegateDao modelDelegateDao;
 
     private OgnlUtil ognlUtil = OgnlUtil.getInstance();
 
@@ -291,6 +298,14 @@ public class ModelUtils {
                 ClassUtil.setValue(dest, field.getName(), value);
             }
         }
+    }
+
+    public ModelDelegate getDelegate(Class<? extends GraphQLDelegateResolver> resolverClass) {
+        if (resolverClass.isAssignableFrom(MockGraphQLGetQueryResolver.class)) {
+            Optional<ModelDelegate> optional = modelDelegateDao.findOne(Example.of(ModelDelegate.builder().type(ModelDelegateType.Mock).delegateClassName(resolverClass.getName()).build()));
+            return optional.orElseGet(() -> ModelDelegate.builder().type(ModelDelegateType.Mock).delegateClassName(resolverClass.getName()).build());
+        }
+        return null;
     }
 
     @Data

@@ -1,5 +1,7 @@
 package cn.asany.shanhai.core.rest;
 
+import cn.asany.shanhai.core.support.dao.ManualTransactionManager;
+import cn.asany.shanhai.core.support.dao.ModelSessionFactory;
 import cn.asany.shanhai.core.support.graphql.GraphQLServer;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.ReadContext;
@@ -15,16 +17,23 @@ import java.util.Map;
 @RestController
 @Slf4j
 public class GraphQLEndpoint {
-
+    @Autowired
+    private ModelSessionFactory sessionFactory;
     @Autowired
     private GraphQLServer graphQLServer;
 
     @PostMapping("/dynamic_graphql")
     public Map<String, Object> graphql(@RequestBody String body) {
-        log.debug("请求体:" + body);
-        ReadContext context = JsonPath.parse(body);
-        body = JSON.getObjectMapper().convertValue(context.read("$.query"), String.class);
-        return graphQLServer.execute(body);
+        ManualTransactionManager transactionManager = new ManualTransactionManager(sessionFactory);
+        transactionManager.bindSession();
+        try {
+            log.debug("请求体:" + body);
+            ReadContext context = JsonPath.parse(body);
+            body = JSON.getObjectMapper().convertValue(context.read("$.query"), String.class);
+            return graphQLServer.execute(body);
+        } finally {
+            transactionManager.unbindSession();
+        }
     }
 
 }

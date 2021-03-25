@@ -1,5 +1,6 @@
 package cn.asany.shanhai.core.dao;
 
+import cn.asany.shanhai.core.bean.ModelDelegate;
 import cn.asany.shanhai.core.bean.ModelEndpoint;
 import org.jfantasy.framework.dao.jpa.JpaRepository;
 
@@ -8,5 +9,5 @@ import org.jfantasy.framework.dao.jpa.JpaRepository;
  *
  * @author limaofeng
  */
-public interface ModelEndpointDelegateDao extends JpaRepository<ModelEndpoint, Long> {
+public interface ModelDelegateDao extends JpaRepository<ModelDelegate, Long> {
 }

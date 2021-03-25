@@ -6,6 +6,7 @@ import cn.asany.shanhai.core.service.ModelService;
 import cn.asany.shanhai.core.support.dao.ModelRepository;
 import cn.asany.shanhai.core.support.dao.ModelSessionFactory;
 import cn.asany.shanhai.core.support.graphql.GraphQLServer;
+import cn.asany.shanhai.core.support.graphql.ModelDelegateFactory;
 import cn.asany.shanhai.core.support.model.FieldType;
 import cn.asany.shanhai.core.support.model.FieldTypeRegistry;
 import cn.asany.shanhai.core.support.model.IModelFeature;
@@ -45,6 +46,11 @@ public class ModelAutoConfiguration {
     @Bean
     public GraphQLServer buildGraphQLServer() {
         return this.graphQLServer = new GraphQLServer();
+    }
+
+    @Bean
+    public ModelDelegateFactory buildModelDelegateFactory() {
+        return new ModelDelegateFactory();
     }
 
     @Bean

@@ -1,6 +1,7 @@
 package cn.asany.shanhai.core.bean;
 
-import cn.asany.shanhai.core.bean.enums.ModelEndpointDelegateType;
+import cn.asany.shanhai.core.bean.enums.ModelDelegateType;
+import cn.asany.shanhai.core.support.graphql.DelegateHandler;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
@@ -19,9 +20,9 @@ import javax.persistence.*;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false, of = "id")
 @Entity
-@Table(name = "SH_MODEL_ENDPOINT_DELEGATE")
+@Table(name = "SH_MODEL_DELEGATE")
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-public class ModelEndpointDelegate extends BaseBusEntity {
+public class ModelDelegate extends BaseBusEntity {
     @Id
     @Column(name = "ID")
     @GeneratedValue(generator = "fantasy-sequence")
@@ -32,7 +33,7 @@ public class ModelEndpointDelegate extends BaseBusEntity {
      */
     @Enumerated(EnumType.STRING)
     @Column(name = "TYPE", length = 50)
-    private ModelEndpointDelegateType type;
+    private ModelDelegateType type;
     /**
      * 名称
      */
@@ -44,6 +45,11 @@ public class ModelEndpointDelegate extends BaseBusEntity {
     @Column(name = "DESCRIPTION", length = 200)
     private String description;
     /**
+     * 委托处理类
+     */
+    @Column(name = "DELEGATE_CLASS_NAME", length = 200)
+    private String delegateClassName;
+    /**
      * 规则
      */
     @Transient
@@ -52,8 +58,13 @@ public class ModelEndpointDelegate extends BaseBusEntity {
      * 服务
      */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "SERVICE_ID", foreignKey = @ForeignKey(name = "FK_MODEL_ENDPOINT_DELEGATE_SID"), nullable = false)
+    @JoinColumn(name = "SERVICE_ID", foreignKey = @ForeignKey(name = "FK_MODEL_ENDPOINT_DELEGATE_SID"))
     private NameServer nameServer;
+
+    @Transient
+    public DelegateHandler getDelegateHandler() {
+        return null;
+    }
 
     static class ModelEndpointDelegateRule {
         String query;

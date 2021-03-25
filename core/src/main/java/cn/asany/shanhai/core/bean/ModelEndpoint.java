@@ -1,6 +1,7 @@
 package cn.asany.shanhai.core.bean;
 
 import cn.asany.shanhai.core.bean.enums.ModelEndpointType;
+import cn.asany.shanhai.core.support.graphql.resolvers.GraphQLDelegateResolver;
 import cn.asany.shanhai.core.utils.ModelUtils;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -66,12 +67,13 @@ public class ModelEndpoint extends BaseBusEntity {
     @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
     @PrimaryKeyJoinColumn
     private ModelEndpointReturnType returnType;
+
     /**
      * 委派
      */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "DELEGATE_ID", foreignKey = @ForeignKey(name = "FK_MODEL_ENDPOINT_DID"))
-    private ModelEndpointDelegate delegate;
+    private ModelDelegate delegate;
 
     public static class ModelEndpointBuilder {
 
@@ -135,6 +137,12 @@ public class ModelEndpoint extends BaseBusEntity {
                 this.arguments = new ArrayList<>();
             }
             this.arguments.add(ModelEndpointArgument.builder().name(name).required(required).description(description).type(type).build());
+            return this;
+        }
+
+        public ModelEndpointBuilder delegate(Class<? extends GraphQLDelegateResolver> resolverClass) {
+            ModelUtils modelUtils = SpringContextUtil.getBeanByType(ModelUtils.class);
+            this.delegate = modelUtils.getDelegate(resolverClass);
             return this;
         }
     }

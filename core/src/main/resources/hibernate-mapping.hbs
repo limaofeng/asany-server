@@ -5,12 +5,12 @@
 <hibernate-mapping>
     <class entity-name="{{code}}" table="{{databaseTableName}}">
         {{~#idField}}
-        <id name="{{code}}" type="{{javaType}}" length="64" unsaved-value="null">
+        <id name="{{code}}" type="{{hibernateType}}" length="64" unsaved-value="null">
             <generator class="fantasy-sequence"/>
         </id>
         {{~/idField}}
         {{~#each fields}}
-        <property type="{{javaType}}" name="{{code}}" column="{{databaseColumnName}}"/>
+        <property type="{{hibernateType}}" name="{{code}}" column="{{databaseColumnName}}"/>
         {{~/each}}
     </class>
 </hibernate-mapping>

@@ -4,6 +4,7 @@ import cn.asany.shanhai.core.bean.*;
 import cn.asany.shanhai.core.bean.enums.ModelEndpointType;
 import cn.asany.shanhai.core.bean.enums.ModelType;
 import cn.asany.shanhai.core.support.model.FieldType;
+import cn.asany.shanhai.core.support.graphql.resolvers.mock.MockGraphQLGetQueryResolver;
 import cn.asany.shanhai.core.support.model.IModelFeature;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -99,6 +100,7 @@ public class MasterModelFeature implements IModelFeature, InitializingBean {
             .argument("id", FieldType.ID.getCode(), true)
             .returnType(model)
             .model(model)
+            .delegate(MockGraphQLGetQueryResolver.class)
             .build();
         endpoint.getReturnType().setEndpoint(endpoint);
         return endpoint;
