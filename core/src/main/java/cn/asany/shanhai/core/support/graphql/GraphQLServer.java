@@ -11,7 +11,6 @@ import com.github.jknack.handlebars.Options;
 import com.github.jknack.handlebars.Template;
 import graphql.ExecutionResult;
 import graphql.GraphQL;
-import graphql.scalars.ExtendedScalars;
 import graphql.schema.DataFetcher;
 import graphql.schema.GraphQLScalarType;
 import graphql.schema.GraphQLSchema;
@@ -122,6 +121,12 @@ public class GraphQLServer implements InitializingBean {
         RuntimeWiring.Builder runtimeWiringBuilder = newRuntimeWiring();
         runtimeWiringBuilder.type("Query", builder -> {
             for (ModelEndpoint endpoint : queries.values()) {
+                builder.dataFetcher(endpoint.getCode(), dataFetcherMap.get(endpoint));
+            }
+            return builder;
+        });
+        runtimeWiringBuilder.type("Mutation", builder -> {
+            for (ModelEndpoint endpoint : mutations.values()) {
                 builder.dataFetcher(endpoint.getCode(), dataFetcherMap.get(endpoint));
             }
             return builder;

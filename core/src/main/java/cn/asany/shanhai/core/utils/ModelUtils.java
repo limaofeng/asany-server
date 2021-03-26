@@ -8,8 +8,8 @@ import cn.asany.shanhai.core.dao.ModelDelegateDao;
 import cn.asany.shanhai.core.dao.ModelFieldDao;
 import cn.asany.shanhai.core.service.ModelFeatureService;
 import cn.asany.shanhai.core.service.ModelService;
-import cn.asany.shanhai.core.support.graphql.resolvers.GraphQLDelegateResolver;
-import cn.asany.shanhai.core.support.graphql.resolvers.mock.MockGraphQLGetQueryResolver;
+import cn.asany.shanhai.core.support.graphql.resolvers.BaseDataFetcher;
+import cn.asany.shanhai.core.support.graphql.resolvers.DelegateDataFetcher;
 import cn.asany.shanhai.core.support.model.FieldType;
 import cn.asany.shanhai.core.support.model.IModelFeature;
 import cn.asany.shanhai.core.support.model.ModelFeatureRegistry;
@@ -300,10 +300,10 @@ public class ModelUtils {
         }
     }
 
-    public ModelDelegate getDelegate(Class<? extends GraphQLDelegateResolver> resolverClass) {
-        if (resolverClass.isAssignableFrom(MockGraphQLGetQueryResolver.class)) {
-            Optional<ModelDelegate> optional = modelDelegateDao.findOne(Example.of(ModelDelegate.builder().type(ModelDelegateType.Mock).delegateClassName(resolverClass.getName()).build()));
-            return optional.orElseGet(() -> ModelDelegate.builder().type(ModelDelegateType.Mock).delegateClassName(resolverClass.getName()).build());
+    public ModelDelegate getDelegate(Class<? extends DelegateDataFetcher> resolverClass) {
+        if (BaseDataFetcher.class.isAssignableFrom(resolverClass)) {
+            Optional<ModelDelegate> optional = modelDelegateDao.findOne(Example.of(ModelDelegate.builder().type(ModelDelegateType.Base).delegateClassName(resolverClass.getName()).build()));
+            return optional.orElseGet(() -> ModelDelegate.builder().type(ModelDelegateType.Base).delegateClassName(resolverClass.getName()).build());
         }
         return null;
     }

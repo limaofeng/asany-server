@@ -2,7 +2,7 @@ package cn.asany.shanhai.core.support.graphql.resolvers;
 
 import graphql.schema.DataFetchingEnvironment;
 
-public interface GraphQLDelegateResolver {
+public interface DelegateDataFetcher {
 
     String method();
 

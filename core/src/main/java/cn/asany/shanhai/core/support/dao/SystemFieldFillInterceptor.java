@@ -9,22 +9,31 @@ import org.jfantasy.framework.security.SpringSecurityUtils;
 import org.jfantasy.framework.util.common.DateUtil;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.common.StringUtil;
+import org.jfantasy.framework.util.ognl.OgnlUtil;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
+/**
+ * 填充系统默认字段
+ *
+ * @author limaofeng
+ */
 public class SystemFieldFillInterceptor extends EmptyInterceptor {
     /**
      * 默认编辑人
      */
-    private static final String DEFAULT_MODIFIER = "unknown";
+    private static final String DEFAULT_MODIFIER = null;
     /**
      * 默认创建人
      */
-    private static final String DEFAULT_CREATOR = "unknown";
+    private static final String DEFAULT_CREATOR = null;
+
+    private static final OgnlUtil ognlUtil = OgnlUtil.getInstance();
 
     @Override
     public boolean onFlushDirty(Object entity, Serializable id, Object[] currentState, Object[] previousState, String[] propertyNames, Type[] types) {
-        if (entity instanceof BaseBusEntity) {
+        if (Arrays.stream(propertyNames).anyMatch(item -> ObjectUtil.exists(new String[]{BaseBusEntity.FIELD_UPDATOR, BaseBusEntity.FIELD_UPDATED_AT}, item))) {
             String modifier = DEFAULT_MODIFIER;
             LoginUser user = SpringSecurityUtils.getCurrentUser();
             if (ObjectUtil.isNotNull(user)) {
@@ -49,9 +58,9 @@ public class SystemFieldFillInterceptor extends EmptyInterceptor {
 
     @Override
     public boolean onSave(Object entity, Serializable id, Object[] state, String[] propertyNames, Type[] types) {
-        if (entity instanceof BaseBusEntity) {
+        if (Arrays.stream(propertyNames).anyMatch(item -> ObjectUtil.exists(new String[]{BaseBusEntity.FIELD_CREATOR, BaseBusEntity.FIELD_CREATED_AT, BaseBusEntity.FIELD_UPDATOR, BaseBusEntity.FIELD_UPDATED_AT}, item))) {
             LoginUser user = SpringSecurityUtils.getCurrentUser();
-            String creator = ObjectUtil.isNotNull(user) ? user.getUid() : StringUtil.defaultValue(((BaseBusEntity) entity).getCreator(), DEFAULT_CREATOR);
+            String creator = ObjectUtil.isNotNull(user) ? user.getUid() : StringUtil.defaultValue(ognlUtil.getValue(BaseBusEntity.FIELD_CREATOR, entity), DEFAULT_CREATOR);
             int count = 0;
             int maxCount = 4;
             if (entity instanceof BaseBusBusinessEntity) {
@@ -64,9 +73,6 @@ public class SystemFieldFillInterceptor extends EmptyInterceptor {
                 } else if (BaseBusEntity.FIELD_CREATED_AT.equals(propertyNames[i]) || BaseBusEntity.FIELD_UPDATED_AT.equals(propertyNames[i])) {
                     state[i] = DateUtil.now().clone();
                     count++;
-                } else if (BaseBusBusinessEntity.FIELD_DELETED.equals(propertyNames[i])) {
-                    state[i] = false;
-                    ((BaseBusBusinessEntity) entity).setDeleted(false);
                 }
                 if (count >= maxCount) {
                     return true;

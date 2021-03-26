@@ -1,16 +1,16 @@
 package cn.asany.shanhai.core.support.graphql;
 
-import cn.asany.shanhai.core.support.graphql.resolvers.GraphQLDelegateResolver;
+import cn.asany.shanhai.core.support.graphql.resolvers.DelegateDataFetcher;
 import graphql.schema.DataFetchingEnvironment;
 import org.jfantasy.framework.util.common.ClassUtil;
 import org.jfantasy.framework.util.reflect.MethodProxy;
 
 public class DefaultDelegateHandler implements DelegateHandler {
 
-    private GraphQLDelegateResolver delegate;
+    private DelegateDataFetcher delegate;
     private MethodProxy method;
 
-    public DefaultDelegateHandler(GraphQLDelegateResolver delegate) {
+    public DefaultDelegateHandler(DelegateDataFetcher delegate) {
         this.delegate = delegate;
         this.method = ClassUtil.getMethodProxy(this.delegate.getClass(), this.delegate.method());
     }

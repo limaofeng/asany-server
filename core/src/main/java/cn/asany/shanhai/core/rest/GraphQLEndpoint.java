@@ -26,11 +26,17 @@ public class GraphQLEndpoint {
     public Map<String, Object> graphql(@RequestBody String body) {
         ManualTransactionManager transactionManager = new ManualTransactionManager(sessionFactory);
         transactionManager.bindSession();
+        transactionManager.beginTransaction();
         try {
             log.debug("请求体:" + body);
             ReadContext context = JsonPath.parse(body);
             body = JSON.getObjectMapper().convertValue(context.read("$.query"), String.class);
-            return graphQLServer.execute(body);
+            Map<String, Object> result = graphQLServer.execute(body);
+            transactionManager.commitTransaction();
+            return result;
+        } catch (Exception e) {
+            transactionManager.rollbackTransaction();
+            throw e;
         } finally {
             transactionManager.unbindSession();
         }

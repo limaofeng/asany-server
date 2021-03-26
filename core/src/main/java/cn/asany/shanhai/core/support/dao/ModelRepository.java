@@ -7,22 +7,21 @@ import org.hibernate.SessionFactory;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.transform.AliasToBeanResultTransformer;
-import org.hibernate.transform.DistinctResultTransformer;
-import org.hibernate.transform.ResultTransformer;
-import org.jfantasy.framework.util.ognl.OgnlUtil;
 import org.springframework.util.Assert;
 
-import java.sql.Timestamp;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class ModelRepository {
     protected Model model;
     protected String entityName;
+    protected ModelResultTransformer resultTransformer;
 
     public ModelRepository(Model model, ModelSessionFactory sessionFactory) {
         this.model = model;
         this.entityName = model.getCode();
+        this.resultTransformer = new ModelResultTransformer(model.getFields());
     }
 
     protected SessionFactory getSessionFactory() {
@@ -36,24 +35,13 @@ public class ModelRepository {
 
     public Object findById(Long id) {
         Criteria criteria = createCriteria(Restrictions.eq("id", id));
-        criteria.setResultTransformer(new ResultTransformer() {
-            @Override
-            public Object transformTuple(Object[] tuple, String[] aliases) {
-                return tuple[tuple.length - 1];
-            }
-
-            @Override
-            public List transformList(List list) {
-                List<Object> result = new ArrayList<Object>(list.size());
-                for (Object entity : list) {
-                    Timestamp createdAt = OgnlUtil.getInstance().getValue("createdAt", entity);
-                    OgnlUtil.getInstance().setValue("createdAt", entity, new Date(createdAt.getTime()));
-                    result.add(entity);
-                }
-                return result;
-            }
-        });
+        criteria.setResultTransformer(this.resultTransformer);
         return criteria.uniqueResult();
+    }
+
+    public Object save(Object input) {
+        Object pk = getSession().save(entityName, input);
+        return findById((Long) pk);
     }
 
     public List findBy(String propertyName, Object value) {

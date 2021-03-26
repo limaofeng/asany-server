@@ -3,7 +3,8 @@ package cn.asany.shanhai.core.service;
 import cn.asany.shanhai.TestApplication;
 import cn.asany.shanhai.core.bean.ModelDelegate;
 import cn.asany.shanhai.core.bean.enums.ModelDelegateType;
-import cn.asany.shanhai.core.support.graphql.resolvers.mock.MockGraphQLGetQueryResolver;
+import cn.asany.shanhai.core.support.graphql.resolvers.base.BaseMutationCreateDataFetcher;
+import cn.asany.shanhai.core.support.graphql.resolvers.base.BaseQueryGetDataFetcher;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,9 +27,18 @@ class ModelDelegateServiceTest {
     void save() {
         ModelDelegate GET = ModelDelegate.builder()
             .name("获取单个对象")
-            .type(ModelDelegateType.Mock)
-            .delegateClassName(MockGraphQLGetQueryResolver.class.getName())
+            .type(ModelDelegateType.Base)
+            .delegateClassName(BaseQueryGetDataFetcher.class.getName())
             .build();
         modelDelegateService.save(GET);
+
+        ModelDelegate SAVE = ModelDelegate.builder()
+            .name("保存对象")
+            .type(ModelDelegateType.Base)
+            .delegateClassName(BaseMutationCreateDataFetcher.class.getName())
+            .build();
+        modelDelegateService.save(SAVE);
+
+
     }
 }

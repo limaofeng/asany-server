@@ -1,7 +1,7 @@
 package cn.asany.shanhai.core.bean;
 
 import cn.asany.shanhai.core.bean.enums.ModelEndpointType;
-import cn.asany.shanhai.core.support.graphql.resolvers.GraphQLDelegateResolver;
+import cn.asany.shanhai.core.support.graphql.resolvers.DelegateDataFetcher;
 import cn.asany.shanhai.core.utils.ModelUtils;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -140,7 +140,7 @@ public class ModelEndpoint extends BaseBusEntity {
             return this;
         }
 
-        public ModelEndpointBuilder delegate(Class<? extends GraphQLDelegateResolver> resolverClass) {
+        public ModelEndpointBuilder delegate(Class<? extends DelegateDataFetcher> resolverClass) {
             ModelUtils modelUtils = SpringContextUtil.getBeanByType(ModelUtils.class);
             this.delegate = modelUtils.getDelegate(resolverClass);
             return this;

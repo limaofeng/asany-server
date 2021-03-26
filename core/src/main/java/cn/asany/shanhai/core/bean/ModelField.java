@@ -104,6 +104,10 @@ public class ModelField extends BaseBusEntity {
     @JoinColumn(name = "DELEGATE_ID", foreignKey = @ForeignKey(name = "FK_MODEL_FIELD_DID"))
     private ModelDelegate delegate;
 
+    public void getConverter() {
+
+    }
+
     public static class ModelFieldBuilder {
         private ModelFieldMetadata metadata;
 

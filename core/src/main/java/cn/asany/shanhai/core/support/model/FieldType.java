@@ -4,7 +4,9 @@ import cn.asany.shanhai.core.bean.Model;
 import cn.asany.shanhai.core.bean.ModelFieldMetadata;
 import cn.asany.shanhai.core.bean.enums.ModelType;
 
-public interface FieldType {
+import javax.persistence.AttributeConverter;
+
+public interface FieldType<JAVA extends Object, DB extends Object> extends AttributeConverter<JAVA, DB> {
     /**
      * ID
      */
@@ -64,4 +66,14 @@ public interface FieldType {
      * @return
      */
     DatabaseColumn getColumn(ModelFieldMetadata metadata);
+
+    @Override
+    default DB convertToDatabaseColumn(JAVA attribute) {
+        return (DB) attribute;
+    }
+
+    @Override
+    default JAVA convertToEntityAttribute(DB dbData) {
+        return (JAVA) dbData;
+    }
 }
