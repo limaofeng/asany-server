@@ -37,7 +37,9 @@ public class TemplateDataOfModelField {
     public String getGraphQLType() {
         FieldTypeRegistry registry = SpringContextUtil.getBeanByType(FieldTypeRegistry.class);
         FieldType type = registry.getType(this.field.getType().getCode());
-        return type.getGraphQLType(this.field.getMetadata());
+        Boolean isList = this.field.getList();
+        String graphQLType = type.getGraphQLType(this.field.getMetadata());
+        return isList ? "[" + graphQLType + "]" : graphQLType;
     }
 
     public String getType() {

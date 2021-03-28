@@ -4,19 +4,18 @@ import cn.asany.shanhai.core.bean.Model;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
+import org.jfantasy.framework.util.ognl.OgnlUtil;
 import org.springframework.util.Assert;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class ModelRepository {
     protected Model model;
     protected String entityName;
     protected ModelResultTransformer resultTransformer;
+    private OgnlUtil ognlUtil = OgnlUtil.getInstance();
 
     public ModelRepository(Model model, ModelSessionFactory sessionFactory) {
         this.model = model;
@@ -39,6 +38,14 @@ public class ModelRepository {
         return criteria.uniqueResult();
     }
 
+    public void delete(Long id) {
+        Object entity = findById(id);
+        if (entity == null) {
+            return;
+        }
+        getSession().delete(entityName, entity);
+    }
+
     public Object save(Object input) {
         Object pk = getSession().save(entityName, input);
         return findById((Long) pk);
@@ -54,7 +61,8 @@ public class ModelRepository {
     }
 
     protected Criteria distinct(Criteria criteria) {
-        criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+        // TODO: criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+        criteria.setResultTransformer(this.resultTransformer);
         return criteria;
     }
 
@@ -86,4 +94,21 @@ public class ModelRepository {
         return criteria;
     }
 
+    public List<Object> findAll() {
+        Criteria criteria = distinct(createCriteria(new Criterion[0]));
+        return criteria.list();
+    }
+
+    public Object update(Long id, Object input) {
+        ognlUtil.setValue("id", input, id);
+        Object source = findById(id);
+        if (source == null) {
+            return null;
+        }
+        for (Map.Entry<String, Object> entry : ((Map<String, Object>) input).entrySet()) {
+            ognlUtil.setValue(entry.getKey(), source, entry.getValue());
+        }
+        getSession().update(entityName, source);
+        return source;
+    }
 }

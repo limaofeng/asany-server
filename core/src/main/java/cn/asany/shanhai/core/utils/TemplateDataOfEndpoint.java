@@ -34,7 +34,9 @@ public class TemplateDataOfEndpoint {
 
     public String getReturnType() {
         ModelEndpointReturnType returnType = endpoint.getReturnType();
-        return StringUtil.upperCaseFirst(returnType.getType().getCode());
+        Boolean isList = returnType.getList();
+        String type = StringUtil.upperCaseFirst(returnType.getType().getCode());
+        return isList ? "[" + type + "]" : type;
     }
 
 }

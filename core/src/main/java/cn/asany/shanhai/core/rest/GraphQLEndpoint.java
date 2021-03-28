@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -22,7 +23,7 @@ public class GraphQLEndpoint {
     @Autowired
     private GraphQLServer graphQLServer;
 
-    @PostMapping("/dynamic_graphql")
+    @PostMapping("/latest/graphql")
     public Map<String, Object> graphql(@RequestBody String body) {
         ManualTransactionManager transactionManager = new ManualTransactionManager(sessionFactory);
         transactionManager.bindSession();
@@ -30,8 +31,12 @@ public class GraphQLEndpoint {
         try {
             log.debug("请求体:" + body);
             ReadContext context = JsonPath.parse(body);
-            body = JSON.getObjectMapper().convertValue(context.read("$.query"), String.class);
-            Map<String, Object> result = graphQLServer.execute(body);
+
+            String query = JSON.getObjectMapper().convertValue(context.read("$.query"), String.class);
+            String operationName = JSON.getObjectMapper().convertValue(context.read("$.operationName"), String.class);
+            Map<String, Object> variables = JSON.getObjectMapper().convertValue(context.read("$.variables"), HashMap.class);
+
+            Map<String, Object> result = graphQLServer.execute(query, operationName, variables);
             transactionManager.commitTransaction();
             return result;
         } catch (Exception e) {

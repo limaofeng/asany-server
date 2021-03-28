@@ -9,6 +9,7 @@ import cn.asany.shanhai.core.utils.TemplateDataOfEndpoint;
 import cn.asany.shanhai.core.utils.TemplateDataOfModel;
 import com.github.jknack.handlebars.Options;
 import com.github.jknack.handlebars.Template;
+import graphql.ExecutionInput;
 import graphql.ExecutionResult;
 import graphql.GraphQL;
 import graphql.schema.DataFetcher;
@@ -139,8 +140,9 @@ public class GraphQLServer implements InitializingBean {
         return this.graphQL = GraphQL.newGraphQL(graphQLSchema).build();
     }
 
-    public Map<String, Object> execute(String query) {
-        ExecutionResult executionResult = this.graphQL.execute(query);
+    public Map<String, Object> execute(String query, String operationName, Map<String, Object> variables) {
+        ExecutionInput.Builder builder = ExecutionInput.newExecutionInput().query(query).operationName(operationName).variables(variables);
+        ExecutionResult executionResult = this.graphQL.execute(builder);
 
         Map<String, Object> result = new HashMap<>();
         if (!executionResult.getErrors().isEmpty()) {

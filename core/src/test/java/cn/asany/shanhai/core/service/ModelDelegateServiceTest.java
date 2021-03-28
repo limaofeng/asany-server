@@ -1,14 +1,13 @@
 package cn.asany.shanhai.core.service;
 
 import cn.asany.shanhai.TestApplication;
-import cn.asany.shanhai.core.bean.ModelDelegate;
-import cn.asany.shanhai.core.bean.enums.ModelDelegateType;
-import cn.asany.shanhai.core.support.graphql.resolvers.base.BaseMutationCreateDataFetcher;
-import cn.asany.shanhai.core.support.graphql.resolvers.base.BaseQueryGetDataFetcher;
+import cn.asany.shanhai.core.runners.DefaultCRUDDelegateCommandLineRunner;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.jfantasy.framework.spring.SpringContextUtil;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -20,25 +19,17 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @Slf4j
 class ModelDelegateServiceTest {
 
-    @Autowired
-    private ModelDelegateService modelDelegateService;
+    private DefaultCRUDDelegateCommandLineRunner runner;
+
+    @SneakyThrows
+    @BeforeEach
+    void setUp() {
+        runner = SpringContextUtil.createBean(DefaultCRUDDelegateCommandLineRunner.class, SpringContextUtil.AutoType.AUTOWIRE_BY_TYPE);
+    }
 
     @Test
+    @SneakyThrows
     void save() {
-        ModelDelegate GET = ModelDelegate.builder()
-            .name("获取单个对象")
-            .type(ModelDelegateType.Base)
-            .delegateClassName(BaseQueryGetDataFetcher.class.getName())
-            .build();
-        modelDelegateService.save(GET);
-
-        ModelDelegate SAVE = ModelDelegate.builder()
-            .name("保存对象")
-            .type(ModelDelegateType.Base)
-            .delegateClassName(BaseMutationCreateDataFetcher.class.getName())
-            .build();
-        modelDelegateService.save(SAVE);
-
-
+        runner.run(new String[0]);
     }
 }

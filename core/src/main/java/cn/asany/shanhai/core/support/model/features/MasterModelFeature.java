@@ -3,9 +3,8 @@ package cn.asany.shanhai.core.support.model.features;
 import cn.asany.shanhai.core.bean.*;
 import cn.asany.shanhai.core.bean.enums.ModelEndpointType;
 import cn.asany.shanhai.core.bean.enums.ModelType;
-import cn.asany.shanhai.core.support.graphql.resolvers.base.BaseMutationCreateDataFetcher;
+import cn.asany.shanhai.core.support.graphql.resolvers.base.*;
 import cn.asany.shanhai.core.support.model.FieldType;
-import cn.asany.shanhai.core.support.graphql.resolvers.base.BaseQueryGetDataFetcher;
 import cn.asany.shanhai.core.support.model.IModelFeature;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -33,8 +32,10 @@ public class MasterModelFeature implements IModelFeature, InitializingBean {
         List<ModelEndpoint> endpoints = new ArrayList<>();
         endpoints.add(buildCreateEndpoint(model));
         endpoints.add(buildUpdateEndpoint(model));
+        endpoints.add(buildDeleteEndpoint(model));
         endpoints.add(buildGetEndpoint(model));
-        endpoints.add(buildFindPagerEndpoint(model));
+        endpoints.add(buildFindAllEndpoint(model));
+        endpoints.add(buildFindPaginationEndpoint(model));
         return endpoints;
     }
 
@@ -89,6 +90,21 @@ public class MasterModelFeature implements IModelFeature, InitializingBean {
             .argument("merge", FieldType.Boolean.getCode(), "启用合并模式", true)
             .returnType(model)
             .model(model)
+            .delegate(BaseMutationUpdateDataFetcher.class)
+            .build();
+        endpoint.getReturnType().setEndpoint(endpoint);
+        return endpoint;
+    }
+
+    private ModelEndpoint buildDeleteEndpoint(Model model) {
+        ModelEndpoint endpoint = ModelEndpoint.builder()
+            .type(ModelEndpointType.MUTATION)
+            .code("delete" + StringUtil.upperCaseFirst(model.getCode()))
+            .name("删除" + model.getName())
+            .argument("id", FieldType.ID.getCode(), true)
+            .returnType(model)
+            .model(model)
+            .delegate(BaseMutationDeleteDataFetcher.class)
             .build();
         endpoint.getReturnType().setEndpoint(endpoint);
         return endpoint;
@@ -108,10 +124,23 @@ public class MasterModelFeature implements IModelFeature, InitializingBean {
         return endpoint;
     }
 
-    private ModelEndpoint buildFindPagerEndpoint(Model model) {
+    private ModelEndpoint buildFindAllEndpoint(Model model) {
         ModelEndpoint endpoint = ModelEndpoint.builder()
             .type(ModelEndpointType.QUERY)
             .code(StringUtil.lowerCaseFirst(this.pluralize(model.getCode())))
+            .name("查询" + model.getName())
+            .returnType(true, model)
+            .model(model)
+            .delegate(BaseQueryFindFindAllDataFetcher.class)
+            .build();
+        endpoint.getReturnType().setEndpoint(endpoint);
+        return endpoint;
+    }
+
+    private ModelEndpoint buildFindPaginationEndpoint(Model model) {
+        ModelEndpoint endpoint = ModelEndpoint.builder()
+            .type(ModelEndpointType.QUERY)
+            .code(StringUtil.lowerCaseFirst(this.pluralize(model.getCode())) + "Connection")
             .name(model.getName() + "分页查询")
             .returnType(model)
             .model(model)

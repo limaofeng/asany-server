@@ -82,6 +82,11 @@ public class ModelEndpoint extends BaseBusEntity {
             return this;
         }
 
+        public ModelEndpointBuilder returnType(Boolean multiple, Model type) {
+            this.returnType = ModelEndpointReturnType.builder().list(multiple).type(type).build();
+            return this;
+        }
+
         public ModelEndpointBuilder returnType(String type) {
             ModelUtils modelUtils = SpringContextUtil.getBeanByType(ModelUtils.class);
             this.returnType = ModelEndpointReturnType.builder().type(modelUtils.getModelByCode(type)).build();
