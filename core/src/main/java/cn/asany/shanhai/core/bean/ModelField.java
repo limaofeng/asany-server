@@ -111,6 +111,11 @@ public class ModelField extends BaseBusEntity {
     public static class ModelFieldBuilder {
         private ModelFieldMetadata metadata;
 
+        public ModelFieldBuilder metadata(boolean insertable, boolean updatable) {
+            this.metadata = ModelFieldMetadata.builder().insertable(insertable).updatable(updatable).build();
+            return this;
+        }
+
         public ModelFieldBuilder metadata(String columnName) {
             this.metadata = ModelFieldMetadata.builder().databaseColumnName(columnName).build();
             return this;

@@ -11,14 +11,12 @@ import org.hibernate.boot.internal.SessionFactoryOptionsBuilder;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.tool.hbm2ddl.SchemaExport;
 import org.hibernate.tool.schema.TargetType;
-import org.jfantasy.framework.spring.SpringContextUtil;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.EntityManagerFactory;
 import java.io.ByteArrayInputStream;
 import java.util.EnumSet;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -85,7 +83,7 @@ public class ModelSessionFactory implements InitializingBean, ModelRepositoryFac
         String xml = hibernateMappingHelper.generateXML(model);
         this.addMetadataSource(xml);
         repositoryEntityNameMap.put(model.getId(), model.getCode());
-        repositoryMap.put(model.getCode(), repository = new ModelRepository(model, this));
+        repositoryMap.put(model.getCode(), repository = new ModelRepository(model));
         return repository;
     }
 }

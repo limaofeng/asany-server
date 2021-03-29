@@ -1,16 +1,20 @@
 package cn.asany.shanhai.core.support.dao;
 
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.springframework.orm.hibernate5.SessionHolder;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * 手动事务管理器
  *
  * @author limaofeng
  */
+@Slf4j
 public class ManualTransactionManager {
 
     private static ThreadLocal<SessionFactory> holder = new ThreadLocal<>();
@@ -58,6 +62,14 @@ public class ManualTransactionManager {
 
     public void bindSession() {
         SessionFactory sessionFactory = this.buildCurrentSessionFactory();
+        while (sessionFactory == null) {
+            try {
+                Thread.sleep(TimeUnit.SECONDS.toMillis(5));
+            } catch (InterruptedException e) {
+                log.error(e.getMessage(), e);
+            }
+            sessionFactory = this.buildCurrentSessionFactory();
+        }
         Session session = sessionFactory.openSession();
         SessionHolder sessionHolder = new SessionHolder(session);
         TransactionSynchronizationManager.bindResource(sessionFactory, sessionHolder);

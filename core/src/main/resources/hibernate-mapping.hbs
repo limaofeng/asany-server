@@ -10,7 +10,7 @@
         </id>
         {{~/idField}}
         {{~#each fields}}
-        <property type="{{hibernateType}}" name="{{code}}" column="{{databaseColumnName}}"/>
+        <property type="{{hibernateType}}" name="{{code}}" column="{{databaseColumnName}}" {{#nonInsertable}}insert="false"{{/nonInsertable}} {{#nonUpdatable}}update="false"{{/nonUpdatable}}/>
         {{~/each}}
     </class>
 </hibernate-mapping>

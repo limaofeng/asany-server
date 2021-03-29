@@ -5,6 +5,7 @@ import cn.asany.shanhai.core.support.model.FieldType;
 import cn.asany.shanhai.core.support.model.FieldTypeRegistry;
 import lombok.AllArgsConstructor;
 import org.jfantasy.framework.spring.SpringContextUtil;
+import org.jfantasy.framework.util.common.ObjectUtil;
 
 @AllArgsConstructor
 public class TemplateDataOfModelField {
@@ -27,6 +28,15 @@ public class TemplateDataOfModelField {
         FieldType type = registry.getType(this.field.getType().getCode());
         return type.getJavaType(this.field.getMetadata());
     }
+
+    public boolean isNonInsertable() {
+        return !ObjectUtil.defaultValue(field.getMetadata().getInsertable(), Boolean.TRUE);
+    }
+
+    public boolean isNonUpdatable() {
+        return !ObjectUtil.defaultValue(field.getMetadata().getUpdatable(), Boolean.TRUE);
+    }
+
 
     public String getHibernateType() {
         FieldTypeRegistry registry = SpringContextUtil.getBeanByType(FieldTypeRegistry.class);

@@ -17,7 +17,7 @@ public class ModelRepository {
     protected ModelResultTransformer resultTransformer;
     private OgnlUtil ognlUtil = OgnlUtil.getInstance();
 
-    public ModelRepository(Model model, ModelSessionFactory sessionFactory) {
+    public ModelRepository(Model model) {
         this.model = model;
         this.entityName = model.getCode();
         this.resultTransformer = new ModelResultTransformer(model.getFields());

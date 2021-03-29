@@ -33,6 +33,18 @@ public class ModelFieldMetadata implements Serializable {
      */
     @Column(name = "IS_UNIQUE", length = 1)
     private Boolean unique;
+    /**
+     * 可插入
+     */
+    @Builder.Default
+    @Column(name = "INSERTABLE", length = 1)
+    private Boolean insertable = true;
+    /**
+     * 可修改
+     */
+    @Builder.Default
+    @Column(name = "UPDATABLE", length = 1)
+    private Boolean updatable = true;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
     @PrimaryKeyJoinColumn
