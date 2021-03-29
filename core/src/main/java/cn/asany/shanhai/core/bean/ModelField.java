@@ -60,7 +60,7 @@ public class ModelField extends BaseBusEntity {
      * 字段类型
      */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "TYPE_ID", foreignKey = @ForeignKey(name = "FK_MODEL_FIELD_TID"), nullable = false)
+    @JoinColumn(name = "TYPE_ID", foreignKey = @ForeignKey(name = "FK_MODEL_FIELD_TID"))
     private Model type;
     /**
      * 是否唯一

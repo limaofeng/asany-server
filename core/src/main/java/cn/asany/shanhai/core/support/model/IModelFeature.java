@@ -21,7 +21,7 @@ public interface IModelFeature {
         return Collections.emptyList();
     }
 
-    default List<Model> getInputTypes(Model model) {
+    default List<Model> getTypes(Model model) {
         return Collections.emptyList();
     }
 

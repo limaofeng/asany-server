@@ -1,6 +1,8 @@
 package cn.asany.shanhai.core.support.model.features;
 
-import cn.asany.shanhai.core.bean.*;
+import cn.asany.shanhai.core.bean.Model;
+import cn.asany.shanhai.core.bean.ModelEndpoint;
+import cn.asany.shanhai.core.bean.ModelField;
 import cn.asany.shanhai.core.bean.enums.ModelEndpointType;
 import cn.asany.shanhai.core.bean.enums.ModelType;
 import cn.asany.shanhai.core.support.graphql.resolvers.base.*;
@@ -18,6 +20,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+
 
 @Data
 @Component
@@ -39,8 +42,8 @@ public class MasterModelFeature implements IModelFeature, InitializingBean {
         return endpoints;
     }
 
-    public Model buildInputType(String code, String name, List<ModelField> fields) {
-        return Model.builder().type(ModelType.INPUT).code(code).name(name).fields(
+    private Model buildType(ModelType type, String code, String name, List<ModelField> fields) {
+        return Model.builder().type(type).code(code).name(name).fields(
             fields.stream().filter(item -> !item.getPrimaryKey() && !item.getSystem()).map(item ->
                 ModelField.builder()
                     .code(item.getCode())
@@ -56,14 +59,64 @@ public class MasterModelFeature implements IModelFeature, InitializingBean {
     }
 
     private static String getUpdateInputTypeName(Model model) {
+        return model.getCode() + "Filter";
+    }
+
+    private static String getFilterInputTypeName(Model model) {
         return model.getCode() + "UpdateInput";
     }
 
+    private static String getConnectionTypeName(Model model) {
+        return model.getCode() + "Connection";
+    }
+
+    private static List<ModelField> buildFilterFields(Model model) {
+        List<ModelField> fields = new ArrayList<>();
+        for (ModelField field : model.getFields().stream().filter(item -> !item.getSystem() && !item.getPrimaryKey()).collect(Collectors.toList())) {
+            fields.add(ModelField.builder().code(field.getCode()).type(field.getType()).name(field.getName()).build());
+        }
+        return fields;
+    }
+
+    private List<ModelField> buildEdgeFields(Model model) {
+        List<ModelField> fields = new ArrayList<>();
+        fields.add(ModelField.builder().code("node").type(model).required(true).name("The item at the end of the edge.").build());
+        fields.add(ModelField.builder().code("cursor").type(model).required(true).name("A cursor for use in pagination.").build());
+        return fields;
+    }
+
+    private static List<ModelField> buildOrderByFields(Model model) {
+        List<ModelField> fields = new ArrayList<>();
+        for (ModelField field : model.getFields().stream().filter(item -> !item.getPrimaryKey()).collect(Collectors.toList())) {
+            fields.add(ModelField.builder().code(field.getCode() + "_ASC").name(field.getName() + " 升序").build());
+            fields.add(ModelField.builder().code(field.getCode() + "_DESC").name(field.getName() + " 降序").build());
+        }
+        return fields;
+    }
+
+    private static List<ModelField> buildConnectionFields(Model model) {
+        List<ModelField> fields = new ArrayList<>();
+        fields.add(ModelField.builder().code("totalCount").type(FieldType.Int).name("总数据条数").required(true).build());
+        fields.add(ModelField.builder().code("pageSize").type(FieldType.Int).name("每页数据条数").required(true).build());
+        fields.add(ModelField.builder().code("totalPage").type(FieldType.Int).name("总页数").required(true).build());
+        fields.add(ModelField.builder().code("currentPage").type(FieldType.Int).name("当前页码").required(true).build());
+        fields.add(ModelField.builder().code("edges").type(getEdgeTypeName(model)).list(true).required(true).name("A list of edges.").build());
+        return fields;
+    }
+
     @Override
-    public List<Model> getInputTypes(Model model) {
-        Model inputTypeOfCreate = this.buildInputType(getCreateInputTypeName(model), model.getName() + "录入对象", model.getFields());
-        Model inputTypeOfUpdate = this.buildInputType(getUpdateInputTypeName(model), model.getName() + "更新对象", model.getFields());
-        return new ArrayList<>(Arrays.asList(inputTypeOfCreate, inputTypeOfUpdate));
+    public List<Model> getTypes(Model model) {
+        Model inputTypeOfCreate = this.buildType(ModelType.INPUT, getCreateInputTypeName(model), model.getName() + "录入对象", model.getFields());
+        Model inputTypeOfUpdate = this.buildType(ModelType.INPUT, getUpdateInputTypeName(model), model.getName() + "更新对象", model.getFields());
+        Model inputTypeOfFilter = this.buildType(ModelType.INPUT, getFilterInputTypeName(model), model.getName() + "过滤器", buildFilterFields(model));
+        Model inputTypeOfOrderBy = this.buildType(ModelType.ENUM, getFilterInputTypeName(model), model.getName() + "过滤器", buildOrderByFields(model));
+        Model typeOfEdge = this.buildType(ModelType.TYPE, getEdgeTypeName(model), model.getName() + " ：A connection to a list of items.", buildEdgeFields(model));
+        Model typeOfConnection = this.buildType(ModelType.TYPE, getConnectionTypeName(model), model.getName() + " ：A connection to a list of items.", buildConnectionFields(model));
+        return new ArrayList<>(Arrays.asList(inputTypeOfCreate, inputTypeOfUpdate, inputTypeOfFilter, inputTypeOfOrderBy, typeOfEdge, typeOfConnection));
+    }
+
+    private static String getEdgeTypeName(Model model) {
+        return model.getCode() + "Edge";
     }
 
     private ModelEndpoint buildCreateEndpoint(Model model) {
@@ -142,7 +195,11 @@ public class MasterModelFeature implements IModelFeature, InitializingBean {
             .type(ModelEndpointType.QUERY)
             .code(StringUtil.lowerCaseFirst(this.pluralize(model.getCode())) + "Connection")
             .name(model.getName() + "分页查询")
-            .returnType(model)
+            .argument("filter", getFilterInputTypeName(model))
+            .argument("page", FieldType.Int, "页码", 1)
+            .argument("pageSize", FieldType.Int, "每页展示条数", 15)
+            .argument("orderBy", FieldType.Int, "每页展示条数", 15)
+            .returnType(getConnectionTypeName(model))
             .model(model)
             .build();
         endpoint.getReturnType().setEndpoint(endpoint);

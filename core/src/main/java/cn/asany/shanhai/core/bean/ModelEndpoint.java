@@ -113,6 +113,14 @@ public class ModelEndpoint extends BaseBusEntity {
             return this;
         }
 
+        public ModelEndpointBuilder argument(String name, Model type) {
+            if (this.arguments == null) {
+                this.arguments = new ArrayList<>();
+            }
+            this.arguments.add(ModelEndpointArgument.builder().name(name).type(type).build());
+            return this;
+        }
+
         public ModelEndpointBuilder argument(String name, String type, Boolean required) {
             if (this.arguments == null) {
                 this.arguments = new ArrayList<>();
@@ -130,6 +138,14 @@ public class ModelEndpoint extends BaseBusEntity {
         }
 
         public ModelEndpointBuilder argument(String name, String type, String description, Object defaultValue) {
+            if (this.arguments == null) {
+                this.arguments = new ArrayList<>();
+            }
+            this.arguments.add(ModelEndpointArgument.builder().name(name).description(description).type(type).build());
+            return this;
+        }
+
+        public ModelEndpointBuilder argument(String name, Model type, String description, Object defaultValue) {
             if (this.arguments == null) {
                 this.arguments = new ArrayList<>();
             }

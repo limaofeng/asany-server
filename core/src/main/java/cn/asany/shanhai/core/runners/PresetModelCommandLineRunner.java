@@ -21,6 +21,7 @@ public class PresetModelCommandLineRunner implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
+        // 基础类型
         modelService.saveInBatch(
             FieldType.ID,
             FieldType.Int,
@@ -29,5 +30,11 @@ public class PresetModelCommandLineRunner implements CommandLineRunner {
             FieldType.Boolean,
             FieldType.Date
         );
+        // 默认类型 PageInfo
+//        modelService.saveInBatch(
+//            PageInfo
+//        );
+
+
     }
 }

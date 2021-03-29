@@ -16,6 +16,7 @@ import cn.asany.shanhai.core.support.model.ModelFeatureRegistry;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.jfantasy.framework.error.ValidationException;
 import org.jfantasy.framework.util.PinyinUtils;
 import org.jfantasy.framework.util.common.ClassUtil;
@@ -32,6 +33,7 @@ import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Component
 public class ModelUtils {
 
@@ -112,7 +114,8 @@ public class ModelUtils {
     public Model getModelByCode(String code) {
         Optional<Model> optional = modelService.findByCode(code);
         if (!optional.isPresent()) {
-            throw new ValidationException("MODEL CODE:" + code + "不存在");
+            log.error("MODEL CODE:" + code + "不存在");
+            return Model.builder().code(code).build();
         }
         return Model.builder().id(optional.get().getId()).build();
     }
@@ -137,17 +140,26 @@ public class ModelUtils {
             fields.add(this.install(model, field));
         }
 
-        for (Model type : feature.getInputTypes(model)) {
+        for (Model type : feature.getTypes(model)) {
             Optional<Model> optional = modelService.findByCode(type.getCode());
             if (optional.isPresent()) {
-                model.connect(optional.get(), ModelConnectType.INPUT);
+                model.connect(optional.get(), getModelConnectType(type.getType()));
             } else {
-                model.connect(modelService.save(type), ModelConnectType.INPUT);
+                model.connect(modelService.save(type), getModelConnectType(type.getType()));
             }
         }
 
         // 设置 Endpoint
         model.getEndpoints().addAll(feature.getEndpoints(model));
+    }
+
+    private ModelConnectType getModelConnectType(ModelType type) {
+        if (ModelType.INPUT == type) {
+            return ModelConnectType.INPUT;
+        } else if (ModelType.INPUT == type) {
+            return ModelConnectType.TYPE;
+        }
+        return null;
     }
 
     public void reinstall(Model model, ModelFeature modelFeature) {
@@ -161,7 +173,7 @@ public class ModelUtils {
             fields.add(this.install(model, field));
         }
 
-        for (Model type : feature.getInputTypes(model)) {
+        for (Model type : feature.getTypes(model)) {
             Optional<Model> optional = modelService.findByCode(type.getCode());
             if (optional.isPresent()) { // 如果之前存在对象，查询填充 ID 字段
                 Model oldType = optional.get();

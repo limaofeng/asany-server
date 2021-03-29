@@ -52,5 +52,10 @@ public class ModelEndpointArgument {
             this.type = Model.builder().code(type).build();
             return this;
         }
+
+        public ModelEndpointArgumentBuilder type(Model type) {
+            this.type = type;
+            return this;
+        }
     }
 }

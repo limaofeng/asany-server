@@ -1,7 +1,8 @@
 package cn.asany.shanhai.core.bean.enums;
 
 public enum ModelConnectType {
-    INPUT(ModelRelationType.SUBJECTION, "INPUT");
+    INPUT(ModelRelationType.SUBJECTION, "INPUT"),
+    TYPE(ModelRelationType.SUBJECTION, "TYPE");
 
     public ModelRelationType type;
     public String relation;
