@@ -36,7 +36,7 @@ class InitModelDaoCommandLineRunnerTest {
         ManualTransactionManager transactionManager = new ManualTransactionManager(sessionFactory);
         transactionManager.bindSession();
 
-        ModelRepository modelJpaRepository = new ModelRepository(Model.builder().code("Employee").build(), sessionFactory);
+        ModelRepository modelJpaRepository = new ModelRepository(Model.builder().code("Employee").build());
         List result = modelJpaRepository.findBy("name", "1234");
         System.out.println("resultList: " + result);
 

@@ -2,6 +2,7 @@ package cn.asany.shanhai.core.service;
 
 import cn.asany.shanhai.core.bean.*;
 import cn.asany.shanhai.core.bean.enums.ModelConnectType;
+import cn.asany.shanhai.core.bean.enums.ModelRelationType;
 import cn.asany.shanhai.core.bean.enums.ModelStatus;
 import cn.asany.shanhai.core.bean.enums.ModelType;
 import cn.asany.shanhai.core.dao.*;
@@ -15,10 +16,12 @@ import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.error.ValidationException;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.common.StringUtil;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -155,11 +158,11 @@ public class ModelService {
         for (ModelEndpoint endpoint : model.getEndpoints()) {
             this.modelEndpointDao.delete(endpoint);
         }
-        List<Model> inputTypes = model.getRelations().stream().filter(item -> item.getType() == ModelConnectType.INPUT.type && ModelConnectType.INPUT.relation.equals(item.getRelation())).map(item -> item.getInverse()).collect(Collectors.toList());
+        List<Model> types = model.getRelations().stream().filter(item -> item.getType() == ModelRelationType.SUBJECTION).map(item -> item.getInverse()).collect(Collectors.toList());
         for (ModelRelation relation : model.getRelations()) {
             this.modelRelationDao.delete(relation);
         }
-        for (Model type : inputTypes) {
+        for (Model type : types) {
             this.modelDao.delete(type);
         }
         this.modelDao.delete(model);
@@ -197,6 +200,5 @@ public class ModelService {
     public boolean exists(String code) {
         return this.modelDao.exists(Example.of(Model.builder().code(code).build()));
     }
-
 
 }

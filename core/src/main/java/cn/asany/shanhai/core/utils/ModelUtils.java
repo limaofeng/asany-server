@@ -4,6 +4,7 @@ import cn.asany.shanhai.core.bean.*;
 import cn.asany.shanhai.core.bean.enums.ModelConnectType;
 import cn.asany.shanhai.core.bean.enums.ModelDelegateType;
 import cn.asany.shanhai.core.bean.enums.ModelType;
+import cn.asany.shanhai.core.dao.ModelDao;
 import cn.asany.shanhai.core.dao.ModelDelegateDao;
 import cn.asany.shanhai.core.dao.ModelFieldDao;
 import cn.asany.shanhai.core.service.ModelFeatureService;
@@ -26,6 +27,8 @@ import org.jfantasy.framework.util.ognl.OgnlUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.Column;
 import java.lang.reflect.Field;
@@ -128,6 +131,7 @@ public class ModelUtils {
         return model.getFields().stream().filter(item -> !item.getPrimaryKey()).collect(Collectors.toList());
     }
 
+    @Transactional(propagation = Propagation.MANDATORY)
     public void install(Model model, ModelFeature modelFeature) {
         Optional<ModelFeature> optionalModelFeature = modelFeatureService.get(modelFeature.getId());
         if (!optionalModelFeature.isPresent()) {
@@ -156,12 +160,13 @@ public class ModelUtils {
     private ModelConnectType getModelConnectType(ModelType type) {
         if (ModelType.INPUT == type) {
             return ModelConnectType.INPUT;
-        } else if (ModelType.INPUT == type) {
+        } else if (ModelType.TYPE == type || ModelType.ENUM == type) {
             return ModelConnectType.TYPE;
         }
         return null;
     }
 
+    @Transactional(propagation = Propagation.MANDATORY)
     public void reinstall(Model model, ModelFeature modelFeature) {
         IModelFeature feature = modelFeatureRegistry.get(modelFeature.getId());
         List<ModelField> fields = model.getFields();
@@ -185,9 +190,9 @@ public class ModelUtils {
                     }
                     field.setId(oldField.getId());
                 }
-                model.connect(modelService.update(type), ModelConnectType.INPUT);
+                model.connect(modelService.update(type), getModelConnectType(type.getType()));
             } else {
-                model.connect(modelService.save(type), ModelConnectType.INPUT);
+                model.connect(modelService.save(type), getModelConnectType(type.getType()));
             }
         }
 
@@ -195,6 +200,7 @@ public class ModelUtils {
         // model.getEndpoints().addAll(feature.getEndpoints(model));
     }
 
+    @Transactional(propagation = Propagation.MANDATORY)
     public void uninstall(Model model, ModelFeature modelFeature) {
         IModelFeature feature = modelFeatureRegistry.get(modelFeature.getId());
         // 卸载字段

@@ -38,7 +38,7 @@ public class MasterModelFeature implements IModelFeature, InitializingBean {
         endpoints.add(buildDeleteEndpoint(model));
         endpoints.add(buildGetEndpoint(model));
         endpoints.add(buildFindAllEndpoint(model));
-        endpoints.add(buildFindPaginationEndpoint(model));
+//        endpoints.add(buildFindPaginationEndpoint(model));
         return endpoints;
     }
 
@@ -81,7 +81,7 @@ public class MasterModelFeature implements IModelFeature, InitializingBean {
     private List<ModelField> buildEdgeFields(Model model) {
         List<ModelField> fields = new ArrayList<>();
         fields.add(ModelField.builder().code("node").type(model).required(true).name("The item at the end of the edge.").build());
-        fields.add(ModelField.builder().code("cursor").type(model).required(true).name("A cursor for use in pagination.").build());
+        fields.add(ModelField.builder().code("cursor").type(FieldType.String).required(true).name("A cursor for use in pagination.").build());
         return fields;
     }
 
@@ -111,8 +111,8 @@ public class MasterModelFeature implements IModelFeature, InitializingBean {
         Model inputTypeOfFilter = this.buildType(ModelType.INPUT, getFilterInputTypeName(model), model.getName() + "过滤器", buildFilterFields(model));
         Model inputTypeOfOrderBy = this.buildType(ModelType.ENUM, getFilterInputTypeName(model), model.getName() + "过滤器", buildOrderByFields(model));
         Model typeOfEdge = this.buildType(ModelType.TYPE, getEdgeTypeName(model), model.getName() + " ：A connection to a list of items.", buildEdgeFields(model));
-        Model typeOfConnection = this.buildType(ModelType.TYPE, getConnectionTypeName(model), model.getName() + " ：A connection to a list of items.", buildConnectionFields(model));
-        return new ArrayList<>(Arrays.asList(inputTypeOfCreate, inputTypeOfUpdate, inputTypeOfFilter, inputTypeOfOrderBy, typeOfEdge, typeOfConnection));
+//        Model typeOfConnection = this.buildType(ModelType.TYPE, getConnectionTypeName(model), model.getName() + " ：A connection to a list of items.", buildConnectionFields(model));
+        return new ArrayList<>(Arrays.asList(inputTypeOfCreate, inputTypeOfUpdate, inputTypeOfFilter, inputTypeOfOrderBy, typeOfEdge));
     }
 
     private static String getEdgeTypeName(Model model) {
