@@ -87,7 +87,7 @@ public class ModelUtils {
             return field;
         }
         if (field.getType().getId() == null) {
-            field.setType(getModelByCode(field.getType().getCode()));
+            field.setType(getModelByCode(model, field.getType().getCode()));
         }
 
         if (model.getType() != ModelType.ENTITY) {
@@ -132,6 +132,9 @@ public class ModelUtils {
     }
 
     public Model getModelByCode(Model model, String code) {
+        if (model.getCode().equals(code)) {
+            return model;
+        }
         Optional<Model> modelType = model.getRelations().stream().map(item -> item.getInverse()).filter(item -> item.getCode().equals(code)).findAny();
         return modelType.orElseGet(() -> this.getModelByCode(code));
     }

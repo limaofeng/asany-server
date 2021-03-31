@@ -78,8 +78,12 @@ public class MasterModelFeature implements IModelFeature, InitializingBean {
         return model.getCode() + "Connection";
     }
 
-    private static List<ModelField> buildFilterFields(Model model) {
+    private static List<ModelField> buildWhereFields(Model model) {
+        //TODO: 查询筛选 contains / in / not_in / starts_with / ends_with
         List<ModelField> fields = new ArrayList<>();
+        fields.add(ModelField.builder().code("AND").type(getWhereInputTypeName(model)).name("Logical AND on all given filters.").build());
+        fields.add(ModelField.builder().code("OR").type(getWhereInputTypeName(model)).name("Logical OR on all given filters.").build());
+        fields.add(ModelField.builder().code("NOT").type(getWhereInputTypeName(model)).name("Logical NOT on all given filters combined by AND.").build());
         for (ModelField field : model.getFields().stream().filter(item -> !item.getSystem() && !item.getPrimaryKey()).collect(Collectors.toList())) {
             fields.add(ModelField.builder().code(field.getCode()).type(field.getType()).name(field.getName()).build());
         }
@@ -116,7 +120,7 @@ public class MasterModelFeature implements IModelFeature, InitializingBean {
     public List<Model> getTypes(Model model) {
         Model inputTypeOfCreate = this.buildType(ModelType.INPUT, getCreateInputTypeName(model), model.getName() + "录入对象", cloneModelFields(model.getFields()));
         Model inputTypeOfUpdate = this.buildType(ModelType.INPUT, getUpdateInputTypeName(model), model.getName() + "更新对象", cloneModelFields(model.getFields()));
-        Model inputTypeOfFilter = this.buildType(ModelType.INPUT, getWhereInputTypeName(model), model.getName() + "过滤器", buildFilterFields(model));
+        Model inputTypeOfFilter = this.buildType(ModelType.INPUT, getWhereInputTypeName(model), model.getName() + "过滤器", buildWhereFields(model));
         Model inputTypeOfOrderBy = this.buildType(ModelType.ENUM, getOrderByTypeName(model), model.getName() + "排序", buildOrderByFields(model));
         Model typeOfEdge = this.buildType(ModelType.TYPE, getEdgeTypeName(model), model.getName() + " A connection to a list of items.", buildEdgeFields(model));
         Model typeOfConnection = this.buildType(ModelType.TYPE, getConnectionTypeName(model), model.getName() + " 分页对象", buildConnectionFields(model));
