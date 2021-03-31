@@ -1,33 +1,31 @@
 package cn.asany.shanhai.core.service;
 
 import cn.asany.shanhai.core.bean.*;
-import cn.asany.shanhai.core.bean.enums.ModelConnectType;
 import cn.asany.shanhai.core.bean.enums.ModelRelationType;
 import cn.asany.shanhai.core.bean.enums.ModelStatus;
 import cn.asany.shanhai.core.bean.enums.ModelType;
 import cn.asany.shanhai.core.dao.*;
 import cn.asany.shanhai.core.support.dao.ModelRepositoryFactory;
 import cn.asany.shanhai.core.support.model.ModelFeatureRegistry;
-import cn.asany.shanhai.core.utils.HibernateMappingHelper;
 import cn.asany.shanhai.core.utils.ModelUtils;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.error.ValidationException;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.common.StringUtil;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @Transactional
 public class ModelService {
@@ -67,13 +65,22 @@ public class ModelService {
             return modelDao.save(model);
         }
 
+        log.debug("实体" + model.getCode());
+
         // 检查 ModelField Metadata 设置
         for (ModelField field : model.getFields()) {
             modelUtils.install(model, field);
         }
 
-        if (model.getType() == ModelType.INPUT) {
-            return modelDao.save(model);
+        // 检查设置 Endpoint
+        for (ModelEndpoint endpoint : model.getEndpoints()) {
+            modelUtils.install(model, endpoint);
+        }
+
+        modelDao.save(model);
+
+        if (model.getType() != ModelType.ENTITY) {
+            return model;
         }
 
         // 检查主键
@@ -90,11 +97,6 @@ public class ModelService {
                 throw new ValidationException("0000000", String.format("模型特征[%s]不存在", feature.getId()));
             }
             modelUtils.install(model, feature);
-        }
-
-        // 检查设置 Endpoint
-        for (ModelEndpoint endpoint : model.getEndpoints()) {
-            modelUtils.install(model, endpoint);
         }
 
         // 检查 ModelRelation 设置
@@ -123,7 +125,7 @@ public class ModelService {
         // 合并字段
         modelUtils.mergeFields(original, model.getFields());
 
-        if (model.getType() != ModelType.OBJECT) {
+        if (model.getType() != ModelType.ENTITY) {
             return this.modelDao.update(original);
         }
 
@@ -151,7 +153,7 @@ public class ModelService {
     }
 
     public void delete(Model model) {
-        if (model.getType() != ModelType.OBJECT) {
+        if (model.getType() != ModelType.ENTITY) {
             this.delete(model);
             return;
         }
@@ -169,7 +171,7 @@ public class ModelService {
     }
 
     public void clear() {
-        List<Model> models = this.modelDao.findAll(Example.of(Model.builder().type(ModelType.OBJECT).build()), Sort.by(Sort.Direction.DESC, "createdAt"));
+        List<Model> models = this.modelDao.findAll(Example.of(Model.builder().type(ModelType.ENTITY).build()), Sort.by(Sort.Direction.DESC, "createdAt"));
         for (Model model : models) {
             this.delete(model);
         }

@@ -57,6 +57,7 @@ public class GraphQLServer implements InitializingBean {
     private Map<Long, Model> modelMap = new ConcurrentHashMap<>();
     private Map<Long, Model> typeMap = new ConcurrentHashMap<>();
     private Map<Long, Model> inputTypeMap = new ConcurrentHashMap<>();
+    private Map<Long, Model> enumMap = new ConcurrentHashMap<>();
     private Map<Long, Model> scalarMap = new ConcurrentHashMap<>();
     private Map<Long, List<Long>> modeTypeMap = new ConcurrentHashMap<>();
     private Map<Long, List<Long>> modelEndpointMap = new ConcurrentHashMap<>();
@@ -81,12 +82,13 @@ public class GraphQLServer implements InitializingBean {
         List<Model> models = new ArrayList<>(modelMap.values());
         List<ModelEndpoint> queries = new ArrayList<>(this.queries.values());
         List<ModelEndpoint> mutations = new ArrayList<>(this.mutations.values());
+        List<Model> enumerations = new ArrayList<>(this.enumMap.values());
         List<Model> types = new ArrayList<>(models);
         types.addAll(this.typeMap.values());
         List<Model> inputTypes = new ArrayList<>(this.inputTypeMap.values());
         List<Model> scalars = new ArrayList<>(this.scalarMap.values());
 
-        scheme = template.apply(new TemplateRootData(queries, mutations, types, inputTypes, scalars));
+        scheme = template.apply(new TemplateRootData(queries, mutations, types, inputTypes, scalars, enumerations));
         log.debug("SCHEME: " + scheme);
 
         return scheme;
@@ -160,9 +162,9 @@ public class GraphQLServer implements InitializingBean {
                 inputTypeMap.put(type.getId(), type);
             } else if (type.getType() == ModelType.SCALAR) {
                 scalarMap.put(type.getId(), type);
+            } else if (type.getType() == ModelType.ENUM) {
+                enumMap.put(type.getId(), type);
             }
-
-
         }
     }
 
@@ -171,15 +173,16 @@ public class GraphQLServer implements InitializingBean {
         private final List<ModelEndpoint> mutations;
         private final List<Model> types;
         private final List<Model> inputTypes;
+        private final List<Model> enumerations;
         private final List<Model> scalars;
-        private List<Model> models;
 
-        public TemplateRootData(List<ModelEndpoint> queries, List<ModelEndpoint> mutations, List<Model> types, List<Model> inputTypes, List<Model> scalars) {
+        public TemplateRootData(List<ModelEndpoint> queries, List<ModelEndpoint> mutations, List<Model> types, List<Model> inputTypes, List<Model> scalars, List<Model> enumerations) {
             this.types = types;
             this.scalars = scalars;
             this.inputTypes = inputTypes;
             this.queries = queries;
             this.mutations = mutations;
+            this.enumerations = enumerations;
         }
 
         public List getMutations() {
@@ -200,6 +203,10 @@ public class GraphQLServer implements InitializingBean {
 
         public List<TemplateDataOfModel> getScalars() {
             return scalars.stream().map(item -> new TemplateDataOfModel(item)).collect(Collectors.toList());
+        }
+
+        public List<TemplateDataOfModel> getEnumerations() {
+            return enumerations.stream().map(item -> new TemplateDataOfModel(item)).collect(Collectors.toList());
         }
     }
 

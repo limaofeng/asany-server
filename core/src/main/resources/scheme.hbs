@@ -1,3 +1,59 @@
+scalar Date
+
+{{~#each enumerations}}
+"""
+{{{name}}}
+"""
+enum {{code}} {
+    {{~#each fields}}
+    """
+    {{{name}}}
+    """
+    {{code}}
+    {{~/each}}
+}
+{{~/each}}
+
+{{~#each types}}
+"""
+{{name}}
+"""
+type {{code}} {
+    {{~#idField}}
+    {{~#notNull name}}
+    """
+    {{{name}}}
+    """
+    {{~/notNull}}
+    {{code}}: {{type}}{{#required}}!{{/required}}
+    {{~/idField}}
+    {{~#each fields}}
+    {{~#notNull name}}
+    """
+    {{{name}}}
+    """
+    {{~/notNull}}
+    {{code}}: {{type}}{{#required}}!{{/required}}
+    {{~/each}}
+}
+{{~/each}}
+
+{{~#each inputTypes}}
+"""
+{{name}}
+"""
+input {{code}} {
+    {{~#each fields}}
+    {{~#notNull name}}
+    """
+    {{{name}}}
+    """
+    {{~/notNull}}
+    {{code}}: {{type}}{{#required}}!{{/required}}
+    {{~/each}}
+}
+{{~/each}}
+
 type Query {
 {{~#each queries}}
     {{~#notNull name}}
@@ -17,6 +73,7 @@ type Query {
     ){{/isArg}}: {{returnType}}
 {{~/each}}
 }
+
 type Mutation {
 {{~#each mutations}}
     {{~#notNull name}}
@@ -36,39 +93,3 @@ type Mutation {
     ){{/isArg}}: {{returnType}}
 {{~/each}}
 }
-
-{{~#each types}}
-type {{code}} {
-    {{~#idField}}
-    {{~#notNull name}}
-    """
-    {{{name}}}
-    """
-    {{~/notNull}}
-    {{code}}: {{type}}
-    {{~/idField}}
-    {{~#each fields}}
-    {{~#notNull name}}
-    """
-    {{{name}}}
-    """
-    {{~/notNull}}
-    {{code}}: {{type}}
-    {{~/each}}
-}
-{{~/each}}
-
-{{~#each inputTypes}}
-input {{code}} {
-    {{~#each fields}}
-    {{~#notNull name}}
-    """
-    {{{name}}}
-    """
-    {{~/notNull}}
-    {{code}}: {{type}}
-    {{~/each}}
-}
-{{~/each}}
-
-scalar Date

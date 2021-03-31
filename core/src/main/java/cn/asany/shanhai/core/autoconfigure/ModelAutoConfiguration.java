@@ -74,8 +74,8 @@ public class ModelAutoConfiguration {
     }
 
     public void load() {
-        List<Model> types = modelService.findAll(ModelType.SCALAR, ModelType.TYPE, ModelType.INPUT);
-        List<Model> models = modelService.findAll(ModelType.OBJECT);
+        List<Model> types = modelService.findAll(ModelType.SCALAR, ModelType.TYPE, ModelType.INPUT, ModelType.ENUM);
+        List<Model> models = modelService.findAll(ModelType.ENTITY);
 
         graphQLServer.setTypes(types);
 

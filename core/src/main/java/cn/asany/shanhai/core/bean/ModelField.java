@@ -1,9 +1,7 @@
 package cn.asany.shanhai.core.bean;
 
-import cn.asany.shanhai.core.utils.ModelUtils;
 import lombok.*;
 import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.spring.SpringContextUtil;
 
 import javax.persistence.*;
 
@@ -122,8 +120,7 @@ public class ModelField extends BaseBusEntity {
         }
 
         public ModelFieldBuilder type(String id) {
-            ModelUtils modelUtils = SpringContextUtil.getBeanByType(ModelUtils.class);
-            this.type = modelUtils.getModelByCode(id);
+            this.type = Model.builder().code(id).build();
             return this;
         }
 

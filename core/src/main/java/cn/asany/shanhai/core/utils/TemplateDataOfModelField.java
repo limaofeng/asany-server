@@ -1,6 +1,8 @@
 package cn.asany.shanhai.core.utils;
 
+import cn.asany.shanhai.core.bean.Model;
 import cn.asany.shanhai.core.bean.ModelField;
+import cn.asany.shanhai.core.bean.enums.ModelType;
 import cn.asany.shanhai.core.support.model.FieldType;
 import cn.asany.shanhai.core.support.model.FieldTypeRegistry;
 import lombok.AllArgsConstructor;
@@ -45,11 +47,19 @@ public class TemplateDataOfModelField {
     }
 
     public String getGraphQLType() {
-        FieldTypeRegistry registry = SpringContextUtil.getBeanByType(FieldTypeRegistry.class);
-        FieldType type = registry.getType(this.field.getType().getCode());
+        Model modelType = this.field.getType();
+        String graphQLType = modelType.getCode();
+        if (modelType.getType() == ModelType.SCALAR) {
+            FieldTypeRegistry registry = SpringContextUtil.getBeanByType(FieldTypeRegistry.class);
+            FieldType type = registry.getType(this.field.getType().getCode());
+            graphQLType = type.getGraphQLType(this.field.getMetadata());
+        }
         Boolean isList = this.field.getList();
-        String graphQLType = type.getGraphQLType(this.field.getMetadata());
         return isList ? "[" + graphQLType + "]" : graphQLType;
+    }
+
+    public Boolean getRequired() {
+        return this.field.getRequired();
     }
 
     public String getType() {

@@ -14,9 +14,9 @@ public enum ModelType {
      */
     TYPE,
     /**
-     * TODO：实体
+     *
      */
-    OBJECT,
+    ENTITY,
     /**
      * 枚举
      */

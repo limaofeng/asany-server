@@ -4,8 +4,8 @@ import cn.asany.shanhai.core.bean.*;
 import cn.asany.shanhai.core.bean.enums.ModelConnectType;
 import cn.asany.shanhai.core.bean.enums.ModelDelegateType;
 import cn.asany.shanhai.core.bean.enums.ModelType;
-import cn.asany.shanhai.core.dao.ModelDao;
 import cn.asany.shanhai.core.dao.ModelDelegateDao;
+import cn.asany.shanhai.core.dao.ModelEndpointDao;
 import cn.asany.shanhai.core.dao.ModelFieldDao;
 import cn.asany.shanhai.core.service.ModelFeatureService;
 import cn.asany.shanhai.core.service.ModelService;
@@ -27,8 +27,6 @@ import org.jfantasy.framework.util.ognl.OgnlUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.Column;
 import java.lang.reflect.Field;
@@ -50,12 +48,14 @@ public class ModelUtils {
     private ModelFieldDao modelFieldDao;
     @Autowired
     private ModelDelegateDao modelDelegateDao;
+    @Autowired
+    private ModelEndpointDao modelEndpointDao;
 
     private OgnlUtil ognlUtil = OgnlUtil.getInstance();
 
     @SneakyThrows
     public void initialize(Model model) {
-        model.setType(ObjectUtil.defaultValue(model.getType(), ModelType.OBJECT));
+        model.setType(ObjectUtil.defaultValue(model.getType(), ModelType.ENTITY));
         model.setCode(ObjectUtil.defaultValue(model.getCode(), () -> StringUtil.upperCaseFirst(StringUtil.camelCase(PinyinUtils.getAll(model.getName())))));
         model.setFields(new ArrayList<>((ObjectUtil.defaultValue(model.getFields(), Collections.emptyList()))));
         model.setFeatures(new ArrayList<>(ObjectUtil.defaultValue(model.getFeatures(), Collections.emptyList())));
@@ -82,7 +82,15 @@ public class ModelUtils {
         field.setModel(model);
         field.setPrimaryKey(ObjectUtil.defaultValue(field.getPrimaryKey(), Boolean.FALSE));
         field.setCode(ObjectUtil.defaultValue(field.getCode(), StringUtil.lowerCaseFirst(StringUtil.camelCase(PinyinUtils.getAll(field.getName())))));
-        if (model.getType() != ModelType.OBJECT) {
+
+        if (model.getType() == ModelType.ENUM) {
+            return field;
+        }
+        if (field.getType().getId() == null) {
+            field.setType(getModelByCode(field.getType().getCode()));
+        }
+
+        if (model.getType() != ModelType.ENTITY) {
             return field;
         }
         ModelFieldMetadata metadata = field.getMetadata();
@@ -123,6 +131,11 @@ public class ModelUtils {
         return Model.builder().id(optional.get().getId()).build();
     }
 
+    public Model getModelByCode(Model model, String code) {
+        Optional<Model> modelType = model.getRelations().stream().map(item -> item.getInverse()).filter(item -> item.getCode().equals(code)).findAny();
+        return modelType.orElseGet(() -> this.getModelByCode(code));
+    }
+
     public ModelField generatePrimaryKeyField() {
         return ModelField.builder().code(FieldType.ID.getCode().toLowerCase()).name(FieldType.ID.getCode()).type(FieldType.ID).system(true).primaryKey(true).build();
     }
@@ -131,7 +144,6 @@ public class ModelUtils {
         return model.getFields().stream().filter(item -> !item.getPrimaryKey()).collect(Collectors.toList());
     }
 
-    @Transactional(propagation = Propagation.MANDATORY)
     public void install(Model model, ModelFeature modelFeature) {
         Optional<ModelFeature> optionalModelFeature = modelFeatureService.get(modelFeature.getId());
         if (!optionalModelFeature.isPresent()) {
@@ -153,8 +165,9 @@ public class ModelUtils {
             }
         }
 
-        // 设置 Endpoint
-        model.getEndpoints().addAll(feature.getEndpoints(model));
+        for (ModelEndpoint endpoint : feature.getEndpoints(model)) {
+            this.install(model, endpoint);
+        }
     }
 
     private ModelConnectType getModelConnectType(ModelType type) {
@@ -166,7 +179,6 @@ public class ModelUtils {
         return null;
     }
 
-    @Transactional(propagation = Propagation.MANDATORY)
     public void reinstall(Model model, ModelFeature modelFeature) {
         IModelFeature feature = modelFeatureRegistry.get(modelFeature.getId());
         List<ModelField> fields = model.getFields();
@@ -180,7 +192,8 @@ public class ModelUtils {
 
         for (Model type : feature.getTypes(model)) {
             Optional<Model> optional = modelService.findByCode(type.getCode());
-            if (optional.isPresent()) { // 如果之前存在对象，查询填充 ID 字段
+            // 如果之前存在对象，查询填充 ID 字段
+            if (optional.isPresent()) {
                 Model oldType = optional.get();
                 type.setId(oldType.getId());
                 for (ModelField field : type.getFields()) {
@@ -200,7 +213,6 @@ public class ModelUtils {
         // model.getEndpoints().addAll(feature.getEndpoints(model));
     }
 
-    @Transactional(propagation = Propagation.MANDATORY)
     public void uninstall(Model model, ModelFeature modelFeature) {
         IModelFeature feature = modelFeatureRegistry.get(modelFeature.getId());
         // 卸载字段
@@ -213,9 +225,21 @@ public class ModelUtils {
     public void install(Model model, ModelEndpoint endpoint) {
         for (ModelEndpointArgument argument : ObjectUtil.defaultValue(endpoint.getArguments(), Collections.<ModelEndpointArgument>emptyList())) {
             argument.setEndpoint(endpoint);
-            argument.setType(this.getModelByCode(argument.getType().getCode()));
+            if (argument.getType().getId() != null) {
+                continue;
+            }
+            argument.setType(this.getModelByCode(model, argument.getType().getCode()));
+        }
+        ModelEndpointReturnType returnType = endpoint.getReturnType();
+        returnType.setEndpoint(endpoint);
+        if (returnType.getType().getId() == null) {
+            returnType.setType(this.getModelByCode(model, returnType.getType().getCode()));
         }
         endpoint.setModel(model);
+        modelEndpointDao.save(endpoint);
+        if (!ObjectUtil.exists(model.getEndpoints(), "code", endpoint.getCode())) {
+            model.getEndpoints().add(endpoint);
+        }
     }
 
     public void mergeFields(Model model, List<ModelField> nextFields) {

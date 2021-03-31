@@ -59,12 +59,12 @@ public class ModelEndpoint extends BaseBusEntity {
     /**
      * 参数
      */
-    @OneToMany(mappedBy = "endpoint", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "endpoint", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE}, fetch = FetchType.LAZY)
     private List<ModelEndpointArgument> arguments;
     /**
      * 返回类型
      */
-    @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
+    @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
     @PrimaryKeyJoinColumn
     private ModelEndpointReturnType returnType;
 
@@ -88,20 +88,17 @@ public class ModelEndpoint extends BaseBusEntity {
         }
 
         public ModelEndpointBuilder returnType(String type) {
-            ModelUtils modelUtils = SpringContextUtil.getBeanByType(ModelUtils.class);
-            this.returnType = ModelEndpointReturnType.builder().type(modelUtils.getModelByCode(type)).build();
+            this.returnType = ModelEndpointReturnType.builder().type(Model.builder().code(type).build()).build();
             return this;
         }
 
         public ModelEndpointBuilder returnType(Boolean multiple, String type) {
-            ModelUtils modelUtils = SpringContextUtil.getBeanByType(ModelUtils.class);
-            this.returnType = ModelEndpointReturnType.builder().list(multiple).type(modelUtils.getModelByCode(type)).build();
+            this.returnType = ModelEndpointReturnType.builder().list(multiple).type(Model.builder().code(type).build()).build();
             return this;
         }
 
         public ModelEndpointBuilder returnType(Boolean required, Boolean multiple, String type) {
-            ModelUtils modelUtils = SpringContextUtil.getBeanByType(ModelUtils.class);
-            this.returnType = ModelEndpointReturnType.builder().required(required).list(multiple).type(modelUtils.getModelByCode(type)).build();
+            this.returnType = ModelEndpointReturnType.builder().required(required).list(multiple).type(Model.builder().code(type).build()).build();
             return this;
         }
 
@@ -113,11 +110,11 @@ public class ModelEndpoint extends BaseBusEntity {
             return this;
         }
 
-        public ModelEndpointBuilder argument(String name, Model type) {
+        public ModelEndpointBuilder argument(String name, Model type, String description) {
             if (this.arguments == null) {
                 this.arguments = new ArrayList<>();
             }
-            this.arguments.add(ModelEndpointArgument.builder().name(name).type(type).build());
+            this.arguments.add(ModelEndpointArgument.builder().name(name).type(type).description(description).build());
             return this;
         }
 

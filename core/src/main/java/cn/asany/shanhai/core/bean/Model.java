@@ -60,7 +60,7 @@ public class Model extends BaseBusEntity {
     /**
      * 关联引用
      */
-    @OneToMany(mappedBy = "model", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "model", cascade = {CascadeType.PERSIST, CascadeType.MERGE,CascadeType.REMOVE}, fetch = FetchType.LAZY)
     private List<ModelRelation> relations;
     /**
      * 标签
@@ -77,7 +77,7 @@ public class Model extends BaseBusEntity {
     @OneToMany(mappedBy = "model", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE}, fetch = FetchType.LAZY)
     private List<ModelField> fields;
 
-    @OneToMany(mappedBy = "model", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "model", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE}, fetch = FetchType.LAZY)
     private List<ModelEndpoint> endpoints;
     /**
      * 元数据
