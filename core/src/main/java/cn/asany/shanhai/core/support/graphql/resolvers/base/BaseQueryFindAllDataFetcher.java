@@ -4,6 +4,7 @@ import cn.asany.shanhai.core.bean.Model;
 import cn.asany.shanhai.core.bean.ModelEndpoint;
 import cn.asany.shanhai.core.support.dao.ModelRepository;
 import cn.asany.shanhai.core.support.graphql.resolvers.QueryFindAllDataFetcher;
+import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
 
 import java.util.List;
 
@@ -16,8 +17,8 @@ public class BaseQueryFindAllDataFetcher implements QueryFindAllDataFetcher {
     }
 
     @Override
-    public List<Object> findAll() {
-        return this.repository.findAll();
+    public List<Object> findAll(PropertyFilterBuilder filter) {
+        return this.repository.findAll(filter.build());
     }
 
 }

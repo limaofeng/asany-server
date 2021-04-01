@@ -7,11 +7,16 @@ import cn.asany.shanhai.core.bean.enums.ModelEndpointType;
 import cn.asany.shanhai.core.bean.enums.ModelType;
 import cn.asany.shanhai.core.support.graphql.resolvers.base.*;
 import cn.asany.shanhai.core.support.model.FieldType;
+import cn.asany.shanhai.core.support.model.FieldTypeRegistry;
 import cn.asany.shanhai.core.support.model.IModelFeature;
+import cn.asany.shanhai.core.utils.ModelUtils;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.jfantasy.framework.dao.jpa.PropertyFilter.MatchType;
+import org.jfantasy.framework.spring.SpringContextUtil;
 import org.jfantasy.framework.util.common.StringUtil;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -27,6 +32,9 @@ import java.util.stream.Collectors;
 public class MasterModelFeature implements IModelFeature, InitializingBean {
     public static final String ID = "master";
     private String id = ID;
+
+    @Autowired
+    private FieldTypeRegistry fieldTypeRegistry;
 
     private List<RuleAndReplacement> plurals = new ArrayList<>();
 
@@ -78,14 +86,18 @@ public class MasterModelFeature implements IModelFeature, InitializingBean {
         return model.getCode() + "Connection";
     }
 
-    private static List<ModelField> buildWhereFields(Model model) {
-        //TODO: 查询筛选 contains / in / not_in / starts_with / ends_with
+    private List<ModelField> buildWhereFields(Model model) {
         List<ModelField> fields = new ArrayList<>();
         fields.add(ModelField.builder().code("AND").type(getWhereInputTypeName(model)).list(true).name("Logical AND on all given filters.").build());
         fields.add(ModelField.builder().code("OR").type(getWhereInputTypeName(model)).list(true).name("Logical OR on all given filters.").build());
         fields.add(ModelField.builder().code("NOT").type(getWhereInputTypeName(model)).list(true).name("Logical NOT on all given filters combined by AND.").build());
         for (ModelField field : model.getFields().stream().filter(item -> !item.getSystem() && !item.getPrimaryKey()).collect(Collectors.toList())) {
-            fields.add(ModelField.builder().code(field.getCode()).type(field.getType()).name(field.getName()).build());
+            if (field.getType().getType() == ModelType.SCALAR) {
+                for (MatchType matchType : field.getMetadata().getFilters()) {
+                    String fieldName = matchType == MatchType.EQ ? field.getCode() : field.getCode() + "_" + matchType.getSlug();
+                    fields.add(ModelField.builder().code(fieldName).type(field.getType()).build());
+                }
+            }
         }
         return fields;
     }

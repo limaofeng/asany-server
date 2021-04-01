@@ -12,6 +12,7 @@ import cn.asany.shanhai.core.service.ModelService;
 import cn.asany.shanhai.core.support.graphql.resolvers.BaseDataFetcher;
 import cn.asany.shanhai.core.support.graphql.resolvers.DelegateDataFetcher;
 import cn.asany.shanhai.core.support.model.FieldType;
+import cn.asany.shanhai.core.support.model.FieldTypeRegistry;
 import cn.asany.shanhai.core.support.model.IModelFeature;
 import cn.asany.shanhai.core.support.model.ModelFeatureRegistry;
 import lombok.Data;
@@ -44,6 +45,8 @@ public class ModelUtils {
     private ModelFeatureService modelFeatureService;
     @Autowired
     private ModelFeatureRegistry modelFeatureRegistry;
+    @Autowired
+    private FieldTypeRegistry fieldTypeRegistry;
     @Autowired
     private ModelFieldDao modelFieldDao;
     @Autowired
@@ -81,7 +84,7 @@ public class ModelUtils {
     public ModelField install(Model model, ModelField field) {
         field.setModel(model);
         field.setPrimaryKey(ObjectUtil.defaultValue(field.getPrimaryKey(), Boolean.FALSE));
-        field.setCode(ObjectUtil.defaultValue(field.getCode(), StringUtil.lowerCaseFirst(StringUtil.camelCase(PinyinUtils.getAll(field.getName())))));
+        field.setCode(ObjectUtil.defaultValue(field.getCode(), () -> StringUtil.lowerCaseFirst(StringUtil.camelCase(PinyinUtils.getAll(field.getName())))));
 
         if (model.getType() == ModelType.ENUM) {
             return field;
@@ -101,6 +104,11 @@ public class ModelUtils {
         if (StringUtil.isBlank(metadata.getDatabaseColumnName())) {
             metadata.setDatabaseColumnName(StringUtil.snakeCase(field.getCode()).toUpperCase());
         }
+
+        if (metadata.getFilters() == null && field.getType().getType() == ModelType.SCALAR) {
+            metadata.setFilters(fieldTypeRegistry.getType(field.getType().getCode()).filters());
+        }
+
         metadata.setField(field);
         return field;
     }

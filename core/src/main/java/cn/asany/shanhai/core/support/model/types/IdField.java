@@ -4,6 +4,7 @@ import cn.asany.shanhai.core.bean.ModelFieldMetadata;
 import cn.asany.shanhai.core.support.model.DatabaseColumn;
 import cn.asany.shanhai.core.support.model.FieldType;
 import lombok.Data;
+import org.jfantasy.framework.dao.jpa.PropertyFilter.MatchType;
 import org.springframework.stereotype.Component;
 
 @Data
@@ -27,5 +28,10 @@ public class IdField implements FieldType {
     @Override
     public DatabaseColumn getColumn(ModelFieldMetadata metadata) {
         return DatabaseColumn.builder().name(metadata.getDatabaseColumnName()).updatable(false).nullable(false).build();
+    }
+
+    @Override
+    public MatchType[] filters() {
+        return new MatchType[]{MatchType.EQ};
     }
 }

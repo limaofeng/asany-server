@@ -4,6 +4,7 @@ import cn.asany.shanhai.core.bean.ModelFieldMetadata;
 import cn.asany.shanhai.core.support.model.DatabaseColumn;
 import cn.asany.shanhai.core.support.model.FieldType;
 import lombok.Data;
+import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.springframework.stereotype.Component;
 
 @Data
@@ -28,4 +29,10 @@ public class StringField implements FieldType {
     public DatabaseColumn getColumn(ModelFieldMetadata metadata) {
         return DatabaseColumn.builder().name(metadata.getDatabaseColumnName()).build();
     }
+
+    @Override
+    public PropertyFilter.MatchType[] filters() {
+        return new PropertyFilter.MatchType[]{PropertyFilter.MatchType.EQ, PropertyFilter.MatchType.CONTAINS, PropertyFilter.MatchType.STARTS_WITH, PropertyFilter.MatchType.ENDS_WITH};
+    }
+
 }

@@ -1,9 +1,11 @@
 package cn.asany.shanhai.core.bean;
 
+import cn.asany.shanhai.core.bean.converter.MatchTypeConverter;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
+import org.jfantasy.framework.dao.jpa.PropertyFilter;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -45,6 +47,13 @@ public class ModelFieldMetadata implements Serializable {
     @Builder.Default
     @Column(name = "UPDATABLE", length = 1)
     private Boolean updatable = true;
+
+    /**
+     * 字段支持的筛选方式
+     */
+    @Column(name = "FILTERS", columnDefinition = "JSON")
+    @Convert(converter = MatchTypeConverter.class)
+    private PropertyFilter.MatchType[] filters;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
     @PrimaryKeyJoinColumn

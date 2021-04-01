@@ -157,22 +157,17 @@ public class ModelRepository {
         try {
             if (PropertyFilter.MatchType.EQ.equals(matchType)) {
                 criterion = Restrictions.eq(propertyName, propertyValue);
-            } else if (PropertyFilter.MatchType.LIKE.equals(matchType)) {
-                String value = (String) propertyValue;
-                MatchMode matchMode = MatchMode.ANYWHERE;
-                if (value.endsWith("%")) {
-                    matchMode = MatchMode.START;
-                    value = value.substring(0, value.length() - 1);
-                } else if (value.startsWith("%")) {
-                    matchMode = MatchMode.END;
-                    value = value.substring(1);
-                }
-                criterion = Restrictions.like(propertyName, value, matchMode);
-            } else if (PropertyFilter.MatchType.LE.equals(matchType)) {
+            } else if (PropertyFilter.MatchType.CONTAINS.equals(matchType)) {
+                criterion = Restrictions.like(propertyName, (String) propertyValue, MatchMode.ANYWHERE);
+            } else if (PropertyFilter.MatchType.STARTS_WITH.equals(matchType)) {
+                criterion = Restrictions.like(propertyName, (String) propertyValue, MatchMode.START);
+            } else if (PropertyFilter.MatchType.ENDS_WITH.equals(matchType)) {
+                criterion = Restrictions.like(propertyName, (String) propertyValue, MatchMode.END);
+            } else if (PropertyFilter.MatchType.LTE.equals(matchType)) {
                 criterion = Restrictions.le(propertyName, propertyValue);
             } else if (PropertyFilter.MatchType.LT.equals(matchType)) {
                 criterion = Restrictions.lt(propertyName, propertyValue);
-            } else if (PropertyFilter.MatchType.GE.equals(matchType)) {
+            } else if (PropertyFilter.MatchType.GTE.equals(matchType)) {
                 criterion = Restrictions.ge(propertyName, propertyValue);
             } else if (PropertyFilter.MatchType.GT.equals(matchType)) {
                 criterion = Restrictions.gt(propertyName, propertyValue);
@@ -181,7 +176,7 @@ public class ModelRepository {
                     return null;
                 }
                 criterion = Restrictions.in(propertyName, (Object[]) propertyValue);
-            } else if (PropertyFilter.MatchType.NOTIN.equals(matchType)) {
+            } else if (PropertyFilter.MatchType.NOT_IN.equals(matchType)) {
                 if (Array.getLength(propertyValue) == 0) {
                     return null;
                 }
@@ -190,16 +185,14 @@ public class ModelRepository {
                 criterion = Restrictions.ne(propertyName, propertyValue);
             } else if (PropertyFilter.MatchType.NULL.equals(matchType)) {
                 criterion = Restrictions.isNull(propertyName);
-            } else if (PropertyFilter.MatchType.NOTNULL.equals(matchType)) {
+            } else if (PropertyFilter.MatchType.NOT_NULL.equals(matchType)) {
                 criterion = Restrictions.isNotNull(propertyName);
             } else if (PropertyFilter.MatchType.EMPTY.equals(matchType)) {
                 criterion = Restrictions.isEmpty(propertyName);
-            } else if (PropertyFilter.MatchType.NOTEMPTY.equals(matchType)) {
+            } else if (PropertyFilter.MatchType.NOT_EMPTY.equals(matchType)) {
                 criterion = Restrictions.isNotEmpty(propertyName);
             } else if (PropertyFilter.MatchType.BETWEEN.equals(matchType)) {
                 criterion = Restrictions.between(propertyName, Array.get(propertyValue, 0), Array.get(propertyValue, 1));
-            } else if (PropertyFilter.MatchType.SQL.equals(matchType)) {
-                criterion = Restrictions.sqlRestriction("ERROR");
             }
         } catch (Exception e) {
             throw ReflectionUtils.convertReflectionExceptionToUnchecked(e);

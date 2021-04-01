@@ -3,6 +3,7 @@ package cn.asany.shanhai.core.support.model;
 import cn.asany.shanhai.core.bean.Model;
 import cn.asany.shanhai.core.bean.ModelFieldMetadata;
 import cn.asany.shanhai.core.bean.enums.ModelType;
+import org.jfantasy.framework.dao.jpa.PropertyFilter.MatchType;
 
 import javax.persistence.AttributeConverter;
 
@@ -75,5 +76,9 @@ public interface FieldType<JAVA extends Object, DB extends Object> extends Attri
     @Override
     default JAVA convertToEntityAttribute(DB dbData) {
         return (JAVA) dbData;
+    }
+
+    default MatchType[] filters() {
+        return new MatchType[0];
     }
 }
