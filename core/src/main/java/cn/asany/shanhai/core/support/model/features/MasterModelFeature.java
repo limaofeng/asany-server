@@ -81,9 +81,9 @@ public class MasterModelFeature implements IModelFeature, InitializingBean {
     private static List<ModelField> buildWhereFields(Model model) {
         //TODO: 查询筛选 contains / in / not_in / starts_with / ends_with
         List<ModelField> fields = new ArrayList<>();
-        fields.add(ModelField.builder().code("AND").type(getWhereInputTypeName(model)).name("Logical AND on all given filters.").build());
-        fields.add(ModelField.builder().code("OR").type(getWhereInputTypeName(model)).name("Logical OR on all given filters.").build());
-        fields.add(ModelField.builder().code("NOT").type(getWhereInputTypeName(model)).name("Logical NOT on all given filters combined by AND.").build());
+        fields.add(ModelField.builder().code("AND").type(getWhereInputTypeName(model)).list(true).name("Logical AND on all given filters.").build());
+        fields.add(ModelField.builder().code("OR").type(getWhereInputTypeName(model)).list(true).name("Logical OR on all given filters.").build());
+        fields.add(ModelField.builder().code("NOT").type(getWhereInputTypeName(model)).list(true).name("Logical NOT on all given filters combined by AND.").build());
         for (ModelField field : model.getFields().stream().filter(item -> !item.getSystem() && !item.getPrimaryKey()).collect(Collectors.toList())) {
             fields.add(ModelField.builder().code(field.getCode()).type(field.getType()).name(field.getName()).build());
         }
@@ -200,7 +200,7 @@ public class MasterModelFeature implements IModelFeature, InitializingBean {
             .argument("orderBy", getOrderByTypeName(model), "排序")
             .returnType(true, model)
             .model(model)
-            .delegate(BaseQueryFindFindAllDataFetcher.class)
+            .delegate(BaseQueryFindAllDataFetcher.class)
             .build();
         endpoint.getReturnType().setEndpoint(endpoint);
         return endpoint;

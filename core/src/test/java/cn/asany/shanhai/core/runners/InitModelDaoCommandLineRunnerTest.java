@@ -8,8 +8,6 @@ import cn.asany.shanhai.core.support.dao.ManualTransactionManager;
 import cn.asany.shanhai.core.support.dao.ModelRepository;
 import cn.asany.shanhai.core.support.dao.ModelSessionFactory;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.Session;
-import org.hibernate.query.Query;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,10 +19,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = TestApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -54,15 +49,14 @@ class InitModelDaoCommandLineRunnerTest {
         transactionManager.bindSession();
 
         ModelRepository modelJpaRepository = sessionFactory.getRepository("Employee");
-        List<PropertyFilter> filters = new ArrayList();
+        PropertyFilterBuilder builder = PropertyFilter.builder();
 
-        List<List<PropertyFilter>> or = new ArrayList();
+        builder.or(
+            PropertyFilter.builder().equal("name", "王武ds11").isNull("createdAt"),
+            PropertyFilter.builder().startsWith("name", "12312")
+        );
 
-        or.add(PropertyFilter.builder().equal("name", "王武ds11").isNull("createdAt").build());
-        or.add(PropertyFilter.builder().startsWith("name", "12312").build());
-
-        filters.add(new PropertyFilter(PropertyFilter.MatchType.OR, or));
-        List result = modelJpaRepository.findAll(filters);
+        List result = modelJpaRepository.findAll(builder.build());
         System.out.println("resultList: " + result);
 
         transactionManager.unbindSession();

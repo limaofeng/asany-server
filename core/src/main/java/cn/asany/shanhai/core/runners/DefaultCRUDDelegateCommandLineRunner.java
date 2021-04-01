@@ -41,7 +41,7 @@ public class DefaultCRUDDelegateCommandLineRunner implements CommandLineRunner {
         ModelDelegate FIND_ALL = ModelDelegate.builder()
             .name("查询全部")
             .type(ModelDelegateType.Base)
-            .delegateClassName(BaseQueryFindFindAllDataFetcher.class.getName())
+            .delegateClassName(BaseQueryFindAllDataFetcher.class.getName())
             .build();
         modelDelegateService.saveInBatch(CREATE, UPDATE, DELETE, GET, FIND_ALL);
     }

@@ -4,6 +4,7 @@ import cn.asany.shanhai.TestApplication;
 import cn.asany.shanhai.core.support.dao.SystemFieldFillInterceptor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -99,6 +100,7 @@ public class DynamicDdlTest {
     }
 
     @Data
+    @EqualsAndHashCode(callSuper=false)
     @Builder
     static class Student extends BaseBusEntity {
         private String username;

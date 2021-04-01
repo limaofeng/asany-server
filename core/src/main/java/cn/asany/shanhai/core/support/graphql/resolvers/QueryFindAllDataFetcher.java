@@ -1,8 +1,10 @@
 package cn.asany.shanhai.core.support.graphql.resolvers;
 
+import cn.asany.shanhai.core.support.graphql.resolvers.base.utils.MethodArgumentResolver;
 import graphql.schema.DataFetchingEnvironment;
 
 import java.util.List;
+import java.util.Map;
 
 public interface QueryFindAllDataFetcher extends DelegateDataFetcher, BaseDataFetcher {
 
@@ -18,6 +20,9 @@ public interface QueryFindAllDataFetcher extends DelegateDataFetcher, BaseDataFe
 
     @Override
     default Object[] args(DataFetchingEnvironment environment) {
+        Map<String, Object> where = environment.getArgument("where");
+        MethodArgumentResolver.where(where);
+        environment.getArguments();
         return new Object[]{};
     }
 

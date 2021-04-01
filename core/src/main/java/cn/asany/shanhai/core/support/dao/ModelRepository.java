@@ -5,12 +5,10 @@ import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Criterion;
-import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
 import org.jfantasy.framework.dao.hibernate.util.ReflectionUtils;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
-import org.jfantasy.framework.util.common.StringUtil;
 import org.jfantasy.framework.util.ognl.OgnlUtil;
 import org.springframework.util.Assert;
 
@@ -122,8 +120,8 @@ public class ModelRepository {
         return source;
     }
 
-    protected Criterion[] buildPropertyFilterCriterions(List<PropertyFilter> filters) {
-        List<Criterion> criterionList = new ArrayList<Criterion>();
+    protected Criterion buildPropertyFilterCriterions(List<PropertyFilter> filters) {
+        List<Criterion> criterionList = new ArrayList<>();
         for (PropertyFilter filter : filters) {
             Object propertyValue = getPropertyValue(filter);
             Criterion criterion = buildPropertyFilterCriterion(filter.getPropertyName(), propertyValue, filter.getMatchType());
@@ -132,27 +130,27 @@ public class ModelRepository {
             }
             criterionList.add(criterion);
         }
-        return criterionList.toArray(new Criterion[criterionList.size()]);
+        return conjunction(PropertyFilter.MatchType.AND, criterionList.toArray(new Criterion[criterionList.size()]));
+    }
+
+    private Criterion conjunction(PropertyFilter.MatchType matchType, Criterion[] criteria) {
+        if (criteria.length == 1) {
+            return criteria[0];
+        }
+        return matchType == PropertyFilter.MatchType.AND ? Restrictions.and(criteria) : Restrictions.or(criteria);
     }
 
     private Object getPropertyValue(PropertyFilter filter) {
         return filter.getPropertyValue();
     }
 
+    protected Criterion[] buildPropertyFilterCriterion(List<List<PropertyFilter>> filters) {
+        return filters.stream().map(item -> buildPropertyFilterCriterions(item)).toArray(Criterion[]::new);
+    }
+
     protected Criterion buildPropertyFilterCriterion(String propertyName, Object propertyValue, PropertyFilter.MatchType matchType) {
-        if (matchType == PropertyFilter.MatchType.OR) {
-            List<List<PropertyFilter>> filters = (List<List<PropertyFilter>>) propertyValue;
-            Criterion[] criteria = filters.stream().map(item -> {
-                Criterion[] innerCriteria = buildPropertyFilterCriterions(item);
-                if (innerCriteria.length == 1) {
-                    return innerCriteria[0];
-                }
-                return Restrictions.and(innerCriteria);
-            }).toArray(Criterion[]::new);
-            return Restrictions.or(criteria);
-        }
-        if (matchType == PropertyFilter.MatchType.AND) {
-            return Restrictions.and();
+        if (matchType == PropertyFilter.MatchType.OR || matchType == PropertyFilter.MatchType.AND) {
+            return conjunction(matchType, buildPropertyFilterCriterion((List<List<PropertyFilter>>) propertyValue));
         }
         Assert.hasText(propertyName, "propertyName不能为空");
         Criterion criterion = null;

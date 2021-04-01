@@ -7,11 +7,11 @@ import cn.asany.shanhai.core.support.graphql.resolvers.QueryFindAllDataFetcher;
 
 import java.util.List;
 
-public class BaseQueryFindFindAllDataFetcher implements QueryFindAllDataFetcher {
+public class BaseQueryFindAllDataFetcher implements QueryFindAllDataFetcher {
 
     private ModelRepository repository;
 
-    public BaseQueryFindFindAllDataFetcher(Model model, ModelEndpoint endpoint, ModelRepository repository) {
+    public BaseQueryFindAllDataFetcher(Model model, ModelEndpoint endpoint, ModelRepository repository) {
         this.repository = repository;
     }
 

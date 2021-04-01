@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import org.jfantasy.graphql.inputs.QueryFilter;
 
+/**
+ * @author limaofeng
+ */
 @Data
 public class UserFilter extends QueryFilter {
 
