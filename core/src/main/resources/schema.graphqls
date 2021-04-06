@@ -3,6 +3,18 @@ type Query {
     models(filter: ModelFilter, page: Int = 1, pageSize: Int = 15, orderBy: OrderBy): ModelConnection
     # 查询单个用户
     model(id: ID): Model
+    # 服务
+    services: [Service]
+    # 消费者
+    consumers: [Consumer]
+}
+
+type Service {
+    id: ID
+}
+
+type Consumer {
+
 }
 
 type Mutation {

@@ -1,5 +1,6 @@
 rootProject.name = 'shanhai'
-include ":shanhai-boot", ":shanhai-core"
+include ":shanhai-boot", ":shanhai-core", ":shanhai-scheme"
 
 project(':shanhai-boot').projectDir = "$rootDir/boot" as File
 project(':shanhai-core').projectDir = "$rootDir/core" as File
+project(':shanhai-scheme').projectDir = "$rootDir/scheme" as File
