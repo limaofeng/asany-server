@@ -4,9 +4,9 @@ import cn.asany.shanhai.core.bean.*;
 import cn.asany.shanhai.core.bean.enums.ModelRelationType;
 import cn.asany.shanhai.core.bean.enums.ModelStatus;
 import cn.asany.shanhai.core.bean.enums.ModelType;
-import cn.asany.shanhai.core.dao.*;
-import cn.asany.shanhai.core.support.dao.ModelRepositoryFactory;
-import cn.asany.shanhai.core.support.model.ModelFeatureRegistry;
+import cn.asany.shanhai.core.dao.ModelDao;
+import cn.asany.shanhai.core.dao.ModelEndpointDao;
+import cn.asany.shanhai.core.dao.ModelRelationDao;
 import cn.asany.shanhai.core.utils.ModelUtils;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -32,23 +32,11 @@ public class ModelService {
     @Autowired
     private ModelDao modelDao;
     @Autowired
-    private ModelMetadataDao modelMetadataDao;
-    @Autowired
-    private ModelFieldDao modelFieldDao;
-    @Autowired
-    private ModelFieldMetadataDao modelFieldMetadataDao;
-    @Autowired
     private ModelEndpointDao modelEndpointDao;
     @Autowired
     private ModelRelationDao modelRelationDao;
-    //    @Autowired
-//    private RuntimeMetadataRegistry metadataRegistry;
-    @Autowired
-    private ModelRepositoryFactory jpaRepositoryFactory;
     @Autowired
     private ModelFeatureService modelFeatureService;
-    @Autowired
-    private ModelFeatureRegistry modelFeatureRegistry;
     @Autowired
     public ModelUtils modelUtils;
 
@@ -146,6 +134,13 @@ public class ModelService {
 
     public Optional<Model> get(Long id) {
         return this.modelDao.findById(id);
+    }
+
+    public int delete(Long[] ids) {
+        for (Long id : ids) {
+            this.modelDao.delete(this.modelDao.getOne(id));
+        }
+        return ids.length;
     }
 
     public void delete(Long id) {

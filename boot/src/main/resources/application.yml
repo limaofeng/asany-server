@@ -73,6 +73,15 @@ spring:
 graphql:
   servlet:
     exception-handlers-enabled: true
+    cors-enabled: true
+    cors:
+      allowed-origins: "*"
+      allowed-methods: GET, HEAD, POST
+      allowed-headers: Accept, Origin, Authorization, Content-Type, Last-Modified
+      allow-credentials: true
+      max-age: 3600
+  tools:
+    introspection-enabled: true
 
 logging:
   config: classpath:logback.xml

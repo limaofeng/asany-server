@@ -6,6 +6,9 @@ import graphql.kickstart.tools.GraphQLMutationResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * @author limaofeng
+ */
 @Component
 public class ModelGraphQLMutationResolver implements GraphQLMutationResolver {
 
@@ -16,4 +19,11 @@ public class ModelGraphQLMutationResolver implements GraphQLMutationResolver {
         return modelService.save(input);
     }
 
+    public Model updateModel(Long id, Model input) {
+        return modelService.update(input);
+    }
+
+    public int deleteModel(Long[] ids) {
+        return modelService.delete(ids);
+    }
 }

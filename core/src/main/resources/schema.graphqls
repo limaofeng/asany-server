@@ -1,35 +1,38 @@
-type Query {
-    # 用户列表
-    models(filter: ModelFilter, page: Int = 1, pageSize: Int = 15, orderBy: OrderBy): ModelConnection
-    # 查询单个用户
-    model(id: ID): Model
-    # 服务
-    services: [Service]
-    # 消费者
-    consumers: [Consumer]
-}
-
-type Service {
-    id: ID
-}
-
-type Consumer {
-
-}
-
-type Mutation {
-    createModel(input: ModelCreateInput!): Model
-}
+scalar Date
+scalar OrderBy
 
 input ModelCreateInput {
-    #登录名
+    # 编码
     code: String
-    #登录密码
+    # 名称
     name: String
+    # 字段
+    fields: [ModelFieldCreateInput]
+    # 特征
+    features: [String]
+}
+
+input ModelFieldCreateInput {
+    # 编码
+    code: String
+    # 名称
+    name: String
+    # 类型
+    type: String
 }
 
 input ModelFilter {
+    type: ModelType
+    type_not: ModelType
+    type_in: [ModelType]
+    type_notIn: [ModelType]
+    code: String
+    code_contains: String
+    name: String
     name_contains: String
+    AND: [ModelFilter]
+    OR: [ModelFilter]
+    NOT: [ModelFilter]
 }
 
 type ModelConnection {
@@ -49,12 +52,27 @@ type ModelEdge{
     node: Model
 }
 
+enum ModelType {
+    # 输入对象
+    INPUT
+    # 标量
+    SCALAR
+    # 类型
+    TYPE
+    # 实体
+    ENTITY
+    # 枚举
+    ENUM
+}
+
 type Model {
     id: ID
     # 编码
     code: String
     # 名称
     name: String
+    # 类型
+    type: ModelType
     # 描述
     description: String
     # 字段
@@ -89,5 +107,37 @@ type ModelField {
     system: Boolean
 }
 
-scalar Date
-scalar OrderBy
+type Service {
+    id: ID
+}
+
+type Consumer {
+
+}
+
+extend type Query {
+    # 用户列表
+    models(filter: ModelFilter, page: Int = 1, pageSize: Int = 15, orderBy: OrderBy): ModelConnection
+    # 查询单个用户
+    model(id: ID): Model
+    # 服务
+    services: [Service]
+    # 消费者
+    consumers: [Consumer]
+}
+
+extend type Mutation {
+    """
+    新增实体
+    """
+    createModel(input: ModelCreateInput!): Model
+    """
+    修改实体
+    """
+    updateModel(id: ID!, input: ModelCreateInput!): Model
+    """
+    删除实体
+    """
+    deleteModel(id: [ID]!): Int
+}
+

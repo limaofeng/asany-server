@@ -9,6 +9,7 @@ import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
 import org.jfantasy.framework.dao.hibernate.util.ReflectionUtils;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
+import org.jfantasy.framework.dao.jpa.PropertyFilter.MatchType;
 import org.jfantasy.framework.util.ognl.OgnlUtil;
 import org.springframework.util.Assert;
 
@@ -104,7 +105,7 @@ public class ModelRepository {
     }
 
     public List<Object> findAll(List<PropertyFilter> filters) {
-        return find(buildPropertyFilterCriterions(filters));
+        return find(buildPropertyFilterCriterion(filters));
     }
 
     public Object update(Long id, Object input) {
@@ -120,7 +121,7 @@ public class ModelRepository {
         return source;
     }
 
-    protected Criterion buildPropertyFilterCriterions(List<PropertyFilter> filters) {
+    protected Criterion[] buildPropertyFilterCriterion(List<PropertyFilter> filters) {
         List<Criterion> criterionList = new ArrayList<>();
         for (PropertyFilter filter : filters) {
             Object propertyValue = getPropertyValue(filter);
@@ -130,68 +131,64 @@ public class ModelRepository {
             }
             criterionList.add(criterion);
         }
-        return conjunction(PropertyFilter.MatchType.AND, criterionList.toArray(new Criterion[criterionList.size()]));
+        return criterionList.toArray(new Criterion[criterionList.size()]);
     }
 
-    private Criterion conjunction(PropertyFilter.MatchType matchType, Criterion[] criteria) {
+    private Criterion conjunction(MatchType matchType, Criterion[] criteria) {
         if (criteria.length == 1) {
             return criteria[0];
         }
-        return matchType == PropertyFilter.MatchType.AND ? Restrictions.and(criteria) : Restrictions.or(criteria);
+        return matchType == MatchType.AND ? Restrictions.and(criteria) : Restrictions.or(criteria);
     }
 
     private Object getPropertyValue(PropertyFilter filter) {
         return filter.getPropertyValue();
     }
 
-    protected Criterion[] buildPropertyFilterCriterion(List<List<PropertyFilter>> filters) {
-        return filters.stream().map(item -> buildPropertyFilterCriterions(item)).toArray(Criterion[]::new);
-    }
-
-    protected Criterion buildPropertyFilterCriterion(String propertyName, Object propertyValue, PropertyFilter.MatchType matchType) {
-        if (matchType == PropertyFilter.MatchType.OR || matchType == PropertyFilter.MatchType.AND) {
-            return conjunction(matchType, buildPropertyFilterCriterion((List<List<PropertyFilter>>) propertyValue));
+    protected Criterion buildPropertyFilterCriterion(String propertyName, Object propertyValue, MatchType matchType) {
+        if (matchType == MatchType.OR || matchType == MatchType.AND) {
+            return conjunction(matchType, ((List<List<PropertyFilter>>) propertyValue).stream().map(item -> conjunction(MatchType.AND, buildPropertyFilterCriterion(item))).toArray(Criterion[]::new));
         }
         Assert.hasText(propertyName, "propertyName不能为空");
         Criterion criterion = null;
         try {
-            if (PropertyFilter.MatchType.EQ.equals(matchType)) {
+            if (MatchType.EQ.equals(matchType)) {
                 criterion = Restrictions.eq(propertyName, propertyValue);
-            } else if (PropertyFilter.MatchType.CONTAINS.equals(matchType)) {
+            } else if (MatchType.CONTAINS.equals(matchType)) {
                 criterion = Restrictions.like(propertyName, (String) propertyValue, MatchMode.ANYWHERE);
-            } else if (PropertyFilter.MatchType.STARTS_WITH.equals(matchType)) {
+            } else if (MatchType.STARTS_WITH.equals(matchType)) {
                 criterion = Restrictions.like(propertyName, (String) propertyValue, MatchMode.START);
-            } else if (PropertyFilter.MatchType.ENDS_WITH.equals(matchType)) {
+            } else if (MatchType.ENDS_WITH.equals(matchType)) {
                 criterion = Restrictions.like(propertyName, (String) propertyValue, MatchMode.END);
-            } else if (PropertyFilter.MatchType.LTE.equals(matchType)) {
+            } else if (MatchType.LTE.equals(matchType)) {
                 criterion = Restrictions.le(propertyName, propertyValue);
-            } else if (PropertyFilter.MatchType.LT.equals(matchType)) {
+            } else if (MatchType.LT.equals(matchType)) {
                 criterion = Restrictions.lt(propertyName, propertyValue);
-            } else if (PropertyFilter.MatchType.GTE.equals(matchType)) {
+            } else if (MatchType.GTE.equals(matchType)) {
                 criterion = Restrictions.ge(propertyName, propertyValue);
-            } else if (PropertyFilter.MatchType.GT.equals(matchType)) {
+            } else if (MatchType.GT.equals(matchType)) {
                 criterion = Restrictions.gt(propertyName, propertyValue);
-            } else if (PropertyFilter.MatchType.IN.equals(matchType)) {
+            } else if (MatchType.IN.equals(matchType)) {
                 if (Array.getLength(propertyValue) == 0) {
                     return null;
                 }
                 criterion = Restrictions.in(propertyName, (Object[]) propertyValue);
-            } else if (PropertyFilter.MatchType.NOT_IN.equals(matchType)) {
+            } else if (MatchType.NOT_IN.equals(matchType)) {
                 if (Array.getLength(propertyValue) == 0) {
                     return null;
                 }
                 criterion = Restrictions.not(Restrictions.in(propertyName, (Object[]) propertyValue));
-            } else if (PropertyFilter.MatchType.NE.equals(matchType)) {
+            } else if (MatchType.NOT_EQUAL.equals(matchType)) {
                 criterion = Restrictions.ne(propertyName, propertyValue);
-            } else if (PropertyFilter.MatchType.NULL.equals(matchType)) {
+            } else if (MatchType.NULL.equals(matchType)) {
                 criterion = Restrictions.isNull(propertyName);
-            } else if (PropertyFilter.MatchType.NOT_NULL.equals(matchType)) {
+            } else if (MatchType.NOT_NULL.equals(matchType)) {
                 criterion = Restrictions.isNotNull(propertyName);
-            } else if (PropertyFilter.MatchType.EMPTY.equals(matchType)) {
+            } else if (MatchType.EMPTY.equals(matchType)) {
                 criterion = Restrictions.isEmpty(propertyName);
-            } else if (PropertyFilter.MatchType.NOT_EMPTY.equals(matchType)) {
+            } else if (MatchType.NOT_EMPTY.equals(matchType)) {
                 criterion = Restrictions.isNotEmpty(propertyName);
-            } else if (PropertyFilter.MatchType.BETWEEN.equals(matchType)) {
+            } else if (MatchType.BETWEEN.equals(matchType)) {
                 criterion = Restrictions.between(propertyName, Array.get(propertyValue, 0), Array.get(propertyValue, 1));
             }
         } catch (Exception e) {
