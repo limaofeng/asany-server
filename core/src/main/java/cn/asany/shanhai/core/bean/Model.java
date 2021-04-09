@@ -60,7 +60,7 @@ public class Model extends BaseBusEntity {
     /**
      * 关联引用
      */
-    @OneToMany(mappedBy = "model", cascade = {CascadeType.PERSIST, CascadeType.MERGE,CascadeType.REMOVE}, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "model", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE}, fetch = FetchType.LAZY)
     private List<ModelRelation> relations;
     /**
      * 标签
@@ -129,6 +129,14 @@ public class Model extends BaseBusEntity {
                 this.fields = new ArrayList<>();
             }
             this.fields.add(ModelField.builder().id(id).code(code).name(name).type(type).build());
+            return this;
+        }
+
+        public ModelBuilder field(String code, String name, String type) {
+            if (this.fields == null) {
+                this.fields = new ArrayList<>();
+            }
+            this.fields.add(ModelField.builder().code(code).name(name).type(type).build());
             return this;
         }
 

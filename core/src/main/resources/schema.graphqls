@@ -112,7 +112,7 @@ type Service {
 }
 
 type Consumer {
-
+    id: ID
 }
 
 extend type Query {
