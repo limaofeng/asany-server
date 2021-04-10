@@ -195,7 +195,12 @@ public class ModelService {
     }
 
     public boolean exists(String code) {
-        return this.modelDao.exists(Example.of(Model.builder().code(code).build()));
+        try {
+            return this.modelDao.exists(Example.of(Model.builder().code(code).build()));
+        } catch (Exception e) {
+            System.err.println("Error :" + code);
+            throw e;
+        }
     }
 
 }

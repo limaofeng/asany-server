@@ -10,7 +10,7 @@ import java.util.*;
 
 public class GraphQLSchema {
 
-    private final Map<String, GraphQLTypeDefinition> typeMap = new HashMap<>();
+    private final Map<String, GraphQLTypeDefinition> typeMap = new LinkedHashMap<>();
 
     public static GraphQLSchemaBuilder builder() {
         return new GraphQLSchemaBuilder();
@@ -189,6 +189,7 @@ public class GraphQLSchema {
 
         private void loadObjectTypeDefinition(ObjectTypeDefinition definition, TypeDefinitionRegistry registry, GraphQLSchema schema) {
             if (this.parsing.contains(definition.getName())) {
+                System.out.println("循环依赖:" + definition);
                 return;
             }
             this.parsing.add(definition.getName());
@@ -196,6 +197,8 @@ public class GraphQLSchema {
             loadFieldDefinitions(definition.getFieldDefinitions(), registry, schema);
 
             schema.addType(definition);
+            GraphQLTypeDefinition type = schema.getType(definition.getName());
+            System.out.println("新增 ModelType : " + definition.getName() + " --- " + type.getBoost());
             this.parsing.remove(definition.getName());
         }
 
@@ -204,11 +207,6 @@ public class GraphQLSchema {
                 String name = typeName(field.getType());
                 loadTypeDefinition(registry.getType(name).get(), registry, schema);
             }
-        }
-
-        private Boolean exists(Type type, GraphQLSchema schema) {
-            String name = typeName(type);
-            return schema.getType(name) != null;
         }
 
     }

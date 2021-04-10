@@ -26,10 +26,12 @@ public class SchemaService {
     public void save(GraphQLSchema schema) {
         for (Map.Entry<String, GraphQLTypeDefinition> entry : schema.getTypeMap().entrySet()) {
             GraphQLTypeDefinition definition = entry.getValue();
+            
+            System.out.println("新增 ModelType : " + definition.getId());
 
-//            if(this.modelService.exists(definition.getId())){
-//                continue;
-//            }
+            if (this.modelService.exists(definition.getId())) {
+                continue;
+            }
 
             Model.ModelBuilder builder = Model.builder()
                 .code(definition.getId())
@@ -42,8 +44,7 @@ public class SchemaService {
 
             Model model = builder.build();
 
-//            this.modelService.save(model);
-            System.out.println(model);
+            this.modelService.save(model);
         }
     }
 }
