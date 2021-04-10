@@ -9,11 +9,9 @@ import cn.asany.shanhai.core.support.graphql.resolvers.base.*;
 import cn.asany.shanhai.core.support.model.FieldType;
 import cn.asany.shanhai.core.support.model.FieldTypeRegistry;
 import cn.asany.shanhai.core.support.model.IModelFeature;
-import cn.asany.shanhai.core.utils.ModelUtils;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.jfantasy.framework.dao.jpa.PropertyFilter.MatchType;
-import org.jfantasy.framework.spring.SpringContextUtil;
 import org.jfantasy.framework.util.common.StringUtil;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -130,12 +128,12 @@ public class MasterModelFeature implements IModelFeature, InitializingBean {
 
     @Override
     public List<Model> getTypes(Model model) {
-        Model inputTypeOfCreate = this.buildType(ModelType.INPUT, getCreateInputTypeName(model), model.getName() + "录入对象", cloneModelFields(model.getFields()));
-        Model inputTypeOfUpdate = this.buildType(ModelType.INPUT, getUpdateInputTypeName(model), model.getName() + "更新对象", cloneModelFields(model.getFields()));
-        Model inputTypeOfFilter = this.buildType(ModelType.INPUT, getWhereInputTypeName(model), model.getName() + "过滤器", buildWhereFields(model));
+        Model inputTypeOfCreate = this.buildType(ModelType.INPUT_OBJECT, getCreateInputTypeName(model), model.getName() + "录入对象", cloneModelFields(model.getFields()));
+        Model inputTypeOfUpdate = this.buildType(ModelType.INPUT_OBJECT, getUpdateInputTypeName(model), model.getName() + "更新对象", cloneModelFields(model.getFields()));
+        Model inputTypeOfFilter = this.buildType(ModelType.INPUT_OBJECT, getWhereInputTypeName(model), model.getName() + "过滤器", buildWhereFields(model));
         Model inputTypeOfOrderBy = this.buildType(ModelType.ENUM, getOrderByTypeName(model), model.getName() + "排序", buildOrderByFields(model));
-        Model typeOfEdge = this.buildType(ModelType.TYPE, getEdgeTypeName(model), model.getName() + " A connection to a list of items.", buildEdgeFields(model));
-        Model typeOfConnection = this.buildType(ModelType.TYPE, getConnectionTypeName(model), model.getName() + " 分页对象", buildConnectionFields(model));
+        Model typeOfEdge = this.buildType(ModelType.OBJECT, getEdgeTypeName(model), model.getName() + " A connection to a list of items.", buildEdgeFields(model));
+        Model typeOfConnection = this.buildType(ModelType.OBJECT, getConnectionTypeName(model), model.getName() + " 分页对象", buildConnectionFields(model));
         return new ArrayList<>(Arrays.asList(inputTypeOfCreate, inputTypeOfUpdate, inputTypeOfFilter, inputTypeOfOrderBy, typeOfEdge, typeOfConnection));
     }
 

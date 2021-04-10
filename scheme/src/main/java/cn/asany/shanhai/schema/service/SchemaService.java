@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.Map;
 
 @Service
-@Transactional
 public class SchemaService {
 
     @Autowired
@@ -23,13 +22,18 @@ public class SchemaService {
     public void loadSchemaForService() {
     }
 
+    @Transactional(rollbackFor = RuntimeException.class)
     public void save(GraphQLSchema schema) {
         for (Map.Entry<String, GraphQLTypeDefinition> entry : schema.getTypeMap().entrySet()) {
             GraphQLTypeDefinition definition = entry.getValue();
 
+//            if(this.modelService.exists(definition.getId())){
+//                continue;
+//            }
+
             Model.ModelBuilder builder = Model.builder()
                 .code(definition.getId())
-//                .type(definition.getType())
+                .type(definition.getType().toModelType())
                 .name(definition.getDescription());
 
             for (GraphQLFieldDefinition field : ObjectUtil.defaultValue(definition.getFields(), new ArrayList<GraphQLFieldDefinition>())) {
@@ -38,6 +42,7 @@ public class SchemaService {
 
             Model model = builder.build();
 
+//            this.modelService.save(model);
             System.out.println(model);
         }
     }

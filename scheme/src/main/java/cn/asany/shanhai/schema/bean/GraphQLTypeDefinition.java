@@ -13,6 +13,7 @@ public class GraphQLTypeDefinition {
     private String id;
     private String description;
     private GraphQLType type;
+    private int boost;
     private List<GraphQLFieldDefinition> fields;
 
     public static class GraphQLTypeDefinitionBuilder {

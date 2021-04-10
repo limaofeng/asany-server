@@ -1,28 +1,40 @@
 package cn.asany.shanhai.schema.bean;
 
+import cn.asany.shanhai.core.bean.enums.ModelType;
+
 public enum GraphQLType {
     /**
      * 标量
      */
-    Scalar,
+    Scalar(ModelType.SCALAR),
     /**
      * 输入对象
      */
-    InputObject,
+    InputObject(ModelType.INPUT_OBJECT),
     /**
      * 对象
      */
-    Object,
+    Object(ModelType.OBJECT),
     /**
      * 枚举型
      */
-    Enum,
+    Enum(ModelType.ENUM),
     /**
      * 联合
      */
-    Union,
+    Union(ModelType.UNION),
     /**
      * 接口
      */
-    Interface
+    Interface(ModelType.INTERFACE);
+
+    private ModelType modelType;
+
+    GraphQLType(ModelType modelType) {
+        this.modelType = modelType;
+    }
+
+    public ModelType toModelType() {
+        return this.modelType;
+    }
 }

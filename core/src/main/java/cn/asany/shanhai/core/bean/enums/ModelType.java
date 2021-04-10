@@ -4,7 +4,7 @@ public enum ModelType {
     /**
      * 输入对象
      */
-    INPUT,
+    INPUT_OBJECT,
     /**
      * 标量
      */
@@ -12,7 +12,7 @@ public enum ModelType {
     /**
      * 类型
      */
-    TYPE,
+    OBJECT,
     /**
      *
      */
@@ -20,6 +20,14 @@ public enum ModelType {
     /**
      * 枚举
      */
-    ENUM
+    ENUM,
+    /**
+     * 联合
+     */
+    UNION,
+    /**
+     * 接口
+     */
+    INTERFACE
 
 }

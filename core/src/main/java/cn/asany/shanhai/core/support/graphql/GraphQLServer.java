@@ -156,9 +156,9 @@ public class GraphQLServer implements InitializingBean {
 
     public void setTypes(List<Model> types) {
         for (Model type : types) {
-            if (type.getType() == ModelType.TYPE) {
+            if (type.getType() == ModelType.OBJECT) {
                 typeMap.put(type.getId(), type);
-            } else if (type.getType() == ModelType.INPUT) {
+            } else if (type.getType() == ModelType.INPUT_OBJECT) {
                 inputTypeMap.put(type.getId(), type);
             } else if (type.getType() == ModelType.SCALAR) {
                 scalarMap.put(type.getId(), type);

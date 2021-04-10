@@ -1,7 +1,6 @@
 package cn.asany.shanhai.schema.bean;
 
 import graphql.language.Type;
-import graphql.language.TypeName;
 import lombok.Builder;
 import lombok.Data;
 
@@ -15,10 +14,7 @@ public class GraphQLFieldDefinition {
     public static class GraphQLFieldDefinitionBuilder {
 
         public GraphQLFieldDefinitionBuilder type(Type type) {
-            if(type instanceof TypeName){
-                this.type = ((TypeName) type).getName();
-            }
-            System.out.println(type);
+            this.type = GraphQLSchema.typeName(type);
             return this;
         }
 

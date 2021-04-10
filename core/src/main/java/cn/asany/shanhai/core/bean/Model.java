@@ -39,7 +39,7 @@ public class Model extends BaseBusEntity {
      * 类型
      */
     @Enumerated(EnumType.STRING)
-    @Column(name = "TYPE", length = 10)
+    @Column(name = "TYPE", length = 20)
     private ModelType type;
     /**
      * 名称

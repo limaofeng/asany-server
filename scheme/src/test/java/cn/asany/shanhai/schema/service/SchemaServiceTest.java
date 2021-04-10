@@ -2,12 +2,11 @@ package cn.asany.shanhai.schema.service;
 
 import cn.asany.shanhai.schema.TestApplication;
 import cn.asany.shanhai.schema.bean.GraphQLSchema;
+import cn.asany.shanhai.schema.bean.GraphQLSchema.GraphQLSchemaBuilder;
 import graphql.introspection.IntrospectionQuery;
 import graphql.introspection.IntrospectionResultToSchema;
 import graphql.language.*;
-import graphql.schema.idl.SchemaParser;
 import graphql.schema.idl.SchemaPrinter;
-import graphql.schema.idl.TypeDefinitionRegistry;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.jfantasy.framework.error.IgnoreException;
@@ -73,65 +72,17 @@ class SchemaServiceTest {
         }
     }
 
-    private void loadObjectTypeDefinition(InputObjectTypeDefinition definition, Map<String, InputObjectTypeDefinition> typeMap, Map<String, ScalarTypeDefinition> scalars, GraphQLSchema schema) {
-        schema.addType(definition);
-        for (InputValueDefinition field : definition.getInputValueDefinitions()) {
-            if (field.getType() instanceof TypeName) {
-                String name = ((TypeName) field.getType()).getName();
-                if (schema.getType(name) != null || scalars.containsKey(name)) {
-                    continue;
-                }
-                System.out.println(">>>>>>>>" + definition.getName() + "." + field.getName() + ": " + name);
-                loadObjectTypeDefinition(typeMap.get(name), typeMap, scalars, schema);
-            }
-        }
-    }
 
-    private void loadObjectTypeDefinition(ObjectTypeDefinition definition, Map<String, ObjectTypeDefinition> typeMap, Map<String, ScalarTypeDefinition> scalars, GraphQLSchema schema) {
-        schema.addType(definition);
-        for (FieldDefinition field : definition.getFieldDefinitions()) {
-            if (field.getType() instanceof TypeName) {
-                String name = ((TypeName) field.getType()).getName();
-                if (schema.getType(name) != null || scalars.containsKey(name)) {
-                    continue;
-                }
-                System.out.println(">>>>>>>>" + definition.getName() + "." + field.getName() + ": " + name);
-                loadObjectTypeDefinition(typeMap.get(name), typeMap, scalars, schema);
-            }
-        }
-    }
 
     @Test
     @SneakyThrows
     public void testLoadSchema() {
-        GraphQLSchema schema = new GraphQLSchema();
-        SchemaParser schemaParser = new SchemaParser();
-        TypeDefinitionRegistry registry = schemaParser.parse(FileUtil.readFile(SCHEMA_PATH));
-
         Map<String, List<String>> models = new HashMap<>();
 
-        Map<String, ObjectTypeDefinition> types = registry.getTypesMap(ObjectTypeDefinition.class);
+        GraphQLSchemaBuilder builder = GraphQLSchema.builder();
+        builder.schema(FileUtil.readFile(SCHEMA_PATH));
 
-        schema.addScalars(registry.scalars());
-
-        schema.addEnums(registry.getTypes(EnumTypeDefinition.class));
-
-        schema.addUnions(registry.getTypes(UnionTypeDefinition.class));
-
-        schema.addInterfaces(registry.getTypes(InterfaceTypeDefinition.class));
-
-        for (Map.Entry<String, ObjectTypeDefinition> entry : types.entrySet()) {
-            if (entry.getKey().endsWith("Connection") || entry.getKey().endsWith("Edge") || entry.getKey().equals("PageInfo") || entry.getKey().startsWith("GraphQL")) {
-                continue;
-            }
-            loadObjectTypeDefinition(entry.getValue(), types, registry.scalars(), schema);
-        }
-
-        Map<String, InputObjectTypeDefinition> inputTypes = registry.getTypesMap(InputObjectTypeDefinition.class);
-
-        for (Map.Entry<String, InputObjectTypeDefinition> entry : inputTypes.entrySet()) {
-            loadObjectTypeDefinition(entry.getValue(), inputTypes, registry.scalars(), schema);
-        }
+        GraphQLSchema schema = builder.build();
 
         System.out.println("...............");
 

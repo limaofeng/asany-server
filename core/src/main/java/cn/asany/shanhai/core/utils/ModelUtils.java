@@ -65,7 +65,7 @@ public class ModelUtils {
         model.setEndpoints(new ArrayList<>(ObjectUtil.defaultValue(model.getEndpoints(), Collections.emptyList())));
         model.setRelations(new ArrayList<>(ObjectUtil.defaultValue(model.getRelations(), Collections.emptyList())));
 
-        if (model.getType() == ModelType.SCALAR || model.getType() == ModelType.INPUT) {
+        if (model.getType() == ModelType.SCALAR || model.getType() == ModelType.INPUT_OBJECT) {
             return;
         }
 
@@ -182,9 +182,9 @@ public class ModelUtils {
     }
 
     private ModelConnectType getModelConnectType(ModelType type) {
-        if (ModelType.INPUT == type) {
+        if (ModelType.INPUT_OBJECT == type) {
             return ModelConnectType.INPUT;
-        } else if (ModelType.TYPE == type || ModelType.ENUM == type) {
+        } else if (ModelType.OBJECT == type || ModelType.ENUM == type) {
             return ModelConnectType.TYPE;
         }
         return null;
