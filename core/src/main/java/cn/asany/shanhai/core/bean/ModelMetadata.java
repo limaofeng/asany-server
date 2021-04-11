@@ -3,6 +3,8 @@ package cn.asany.shanhai.core.bean;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.LazyToOne;
+import org.hibernate.annotations.LazyToOneOption;
 import org.hibernate.annotations.Parameter;
 
 import javax.persistence.*;
@@ -35,6 +37,7 @@ public class ModelMetadata implements Serializable {
     @Column(name = "HIBERNATE_MAPPING", columnDefinition = "Text")
     private String hbm;
 
+    @LazyToOne(LazyToOneOption.NO_PROXY)
     @OneToOne(fetch = FetchType.LAZY, targetEntity = Model.class, mappedBy = "metadata")
     private Model model;
 }

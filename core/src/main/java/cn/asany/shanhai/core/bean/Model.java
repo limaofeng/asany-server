@@ -6,6 +6,8 @@ import cn.asany.shanhai.core.bean.enums.ModelType;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.LazyToOne;
+import org.hibernate.annotations.LazyToOneOption;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.framework.dao.hibernate.converter.StringArrayConverter;
 
@@ -49,7 +51,7 @@ public class Model extends BaseBusEntity {
     /**
      * 描述
      */
-    @Column(name = "DESCRIPTION", length = 200)
+    @Column(name = "DESCRIPTION", length = 500)
     private String description;
     /**
      * 状态：草稿、发布
@@ -83,7 +85,8 @@ public class Model extends BaseBusEntity {
      * 元数据
      */
     @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
-    @PrimaryKeyJoinColumn
+    @LazyToOne(LazyToOneOption.NO_PROXY)
+    @PrimaryKeyJoinColumn(name = "ID", referencedColumnName = "MODEL_ID")
     private ModelMetadata metadata;
     /**
      * 服务

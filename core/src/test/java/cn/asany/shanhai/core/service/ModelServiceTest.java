@@ -57,6 +57,11 @@ class ModelServiceTest {
     }
 
     @Test
+    void clear() {
+        log.debug("新增成功");
+    }
+
+    @Test
     void save() {
         Model model = testEmployee();
         log.debug("新增成功:" + model.getId());

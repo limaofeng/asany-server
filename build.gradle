@@ -4,6 +4,9 @@ buildscript {
         mavenCentral()
         mavenLocal()
     }
+    dependencies {
+        classpath "org.hibernate:hibernate-gradle-plugin:5.4.10.Final"
+    }
 }
 
 plugins {
@@ -65,10 +68,20 @@ allprojects {
 subprojects {
     apply plugin: 'java'
     apply plugin: "jacoco"
+    apply plugin: 'org.hibernate.orm'
 
     jar {
         manifest {
             attributes 'provider': 'gradle'
+        }
+    }
+
+    hibernate {
+        enhance {
+            enableLazyInitialization = true
+            enableDirtyTracking = true
+            enableAssociationManagement = true
+            enableExtendedEnhancement = false
         }
     }
 

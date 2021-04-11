@@ -29,11 +29,11 @@ public class SystemFieldFillInterceptor extends EmptyInterceptor {
      */
     private static final String DEFAULT_CREATOR = null;
 
-    private static final OgnlUtil ognlUtil = OgnlUtil.getInstance();
+    private static final OgnlUtil OGNL_UTIL = OgnlUtil.getInstance();
 
     @Override
     public boolean onFlushDirty(Object entity, Serializable id, Object[] currentState, Object[] previousState, String[] propertyNames, Type[] types) {
-        if (Arrays.stream(propertyNames).anyMatch(item -> ObjectUtil.exists(new String[]{BaseBusEntity.FIELD_UPDATOR, BaseBusEntity.FIELD_UPDATED_AT}, item))) {
+        if (Arrays.stream(propertyNames).anyMatch(item -> ObjectUtil.exists(new String[]{BaseBusEntity.FIELD_UPDATED_BY, BaseBusEntity.FIELD_UPDATED_AT}, item))) {
             String modifier = DEFAULT_MODIFIER;
             LoginUser user = SpringSecurityUtils.getCurrentUser();
             if (ObjectUtil.isNotNull(user)) {
@@ -41,7 +41,7 @@ public class SystemFieldFillInterceptor extends EmptyInterceptor {
             }
             int count = 0;
             for (int i = 0; i < propertyNames.length; i++) {
-                if (BaseBusEntity.FIELD_UPDATOR.equals(propertyNames[i])) {
+                if (BaseBusEntity.FIELD_UPDATED_BY.equals(propertyNames[i])) {
                     currentState[i] = modifier;
                     count++;
                 } else if (BaseBusEntity.FIELD_UPDATED_AT.equals(propertyNames[i])) {
@@ -58,16 +58,16 @@ public class SystemFieldFillInterceptor extends EmptyInterceptor {
 
     @Override
     public boolean onSave(Object entity, Serializable id, Object[] state, String[] propertyNames, Type[] types) {
-        if (Arrays.stream(propertyNames).anyMatch(item -> ObjectUtil.exists(new String[]{BaseBusEntity.FIELD_CREATOR, BaseBusEntity.FIELD_CREATED_AT, BaseBusEntity.FIELD_UPDATOR, BaseBusEntity.FIELD_UPDATED_AT}, item))) {
+        if (Arrays.stream(propertyNames).anyMatch(item -> ObjectUtil.exists(new String[]{BaseBusEntity.FIELD_CREATED_BY, BaseBusEntity.FIELD_CREATED_AT, BaseBusEntity.FIELD_CREATED_BY, BaseBusEntity.FIELD_UPDATED_AT}, item))) {
             LoginUser user = SpringSecurityUtils.getCurrentUser();
-            String creator = ObjectUtil.isNotNull(user) ? user.getUid() : StringUtil.defaultValue(ognlUtil.getValue(BaseBusEntity.FIELD_CREATOR, entity), DEFAULT_CREATOR);
+            String creator = ObjectUtil.isNotNull(user) ? user.getUid() : StringUtil.defaultValue(OGNL_UTIL.getValue(BaseBusEntity.FIELD_CREATED_BY, entity), DEFAULT_CREATOR);
             int count = 0;
             int maxCount = 4;
             if (entity instanceof BaseBusBusinessEntity) {
                 maxCount++;
             }
             for (int i = 0; i < propertyNames.length; i++) {
-                if (BaseBusEntity.FIELD_CREATOR.equals(propertyNames[i]) || BaseBusEntity.FIELD_UPDATOR.equals(propertyNames[i])) {
+                if (BaseBusEntity.FIELD_CREATED_BY.equals(propertyNames[i]) || BaseBusEntity.FIELD_UPDATED_BY.equals(propertyNames[i])) {
                     state[i] = creator;
                     count++;
                 } else if (BaseBusEntity.FIELD_CREATED_AT.equals(propertyNames[i]) || BaseBusEntity.FIELD_UPDATED_AT.equals(propertyNames[i])) {

@@ -6,11 +6,18 @@ import graphql.language.*;
 import graphql.schema.idl.SchemaParser;
 import graphql.schema.idl.TypeDefinitionRegistry;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 public class GraphQLSchema {
 
     private final Map<String, GraphQLTypeDefinition> typeMap = new LinkedHashMap<>();
+
+    private GraphQLTypeDefinition queryType;
+    private GraphQLTypeDefinition mutationType;
+    private GraphQLTypeDefinition subscriptionType;
 
     public static GraphQLSchemaBuilder builder() {
         return new GraphQLSchemaBuilder();
@@ -72,6 +79,18 @@ public class GraphQLSchema {
         }
     }
 
+    public GraphQLTypeDefinition getQueryType() {
+        return this.queryType;
+    }
+
+    public GraphQLTypeDefinition getMutationType() {
+        return this.mutationType;
+    }
+
+    public GraphQLTypeDefinition getSubscriptionType() {
+        return this.subscriptionType;
+    }
+
     private GraphQLTypeDefinition buildGraphQLType(InputObjectTypeDefinition definition) {
         return GraphQLTypeDefinition.builder().id(definition.getName()).type(GraphQLType.InputObject).build();
     }
@@ -126,13 +145,36 @@ public class GraphQLSchema {
         }
 
         private void loadSchema(TypeDefinitionRegistry registry, GraphQLSchema schema) {
+            GraphQLTypeDefinitionBuilder queryTypeBuilder = GraphQLTypeDefinition.builder().id("Query").type(GraphQLType.Object);
+            GraphQLTypeDefinitionBuilder mutationTypeBuilder = GraphQLTypeDefinition.builder().id("Mutation").type(GraphQLType.Object);
+            GraphQLTypeDefinitionBuilder subscriptionTypeBuilder = GraphQLTypeDefinition.builder().id("Subscription").type(GraphQLType.Object);
+
             List<FieldDefinition> queries = registry.getType("Query", ObjectTypeDefinition.class).get().getFieldDefinitions();
+            List<FieldDefinition> mutations = registry.getType("Mutation", ObjectTypeDefinition.class).get().getFieldDefinitions();
+            List<FieldDefinition> subscriptions = registry.getType("Subscription", ObjectTypeDefinition.class).get().getFieldDefinitions();
+
 
             for (FieldDefinition field : queries) {
                 String name = typeName(field.getType());
                 loadTypeDefinition(registry.getType(name).get(), registry, schema);
+                queryTypeBuilder.field(field.getName(), field);
             }
 
+            for (FieldDefinition field : mutations) {
+                String name = typeName(field.getType());
+                loadTypeDefinition(registry.getType(name).get(), registry, schema);
+                mutationTypeBuilder.field(field.getName(), field);
+            }
+
+            for (FieldDefinition field : subscriptions) {
+                String name = typeName(field.getType());
+                loadTypeDefinition(registry.getType(name).get(), registry, schema);
+                subscriptionTypeBuilder.field(field.getName(), field);
+            }
+
+            schema.setQueryType(queryTypeBuilder.build());
+            schema.setMutationType(mutationTypeBuilder.build());
+            schema.setSubscriptionType(subscriptionTypeBuilder.build());
         }
 
         private void loadTypeDefinition(TypeDefinition definition, TypeDefinitionRegistry registry, GraphQLSchema schema) {
@@ -198,7 +240,7 @@ public class GraphQLSchema {
 
             schema.addType(definition);
             GraphQLTypeDefinition type = schema.getType(definition.getName());
-            System.out.println("新增 ModelType : " + definition.getName() + " --- " + type.getBoost());
+//          TODO:  System.out.println("新增 ModelType : " + definition.getName() + " --- " + type.getBoost());
             this.parsing.remove(definition.getName());
         }
 
@@ -209,6 +251,18 @@ public class GraphQLSchema {
             }
         }
 
+    }
+
+    private void setSubscriptionType(GraphQLTypeDefinition type) {
+        this.subscriptionType = type;
+    }
+
+    private void setMutationType(GraphQLTypeDefinition type) {
+        this.queryType = type;
+    }
+
+    private void setQueryType(GraphQLTypeDefinition type) {
+        this.mutationType = type;
     }
 
     public static String typeName(Type type) {

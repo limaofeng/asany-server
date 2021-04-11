@@ -5,6 +5,10 @@ import org.jfantasy.framework.dao.BaseBusEntity;
 
 import javax.persistence.*;
 
+/**
+ * 实体字段
+ * @author limaofeng
+ */
 @Data
 @Builder
 @NoArgsConstructor
@@ -30,12 +34,12 @@ public class ModelField extends BaseBusEntity {
     /**
      * 名称
      */
-    @Column(name = "NAME", length = 50)
+    @Column(name = "NAME", length = 100)
     private String name;
     /**
      * 描述
      */
-    @Column(name = "DESCRIPTION", length = 200)
+    @Column(name = "DESCRIPTION", length = 500)
     private String description;
     /**
      * 默认值
@@ -102,12 +106,7 @@ public class ModelField extends BaseBusEntity {
     @JoinColumn(name = "DELEGATE_ID", foreignKey = @ForeignKey(name = "FK_MODEL_FIELD_DID"))
     private ModelDelegate delegate;
 
-    public void getConverter() {
-
-    }
-
     public static class ModelFieldBuilder {
-        private ModelFieldMetadata metadata;
 
         public ModelFieldBuilder metadata(boolean insertable, boolean updatable) {
             this.metadata = ModelFieldMetadata.builder().insertable(insertable).updatable(updatable).build();

@@ -65,7 +65,14 @@ public class ModelUtils {
         model.setEndpoints(new ArrayList<>(ObjectUtil.defaultValue(model.getEndpoints(), Collections.emptyList())));
         model.setRelations(new ArrayList<>(ObjectUtil.defaultValue(model.getRelations(), Collections.emptyList())));
 
-        if (model.getType() == ModelType.SCALAR || model.getType() == ModelType.INPUT_OBJECT) {
+        if (StringUtil.isNotBlank(model.getName()) && StringUtil.length(model.getName()) > 100) {
+            if (StringUtil.isBlank(model.getDescription())) {
+                model.setDescription(model.getName());
+            }
+            model.setName(StringUtil.ellipsis(model.getName(), 100, "..."));
+        }
+
+        if (model.getType() != ModelType.ENTITY) {
             return;
         }
 
@@ -73,29 +80,46 @@ public class ModelUtils {
         if (metadata == null) {
             model.setMetadata(metadata = ModelMetadata.builder().model(model).build());
         } else {
-            metadata.setId(model.getId());
+            metadata.setModel(model);
         }
         if (StringUtil.isBlank(metadata.getDatabaseTableName())) {
             metadata.setDatabaseTableName("DM_" + StringUtil.snakeCase(model.getCode()).toUpperCase());
         }
     }
 
-    @SneakyThrows
-    public ModelField install(Model model, ModelField field) {
+    public ModelField install(Model model, ModelField field) throws FieldTypeNotFoundException {
         field.setModel(model);
         field.setPrimaryKey(ObjectUtil.defaultValue(field.getPrimaryKey(), Boolean.FALSE));
         field.setCode(ObjectUtil.defaultValue(field.getCode(), () -> StringUtil.lowerCaseFirst(StringUtil.camelCase(PinyinUtils.getAll(field.getName())))));
 
+        if (StringUtil.isNotBlank(field.getName()) && StringUtil.length(field.getName()) > 100) {
+            if (StringUtil.isBlank(field.getDescription())) {
+                field.setDescription(field.getName());
+            }
+            field.setName(StringUtil.ellipsis(field.getName(), 100, "..."));
+        }
+
+        if (StringUtil.isNotBlank(field.getName())) {
+            System.out.println(">>>>" + field.getName() + "(" + StringUtil.length(field.getName()) + ")");
+        }
+
+
         if (model.getType() == ModelType.ENUM) {
             return field;
         }
+
         if (field.getType().getId() == null) {
-            field.setType(getModelByCode(model, field.getType().getCode()));
+            Model type = getModelByCode(model, field.getType().getCode());
+            if (type == null) {
+                throw new FieldTypeNotFoundException(field.getType().getCode());
+            }
+            field.setType(type);
         }
 
         if (model.getType() != ModelType.ENTITY) {
             return field;
         }
+
         ModelFieldMetadata metadata = field.getMetadata();
         if (metadata == null) {
             field.setMetadata(metadata = ModelFieldMetadata.builder().field(field).build());
@@ -133,8 +157,7 @@ public class ModelUtils {
     public Model getModelByCode(String code) {
         Optional<Model> optional = modelService.findByCode(code);
         if (!optional.isPresent()) {
-            log.error("MODEL CODE:" + code + "不存在");
-            return Model.builder().code(code).build();
+            return null;
         }
         return Model.builder().id(optional.get().getId()).build();
     }
@@ -155,6 +178,7 @@ public class ModelUtils {
         return model.getFields().stream().filter(item -> !item.getPrimaryKey()).collect(Collectors.toList());
     }
 
+    @SneakyThrows
     public void install(Model model, ModelFeature modelFeature) {
         Optional<ModelFeature> optionalModelFeature = modelFeatureService.get(modelFeature.getId());
         if (!optionalModelFeature.isPresent()) {
@@ -190,6 +214,7 @@ public class ModelUtils {
         return null;
     }
 
+    @SneakyThrows
     public void reinstall(Model model, ModelFeature modelFeature) {
         IModelFeature feature = modelFeatureRegistry.get(modelFeature.getId());
         List<ModelField> fields = model.getFields();
@@ -253,6 +278,7 @@ public class ModelUtils {
         }
     }
 
+    @SneakyThrows
     public void mergeFields(Model model, List<ModelField> nextFields) {
         List<ModelField> prevFields = model.getFields();
         DiffObject diffObject = diff(prevFields.stream().filter(item -> !item.getSystem()).collect(Collectors.toList()), nextFields, (prev, next) -> prev.equals(next) ? 0 : -1);
