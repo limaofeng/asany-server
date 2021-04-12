@@ -1,19 +1,27 @@
-package cn.asany.shanhai.schema.bean;
+package cn.asany.shanhai.schema.util;
 
 
-import cn.asany.shanhai.schema.bean.GraphQLTypeDefinition.GraphQLTypeDefinitionBuilder;
+import cn.asany.shanhai.schema.util.GraphQLTypeDefinition.GraphQLTypeDefinitionBuilder;
 import graphql.language.*;
+import graphql.schema.GraphQLSchema;
 import graphql.schema.idl.SchemaParser;
+import graphql.schema.idl.SchemaPrinter;
 import graphql.schema.idl.TypeDefinitionRegistry;
+import graphql.schema.idl.UnExecutableSchemaGenerator;
+import org.jfantasy.framework.util.common.ObjectUtil;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class GraphQLSchema {
+import static graphql.schema.idl.SchemaPrinter.Options.defaultOptions;
 
-    private final Map<String, GraphQLTypeDefinition> typeMap = new LinkedHashMap<>();
+public class GraphQLSchemaDefinition {
+
+    private transient final Map<String, GraphQLTypeDefinition> typeMap = new LinkedHashMap<>();
+
+    private TypeDefinitionRegistry registry;
 
     private GraphQLTypeDefinition queryType;
     private GraphQLTypeDefinition mutationType;
@@ -96,7 +104,16 @@ public class GraphQLSchema {
     }
 
     private GraphQLTypeDefinition buildGraphQLType(InterfaceTypeDefinition definition) {
-        return GraphQLTypeDefinition.builder().id(definition.getName()).type(GraphQLType.Interface).build();
+        GraphQLTypeDefinitionBuilder builder = GraphQLTypeDefinition.builder().id(definition.getName()).type(GraphQLType.Interface);
+
+        for (FieldDefinition field : definition.getFieldDefinitions()) {
+            builder.field(field.getName(), field);
+        }
+
+        String description = definition.getDescription() != null ? definition.getDescription().content : null;
+        builder.description(description);
+
+        return builder.build();
     }
 
     private GraphQLTypeDefinition buildGraphQLType(ObjectTypeDefinition definition) {
@@ -124,6 +141,36 @@ public class GraphQLSchema {
         return GraphQLTypeDefinition.builder().id(definition.getName()).type(GraphQLType.Union).build();
     }
 
+    public void removeType(GraphQLTypeDefinition type) {
+        this.typeMap.remove(type.getId());
+        this.registry.remove(this.registry.getType(type.getId()).get());
+    }
+
+
+    public void removeField(GraphQLTypeDefinition type, GraphQLFieldDefinition definition) {
+        ObjectTypeDefinition query = (ObjectTypeDefinition) this.registry.getType(type.getId()).get();
+        ObjectTypeDefinition newQuery = ObjectTypeDefinition.newObjectTypeDefinition()
+            .name(query.getName())
+            .implementz(query.getImplements())
+            .directives(query.getDirectives())
+            .fieldDefinitions(ObjectUtil.filter(query.getFieldDefinitions(), (item) -> !item.getName().equals(definition.getId())))
+            .description(query.getDescription())
+            .sourceLocation(query.getSourceLocation())
+            .comments(query.getComments())
+            .ignoredChars(query.getIgnoredChars())
+            .additionalData(query.getAdditionalData())
+            .build();
+        this.registry.remove(query);
+        this.registry.add(newQuery);
+    }
+
+    public String print() {
+        SchemaPrinter.Options noDirectivesOption = defaultOptions().includeDirectives(false);
+        SchemaPrinter schemaPrinter = new SchemaPrinter(noDirectivesOption);
+        GraphQLSchema graphQLSchema = UnExecutableSchemaGenerator.makeUnExecutableSchema(this.registry);
+        return schemaPrinter.print(graphQLSchema);
+    }
+
     public static class GraphQLSchemaBuilder {
         private String schemaInput;
         private List<String> parsing = new ArrayList<>();
@@ -133,8 +180,8 @@ public class GraphQLSchema {
             return this;
         }
 
-        public GraphQLSchema build() {
-            GraphQLSchema schema = new GraphQLSchema();
+        public GraphQLSchemaDefinition build() {
+            GraphQLSchemaDefinition schema = new GraphQLSchemaDefinition();
 
             SchemaParser schemaParser = new SchemaParser();
             TypeDefinitionRegistry registry = schemaParser.parse(this.schemaInput);
@@ -144,7 +191,7 @@ public class GraphQLSchema {
             return schema;
         }
 
-        private void loadSchema(TypeDefinitionRegistry registry, GraphQLSchema schema) {
+        private void loadSchema(TypeDefinitionRegistry registry, GraphQLSchemaDefinition schema) {
             GraphQLTypeDefinitionBuilder queryTypeBuilder = GraphQLTypeDefinition.builder().id("Query").type(GraphQLType.Object);
             GraphQLTypeDefinitionBuilder mutationTypeBuilder = GraphQLTypeDefinition.builder().id("Mutation").type(GraphQLType.Object);
             GraphQLTypeDefinitionBuilder subscriptionTypeBuilder = GraphQLTypeDefinition.builder().id("Subscription").type(GraphQLType.Object);
@@ -153,6 +200,7 @@ public class GraphQLSchema {
             List<FieldDefinition> mutations = registry.getType("Mutation", ObjectTypeDefinition.class).get().getFieldDefinitions();
             List<FieldDefinition> subscriptions = registry.getType("Subscription", ObjectTypeDefinition.class).get().getFieldDefinitions();
 
+            schema.setTypeDefinitionRegistry(registry);
 
             for (FieldDefinition field : queries) {
                 String name = typeName(field.getType());
@@ -177,7 +225,7 @@ public class GraphQLSchema {
             schema.setSubscriptionType(subscriptionTypeBuilder.build());
         }
 
-        private void loadTypeDefinition(TypeDefinition definition, TypeDefinitionRegistry registry, GraphQLSchema schema) {
+        private void loadTypeDefinition(TypeDefinition definition, TypeDefinitionRegistry registry, GraphQLSchemaDefinition schema) {
             if (schema.getType(definition.getName()) != null) {
                 return;
             }
@@ -197,7 +245,7 @@ public class GraphQLSchema {
 
         }
 
-        private void loadInterfaceTypeDefinition(InterfaceTypeDefinition definition, TypeDefinitionRegistry registry, GraphQLSchema schema) {
+        private void loadInterfaceTypeDefinition(InterfaceTypeDefinition definition, TypeDefinitionRegistry registry, GraphQLSchemaDefinition schema) {
             if (this.parsing.contains(definition.getName())) {
                 return;
             }
@@ -209,7 +257,7 @@ public class GraphQLSchema {
             this.parsing.remove(definition.getName());
         }
 
-        private void loadUnionTypeDefinition(UnionTypeDefinition definition, TypeDefinitionRegistry registry, GraphQLSchema schema) {
+        private void loadUnionTypeDefinition(UnionTypeDefinition definition, TypeDefinitionRegistry registry, GraphQLSchemaDefinition schema) {
             if (this.parsing.contains(definition.getName())) {
                 return;
             }
@@ -220,16 +268,16 @@ public class GraphQLSchema {
             this.parsing.remove(definition.getName());
         }
 
-        private void loadEnumTypeDefinition(EnumTypeDefinition definition, TypeDefinitionRegistry registry, GraphQLSchema schema) {
+        private void loadEnumTypeDefinition(EnumTypeDefinition definition, TypeDefinitionRegistry registry, GraphQLSchemaDefinition schema) {
             schema.addType(definition);
         }
 
-        private void loadScalarTypeDefinition(ScalarTypeDefinition definition, TypeDefinitionRegistry registry, GraphQLSchema schema) {
+        private void loadScalarTypeDefinition(ScalarTypeDefinition definition, TypeDefinitionRegistry registry, GraphQLSchemaDefinition schema) {
             schema.addType(definition);
         }
 
 
-        private void loadObjectTypeDefinition(ObjectTypeDefinition definition, TypeDefinitionRegistry registry, GraphQLSchema schema) {
+        private void loadObjectTypeDefinition(ObjectTypeDefinition definition, TypeDefinitionRegistry registry, GraphQLSchemaDefinition schema) {
             if (this.parsing.contains(definition.getName())) {
                 System.out.println("循环依赖:" + definition);
                 return;
@@ -244,7 +292,7 @@ public class GraphQLSchema {
             this.parsing.remove(definition.getName());
         }
 
-        private void loadFieldDefinitions(List<FieldDefinition> fields, TypeDefinitionRegistry registry, GraphQLSchema schema) {
+        private void loadFieldDefinitions(List<FieldDefinition> fields, TypeDefinitionRegistry registry, GraphQLSchemaDefinition schema) {
             for (FieldDefinition field : fields) {
                 String name = typeName(field.getType());
                 loadTypeDefinition(registry.getType(name).get(), registry, schema);
@@ -253,16 +301,20 @@ public class GraphQLSchema {
 
     }
 
+    private void setTypeDefinitionRegistry(TypeDefinitionRegistry registry) {
+        this.registry = registry;
+    }
+
     private void setSubscriptionType(GraphQLTypeDefinition type) {
         this.subscriptionType = type;
     }
 
     private void setMutationType(GraphQLTypeDefinition type) {
-        this.queryType = type;
+        this.mutationType = type;
     }
 
     private void setQueryType(GraphQLTypeDefinition type) {
-        this.mutationType = type;
+        this.queryType = type;
     }
 
     public static String typeName(Type type) {

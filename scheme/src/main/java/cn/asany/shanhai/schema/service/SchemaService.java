@@ -4,9 +4,9 @@ import cn.asany.shanhai.core.bean.Model;
 import cn.asany.shanhai.core.bean.ModelField;
 import cn.asany.shanhai.core.service.ModelService;
 import cn.asany.shanhai.core.support.ModelSaveContext;
-import cn.asany.shanhai.schema.bean.GraphQLFieldDefinition;
-import cn.asany.shanhai.schema.bean.GraphQLSchema;
-import cn.asany.shanhai.schema.bean.GraphQLTypeDefinition;
+import cn.asany.shanhai.schema.util.GraphQLFieldDefinition;
+import cn.asany.shanhai.schema.util.GraphQLSchemaDefinition;
+import cn.asany.shanhai.schema.util.GraphQLTypeDefinition;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,7 +29,7 @@ public class SchemaService {
     }
 
     @Transactional(rollbackFor = RuntimeException.class)
-    public void save(GraphQLSchema schema) {
+    public void save(GraphQLSchemaDefinition schema) {
         ModelSaveContext saveContext = ModelSaveContext.newInstance();
 
         saveContext.setModels(this.modelService.findAll());

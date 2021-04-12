@@ -1,4 +1,4 @@
-package cn.asany.shanhai.schema.bean;
+package cn.asany.shanhai.schema.util;
 
 import cn.asany.shanhai.core.bean.enums.ModelType;
 

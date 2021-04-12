@@ -59,7 +59,7 @@ public class ModelDelegate extends BaseBusEntity {
      */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "SERVICE_ID", foreignKey = @ForeignKey(name = "FK_MODEL_ENDPOINT_DELEGATE_SID"))
-    private NameServer nameServer;
+    private Service service;
 
     @Transient
     public DelegateHandler getDelegateHandler() {

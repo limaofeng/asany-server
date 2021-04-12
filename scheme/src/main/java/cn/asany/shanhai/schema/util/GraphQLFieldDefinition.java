@@ -1,4 +1,4 @@
-package cn.asany.shanhai.schema.bean;
+package cn.asany.shanhai.schema.util;
 
 import graphql.language.Type;
 import lombok.Builder;
@@ -14,7 +14,7 @@ public class GraphQLFieldDefinition {
     public static class GraphQLFieldDefinitionBuilder {
 
         public GraphQLFieldDefinitionBuilder type(Type type) {
-            this.type = GraphQLSchema.typeName(type);
+            this.type = GraphQLSchemaDefinition.typeName(type);
             return this;
         }
 

@@ -2,8 +2,8 @@ package cn.asany.shanhai.schema.service;
 
 import cn.asany.shanhai.core.service.ModelService;
 import cn.asany.shanhai.schema.TestApplication;
-import cn.asany.shanhai.schema.bean.GraphQLSchema;
-import cn.asany.shanhai.schema.bean.GraphQLSchema.GraphQLSchemaBuilder;
+import cn.asany.shanhai.schema.util.GraphQLSchemaDefinition;
+import cn.asany.shanhai.schema.util.GraphQLSchemaDefinition.GraphQLSchemaBuilder;
 import graphql.introspection.IntrospectionQuery;
 import graphql.introspection.IntrospectionResultToSchema;
 import graphql.language.Document;
@@ -64,7 +64,9 @@ class SchemaServiceTest {
 
         SchemaPrinter.Options noDirectivesOption = defaultOptions().includeDirectives(false);
 
-        String result = new SchemaPrinter(noDirectivesOption).print(schemaDefinition);
+        SchemaPrinter schemaPrinter = new SchemaPrinter(noDirectivesOption);
+
+        String result = schemaPrinter.print(schemaDefinition);
 
         System.out.println(result);
 
@@ -86,10 +88,10 @@ class SchemaServiceTest {
     @Test
     @SneakyThrows
     public void testLoadSchema() {
-        GraphQLSchemaBuilder builder = GraphQLSchema.builder();
+        GraphQLSchemaBuilder builder = GraphQLSchemaDefinition.builder();
         builder.schema(FileUtil.readFile(SCHEMA_PATH));
 
-        GraphQLSchema schema = builder.build();
+        GraphQLSchemaDefinition schema = builder.build();
 
         System.out.println("...............");
 

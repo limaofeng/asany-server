@@ -93,7 +93,7 @@ public class Model extends BaseBusEntity {
      */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "SERVICE_ID", foreignKey = @ForeignKey(name = "FK_MODEL_SID"))
-    private NameServer nameServer;
+    private Service service;
 
     @Transient
     public void connect(Model model, ModelConnectType connectType) {

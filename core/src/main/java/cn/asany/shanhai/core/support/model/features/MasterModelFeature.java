@@ -20,6 +20,7 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -48,8 +49,16 @@ public class MasterModelFeature implements IModelFeature, InitializingBean {
         return endpoints;
     }
 
-    private List<ModelField> cloneModelFields(List<ModelField> fields) {
-        return fields.stream().filter(item -> !item.getPrimaryKey() && !item.getSystem()).map(item ->
+    private List<ModelField> cloneObjectFields(List<ModelField> fields) {
+        return cloneModelFields(fields, item -> true);
+    }
+
+    private List<ModelField> cloneInputFields(List<ModelField> fields) {
+        return cloneModelFields(fields, item -> !item.getPrimaryKey() && !item.getSystem());
+    }
+
+    private List<ModelField> cloneModelFields(List<ModelField> fields, Predicate<ModelField> predicate) {
+        return fields.stream().filter(predicate).map(item ->
             ModelField.builder()
                 .code(item.getCode())
                 .name(item.getName())
@@ -57,7 +66,6 @@ public class MasterModelFeature implements IModelFeature, InitializingBean {
                 .type(item.getType())
                 .build())
             .collect(Collectors.toList());
-
     }
 
     private Model buildType(ModelType type, String code, String name, List<ModelField> fields) {
@@ -128,8 +136,8 @@ public class MasterModelFeature implements IModelFeature, InitializingBean {
 
     @Override
     public List<Model> getTypes(Model model) {
-        Model inputTypeOfCreate = this.buildType(ModelType.INPUT_OBJECT, getCreateInputTypeName(model), model.getName() + "录入对象", cloneModelFields(model.getFields()));
-        Model inputTypeOfUpdate = this.buildType(ModelType.INPUT_OBJECT, getUpdateInputTypeName(model), model.getName() + "更新对象", cloneModelFields(model.getFields()));
+        Model inputTypeOfCreate = this.buildType(ModelType.INPUT_OBJECT, getCreateInputTypeName(model), model.getName() + "录入对象", cloneInputFields(model.getFields()));
+        Model inputTypeOfUpdate = this.buildType(ModelType.INPUT_OBJECT, getUpdateInputTypeName(model), model.getName() + "更新对象", cloneInputFields(model.getFields()));
         Model inputTypeOfFilter = this.buildType(ModelType.INPUT_OBJECT, getWhereInputTypeName(model), model.getName() + "过滤器", buildWhereFields(model));
         Model inputTypeOfOrderBy = this.buildType(ModelType.ENUM, getOrderByTypeName(model), model.getName() + "排序", buildOrderByFields(model));
         Model typeOfEdge = this.buildType(ModelType.OBJECT, getEdgeTypeName(model), model.getName() + " A connection to a list of items.", buildEdgeFields(model));
