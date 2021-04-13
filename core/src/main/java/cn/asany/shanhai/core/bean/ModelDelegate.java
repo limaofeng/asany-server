@@ -2,6 +2,7 @@ package cn.asany.shanhai.core.bean;
 
 import cn.asany.shanhai.core.bean.enums.ModelDelegateType;
 import cn.asany.shanhai.core.support.graphql.DelegateHandler;
+import cn.asany.shanhai.gateway.bean.Service;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;

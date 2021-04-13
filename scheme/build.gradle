@@ -1,9 +1,0 @@
-description = "主框架 - 框架主体,包含基础的集成框架"
-
-configurations {
-    compile.exclude module: "tomcat-jdbc"
-}
-
-dependencies {
-    compile project(":shanhai-core")
-}

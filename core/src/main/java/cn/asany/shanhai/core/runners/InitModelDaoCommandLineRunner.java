@@ -1,6 +1,6 @@
 package cn.asany.shanhai.core.runners;
 
-import cn.asany.shanhai.core.autoconfigure.ModelAutoConfiguration;
+import cn.asany.shanhai.autoconfigure.ModelAutoConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
@@ -17,6 +17,6 @@ public class InitModelDaoCommandLineRunner implements CommandLineRunner {
     @Override
     @Transactional(readOnly = true)
     public void run(String... args) {
-        configuration.load();
+//        configuration.load();
     }
 }
