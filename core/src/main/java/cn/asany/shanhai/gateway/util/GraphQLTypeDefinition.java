@@ -32,6 +32,9 @@ public class GraphQLTypeDefinition {
 
     @Transient
     public List<GraphQLFieldDefinition> getFields() {
+        if (this.fieldMap == null) {
+            return new ArrayList<>();
+        }
         return new ArrayList<>(this.fieldMap.values());
     }
 

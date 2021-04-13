@@ -10,10 +10,7 @@ import graphql.schema.idl.TypeDefinitionRegistry;
 import graphql.schema.idl.UnExecutableSchemaGenerator;
 import org.jfantasy.framework.util.common.ObjectUtil;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static graphql.schema.idl.SchemaPrinter.Options.defaultOptions;
 
@@ -188,18 +185,46 @@ public class GraphQLSchemaDefinition {
         return schemaPrinter.print(graphQLSchema);
     }
 
-    public void dependencies(String name) {
+    public Set<GraphQLTypeDefinition> dependencies(String name) {
         String names[] = name.split("\\.");
         String type = names[0];
-        String field = names[1];
+
         GraphQLTypeDefinition typeDefinition = this.getType(type);
 
-       GraphQLFieldDefinition fieldDefinition = typeDefinition.getField(field);
-        fieldDefinition.getType();
+        Set<GraphQLTypeDefinition> origin = new HashSet<>();
+
+        if (names.length > 1) {
+            String field = names[1];
+            GraphQLFieldDefinition fieldDefinition = typeDefinition.getField(field);
+            origin.add(fieldDefinition.getTypeDefinition());
+        } else {
+            origin.add(typeDefinition);
+        }
+
+        Map<String, GraphQLTypeDefinition> book = new HashMap<>();
+        recursive(origin, book);
+        return new HashSet<>(book.values());
     }
 
-    public List<GraphQLTypeDefinition> recursive(List<GraphQLTypeDefinition> definitions) {
-        return definitions;
+    public void recursive(Set<GraphQLTypeDefinition> definitions, Map<String, GraphQLTypeDefinition> book) {
+        for (GraphQLTypeDefinition definition : definitions) {
+            if (book.containsKey(definition.getId())) {
+                continue;
+            }
+            book.put(definition.getId(), definition);
+            System.out.println("-------" + definition.getId());
+            if (definition.getType() == GraphQLType.Scalar) {
+                continue;
+            }
+            Set<GraphQLTypeDefinition> origin = new HashSet<>();
+            for (GraphQLFieldDefinition field : definition.getFields()) {
+                if (book.containsKey(field.getType())) {
+                    continue;
+                }
+                origin.add(field.getTypeDefinition());
+            }
+            recursive(origin, book);
+        }
     }
 
     public static class GraphQLSchemaBuilder {

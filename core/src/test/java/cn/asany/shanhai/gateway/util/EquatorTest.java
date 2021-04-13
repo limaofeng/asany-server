@@ -36,8 +36,9 @@ class EquatorTest {
 
         GraphQLSchemaDefinition schema = builder.build();
 
-        schema.dependencies("Query.viewer");
+        Set<GraphQLTypeDefinition> definitions = schema.dependencies("Employee");
 
+        System.out.println(definitions.size());
     }
 
     @Test
