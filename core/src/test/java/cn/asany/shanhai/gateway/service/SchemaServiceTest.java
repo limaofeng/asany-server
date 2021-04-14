@@ -1,7 +1,7 @@
 package cn.asany.shanhai.gateway.service;
 
 import cn.asany.shanhai.TestApplication;
-import cn.asany.shanhai.gateway.util.GraphQLSchemaDefinition;
+import cn.asany.shanhai.gateway.util.GraphQLSchema;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.jfantasy.framework.util.common.file.FileUtil;
@@ -69,10 +69,10 @@ class SchemaServiceTest {
     @Test
     @SneakyThrows
     public void testLoadSchema() {
-        GraphQLSchemaDefinition.GraphQLSchemaBuilder builder = GraphQLSchemaDefinition.builder();
+        GraphQLSchema.GraphQLSchemaBuilder builder = GraphQLSchema.builder();
         builder.schema(FileUtil.readFile(SCHEMA_PATH));
 
-        GraphQLSchemaDefinition schema = builder.build();
+        GraphQLSchema schema = builder.build();
 
         System.out.println("...............");
 

@@ -111,8 +111,28 @@ type ModelField {
     system: Boolean
 }
 
+enum ServiceIdType {
+    ID, CODE
+}
+
 type Service {
     id: ID
+    # 编码
+    code: String
+    # 名称
+    name: String
+    # 描述
+    description: String
+    # Web 协议
+    protocol: String
+    # Host 地址
+    host: String
+    # 端口
+    port: String
+    # PATH 地址
+    path: String
+    # 地址
+    url: String
 }
 
 type Consumer {
@@ -124,6 +144,8 @@ extend type Query {
     models(filter: ModelFilter, page: Int = 1, pageSize: Int = 15, orderBy: OrderBy): ModelConnection
     # 查询单个用户
     model(id: ID): Model
+    # 查询单个服务
+    service(id: ID!, idType: ServiceIdType = ID): Service
     # 服务
     services: [Service]
     # 消费者

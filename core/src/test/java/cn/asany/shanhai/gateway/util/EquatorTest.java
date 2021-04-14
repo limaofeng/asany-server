@@ -1,5 +1,6 @@
 package cn.asany.shanhai.gateway.util;
 
+import cn.asany.shanhai.gateway.bean.ServiceSchemaVersionPatch;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.common.file.FileUtil;
 import org.junit.jupiter.api.Test;
@@ -17,12 +18,13 @@ class EquatorTest {
     void isEquals() {
 
     }
+
     @Test
     void kong() {
-        GraphQLSchemaDefinition.GraphQLSchemaBuilder builder = GraphQLSchemaDefinition.builder();
+        GraphQLSchema.GraphQLSchemaBuilder builder = GraphQLSchema.builder();
         builder.schema("type Query {} type Mutation {} type Subscription {}");
 
-        GraphQLSchemaDefinition schema = builder.build();
+        GraphQLSchema schema = builder.build();
 
         schema.removeType("Mutation");
         schema.removeType("Subscription");
@@ -31,45 +33,60 @@ class EquatorTest {
 
     @Test
     void dependencies() {
-        GraphQLSchemaDefinition.GraphQLSchemaBuilder builder = GraphQLSchemaDefinition.builder();
-        builder.schema(FileUtil.readFile(SCHEMA_PATH + "schema.text"));
+        GraphQLSchema.GraphQLSchemaBuilder prevBuilder = GraphQLSchema.builder();
+        prevBuilder.schema("type Query {} type Mutation {} type Subscription {}");
 
-        GraphQLSchemaDefinition schema = builder.build();
+        GraphQLSchema prevSchema = prevBuilder.build();
 
-        Set<GraphQLTypeDefinition> definitions = schema.dependencies("Employee");
+        GraphQLSchema.GraphQLSchemaBuilder xbuilder = GraphQLSchema.builder();
+        xbuilder.schema(FileUtil.readFile(SCHEMA_PATH + "schema.text"));
 
-        System.out.println(definitions.size());
+        GraphQLSchema schema = xbuilder.build();
+
+        String[] ignoreProperties = new String[]{"Department", "Role", "GrantPermission", "Position"};
+
+        Set<String> dependencies = schema.dependencies("Query.viewer", ignoreProperties);
+
+        System.out.println(dependencies.size());
+
+        //        changelist
+
+//        Set<String> all = new LinkedHashSet<>(ObjectUtil.toFieldList(items, "name", new ArrayList<String>()));
+
+//        Set<String> intersection = Equator.intersection(dependencies, all);
+
+//        System.out.println(intersection);
     }
 
     @Test
     void diff() {
-        GraphQLSchemaDefinition.GraphQLSchemaBuilder builder = GraphQLSchemaDefinition.builder();
-        builder.schema(FileUtil.readFile(SCHEMA_PATH + "schema.text"));
 
-        GraphQLSchemaDefinition schema = builder.build();
+        GraphQLSchema schema = SchemaUtils.loadSchema(FileUtil.readFile(SCHEMA_PATH + "schema.text"));
 
-        GraphQLSchemaDefinition.GraphQLSchemaBuilder newBuilder = GraphQLSchemaDefinition.builder();
-        newBuilder.schema(FileUtil.readFile(SCHEMA_PATH + "schema_new.text"));
-
-        GraphQLSchemaDefinition newSchema = newBuilder.build();
+        GraphQLSchema newSchema = SchemaUtils.loadSchema(FileUtil.readFile(SCHEMA_PATH + "schema_new.text"));
 
         List<DiffObject> diffs = Equator.diff(schema, newSchema);
+
+        List<ServiceSchemaVersionPatch> patches = SchemaUtils.diff(schema, newSchema);
+
+        SchemaUtils.findDifference(diffs, "Mutation.login");
+
         Optional<DiffObject> typeMap = ObjectUtil.filter(diffs, "path", "/typeMap").stream().findAny();
         if (typeMap.isPresent()) {
             for (DiffObject diffObject : typeMap.get().getDiffObjects()) {
                 if (diffObject.getStatus() == DiffObject.DiffStatus.D) {
-                    schema.removeType((GraphQLTypeDefinition) diffObject.getPrev());
+                    schema.removeType((GraphQLObjectType) diffObject.getPrev());
                 }
             }
         }
         Optional<DiffObject> queryType = ObjectUtil.filter(diffs, "path", "/queryType").stream().findAny();
         if (queryType.isPresent()) {
             DiffObject queryDiffObject = ObjectUtil.filter(queryType.get().getDiffObjects(), "path", "/queryType/fieldMap").stream().findAny().get();
-            GraphQLTypeDefinition query = (GraphQLTypeDefinition) queryType.get().getPrev();
+            GraphQLObjectType query = (GraphQLObjectType) queryType.get().getPrev();
             List<DiffObject> queries = queryDiffObject.getDiffObjects();
             for (DiffObject diffObject : queries) {
                 if (diffObject.getStatus() == DiffObject.DiffStatus.D) {
-                    GraphQLFieldDefinition fieldDefinition = (GraphQLFieldDefinition) diffObject.getPrev();
+                    GraphQLField fieldDefinition = (GraphQLField) diffObject.getPrev();
                     query.remove(fieldDefinition);
                     schema.removeField(query, fieldDefinition);
                 }

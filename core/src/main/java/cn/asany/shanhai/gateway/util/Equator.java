@@ -133,21 +133,21 @@ public class Equator {
     }
 
     public static Set<String> intersection(Set<String> left, Set<String> right) {
-        Set result = new HashSet();
+        Set result = new LinkedHashSet();
         result.addAll(left);
         result.retainAll(right);
         return result;
     }
 
     public static Set<String> differenceSet(Set<String> left, Set<String> right) {
-        Set result = new HashSet();
+        Set result = new LinkedHashSet();
         result.addAll(left);
         result.removeAll(right);
         return result;
     }
 
     public static Set<String> union(Set<String> left, Set<String> right) {
-        Set<String> result = new HashSet();
+        Set<String> result = new LinkedHashSet();
         result.addAll(left);
         result.addAll(right);
         return result;

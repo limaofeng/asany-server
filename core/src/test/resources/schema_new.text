@@ -1358,7 +1358,6 @@ type BudgetPeriod {
   code: String
   "创建日期"
   createdAt(
-    format: String, 
     "入参"
     input: String
   ): Date
@@ -8924,7 +8923,7 @@ type Mutation {
   "会签"
   jointlySign(empId: String, receiver: [String], taskId: String): Boolean
   "系统•登录 当 loginType = password 时 username 与 password 必填， loginType = dingtalk 时，  authCode 与 tmpAuthCode 其中一个不能为 NULL"
-  login(authCode: String, loginType: LoginType = password, options: LoginOptions, password: String, singleCode: String, tmpAuthCode: String, username: String): LoginUser
+  login(authCode: String, loginType: LoginType = password, options: LoginOptions, password: String, singleCode: String, username: String): LoginUser
   "实体字段拖拽排序"
   modelFieldSort(id: ID!, target: Int): Boolean
   "功能：业务实体升级"
@@ -20870,7 +20869,6 @@ input DraftInput {
   sendAutomatically: Boolean
   sendTime: Date
   sender: String
-  value: JSON
 }
 
 input EZWorkflowActivityInput {

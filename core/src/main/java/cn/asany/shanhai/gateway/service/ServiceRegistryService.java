@@ -21,6 +21,7 @@ public class ServiceRegistryService {
     @Autowired
     private ServiceDao serviceDao;
 
+
     public List<Service> services() {
         return serviceDao.findAll();
     }
@@ -39,5 +40,9 @@ public class ServiceRegistryService {
 
     public Optional<Service> getService(Long id) {
         return this.serviceDao.findById(id);
+    }
+
+    public Optional<Service> findServiceOneByCode(String code) {
+        return this.serviceDao.findOne(Example.of(Service.builder().code(code).build()));
     }
 }

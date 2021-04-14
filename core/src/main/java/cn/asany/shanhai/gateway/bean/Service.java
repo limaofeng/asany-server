@@ -74,7 +74,7 @@ public class Service extends BaseBusEntity {
 
     @Transient
     public String getUrl() {
-        return this.protocol.name().toLowerCase() + "://" + this.host + ":" + this.port + this.path;
+        return this.protocol + "://" + this.host + this.protocol.getPort(this.port) + this.path;
     }
 
     public static class ServiceBuilder {
