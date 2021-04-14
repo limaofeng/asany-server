@@ -13,9 +13,7 @@ import org.jfantasy.graphql.client.GraphQLTemplate;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 import static graphql.schema.idl.SchemaPrinter.Options.defaultOptions;
 
@@ -164,12 +162,17 @@ public class SchemaUtils {
 
     }
 
-    public static void findDifference(List<DiffObject> diffs, String name) {
-        String[] names = name.split("\\.");
-
-        parse(diffs, names);
-
-        ObjectUtil.find(diffs, "path", name);
+    public static Set<DiffObject> findDifference(List<DiffObject> diffs, Set<String> keys) {
+        Set<DiffObject> diffObjects = new LinkedHashSet<>();
+        for (String name : keys) {
+            if (name.contains(".")) {
+                String[] names = name.split("\\.");
+                diffObjects.addAll(ObjectUtil.filter(diffs, (item) -> item.getPath().startsWith("/typeMap[" + names[0] + "]/fieldMap[" + names[1] + "]")));
+            } else {
+                diffObjects.addAll(ObjectUtil.filter(diffs, (item) -> item.getPath().startsWith("/typeMap[" + name + "]")));
+            }
+        }
+        return diffObjects;
     }
 
 
