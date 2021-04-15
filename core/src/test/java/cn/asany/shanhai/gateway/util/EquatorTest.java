@@ -2,6 +2,7 @@ package cn.asany.shanhai.gateway.util;
 
 import cn.asany.shanhai.gateway.bean.ServiceSchemaVersionPatch;
 import org.jfantasy.framework.util.common.ObjectUtil;
+import org.jfantasy.framework.util.common.PathUtil;
 import org.jfantasy.framework.util.common.file.FileUtil;
 import org.junit.jupiter.api.Test;
 
@@ -12,7 +13,7 @@ import java.util.Set;
 
 class EquatorTest {
 
-    String SCHEMA_PATH = "/Users/limaofeng/Workspace/whir/kuafu/core/src/test/resources/";
+//    String SCHEMA_PATH =; // "/Users/limaofeng/Workspace/whir/kuafu/core/src/test/resources/";
 
     @Test
     void isEquals() {
@@ -37,15 +38,15 @@ class EquatorTest {
         prevBuilder.schema("type Query {} type Mutation {} type Subscription {}");
 
         GraphQLSchema prevSchema = prevBuilder.build();
-
+        String nextPath =  PathUtil.getContextClassLoaderResource("schema_new.text").getPath();
         GraphQLSchema.GraphQLSchemaBuilder xbuilder = GraphQLSchema.builder();
-        xbuilder.schema(FileUtil.readFile(SCHEMA_PATH + "schema.text"));
+        xbuilder.schema(FileUtil.readFile(nextPath));
 
         GraphQLSchema schema = xbuilder.build();
 
         String[] ignoreProperties = new String[]{"Department", "Role", "GrantPermission", "Position"};
 
-        Set<String> dependencies = schema.dependencies("Query.viewer", ignoreProperties);
+        Set<String> dependencies = schema.dependencies("Mutation.createEmployee", ignoreProperties);
 
         System.out.println(dependencies.size());
 
@@ -60,16 +61,20 @@ class EquatorTest {
 
     @Test
     void diff() {
+        String prevPath = PathUtil.getContextClassLoaderResource("schema.text").getPath();
+        String nextPath =  PathUtil.getContextClassLoaderResource("schema_new.text").getPath();
 
-        GraphQLSchema schema = SchemaUtils.loadSchema(FileUtil.readFile(SCHEMA_PATH + "schema.text"));
+        GraphQLSchema schema = SchemaUtils.loadSchema("type Query {} type Mutation {} type Subscription {}");
 
-        GraphQLSchema newSchema = SchemaUtils.loadSchema(FileUtil.readFile(SCHEMA_PATH + "schema_new.text"));
+        GraphQLSchema newSchema = SchemaUtils.loadSchema(FileUtil.readFile(nextPath));
 
         List<DiffObject> diffs = Equator.diff(schema, newSchema);
 
-        List<ServiceSchemaVersionPatch> patches = SchemaUtils.diff(schema, newSchema);
+//        List<ServiceSchemaVersionPatch> patches = SchemaUtils.diff(schema, newSchema);
 
-        SchemaUtils.findDifference(diffs, "Mutation.login");
+        String[] ignoreProperties = new String[]{"Department", "Role", "GrantPermission", "Position"};
+
+        Set<DiffObject> aa = SchemaUtils.findDifference(diffs, newSchema.dependencies("Query.viewer", ignoreProperties));
 
         Optional<DiffObject> typeMap = ObjectUtil.filter(diffs, "path", "/typeMap").stream().findAny();
         if (typeMap.isPresent()) {

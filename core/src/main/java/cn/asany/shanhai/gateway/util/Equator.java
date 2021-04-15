@@ -1,11 +1,15 @@
 package cn.asany.shanhai.gateway.util;
 
+import lombok.Builder;
+import lombok.Data;
 import org.jfantasy.framework.util.common.ClassUtil;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.ognl.OgnlUtil;
 import org.jfantasy.framework.util.reflect.Property;
 
 import java.util.*;
+import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public class Equator {
@@ -14,11 +18,15 @@ public class Equator {
         return false;
     }
 
-    public static List<DiffObject> diff(Object left, Object right) {
-        return diff(left, right, "");
+    public static List<DiffObject> diff(Object left, Object right, Structure structure) {
+        return diff(left, right, structure, "");
     }
 
-    public static List<DiffObject> diff(Object left, Object right, String parentPath) {
+    public static List<DiffObject> diff(Object left, Object right) {
+        return diff(left, right, Structure.LIST);
+    }
+
+    private static List<DiffObject> diff(Object left, Object right, Structure structure, String parentPath) {
         Property[] properties = ClassUtil.getPropertys(left.getClass());
         List<DiffObject> diffObjects = new ArrayList<>();
         for (Property property : properties) {
@@ -39,32 +47,24 @@ public class Equator {
                     Map prevMap = toMap((List) childByLeft, "id");
                     Map currentMap = toMap((List) childByRight, "id");
 
-                    Set appendItems = differenceSet(prevMap.keySet(), currentMap.keySet());
-                    Set deletedItems = differenceSet(prevMap.keySet(), currentMap.keySet());
-                    Set modifiedKeys = intersection(prevMap.keySet(), currentMap.keySet());
+                    Set<String> appendItems = differenceSet(prevMap.keySet(), currentMap.keySet());
+                    Set<String> deletedItems = differenceSet(prevMap.keySet(), currentMap.keySet());
+                    Set<String> modifiedKeys = intersection(prevMap.keySet(), currentMap.keySet());
 
-                    children.addAll((List) appendItems.stream().map(key -> {
-                        Object prev = prevMap.get(key);
-                        int index = ObjectUtil.indexOf((List) childByRight, currentMap.get(key));
-                        String path = propertyPath + "[" + index + "]";
-                        return DiffObject.builder().path(path).status(DiffObject.DiffStatus.A).prev(prev).build();
-                    }).collect(Collectors.toList()));
+                    children.addAll(added(appendItems, prevMap, currentMap, (item) -> {
+                        int index = ObjectUtil.indexOf((List) childByRight, item.right);
+                        return propertyPath + "[" + index + "]";
+                    }));
 
-                    children.addAll((List) deletedItems.stream().map(key -> {
-                        Object prev = prevMap.get(key);
-                        int index = ObjectUtil.indexOf((List) childByRight, currentMap.get(key));
-                        String path = propertyPath + "[" + index + "]";
-                        return DiffObject.builder().path(path).status(DiffObject.DiffStatus.D).prev(prev).build();
-                    }).collect(Collectors.toList()));
+                    children.addAll(delete(deletedItems, prevMap, currentMap, (item) -> {
+                        int index = ObjectUtil.indexOf((List) childByRight, item.right);
+                        return propertyPath + "[" + index + "]";
+                    }));
 
-                    children.addAll((List) modifiedKeys.stream().filter((key) -> !prevMap.get(key).equals(currentMap.get(key))).map(key -> {
-                        Object prev = prevMap.get(key);
-                        Object current = currentMap.get(key);
-                        int index = ObjectUtil.indexOf((List) childByRight, currentMap.get(key));
-                        String path = propertyPath + "[" + index + "]";
-                        return DiffObject.builder().path(path).status(DiffObject.DiffStatus.M).prev(prev).current(current).diffObjects(diff(prev, current, path)).build();
-                    }).collect(Collectors.toList()));
-
+                    children.addAll(modified(modifiedKeys, prevMap, currentMap, (item) -> {
+                        int index = ObjectUtil.indexOf((List) childByRight, item.right);
+                        return propertyPath + "[" + index + "]";
+                    }, structure));
 
                 } else {
                     Set prev = new HashSet((List) childByLeft);
@@ -74,38 +74,25 @@ public class Equator {
                 }
 
                 if (!children.isEmpty()) {
-                    diffObjects.add(builder.diffObjects(children).build());
+                    joining(diffObjects, builder, children, structure);
                 }
             } else if (ClassUtil.isMap(childType)) {
                 List<DiffObject> children = new ArrayList<>();
                 Map prevMap = ObjectUtil.defaultValue((Map) childByLeft, new HashMap());
                 Map currentMap = ObjectUtil.defaultValue((Map) childByRight, new HashMap());
+
                 Set appendItems = differenceSet(currentMap.keySet(), prevMap.keySet());
                 Set deletedItems = differenceSet(prevMap.keySet(), currentMap.keySet());
                 Set modifiedKeys = intersection(prevMap.keySet(), currentMap.keySet());
 
-                children.addAll((List) appendItems.stream().map(key -> {
-                    String path = propertyPath + "[" + key + "]";
-                    Object current = currentMap.get(key);
-                    return DiffObject.builder().path(path).status(DiffObject.DiffStatus.A).current(current).build();
-                }).collect(Collectors.toList()));
+                children.addAll(added(appendItems, prevMap, currentMap, (item) -> propertyPath + "[" + item.key + "]"));
 
-                children.addAll((List) deletedItems.stream().map(key -> {
-                    String path = propertyPath + "[" + key + "]";
-                    Object prev = prevMap.get(key);
-                    Object current = currentMap.get(key);
-                    return DiffObject.builder().path(path).status(DiffObject.DiffStatus.D).prev(prev).current(current).build();
-                }).collect(Collectors.toList()));
+                children.addAll(delete(deletedItems, prevMap, currentMap, (item) -> propertyPath + "[" + item.key + "]"));
 
-                children.addAll((List) modifiedKeys.stream().filter((key) -> !prevMap.get(key).equals(currentMap.get(key))).map(key -> {
-                    String path = propertyPath + "[" + key + "]";
-                    Object prev = prevMap.get(key);
-                    Object current = currentMap.get(key);
-                    return DiffObject.builder().path(path).status(DiffObject.DiffStatus.M).prev(prev).current(current).diffObjects(diff(prev, current, path)).build();
-                }).collect(Collectors.toList()));
+                children.addAll(modified(modifiedKeys, prevMap, currentMap, (item) -> propertyPath + "[" + item.key + "]", structure));
 
                 if (!children.isEmpty()) {
-                    diffObjects.add(builder.diffObjects(children).build());
+                    joining(diffObjects, builder, children, structure);
                 }
             } else if (ClassUtil.isBasicType(childType)) {
                 if (childByLeft == childByRight) {
@@ -115,13 +102,65 @@ public class Equator {
                     diffObjects.add(builder.build());
                 }
             } else {
-                List<DiffObject> children = diff(childByLeft, childByRight, propertyPath);
+                List<DiffObject> children = diff(childByLeft, childByRight, structure, propertyPath);
                 if (!children.isEmpty()) {
-                    diffObjects.add(builder.diffObjects(children).build());
+                    joining(diffObjects, builder, children, structure);
                 }
             }
         }
         return diffObjects;
+    }
+
+    @Data
+    @Builder
+    public static class CompareItem {
+        Object left;
+        Object right;
+        String key;
+    }
+
+    private static List<DiffObject> added(Set<String> items, Map<String, Object> prevMap, Map<String, Object> currentMap, Function<CompareItem, String> other) {
+        return items.stream().map(key -> {
+            Object prev = prevMap.get(key);
+            Object current = currentMap.get(key);
+            String path = other.apply(CompareItem.builder().key(key).left(currentMap.get(key)).right(current).build());
+            return DiffObject.builder().path(path).status(DiffObject.DiffStatus.A).prev(prev).current(current).build();
+        }).collect(Collectors.toList());
+    }
+
+    private static List<DiffObject> modified(Set<String> items, Map<String, Object> prevMap, Map<String, Object> currentMap, Function<CompareItem, String> other, Structure structure) {
+        List<DiffObject> diffObjects = new ArrayList<>();
+        items.stream()
+            .map(key -> CompareItem.builder().key(key).left(prevMap.get(key)).right(currentMap.get(key)).build())
+            .filter(item -> !item.left.equals(item.right))
+            .forEach(item -> {
+                Object prev = item.left;
+                Object current = item.right;
+                String path = other.apply(item);
+                DiffObject.DiffObjectBuilder builder = DiffObject.builder().path(path).status(DiffObject.DiffStatus.M).prev(prev).current(current);
+                List<DiffObject> children = diff(prev, current, structure, path);
+                if (!children.isEmpty()) {
+                    joining(diffObjects, builder, children, structure);
+                }
+            });
+        return diffObjects;
+    }
+
+    private static List<DiffObject> delete(Set<String> items, Map<String, Object> prevMap, Map<String, Object> currentMap, Function<CompareItem, String> other) {
+        return items.stream().map(key -> {
+            Object prev = prevMap.get(key);
+            Object current = currentMap.get(key);
+            String path = other.apply(CompareItem.builder().key(key).left(currentMap.get(key)).right(current).build());
+            return DiffObject.builder().path(path).status(DiffObject.DiffStatus.D).prev(prev).build();
+        }).collect(Collectors.toList());
+    }
+
+    private static void joining(List<DiffObject> diffObjects, DiffObject.DiffObjectBuilder builder, List<DiffObject> children, Structure structure) {
+        if (structure == Structure.LIST) {
+            diffObjects.addAll(children);
+        } else {
+            diffObjects.add(builder.current(children).build());
+        }
     }
 
     public static <PK, T> Map<PK, T> toMap(List<T> list, String fieldName) {

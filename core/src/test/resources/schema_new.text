@@ -35,6 +35,11 @@ type APackage {
   processNum: String
 }
 
+type TNewType {
+  id: ID
+  name: String
+}
+
 type ActiveNode {
   "活动处理人"
   assignee: Employee
@@ -12599,6 +12604,7 @@ type PurchaseTenderEdge {
 }
 
 type Query {
+  tNewType: TNewType
   "查询我的收文列表"
   GetReceiveFileBox(getReceiveFileBoxFilter: GetReceiveFileBoxFilter): GetReceiveFileBoxResponse
   "查询进口论证详情"

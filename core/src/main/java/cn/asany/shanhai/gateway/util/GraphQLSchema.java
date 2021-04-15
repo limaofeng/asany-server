@@ -35,6 +35,10 @@ public class GraphQLSchema {
     }
 
     public Map<String, GraphQLObjectType> getTypeMap() {
+        Map<String, GraphQLObjectType> typeMap = new LinkedHashMap<>(this.typeMap);
+        typeMap.put("Query", queryType);
+        typeMap.put("Mutation", mutationType);
+        typeMap.put("Subscription", subscriptionType);
         return typeMap;
     }
 
@@ -63,10 +67,7 @@ public class GraphQLSchema {
     }
 
     public GraphQLObjectType getType(String name) {
-        if ("Query".equals(name)) {
-            return queryType;
-        }
-        return this.typeMap.get(name);
+        return this.getTypeMap().get(name);
     }
 
     public void addScalars(Map<String, ScalarTypeDefinition> scalars) {
@@ -93,14 +94,17 @@ public class GraphQLSchema {
         }
     }
 
+    @Transient
     public GraphQLObjectType getQueryType() {
         return this.queryType;
     }
 
+    @Transient
     public GraphQLObjectType getMutationType() {
         return this.mutationType;
     }
 
+    @Transient
     public GraphQLObjectType getSubscriptionType() {
         return this.subscriptionType;
     }
@@ -212,6 +216,7 @@ public class GraphQLSchema {
     }
 
     public Set<String> dependencies(String name, String[] ignoreProperties) {
+        Set<String> _ignoreProperties = new LinkedHashSet<String>(new ArrayList(Arrays.asList(ignoreProperties)));
         String names[] = name.split("\\.");
         String type = names[0];
         Set<String> book = new LinkedHashSet<>();
@@ -225,11 +230,12 @@ public class GraphQLSchema {
             GraphQLField fieldDefinition = typeDefinition.getField(field);
             origin.add(fieldDefinition.getTypeDefinition());
             book.add(typeDefinition.getId() + "." + fieldDefinition.getId());
+            recursive(ObjectUtil.defaultValue(fieldDefinition.getArguments(), Collections.emptyMap()).values().toArray(new GraphQLFieldArgument[0]), book, _ignoreProperties);
         } else {
             origin.add(typeDefinition);
         }
 
-        recursive(origin, book, new LinkedHashSet<String>(new ArrayList(Arrays.asList(ignoreProperties))));
+        recursive(origin, book, _ignoreProperties);
 
         List<String> scalars = new ArrayList<>();
         scalars.add("String");
@@ -245,6 +251,40 @@ public class GraphQLSchema {
         return book;
     }
 
+    public void recursive(GraphQLFieldArgument[] arguments, Set<String> book, Set<String> ignoreProperties) {
+        if (arguments == null) {
+            return;
+        }
+        Set<GraphQLObjectType> origin = new HashSet<>();
+        for (GraphQLFieldArgument argument : arguments) {
+            if (book.contains(argument.getType()) || ignoreProperties.contains(argument.getType())) {
+                continue;
+            }
+            origin.add(argument.getTypeDefinition());
+        }
+        recursive(origin, book, ignoreProperties);
+    }
+
+
+    public void recursive(GraphQLObjectType type, List<GraphQLField> fields, Set<String> book, Set<String> ignoreProperties) {
+        Set<GraphQLObjectType> origin = new HashSet<>();
+        for (GraphQLField field : fields) {
+            // 解析 参数
+            recursive(ObjectUtil.defaultValue(field.getArguments(), Collections.emptyMap()).values().toArray(new GraphQLFieldArgument[0]), book, ignoreProperties);
+            //解析字段类型
+            String key = type.getId() + "." + field.getId();
+            if (ignoreProperties.contains(key) || ignoreProperties.contains(field.getType())) {
+                continue;
+            }
+            book.add(key);
+            if (book.contains(field.getType())) {
+                continue;
+            }
+            origin.add(field.getTypeDefinition());
+        }
+        recursive(origin, book, ignoreProperties);
+    }
+
     public void recursive(Set<GraphQLObjectType> definitions, Set<String> book, Set<String> ignoreProperties) {
         for (GraphQLObjectType definition : definitions) {
             if (book.contains(definition.getId())) {
@@ -257,19 +297,7 @@ public class GraphQLSchema {
             if (definition.getType() == GraphQLType.Scalar) {
                 continue;
             }
-            Set<GraphQLObjectType> origin = new HashSet<>();
-            for (GraphQLField field : definition.getFields()) {
-                String key = definition.getId() + "." + field.getId();
-                if (ignoreProperties.contains(key) || ignoreProperties.contains(field.getType())) {
-                    continue;
-                }
-                book.add(key);
-                if (book.contains(field.getType())) {
-                    continue;
-                }
-                origin.add(field.getTypeDefinition());
-            }
-            recursive(origin, book, ignoreProperties);
+            recursive(definition, definition.getFields(), book, ignoreProperties);
         }
     }
 
@@ -305,19 +333,14 @@ public class GraphQLSchema {
 
             schema.setTypeDefinitionRegistry(registry);
 
-            for (FieldDefinition field : queries) {
-                String name = typeName(field.getType());
-                loadTypeDefinition(registry.getType(name).get(), registry, schema);
-                queryTypeBuilder.field(field.getName(), field);
-            }
+            loadFieldDefinitions(queries, registry, schema);
+            schema.buildGraphQLFields(queryTypeBuilder, queries.toArray(new FieldDefinition[0]));
 
-            for (FieldDefinition field : mutations) {
-                String name = typeName(field.getType());
-                loadTypeDefinition(registry.getType(name).get(), registry, schema);
-                mutationTypeBuilder.field(field.getName(), field);
-            }
+            loadFieldDefinitions(mutations, registry, schema);
+            schema.buildGraphQLFields(mutationTypeBuilder, mutations.toArray(new FieldDefinition[0]));
 
             loadFieldDefinitions(subscriptions, registry, schema);
+            schema.buildGraphQLFields(subscriptionTypeBuilder, subscriptions.toArray(new FieldDefinition[0]));
 
             schema.setQueryType(queryTypeBuilder.build());
             schema.setMutationType(mutationTypeBuilder.build());
