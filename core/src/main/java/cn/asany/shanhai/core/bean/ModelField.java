@@ -1,12 +1,17 @@
 package cn.asany.shanhai.core.bean;
 
 import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.LazyToOne;
+import org.hibernate.annotations.LazyToOneOption;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
 import javax.persistence.*;
+import java.util.List;
 
 /**
  * 实体字段
+ *
  * @author limaofeng
  */
 @Data
@@ -23,8 +28,8 @@ public class ModelField extends BaseBusEntity {
      */
     @Id
     @Column(name = "ID")
-    @GeneratedValue(generator = "DDM_MODEL_FIELD")
-    @TableGenerator(name = "DDM_MODEL_FIELD", table = "sys_sequence", pkColumnName = "gen_name", pkColumnValue = "MODEL_FIELD:id", valueColumnName = "gen_value")
+    @GeneratedValue(generator = "fantasy-sequence")
+    @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
     private Long id;
     /**
      * 编码 用于 HQL 名称及 API 名称
@@ -61,6 +66,7 @@ public class ModelField extends BaseBusEntity {
     /**
      * 字段类型
      */
+    @LazyToOne(LazyToOneOption.NO_PROXY)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "TYPE_ID", foreignKey = @ForeignKey(name = "FK_MODEL_FIELD_TID"))
     private Model type;
@@ -82,7 +88,6 @@ public class ModelField extends BaseBusEntity {
     @Builder.Default
     @Column(name = "IS_SYSTEM", length = 1)
     private Boolean system = false;
-
     /**
      * 序号
      */
@@ -91,6 +96,7 @@ public class ModelField extends BaseBusEntity {
     /**
      * 实体
      */
+    @LazyToOne(LazyToOneOption.NO_PROXY)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MODEL_ID", foreignKey = @ForeignKey(name = "FK_MODEL_FIELD_MODEL_ID"), nullable = false)
     private Model model;
@@ -98,6 +104,7 @@ public class ModelField extends BaseBusEntity {
      * 元数据
      */
     @OneToOne(mappedBy = "field", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
+    @LazyToOne(LazyToOneOption.NO_PROXY)
     private ModelFieldMetadata metadata;
     /**
      * 委派
@@ -105,6 +112,11 @@ public class ModelField extends BaseBusEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "DELEGATE_ID", foreignKey = @ForeignKey(name = "FK_MODEL_FIELD_DID"))
     private ModelDelegate delegate;
+    /**
+     * 参数
+     */
+    @OneToMany(mappedBy = "field", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE}, fetch = FetchType.LAZY)
+    private List<ModelFieldArgument> arguments;
 
     public static class ModelFieldBuilder {
 

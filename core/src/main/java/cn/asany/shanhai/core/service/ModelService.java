@@ -239,4 +239,11 @@ public class ModelService {
     public void save(ModelField field) {
         modelFieldDao.save(modelUtils.install(field.getModel(), field));
     }
+
+    public List<ModelField> queries() {
+        PropertyFilterBuilder builder = PropertyFilter.builder();
+        builder.equal("model.code", "Query");
+        return this.modelFieldDao.findAll(builder.build());
+    }
+
 }

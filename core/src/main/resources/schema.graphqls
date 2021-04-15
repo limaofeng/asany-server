@@ -139,6 +139,47 @@ type Consumer {
     id: ID
 }
 
+type GraphQLEndpoint {
+    id: ID
+}
+
+enum GraphQLType {
+    # 输入对象
+    InputObject
+    # 标量
+    Scalar
+    # 类型
+    Object
+    # 枚举
+    Enum
+    # 联合
+    Union
+    # 接口
+    Interface
+}
+
+type ModelGroupResource {
+    id: ID
+    resource: String
+}
+
+type ModelGroup {
+    id: ID
+    name: String
+    description: String
+    items: [ModelGroupResource]
+}
+
+type GraphQLSchema {
+    id: ID
+    name: String
+    ungrouped: [ModelGroupResource]
+    groups: [ModelGroup]
+    queries: [ModelField]
+    mutations: [ModelField]
+    types: [Model]
+}
+
 extend type Query {
     # 用户列表
     models(filter: ModelFilter, page: Int = 1, pageSize: Int = 15, orderBy: OrderBy): ModelConnection
@@ -150,6 +191,8 @@ extend type Query {
     services: [Service]
     # 消费者
     consumers: [Consumer]
+    #  GraphQL 架构图
+    schema(id: ID!): GraphQLSchema
 }
 
 extend type Mutation {
