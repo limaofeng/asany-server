@@ -246,4 +246,13 @@ public class ModelService {
         return this.modelFieldDao.findAll(builder.build());
     }
 
+    public List<ModelField> findAllModelFields(List<PropertyFilter> filters) {
+        return this.modelFieldDao.findAll(filters);
+    }
+
+    public List<ModelField> endpoints() {
+        PropertyFilterBuilder builder = PropertyFilter.builder();
+        builder.in("model.code", "Query", "Mutation");
+        return this.modelFieldDao.findWithModelAndType(builder.build());
+    }
 }

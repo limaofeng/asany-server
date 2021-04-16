@@ -93,6 +93,8 @@ type Model {
 
 type ModelField {
     id: ID
+    # 编码
+    code: String
     # 名称
     name: String
     # 描述
@@ -109,6 +111,8 @@ type ModelField {
     list: Boolean
     # 是否为系统字段
     system: Boolean
+    # 所属实体
+    model: Model
 }
 
 enum ServiceIdType {
@@ -175,6 +179,7 @@ type GraphQLSchema {
     name: String
     ungrouped: [ModelGroupResource]
     groups: [ModelGroup]
+    endpoints: [ModelField]
     queries: [ModelField]
     mutations: [ModelField]
     types: [Model]

@@ -26,6 +26,7 @@ import java.util.stream.Collectors;
 @EqualsAndHashCode(callSuper = false, of = "id")
 @Entity
 @Table(name = "SH_MODEL")
+@NamedEntityGraph(name = "Model.Graph", attributeNodes = {@NamedAttributeNode("fields")})
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class Model extends BaseBusEntity {
     @Id

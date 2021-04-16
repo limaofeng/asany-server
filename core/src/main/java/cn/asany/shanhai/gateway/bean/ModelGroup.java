@@ -7,6 +7,9 @@ import org.jfantasy.framework.dao.BaseBusEntity;
 import javax.persistence.*;
 import java.util.List;
 
+/**
+ * @author limaofeng
+ */
 @Data
 @Builder
 @NoArgsConstructor

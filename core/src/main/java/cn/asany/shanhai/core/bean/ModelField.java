@@ -20,6 +20,10 @@ import java.util.List;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false, of = "id")
 @Entity
+@NamedEntityGraph(name = "Graph.ModelField.FetchModelAndType", attributeNodes = {
+    @NamedAttributeNode(value = "model"),
+    @NamedAttributeNode(value = "type"),
+})
 @Table(name = "SH_MODEL_FIELD", uniqueConstraints = @UniqueConstraint(columnNames = {"MODEL_ID", "CODE"}, name = "UK_MODEL_FIELD_CODE"))
 public class ModelField extends BaseBusEntity {
 
@@ -66,7 +70,6 @@ public class ModelField extends BaseBusEntity {
     /**
      * 字段类型
      */
-    @LazyToOne(LazyToOneOption.NO_PROXY)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "TYPE_ID", foreignKey = @ForeignKey(name = "FK_MODEL_FIELD_TID"))
     private Model type;
@@ -96,7 +99,6 @@ public class ModelField extends BaseBusEntity {
     /**
      * 实体
      */
-    @LazyToOne(LazyToOneOption.NO_PROXY)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MODEL_ID", foreignKey = @ForeignKey(name = "FK_MODEL_FIELD_MODEL_ID"), nullable = false)
     private Model model;
