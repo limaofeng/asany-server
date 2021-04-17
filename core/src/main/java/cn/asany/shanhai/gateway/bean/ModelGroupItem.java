@@ -1,7 +1,12 @@
 package cn.asany.shanhai.gateway.bean;
 
+import cn.asany.shanhai.core.bean.Model;
+import cn.asany.shanhai.core.bean.ModelField;
 import lombok.*;
+import org.hibernate.annotations.Any;
+import org.hibernate.annotations.AnyMetaDef;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.MetaValue;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
 import javax.persistence.*;
@@ -22,8 +27,26 @@ public class ModelGroupItem extends BaseBusEntity {
     /**
      * 引用资源
      */
-    @Column(name = "RESOURCE", length = 100)
-    private String resource;
+    @Any(
+        metaColumn = @Column(name = "RESOURCE_TYPE", length = 10, insertable = false, updatable = false),
+        fetch = FetchType.LAZY
+    )
+    @AnyMetaDef(
+        idType = "long", metaType = "string",
+        metaValues = {
+            @MetaValue(targetEntity = ModelField.class, value = "ENDPOINT"),
+            @MetaValue(targetEntity = Model.class, value = "MODEL")
+        }
+    )
+    @JoinColumn(name = "RESOURCE_ID", insertable = false, updatable = false)
+    private ModelGroupResource resource;
+
+    @Column(name = "RESOURCE_ID")
+    private Long resourceId;
+
+    @Column(name = "RESOURCE_TYPE", length = 10)
+    private String resourceType;
+
     /**
      * 排序
      */

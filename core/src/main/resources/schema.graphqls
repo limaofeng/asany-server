@@ -164,7 +164,8 @@ enum GraphQLType {
 
 type ModelGroupResource {
     id: ID
-    resource: String
+    resourceId: Int
+    resourceType: String
 }
 
 type ModelGroup {

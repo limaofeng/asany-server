@@ -23,8 +23,8 @@ public class ServiceSchema extends BaseBusEntity {
 
     @Id
     @Column(name = "SERVICE_ID", nullable = false, updatable = false, precision = 22, scale = 0)
-    @GenericGenerator(name = "ModelMetadataPkGenerator", strategy = "foreign", parameters = {@org.hibernate.annotations.Parameter(name = "property", value = "service")})
-    @GeneratedValue(generator = "ModelMetadataPkGenerator")
+    @GenericGenerator(name = "ServiceSchemaPkGenerator", strategy = "foreign", parameters = {@org.hibernate.annotations.Parameter(name = "property", value = "service")})
+    @GeneratedValue(generator = "ServiceSchemaPkGenerator")
     private Long id;
 
     @Basic(fetch = FetchType.LAZY)

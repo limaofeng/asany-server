@@ -16,6 +16,10 @@ import java.util.List;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false, of = "id")
 @Entity
+@NamedEntityGraph(
+    name = "Graph.ModelGroup.FetchChildren",
+    attributeNodes = @NamedAttributeNode(value = "items")
+)
 @Table(name = "SH_MODEL_GROUP")
 public class ModelGroup extends BaseBusEntity {
 

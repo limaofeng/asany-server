@@ -16,7 +16,7 @@ public class ModelGroupService {
     private ModelGroupDao modelGroupDao;
 
     public List<ModelGroup> groups() {
-        return this.modelGroupDao.findAll();
+        return this.modelGroupDao.findAllWithItems();
     }
 
 }

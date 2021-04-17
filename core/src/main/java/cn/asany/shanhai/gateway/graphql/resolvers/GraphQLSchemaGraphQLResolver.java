@@ -39,7 +39,8 @@ public class GraphQLSchemaGraphQLResolver implements GraphQLResolver<GraphQLSche
     }
 
     public List<ModelGroup> groups(GraphQLSchema schema) {
-        return modelGroupService.groups();
+        List<ModelGroup> groups = modelGroupService.groups();
+        return groups;
     }
 
 }

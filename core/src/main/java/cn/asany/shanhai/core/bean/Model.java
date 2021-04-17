@@ -3,6 +3,7 @@ package cn.asany.shanhai.core.bean;
 import cn.asany.shanhai.core.bean.enums.ModelConnectType;
 import cn.asany.shanhai.core.bean.enums.ModelStatus;
 import cn.asany.shanhai.core.bean.enums.ModelType;
+import cn.asany.shanhai.gateway.bean.ModelGroupResource;
 import cn.asany.shanhai.gateway.bean.Service;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
@@ -28,7 +29,7 @@ import java.util.stream.Collectors;
 @Table(name = "SH_MODEL")
 @NamedEntityGraph(name = "Model.Graph", attributeNodes = {@NamedAttributeNode("fields")})
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-public class Model extends BaseBusEntity {
+public class Model extends BaseBusEntity implements ModelGroupResource {
     @Id
     @Column(name = "ID")
     @GeneratedValue(generator = "fantasy-sequence")

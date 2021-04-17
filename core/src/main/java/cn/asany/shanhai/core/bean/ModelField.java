@@ -1,5 +1,6 @@
 package cn.asany.shanhai.core.bean;
 
+import cn.asany.shanhai.gateway.bean.ModelGroupResource;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.LazyToOne;
@@ -20,12 +21,15 @@ import java.util.List;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false, of = "id")
 @Entity
-@NamedEntityGraph(name = "Graph.ModelField.FetchModelAndType", attributeNodes = {
-    @NamedAttributeNode(value = "model"),
-    @NamedAttributeNode(value = "type"),
-})
+@NamedEntityGraph(
+    name = "Graph.ModelField.FetchModelAndType",
+    attributeNodes = {
+        @NamedAttributeNode(value = "model"),
+        @NamedAttributeNode(value = "type"),
+    }
+)
 @Table(name = "SH_MODEL_FIELD", uniqueConstraints = @UniqueConstraint(columnNames = {"MODEL_ID", "CODE"}, name = "UK_MODEL_FIELD_CODE"))
-public class ModelField extends BaseBusEntity {
+public class ModelField extends BaseBusEntity implements ModelGroupResource {
 
     /**
      * id主键
