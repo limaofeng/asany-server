@@ -27,7 +27,6 @@ class SchemaServiceTest {
     @Autowired
     private ServiceRegistryService serviceRegistryService;
 
-    @SneakyThrows
     @BeforeEach
     void setUp() {
 //        modelService.clear();
