@@ -28,6 +28,9 @@ public class KmeansClustering {
     private void initDataSet() throws IOException {
         dataset = new ArrayList<Point>();
 
+
+
+
         BufferedReader bufferedReader = new BufferedReader(
             new InputStreamReader(KmeansClustering.class.getClassLoader()
                 .getResourceAsStream("data.txt")));
