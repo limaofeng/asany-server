@@ -1,6 +1,3 @@
-scalar Date
-scalar OrderBy
-
 input ModelCreateInput {
     # 编码
     code: String
