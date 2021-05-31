@@ -24,9 +24,9 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
  */
 @Slf4j
 @Configuration
-@ComponentScan({"cn.asany.shanhai.*.service", "cn.asany.shanhai.*.graphql"})
+@ComponentScan({"cn.asany.*.*.service", "cn.asany.*.*.graphql"})
 @EntityScan({
-    "cn.asany.shanhai.*.bean",
+    "cn.asany.*.*.bean",
 })
 @EnableJpaRepositories(
     includeFilters = {
@@ -36,7 +36,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
         )
     },
     basePackages = {
-        "cn.asany.shanhai.*.dao",
+        "cn.asany.*.*.dao",
     },
     repositoryBaseClass = ComplexJpaRepository.class
 )

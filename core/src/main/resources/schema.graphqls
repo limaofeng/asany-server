@@ -159,8 +159,25 @@ enum GraphQLType {
     Interface
 }
 
-type ModelGroupResource {
+enum ModelGroupItemResourceType {
+    # 查询
+    Query
+    # 突变
+    Mutation
+    # 标量
+    Scalar
+    # 模型
+    Model
+    # 输入
+    Input
+    # 枚举
+    ENUM
+}
+
+type ModelGroupItemResource {
     id: ID
+    name: String
+    type: ModelGroupItemResourceType
     resourceId: Int
     resourceType: String
 }
@@ -169,13 +186,13 @@ type ModelGroup {
     id: ID
     name: String
     description: String
-    items: [ModelGroupResource]
+    items: [ModelGroupItemResource]
 }
 
 type GraphQLSchema {
     id: ID
     name: String
-    ungrouped: [ModelGroupResource]
+    ungrouped: [ModelGroupItemResource]
     groups: [ModelGroup]
     endpoints: [ModelField]
     queries: [ModelField]
@@ -183,11 +200,23 @@ type GraphQLSchema {
     types: [Model]
 }
 
+enum ModelIdType {
+    id
+    code
+}
+
+enum EndpointIdType {
+    id
+    code
+}
+
 extend type Query {
     # 用户列表
     models(filter: ModelFilter, page: Int = 1, pageSize: Int = 15, orderBy: OrderBy): ModelConnection
-    # 查询单个用户
-    model(id: ID): Model
+    # 查询单个模型
+    model(id: ID, idType: ModelIdType = id): Model
+    # 查询单个接口
+    endpoint(id: ID, idType: EndpointIdType = id): ModelField
     # 查询单个服务
     service(id: ID!, idType: ServiceIdType = ID): Service
     # 服务

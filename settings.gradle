@@ -1,5 +1,15 @@
 rootProject.name = 'shanhai'
-include ":shanhai-boot", ":shanhai-core"
+include ":asany-shanhai", ":asany-organization", ":asany-base", ":asany-security", ":asany-mountain", ":asany-boot"
 
-project(':shanhai-boot').projectDir = "$rootDir/boot" as File
-project(':shanhai-core').projectDir = "$rootDir/core" as File
+// 基础
+project(':asany-base').projectDir = "$rootDir/base" as File
+// 网关
+project(':asany-mountain').projectDir = "$rootDir/mountain" as File
+// 建模
+project(':asany-shanhai').projectDir = "$rootDir/shanhai" as File
+// 组织 / 员工 / 通讯录
+project(':asany-organization').projectDir = "$rootDir/organization" as File
+// 安全 / 登录 / 授权
+project(':asany-security').projectDir = "$rootDir/security" as File
+// 启动
+project(':asany-boot').projectDir = "$rootDir/boot" as File

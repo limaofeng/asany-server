@@ -1,6 +1,9 @@
 package cn.asany.shanhai.core.graphql;
 
 import cn.asany.shanhai.core.bean.Model;
+import cn.asany.shanhai.core.bean.ModelField;
+import cn.asany.shanhai.core.graphql.enums.EndpointIdType;
+import cn.asany.shanhai.core.graphql.enums.ModelIdType;
 import cn.asany.shanhai.core.graphql.inputs.ModelFilter;
 import cn.asany.shanhai.core.graphql.types.ModelConnection;
 import cn.asany.shanhai.core.service.ModelService;
@@ -29,8 +32,18 @@ public class ModelGraphQLQueryResolver implements GraphQLQueryResolver {
         return Kit.connection(modelService.findPager(pager, filter.build()), ModelConnection.class);
     }
 
-    public Optional<Model> model(Long id) {
-        return modelService.get(id);
+    public Optional<Model> model(String id, ModelIdType idType) {
+        if (idType == ModelIdType.id) {
+            return modelService.get(Long.valueOf(id));
+        }
+        return modelService.findByCode(id);
+    }
+
+    public Optional<ModelField> endpoint(String id, EndpointIdType idType) {
+        if (idType == EndpointIdType.id) {
+            return modelService.findEndpointById(Long.valueOf(id));
+        }
+        return modelService.findEndpointByCode(id);
     }
 
 }

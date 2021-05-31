@@ -11,6 +11,7 @@ import cn.asany.shanhai.core.dao.ModelRelationDao;
 import cn.asany.shanhai.core.support.ModelSaveContext;
 import cn.asany.shanhai.core.utils.FieldTypeNotFoundException;
 import cn.asany.shanhai.core.utils.ModelUtils;
+import cn.asany.shanhai.gateway.bean.ModelGroupItem;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.jfantasy.framework.dao.Pager;
@@ -25,6 +26,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
@@ -254,5 +256,27 @@ public class ModelService {
         PropertyFilterBuilder builder = PropertyFilter.builder();
         builder.in("model.code", "Query", "Mutation");
         return this.modelFieldDao.findWithModelAndType(builder.build());
+    }
+
+    public List<ModelGroupItem> findResourcesByUngrouped() {
+        List<ModelGroupItem> items = new ArrayList<>();
+        int i = 0;
+        for (ModelField field : this.modelFieldDao.findByUngrouped()) {
+            items.add(ModelGroupItem.builder().id(Long.valueOf(--i)).resourceId(field.getId()).resourceType("ENDPOINT").resource(field).build());
+        }
+        for (Model model : this.modelDao.findByUngrouped()) {
+            items.add(ModelGroupItem.builder().id(Long.valueOf(--i)).resourceId(model.getId()).resourceType("MODEL").resource(model).build());
+        }
+        return items;
+    }
+
+    public Optional<ModelField> findEndpointById(Long id) {
+        return this.modelFieldDao.findById(id);
+    }
+
+    public Optional<ModelField> findEndpointByCode(String code) {
+        PropertyFilterBuilder builder = PropertyFilter.builder();
+        builder.equal("code", code);
+        return this.modelFieldDao.findOne(builder.build());
     }
 }

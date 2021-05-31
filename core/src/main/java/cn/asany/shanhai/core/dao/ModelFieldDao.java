@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -28,8 +27,8 @@ public interface ModelFieldDao extends JpaRepository<ModelField, Long> {
     @EntityGraph(value = "Graph.ModelField.FetchModelAndType", type = EntityGraph.EntityGraphType.FETCH)
     @Query("FROM ModelField mf " +
         "LEFT JOIN Model m ON m.id = mf.model.id " +
-        "INNER JOIN ModelGroupItem gi ON gi.resourceId <> mf.id AND gi.resourceType = 'ENDPOINT' " +
-        "WHERE m.code in ( 'Query', 'Mutation' )")
+        "LEFT JOIN ModelGroupItem gi ON gi.resourceId = mf.id AND gi.resourceType = 'ENDPOINT' " +
+        "WHERE m.code in ( 'Query', 'Mutation' ) AND gi.id is null")
     List<ModelField> findByUngrouped();
 
 }

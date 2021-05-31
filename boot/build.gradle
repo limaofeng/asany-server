@@ -35,5 +35,6 @@ task dev {
 }
 
 dependencies {
-    compile project(":shanhai-core")
+    compile project(":asany-security")
+    compile project(":asany-organization")
 }

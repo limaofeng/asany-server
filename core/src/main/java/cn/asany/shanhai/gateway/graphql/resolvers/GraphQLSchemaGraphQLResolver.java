@@ -9,7 +9,6 @@ import cn.asany.shanhai.gateway.service.ModelGroupService;
 import graphql.kickstart.tools.GraphQLResolver;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -35,7 +34,7 @@ public class GraphQLSchemaGraphQLResolver implements GraphQLResolver<GraphQLSche
     }
 
     public List<ModelGroupItem> ungrouped(GraphQLSchema schema) {
-        return new ArrayList<>();
+        return modelService.findResourcesByUngrouped();
     }
 
     public List<ModelGroup> groups(GraphQLSchema schema) {

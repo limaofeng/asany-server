@@ -1,56 +1,12 @@
 type Query {
-    # 用户列表
-    users(filter: UserFilter, page: Int = 1, pageSize: Int = 15, orderBy: OrderBy): UserConnection
-    # 查询单个用户
-    user(id: ID): User
+#    # 用户列表
+#    users(filter: UserFilter, page: Int = 1, pageSize: Int = 15, orderBy: OrderBy): UserConnection
+#    # 查询单个用户
+#    user(id: ID): User
 }
 
 type Mutation {
-    createUser(input: UserCreateInput!): User
-}
-
-input UserCreateInput {
-    #登录名
-    username:String
-    #登录密码
-    password:String
-}
-
-input UserFilter {
-    username_contains: String
-}
-
-type UserConnection {
-    # 总数据条数
-    totalCount: Int
-    # 每页显示条数
-    pageSize: Int
-    # 总页数
-    totalPage: Int
-    # 当前页
-    currentPage: Int
-    edges: [UserEdge]
-    #pageInfo: PageInfo
-}
-type UserEdge{
-    cursor: String
-    node: User
-}
-
-type User {
-    id:ID
-    #登录名
-    username:String
-    #登录密码
-    password:String
-    # 创建人
-    creator: String
-    # 修改人
-    updator: String
-    # 创建时间
-    createdAt: Date
-    # 修改时间
-    updatedAt: Date
+#    createUser(input: UserCreateInput!): User
 }
 
 scalar Date

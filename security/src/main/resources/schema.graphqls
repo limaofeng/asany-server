@@ -1,0 +1,118 @@
+directive @auth(requires: String) on OBJECT | FIELD_DEFINITION
+
+enum LoginType{
+    #密码登录
+    password,
+    #钉钉登录
+    dingtalk,
+    #企业微信登录
+    WeChatCP,
+    #微信公众号登录
+    WeChatPM,
+    #游客登入
+    tourist,
+    #单点登录
+    @deprecated(reason: "该登录方式不安全, 后期会删除")
+    single
+}
+
+
+enum SocialProvider {
+    # 钉钉
+    dingtalk,
+    # 微信
+    WeChat
+}
+
+input LoginOptions {
+    # 连接社交平台
+    connected: Boolean = true
+    # 社交平台
+    provider: SocialProvider
+    # 用户社交平台 USER_ID
+    snser: String
+}
+
+enum IdType {
+    id, dingtalk
+}
+
+# 登录用户对象
+type LoginUser {
+    # 用户ID
+    uid(type: IdType): String
+    # 名称
+    name: String
+    # 称号
+    title: String
+    # 用户类型
+    type: String
+    # 头像
+    avatar: String
+    # 邮箱
+    email: String
+    # 签名
+    signature: String
+    # 组名
+    group: String
+    # 电话
+    phone: String
+    # 权限
+    authoritys: [String]
+    # 工号
+    jobNumber:String
+    # 部门
+    #    departments(organization: ID): [Department]
+    # 职务
+    #    positions(organization: ID,department: ID): [Position]
+    # 角色
+    #    roles: [Role]
+    #当前部门
+    #    currentDepartment(organization: ID!): Department
+    #当前职务
+    #    currentPosition(organization: ID!): Position
+}
+
+type CurrentUser {
+    # 用户ID
+    uid(type: IdType): String
+    # 名称
+    name: String
+    # 称号
+    title: String
+    # 用户类型
+    type: String
+    # 头像
+    avatar: String
+    # 邮箱
+    email: String
+    # 签名
+    signature: String
+    # 组名
+    group: String
+    # 电话
+    phone: String
+    # 权限
+    authoritys: [String]
+    #工号
+    jobNumber:String
+}
+
+extend type Query {
+    # 系统•当前登录用户
+    viewer(organization: ID): LoginUser @auth(requires: "USER")
+}
+
+extend type Mutation {
+    # 系统•登录 当 loginType = password 时 username 与 password 必填， loginType = dingtalk 时，  authCode 与 tmpAuthCode 其中一个不能为 NULL
+    login(
+        loginType:LoginType = password,
+        username: String,
+        password: String,
+        authCode: String,
+        tmpAuthCode: String,
+        singleCode: String,
+        #绑定第三方平台信息
+        options: LoginOptions
+    ): LoginUser
+}
