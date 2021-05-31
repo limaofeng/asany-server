@@ -1,6 +1,7 @@
 dependencies {
     compile project(":asany-base")
     compile project(":asany-organization")
+    compile "org.springframework.boot:spring-boot-starter-data-redis"
     compile "org.jfantasy:jfantasy-storage:$LIB_JFAN_VER"
     compileOnly "org.projectlombok:lombok:${LIB_LOMBOK_VER}"
     annotationProcessor "org.projectlombok:lombok:$LIB_LOMBOK_VER"

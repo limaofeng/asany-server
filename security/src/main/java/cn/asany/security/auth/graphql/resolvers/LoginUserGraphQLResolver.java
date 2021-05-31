@@ -177,4 +177,9 @@ public class LoginUserGraphQLResolver implements GraphQLResolver<LoginUser> {
 //        return organizationEmployeeService.get(organization, employee.getId()).orElse(null);
 //    }
 
+    public String token(LoginUser user){
+
+        return null;
+    }
+
 }

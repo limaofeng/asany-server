@@ -1,6 +1,8 @@
 package cn.asany.security.oauth.bean;
 
+import cn.asany.security.oauth.Ownership;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.*;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
@@ -16,6 +18,7 @@ import java.util.List;
  * @author limaofeng
  */
 @Data
+@EqualsAndHashCode(callSuper=false)
 @Entity
 @Table(name = "OAUTH_APP")
 @GenericGenerator(name = "app_gen", strategy = "fantasy-sequence")
@@ -75,10 +78,10 @@ public class Application extends BaseBusEntity implements Ownership {
     /**
      * 用户对应的角色
      */
-    @ManyToMany(targetEntity = Role.class, fetch = FetchType.LAZY)
-    @JoinTable(name = "AUTH_ROLE_APP", joinColumns = @JoinColumn(name = "APP_ID"), inverseJoinColumns = @JoinColumn(name = "ROLE_CODE"), foreignKey = @ForeignKey(name = "FK_ROLE_APP_AID"))
-    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    private List<Role> roles;
+//    @ManyToMany(targetEntity = Role.class, fetch = FetchType.LAZY)
+//    @JoinTable(name = "AUTH_ROLE_APP", joinColumns = @JoinColumn(name = "APP_ID"), inverseJoinColumns = @JoinColumn(name = "ROLE_CODE"), foreignKey = @ForeignKey(name = "FK_ROLE_APP_AID"))
+//    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+//    private List<Role> roles;
 
     @Any(
         metaColumn = @Column(name = "OWNERSHIP_TYPE", length = 10, insertable = false, updatable = false),

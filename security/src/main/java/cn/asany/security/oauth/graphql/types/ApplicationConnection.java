@@ -1,6 +1,8 @@
 package cn.asany.security.oauth.graphql.types;
 
+import cn.asany.security.oauth.bean.Application;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.jfantasy.graphql.Edge;
 import org.jfantasy.graphql.types.BaseConnection;
 
@@ -12,6 +14,7 @@ import java.util.List;
  * @author limaofeng
  */
 @Data
+@EqualsAndHashCode(callSuper=false)
 public class ApplicationConnection extends BaseConnection<ApplicationConnection.ApplicationEdge> {
 
     private List<ApplicationEdge> edges;

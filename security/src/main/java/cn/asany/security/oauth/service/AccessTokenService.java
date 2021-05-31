@@ -141,6 +141,10 @@ public class AccessTokenService {
 //        token += ("_" + request.getCode());
     }
 
+    public String implicit(String clientId, LoginUser loginUser) {
+        return null;
+    }
+
     private void client_credentials(AuthCodeTokenRequest tokenRequest) {
 
     }
@@ -151,5 +155,6 @@ public class AccessTokenService {
 
     private void refresh_token() {
     }
+
 
 }

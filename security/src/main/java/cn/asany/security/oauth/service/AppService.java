@@ -1,5 +1,7 @@
 package cn.asany.security.oauth.service;
 
+import cn.asany.security.oauth.bean.Application;
+import cn.asany.security.oauth.dao.ApplicationDao;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.springframework.beans.factory.annotation.Autowired;

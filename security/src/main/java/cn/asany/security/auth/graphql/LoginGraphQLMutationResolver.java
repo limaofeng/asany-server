@@ -3,6 +3,7 @@ package cn.asany.security.auth.graphql;
 import cn.asany.security.auth.authentication.*;
 import cn.asany.security.auth.graphql.types.LoginOptions;
 import cn.asany.security.auth.graphql.types.LoginType;
+import cn.asany.security.oauth.service.AccessTokenService;
 import graphql.GraphQLError;
 import graphql.kickstart.spring.error.ErrorContext;
 import graphql.kickstart.tools.GraphQLMutationResolver;
@@ -32,8 +33,11 @@ public class LoginGraphQLMutationResolver implements GraphQLMutationResolver {
 
     private final AuthenticationManager authenticationManager;
 
-    public LoginGraphQLMutationResolver(AuthenticationManager authenticationManager) {
+    private final AccessTokenService accessTokenService;
+
+    public LoginGraphQLMutationResolver(AuthenticationManager authenticationManager,AccessTokenService accessTokenService) {
         this.authenticationManager = authenticationManager;
+        this.accessTokenService = accessTokenService;
     }
 
     @ExceptionHandler(value = AuthenticationException.class)
@@ -50,7 +54,10 @@ public class LoginGraphQLMutationResolver implements GraphQLMutationResolver {
             throw new BadCredentialsException("Bad credentials");
         }
 
-        return (LoginUser) authentication.getPrincipal();
+        LoginUser loginUser = (LoginUser) authentication.getPrincipal();
+        String clientId = "";
+        loginUser.setToken(accessTokenService.implicit(clientId, loginUser));
+        return loginUser;
     }
 
     private Authentication buildAuthenticationToken(LoginType loginType, String username, String password, String authCode, String tmpAuthCode, String singleCode, LoginOptions options) {

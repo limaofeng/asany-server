@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
  * @author limaofeng
  */
 @Component
-public class OAuthGraphQLResolver implements GraphQLMutationResolver {
+public class AccessTokenGraphQLResolver implements GraphQLMutationResolver {
 
 
 }

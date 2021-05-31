@@ -1,5 +1,9 @@
 package cn.asany.security.oauth.graphql;
 
+import cn.asany.security.oauth.bean.Application;
+import cn.asany.security.oauth.graphql.inputs.ApplicationFilter;
+import cn.asany.security.oauth.graphql.types.ApplicationConnection;
+import cn.asany.security.oauth.service.AppService;
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import org.jfantasy.framework.dao.OrderBy;
 import org.jfantasy.framework.dao.Pager;
@@ -17,14 +21,10 @@ public class ApplicationGraphQLQueryResolver implements GraphQLQueryResolver {
     @Autowired
     private AppService appService;
 
-    public ApplicationConnection applicationConnection(ApplicationFilter filter, int page, int pageSize, OrderBy orderBy) {
+    public ApplicationConnection applications(ApplicationFilter filter, int page, int pageSize, OrderBy orderBy) {
         Pager<Application> pager = new Pager<>(page, pageSize, orderBy);
         filter = ObjectUtil.defaultValue(filter, new ApplicationFilter());
         return Kit.connection(appService.findPager(pager, filter.build()), ApplicationConnection.class);
-    }
-
-    public List<Application> applications(ApplicationFilter filter) {
-        return appService.findAll(filter.build());
     }
 
     public Optional<Application> application(String id) {
