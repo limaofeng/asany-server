@@ -5,6 +5,7 @@ import cn.asany.security.core.bean.enums.IdType;
 import cn.asany.security.core.service.GrantPermissionService;
 import graphql.kickstart.tools.GraphQLResolver;
 import org.jfantasy.framework.security.LoginUser;
+import org.jfantasy.framework.security.oauth2.core.OAuth2AccessToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -176,9 +177,9 @@ public class LoginUserGraphQLResolver implements GraphQLResolver<LoginUser> {
 //        }
 //        return organizationEmployeeService.get(organization, employee.getId()).orElse(null);
 //    }
-
-    public String token(LoginUser user){
-        return null;
+    public String token(LoginUser user) {
+        OAuth2AccessToken accessToken = user.getAttribute("token");
+        return accessToken != null ? accessToken.getTokenValue() : null;
     }
 
 }

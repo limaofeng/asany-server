@@ -60,7 +60,9 @@ type LoginUser {
     # 权限
     authoritys: [String]
     # 工号
-    jobNumber:String
+    jobNumber: String
+    # 令牌
+    token: String
     # 部门
     #    departments(organization: ID): [Department]
     # 职务
