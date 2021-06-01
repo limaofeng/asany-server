@@ -178,7 +178,6 @@ public class LoginUserGraphQLResolver implements GraphQLResolver<LoginUser> {
 //    }
 
     public String token(LoginUser user){
-
         return null;
     }
 

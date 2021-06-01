@@ -3,7 +3,6 @@ package cn.asany.security.auth.graphql;
 import cn.asany.security.auth.authentication.*;
 import cn.asany.security.auth.graphql.types.LoginOptions;
 import cn.asany.security.auth.graphql.types.LoginType;
-import cn.asany.security.oauth.service.AccessTokenService;
 import graphql.GraphQLError;
 import graphql.kickstart.spring.error.ErrorContext;
 import graphql.kickstart.tools.GraphQLMutationResolver;
@@ -15,6 +14,7 @@ import org.jfantasy.framework.security.authentication.AbstractAuthenticationToke
 import org.jfantasy.framework.security.authentication.Authentication;
 import org.jfantasy.framework.security.authentication.BadCredentialsException;
 import org.jfantasy.framework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.jfantasy.framework.security.oauth2.core.token.AuthorizationServerTokenServices;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.graphql.util.GraphQLErrorUtils;
 import org.springframework.stereotype.Component;
@@ -32,12 +32,11 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class LoginGraphQLMutationResolver implements GraphQLMutationResolver {
 
     private final AuthenticationManager authenticationManager;
+    private final AuthorizationServerTokenServices tokenServices;
 
-    private final AccessTokenService accessTokenService;
-
-    public LoginGraphQLMutationResolver(AuthenticationManager authenticationManager,AccessTokenService accessTokenService) {
+    public LoginGraphQLMutationResolver(AuthenticationManager authenticationManager, AuthorizationServerTokenServices tokenServices) {
         this.authenticationManager = authenticationManager;
-        this.accessTokenService = accessTokenService;
+        this.tokenServices = tokenServices;
     }
 
     @ExceptionHandler(value = AuthenticationException.class)
@@ -55,14 +54,14 @@ public class LoginGraphQLMutationResolver implements GraphQLMutationResolver {
         }
 
         LoginUser loginUser = (LoginUser) authentication.getPrincipal();
-        String clientId = "";
-        loginUser.setToken(accessTokenService.implicit(clientId, loginUser));
+
+        loginUser.setAttribute("token", tokenServices.createAccessToken(authentication));
         return loginUser;
     }
 
     private Authentication buildAuthenticationToken(LoginType loginType, String username, String password, String authCode, String tmpAuthCode, String singleCode, LoginOptions options) {
         options = ObjectUtil.defaultValue(options, LoginOptions.builder().build());
-        AuthenticationDetails details = AuthenticationDetails.builder().loginType(loginType).options(options).build();
+        LoginAuthenticationDetails details = new LoginAuthenticationDetails("", loginType, options);
         AbstractAuthenticationToken authentication;
 
         switch (loginType) {

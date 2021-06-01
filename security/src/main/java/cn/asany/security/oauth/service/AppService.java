@@ -4,6 +4,9 @@ import cn.asany.security.oauth.bean.Application;
 import cn.asany.security.oauth.dao.ApplicationDao;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
+import org.jfantasy.framework.security.oauth2.core.ClientDetails;
+import org.jfantasy.framework.security.oauth2.core.ClientDetailsService;
+import org.jfantasy.framework.security.oauth2.core.ClientRegistrationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,13 +15,18 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class AppService {
+public class AppService implements ClientDetailsService {
 
     private final ApplicationDao applicationDao;
 
     @Autowired
     public AppService(ApplicationDao applicationDao) {
         this.applicationDao = applicationDao;
+    }
+
+    @Override
+    public ClientDetails loadClientByClientId(String clientId) throws ClientRegistrationException {
+        return null;
     }
 
     @Transactional
@@ -59,4 +67,5 @@ public class AppService {
     public Optional<Application> getApplicationByClient(String id) {
         return this.applicationDao.findOne(PropertyFilter.builder().equal("clientId", id).build());
     }
+
 }
