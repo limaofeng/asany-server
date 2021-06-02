@@ -15,18 +15,22 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class AppService implements ClientDetailsService {
+public class ApplicationService implements ClientDetailsService {
 
     private final ApplicationDao applicationDao;
 
     @Autowired
-    public AppService(ApplicationDao applicationDao) {
+    public ApplicationService(ApplicationDao applicationDao) {
         this.applicationDao = applicationDao;
     }
 
     @Override
     public ClientDetails loadClientByClientId(String clientId) throws ClientRegistrationException {
-        return null;
+        Optional<Application> optional = this.applicationDao.findOne(PropertyFilter.builder().equal("clientId", clientId).equal("enabled", true).build());
+        if (!optional.isPresent()) {
+            throw new ClientRegistrationException("[client_id=" + clientId + "]不存在");
+        }
+        return optional.get();
     }
 
     @Transactional

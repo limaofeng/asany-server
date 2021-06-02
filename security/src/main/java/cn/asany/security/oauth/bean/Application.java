@@ -3,14 +3,14 @@ package cn.asany.security.oauth.bean;
 import cn.asany.security.oauth.Ownership;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.hibernate.annotations.*;
+import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
+import org.jfantasy.framework.security.core.GrantedAuthority;
+import org.jfantasy.framework.security.oauth2.core.AuthorizationGrantType;
+import org.jfantasy.framework.security.oauth2.core.ClientDetails;
 
-import javax.persistence.Entity;
-import javax.persistence.ForeignKey;
-import javax.persistence.Table;
 import javax.persistence.*;
-import java.util.List;
+import java.util.*;
 
 /**
  * 应用
@@ -18,11 +18,11 @@ import java.util.List;
  * @author limaofeng
  */
 @Data
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 @Entity
 @Table(name = "OAUTH_APP")
 @GenericGenerator(name = "app_gen", strategy = "fantasy-sequence")
-public class Application extends BaseBusEntity implements Ownership {
+public class Application extends BaseBusEntity implements Ownership, ClientDetails {
 
     @Id
     @Column(name = "ID", updatable = false)
@@ -43,6 +43,7 @@ public class Application extends BaseBusEntity implements Ownership {
      */
     @Column(name = "LOGO", length = 100)
     private String logo;
+
     /**
      * 应用地址
      */
@@ -64,36 +65,46 @@ public class Application extends BaseBusEntity implements Ownership {
     @Column(name = "CLIENT_SECRETS", length = 50)
     private String clientSecrets;
 
-//    /**
-//     * APIKEY
-//     */
-//    @OneToMany(mappedBy = "application", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
-//    private List<ApiKey> apiKeys;
-
     /**
      * 是否启用
      */
     @Column(name = "ENABLED", nullable = false)
     private Boolean enabled;
-    /**
-     * 用户对应的角色
-     */
-//    @ManyToMany(targetEntity = Role.class, fetch = FetchType.LAZY)
-//    @JoinTable(name = "AUTH_ROLE_APP", joinColumns = @JoinColumn(name = "APP_ID"), inverseJoinColumns = @JoinColumn(name = "ROLE_CODE"), foreignKey = @ForeignKey(name = "FK_ROLE_APP_AID"))
-//    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-//    private List<Role> roles;
 
-    @Any(
-        metaColumn = @Column(name = "OWNERSHIP_TYPE", length = 10, insertable = false, updatable = false),
-        fetch = FetchType.LAZY
-    )
-    @AnyMetaDef(
-        idType = "long", metaType = "string",
-        metaValues = {
-            @MetaValue(targetEntity = Application.class, value = "APPLICATION"),
-//            @MetaValue(targetEntity = User.class, value = "PERSONAL")
-        }
-    )
-    @JoinColumn(name = "OWNERSHIP_ID", insertable = false, updatable = false)
-    private Ownership ownership;
+    @Override
+    public Map<String, Object> getAdditionalInformation() {
+        return null;
+    }
+
+    @Override
+    public Collection<GrantedAuthority> getAuthorities() {
+        return new ArrayList<>();
+    }
+
+    @Override
+    public Set<String> getAuthorizedGrantTypes() {
+        Set<String> grantTypes = new HashSet<>();
+        grantTypes.add(AuthorizationGrantType.JWT_BEARER.getValue());
+        return grantTypes;
+    }
+
+    @Override
+    public String getClientSecret() {
+        return this.clientSecrets;
+    }
+
+    @Override
+    public Set<String> getRedirectUri() {
+        return null;
+    }
+
+    @Override
+    public Set<String> getScope() {
+        return new HashSet<>();
+    }
+
+    @Override
+    public int getTokenExpires() {
+        return 30;
+    }
 }

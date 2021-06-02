@@ -1,4 +1,5 @@
 dependencies {
+    compile 'com.nimbusds:nimbus-jose-jwt:8.16'
     compile project(":asany-base")
     compile project(":asany-organization")
     compile "org.springframework.boot:spring-boot-starter-data-redis"

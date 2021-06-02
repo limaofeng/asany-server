@@ -11,7 +11,6 @@ import org.jfantasy.framework.security.core.GrantedAuthority;
 import org.jfantasy.framework.security.oauth2.server.BearerTokenAuthenticationToken;
 import org.jfantasy.framework.security.oauth2.server.authentication.BearerTokenAuthentication;
 import org.jfantasy.framework.util.common.ObjectUtil;
-import org.jfantasy.storage.FileObject;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -21,11 +20,8 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.util.StringUtils;
 
-import java.lang.reflect.Type;
-import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Redis 令牌存储器
@@ -97,7 +93,7 @@ public class RedisTokenStore implements TokenStore, InitializingBean {
     }
 
     @Override
-    public void storeRefreshToken(OAuth2RefreshToken refreshToken, BearerTokenAuthentication authentication) {
+    public void storeRefreshToken(OAuth2RefreshToken refreshToken, Authentication authentication) {
 //        String principal = principalToString(authentication);
 //
 //        String key = refreshToken.getTokenValue();
@@ -163,12 +159,13 @@ public class RedisTokenStore implements TokenStore, InitializingBean {
     private OAuth2AccessToken buildOAuth2AccessToken(String data) {
         ObjectMapper mapper = JSON.getObjectMapper();
         ReadContext context = JsonPath.parse(data);
-        String tokenType = mapper.convertValue(context.read("$.access_token.tokenValue"), String.class);
+        String tokenValue = mapper.convertValue(context.read("$.access_token.tokenValue"), String.class);
+        String refreshTokenValue = mapper.convertValue(context.read("$.access_token.refreshTokenValue"), String.class);
         Set<String> scopes = mapper.convertValue(context.read("$.access_token.scopes"), Set.class);
         Instant issuedAt = mapper.convertValue(context.read("$.access_token.issuedAt"), Instant.class);
         Instant expiresAt = mapper.convertValue(context.read("$.access_token.expiresAt"), Instant.class);
 
-        return new OAuth2AccessToken(OAuth2AccessToken.TokenType.BEARER, tokenType, issuedAt, expiresAt, scopes);
+        return new OAuth2AccessToken(OAuth2AccessToken.TokenType.BEARER, tokenValue, refreshTokenValue, issuedAt, expiresAt, scopes);
     }
 
     private BearerTokenAuthentication buildBearerTokenAuthentication(String data, OAuth2AccessToken accessToken) {

@@ -1,5 +1,7 @@
 package cn.asany.security.oauth.service;
 
+import org.jfantasy.framework.security.authentication.Authentication;
+import org.jfantasy.framework.security.oauth2.core.OAuth2AccessToken;
 import org.jfantasy.framework.security.oauth2.core.RedisTokenStore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,12 +24,19 @@ public class AccessTokenService extends RedisTokenStore {
     private final static String ALL_PERMISSION = "ALL_PERMISSION:";
 
     @Autowired
-    private AppService appService;
+    private ApplicationService applicationService;
     @Autowired
     private RedisTemplate redisTemplate;
     @Value("${spring.profiles.active}")
     private String env;
 
+    @Override
+    public void storeAccessToken(OAuth2AccessToken token, Authentication authentication) {
+
+        // 如果已经存在，更新最后使用时间及位置信息
+
+        super.storeAccessToken(token, authentication);
+    }
 //    @Transactional
 //    public TokenResponse allocateToken(TokenRequest request) {
 //        AccessToken accessToken = new AccessToken();

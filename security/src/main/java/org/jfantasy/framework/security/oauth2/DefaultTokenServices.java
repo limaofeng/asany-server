@@ -1,71 +1,78 @@
 package org.jfantasy.framework.security.oauth2;
 
 import lombok.SneakyThrows;
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.codec.binary.Hex;
-import org.jfantasy.framework.security.authentication.Authentication;
-import org.jfantasy.framework.security.oauth2.core.ClientDetailsService;
-import org.jfantasy.framework.security.oauth2.core.OAuth2AccessToken;
-import org.jfantasy.framework.security.oauth2.core.TokenStore;
+import org.jfantasy.framework.jackson.JSON;
+import org.jfantasy.framework.security.oauth2.core.*;
 import org.jfantasy.framework.security.oauth2.core.token.AuthorizationServerTokenServices;
 import org.jfantasy.framework.security.oauth2.core.token.ConsumerTokenServices;
 import org.jfantasy.framework.security.oauth2.core.token.ResourceServerTokenServices;
+import org.jfantasy.framework.security.oauth2.jwt.JwtTokenService;
+import org.jfantasy.framework.security.oauth2.jwt.JwtTokenServiceImpl;
 import org.jfantasy.framework.security.oauth2.server.authentication.BearerTokenAuthentication;
 import org.jfantasy.framework.util.common.StringUtil;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Base64Utils;
+import org.springframework.util.DigestUtils;
 
-import javax.crypto.Mac;
-import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.UUID;
 
 /**
  * @author limaofeng
  */
-public class DefaultTokenServices implements AuthorizationServerTokenServices, ResourceServerTokenServices, ConsumerTokenServices, InitializingBean {
+public class DefaultTokenServices implements AuthorizationServerTokenServices, ResourceServerTokenServices, ConsumerTokenServices {
 
-    private boolean supportRefreshToken;
     private TokenStore tokenStore;
     private ClientDetailsService clientDetailsService;
-
-    @Override
-    public void afterPropertiesSet() throws Exception {
-
-    }
+    private JwtTokenService jwtTokenService = new JwtTokenServiceImpl();
 
     public DefaultTokenServices(TokenStore tokenStore, ClientDetailsService clientDetailsService) {
         this.tokenStore = tokenStore;
         this.clientDetailsService = clientDetailsService;
     }
 
+    @SneakyThrows
     @Override
-    public OAuth2AccessToken createAccessToken(Authentication authentication) {
+    public OAuth2AccessToken createAccessToken(OAuth2Authentication authentication) {
         OAuth2AuthenticationDetails details = (OAuth2AuthenticationDetails) authentication.getDetails();
-        this.clientDetailsService.loadClientByClientId(details.getClientId());
+        ClientDetails clientDetails = this.clientDetailsService.loadClientByClientId(details.getClientId());
 
-        String tokenValue;
-        do {
-            tokenValue = generateToken();
-        } while (containsToken(tokenValue));
+        int expires = clientDetails.getTokenExpires();
+        String secret = clientDetails.getClientSecret();
+        TokenRenewalType renewalType = details.getTokenRenewalType();
 
-        OAuth2AccessToken accessToken = new OAuth2AccessToken(OAuth2AccessToken.TokenType.BEARER, tokenValue, Instant.now(), Instant.now().plus(10, ChronoUnit.MINUTES));
+        boolean supportRefreshToken = renewalType == TokenRenewalType.REFRESH_TOKEN;
+
+        Instant issuedAt = Instant.now();
+        Instant expiresAt = Instant.now().plus(expires, ChronoUnit.MINUTES);
+
+        JwtTokenPayload payload = JwtTokenPayload.builder().name(authentication.getName()).clientId(clientDetails.getClientId()).renewalType(renewalType).expiresAt(expiresAt).build();
+
+        String tokenValue = generateTokenValue(payload, secret);
+
+        OAuth2AccessToken accessToken = new OAuth2AccessToken(OAuth2AccessToken.TokenType.BEARER, tokenValue, issuedAt, expiresAt);
+
+        if (supportRefreshToken) {
+            String refreshTokenValue = generateRefreshTokenValue();
+            OAuth2RefreshToken refreshToken = new OAuth2RefreshToken(refreshTokenValue, issuedAt, expiresAt.plus(7, ChronoUnit.DAYS));
+            tokenStore.storeRefreshToken(refreshToken, authentication);
+
+            accessToken.setRefreshTokenValue(refreshTokenValue);
+        }
+
         tokenStore.storeAccessToken(accessToken, authentication);
-        tokenStore.readAccessToken(accessToken.getTokenValue());
+
         return accessToken;
     }
 
     @Override
-    public OAuth2AccessToken getAccessToken(Authentication authentication) {
+    public OAuth2AccessToken getAccessToken(OAuth2Authentication authentication) {
         return null;
     }
 
-//    @Override
-//    public OAuth2AccessToken refreshAccessToken(String refreshToken, TokenRequest tokenRequest) {
-//        return null;
-//    }
+    private void refreshAccessToken(OAuth2AccessToken accessToken, long expires) {
+        accessToken.setExpiresAt(accessToken.getExpiresAt().plus(expires, ChronoUnit.MINUTES));
+        this.tokenStore.storeAccessToken(accessToken, this.tokenStore.readAuthentication(accessToken.getTokenValue()));
+    }
 
     @Override
     public boolean revokeToken(String tokenValue) {
@@ -73,17 +80,40 @@ public class DefaultTokenServices implements AuthorizationServerTokenServices, R
     }
 
     @Override
+    @SneakyThrows
     public BearerTokenAuthentication loadAuthentication(String accessToken) {
-        return this.tokenStore.readAuthentication(accessToken);
+        OAuth2AccessToken token = this.readAccessToken(accessToken);
+        return this.tokenStore.readAuthentication(token.getTokenValue());
     }
 
     @Override
+    @SneakyThrows
     public OAuth2AccessToken readAccessToken(String accessToken) {
-        return null;
-    }
+        String[] strings = StringUtil.tokenizeToStringArray(accessToken, ".");
+        // 解析内容
+        JwtTokenPayload payload = JSON.deserialize(new String(Base64Utils.decodeFromString(strings[1])), JwtTokenPayload.class);
 
-    public void setSupportRefreshToken(boolean supportRefreshToken) {
-        this.supportRefreshToken = supportRefreshToken;
+        // 获取客户端配置
+        ClientDetails clientDetails = clientDetailsService.loadClientByClientId(payload.getClientId());
+        String secret = clientDetails.getClientSecret();
+        int expires = clientDetails.getTokenExpires();
+
+        // 验证 Token
+        jwtTokenService.verifyToken(accessToken, DigestUtils.md5DigestAsHex(secret.getBytes()));
+
+        // 获取令牌
+        OAuth2AccessToken oAuth2AccessToken = this.tokenStore.readAccessToken(accessToken);
+
+        if (oAuth2AccessToken == null) {
+            throw new InvalidTokenException("无效的 Token");
+        }
+
+        // 如果续期方式为 Session 执行续期操作
+        if (payload.getRenewalType() == TokenRenewalType.SESSION) {
+            this.refreshAccessToken(oAuth2AccessToken, expires);
+        }
+
+        return oAuth2AccessToken;
     }
 
     public void setTokenStore(TokenStore tokenStore) {
@@ -95,11 +125,20 @@ public class DefaultTokenServices implements AuthorizationServerTokenServices, R
     }
 
     @SneakyThrows
-    private String generateToken() {
-        return StringUtil.generateNonceString(32);
+    private String generateTokenValue(JwtTokenPayload payload, String secret) {
+        String tokenValue;
+        do {
+            payload.setNonce(StringUtil.generateNonceString(32));
+            tokenValue = jwtTokenService.generateToken(JSON.serialize(payload), DigestUtils.md5DigestAsHex(secret.getBytes()));
+        } while (tokenStore.readAccessToken(tokenValue) != null);
+        return tokenValue;
     }
 
-    private boolean containsToken(String token) {
-        return tokenStore.readAccessToken(token) != null;
+    private String generateRefreshTokenValue() {
+        String tokenValue;
+        do {
+            tokenValue = StringUtil.generateNonceString(32);
+        } while (tokenStore.readRefreshToken(tokenValue) != null);
+        return tokenValue;
     }
 }
