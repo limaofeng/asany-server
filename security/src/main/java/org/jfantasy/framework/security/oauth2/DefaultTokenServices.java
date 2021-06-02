@@ -2,6 +2,7 @@ package org.jfantasy.framework.security.oauth2;
 
 import lombok.SneakyThrows;
 import org.jfantasy.framework.jackson.JSON;
+import org.jfantasy.framework.security.LoginUser;
 import org.jfantasy.framework.security.oauth2.core.*;
 import org.jfantasy.framework.security.oauth2.core.token.AuthorizationServerTokenServices;
 import org.jfantasy.framework.security.oauth2.core.token.ConsumerTokenServices;
@@ -17,13 +18,15 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
 /**
+ * Token 服务
+ *
  * @author limaofeng
  */
 public class DefaultTokenServices implements AuthorizationServerTokenServices, ResourceServerTokenServices, ConsumerTokenServices {
 
     private TokenStore tokenStore;
     private ClientDetailsService clientDetailsService;
-    private JwtTokenService jwtTokenService = new JwtTokenServiceImpl();
+    private final JwtTokenService jwtTokenService = new JwtTokenServiceImpl();
 
     public DefaultTokenServices(TokenStore tokenStore, ClientDetailsService clientDetailsService) {
         this.tokenStore = tokenStore;
@@ -33,23 +36,24 @@ public class DefaultTokenServices implements AuthorizationServerTokenServices, R
     @SneakyThrows
     @Override
     public OAuth2AccessToken createAccessToken(OAuth2Authentication authentication) {
+        LoginUser principal = (LoginUser) authentication.getPrincipal();
         OAuth2AuthenticationDetails details = (OAuth2AuthenticationDetails) authentication.getDetails();
         ClientDetails clientDetails = this.clientDetailsService.loadClientByClientId(details.getClientId());
 
         int expires = clientDetails.getTokenExpires();
         String secret = clientDetails.getClientSecret();
-        TokenRenewalType renewalType = details.getTokenRenewalType();
+        TokenType tokenType = details.getTokenType();
 
-        boolean supportRefreshToken = renewalType == TokenRenewalType.REFRESH_TOKEN;
+        boolean supportRefreshToken = tokenType == TokenType.TOKEN;
 
         Instant issuedAt = Instant.now();
         Instant expiresAt = Instant.now().plus(expires, ChronoUnit.MINUTES);
 
-        JwtTokenPayload payload = JwtTokenPayload.builder().name(authentication.getName()).clientId(clientDetails.getClientId()).renewalType(renewalType).expiresAt(expiresAt).build();
+        JwtTokenPayload payload = JwtTokenPayload.builder().uid(Long.valueOf(principal.getUid())).name(authentication.getName()).clientId(clientDetails.getClientId()).tokenType(tokenType).expiresAt(expiresAt).build();
 
         String tokenValue = generateTokenValue(payload, secret);
 
-        OAuth2AccessToken accessToken = new OAuth2AccessToken(OAuth2AccessToken.TokenType.BEARER, tokenValue, issuedAt, expiresAt);
+        OAuth2AccessToken accessToken = new OAuth2AccessToken(tokenType, tokenValue, issuedAt, expiresAt);
 
         if (supportRefreshToken) {
             String refreshTokenValue = generateRefreshTokenValue();
@@ -109,7 +113,7 @@ public class DefaultTokenServices implements AuthorizationServerTokenServices, R
         }
 
         // 如果续期方式为 Session 执行续期操作
-        if (payload.getRenewalType() == TokenRenewalType.SESSION) {
+        if (payload.getTokenType() == TokenType.SESSION) {
             this.refreshAccessToken(oAuth2AccessToken, expires);
         }
 

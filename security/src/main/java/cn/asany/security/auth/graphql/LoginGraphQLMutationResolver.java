@@ -15,10 +15,7 @@ import org.jfantasy.framework.security.authentication.AbstractAuthenticationToke
 import org.jfantasy.framework.security.authentication.Authentication;
 import org.jfantasy.framework.security.authentication.BadCredentialsException;
 import org.jfantasy.framework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.jfantasy.framework.security.oauth2.core.OAuth2AccessToken;
-import org.jfantasy.framework.security.oauth2.core.OAuth2Authentication;
-import org.jfantasy.framework.security.oauth2.core.OAuth2AuthenticationDetails;
-import org.jfantasy.framework.security.oauth2.core.TokenRenewalType;
+import org.jfantasy.framework.security.oauth2.core.*;
 import org.jfantasy.framework.security.oauth2.core.token.AuthorizationServerTokenServices;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.graphql.context.AuthorizationGraphQLServletContext;
@@ -62,7 +59,7 @@ public class LoginGraphQLMutationResolver implements GraphQLMutationResolver {
         AuthorizationGraphQLServletContext context = environment.getContext();
         OAuth2AuthenticationDetails oAuth2AuthenticationDetails = new OAuth2AuthenticationDetails();//TODO new OAuth2AuthenticationDetails(context.getRequest());
         oAuth2AuthenticationDetails.setClientId("N6BsX878XkJPEL1nJIQc");
-        oAuth2AuthenticationDetails.setTokenRenewalType(TokenRenewalType.SESSION);
+        oAuth2AuthenticationDetails.setTokenType(TokenType.SESSION);
         OAuth2Authentication oAuth2Authentication = new OAuth2Authentication(authentication, oAuth2AuthenticationDetails);
         OAuth2AccessToken accessToken = tokenServices.createAccessToken(oAuth2Authentication);
         loginUser.setAttribute("token", accessToken);

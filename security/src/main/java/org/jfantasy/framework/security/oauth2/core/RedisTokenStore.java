@@ -119,7 +119,7 @@ public class RedisTokenStore implements TokenStore, InitializingBean {
 
         LoginUser user = JSON.deserialize(principal, LoginUser.class);
 
-        OAuth2AccessToken accessToken = new OAuth2AccessToken(OAuth2AccessToken.TokenType.BEARER, refreshToken.getTokenValue(), refreshToken.getIssuedAt(), refreshToken.getExpiresAt());
+        OAuth2AccessToken accessToken = new OAuth2AccessToken(TokenType.TOKEN, refreshToken.getTokenValue(), refreshToken.getIssuedAt(), refreshToken.getExpiresAt());
         return new BearerTokenAuthentication(user, accessToken, user.getAuthorities());
     }
 
@@ -159,13 +159,14 @@ public class RedisTokenStore implements TokenStore, InitializingBean {
     private OAuth2AccessToken buildOAuth2AccessToken(String data) {
         ObjectMapper mapper = JSON.getObjectMapper();
         ReadContext context = JsonPath.parse(data);
+        TokenType tokenType = mapper.convertValue(context.read("$.access_token.tokenType"), TokenType.class);
         String tokenValue = mapper.convertValue(context.read("$.access_token.tokenValue"), String.class);
         String refreshTokenValue = mapper.convertValue(context.read("$.access_token.refreshTokenValue"), String.class);
         Set<String> scopes = mapper.convertValue(context.read("$.access_token.scopes"), Set.class);
         Instant issuedAt = mapper.convertValue(context.read("$.access_token.issuedAt"), Instant.class);
         Instant expiresAt = mapper.convertValue(context.read("$.access_token.expiresAt"), Instant.class);
 
-        return new OAuth2AccessToken(OAuth2AccessToken.TokenType.BEARER, tokenValue, refreshTokenValue, issuedAt, expiresAt, scopes);
+        return new OAuth2AccessToken(tokenType, tokenValue, refreshTokenValue, issuedAt, expiresAt, scopes);
     }
 
     private BearerTokenAuthentication buildBearerTokenAuthentication(String data, OAuth2AccessToken accessToken) {

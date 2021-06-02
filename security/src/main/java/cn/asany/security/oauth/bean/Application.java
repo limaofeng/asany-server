@@ -1,8 +1,7 @@
 package cn.asany.security.oauth.bean;
 
 import cn.asany.security.oauth.Ownership;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.framework.security.core.GrantedAuthority;
@@ -18,16 +17,17 @@ import java.util.*;
  * @author limaofeng
  */
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @Entity
 @Table(name = "OAUTH_APP")
-@GenericGenerator(name = "app_gen", strategy = "fantasy-sequence")
 public class Application extends BaseBusEntity implements Ownership, ClientDetails {
 
     @Id
-    @Column(name = "ID", updatable = false)
-    @GeneratedValue(generator = "app_gen")
-    private Long id;
+    @Column(name = "ID", length = 50, updatable = false)
+    private String id;
     /**
      * 名称
      */
@@ -57,7 +57,7 @@ public class Application extends BaseBusEntity implements Ownership, ClientDetai
     /**
      * 客服端 ID
      */
-    @Column(name = "CLIENT_ID", length = 20)
+    @Column(name = "ID", length = 50, insertable = false, updatable = false)
     private String clientId;
     /**
      * 客服端密钥

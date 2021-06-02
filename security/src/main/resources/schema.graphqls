@@ -100,9 +100,16 @@ type CurrentUser {
     jobNumber:String
 }
 
+type PersonalAccessToken {
+    id: String
+    name: String
+}
+
 extend type Query {
     # 系统•当前登录用户
     viewer(organization: ID): LoginUser @auth(requires: "USER")
+    # 查询个人 Token
+    personalAccessTokens(clientId: ID, uid: ID): [PersonalAccessToken]
 }
 
 extend type Mutation {
@@ -117,4 +124,9 @@ extend type Mutation {
         #绑定第三方平台信息
         options: LoginOptions
     ): LoginUser
+    # 创建个人访问令牌
+    createPersonalAccessToken(
+        clientId: String,
+        name: String
+    ): PersonalAccessToken
 }

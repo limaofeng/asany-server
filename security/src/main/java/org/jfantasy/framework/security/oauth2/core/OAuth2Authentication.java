@@ -16,7 +16,6 @@ public class OAuth2Authentication extends AbstractAuthenticationToken {
 
     public OAuth2Authentication(Authentication authentication, OAuth2AuthenticationDetails details) {
         super(authentication.getAuthorities());
-        Assert.isTrue(details.getTokenType() == OAuth2AccessToken.TokenType.BEARER, "credentials must be a bearer token");
         this.credentials = authentication.getCredentials();
         this.principal = (OAuth2AuthenticatedPrincipal) authentication.getPrincipal();
         setDetails(details);

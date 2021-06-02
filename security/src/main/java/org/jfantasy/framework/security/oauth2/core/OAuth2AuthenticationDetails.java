@@ -18,12 +18,7 @@ import java.util.Set;
 public class OAuth2AuthenticationDetails {
 
     @Builder.Default
-    private final OAuth2AccessToken.TokenType tokenType = OAuth2AccessToken.TokenType.BEARER;
-    /**
-     * Token 续期方式
-     */
-    @Builder.Default
-    private TokenRenewalType tokenRenewalType = TokenRenewalType.REFRESH_TOKEN;
+    private TokenType tokenType = TokenType.TOKEN;
     /**
      * 客户端的ID<br/>
      * 分配的 apiKey

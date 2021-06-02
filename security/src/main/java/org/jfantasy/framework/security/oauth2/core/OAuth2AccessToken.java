@@ -38,39 +38,4 @@ public class OAuth2AccessToken extends AbstractOAuth2Token {
         return this.scopes;
     }
 
-
-    public static final class TokenType {
-
-        public static final TokenType BEARER = new TokenType("Bearer");
-
-        private final String value;
-
-        private TokenType(String value) {
-            Assert.hasText(value, "value cannot be empty");
-            this.value = value;
-        }
-
-        public String getValue() {
-            return this.value;
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            if (this == obj) {
-                return true;
-            }
-            if (obj == null || this.getClass() != obj.getClass()) {
-                return false;
-            }
-            TokenType that = (TokenType) obj;
-            return this.getValue().equalsIgnoreCase(that.getValue());
-        }
-
-        @Override
-        public int hashCode() {
-            return this.getValue().hashCode();
-        }
-
-    }
-
 }

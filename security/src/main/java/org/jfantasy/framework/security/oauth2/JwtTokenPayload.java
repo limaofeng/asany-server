@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.jfantasy.framework.security.oauth2.core.TokenRenewalType;
+import org.jfantasy.framework.security.oauth2.core.TokenType;
 
 import java.time.Instant;
 
@@ -20,6 +21,10 @@ import java.time.Instant;
 @AllArgsConstructor
 public class JwtTokenPayload {
     /**
+     * 用户 ID
+     */
+    private Long uid;
+    /**
      * 随机串
      */
     private String nonce;
@@ -28,10 +33,10 @@ public class JwtTokenPayload {
      */
     private String name;
     /**
-     * Token 续期方式
+     * 令牌类型
      */
-    @JsonProperty("renewal_type")
-    private TokenRenewalType renewalType;
+    @JsonProperty("token_type")
+    private TokenType tokenType;
     /**
      * 客户端 ID
      */

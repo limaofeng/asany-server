@@ -1,32 +1,32 @@
 package cn.asany.security.oauth.bean;
 
 import cn.asany.security.core.bean.User;
-import cn.asany.security.oauth.bean.enums.TokenType;
+import lombok.*;
 import org.jfantasy.framework.dao.BaseBusEntity;
+import org.jfantasy.framework.dao.hibernate.converter.StringSetConverter;
+import org.jfantasy.framework.security.oauth2.core.TokenType;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.Set;
 
 /**
  * 访问令牌
  *
  * @author limaofeng
  */
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = false)
 @Entity
 @Table(name = "AUTH_ACCESS_TOKEN")
 public class AccessToken extends BaseBusEntity {
 
     @Id
-    @Column(name = "ID", length = 250)
+    @Column(name = "ID", length = 500)
     private String id;
-    /**
-     * 用途
-     * personal 不能续期 / 可以设置有效期的 TOKEN
-     * token    标准 OAUTH 的认证
-     * session  SESSION 形式的授权
-     */
-    @Column(name = "USAGE", length = 250)
-    private String usage;
     /**
      * 名称
      */
@@ -36,12 +36,14 @@ public class AccessToken extends BaseBusEntity {
      * 凭证类型
      */
     @Column(name = "TOKEN_TYPE", length = 20)
+    @Enumerated(EnumType.STRING)
     private TokenType tokenType;
     /**
      * 范围
      */
     @Column(name = "SCOPES")
-    private String scopes;
+    @Convert(converter = StringSetConverter.class)
+    private Set<String> scopes;
     /**
      * 生成时间
      */
@@ -73,9 +75,13 @@ public class AccessToken extends BaseBusEntity {
     /**
      * 应用
      */
-    private Application application;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "CLIENT_ID", foreignKey = @ForeignKey(name = "FK_ACCESS_TOKEN_CLIENT"), updatable = false, nullable = false)
+    private Application client;
     /**
      * 用户
      */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "USER_ID", foreignKey = @ForeignKey(name = "FK_ACCESS_TOKEN_USER"), updatable = false)
     private User user;
 }

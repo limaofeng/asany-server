@@ -1,12 +1,23 @@
 package cn.asany.security.oauth.service;
 
+import cn.asany.security.core.bean.User;
+import cn.asany.security.oauth.bean.AccessToken;
+import cn.asany.security.oauth.bean.Application;
+import cn.asany.security.oauth.dao.AccessTokenDao;
+import org.jfantasy.framework.security.SecurityContextHolder;
 import org.jfantasy.framework.security.authentication.Authentication;
-import org.jfantasy.framework.security.oauth2.core.OAuth2AccessToken;
-import org.jfantasy.framework.security.oauth2.core.RedisTokenStore;
+import org.jfantasy.framework.security.oauth2.DefaultTokenServices;
+import org.jfantasy.framework.security.oauth2.JwtTokenPayload;
+import org.jfantasy.framework.security.oauth2.core.*;
+import org.jfantasy.framework.security.oauth2.jwt.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+
+import java.time.Instant;
+import java.util.Date;
+import java.util.Optional;
 
 /**
  * 访问令牌服务
@@ -24,19 +35,50 @@ public class AccessTokenService extends RedisTokenStore {
     private final static String ALL_PERMISSION = "ALL_PERMISSION:";
 
     @Autowired
-    private ApplicationService applicationService;
+    private AccessTokenDao accessTokenDao;
     @Autowired
     private RedisTemplate redisTemplate;
     @Value("${spring.profiles.active}")
     private String env;
+    @Autowired
+    private DefaultTokenServices defaultTokenServices;
 
     @Override
     public void storeAccessToken(OAuth2AccessToken token, Authentication authentication) {
-
+        Optional<AccessToken> optionalAccessToken = this.accessTokenDao.findById(token.getTokenValue());
         // 如果已经存在，更新最后使用时间及位置信息
+        if (!optionalAccessToken.isPresent()) {
+            JwtTokenPayload payload = JwtUtils.payload(token.getTokenValue());
+            this.accessTokenDao.save(AccessToken.builder()
+                .id(token.getTokenValue())
+                .tokenType(token.getTokenType())
+                .issuedAt(Date.from(token.getIssuedAt()))
+                .expiresAt(Date.from(token.getExpiresAt()))
+                .scopes(token.getScopes())
+                .refreshToken(token.getRefreshTokenValue())
+                .client(Application.builder().id(payload.getClientId()).build())
+                .lastUsedTime(Date.from(Instant.now()))
+                .user(User.builder().id(payload.getUid()).build())
+                .build());
+        } else {
+            AccessToken accessToken = optionalAccessToken.get();
+            accessToken.setExpiresAt(Date.from(token.getExpiresAt()));
+            accessToken.setLastUsedTime(Date.from(Instant.now()));
+        }
 
         super.storeAccessToken(token, authentication);
     }
+
+    public AccessToken createPersonalAccessToken(String clientId, String name) {
+        OAuth2AuthenticationDetails oAuth2AuthenticationDetails = new OAuth2AuthenticationDetails();//TODO new OAuth2AuthenticationDetails(context.getRequest());
+        oAuth2AuthenticationDetails.setClientId(clientId);
+        oAuth2AuthenticationDetails.setTokenType(TokenType.SESSION);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        OAuth2Authentication oAuth2Authentication = new OAuth2Authentication(authentication, oAuth2AuthenticationDetails);
+        OAuth2AccessToken accessToken = defaultTokenServices.createAccessToken(oAuth2Authentication);
+        return this.accessTokenDao.getOne(accessToken.getTokenValue());
+    }
+
 //    @Transactional
 //    public TokenResponse allocateToken(TokenRequest request) {
 //        AccessToken accessToken = new AccessToken();
@@ -69,7 +111,7 @@ public class AccessTokenService extends RedisTokenStore {
 //
 //        LoginUser userDetails = new LoginUser();
 
-        //new AuthUser(appId, apiKey.getApplication().getName(), apiKey.getKey(), apiKey.getDescription(), apiKey.getPlatform());
+    //new AuthUser(appId, apiKey.getApplication().getName(), apiKey.getKey(), apiKey.getDescription(), apiKey.getPlatform());
 
 //        String token = UUID.randomUUID().toString() + "_" + request.getGrantType() + "_" + apiKey.getKey();
 //
@@ -114,7 +156,7 @@ public class AccessTokenService extends RedisTokenStore {
 //        hashOper.put(redisRefreshTokenKey, "user", userDetails);
 //        redisTemplate.expire(redisRefreshTokenKey, accessToken.getReExpires(), TimeUnit.SECONDS);
 
-        //缓存 token 记录 避免重复生成 token 的问题
+    //缓存 token 记录 避免重复生成 token 的问题
 //        String key = apiKey.getKey() + userDetails.getScope() + userDetails.getId();
 //        Set<String> tokens = setOper.members(key);
 //        for (String _token : tokens) {
