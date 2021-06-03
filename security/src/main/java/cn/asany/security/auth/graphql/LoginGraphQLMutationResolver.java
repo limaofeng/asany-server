@@ -19,6 +19,7 @@ import org.jfantasy.framework.security.oauth2.core.*;
 import org.jfantasy.framework.security.oauth2.core.token.AuthorizationServerTokenServices;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.graphql.context.AuthorizationGraphQLServletContext;
+import org.jfantasy.graphql.context.GraphQLContextHolder;
 import org.jfantasy.graphql.util.GraphQLErrorUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -44,6 +45,8 @@ public class LoginGraphQLMutationResolver implements GraphQLMutationResolver {
 
     @ExceptionHandler(value = AuthenticationException.class)
     public GraphQLError loginExceptionHandler(AuthenticationException e, ErrorContext context) {
+        AuthorizationGraphQLServletContext servletContext = (AuthorizationGraphQLServletContext) GraphQLContextHolder.getContext();
+        servletContext.getResponse().setStatus(401);
         return GraphQLErrorUtils.buildGraphQLError(context, e);
     }
 

@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.jfantasy.framework.security.oauth2.core.TokenRenewalType;
 import org.jfantasy.framework.security.oauth2.core.TokenType;
 
 import java.time.Instant;

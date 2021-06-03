@@ -9,9 +9,9 @@ import org.jfantasy.framework.security.oauth2.core.token.ConsumerTokenServices;
 import org.jfantasy.framework.security.oauth2.core.token.ResourceServerTokenServices;
 import org.jfantasy.framework.security.oauth2.jwt.JwtTokenService;
 import org.jfantasy.framework.security.oauth2.jwt.JwtTokenServiceImpl;
+import org.jfantasy.framework.security.oauth2.jwt.JwtUtils;
 import org.jfantasy.framework.security.oauth2.server.authentication.BearerTokenAuthentication;
 import org.jfantasy.framework.util.common.StringUtil;
-import org.springframework.util.Base64Utils;
 import org.springframework.util.DigestUtils;
 
 import java.time.Instant;
@@ -44,10 +44,18 @@ public class DefaultTokenServices implements AuthorizationServerTokenServices, R
         String secret = clientDetails.getClientSecret();
         TokenType tokenType = details.getTokenType();
 
-        boolean supportRefreshToken = tokenType == TokenType.TOKEN;
-
+        boolean supportRefreshToken = false;
         Instant issuedAt = Instant.now();
-        Instant expiresAt = Instant.now().plus(expires, ChronoUnit.MINUTES);
+        Instant expiresAt = null;
+
+        if (tokenType == TokenType.PERSONAL) {
+            expiresAt = details.getExpiresAt();
+        } else if (tokenType == TokenType.TOKEN) {
+            supportRefreshToken = true;
+            expiresAt = Instant.now().plus(expires, ChronoUnit.MINUTES);
+        } else if (tokenType == TokenType.SESSION) {
+            expiresAt = Instant.now().plus(expires, ChronoUnit.MINUTES);
+        }
 
         JwtTokenPayload payload = JwtTokenPayload.builder().uid(Long.valueOf(principal.getUid())).name(authentication.getName()).clientId(clientDetails.getClientId()).tokenType(tokenType).expiresAt(expiresAt).build();
 
@@ -80,7 +88,21 @@ public class DefaultTokenServices implements AuthorizationServerTokenServices, R
 
     @Override
     public boolean revokeToken(String tokenValue) {
-        return false;
+        OAuth2AccessToken accessToken = this.readAccessToken(tokenValue);
+
+        if (accessToken == null) {
+            return false;
+        }
+
+        String refreshTokenValue = accessToken.getRefreshTokenValue();
+
+        if (refreshTokenValue != null) {
+            OAuth2RefreshToken refreshToken = this.tokenStore.readRefreshToken(refreshTokenValue);
+            this.tokenStore.removeRefreshToken(refreshToken);
+        }
+
+        this.tokenStore.removeAccessToken(accessToken);
+        return true;
     }
 
     @Override
@@ -93,9 +115,8 @@ public class DefaultTokenServices implements AuthorizationServerTokenServices, R
     @Override
     @SneakyThrows
     public OAuth2AccessToken readAccessToken(String accessToken) {
-        String[] strings = StringUtil.tokenizeToStringArray(accessToken, ".");
         // 解析内容
-        JwtTokenPayload payload = JSON.deserialize(new String(Base64Utils.decodeFromString(strings[1])), JwtTokenPayload.class);
+        JwtTokenPayload payload = JwtUtils.payload(accessToken);
 
         // 获取客户端配置
         ClientDetails clientDetails = clientDetailsService.loadClientByClientId(payload.getClientId());

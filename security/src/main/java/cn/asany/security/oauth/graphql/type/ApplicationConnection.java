@@ -1,4 +1,4 @@
-package cn.asany.security.oauth.graphql.types;
+package cn.asany.security.oauth.graphql.type;
 
 import cn.asany.security.oauth.bean.Application;
 import lombok.Data;

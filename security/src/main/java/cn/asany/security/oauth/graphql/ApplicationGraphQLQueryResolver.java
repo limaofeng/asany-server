@@ -1,8 +1,8 @@
 package cn.asany.security.oauth.graphql;
 
 import cn.asany.security.oauth.bean.Application;
-import cn.asany.security.oauth.graphql.inputs.ApplicationFilter;
-import cn.asany.security.oauth.graphql.types.ApplicationConnection;
+import cn.asany.security.oauth.graphql.input.ApplicationFilter;
+import cn.asany.security.oauth.graphql.type.ApplicationConnection;
 import cn.asany.security.oauth.service.ApplicationService;
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import org.jfantasy.framework.dao.OrderBy;

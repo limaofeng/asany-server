@@ -2,6 +2,7 @@ package cn.asany.security.oauth.bean;
 
 import cn.asany.security.core.bean.User;
 import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.framework.dao.hibernate.converter.StringSetConverter;
 import org.jfantasy.framework.security.oauth2.core.TokenType;
@@ -21,12 +22,14 @@ import java.util.Set;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @Entity
-@Table(name = "AUTH_ACCESS_TOKEN")
+@Table(name = "AUTH_ACCESS_TOKEN", uniqueConstraints = {@UniqueConstraint(columnNames = "TOKEN", name = "UN_AUTH_ACCESS_TOKEN_UNIQUE")})
 public class AccessToken extends BaseBusEntity {
 
     @Id
-    @Column(name = "ID", length = 500)
-    private String id;
+    @Column(name = "ID", nullable = false, updatable = false, precision = 22)
+    @GeneratedValue(generator = "fantasy-sequence")
+    @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+    private Long id;
     /**
      * 名称
      */
@@ -56,6 +59,11 @@ public class AccessToken extends BaseBusEntity {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "EXPIRES_AT")
     private Date expiresAt;
+    /**
+     * Token
+     */
+    @Column(name = "TOKEN", length = 500)
+    private String token;
     /**
      * 刷新 Token
      */

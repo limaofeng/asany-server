@@ -1,22 +1,26 @@
 package cn.asany.security.oauth.service;
 
-import cn.asany.security.core.bean.User;
 import cn.asany.security.oauth.bean.AccessToken;
-import cn.asany.security.oauth.bean.Application;
+import cn.asany.security.oauth.converter.AccessTokenConverter;
 import cn.asany.security.oauth.dao.AccessTokenDao;
+import cn.asany.security.oauth.vo.PersonalAccessToken;
+import cn.asany.security.oauth.vo.SessionAccessToken;
+import org.jfantasy.framework.dao.jpa.PropertyFilter;
+import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
 import org.jfantasy.framework.security.SecurityContextHolder;
 import org.jfantasy.framework.security.authentication.Authentication;
 import org.jfantasy.framework.security.oauth2.DefaultTokenServices;
 import org.jfantasy.framework.security.oauth2.JwtTokenPayload;
-import org.jfantasy.framework.security.oauth2.core.*;
+import org.jfantasy.framework.security.oauth2.core.OAuth2AccessToken;
+import org.jfantasy.framework.security.oauth2.core.OAuth2Authentication;
+import org.jfantasy.framework.security.oauth2.core.OAuth2AuthenticationDetails;
+import org.jfantasy.framework.security.oauth2.core.TokenType;
 import org.jfantasy.framework.security.oauth2.jwt.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
-import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -25,58 +29,77 @@ import java.util.Optional;
  * @author limaofeng
  */
 @Service
-public class AccessTokenService extends RedisTokenStore {
-
-    private final static String RESOURCE_IDS = "URLRESOURCEIDS:";
-    private final static String RESOURCE_PREFIX = "URLRESOURCEID:";
-    private final static String ASSESS_TOKEN_PREFIX = "assess_token:";
-    private final static String REFRESH_TOKEN_PREFIX = "refresh_token:";
-    private final static String AUTHORIZATION_CODE_PREFIX = "authorization_code:";
-    private final static String ALL_PERMISSION = "ALL_PERMISSION:";
+public class AccessTokenService {
 
     @Autowired
     private AccessTokenDao accessTokenDao;
-    @Autowired
-    private RedisTemplate redisTemplate;
     @Value("${spring.profiles.active}")
     private String env;
     @Autowired
-    private DefaultTokenServices defaultTokenServices;
+    private DefaultTokenServices tokenServices;
+    @Autowired
+    private AccessTokenConverter accessTokenConverter;
 
-    @Override
-    public void storeAccessToken(OAuth2AccessToken token, Authentication authentication) {
-        Optional<AccessToken> optionalAccessToken = this.accessTokenDao.findById(token.getTokenValue());
-        // 如果已经存在，更新最后使用时间及位置信息
-        if (!optionalAccessToken.isPresent()) {
-            JwtTokenPayload payload = JwtUtils.payload(token.getTokenValue());
-            this.accessTokenDao.save(AccessToken.builder()
-                .id(token.getTokenValue())
-                .tokenType(token.getTokenType())
-                .issuedAt(Date.from(token.getIssuedAt()))
-                .expiresAt(Date.from(token.getExpiresAt()))
-                .scopes(token.getScopes())
-                .refreshToken(token.getRefreshTokenValue())
-                .client(Application.builder().id(payload.getClientId()).build())
-                .lastUsedTime(Date.from(Instant.now()))
-                .user(User.builder().id(payload.getUid()).build())
-                .build());
-        } else {
-            AccessToken accessToken = optionalAccessToken.get();
-            accessToken.setExpiresAt(Date.from(token.getExpiresAt()));
-            accessToken.setLastUsedTime(Date.from(Instant.now()));
-        }
-
-        super.storeAccessToken(token, authentication);
-    }
-
-    public AccessToken createPersonalAccessToken(String clientId, String name) {
-        OAuth2AuthenticationDetails oAuth2AuthenticationDetails = new OAuth2AuthenticationDetails();//TODO new OAuth2AuthenticationDetails(context.getRequest());
+    public PersonalAccessToken createPersonalAccessToken(String clientId, String name) {
+        OAuth2AuthenticationDetails oAuth2AuthenticationDetails = new OAuth2AuthenticationDetails();
         oAuth2AuthenticationDetails.setClientId(clientId);
-        oAuth2AuthenticationDetails.setTokenType(TokenType.SESSION);
+        oAuth2AuthenticationDetails.setTokenType(TokenType.PERSONAL);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         OAuth2Authentication oAuth2Authentication = new OAuth2Authentication(authentication, oAuth2AuthenticationDetails);
-        OAuth2AccessToken accessToken = defaultTokenServices.createAccessToken(oAuth2Authentication);
-        return this.accessTokenDao.getOne(accessToken.getTokenValue());
+        oAuth2Authentication.setName(name);
+        OAuth2AccessToken accessToken = tokenServices.createAccessToken(oAuth2Authentication);
+        return accessTokenConverter.toPersonalAccessToken(this.accessTokenDao.findOne(PropertyFilter.builder().equal("token", accessToken.getTokenValue()).build()).get());
+    }
+
+    public List<PersonalAccessToken> getPersonalAccessTokens(String clientId, Long uid) {
+        PropertyFilterBuilder builder = PropertyFilter.builder()
+            .equal("client.id", clientId)
+            .equal("tokenType", TokenType.PERSONAL)
+            .equal("user.id", uid);
+        List<AccessToken> accessTokens = this.accessTokenDao.findAll(builder.build());
+        return accessTokenConverter.toPersonalAccessTokens(accessTokens);
+    }
+
+    public List<SessionAccessToken> getSessions(String clientId, Long uid) {
+        PropertyFilterBuilder builder = PropertyFilter.builder()
+            .equal("client.id", clientId)
+            .equal("tokenType", TokenType.SESSION)
+            .equal("user.id", uid);
+        List<AccessToken> accessTokens = this.accessTokenDao.findAll(builder.build());
+        return accessTokenConverter.toSessions(accessTokens);
+    }
+
+    public boolean revokeToken(Long uid, String token) {
+        JwtTokenPayload payload = JwtUtils.payload(token);
+        OAuth2AccessToken accessToken = this.tokenServices.readAccessToken(token);
+        if (!uid.equals(payload.getUid())) {
+            return false;
+        }
+        return this.tokenServices.revokeToken(accessToken.getTokenValue());
+    }
+
+    public boolean revokeSession(Long uid, Long id) {
+        PropertyFilterBuilder builder = PropertyFilter.builder()
+            .equal("id", id)
+            .equal("user.id", uid)
+            .equal("tokenType", TokenType.SESSION);
+        Optional<AccessToken> optionalAccessToken = this.accessTokenDao.findOne(builder.build());
+        if (!optionalAccessToken.isPresent()) {
+            return false;
+        }
+        return this.tokenServices.revokeToken(optionalAccessToken.get().getToken());
+    }
+
+    public boolean revokePersonalAccessToken(Long uid, Long id) {
+        PropertyFilterBuilder builder = PropertyFilter.builder()
+            .equal("id", id)
+            .equal("user.id", uid)
+            .equal("tokenType", TokenType.PERSONAL);
+        Optional<AccessToken> optionalAccessToken = this.accessTokenDao.findOne(builder.build());
+        if (!optionalAccessToken.isPresent()) {
+            return false;
+        }
+        return this.tokenServices.revokeToken(optionalAccessToken.get().getToken());
     }
 
 //    @Transactional

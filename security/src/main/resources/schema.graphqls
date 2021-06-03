@@ -101,15 +101,46 @@ type CurrentUser {
 }
 
 type PersonalAccessToken {
-    id: String
+    id: ID
+    # 名称
     name: String
+    # 创建时间
+    issuedAt: Date
+    # 过期时间
+    expiresAt: Date
+    # 权限范围
+    scopes: [String]
+}
+
+type Geolocation {
+    id: ID
+    # IP 地址
+    internetProtocolAddress: String
+    # 国家
+    country: String
+    # 省 / 州
+    state: String
+    # 城市
+    city: String
+}
+
+type Session {
+    id: ID
+    # 设备
+    device: String
+    # 位置
+    location: Geolocation
+    # 登录时间
+    loginTime: Date
 }
 
 extend type Query {
     # 系统•当前登录用户
     viewer(organization: ID): LoginUser @auth(requires: "USER")
+    # 用户会话
+    sessions: [Session]
     # 查询个人 Token
-    personalAccessTokens(clientId: ID, uid: ID): [PersonalAccessToken]
+    personalAccessTokens: [PersonalAccessToken]
 }
 
 extend type Mutation {
@@ -129,4 +160,10 @@ extend type Mutation {
         clientId: String,
         name: String
     ): PersonalAccessToken
+    # 撤销 Token
+    revokeToken(token: String): Boolean
+    # 撤销 Session
+    revokeSession(id: ID): Boolean
+    # 撤销个人 Token
+    revokePersonalAccessToken(id: ID): Boolean
 }

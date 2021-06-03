@@ -1,4 +1,4 @@
-package cn.asany.security.oauth.graphql.inputs;
+package cn.asany.security.oauth.graphql.input;
 
 import lombok.Data;
 

@@ -3,6 +3,7 @@ package org.jfantasy.framework.security.oauth2.core;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
+import java.time.Instant;
 import java.util.Set;
 
 /**
@@ -55,5 +56,10 @@ public class OAuth2AuthenticationDetails {
      */
     @JsonProperty("refresh_token")
     private String refreshToken;
+    /**
+     * 过期时间
+     */
+    @JsonProperty("expires_at")
+    private Instant expiresAt;
 
 }

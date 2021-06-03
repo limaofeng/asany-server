@@ -671,9 +671,6 @@ type EmployeeEdge {
     cursor: String!
     node: Employee
 }
-enum IdType {
-    id,ezoffice,dingtalk
-}
 
 # excl操作表
 type ExcelEmployee{

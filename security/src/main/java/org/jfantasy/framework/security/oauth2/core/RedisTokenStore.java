@@ -74,7 +74,9 @@ public class RedisTokenStore implements TokenStore, InitializingBean {
 
         valueOperations.set(key, data);
 
-        redisTemplate.expireAt(key, Date.from(token.getExpiresAt()));
+        if (token.getExpiresAt() != null) {
+            redisTemplate.expireAt(key, Date.from(token.getExpiresAt()));
+        }
     }
 
     @Override
@@ -89,7 +91,7 @@ public class RedisTokenStore implements TokenStore, InitializingBean {
 
     @Override
     public void removeAccessToken(OAuth2AccessToken token) {
-
+        this.redisTemplate.delete(ASSESS_TOKEN_PREFIX + token.getTokenValue());
     }
 
     @Override
