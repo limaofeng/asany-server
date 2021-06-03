@@ -7,8 +7,8 @@ import cn.asany.security.oauth.dao.AccessTokenDao;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.security.authentication.Authentication;
 import org.jfantasy.framework.security.oauth2.JwtTokenPayload;
+import org.jfantasy.framework.security.oauth2.core.AbstractTokenStore;
 import org.jfantasy.framework.security.oauth2.core.OAuth2AccessToken;
-import org.jfantasy.framework.security.oauth2.core.RedisTokenStore;
 import org.jfantasy.framework.security.oauth2.jwt.JwtUtils;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +19,7 @@ import java.util.Date;
 import java.util.Optional;
 
 @Service
-public class DataBaseTokenStore extends RedisTokenStore {
+public class DataBaseTokenStore extends AbstractTokenStore {
 
     @Autowired
     private AccessTokenDao accessTokenDao;

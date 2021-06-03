@@ -12,6 +12,7 @@ public interface AccessTokenConverter {
 
     @Mappings({
         @Mapping(source = "id", target = "id"),
+        @Mapping(source = "issuedAt", target = "loginTime"),
     })
     SessionAccessToken toSession(AccessToken accessTokens);
 

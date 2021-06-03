@@ -10,9 +10,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 权限筛选
+ *
  * @author limaofeng
  * @version V1.0
- * @Description: TODO
  * @date 2019-08-20 14:10
  */
 @Slf4j
