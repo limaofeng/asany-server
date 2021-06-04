@@ -1,0 +1,23 @@
+interface StorageProperties {
+    id: ID
+}
+
+type MinIOProperties implements StorageProperties {
+    id: ID
+    endpoint: String
+    accessKeyId: String
+    accessKeySecret: String
+    bucketName: String
+    useSSL: Boolean
+}
+
+type Storage {
+    id: ID
+    name: String
+    properties: StorageProperties
+}
+
+extend type Query {
+    # 存储器
+    storages: [Storage]
+}
