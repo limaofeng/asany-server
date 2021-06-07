@@ -1,5 +1,13 @@
 rootProject.name = 'shanhai'
-include ":asany-shanhai", ":asany-organization", ":asany-base", ":asany-security", ":asany-mountain", ":asany-storage", ":asany-boot"
+include ":asany-shanhai",
+        ":asany-organization",
+        ":asany-base",
+        ":asany-security",
+        ":asany-mountain",
+        ":asany-storage-api",
+        ":asany-storage",
+        ":asany-nuwa",
+        ":asany-boot"
 
 // 基础
 project(':asany-base').projectDir = "$rootDir/base" as File
@@ -11,7 +19,11 @@ project(':asany-shanhai').projectDir = "$rootDir/shanhai" as File
 project(':asany-organization').projectDir = "$rootDir/organization" as File
 // 安全 / 登录 / 授权
 project(':asany-security').projectDir = "$rootDir/security" as File
+// 存储服务接口
+project(':asany-storage-api').projectDir = "$rootDir/storage-api" as File
 // 存储服务
 project(':asany-storage').projectDir = "$rootDir/storage" as File
+// 应用及路由管理
+project(':asany-nuwa').projectDir = "$rootDir/nuwa" as File
 // 启动
 project(':asany-boot').projectDir = "$rootDir/boot" as File

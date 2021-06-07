@@ -1,12 +1,10 @@
 package cn.asany.storage.core.engine.minio;
 
 import cn.asany.storage.core.AbstractStorageConfig;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 /**
+ * 存储配置
  *
  * @author limaofeng
  */
@@ -14,11 +12,12 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper = false)
 public class MinIOStorageConfig extends AbstractStorageConfig {
     private String endpoint;
     private String accessKeyId;
     private String accessKeySecret;
     private String bucketName;
-    private String useSSL;
+    private boolean useSSL;
 
 }

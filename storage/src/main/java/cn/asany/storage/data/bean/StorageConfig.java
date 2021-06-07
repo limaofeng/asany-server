@@ -5,10 +5,7 @@ import cn.asany.storage.core.IStorageConfig;
 import cn.asany.storage.core.engine.minio.MinIOStorageConfig;
 import cn.asany.storage.data.bean.enums.StorageType;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.framework.jackson.JSON;
@@ -27,6 +24,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper=false)
 @Entity
 @Table(name = "STORAGE_CONFIG")
 @JsonIgnoreProperties({"hibernate_lazy_initializer", "handler", "folders", "fileDetails"})
@@ -69,13 +67,13 @@ public class StorageConfig extends BaseBusEntity {
     /**
      * 文件管理器对应的目录
      */
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "storage", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<Folder> folders;
 
     /**
      * 文件管理器对应的文件
      */
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "storage", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<FileDetail> fileDetails;
 
     @Transient

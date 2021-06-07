@@ -44,7 +44,7 @@ public class FileDetailsDeserializer extends JsonDeserializer<FileDetail[]> {
         fileDetails = new FileDetail[absolutePaths.length];
         for (int i = 0, len = absolutePaths.length; i < len; i++) {
             String[] arry = absolutePaths[i].split(":");
-            FileDetail fileDetail = getFileService().get(arry[0]);
+            FileDetail fileDetail = getFileService().findByPath(arry[0]);
             if (fileDetail == null) {
                 continue;
             }

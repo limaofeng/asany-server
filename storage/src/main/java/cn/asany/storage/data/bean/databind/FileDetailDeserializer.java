@@ -22,7 +22,7 @@ public class FileDetailDeserializer extends JsonDeserializer<FileDetail> {
             return null;
         }
         String[] arry = value.split(":");
-        return getFileService().get(arry[0]);
+        return getFileService().findByPath(arry[0]);
     }
 
     private static FileService getFileService() {

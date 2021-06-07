@@ -1,9 +1,6 @@
 package cn.asany.storage.core.engine.disk;
 
-import cn.asany.storage.core.AbstractFileObject;
-import cn.asany.storage.core.FileItemFilter;
-import cn.asany.storage.core.FileItemSelector;
-import cn.asany.storage.core.FileObject;
+import cn.asany.storage.core.*;
 import org.jfantasy.framework.error.IgnoreException;
 
 import java.io.File;
@@ -24,7 +21,7 @@ public class LocalFileObject extends AbstractFileObject {
         this.fileManager = fileManager;
     }
 
-    LocalFileObject(LocalStorage fileManager, final File file, FileObject.Metadata metadata) {
+    LocalFileObject(LocalStorage fileManager, final File file, FileObjectMetadata metadata) {
         super(file.getAbsolutePath().substring(fileManager.defaultDir.length() + (fileManager.defaultDir.endsWith(File.separator) ? -1 : 0)), file.length(), new Date(file.lastModified()), metadata);
         this.file = file;
         this.fileManager = fileManager;

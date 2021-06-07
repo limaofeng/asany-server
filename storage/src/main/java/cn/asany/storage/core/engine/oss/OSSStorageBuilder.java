@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
  * @author limaofeng
  */
 @Component
-public class OSSStorageBuilder implements StorageBuilder<OSSIStorage, OSSStorageConfig> {
+public class OSSStorageBuilder implements StorageBuilder<OSSStorage, OSSStorageConfig> {
 
     @Override
     public boolean supports(Class<OSSStorageConfig> config) {
@@ -16,11 +16,11 @@ public class OSSStorageBuilder implements StorageBuilder<OSSIStorage, OSSStorage
     }
 
     @Override
-    public OSSIStorage build(OSSStorageConfig config) {
+    public OSSStorage build(OSSStorageConfig config) {
         String accessKeyId = config.getAccessKeyId();
         String accessKeySecret = config.getAccessKeySecret();
         String endpoint = config.getEndpoint();
         String bucketName = config.getBucketName();
-        return new OSSIStorage(endpoint, new OSSIStorage.AccessKey(accessKeyId, accessKeySecret), bucketName);
+        return new OSSStorage(endpoint, new OSSStorage.AccessKey(accessKeyId, accessKeySecret), bucketName);
     }
 }

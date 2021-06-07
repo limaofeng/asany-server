@@ -1,9 +1,6 @@
 package cn.asany.storage.core.engine.disk;
 
-import cn.asany.storage.core.FileItemFilter;
-import cn.asany.storage.core.FileItemSelector;
-import cn.asany.storage.core.FileObject;
-import cn.asany.storage.core.Storage;
+import cn.asany.storage.core.*;
 import org.jfantasy.framework.util.common.StreamUtil;
 import org.jfantasy.framework.util.common.StringUtil;
 import org.jfantasy.framework.util.common.file.FileUtil;
@@ -99,8 +96,8 @@ public class LocalStorage implements Storage {
             return null;
         }
         Map<String, Object> metadata = new HashMap<>();
-        metadata.put(FileObject.HttpHeaders.CONTENT_TYPE, FileUtil.getMimeType(file));
-        return file.isDirectory() ? new LocalFileObject(this, file) : new LocalFileObject(this, file, new FileObject.Metadata(metadata));
+        metadata.put(FileObjectMetadata.CONTENT_TYPE, FileUtil.getMimeType(file));
+        return file.isDirectory() ? new LocalFileObject(this, file) : new LocalFileObject(this, file, new FileObjectMetadata(metadata));
     }
 
     FileObject retrieveFileItem(final File file) {
@@ -108,8 +105,8 @@ public class LocalStorage implements Storage {
             return null;
         }
         Map<String, Object> metadata = new HashMap<>();
-        metadata.put(FileObject.HttpHeaders.CONTENT_TYPE, FileUtil.getMimeType(file));
-        return file.isDirectory() ? new LocalFileObject(this, file) : new LocalFileObject(this, file, new FileObject.Metadata(metadata));
+        metadata.put(FileObjectMetadata.CONTENT_TYPE, FileUtil.getMimeType(file));
+        return file.isDirectory() ? new LocalFileObject(this, file) : new LocalFileObject(this, file, new FileObjectMetadata(metadata));
     }
 
     @Override

@@ -1,13 +1,19 @@
 package cn.asany.storage.core;
 
+import cn.asany.storage.data.bean.StorageConfig;
+import cn.asany.storage.data.service.StorageService;
 import org.apache.commons.collections.map.HashedMap;
 import org.jfantasy.framework.jackson.JSON;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public class DefaultStorageResolver implements StorageResolver {
+
+    @Autowired
+    private StorageService storageService;
 
     private Map<IStorageConfig, Storage> storages = new HashedMap();
     private List<StorageBuilder> builders = new ArrayList<>();
@@ -18,7 +24,8 @@ public class DefaultStorageResolver implements StorageResolver {
 
     @Override
     public Storage resolve(String id) {
-        return null;
+        StorageConfig config = storageService.get(id);
+        return resolve(config.getProperties());
     }
 
     @Override

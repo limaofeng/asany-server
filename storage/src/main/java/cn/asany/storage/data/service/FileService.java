@@ -1,17 +1,19 @@
 package cn.asany.storage.data.service;
 
-import cn.asany.storage.data.bean.*;
+import cn.asany.storage.data.bean.FileDetail;
+import cn.asany.storage.data.bean.Folder;
+import cn.asany.storage.data.bean.Space;
+import cn.asany.storage.data.bean.StorageConfig;
 import cn.asany.storage.data.dao.FileDetailDao;
 import cn.asany.storage.data.dao.FolderDao;
 import cn.asany.storage.data.dao.SpaceDao;
-import org.hibernate.Hibernate;
-import org.hibernate.criterion.Criterion;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.regexp.RegexpUtil;
 import org.jfantasy.framework.util.web.WebUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -31,32 +34,30 @@ public class FileService {
     @Autowired
     private SpaceDao spaceDao;
 
-    public FileDetail saveFileDetail(String absolutePath, String fileName, String contentType, long length, String md5, String realPath, String fileManagerId, String description) {
+    public FileDetail saveFileDetail(String path, String fileName, String contentType, long length, String md5, String storage, String description) {
         FileDetail fileDetail = new FileDetail();
-        fileDetail.setPath(absolutePath);
-        fileDetail.setStorage(fileManagerId);
+        fileDetail.setPath(path);
+        fileDetail.setStorage(StorageConfig.builder().id(storage).build());
         fileDetail.setName(fileName);
-//        fileDetail.setExt(WebUtil.getExtension(fileName));
-//        fileDetail.setContentType(contentType);
+        fileDetail.setMimeType(contentType);
         fileDetail.setSize(length);
         fileDetail.setMd5(md5);
-        fileDetail.setFolder(createFolder(absolutePath.replaceFirst("[^\\/]+$", ""), fileManagerId));
-        fileDetail.setRealPath(realPath);
+        fileDetail.setFolder(createFolder(path.replaceFirst("[^\\/]+$", ""), storage));
         fileDetail.setDescription(description);
         this.fileDetailDao.save(fileDetail);
         return fileDetail;
     }
 
     public FileDetail update(FileDetail detail) {
-        FileDetail fileDetail = this.get(detail.getPath());
+        FileDetail fileDetail = this.findByPath(detail.getPath());
         fileDetail.setName(detail.getName());
         fileDetail.setDescription(detail.getDescription());
         this.fileDetailDao.save(fileDetail);
         return fileDetail;
     }
 
-    public Folder getFolder(String absolutePath, String managerId) {
-        return null;//this.folderDao.getOne(new FolderKey(absolutePath, managerId));
+    public Optional<Folder> getFolderByPath(String absolutePath, String storageId) {
+        return this.folderDao.findOne(PropertyFilter.builder().equal("path", absolutePath).equal("storage.id", storageId).build());
     }
 
     public void delete(Long id) {
@@ -69,16 +70,19 @@ public class FileService {
      * @param path 路径
      * @return {Folder}
      */
-    public Folder createFolder(String path, String namespace) {
-        Folder folder = null;//this.folderDao.getOne(new FolderKey(path, namespace));
-        if (ObjectUtil.isNull(folder)) {
-            if ("/".equals(path)) {
-                folder = createRootFolder(path, namespace);
-            } else {
-                folder = createFolder(path, createFolder(path.replaceFirst("[^\\/]+\\/$", ""), namespace), namespace);
-            }
+    public Folder createFolder(String path, String storage) {
+        Optional<Folder> optional = this.folderDao.findOne(PropertyFilter.builder()
+            .equal("path", path)
+            .equal("storage.id", storage)
+            .build());
+        if (optional.isPresent()) {
+            return optional.get();
         }
-        return folder;
+        if ("/".equals(path)) {
+            return createRootFolder(path, storage);
+        } else {
+            return createFolder(path, createFolder(path.replaceFirst("[^\\/]+\\/$", ""), storage), storage);
+        }
     }
 
     public FileDetail findUniqueByMd5(String md5, String managerId) {
@@ -92,9 +96,8 @@ public class FileService {
         return null;
     }
 
-    public FileDetail get(String path) {
-//        return this.fileDetailDao.get(path);
-        return null;
+    public FileDetail findByPath(String path) {
+        return this.fileDetailDao.findOne(PropertyFilter.builder().equal("path", path).build()).orElse(null);
     }
 
     private Folder createRootFolder(String absolutePath, String managerId) {
@@ -126,28 +129,22 @@ public class FileService {
         return folder;
     }
 
-    public List<FileDetail> findFileDetail(Criterion... criterions) {
-        return new ArrayList<>();//this.fileDetailDao.find(criterions);
-    }
-
     public Pager<FileDetail> findPager(Pager<FileDetail> pager, List<PropertyFilter> filters) {
         return this.fileDetailDao.findPager(pager, filters);
     }
 
-    public List<Folder> listFolder(String path, String namespace, String orderBy) {
-//        return this.folderDao.find(new Criterion[]{Restrictions.eq("parentFolder.path", path), Restrictions.eq("parentFolder.namespace", namespace)}, orderBy, "asc");
-        return new ArrayList<>();
+    public List<Folder> listFolder(String path, String storage, String orderBy) {
+        return this.folderDao.findAll(PropertyFilter.builder().equal("parentFolder.path", path).equal("storage.id", storage).build(), Sort.by(orderBy));
     }
 
     @Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
-    public List<FileDetail> listFileDetail(String path, String fileManagerId, String orderBy) {
-//        return this.fileDetailDao.find(new Criterion[]{Restrictions.eq("folder.path", path), Restrictions.eq("folder.namespace", fileManagerId)}, orderBy, "asc");
-        return new ArrayList<>();
+    public List<FileDetail> listFileDetail(String path, String storageId, String orderBy) {
+        return this.fileDetailDao.findAll(PropertyFilter.builder().equal("folder.path", path).equal("storage", storageId).build(), Sort.by(orderBy));
     }
 
     @Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
-    public FileDetail getFileDetailByMd5(String md5, String fileManagerId) {
-        List<FileDetail> fileDetails = new ArrayList<>();//this.fileDetailDao.find(new Criterion[]{Restrictions.eq("md5", md5), Restrictions.eq("namespace", fileManagerId)}, 0, 1);
+    public FileDetail getFileDetailByMd5(String md5, String storageId) {
+        List<FileDetail> fileDetails = this.fileDetailDao.findAll(PropertyFilter.builder().equal("md5", md5).equal("storage", storageId).build());
         if (fileDetails.isEmpty()) {
             return null;
         }
@@ -179,13 +176,12 @@ public class FileService {
         // 4.开始转移文件
     }
 
-    public Space getDirectory(String dirKey) throws IOException {
-        Space directory = new Space();//directoryDao.get(dirKey);
-        if (directory == null) {
+    public Space getSpace(String dirKey) throws IOException {
+        Optional<Space> space = this.spaceDao.findById(dirKey);
+        if (!space.isPresent()) {
             throw new IOException("目录配置[key=" + dirKey + "]未找到!");
         }
-        Hibernate.initialize(directory.getStorage());
-        return directory;
+        return space.get();
     }
 
     /**

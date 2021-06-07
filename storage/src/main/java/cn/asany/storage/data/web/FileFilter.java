@@ -57,10 +57,10 @@ public class FileFilter extends GenericFilterBean {
         }
 
         final String url = request.getRequestURI().replaceAll("^" + request.getContextPath(), "");
-        FileDetail fileDetail = FileFilter.this.fileService.get(url);
+        FileDetail fileDetail = FileFilter.this.fileService.findByPath(url);
         if (fileDetail != null) {
             Storage Storage = null;//FileManagerFactory.getInstance().getFileManager(fileDetail.getStorage());
-            FileObject fileObject = Storage.getFileItem(fileDetail.getRealPath());
+            FileObject fileObject = Storage.getFileItem(fileDetail.getPath());
             if (fileObject != null) {
                 writeFile(request, response, fileObject);
                 return;
@@ -68,14 +68,14 @@ public class FileFilter extends GenericFilterBean {
         }
         if (RegexpUtil.find(url, regex)) {
             final String srcUrl = RegexpUtil.replace(url, regex, ".$3");
-            FileDetail srcFileDetail = FileFilter.this.fileService.get(srcUrl);
+            FileDetail srcFileDetail = FileFilter.this.fileService.findByPath(srcUrl);
             if (srcFileDetail == null) {
                 chain.doFilter(request, response);
                 return;
             }
             // 查找源文件
             Storage Storage =  null;// FileManagerFactory.getInstance().getFileManager(srcFileDetail.getStorage());
-            FileObject fileObject = Storage.getFileItem(srcFileDetail.getRealPath());
+            FileObject fileObject = Storage.getFileItem(srcFileDetail.getPath());
             if (fileObject == null) {
                 chain.doFilter(request, response);
                 return;
@@ -95,7 +95,7 @@ public class FileFilter extends GenericFilterBean {
             fileDetail = fileUploadService.upload(tmp, url, "haolue-upload");
             // 删除临时文件
             FileUtil.delFile(tmp);
-            writeFile(request, response, Storage.getFileItem(fileDetail.getRealPath()));
+            writeFile(request, response, Storage.getFileItem(fileDetail.getPath()));
         }else{
             chain.doFilter(request,response);
         }

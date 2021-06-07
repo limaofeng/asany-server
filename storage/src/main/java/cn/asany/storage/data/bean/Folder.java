@@ -2,6 +2,8 @@ package cn.asany.storage.data.bean;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
@@ -17,7 +19,8 @@ import java.util.List;
 @Data
 @Entity
 @Table(name = "STORAGE_FOLDER")
-@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@EqualsAndHashCode(callSuper = false)
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @JsonIgnoreProperties({"hibernate_lazy_initializer", "handler"})
 public class Folder extends BaseBusEntity {
 
@@ -27,7 +30,7 @@ public class Folder extends BaseBusEntity {
     @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
     private Long id;
 
-    @Column(name = "PATH", nullable = false, insertable = true, updatable = false, length = 250)
+    @Column(name = "PATH", nullable = false, updatable = false, length = 250)
     private String path;
     /**
      * 同一目录下不允许重名
@@ -68,7 +71,7 @@ public class Folder extends BaseBusEntity {
     /**
      * 存储器
      */
-    @JoinColumn(name = "STORAGE_ID", insertable = true, updatable = false, foreignKey = @ForeignKey(name = "FK_STORAGE_SPACE_STORAGE"))
+    @JoinColumn(name = "STORAGE_ID", updatable = false, foreignKey = @ForeignKey(name = "FK_STORAGE_FOLDER_STORAGE"))
     @ManyToOne(fetch = FetchType.LAZY)
     private StorageConfig storage;
     /**

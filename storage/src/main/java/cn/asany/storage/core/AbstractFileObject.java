@@ -11,7 +11,7 @@ public abstract class AbstractFileObject implements FileObject {
     private String name;
     private boolean directory;
     private Date lastModified;
-    private Metadata metadata;
+    private FileObjectMetadata metadata;
     private long size;
 
     public AbstractFileObject(String absolutePath) {
@@ -25,10 +25,10 @@ public abstract class AbstractFileObject implements FileObject {
         this.name = StringUtil.nullValue(RegexpUtil.parseGroup(this.absolutePath, "([^/]+)/$", 1));
         this.directory = true;
         this.lastModified = null;
-        this.metadata = new Metadata();
+        this.metadata = new FileObjectMetadata();
     }
 
-    public AbstractFileObject(String absolutePath, Metadata metadata) {
+    public AbstractFileObject(String absolutePath, FileObjectMetadata metadata) {
         this.absolutePath = absolutePath.replace(File.separator, "/");
         this.name = RegexpUtil.parseGroup(absolutePath, "([^/]+)/$", 1);
         this.directory = true;
@@ -36,7 +36,7 @@ public abstract class AbstractFileObject implements FileObject {
         this.metadata = metadata;
     }
 
-    public AbstractFileObject(String absolutePath, long size, Date lastModified, Metadata metadata) {
+    public AbstractFileObject(String absolutePath, long size, Date lastModified, FileObjectMetadata metadata) {
         this.absolutePath = absolutePath.replace(File.separator, "/");
         this.name = RegexpUtil.parseGroup(absolutePath, "([^/]+)$", 1);
         this.size = size;
@@ -76,7 +76,7 @@ public abstract class AbstractFileObject implements FileObject {
     }
 
     @Override
-    public Metadata getMetadata() {
+    public FileObjectMetadata getMetadata() {
         return this.metadata;
     }
 

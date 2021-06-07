@@ -17,14 +17,14 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-public class OSSIStorage implements Storage {
+public class OSSStorage implements Storage {
 
     private AccessKey accessKey;
     private String bucketName;
     private String endpoint;
     private OSSClient client;
 
-    public OSSIStorage(String endpoint, AccessKey accessKey, String bucketName) {
+    public OSSStorage(String endpoint, AccessKey accessKey, String bucketName) {
         this.accessKey = accessKey;
         this.bucketName = bucketName;
         this.endpoint = endpoint;
@@ -176,16 +176,16 @@ public class OSSIStorage implements Storage {
 
     public class OSSFileObject extends AbstractFileObject {
         private String ossAbsolutePath;
-        private OSSIStorage fileManager;
+        private OSSStorage fileManager;
 
-        protected OSSFileObject(OSSIStorage fileManager, String absolutePath, ObjectMetadata objectMetadata) {
-            super(absolutePath, new Metadata(objectMetadata.getRawMetadata(), objectMetadata.getUserMetadata()));
+        protected OSSFileObject(OSSStorage fileManager, String absolutePath, ObjectMetadata objectMetadata) {
+            super(absolutePath, new FileObjectMetadata(objectMetadata.getRawMetadata(), objectMetadata.getUserMetadata()));
             this.ossAbsolutePath = RegexpUtil.replace(absolutePath, "^/", "");
             this.fileManager = fileManager;
         }
 
-        protected OSSFileObject(OSSIStorage fileManager, String absolutePath, long size, Date lastModified, ObjectMetadata objectMetadata) {
-            super(absolutePath, size, lastModified, new Metadata(objectMetadata.getRawMetadata(), objectMetadata.getUserMetadata()));
+        protected OSSFileObject(OSSStorage fileManager, String absolutePath, long size, Date lastModified, ObjectMetadata objectMetadata) {
+            super(absolutePath, size, lastModified, new FileObjectMetadata(objectMetadata.getRawMetadata(), objectMetadata.getUserMetadata()));
             this.ossAbsolutePath = RegexpUtil.replace(absolutePath, "^/", "");
             this.fileManager = fileManager;
         }

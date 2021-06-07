@@ -2,17 +2,25 @@ package cn.asany.storage.data.bean;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
 import javax.persistence.*;
 
 
+/**
+ * 文件部分
+ *
+ * @author limaofeng
+ */
 @Data
 @Entity
-@Table(name = "STORAGE_FILEPART", uniqueConstraints = {@UniqueConstraint(columnNames = {"ENTIRE_FILE_HASH", "PART_FILE_HASH"})})
-@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@EqualsAndHashCode(callSuper = false)
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @JsonIgnoreProperties({"hibernate_lazy_initializer", "handler"})
+@Table(name = "STORAGE_FILEPART", uniqueConstraints = {@UniqueConstraint(columnNames = {"ENTIRE_FILE_HASH", "PART_FILE_HASH"})})
 public class FilePart extends BaseBusEntity {
 
     @Id
