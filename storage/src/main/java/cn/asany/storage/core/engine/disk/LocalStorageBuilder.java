@@ -2,7 +2,7 @@ package cn.asany.storage.core.engine.disk;
 
 
 import cn.asany.storage.core.FileStoreException;
-import cn.asany.storage.core.StorageBuilder;
+import cn.asany.storage.api.StorageBuilder;
 import org.springframework.stereotype.Component;
 
 @Component

@@ -2,12 +2,14 @@ package cn.asany.storage.data.service;
 
 import cn.asany.storage.data.bean.FilePart;
 import cn.asany.storage.data.dao.FilePartDao;
+import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -43,8 +45,7 @@ public class FilePartService {
         return new ArrayList<>();
     }
 
-    public FilePart findByPartFileHash(String entireFileHash, String partFileHash) {
-//        return this.filePartDao.findUnique(Restrictions.eq("entireFileHash", entireFileHash), Restrictions.eq("partFileHash", partFileHash));
-        return null;
+    public Optional<FilePart> findByPartFileHash(String entireFileHash, String partFileHash) {
+        return this.filePartDao.findOne(PropertyFilter.builder().equal("entireFileHash", entireFileHash).equal("partFileHash", partFileHash).build());
     }
 }

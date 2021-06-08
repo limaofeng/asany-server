@@ -17,6 +17,11 @@ type Storage {
     properties: StorageProperties
 }
 
+type FileDetails {
+    id: ID
+    name: String
+}
+
 input UploadOptions {
     name: String
     url: String
@@ -37,10 +42,12 @@ input UploadOptions {
 extend type Query {
     # 存储器
     storages: [Storage]
+    # 文件详情
+    file(id: ID): FileDetails
 }
 
 extend type Mutation {
-    upload(file: Upload!, options: UploadOptions = { space: "default" }): FileObject
+    upload(file: Upload!, options: UploadOptions = { space: "default" }): FileDetails
 }
 
 scalar Upload

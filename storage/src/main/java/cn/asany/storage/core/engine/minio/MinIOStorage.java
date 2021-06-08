@@ -1,6 +1,6 @@
 package cn.asany.storage.core.engine.minio;
 
-import cn.asany.storage.core.*;
+import cn.asany.storage.api.*;
 import io.minio.*;
 import io.minio.errors.ErrorResponseException;
 import io.minio.messages.Item;

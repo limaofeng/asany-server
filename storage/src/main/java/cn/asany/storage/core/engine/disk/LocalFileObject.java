@@ -1,5 +1,9 @@
 package cn.asany.storage.core.engine.disk;
 
+import cn.asany.storage.api.FileItemFilter;
+import cn.asany.storage.api.FileItemSelector;
+import cn.asany.storage.api.FileObject;
+import cn.asany.storage.api.FileObjectMetadata;
 import cn.asany.storage.core.*;
 import org.jfantasy.framework.error.IgnoreException;
 

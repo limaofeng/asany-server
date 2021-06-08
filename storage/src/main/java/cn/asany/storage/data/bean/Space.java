@@ -4,8 +4,10 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.jfantasy.framework.dao.BaseBusEntity;
+import org.jfantasy.framework.dao.hibernate.converter.StringSetConverter;
 
 import javax.persistence.*;
+import java.util.Set;
 
 /**
  * 文件上传时，为其指定的上传目录
@@ -19,7 +21,7 @@ import javax.persistence.*;
 @Data
 @Entity
 @Table(name = "STORAGE_SPACE")
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 @JsonIgnoreProperties({"hibernate_lazy_initializer", "handler"})
 public class Space extends BaseBusEntity {
 
@@ -38,6 +40,12 @@ public class Space extends BaseBusEntity {
      */
     @Column(name = "PATH", length = 250)
     private String path;
+    /**
+     * 使用的插件
+     */
+    @Convert(converter = StringSetConverter.class)
+    @Column(name = "PLUGINS", length = 250)
+    private Set<String> plugins;
     /**
      * 对应的文件管理器
      */

@@ -1,4 +1,4 @@
-package cn.asany.storage.core;
+package cn.asany.storage.api;
 
 import org.jfantasy.framework.util.common.DateUtil;
 

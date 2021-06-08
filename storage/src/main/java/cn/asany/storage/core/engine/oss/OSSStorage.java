@@ -1,6 +1,7 @@
 package cn.asany.storage.core.engine.oss;
 
-import cn.asany.storage.core.*;
+import cn.asany.storage.api.*;
+import cn.asany.storage.core.AbstractFileObject;
 import com.aliyun.oss.OSSClient;
 import com.aliyun.oss.model.ListObjectsRequest;
 import com.aliyun.oss.model.OSSObjectSummary;

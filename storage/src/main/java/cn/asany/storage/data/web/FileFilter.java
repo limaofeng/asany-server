@@ -1,8 +1,7 @@
 package cn.asany.storage.data.web;
 
-import cn.asany.storage.core.FileObject;
-import cn.asany.storage.core.FileUploadService;
-import cn.asany.storage.core.Storage;
+import cn.asany.storage.api.FileObject;
+import cn.asany.storage.api.Storage;
 import cn.asany.storage.data.bean.FileDetail;
 import cn.asany.storage.data.service.FileService;
 import org.jfantasy.framework.util.common.ImageUtil;
@@ -34,7 +33,7 @@ public class FileFilter extends GenericFilterBean {
     @Autowired
     private FileService fileService;
     @Autowired
-    private FileUploadService fileUploadService;
+//    private FileUploadService fileUploadService;
 
     private String[] allowHosts;
 
@@ -92,7 +91,7 @@ public class FileFilter extends GenericFilterBean {
             // 创建临时文件
             File tmp = FileUtil.tmp();
             ImageUtil.write(image, tmp);
-            fileDetail = fileUploadService.upload(tmp, url, "haolue-upload");
+//            fileDetail = fileUploadService.upload(tmp, url, "haolue-upload");
             // 删除临时文件
             FileUtil.delFile(tmp);
             writeFile(request, response, Storage.getFileItem(fileDetail.getPath()));

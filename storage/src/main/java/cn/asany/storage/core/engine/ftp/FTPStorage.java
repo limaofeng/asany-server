@@ -1,9 +1,9 @@
 package cn.asany.storage.core.engine.ftp;
 
-import cn.asany.storage.core.FileItemFilter;
-import cn.asany.storage.core.FileItemSelector;
-import cn.asany.storage.core.FileObject;
-import cn.asany.storage.core.Storage;
+import cn.asany.storage.api.FileItemFilter;
+import cn.asany.storage.api.FileItemSelector;
+import cn.asany.storage.api.FileObject;
+import cn.asany.storage.api.Storage;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.net.ftp.FTPFile;

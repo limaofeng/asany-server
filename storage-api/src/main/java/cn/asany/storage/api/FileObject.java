@@ -1,4 +1,4 @@
-package cn.asany.storage.core;
+package cn.asany.storage.api;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;

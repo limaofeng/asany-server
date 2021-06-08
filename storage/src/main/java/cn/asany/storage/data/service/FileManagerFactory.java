@@ -1,7 +1,7 @@
 package cn.asany.storage.data.service;
 
-import cn.asany.storage.core.Storage;
-import cn.asany.storage.core.StorageBuilder;
+import cn.asany.storage.api.Storage;
+import cn.asany.storage.api.StorageBuilder;
 import cn.asany.storage.data.bean.StorageConfig;
 import cn.asany.storage.data.bean.enums.StorageType;
 import org.apache.commons.logging.Log;

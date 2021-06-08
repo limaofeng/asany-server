@@ -1,7 +1,7 @@
 package cn.asany.storage.data.bean;
 
 import cn.asany.storage.core.FileStoreException;
-import cn.asany.storage.core.IStorageConfig;
+import cn.asany.storage.api.IStorageConfig;
 import cn.asany.storage.core.engine.minio.MinIOStorageConfig;
 import cn.asany.storage.data.bean.enums.StorageType;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;

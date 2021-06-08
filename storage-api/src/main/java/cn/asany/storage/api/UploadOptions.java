@@ -1,4 +1,4 @@
-package cn.asany.storage.core;
+package cn.asany.storage.api;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -6,16 +6,20 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.jfantasy.framework.util.common.StringUtil;
 
+/**
+ * 上传选项
+ *
+ * @author limaofeng
+ */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class UploadOptions {
     /**
-     * 原始文件名
+     * 用户定义的文件名称（非上传文件的名称）
      */
     private String name;
-    private String url;
     /**
      * 上传空间
      */

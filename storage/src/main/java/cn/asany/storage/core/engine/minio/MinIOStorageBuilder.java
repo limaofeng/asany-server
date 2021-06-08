@@ -1,6 +1,6 @@
 package cn.asany.storage.core.engine.minio;
 
-import cn.asany.storage.core.StorageBuilder;
+import cn.asany.storage.api.StorageBuilder;
 import org.springframework.stereotype.Component;
 
 @Component

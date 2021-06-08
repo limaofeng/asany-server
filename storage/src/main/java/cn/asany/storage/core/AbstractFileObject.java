@@ -1,5 +1,7 @@
 package cn.asany.storage.core;
 
+import cn.asany.storage.api.FileObject;
+import cn.asany.storage.api.FileObjectMetadata;
 import org.jfantasy.framework.util.common.StringUtil;
 import org.jfantasy.framework.util.regexp.RegexpUtil;
 

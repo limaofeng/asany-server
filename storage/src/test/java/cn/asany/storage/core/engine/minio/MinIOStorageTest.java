@@ -1,7 +1,7 @@
 package cn.asany.storage.core.engine.minio;
 
-import cn.asany.storage.core.FileObject;
-import cn.asany.storage.core.Storage;
+import cn.asany.storage.api.FileObject;
+import cn.asany.storage.api.Storage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

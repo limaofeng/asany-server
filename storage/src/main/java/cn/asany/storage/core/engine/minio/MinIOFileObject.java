@@ -1,9 +1,9 @@
 package cn.asany.storage.core.engine.minio;
 
-import cn.asany.storage.core.FileItemFilter;
-import cn.asany.storage.core.FileItemSelector;
-import cn.asany.storage.core.FileObject;
-import cn.asany.storage.core.FileObjectMetadata;
+import cn.asany.storage.api.FileItemFilter;
+import cn.asany.storage.api.FileItemSelector;
+import cn.asany.storage.api.FileObject;
+import cn.asany.storage.api.FileObjectMetadata;
 import io.minio.ListObjectsArgs;
 import io.minio.Result;
 import io.minio.messages.Item;

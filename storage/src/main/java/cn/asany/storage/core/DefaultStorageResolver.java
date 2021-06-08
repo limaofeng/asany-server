@@ -1,22 +1,29 @@
 package cn.asany.storage.core;
 
+import cn.asany.storage.api.IStorageConfig;
+import cn.asany.storage.api.Storage;
+import cn.asany.storage.api.StorageBuilder;
 import cn.asany.storage.data.bean.StorageConfig;
 import cn.asany.storage.data.service.StorageService;
 import org.apache.commons.collections.map.HashedMap;
 import org.jfantasy.framework.jackson.JSON;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 默认存储器解析器
+ *
+ * @author limaofeng
+ */
 public class DefaultStorageResolver implements StorageResolver {
 
     @Autowired
     private StorageService storageService;
 
     private Map<IStorageConfig, Storage> storages = new HashedMap();
-    private List<StorageBuilder> builders = new ArrayList<>();
+    private List<StorageBuilder> builders;
 
     public DefaultStorageResolver(List<StorageBuilder> builders) {
         this.builders = builders;

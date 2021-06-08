@@ -1,5 +1,8 @@
 package cn.asany.storage.core;
 
+import cn.asany.storage.api.IStorageConfig;
+import cn.asany.storage.api.Storage;
+
 /**
  * StorageResolver
  *

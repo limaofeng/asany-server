@@ -40,7 +40,7 @@ public class FileService {
         fileDetail.setStorage(StorageConfig.builder().id(storage).build());
         fileDetail.setName(fileName);
         fileDetail.setMimeType(contentType);
-        fileDetail.setSize(length);
+        fileDetail.setLength(length);
         fileDetail.setMd5(md5);
         fileDetail.setFolder(createFolder(path.replaceFirst("[^\\/]+$", ""), storage));
         fileDetail.setDescription(description);
@@ -91,9 +91,8 @@ public class FileService {
         return null;
     }
 
-    public FileDetail findUnique(String absolutePath, String md5, String managerId) {
-//        return this.fileDetailDao.findB(Restrictions.eq("fileManagerId", managerId), Restrictions.eq("absolutePath", absolutePath), Restrictions.eq("md5", md5));
-        return null;
+    public Optional<FileDetail> findById(Long id) {
+        return this.fileDetailDao.findById(id);
     }
 
     public FileDetail findByPath(String path) {

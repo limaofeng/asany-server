@@ -1,14 +1,16 @@
 package cn.asany.autoconfigure;
 
+import cn.asany.storage.api.IStorageConfig;
+import cn.asany.storage.api.StorageBuilder;
 import cn.asany.storage.core.DefaultStorageResolver;
-import cn.asany.storage.core.IStorageConfig;
-import cn.asany.storage.core.StorageBuilder;
 import cn.asany.storage.core.StorageResolver;
 import cn.asany.storage.core.engine.minio.MinIOStorageConfig;
 import cn.asany.storage.data.graphql.scalar.FileObjectCoercing;
+import cn.asany.storage.data.service.FileService;
 import graphql.kickstart.servlet.apollo.ApolloScalars;
 import graphql.schema.GraphQLScalarType;
 import org.jfantasy.graphql.SchemaParserDictionaryBuilder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;

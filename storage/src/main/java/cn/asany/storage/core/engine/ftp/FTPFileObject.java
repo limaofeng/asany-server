@@ -1,9 +1,9 @@
 package cn.asany.storage.core.engine.ftp;
 
-import cn.asany.storage.core.FileItemFilter;
-import cn.asany.storage.core.FileItemSelector;
-import cn.asany.storage.core.FileObject;
-import cn.asany.storage.core.FileObjectMetadata;
+import cn.asany.storage.api.FileItemFilter;
+import cn.asany.storage.api.FileItemSelector;
+import cn.asany.storage.api.FileObject;
+import cn.asany.storage.api.FileObjectMetadata;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.net.ftp.FTPFile;

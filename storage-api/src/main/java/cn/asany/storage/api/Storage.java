@@ -1,4 +1,4 @@
-package cn.asany.storage.core;
+package cn.asany.storage.api;
 
 import java.io.File;
 import java.io.IOException;

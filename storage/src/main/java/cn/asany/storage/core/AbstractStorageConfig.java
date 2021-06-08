@@ -1,6 +1,7 @@
 package cn.asany.storage.core;
 
 
+import cn.asany.storage.api.IStorageConfig;
 import lombok.Data;
 
 @Data

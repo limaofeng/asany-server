@@ -1,7 +1,7 @@
 package cn.asany.storage.data.util;
 
-import cn.asany.storage.core.FileObject;
-import cn.asany.storage.core.FileItemSelector;
+import cn.asany.storage.api.FileObject;
+import cn.asany.storage.api.FileItemSelector;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.tools.zip.ZipEntry;

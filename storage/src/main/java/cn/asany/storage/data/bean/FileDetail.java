@@ -1,5 +1,9 @@
 package cn.asany.storage.data.bean;
 
+import cn.asany.storage.api.FileItemFilter;
+import cn.asany.storage.api.FileItemSelector;
+import cn.asany.storage.api.FileObject;
+import cn.asany.storage.api.FileObjectMetadata;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
@@ -9,6 +13,10 @@ import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
 import javax.persistence.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Date;
+import java.util.List;
 
 /**
  * 文件信息表
@@ -21,7 +29,7 @@ import javax.persistence.*;
 @EqualsAndHashCode(callSuper = false)
 @JsonIgnoreProperties({"hibernate_lazy_initializer", "handler", "folder", "storage", "md5", "creator", "updator", "modifier", "createTime", "modifyTime"})
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class FileDetail extends BaseBusEntity implements Cloneable {
+public class FileDetail extends BaseBusEntity implements Cloneable, FileObject {
 
     @Id
     @Column(name = "ID", nullable = false, updatable = false, precision = 22)
@@ -54,7 +62,7 @@ public class FileDetail extends BaseBusEntity implements Cloneable {
      */
     @Column(name = "LENGTH")
     @JsonProperty("length")
-    private Long size;
+    private Long length;
     /**
      * 文件MD5码
      */
@@ -71,4 +79,58 @@ public class FileDetail extends BaseBusEntity implements Cloneable {
     @ManyToOne(fetch = FetchType.LAZY)
     private StorageConfig storage;
 
+    @Override
+    public boolean isDirectory() {
+        return false;
+    }
+
+    @Override
+    public long getSize() {
+        return this.length;
+    }
+
+    @Override
+    public String getContentType() {
+        return this.mimeType;
+    }
+
+    @Override
+    public FileObject getParentFile() {
+        throw new RuntimeException("FileDetails 不提供该方法");
+    }
+
+    @Override
+    public List<FileObject> listFiles() {
+        throw new RuntimeException("FileDetails 不提供该方法");
+    }
+
+    @Override
+    public String getAbsolutePath() {
+        return this.path;
+    }
+
+    @Override
+    public Date lastModified() {
+        return this.getUpdatedAt();
+    }
+
+    @Override
+    public List<FileObject> listFiles(FileItemFilter filter) {
+        throw new RuntimeException("FileDetails 不提供该方法");
+    }
+
+    @Override
+    public List<FileObject> listFiles(FileItemSelector selector) {
+        throw new RuntimeException("FileDetails 不提供该方法");
+    }
+
+    @Override
+    public FileObjectMetadata getMetadata() {
+        throw new RuntimeException("FileDetails 不提供该方法");
+    }
+
+    @Override
+    public InputStream getInputStream() throws IOException {
+        throw new RuntimeException("FileDetails 不提供该方法");
+    }
 }

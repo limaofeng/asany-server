@@ -1,4 +1,4 @@
-package cn.asany.storage.core;
+package cn.asany.storage.api;
 
 /**
  * 文件选择器
