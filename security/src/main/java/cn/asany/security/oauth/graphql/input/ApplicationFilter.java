@@ -1,6 +1,6 @@
 package cn.asany.security.oauth.graphql.input;
 
-import cn.asany.security.oauth.bean.Application;
+import cn.asany.security.oauth.bean.OAuthApplication;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.jfantasy.graphql.inputs.QueryFilter;
@@ -12,5 +12,5 @@ import org.jfantasy.graphql.inputs.QueryFilter;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class ApplicationFilter extends QueryFilter<ApplicationFilter, Application> {
+public class ApplicationFilter extends QueryFilter<ApplicationFilter, OAuthApplication> {
 }

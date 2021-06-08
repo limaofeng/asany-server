@@ -85,7 +85,7 @@ public class AccessToken extends BaseBusEntity {
      */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "CLIENT_ID", foreignKey = @ForeignKey(name = "FK_ACCESS_TOKEN_CLIENT"), updatable = false, nullable = false)
-    private Application client;
+    private OAuthApplication client;
     /**
      * 用户
      */

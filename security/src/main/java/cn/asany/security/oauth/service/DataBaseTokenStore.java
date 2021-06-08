@@ -2,7 +2,7 @@ package cn.asany.security.oauth.service;
 
 import cn.asany.security.core.bean.User;
 import cn.asany.security.oauth.bean.AccessToken;
-import cn.asany.security.oauth.bean.Application;
+import cn.asany.security.oauth.bean.OAuthApplication;
 import cn.asany.security.oauth.dao.AccessTokenDao;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.security.authentication.Authentication;
@@ -42,7 +42,7 @@ public class DataBaseTokenStore extends AbstractTokenStore {
                 .expiresAt(token.getExpiresAt() != null ? Date.from(token.getExpiresAt()) : null)
                 .scopes(token.getScopes())
                 .refreshToken(token.getRefreshTokenValue())
-                .client(Application.builder().id(payload.getClientId()).build())
+                .client(OAuthApplication.builder().id(payload.getClientId()).build())
                 .lastUsedTime(Date.from(Instant.now()))
                 .user(User.builder().id(payload.getUid()).build())
                 .build());

@@ -15,7 +15,7 @@ import java.util.Optional;
  * @author limaofeng
  */
 @Component
-public class StorageGraphQLGraphQLQueryResolver implements GraphQLQueryResolver {
+public class StorageGraphQLQueryResolver implements GraphQLQueryResolver {
 
     @Autowired
     private StorageService storageService;

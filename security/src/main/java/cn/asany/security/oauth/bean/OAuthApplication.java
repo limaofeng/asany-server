@@ -2,13 +2,15 @@ package cn.asany.security.oauth.bean;
 
 import cn.asany.security.oauth.Ownership;
 import lombok.*;
-import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.framework.security.core.GrantedAuthority;
 import org.jfantasy.framework.security.oauth2.core.AuthorizationGrantType;
 import org.jfantasy.framework.security.oauth2.core.ClientDetails;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.*;
 
 /**
@@ -23,7 +25,7 @@ import java.util.*;
 @EqualsAndHashCode(callSuper = false)
 @Entity
 @Table(name = "OAUTH_APP")
-public class Application extends BaseBusEntity implements Ownership, ClientDetails {
+public class OAuthApplication extends BaseBusEntity implements Ownership, ClientDetails {
 
     @Id
     @Column(name = "ID", length = 50, updatable = false)

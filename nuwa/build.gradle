@@ -1,0 +1,9 @@
+dependencies {
+    compile project(":asany-security")
+    compileOnly "org.projectlombok:lombok:${LIB_LOMBOK_VER}"
+    annotationProcessor "org.projectlombok:lombok:$LIB_LOMBOK_VER"
+    testCompileOnly "org.projectlombok:lombok:${LIB_LOMBOK_VER}"
+    testAnnotationProcessor "org.projectlombok:lombok:$LIB_LOMBOK_VER"
+    testCompile 'junit:junit:4.12'
+    testCompile 'org.springframework.boot:spring-boot-starter-test'
+}

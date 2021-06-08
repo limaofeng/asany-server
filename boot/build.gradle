@@ -35,6 +35,7 @@ task dev {
 }
 
 dependencies {
+    compile project(":asany-nuwa")
     compile project(":asany-storage")
     compile project(":asany-security")
     compile project(":asany-organization")

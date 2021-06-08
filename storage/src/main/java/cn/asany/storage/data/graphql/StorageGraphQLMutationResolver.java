@@ -17,7 +17,7 @@ import java.io.IOException;
  * @author limaofeng
  */
 @Component
-public class StorageGraphQLGraphQLMutationResolver implements GraphQLMutationResolver {
+public class StorageGraphQLMutationResolver implements GraphQLMutationResolver {
 
     @Autowired
     private UploadService uploadService;

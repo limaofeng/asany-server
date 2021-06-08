@@ -1,7 +1,7 @@
 package cn.asany.security.oauth.service;
 
-import cn.asany.security.oauth.bean.Application;
-import cn.asany.security.oauth.dao.ApplicationDao;
+import cn.asany.security.oauth.bean.OAuthApplication;
+import cn.asany.security.oauth.dao.OAuthApplicationDao;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.security.oauth2.core.ClientDetails;
@@ -15,18 +15,18 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class ApplicationService implements ClientDetailsService {
+public class OAuthApplicationService implements ClientDetailsService {
 
-    private final ApplicationDao applicationDao;
+    private final OAuthApplicationDao OAuthApplicationDao;
 
     @Autowired
-    public ApplicationService(ApplicationDao applicationDao) {
-        this.applicationDao = applicationDao;
+    public OAuthApplicationService(OAuthApplicationDao OAuthApplicationDao) {
+        this.OAuthApplicationDao = OAuthApplicationDao;
     }
 
     @Override
     public ClientDetails loadClientByClientId(String clientId) throws ClientRegistrationException {
-        Optional<Application> optional = this.applicationDao.findOne(PropertyFilter.builder().equal("clientId", clientId).equal("enabled", true).build());
+        Optional<OAuthApplication> optional = this.OAuthApplicationDao.findOne(PropertyFilter.builder().equal("clientId", clientId).equal("enabled", true).build());
         if (!optional.isPresent()) {
             throw new ClientRegistrationException("[client_id=" + clientId + "]不存在");
         }
@@ -34,13 +34,13 @@ public class ApplicationService implements ClientDetailsService {
     }
 
     @Transactional
-    public Application save(Application application) {
-        return this.applicationDao.save(application);
+    public OAuthApplication save(OAuthApplication OAuthApplication) {
+        return this.OAuthApplicationDao.save(OAuthApplication);
     }
 
     @Transactional
-    public Pager<Application> findPager(Pager<Application> pager, List<PropertyFilter> filters) {
-        return this.applicationDao.findPager(pager, filters);
+    public Pager<OAuthApplication> findPager(Pager<OAuthApplication> pager, List<PropertyFilter> filters) {
+        return this.OAuthApplicationDao.findPager(pager, filters);
     }
 
 //    @Transactional
@@ -60,16 +60,16 @@ public class ApplicationService implements ClientDetailsService {
 //        return this.apiKeyDao.findAll(PropertyFilter.builder().equal("application.id", appid).build());
 //    }
 
-    public List<Application> findAll(List<PropertyFilter> filters) {
-        return this.applicationDao.findAll(filters);
+    public List<OAuthApplication> findAll(List<PropertyFilter> filters) {
+        return this.OAuthApplicationDao.findAll(filters);
     }
 
-    public Optional<Application> getApplication(String id) {
-        return this.applicationDao.findById(id);
+    public Optional<OAuthApplication> getApplication(String id) {
+        return this.OAuthApplicationDao.findById(id);
     }
 
-    public Optional<Application> getApplicationByClient(String id) {
-        return this.applicationDao.findOne(PropertyFilter.builder().equal("clientId", id).build());
+    public Optional<OAuthApplication> getApplicationByClient(String id) {
+        return this.OAuthApplicationDao.findOne(PropertyFilter.builder().equal("clientId", id).build());
     }
 
 }
