@@ -1,6 +1,6 @@
-package cn.asany.security.oauth.graphql.type;
+package cn.asany.nuwa.app.graphql.type;
 
-import cn.asany.security.oauth.bean.OAuthApplication;
+import cn.asany.nuwa.app.bean.Application;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.jfantasy.graphql.Edge;
@@ -20,9 +20,9 @@ public class ApplicationConnection extends BaseConnection<ApplicationConnection.
     private List<ApplicationEdge> edges;
 
     @Data
-    public static class ApplicationEdge implements Edge<OAuthApplication> {
+    public static class ApplicationEdge implements Edge<Application> {
         private String cursor;
-        private OAuthApplication node;
+        private Application node;
 
     }
 }

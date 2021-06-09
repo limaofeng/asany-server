@@ -1,6 +1,7 @@
 package cn.asany.nuwa.app.graphql.resolver;
 
 import cn.asany.nuwa.app.bean.Application;
+import cn.asany.nuwa.app.bean.ClientSecret;
 import cn.asany.nuwa.app.bean.Route;
 import cn.asany.nuwa.app.bean.Routespace;
 import graphql.kickstart.tools.GraphQLResolver;
@@ -41,6 +42,10 @@ public class ApplicationGraphQLResolver implements GraphQLResolver<Application> 
 
     public Boolean dingtalkIntegration(Application application) {
         return Boolean.FALSE;
+    }
+
+    public List<ClientSecret> clientSecrets(Application application) {
+        return application.getClientSecretsAlias();
     }
 
 }

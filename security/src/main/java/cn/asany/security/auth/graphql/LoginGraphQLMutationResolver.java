@@ -60,8 +60,8 @@ public class LoginGraphQLMutationResolver implements GraphQLMutationResolver {
         }
         LoginUser loginUser = (LoginUser) authentication.getPrincipal();
         AuthorizationGraphQLServletContext context = environment.getContext();
-        OAuth2AuthenticationDetails oAuth2AuthenticationDetails = new OAuth2AuthenticationDetails();//TODO new OAuth2AuthenticationDetails(context.getRequest());
-        oAuth2AuthenticationDetails.setClientId("N6BsX878XkJPEL1nJIQc");
+        OAuth2AuthenticationDetails oAuth2AuthenticationDetails = new OAuth2AuthenticationDetails();
+        oAuth2AuthenticationDetails.setClientId("8b2ef1b9625d233ad852");
         oAuth2AuthenticationDetails.setTokenType(TokenType.SESSION);
         OAuth2Authentication oAuth2Authentication = new OAuth2Authentication(authentication, oAuth2AuthenticationDetails);
         OAuth2AccessToken accessToken = tokenServices.createAccessToken(oAuth2Authentication);

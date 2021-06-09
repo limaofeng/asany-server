@@ -5,14 +5,25 @@ import cn.asany.nuwa.app.bean.Route;
 import cn.asany.nuwa.app.graphql.input.ApplicationCreateInput;
 import cn.asany.nuwa.app.graphql.input.RouteCreateInput;
 import cn.asany.nuwa.app.graphql.input.RouteUpdateInput;
+import cn.asany.nuwa.app.service.ApplicationService;
+import cn.asany.nuwa.app.service.dto.OAuthApplication;
 import graphql.kickstart.tools.GraphQLMutationResolver;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * 应用 Mutation
+ *
+ * @author limaofeng
+ */
 @Component
 public class ApplicationGraphQLMutationResolver implements GraphQLMutationResolver {
 
+    @Autowired
+    private ApplicationService applicationService;
+
     public Application createApplication(ApplicationCreateInput input) {
-        return new Application();
+        return applicationService.createApplication(new OAuthApplication());
     }
 
     public Application updateApplication(Long id, ApplicationCreateInput input, Boolean merge) {

@@ -1,10 +1,3 @@
-extend type Query {
-    # 所有的应用
-    applications(filter: ApplicationFilter): [Application]
-    # 查询单个应用的信息
-    application(id: ID!, space: ID): Application
-}
-
 input ApplicationFilter {
     id_in: [String]
     # 分类
@@ -19,23 +12,6 @@ input RouteFilter {
     application: ID
     # 类型
     type: RouteType
-}
-
-extend type Mutation {
-    # 创建一个应用
-    createApplication(input: ApplicationCreateInput!): Application
-    # 更新应用信息
-    updateApplication(id: ID!, input: ApplicationUpdateInput!, merge: Boolean = true): Application
-    # 删除应用
-    removeApplication(id: ID!): Boolean
-    # 创建路由
-    createRoute(input: RouteCreateInput!): Route
-    # 更新路由信息
-    updateRoute(id: ID!, input: RouteUpdateInput!, merge: Boolean = true): Route
-    # 删除路由
-    removeRoute(id: ID!): Boolean
-    # 移动路由
-    moveRoute(id: ID!, parentRoute: ID, location: Int!): Route
 }
 
 input RouteCreateInput {
@@ -102,15 +78,15 @@ input RouteComponentInput {
     # 组件配置数据
     props: JSON
     # 路由配置
-    routeWrapper: RouteComponentWrapperInput
+#    routeWrapper: RouteComponentWrapperInput
 }
 
-input RouteComponentWrapperInput {
-    # 渲染组件
-    template: String
-    # 组件配置数据
-    props: JSON
-}
+#input RouteComponentWrapperInput {
+#    # 渲染组件
+#    template: String
+#    # 组件配置数据
+#    props: JSON
+#}
 
 type RouteComponent {
     # 渲染组件
@@ -138,7 +114,7 @@ type Organization {
 
 input ApplicationCreateInput {
     # 名称
-    name: String
+    name: String!
     # 简介
     description: String
     # 应用 LOGO
@@ -175,6 +151,11 @@ type Routespace {
     name: String
 }
 
+type ClientSecret {
+    id: ID
+    secret: String
+}
+
 type Application {
     id: ID
     # 名称
@@ -207,6 +188,10 @@ type Application {
     layoutRoute(space: ID!): Route
     # 集成钉钉
     dingtalkIntegration: Boolean
+    # 客户端 ID
+    clientId: String
+    # 客户端密钥
+    clientSecrets: [ClientSecret]
     #钉钉
 #    dingtalk: DingtalkDataSource
 }
@@ -222,15 +207,13 @@ type ApplicationVariable {
 
 enum RouteType {
     # 菜单
-    menu
+    MENU
     # 标题
-    header
+    HEADER
     # 分割符
-    divider
+    DIVIDER
     # 路由
-    route
-    # 门户
-    portal
+    ROUTE
 }
 
 type Route {
@@ -272,3 +255,28 @@ type Route {
 }
 
 union StarValue = Application
+
+
+extend type Query {
+    # 所有的应用
+    applications(filter: ApplicationFilter = {}): [Application]
+    # 查询单个应用的信息
+    application(id: ID!, space: ID): Application
+}
+
+extend type Mutation {
+    # 创建一个应用
+    createApplication(input: ApplicationCreateInput!): Application
+    # 更新应用信息
+    updateApplication(id: ID!, input: ApplicationUpdateInput!, merge: Boolean = true): Application
+    # 删除应用
+    removeApplication(id: ID!): Boolean
+    # 创建路由
+    createRoute(input: RouteCreateInput!): Route
+    # 更新路由信息
+    updateRoute(id: ID!, input: RouteUpdateInput!, merge: Boolean = true): Route
+    # 删除路由
+    removeRoute(id: ID!): Boolean
+    # 移动路由
+    moveRoute(id: ID!, parentRoute: ID, location: Int!): Route
+}
