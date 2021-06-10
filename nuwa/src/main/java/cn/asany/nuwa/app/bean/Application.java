@@ -1,8 +1,8 @@
 package cn.asany.nuwa.app.bean;
 
 import cn.asany.nuwa.app.bean.enums.ApplicationType;
-import cn.asany.organization.core.bean.Organization;
 import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.framework.security.core.GrantedAuthority;
 import org.jfantasy.framework.security.oauth2.core.ClientDetails;
@@ -28,13 +28,15 @@ public class Application extends BaseBusEntity implements ClientDetails {
      * ID
      */
     @Id
-    @Column(name = "ID", updatable = false)
+    @Column(name = "ID")
+    @GeneratedValue(generator = "fantasy-sequence")
+    @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
     private Long id;
     /**
      * 应用类型
      */
     @Enumerated(EnumType.STRING)
-    @Column(name = "TYPE", length = 20)
+    @Column(name = "TYPE", length = 20, nullable = false)
     private ApplicationType type;
     /**
      * 名称
@@ -46,16 +48,6 @@ public class Application extends BaseBusEntity implements ClientDetails {
      */
     @Column(name = "URL")
     private String url;
-    /**
-     * 挂载点
-     */
-    @Column(name = "MOUNT_POINT")
-    private String mountPoint;
-    /**
-     * 应用根路径
-     */
-    @Column(name = "PATH")
-    private String path;
     /**
      * 是否启用
      */
@@ -71,12 +63,6 @@ public class Application extends BaseBusEntity implements ClientDetails {
      */
     @Column(name = "LOGO")
     private String logo;
-    /**
-     * 组织
-     */
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ORGANIZATION_ID", foreignKey = @ForeignKey(name = "FK_APPLICATION_ORGANIZATION"), updatable = false, nullable = false)
-    private Organization organization;
     /**
      * 路由
      */
@@ -95,7 +81,7 @@ public class Application extends BaseBusEntity implements ClientDetails {
     /**
      * 客服端密钥
      */
-    @OneToMany(cascade = {CascadeType.REMOVE},fetch = FetchType.LAZY)
+    @OneToMany(cascade = {CascadeType.REMOVE}, fetch = FetchType.LAZY)
     @OrderBy(" createdAt desc ")
     @JoinColumn(name = "CLIENT_ID", referencedColumnName = "CLIENT_ID")
     private List<ClientSecret> clientSecretsAlias;

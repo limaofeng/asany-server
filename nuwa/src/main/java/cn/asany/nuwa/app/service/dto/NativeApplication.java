@@ -1,5 +1,6 @@
 package cn.asany.nuwa.app.service.dto;
 
+import lombok.Builder;
 import lombok.Data;
 
 import java.util.Set;
@@ -10,6 +11,7 @@ import java.util.Set;
  * @author limaofeng
  */
 @Data
+@Builder
 public class NativeApplication {
     private String name;
     private String url;

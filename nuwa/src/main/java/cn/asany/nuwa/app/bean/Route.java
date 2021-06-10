@@ -3,6 +3,7 @@ package cn.asany.nuwa.app.bean;
 import cn.asany.nuwa.app.bean.enums.RouteType;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.framework.dao.hibernate.converter.StringSetConverter;
 
@@ -25,7 +26,9 @@ import java.util.Set;
 public class Route extends BaseBusEntity {
 
     @Id
-    @Column(name = "ID", length = 50, updatable = false)
+    @Column(name = "ID")
+    @GeneratedValue(generator = "fantasy-sequence")
+    @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
     private Long id;
     /**
      * 菜单名称

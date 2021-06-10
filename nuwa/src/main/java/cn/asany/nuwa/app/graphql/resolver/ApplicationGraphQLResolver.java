@@ -4,6 +4,7 @@ import cn.asany.nuwa.app.bean.Application;
 import cn.asany.nuwa.app.bean.ClientSecret;
 import cn.asany.nuwa.app.bean.Route;
 import cn.asany.nuwa.app.bean.Routespace;
+import cn.asany.organization.core.bean.Organization;
 import graphql.kickstart.tools.GraphQLResolver;
 import org.springframework.stereotype.Component;
 
@@ -42,6 +43,10 @@ public class ApplicationGraphQLResolver implements GraphQLResolver<Application> 
 
     public Boolean dingtalkIntegration(Application application) {
         return Boolean.FALSE;
+    }
+
+    public Organization organization(Application application) {
+        return null;
     }
 
     public List<ClientSecret> clientSecrets(Application application) {

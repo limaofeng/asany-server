@@ -1,6 +1,7 @@
 package cn.asany.nuwa.app.bean;
 
 import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
 import javax.persistence.*;
@@ -20,7 +21,9 @@ import javax.persistence.*;
 public class ClientSecret extends BaseBusEntity {
 
     @Id
-    @Column(name = "ID", updatable = false)
+    @Column(name = "ID")
+    @GeneratedValue(generator = "fantasy-sequence")
+    @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
     private Long id;
     /**
      * 密钥

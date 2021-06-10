@@ -22,7 +22,7 @@ import javax.persistence.Table;
 @Table(name = "NUWA_ROUTESPACE")
 public class Routespace extends BaseBusEntity {
     @Id
-    @Column(name = "ID", length = 50, updatable = false)
+    @Column(name = "ID", length = 40)
     private String id;
     @Column(name = "NAME", length = 50)
     private String name;

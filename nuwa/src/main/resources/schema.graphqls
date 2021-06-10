@@ -166,12 +166,8 @@ type Application {
     logo: String
     # 应用访问地址
     url: String
-    # 挂载点
-    mountPoint: String
     # 组织
     organization: Organization
-    # 应用根路径
-    path: String
     # 是否启用
     enabled: Boolean
     # 路由
