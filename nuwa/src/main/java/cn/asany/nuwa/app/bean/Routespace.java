@@ -1,12 +1,10 @@
 package cn.asany.nuwa.app.bean;
 
+import cn.asany.nuwa.template.bean.ApplicationTemplate;
 import lombok.*;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * 区分不同的端
@@ -26,5 +24,8 @@ public class Routespace extends BaseBusEntity {
     private String id;
     @Column(name = "NAME", length = 50)
     private String name;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "APP_TEMPLATE_ID", foreignKey = @ForeignKey(name = "FK_ROUTESPACE_APP_TEMP_ID"), nullable = false)
+    private ApplicationTemplate applicationTemplate;
 
 }

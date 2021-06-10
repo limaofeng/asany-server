@@ -2,7 +2,7 @@ package cn.asany.nuwa.app.graphql.resolver;
 
 import cn.asany.nuwa.app.bean.Application;
 import cn.asany.nuwa.app.bean.ClientSecret;
-import cn.asany.nuwa.app.bean.Route;
+import cn.asany.nuwa.app.bean.ApplicationRoute;
 import cn.asany.nuwa.app.bean.Routespace;
 import cn.asany.organization.core.bean.Organization;
 import graphql.kickstart.tools.GraphQLResolver;
@@ -17,23 +17,23 @@ import java.util.List;
 @Component
 public class ApplicationGraphQLResolver implements GraphQLResolver<Application> {
 
-    public Route route(Application application, String path) {
+    public ApplicationRoute route(Application application, String path) {
         return null;
     }
 
-    public Route layoutRoute(Application application, String space) {
+    public ApplicationRoute layoutRoute(Application application, String space) {
         return null;
     }
 
-    public Route loginRoute(Application application, String space) {
+    public ApplicationRoute loginRoute(Application application, String space) {
         return null;
     }
 
-    public Route rootRoute(Application application, String space) {
+    public ApplicationRoute rootRoute(Application application, String space) {
         return null;
     }
 
-    public List<Route> routes(Application application, String space) {
+    public List<ApplicationRoute> routes(Application application, String space) {
         return new ArrayList<>();
     }
 

@@ -19,5 +19,6 @@ public class NativeApplication {
     private String callbackUrl;
     private String setupURL;
     private WebHook webhook;
+    private Set<String> routespaces;
     private Set<String> authorities;
 }

@@ -22,8 +22,8 @@ import java.util.Set;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @Entity
-@Table(name = "NUWA_ROUTE")
-public class Route extends BaseBusEntity {
+@Table(name = "NUWA_APPLICATION_ROUTE")
+public class ApplicationRoute extends BaseBusEntity {
 
     @Id
     @Column(name = "ID")
@@ -79,14 +79,14 @@ public class Route extends BaseBusEntity {
      */
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
     @JoinColumn(name = "PID", foreignKey = @ForeignKey(name = "FK_ROUTE_PID"))
-    private Route parent;
+    private ApplicationRoute parent;
     /**
      * 子路由
      */
     @JsonInclude(content = JsonInclude.Include.NON_NULL)
     @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @OrderBy("sort ASC")
-    private List<Route> routes;
+    private List<ApplicationRoute> routes;
     /**
      * 可以访问的权限
      */

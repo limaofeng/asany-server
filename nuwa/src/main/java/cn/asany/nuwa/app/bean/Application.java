@@ -51,8 +51,9 @@ public class Application extends BaseBusEntity implements ClientDetails {
     /**
      * 是否启用
      */
+    @Builder.Default
     @Column(name = "ENABLED")
-    private Boolean enabled;
+    private Boolean enabled = true;
     /**
      * 简介
      */
@@ -64,10 +65,19 @@ public class Application extends BaseBusEntity implements ClientDetails {
     @Column(name = "LOGO")
     private String logo;
     /**
+     * 支持的路由空间
+     */
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
+    @JoinTable(name = "NUWA_APPLICATION_ROUTESPACE",
+        joinColumns = @JoinColumn(name = "APPLICATION_ID", foreignKey = @ForeignKey(name = "FK_APPLICATION_ROUTESPACE_APPID")),
+        inverseJoinColumns = @JoinColumn(name = "ROUTESPACE_ID"), foreignKey = @ForeignKey(name = "FK_APPLICATION_ROUTESPACE_SPACEID")
+    )
+    private List<Routespace> routespaces;
+    /**
      * 路由
      */
     @OneToMany(mappedBy = "application", cascade = {CascadeType.REMOVE}, fetch = FetchType.LAZY)
-    private List<Route> routes;
+    private List<ApplicationRoute> routes;
     /**
      * 授权回调 URL
      */

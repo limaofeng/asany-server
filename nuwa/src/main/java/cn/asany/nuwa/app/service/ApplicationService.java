@@ -1,10 +1,14 @@
 package cn.asany.nuwa.app.service;
 
 import cn.asany.nuwa.app.bean.Application;
+import cn.asany.nuwa.app.bean.ApplicationRoute;
 import cn.asany.nuwa.app.bean.ClientSecret;
+import cn.asany.nuwa.app.bean.Routespace;
 import cn.asany.nuwa.app.bean.enums.ApplicationType;
+import cn.asany.nuwa.app.converter.ApplicationConverter;
 import cn.asany.nuwa.app.dao.ApplicationDao;
 import cn.asany.nuwa.app.dao.ClientSecretDao;
+import cn.asany.nuwa.app.dao.RoutespaceDao;
 import cn.asany.nuwa.app.service.dto.NativeApplication;
 import cn.asany.nuwa.app.service.dto.OAuthApplication;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
@@ -30,10 +34,17 @@ public class ApplicationService implements ClientDetailsService {
 
     private static final String NONCE_CHARS = "abcdef0123456789";
 
-    @Autowired
-    private ApplicationDao applicationDao;
-    @Autowired
-    private ClientSecretDao clientSecretDao;
+    private final ApplicationDao applicationDao;
+    private final ClientSecretDao clientSecretDao;
+    private final RoutespaceDao routespaceDao;
+    private final ApplicationConverter applicationConverter;
+
+    public ApplicationService(ApplicationDao applicationDao, ClientSecretDao clientSecretDao, RoutespaceDao routespaceDao, ApplicationConverter applicationConverter) {
+        this.applicationDao = applicationDao;
+        this.clientSecretDao = clientSecretDao;
+        this.routespaceDao = routespaceDao;
+        this.applicationConverter = applicationConverter;
+    }
 
     public List<Application> findAll(List<PropertyFilter> filter) {
         return applicationDao.findAll(filter);
@@ -58,12 +69,14 @@ public class ApplicationService implements ClientDetailsService {
 
     @Transactional
     public Application createApplication(NativeApplication nativeApplication) {
+        // TODO 使用 NamedEntityGraph 查询一次性查询出 应用模版的相关信息
+        List<Routespace> routespaces = this.routespaceDao.findAll(PropertyFilter.builder().in("id", nativeApplication.getRoutespaces()).build());
+
         String clientId = StringUtil.generateNonceString(NONCE_CHARS, 20);
         String clientSecretStr = StringUtil.generateNonceString(NONCE_CHARS, 40);
 
-        List<ClientSecret> clientSecrets = new ArrayList<>();
-
         // 创建密钥
+        List<ClientSecret> clientSecrets = new ArrayList<>();
         ClientSecret clientSecret = clientSecretDao.save(ClientSecret.builder()
             .client(clientId)
             .secret(clientSecretStr)
@@ -72,13 +85,23 @@ public class ApplicationService implements ClientDetailsService {
         clientSecrets.add(clientSecret);
 
         // 创建应用
-        Application application = this.applicationDao.save(Application.builder()
+        Application application = Application.builder()
             .type(ApplicationType.NATIVE)
             .name(nativeApplication.getName())
             .description(nativeApplication.getDescription())
             .clientId(clientId)
             .clientSecretsAlias(clientSecrets)
-            .build());
+            .routespaces(routespaces)
+            .routes(new ArrayList<>())
+            .build();
+
+        // 生成应用路由
+        for (Routespace routespace : routespaces) {
+            List<ApplicationRoute> routes = applicationConverter.toApplication(routespace.getApplicationTemplate()).getRoutes();
+            application.getRoutes().addAll(routes);
+        }
+
+        this.applicationDao.save(application);
 
         return application;
     }

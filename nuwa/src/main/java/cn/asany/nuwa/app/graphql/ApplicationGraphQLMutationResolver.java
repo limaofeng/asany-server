@@ -1,7 +1,7 @@
 package cn.asany.nuwa.app.graphql;
 
 import cn.asany.nuwa.app.bean.Application;
-import cn.asany.nuwa.app.bean.Route;
+import cn.asany.nuwa.app.bean.ApplicationRoute;
 import cn.asany.nuwa.app.graphql.input.ApplicationCreateInput;
 import cn.asany.nuwa.app.graphql.input.RouteCreateInput;
 import cn.asany.nuwa.app.graphql.input.RouteUpdateInput;
@@ -34,19 +34,19 @@ public class ApplicationGraphQLMutationResolver implements GraphQLMutationResolv
         return Boolean.TRUE;
     }
 
-    public Route createRoute(RouteCreateInput input) {
+    public ApplicationRoute createRoute(RouteCreateInput input) {
         return null;
     }
 
-    public Route updateRoute(Long id, RouteUpdateInput input, Boolean merge) {
+    public ApplicationRoute updateRoute(Long id, RouteUpdateInput input, Boolean merge) {
         return null;
     }
 
-    public Route removeRoute(Long id) {
+    public ApplicationRoute removeRoute(Long id) {
         return null;
     }
 
-    public Route moveRoute(Long id, Long parentRoute, int location) {
+    public ApplicationRoute moveRoute(Long id, Long parentRoute, int location) {
         return null;
     }
 
