@@ -14,6 +14,14 @@ spring:
       testOnReturn: true
       poolPreparedStatements: true
       maxOpenPreparedStatements: 20
+  redis:
+    jedis:
+      pool:
+        max-active: 8
+        max-wait: 300
+        max-idle: 100
+        min-idle: 100
+      timeout: 1000
   jpa:
     hibernate:
       ddl-auto: update
@@ -39,15 +47,44 @@ spring:
           identifier_generator_strategy_provider: org.jfantasy.framework.dao.hibernate.spi.CustomIdentifierGeneratorStrategyProvider
     generate-ddl: false
     open-in-view: false
+  quartz:
+    properties:
+      org:
+        quartz:
+          scheduler:
+            instanceName: clusteredScheduler
+            instanceId: AUTO
+          jobStore:
+            class: org.quartz.impl.jdbcjobstore.JobStoreTX
+            driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate
+            tablePrefix: QRTZ_
+            isClustered: false
+            clusterCheckinInterval: 10000
+            useProperties: false
+          threadPool:
+            class: org.quartz.simpl.SimpleThreadPool
+            threadCount: 10
+            threadPriority: 5
+            threadsInheritContextClassLoaderOfInitializingThread: true
+    job-store-type: jdbc
+    jdbc:
+      initialize-schema: never
 
 graphql:
   servlet:
     exception-handlers-enabled: true
+    cors-enabled: true
+    cors:
+      allowed-origins: "*"
+      allowed-methods: GET, HEAD, POST
+      allowed-headers: Accept, Origin, Authorization, Content-Type, Last-Modified
+      allow-credentials: true
+      max-age: 3600
+  tools:
+    introspection-enabled: true
 
 logging:
   config: classpath:logback.xml
   file:
     path: ~/logs
-
-
 

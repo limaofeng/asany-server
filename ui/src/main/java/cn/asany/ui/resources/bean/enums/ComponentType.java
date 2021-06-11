@@ -1,4 +1,4 @@
-package cn.asany.nuwa.app.bean.enums;
+package cn.asany.ui.resources.bean.enums;
 
 /**
  * 组件类型
