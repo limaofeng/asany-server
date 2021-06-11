@@ -1,11 +1,11 @@
-package cn.asany.nuwa.template.bean;
+package cn.asany.ui.library.bean;
 
+import cn.asany.ui.library.bean.enums.LibraryType;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Data
 @Builder
@@ -13,28 +13,28 @@ import java.util.List;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @Entity
-@Table(name = "NUWA_APPLICATION_TEMPLATE")
-public class ApplicationTemplate extends BaseBusEntity {
-
+@Table(name = "UI_LIBRARY")
+public class Library extends BaseBusEntity {
     @Id
     @Column(name = "ID")
     @GeneratedValue(generator = "fantasy-sequence")
     @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
     private Long id;
-
+    /**
+     * 类型
+     */
+    @Enumerated(EnumType.STRING)
+    @Column(name = "TYPE", length = 20, nullable = false)
+    private LibraryType type;
     /**
      * 名称
      */
-    @Column(name = "NAME", length = 50)
+    @Column(name = "NAME", length = 60)
     private String name;
     /**
-     * 简介
+     * 描述
      */
     @Column(name = "DESCRIPTION")
     private String description;
-    /**
-     * 路由
-     */
-    @OneToMany(mappedBy = "application", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.LAZY)
-    private List<ApplicationTemplateRoute> routes;
+
 }

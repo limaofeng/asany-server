@@ -1,10 +1,9 @@
 package cn.asany.nuwa.app.graphql.resolver;
 
 import cn.asany.nuwa.app.bean.Application;
-import cn.asany.nuwa.app.bean.ClientSecret;
 import cn.asany.nuwa.app.bean.ApplicationRoute;
+import cn.asany.nuwa.app.bean.ClientSecret;
 import cn.asany.nuwa.app.bean.Routespace;
-import cn.asany.organization.core.bean.Organization;
 import graphql.kickstart.tools.GraphQLResolver;
 import org.springframework.stereotype.Component;
 
@@ -45,9 +44,9 @@ public class ApplicationGraphQLResolver implements GraphQLResolver<Application> 
         return Boolean.FALSE;
     }
 
-    public Organization organization(Application application) {
-        return null;
-    }
+//    public Organization organization(Application application) {
+//        return null;
+//    }
 
     public List<ClientSecret> clientSecrets(Application application) {
         return application.getClientSecretsAlias();

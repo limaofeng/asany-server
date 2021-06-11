@@ -1,0 +1,224 @@
+{
+  "name": "默认 WEB 模版",
+  "routes": [
+    {
+      "name": "根路由",
+      "type": "ROUTE",
+      "path": "/",
+      "routes": [
+        {
+          "name": "布局路由",
+          "type": "ROUTE",
+          "path": "/",
+          "authorized": true,
+          "component": {
+            "template": "cn.asany.ui.web.layout.BasicLayout",
+            "props": []
+          },
+          "routes": [
+            {
+              "icon": "Monitor3",
+              "name": "应用配置",
+              "path": "/settings",
+              "type": "ROUTE",
+              "component": {
+                "template": "cn.asany.ui.web.layout.BasicLayoutPageContainer",
+                "props": [
+                  {
+                    "key": "root/PageContainer",
+                    "props": {
+                      "sidebar": "cn.asany.ui.web.layout.page.Fixedbar"
+                    }
+                  },
+                  {
+                    "key": "root/PageContainer/PageFixedBar",
+                    "props": {
+                      "items": [
+                        {
+                          "id": "d42acdb1-ee9a-45dc-9ad1-8b6ef7211de8",
+                          "type": "sortable-card",
+                          "component": "cn.asany.ui.web.layout.page.fixedbar.sidebar.UserCard"
+                        },
+                        {
+                          "id": "3ace6cd0-69e1-4027-8202-ed43276ebd00",
+                          "type": "sortable-card",
+                          "component": "cn.asany.ui.web.layout.page.fixedbar.sidebar.Divider"
+                        },
+                        {
+                          "id": "f72d1589-3409-4de1-af17-c180b12633d3",
+                          "type": "sortable-card",
+                          "component": "cn.asany.ui.web.layout.page.fixedbar.sidebar.GeneralList"
+                        },
+                        {
+                          "id": "e919f0de-d4d6-4787-99e4-b25c3b15c6d3",
+                          "type": "sortable-card",
+                          "component": "cn.asany.ui.web.layout.page.fixedbar.sidebar.SimpleList"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "key": "root/PageContainer/PageFixedBar/f72d1589-3409-4de1-af17-c180b12633d3_GeneralList",
+                    "props": {
+                      "title": "应用配置",
+                      "compType": "custom",
+                      "links": [
+                        {
+                          "id": "6798e892-f9be-44c7-b64e-60daa4b55513",
+                          "icon": "",
+                          "type": "card",
+                          "name": "",
+                          "sortable": true,
+                          "isPreset": false,
+                          "isDelete": false,
+                          "canEditName": true,
+                          "component": "notFound",
+                          "title": "登录配置",
+                          "iconType": "custom",
+                          "routeType": "list",
+                          "url": "60473f1f1dcef82434f34621$/new-application/login",
+                          "customUrl": "/KB/sjkb/route"
+                        },
+                        {
+                          "id": "d698879a-3b56-4dd5-9dd7-114ab1e5b5f4",
+                          "icon": "",
+                          "type": "card",
+                          "name": "",
+                          "sortable": true,
+                          "isPreset": false,
+                          "isDelete": false,
+                          "canEditName": true,
+                          "component": "notFound",
+                          "title": "路由配置",
+                          "iconType": "custom",
+                          "routeType": "list",
+                          "url": "604977b6f0fcdc001ad27679$/new-application/route"
+                        },
+                        {
+                          "id": "1aa1ff28-f3bb-4c7b-95b0-5c1ce1790005",
+                          "icon": "",
+                          "type": "card",
+                          "name": "",
+                          "sortable": true,
+                          "isPreset": false,
+                          "isDelete": false,
+                          "canEditName": true,
+                          "component": "notFound",
+                          "title": "基础信息",
+                          "iconType": "custom",
+                          "routeType": "list",
+                          "url": "60505987f0fcdc001ad33f0b$/new-application/basis-info"
+                        },
+                        {
+                          "id": "50d628f9-b8e6-4522-a8f8-4229bc9c8e28",
+                          "icon": "",
+                          "type": "card",
+                          "name": "",
+                          "sortable": true,
+                          "isPreset": false,
+                          "isDelete": false,
+                          "canEditName": true,
+                          "component": "notFound",
+                          "title": "组织架构",
+                          "iconType": "custom",
+                          "routeType": "list",
+                          "url": "605059d1f0fcdc001ad3450a$/new-application/organization"
+                        },
+                        {
+                          "id": "06b99a9e-8562-479c-874d-9009a9359521",
+                          "icon": "",
+                          "type": "card",
+                          "name": "",
+                          "sortable": true,
+                          "isPreset": false,
+                          "isDelete": false,
+                          "canEditName": true,
+                          "component": "notFound",
+                          "title": "布局设置",
+                          "iconType": "custom",
+                          "routeType": "list",
+                          "url": "60505a79f0fcdc001ad34d12$/new-application/layout"
+                        },
+                        {
+                          "id": "8a9acd5d-3837-4cc4-9095-766f6858aadf",
+                          "icon": "",
+                          "type": "card",
+                          "name": "",
+                          "sortable": true,
+                          "isPreset": false,
+                          "isDelete": false,
+                          "canEditName": true,
+                          "component": "notFound",
+                          "title": "模块配置",
+                          "iconType": "custom",
+                          "routeType": "list",
+                          "url": "60505d33f0fcdc001ad36701$/new-application/model"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "key": "root/PageContainer/PageFixedBar/d42acdb1-ee9a-45dc-9ad1-8b6ef7211de8_UserCard",
+                    "props": {
+                      "title": "预设组件排版按照示例样式写",
+                      "presetComp": "cn.asany.ui.web.fixedbar.Card"
+                    }
+                  },
+                  {
+                    "key": "root/PageContainer/PageFixedBar/e919f0de-d4d6-4787-99e4-b25c3b15c6d3-toto",
+                    "props": {
+                      "title": "预设组件排版按照示例样式写"
+                    }
+                  }
+                ]
+              },
+              "routes": [
+                {
+                  "type": "ROUTE",
+                  "name": "基础信息",
+                  "path": "/settings/profile",
+                  "component": {
+                    "template": "cn.asany.ui.web.nuwa.app.settings.BasicInformation"
+                  }
+                },
+                {
+                  "type": "ROUTE",
+                  "name": "布局设置",
+                  "path": "/settings/layout",
+                  "component": {
+                    "template": "cn.asany.ui.web.nuwa.app.settings.Layout"
+                  }
+                },
+                {
+                  "name": "登录配置",
+                  "path": "/settings/login",
+                  "type": "ROUTE",
+                  "component": {
+                    "template": "cn.asany.ui.web.nuwa.app.settings.Login"
+                  }
+                },
+                {
+                  "type": "ROUTE",
+                  "name": "路由配置",
+                  "path": "/settings/route",
+                  "component": {
+                    "template": "cn.asany.ui.web.nuwa.app.settings.Route"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "登录路由",
+          "type": "ROUTE",
+          "path": "/login",
+          "component": {
+            "template": "cn.asany.ui.web.base.login.BasicLogin",
+            "props": []
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -7,6 +7,7 @@ include ":asany-shanhai",
         ":asany-storage-api",
         ":asany-storage",
         ":asany-nuwa",
+        ":asany-ui",
         ":asany-boot"
 
 // 基础
@@ -25,5 +26,7 @@ project(':asany-storage-api').projectDir = "$rootDir/storage-api" as File
 project(':asany-storage').projectDir = "$rootDir/storage" as File
 // 应用及路由管理
 project(':asany-nuwa').projectDir = "$rootDir/nuwa" as File
+
+project(':asany-ui').projectDir = "$rootDir/ui" as File
 // 启动
 project(':asany-boot').projectDir = "$rootDir/boot" as File

@@ -1,8 +1,8 @@
 package cn.asany.nuwa.template.bean;
 
-import cn.asany.nuwa.app.bean.Component;
 import cn.asany.nuwa.app.bean.Routespace;
 import cn.asany.nuwa.app.bean.enums.RouteType;
+import cn.asany.ui.resources.bean.Component;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
@@ -36,7 +36,7 @@ public class ApplicationTemplateRoute extends BaseBusEntity {
      * 路由所属类型 PC端/M站
      */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "SPACE", foreignKey = @ForeignKey(name = "FK_ROUTE_SPACE"), updatable = false, nullable = false)
+    @JoinColumn(name = "SPACE", foreignKey = @ForeignKey(name = "FK_APPLICATION_TEMPLATE_ROUTE_SPACE"), updatable = false, nullable = false)
     private Routespace space;
     /**
      * 路由类型
@@ -48,7 +48,7 @@ public class ApplicationTemplateRoute extends BaseBusEntity {
      * 层级
      */
     @Column(name = "LEVEL")
-    private String level;
+    private Integer level;
     /**
      * 路径
      */

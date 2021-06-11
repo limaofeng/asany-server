@@ -1,10 +1,14 @@
-package cn.asany.nuwa.app.bean;
+package cn.asany.ui.resources.bean;
 
-import cn.asany.nuwa.app.bean.enums.ComponentType;
+import cn.asany.ui.resources.bean.converter.ComponentDataConverter;
+import cn.asany.ui.resources.bean.enums.ComponentScope;
+import cn.asany.ui.resources.bean.enums.ComponentType;
+import cn.asany.ui.resources.bean.toy.ComponentData;
 import lombok.*;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
 import javax.persistence.*;
+import java.util.List;
 
 /**
  * 组件
@@ -24,11 +28,22 @@ public class Component extends BaseBusEntity {
     @Column(name = "ID", length = 50, updatable = false)
     private Long id;
     /**
+     * 使用范围
+     */
+    @Enumerated(EnumType.STRING)
+    @Column(name = "SCOPE", length = 50)
+    private ComponentScope scope;
+    /**
      * 组件类型
      */
     @Enumerated(EnumType.STRING)
     @Column(name = "TYPE", length = 50)
     private ComponentType type;
+    /**
+     * 名称
+     */
+    @Column(name = "CODE")
+    private String code;
     /**
      * 名称
      */
@@ -42,6 +57,7 @@ public class Component extends BaseBusEntity {
     /**
      * 组件数据
      */
+    @Convert(converter = ComponentDataConverter.class)
     @Column(name = "PROPS", columnDefinition = "JSON")
-    private String props;
+    private List<ComponentData> props;
 }
