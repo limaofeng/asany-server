@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @Entity
-@Table(name = "NUWA_APPLICATION", uniqueConstraints = {@UniqueConstraint(name = "UK_CLIENT_ID", columnNames = "CLIENT_ID")})
+@Table(name = "NUWA_APPLICATION", uniqueConstraints = {@UniqueConstraint(name = "UK_APPLICATION_CLIENT_ID", columnNames = "CLIENT_ID")})
 public class Application extends BaseBusEntity implements ClientDetails {
     /**
      * ID
