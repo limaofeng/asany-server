@@ -63,7 +63,7 @@ public class ApplicationTemplateRoute extends BaseBusEntity {
      * 组件
      */
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
-    @JoinColumn(name = "COMPONENT_ID", foreignKey = @ForeignKey(name = "FK_ROUTE_COMPONENT"))
+    @JoinColumn(name = "COMPONENT_ID", foreignKey = @ForeignKey(name = "FK_APPLICATION_TEMPLATE_ROUTE_COMPONENT"))
     private Component component;
     /**
      * 对应的图标

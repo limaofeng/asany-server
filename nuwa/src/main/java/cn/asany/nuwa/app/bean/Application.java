@@ -69,8 +69,9 @@ public class Application extends BaseBusEntity implements ClientDetails {
      */
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
     @JoinTable(name = "NUWA_APPLICATION_ROUTESPACE",
-        joinColumns = @JoinColumn(name = "APPLICATION_ID", foreignKey = @ForeignKey(name = "FK_APPLICATION_ROUTESPACE_APPID")),
-        inverseJoinColumns = @JoinColumn(name = "ROUTESPACE_ID"), foreignKey = @ForeignKey(name = "FK_APPLICATION_ROUTESPACE_SPACEID")
+        joinColumns = @JoinColumn(name = "APPLICATION_ID"),
+        inverseJoinColumns = @JoinColumn(name = "ROUTESPACE_ID"),
+        foreignKey = @ForeignKey(name = "FK_APPLICATION_ROUTESPACE_APPID")
     )
     private List<Routespace> routespaces;
     /**

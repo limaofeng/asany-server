@@ -67,7 +67,7 @@ public class ApplicationRoute extends BaseBusEntity {
      * 组件
      */
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
-    @JoinColumn(name = "COMPONENT_ID", foreignKey = @ForeignKey(name = "FK_ROUTE_COMPONENT"))
+    @JoinColumn(name = "COMPONENT_ID", foreignKey = @ForeignKey(name = "FK_APPLICATION_ROUTE_COMPONENT"))
     private Component component;
     /**
      * 对应的图标
@@ -79,7 +79,7 @@ public class ApplicationRoute extends BaseBusEntity {
      * 父路由
      */
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
-    @JoinColumn(name = "PID", foreignKey = @ForeignKey(name = "FK_ROUTE_PID"))
+    @JoinColumn(name = "PID", foreignKey = @ForeignKey(name = "FK_APPLICATION_ROUTE_PID"))
     private ApplicationRoute parent;
     /**
      * 子路由
@@ -123,7 +123,7 @@ public class ApplicationRoute extends BaseBusEntity {
      * 应用
      */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "APPLICATION_ID", foreignKey = @ForeignKey(name = "FK_ROUTE_APPID"), updatable = false, nullable = false)
+    @JoinColumn(name = "APPLICATION_ID", foreignKey = @ForeignKey(name = "FK_APPLICATION_ROUTE_APPID"), updatable = false, nullable = false)
     private Application application;
     /**
      * 序号

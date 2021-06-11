@@ -5,6 +5,7 @@ import lombok.*;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
 import javax.persistence.*;
+import java.util.List;
 
 /**
  * 区分不同的端
@@ -27,5 +28,13 @@ public class Routespace extends BaseBusEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "APP_TEMPLATE_ID", foreignKey = @ForeignKey(name = "FK_ROUTESPACE_APP_TEMP_ID"), nullable = false)
     private ApplicationTemplate applicationTemplate;
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
+    @JoinTable(name = "NUWA_APPLICATION_ROUTESPACE",
+        joinColumns = @JoinColumn(name = "ROUTESPACE_ID"),
+        inverseJoinColumns = @JoinColumn(name = "APPLICATION_ID"),
+        foreignKey = @ForeignKey(name = "FK_APPLICATION_ROUTESPACE_SPACEID")
+    )
+    private List<Application> applications;
 
 }
