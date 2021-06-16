@@ -2,6 +2,7 @@ package cn.asany.nuwa.template.bean;
 
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Where;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
 import javax.persistence.*;
@@ -36,5 +37,6 @@ public class ApplicationTemplate extends BaseBusEntity {
      * 路由
      */
     @OneToMany(mappedBy = "application", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.LAZY)
+    @Where(clause = " pid is null ")
     private List<ApplicationTemplateRoute> routes;
 }

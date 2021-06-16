@@ -24,11 +24,12 @@ class ApplicationServiceTest {
     void createApplication() {
         NativeApplication app = NativeApplication.builder()
             .name("管理台")
+            .routespaces("web")
             .build();
         Application application = applicationService.createApplication(app);
 
         log.debug(String.format("应用 %s 已经创建成功，ClientId = %s ClientSecret = %s", application.getName(), application.getClientId(), application.getClientSecret()));
 
-        applicationService.deleteApplication(application.getId());
+//        applicationService.deleteApplication(application.getId());
     }
 }

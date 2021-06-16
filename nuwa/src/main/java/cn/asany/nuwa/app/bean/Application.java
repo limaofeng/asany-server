@@ -77,7 +77,7 @@ public class Application extends BaseBusEntity implements ClientDetails {
     /**
      * 路由
      */
-    @OneToMany(mappedBy = "application", cascade = {CascadeType.REMOVE}, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "application", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.LAZY)
     private List<ApplicationRoute> routes;
     /**
      * 授权回调 URL

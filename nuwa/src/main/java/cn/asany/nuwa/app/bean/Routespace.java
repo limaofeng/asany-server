@@ -2,6 +2,7 @@ package cn.asany.nuwa.app.bean;
 
 import cn.asany.nuwa.template.bean.ApplicationTemplate;
 import lombok.*;
+import org.hibernate.annotations.Where;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
 import javax.persistence.*;
@@ -29,7 +30,7 @@ public class Routespace extends BaseBusEntity {
     @JoinColumn(name = "APP_TEMPLATE_ID", foreignKey = @ForeignKey(name = "FK_ROUTESPACE_APP_TEMP_ID"), nullable = false)
     private ApplicationTemplate applicationTemplate;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "NUWA_APPLICATION_ROUTESPACE",
         joinColumns = @JoinColumn(name = "ROUTESPACE_ID"),
         inverseJoinColumns = @JoinColumn(name = "APPLICATION_ID"),

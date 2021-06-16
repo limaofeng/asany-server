@@ -3,6 +3,8 @@ package cn.asany.nuwa.app.service.dto;
 import lombok.Builder;
 import lombok.Data;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -21,4 +23,12 @@ public class NativeApplication {
     private WebHook webhook;
     private Set<String> routespaces;
     private Set<String> authorities;
+
+    public static class NativeApplicationBuilder {
+
+        public NativeApplicationBuilder routespaces(String... spaces) {
+            this.routespaces = new HashSet<>(Arrays.asList(spaces));
+            return this;
+        }
+    }
 }

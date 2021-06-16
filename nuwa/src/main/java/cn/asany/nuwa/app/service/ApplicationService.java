@@ -16,7 +16,6 @@ import org.jfantasy.framework.security.oauth2.core.ClientDetails;
 import org.jfantasy.framework.security.oauth2.core.ClientDetailsService;
 import org.jfantasy.framework.security.oauth2.core.ClientRegistrationException;
 import org.jfantasy.framework.util.common.StringUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -95,14 +94,15 @@ public class ApplicationService implements ClientDetailsService {
             .routes(new ArrayList<>())
             .build();
 
+        List<ApplicationRoute> routes = new ArrayList<>();
+
         // 生成应用路由
         for (Routespace routespace : routespaces) {
-            List<ApplicationRoute> routes = applicationConverter.toApplication(routespace.getApplicationTemplate()).getRoutes();
-            application.getRoutes().addAll(routes);
+            List<ApplicationRoute> spaceRoutes = applicationConverter.toRoutes(routespace.getApplicationTemplate().getRoutes(), application, routespace);
+            routes.addAll(spaceRoutes);
         }
 
         this.applicationDao.save(application);
-
         return application;
     }
 
