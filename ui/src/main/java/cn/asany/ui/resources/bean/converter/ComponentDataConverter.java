@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import org.jfantasy.framework.jackson.JSON;
 
 import javax.persistence.AttributeConverter;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ComponentDataConverter implements AttributeConverter<List<ComponentData>, String> {
@@ -16,6 +17,9 @@ public class ComponentDataConverter implements AttributeConverter<List<Component
 
     @Override
     public List<ComponentData> convertToEntityAttribute(String dbData) {
+        if(dbData == null) {
+            return new ArrayList<>();
+        }
         return JSON.deserialize(dbData, new TypeReference<List<ComponentData>>() {
         });
     }

@@ -14,6 +14,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.io.IOException;
+import java.util.List;
 
 @Slf4j
 @ExtendWith(SpringExtension.class)
@@ -35,4 +36,13 @@ class ApplicationTemplateServiceTest {
         this.applicationTemplateService.createApplicationTemplate(applicationTemplate);
         log.debug(String.format("名称 %s ", applicationTemplate.getName()));
     }
+
+    @Test
+    void deleteApplicationTemplate() throws IOException {
+        List<ApplicationTemplate> applicationTemplates = this.applicationTemplateService.findAll();
+        for (ApplicationTemplate application : applicationTemplates) {
+            this.applicationTemplateService.deleteApplicationTemplate(application.getId());
+        }
+    }
+
 }

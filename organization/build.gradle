@@ -1,10 +1,10 @@
 dependencies {
-    compile project(":asany-base")
-    compile "org.jfantasy:jfantasy-storage:$LIB_JFAN_VER"
+    implementation project(":asany-base")
+    implementation "org.jfantasy:jfantasy-storage:$LIB_JFAN_VER"
     compileOnly "org.projectlombok:lombok:${LIB_LOMBOK_VER}"
     annotationProcessor "org.projectlombok:lombok:$LIB_LOMBOK_VER"
     testCompileOnly "org.projectlombok:lombok:${LIB_LOMBOK_VER}"
     testAnnotationProcessor "org.projectlombok:lombok:$LIB_LOMBOK_VER"
-    testCompile 'junit:junit:4.12'
-    testCompile 'org.springframework.boot:spring-boot-starter-test'
+//    testImplementation 'junit:junit:4.12'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }

@@ -5,6 +5,7 @@ import cn.asany.ui.resources.bean.enums.ComponentScope;
 import cn.asany.ui.resources.bean.enums.ComponentType;
 import cn.asany.ui.resources.bean.toy.ComponentData;
 import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
 import javax.persistence.*;
@@ -21,17 +22,22 @@ import java.util.List;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @Entity
-@Table(name = "NUWA_COMPONENT")
+@Table(name = "NUWA_COMPONENT", uniqueConstraints = {
+    @UniqueConstraint(name = "UK_SCOPE", columnNames = "SCOPE"),
+    @UniqueConstraint(name = "UK_TYPE", columnNames = "TYPE")
+})
 public class Component extends BaseBusEntity {
 
     @Id
     @Column(name = "ID", length = 50, updatable = false)
+    @GeneratedValue(generator = "fantasy-sequence")
+    @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
     private Long id;
     /**
      * 使用范围
      */
     @Enumerated(EnumType.STRING)
-    @Column(name = "SCOPE", length = 50)
+    @Column(name = "SCOPE", length = 50, nullable = false)
     private ComponentScope scope;
     /**
      * 组件类型

@@ -1,6 +1,5 @@
 package cn.asany.nuwa.template.bean;
 
-import cn.asany.nuwa.app.bean.Routespace;
 import cn.asany.nuwa.app.bean.enums.RouteType;
 import cn.asany.ui.resources.bean.Component;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -33,12 +32,6 @@ public class ApplicationTemplateRoute extends BaseBusEntity {
     @Column(name = "NAME")
     private String name;
     /**
-     * 路由所属类型 PC端/M站
-     */
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "SPACE", foreignKey = @ForeignKey(name = "FK_APPLICATION_TEMPLATE_ROUTE_SPACE"), updatable = false, nullable = false)
-    private Routespace space;
-    /**
      * 路由类型
      */
     @Enumerated(EnumType.STRING)
@@ -62,7 +55,7 @@ public class ApplicationTemplateRoute extends BaseBusEntity {
     /**
      * 组件
      */
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "COMPONENT_ID", foreignKey = @ForeignKey(name = "FK_APPLICATION_TEMPLATE_ROUTE_COMPONENT"))
     private Component component;
     /**

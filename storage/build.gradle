@@ -1,12 +1,11 @@
 dependencies {
-    compile project(":asany-storage-api")
-    compile 'org.apache.ant:ant:1.8.2'
-    compile 'io.minio:minio:8.2.1'
-    compile 'com.aliyun.oss:aliyun-sdk-oss:2.0.6'
+    implementation project(":asany-storage-api")
+    implementation 'org.apache.ant:ant:1.8.2'
+    implementation 'io.minio:minio:8.2.1'
+    implementation 'com.aliyun.oss:aliyun-sdk-oss:2.0.6'
     compileOnly "org.projectlombok:lombok:${LIB_LOMBOK_VER}"
     annotationProcessor "org.projectlombok:lombok:$LIB_LOMBOK_VER"
     testCompileOnly "org.projectlombok:lombok:${LIB_LOMBOK_VER}"
     testAnnotationProcessor "org.projectlombok:lombok:$LIB_LOMBOK_VER"
-    testCompile 'junit:junit:4.12'
-    testCompile 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }

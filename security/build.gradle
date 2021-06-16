@@ -1,13 +1,13 @@
 dependencies {
-    compile 'com.nimbusds:nimbus-jose-jwt:8.16'
-    compile project(":asany-base")
-    compile project(":asany-organization")
-    compile "org.springframework.boot:spring-boot-starter-data-redis"
-    compile "org.jfantasy:jfantasy-storage:$LIB_JFAN_VER"
+    implementation 'com.nimbusds:nimbus-jose-jwt:8.16'
+    implementation project(":asany-base")
+    implementation project(":asany-organization")
+    implementation "org.springframework.boot:spring-boot-starter-data-redis"
+    implementation "org.jfantasy:jfantasy-storage:$LIB_JFAN_VER"
     compileOnly "org.projectlombok:lombok:${LIB_LOMBOK_VER}"
     annotationProcessor "org.projectlombok:lombok:$LIB_LOMBOK_VER"
     testCompileOnly "org.projectlombok:lombok:${LIB_LOMBOK_VER}"
     testAnnotationProcessor "org.projectlombok:lombok:$LIB_LOMBOK_VER"
-    testCompile 'junit:junit:4.12'
-    testCompile 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'junit:junit:4.12'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }

@@ -12,7 +12,7 @@ buildscript {
 plugins {
     id 'idea'
     id "io.spring.dependency-management" version "${PLUGIN_SPRING_DEPENDENCY_MANAGEMENT_VER}"
-    id "org.zeroturnaround.gradle.jrebel" version "${PLUGIN_JREBEL_VER}"
+    id "org.zeroturnaround.gradle.jrebel" version "${PLUGIN_JREBEL_VER}" apply false
 }
 
 allprojects {
@@ -113,9 +113,9 @@ subprojects {
     }
 
     dependencies {
-        compile "org.jfantasy:jfantasy-core:$LIB_JFAN_VER"
-        compile "org.jfantasy:jfantasy-graphql:$LIB_JFAN_VER"
-        compile "org.mapstruct:mapstruct:$LIB_MAPSTRUCT_VER"
+        implementation "org.jfantasy:jfantasy-core:$LIB_JFAN_VER"
+        implementation "org.jfantasy:jfantasy-graphql:$LIB_JFAN_VER"
+        compileOnly "org.mapstruct:mapstruct:$LIB_MAPSTRUCT_VER"
         compileOnly "org.projectlombok:lombok:$LIB_LOMBOK_VER"
         annotationProcessor "org.projectlombok:lombok:$LIB_LOMBOK_VER"
         annotationProcessor "org.mapstruct:mapstruct-processor:$LIB_MAPSTRUCT_VER"
