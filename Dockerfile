@@ -2,7 +2,7 @@ FROM core.harbor.thuni-h.com/library/java:8
 
 ARG version_number=0
 
-ADD /build/app.jar /tmp/app/app.jar
+ADD /boot/build/app.jar /tmp/app/app.jar
 
 # 构建应用
 RUN cd /tmp/app && \

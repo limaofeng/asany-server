@@ -75,7 +75,7 @@ graphql:
     exception-handlers-enabled: true
     cors-enabled: true
     cors:
-      allowed-origins: "*"
+      allowed-origin-patterns: "*"
       allowed-methods: GET, HEAD, POST
       allowed-headers: Accept, Origin, Authorization, Content-Type, Last-Modified
       allow-credentials: true

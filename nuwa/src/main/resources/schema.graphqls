@@ -76,7 +76,7 @@ input RouteComponentInput {
     # 渲染组件
     template: String
     # 组件配置数据
-    props: JSON
+#    props: JSON
     # 路由配置
     #    routeWrapper: RouteComponentWrapperInput
 }
@@ -105,7 +105,7 @@ type RouteComponentWrapper {
     # 模版
     template: String
     # 组件配置数据
-    props: JSON
+#    props: JSON
 }
 
 type Organization {

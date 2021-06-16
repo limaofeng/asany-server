@@ -11,3 +11,5 @@ type Mutation {
 
 scalar Date
 scalar OrderBy
+scalar FileObject
+scalar JSON

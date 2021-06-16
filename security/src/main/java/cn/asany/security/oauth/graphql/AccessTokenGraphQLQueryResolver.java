@@ -28,7 +28,8 @@ public class AccessTokenGraphQLQueryResolver implements GraphQLQueryResolver {
         BearerTokenAuthentication authentication = (BearerTokenAuthentication) SecurityContextHolder.getContext().getAuthentication();
         LoginUser user = SpringSecurityUtils.getCurrentUser();
         JwtTokenPayload payload = JwtUtils.payload(authentication.getToken().getTokenValue());
-        return this.accessTokenService.getSessions(payload.getClientId(), Long.valueOf(user.getUid()));
+        Long uid = Long.valueOf(user.getUid());
+        return this.accessTokenService.getSessions(payload.getClientId(), uid);
     }
 
     public List<PersonalAccessToken> personalAccessTokens() {
