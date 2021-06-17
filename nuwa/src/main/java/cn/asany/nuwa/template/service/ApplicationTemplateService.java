@@ -57,6 +57,7 @@ public class ApplicationTemplateService {
     }
 
     private List<ApplicationTemplateRoute> setupDefault(ApplicationTemplate application, List<ApplicationTemplateRoute> routes, ApplicationTemplateRoute parent) {
+        long index = 1;
         for (ApplicationTemplateRoute route : routes) {
             route.setApplication(application);
             route.setLevel(parent == null ? 0 : parent.getLevel() + 1);
@@ -66,6 +67,7 @@ public class ApplicationTemplateService {
             route.setHideInMenu(ObjectUtil.defaultValue(route.getHideInMenu(), Boolean.FALSE));
             route.setHideChildrenInMenu(ObjectUtil.defaultValue(route.getHideChildrenInMenu(), Boolean.FALSE));
             route.setHideInBreadcrumb(ObjectUtil.defaultValue(route.getHideInBreadcrumb(), Boolean.FALSE));
+            route.setIndex(index++);
 
             Optional<Component> optionalComponent = setupComponent(route.getComponent());
             if (optionalComponent.isPresent()) {
@@ -89,7 +91,7 @@ public class ApplicationTemplateService {
         if (component.getCode() != null) {
             return this.componentDao.findOne(PropertyFilter.builder().equal("code", component.getCode()).build());
         }
-        if (component.getScope() == ComponentScope.ROUTE) {
+        if (component.getScope() != ComponentScope.ROUTE) {
             component.setScope(ComponentScope.ROUTE);
         }
         return Optional.of(this.componentDao.save(component));

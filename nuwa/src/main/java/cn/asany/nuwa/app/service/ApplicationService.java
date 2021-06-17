@@ -11,10 +11,15 @@ import cn.asany.nuwa.app.dao.ClientSecretDao;
 import cn.asany.nuwa.app.dao.RoutespaceDao;
 import cn.asany.nuwa.app.service.dto.NativeApplication;
 import cn.asany.nuwa.app.service.dto.OAuthApplication;
+import cn.asany.nuwa.template.bean.ApplicationTemplateRoute;
+import cn.asany.ui.resources.bean.Component;
+import cn.asany.ui.resources.bean.enums.ComponentScope;
+import cn.asany.ui.resources.dao.ComponentDao;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.security.oauth2.core.ClientDetails;
 import org.jfantasy.framework.security.oauth2.core.ClientDetailsService;
 import org.jfantasy.framework.security.oauth2.core.ClientRegistrationException;
+import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.common.StringUtil;
 import org.springframework.stereotype.Service;
 
@@ -35,12 +40,14 @@ public class ApplicationService implements ClientDetailsService {
 
     private final ApplicationDao applicationDao;
     private final ClientSecretDao clientSecretDao;
+    private final ComponentDao componentDao;
     private final RoutespaceDao routespaceDao;
     private final ApplicationConverter applicationConverter;
 
-    public ApplicationService(ApplicationDao applicationDao, ClientSecretDao clientSecretDao, RoutespaceDao routespaceDao, ApplicationConverter applicationConverter) {
+    public ApplicationService(ApplicationDao applicationDao, ClientSecretDao clientSecretDao, ComponentDao componentDao, RoutespaceDao routespaceDao, ApplicationConverter applicationConverter) {
         this.applicationDao = applicationDao;
         this.clientSecretDao = clientSecretDao;
+        this.componentDao = componentDao;
         this.routespaceDao = routespaceDao;
         this.applicationConverter = applicationConverter;
     }
@@ -68,8 +75,7 @@ public class ApplicationService implements ClientDetailsService {
 
     @Transactional
     public Application createApplication(NativeApplication nativeApplication) {
-        // TODO 使用 NamedEntityGraph 查询一次性查询出 应用模版的相关信息
-        List<Routespace> routespaces = this.routespaceDao.findAll(PropertyFilter.builder().in("id", nativeApplication.getRoutespaces()).build());
+        List<Routespace> routespaces = this.routespaceDao.findByIdsWithApplicationTemplateRoute(nativeApplication.getRoutespaces());
 
         String clientId = StringUtil.generateNonceString(NONCE_CHARS, 20);
         String clientSecretStr = StringUtil.generateNonceString(NONCE_CHARS, 40);
@@ -80,7 +86,6 @@ public class ApplicationService implements ClientDetailsService {
             .client(clientId)
             .secret(clientSecretStr)
             .build());
-
         clientSecrets.add(clientSecret);
 
         // 创建应用
@@ -94,14 +99,28 @@ public class ApplicationService implements ClientDetailsService {
             .routes(new ArrayList<>())
             .build();
 
-        List<ApplicationRoute> routes = new ArrayList<>();
-
         // 生成应用路由
+        List<ApplicationRoute> routes = new ArrayList<>();
         for (Routespace routespace : routespaces) {
-            List<ApplicationRoute> spaceRoutes = applicationConverter.toRoutes(routespace.getApplicationTemplate().getRoutes(), application, routespace);
-            routes.addAll(spaceRoutes);
+            List<ApplicationTemplateRoute> templateRoutes = ObjectUtil.tree(routespace.getApplicationTemplate().getRoutes(), "id", "parent.id", "routes", item -> {
+                ApplicationTemplateRoute route = ObjectUtil.clone(item, "routes", "application", "component");
+                Component component = item.getComponent();
+                if (component == null) {
+                    return route;
+                }
+                if (component.getScope() == ComponentScope.ROUTE) {
+                    route.setComponent(this.componentDao.save(ObjectUtil.clone(component, "id")));
+                } else {
+                    route.setComponent(Component.builder().id(component.getId()).build());
+                }
+                return route;
+            });
+            List<ApplicationRoute> spaceRoutes = applicationConverter.toRoutes(templateRoutes, routespace);
+            routes.addAll(ObjectUtil.flat(spaceRoutes, "routes"));
         }
+        application.setRoutes(routes);
 
+        // 保存应用
         this.applicationDao.save(application);
         return application;
     }

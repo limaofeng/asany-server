@@ -2,7 +2,6 @@ package cn.asany.nuwa.app.bean;
 
 import cn.asany.nuwa.template.bean.ApplicationTemplate;
 import lombok.*;
-import org.hibernate.annotations.Where;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
 import javax.persistence.*;
@@ -18,8 +17,28 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
+@ToString(exclude = {"applications", "applicationTemplate"})
 @Entity
 @Table(name = "NUWA_ROUTESPACE")
+@NamedEntityGraph(
+    name = "Graph.Routespace.FetchApplicationTemplateRoute",
+    attributeNodes = {
+        @NamedAttributeNode(value = "applicationTemplate", subgraph = "SubGraph.ApplicationTemplate.FetchRoute"),
+    },
+    subgraphs = {
+        @NamedSubgraph(
+            name = "SubGraph.ApplicationTemplate.FetchRoute",
+            attributeNodes = {
+                @NamedAttributeNode(value = "routes", subgraph = "SubGraph.ApplicationTemplateRoute.FetchChildren")
+            }),
+        @NamedSubgraph(
+            name = "SubGraph.ApplicationTemplateRoute.FetchChildren",
+            attributeNodes = {
+                @NamedAttributeNode(value = "parent"),
+                @NamedAttributeNode(value = "component")
+            })
+    }
+)
 public class Routespace extends BaseBusEntity {
     @Id
     @Column(name = "ID", length = 40)

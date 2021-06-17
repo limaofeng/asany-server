@@ -22,6 +22,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
+@ToString(exclude = {"parent", "application"})
 @Entity
 @Table(name = "NUWA_APPLICATION_ROUTE")
 public class ApplicationRoute extends BaseBusEntity {
@@ -85,8 +86,8 @@ public class ApplicationRoute extends BaseBusEntity {
      * 子路由
      */
     @JsonInclude(content = JsonInclude.Include.NON_NULL)
-    @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-    @OrderBy("sort ASC")
+    @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @OrderBy("index ASC")
     private List<ApplicationRoute> routes;
     /**
      * 可以访问的权限

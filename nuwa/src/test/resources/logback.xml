@@ -57,7 +57,7 @@
     <logger name="org.hibernate.SQL" level="DEBUG"/>
     <logger name="org.hibernate.engine.QueryParameters" level="DEBUG"/>
     <logger name="org.hibernate.engine.query.HQLQueryPlan" level="DEBUG"/>
-    <logger name="org.jfantasy.framework" level="ERROR"/>
+    <logger name="org.jfantasy.framework.util" level="ERROR"/>
     <logger name="cn.asany.nuwa" level="DEBUG"/>
 
     <root level="INFO">

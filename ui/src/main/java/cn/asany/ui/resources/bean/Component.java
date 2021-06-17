@@ -22,10 +22,7 @@ import java.util.List;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @Entity
-@Table(name = "NUWA_COMPONENT", uniqueConstraints = {
-    @UniqueConstraint(name = "UK_SCOPE", columnNames = "SCOPE"),
-    @UniqueConstraint(name = "UK_TYPE", columnNames = "TYPE")
-})
+@Table(name = "NUWA_COMPONENT")
 public class Component extends BaseBusEntity {
 
     @Id

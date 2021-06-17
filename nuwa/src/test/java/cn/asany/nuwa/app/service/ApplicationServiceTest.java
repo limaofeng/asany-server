@@ -4,12 +4,15 @@ import cn.asany.nuwa.TestApplication;
 import cn.asany.nuwa.app.bean.Application;
 import cn.asany.nuwa.app.service.dto.NativeApplication;
 import lombok.extern.slf4j.Slf4j;
+import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+import java.util.List;
 
 @Slf4j
 @ExtendWith(SpringExtension.class)
@@ -32,4 +35,13 @@ class ApplicationServiceTest {
 
 //        applicationService.deleteApplication(application.getId());
     }
+
+    @Test
+    void deleteApplication() {
+        List<Application> applications = applicationService.findAll(PropertyFilter.builder().build());
+        applications.stream().forEach(item -> {
+            applicationService.deleteApplication(item.getId());
+        });
+    }
+
 }
