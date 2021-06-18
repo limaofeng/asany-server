@@ -38,12 +38,21 @@ class ApplicationTemplateServiceTest {
     void createApplicationTemplate() throws IOException {
         String text = FileUtil.readFile(ApplicationTemplate.class.getResourceAsStream("/app-web-template.json"));
         ApplicationTemplate applicationTemplate = JSON.deserialize(text, ApplicationTemplate.class);
-        this.applicationTemplateService.createApplicationTemplate(applicationTemplate);
+        applicationTemplate = this.applicationTemplateService.createApplicationTemplate(applicationTemplate);
         log.debug(String.format("名称 %s ", applicationTemplate.getName()));
     }
 
     @Test
-    void deleteApplicationTemplate() throws IOException {
+    void updateApplicationTemplate() throws IOException {
+        String text = FileUtil.readFile(ApplicationTemplate.class.getResourceAsStream("/app-web-template.json"));
+        ApplicationTemplate applicationTemplate = JSON.deserialize(text, ApplicationTemplate.class);
+        applicationTemplate.setId(1L);
+        applicationTemplate = this.applicationTemplateService.updateApplicationTemplate(applicationTemplate);
+        log.debug(String.format("名称 %s ", applicationTemplate.getName()));
+    }
+
+    @Test
+    void deleteApplicationTemplate() {
         List<Routespace> routespaces = routespaceService.findAll();
         List<ApplicationTemplate> applicationTemplates = this.applicationTemplateService.findAll();
 

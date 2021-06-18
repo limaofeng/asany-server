@@ -68,7 +68,7 @@ public class ApplicationTemplateRoute extends BaseBusEntity {
     /**
      * 父路由
      */
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "PID", foreignKey = @ForeignKey(name = "FK_APPLICATION_TEMPLATE_ROUTE_PID"))
     private ApplicationTemplateRoute parent;
     /**

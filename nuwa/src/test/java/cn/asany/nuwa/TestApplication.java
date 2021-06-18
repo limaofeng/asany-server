@@ -1,6 +1,8 @@
 package cn.asany.nuwa;
 
+import graphql.kickstart.spring.web.boot.GraphQLWebAutoConfiguration;
 import lombok.extern.slf4j.Slf4j;
+import org.jfantasy.autoconfigure.GraphQLAutoConfiguration;
 import org.jfantasy.framework.dao.jpa.ComplexJpaRepository;
 import org.springframework.boot.actuate.autoconfigure.audit.AuditAutoConfiguration;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -22,7 +24,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
  */
 @Slf4j
 @Configuration
-@ComponentScan({"cn.asany.*.*.service", "cn.asany.*.*.converter", "cn.asany.*.*.graphql"})
+@ComponentScan({"cn.asany.*.*.service", "cn.asany.*.*.converter"})
 @EntityScan({
     "cn.asany.*.*.bean",
 })
@@ -38,7 +40,14 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
     },
     repositoryBaseClass = ComplexJpaRepository.class
 )
-@EnableAutoConfiguration(exclude = {MongoAutoConfiguration.class, QuartzAutoConfiguration.class, WebMvcAutoConfiguration.class, AuditAutoConfiguration.class})
+@EnableAutoConfiguration(exclude = {
+    MongoAutoConfiguration.class,
+    QuartzAutoConfiguration.class,
+    WebMvcAutoConfiguration.class,
+    AuditAutoConfiguration.class,
+    GraphQLAutoConfiguration.class,
+    GraphQLWebAutoConfiguration.class
+})
 public class TestApplication {
 
 }

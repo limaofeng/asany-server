@@ -57,4 +57,13 @@ public class Routespace extends BaseBusEntity {
     )
     private List<Application> applications;
 
+    public static class RoutespaceBuilder {
+
+        public RoutespaceBuilder applicationTemplate(Long id) {
+            this.applicationTemplate = ApplicationTemplate.builder().id(id).build();
+            return this;
+        }
+
+    }
+
 }

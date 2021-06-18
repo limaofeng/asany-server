@@ -7,6 +7,7 @@ import cn.asany.security.oauth.vo.PersonalAccessToken;
 import cn.asany.security.oauth.vo.SessionAccessToken;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
+import org.jfantasy.framework.error.ValidationException;
 import org.jfantasy.framework.security.SecurityContextHolder;
 import org.jfantasy.framework.security.authentication.Authentication;
 import org.jfantasy.framework.security.oauth2.DefaultTokenServices;
@@ -16,8 +17,6 @@ import org.jfantasy.framework.security.oauth2.core.OAuth2Authentication;
 import org.jfantasy.framework.security.oauth2.core.OAuth2AuthenticationDetails;
 import org.jfantasy.framework.security.oauth2.core.TokenType;
 import org.jfantasy.framework.security.oauth2.jwt.JwtUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,14 +30,15 @@ import java.util.Optional;
 @Service
 public class AccessTokenService {
 
-    @Autowired
-    private AccessTokenDao accessTokenDao;
-    @Value("${spring.profiles.active}")
-    private String env;
-    @Autowired
-    private DefaultTokenServices tokenServices;
-    @Autowired
-    private AccessTokenConverter accessTokenConverter;
+    private final AccessTokenDao accessTokenDao;
+    private final DefaultTokenServices tokenServices;
+    private final AccessTokenConverter accessTokenConverter;
+
+    public AccessTokenService(AccessTokenDao accessTokenDao, DefaultTokenServices tokenServices, AccessTokenConverter accessTokenConverter) {
+        this.accessTokenDao = accessTokenDao;
+        this.tokenServices = tokenServices;
+        this.accessTokenConverter = accessTokenConverter;
+    }
 
     public PersonalAccessToken createPersonalAccessToken(String clientId, String name) {
         OAuth2AuthenticationDetails oAuth2AuthenticationDetails = new OAuth2AuthenticationDetails();
@@ -48,7 +48,11 @@ public class AccessTokenService {
         OAuth2Authentication oAuth2Authentication = new OAuth2Authentication(authentication, oAuth2AuthenticationDetails);
         oAuth2Authentication.setName(name);
         OAuth2AccessToken accessToken = tokenServices.createAccessToken(oAuth2Authentication);
-        return accessTokenConverter.toPersonalAccessToken(this.accessTokenDao.findOne(PropertyFilter.builder().equal("token", accessToken.getTokenValue()).build()).get());
+        Optional<AccessToken> optionalAccessToken = this.accessTokenDao.findOne(PropertyFilter.builder().equal("token", accessToken.getTokenValue()).build());
+        if (!optionalAccessToken.isPresent()) {
+            throw new ValidationException("创建 Token 失败");
+        }
+        return accessTokenConverter.toPersonalAccessToken(optionalAccessToken.get());
     }
 
     public List<PersonalAccessToken> getPersonalAccessTokens(String clientId, Long uid) {
@@ -84,10 +88,7 @@ public class AccessTokenService {
             .equal("user.id", uid)
             .equal("tokenType", TokenType.SESSION);
         Optional<AccessToken> optionalAccessToken = this.accessTokenDao.findOne(builder.build());
-        if (!optionalAccessToken.isPresent()) {
-            return false;
-        }
-        return this.tokenServices.revokeToken(optionalAccessToken.get().getToken());
+        return optionalAccessToken.filter(accessToken -> this.tokenServices.revokeToken(accessToken.getToken())).isPresent();
     }
 
     public boolean revokePersonalAccessToken(Long uid, Long id) {
@@ -96,10 +97,7 @@ public class AccessTokenService {
             .equal("user.id", uid)
             .equal("tokenType", TokenType.PERSONAL);
         Optional<AccessToken> optionalAccessToken = this.accessTokenDao.findOne(builder.build());
-        if (!optionalAccessToken.isPresent()) {
-            return false;
-        }
-        return this.tokenServices.revokeToken(optionalAccessToken.get().getToken());
+        return optionalAccessToken.filter(accessToken -> this.tokenServices.revokeToken(accessToken.getToken())).isPresent();
     }
 
 //    @Transactional

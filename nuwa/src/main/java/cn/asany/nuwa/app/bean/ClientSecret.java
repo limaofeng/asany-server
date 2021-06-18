@@ -1,10 +1,12 @@
 package cn.asany.nuwa.app.bean;
 
+import cn.asany.security.oauth.bean.AccessToken;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
 import javax.persistence.*;
+import java.util.List;
 
 /**
  * 客户端凭证
@@ -16,8 +18,9 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
+@ToString(exclude = {"accessTokens"})
 @Entity
-@Table(name = "AUTH_CLIENT_SECRET")
+@Table(name = "AUTH_CLIENT_SECRET", uniqueConstraints = {@UniqueConstraint(name = "UK_CLIENT_ID", columnNames = "CLIENT_ID")})
 public class ClientSecret extends BaseBusEntity {
 
     @Id
@@ -33,7 +36,14 @@ public class ClientSecret extends BaseBusEntity {
     /**
      * 客户端
      */
-    @JoinColumn(name = "CLIENT_ID",table = "NUWA_APPLICATION", referencedColumnName = "CLIENT_ID", foreignKey = @ForeignKey(name = "FK_CLIENT_SECRET_CLIENT"), updatable = false, nullable = false)
+    @Column(name = "CLIENT_ID", length = 20, updatable = false, nullable = false)
     private String client;
+    /**
+     * 访问令牌
+     */
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @OrderBy(" createdAt desc ")
+    @JoinColumn(name = "CLIENT_ID", referencedColumnName = "CLIENT_ID", updatable = false)
+    private List<AccessToken> accessTokens;
 
 }

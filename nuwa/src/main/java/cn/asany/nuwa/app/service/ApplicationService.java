@@ -7,11 +7,13 @@ import cn.asany.nuwa.app.bean.Routespace;
 import cn.asany.nuwa.app.bean.enums.ApplicationType;
 import cn.asany.nuwa.app.converter.ApplicationConverter;
 import cn.asany.nuwa.app.dao.ApplicationDao;
+import cn.asany.nuwa.app.dao.ApplicationRouteDao;
 import cn.asany.nuwa.app.dao.ClientSecretDao;
 import cn.asany.nuwa.app.dao.RoutespaceDao;
 import cn.asany.nuwa.app.service.dto.NativeApplication;
 import cn.asany.nuwa.app.service.dto.OAuthApplication;
 import cn.asany.nuwa.template.bean.ApplicationTemplateRoute;
+import cn.asany.security.oauth.dao.AccessTokenDao;
 import cn.asany.ui.resources.bean.Component;
 import cn.asany.ui.resources.bean.enums.ComponentScope;
 import cn.asany.ui.resources.dao.ComponentDao;
@@ -27,6 +29,7 @@ import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * 应用服务
@@ -38,18 +41,22 @@ public class ApplicationService implements ClientDetailsService {
 
     private static final String NONCE_CHARS = "abcdef0123456789";
 
+    private final AccessTokenDao accessTokenDao;
     private final ApplicationDao applicationDao;
     private final ClientSecretDao clientSecretDao;
+    private final ApplicationRouteDao applicationRouteDao;
     private final ComponentDao componentDao;
     private final RoutespaceDao routespaceDao;
     private final ApplicationConverter applicationConverter;
 
-    public ApplicationService(ApplicationDao applicationDao, ClientSecretDao clientSecretDao, ComponentDao componentDao, RoutespaceDao routespaceDao, ApplicationConverter applicationConverter) {
+    public ApplicationService(ApplicationDao applicationDao, ClientSecretDao clientSecretDao, ComponentDao componentDao, RoutespaceDao routespaceDao, ApplicationConverter applicationConverter, ApplicationRouteDao applicationRouteDao, AccessTokenDao accessTokenDao) {
         this.applicationDao = applicationDao;
         this.clientSecretDao = clientSecretDao;
         this.componentDao = componentDao;
         this.routespaceDao = routespaceDao;
         this.applicationConverter = applicationConverter;
+        this.applicationRouteDao = applicationRouteDao;
+        this.accessTokenDao = accessTokenDao;
     }
 
     public List<Application> findAll(List<PropertyFilter> filter) {
@@ -127,6 +134,17 @@ public class ApplicationService implements ClientDetailsService {
 
     @Transactional
     public void deleteApplication(Long id) {
+        List<ApplicationRoute> routes = this.applicationRouteDao.findAll(PropertyFilter.builder()
+            .equal("component.scope", ComponentScope.ROUTE)
+            .equal("application.id", id)
+            .isNotNull("component")
+            .build());
+        List<Component> components = routes.stream().map(item -> item.getComponent()).collect(Collectors.toList());
+
         this.applicationDao.deleteById(id);
+
+        // 删除对应的路由组件
+        this.componentDao.deleteAll(components);
+
     }
 }

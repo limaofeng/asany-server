@@ -13,7 +13,6 @@ import org.jfantasy.framework.util.common.ObjectUtil;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -38,8 +37,12 @@ public class ApplicationTemplateService {
 
     @Transactional
     public void deleteApplicationTemplate(Long applicationId) {
-        List<ApplicationTemplateRoute> routes = this.applicationTemplateRouteDao.findAll(PropertyFilter.builder().equal("application.id", applicationId).isNotNull("component").build());
-        Set<Long> componentIds = routes.stream().filter(item -> item.getComponent().getScope() != ComponentScope.ROUTE).map(item -> item.getComponent().getId()).collect(Collectors.toSet());
+        List<ApplicationTemplateRoute> routes = this.applicationTemplateRouteDao.findAll(PropertyFilter.builder()
+            .equal("application.id", applicationId)
+            .equal("component.scope", ComponentScope.ROUTE)
+            .isNotNull("component")
+            .build());
+        Set<Long> componentIds = routes.stream().map(item -> item.getComponent().getId()).collect(Collectors.toSet());
         // 删除应用模版
         applicationTemplateDao.deleteById(applicationId);
         // 删除对应的路由组件
@@ -48,18 +51,30 @@ public class ApplicationTemplateService {
 
     @Transactional
     public ApplicationTemplate createApplicationTemplate(ApplicationTemplate application) {
-        setupDefault(application, application.getRoutes());
-        return applicationTemplateDao.save(application);
+        List<ApplicationTemplateRoute> routes = setupDefault(application.getRoutes());
+        application.setRoutes(routes);
+        return this.applicationTemplateDao.save(application);
     }
 
-    private List<ApplicationTemplateRoute> setupDefault(ApplicationTemplate application, List<ApplicationTemplateRoute> routes) {
-        return setupDefault(application, new ArrayList<>(routes), null);
+    @Transactional
+    public ApplicationTemplate updateApplicationTemplate(ApplicationTemplate application) {
+        ApplicationTemplate oldObject = this.applicationTemplateDao.getById(application.getId());
+        ObjectUtil.copy(application, oldObject, "routes", "id");
+        List<ApplicationTemplateRoute> routes = setupDefault(application.getRoutes());
+        this.applicationTemplateDao.update(oldObject);
+        oldObject.setRoutes(routes);
+        return oldObject;
     }
 
-    private List<ApplicationTemplateRoute> setupDefault(ApplicationTemplate application, List<ApplicationTemplateRoute> routes, ApplicationTemplateRoute parent) {
+
+    private List<ApplicationTemplateRoute> setupDefault(List<ApplicationTemplateRoute> routes) {
+        setupDefault(routes, null);
+        return ObjectUtil.flat(routes, "routes");
+    }
+
+    private void setupDefault(List<ApplicationTemplateRoute> routes, ApplicationTemplateRoute parent) {
         long index = 1;
         for (ApplicationTemplateRoute route : routes) {
-            route.setApplication(application);
             route.setLevel(parent == null ? 0 : parent.getLevel() + 1);
             route.setEnabled(Boolean.TRUE);
             route.setType(ObjectUtil.defaultValue(route.getType(), RouteType.ROUTE));
@@ -77,11 +92,10 @@ public class ApplicationTemplateService {
             }
 
             if (route.getRoutes() != null) {
-                setupDefault(application, new ArrayList<>(route.getRoutes()), route);
+                setupDefault(route.getRoutes(), route);
             }
 
         }
-        return routes;
     }
 
     private Optional<Component> setupComponent(Component component) {
@@ -97,4 +111,7 @@ public class ApplicationTemplateService {
         return Optional.of(this.componentDao.save(component));
     }
 
+    public Optional<ApplicationTemplate> getApplicationTemplate(Long id) {
+        return this.applicationTemplateDao.findById(id);
+    }
 }

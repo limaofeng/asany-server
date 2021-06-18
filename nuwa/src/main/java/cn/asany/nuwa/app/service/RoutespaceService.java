@@ -4,6 +4,7 @@ import cn.asany.nuwa.app.bean.Routespace;
 import cn.asany.nuwa.app.dao.RoutespaceDao;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
@@ -19,6 +20,7 @@ public class RoutespaceService {
         return routespaceDao.findAll();
     }
 
+    @Transactional
     public Routespace createRoutespace(Routespace routespace) {
         return this.routespaceDao.save(routespace);
     }

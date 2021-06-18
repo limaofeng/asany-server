@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
+@ToString(exclude = {"routespaces", "routes", "clientSecretsAlias"})
 @Entity
 @Table(name = "NUWA_APPLICATION", uniqueConstraints = {@UniqueConstraint(name = "UK_APPLICATION_CLIENT_ID", columnNames = "CLIENT_ID")})
 public class Application extends BaseBusEntity implements ClientDetails {
@@ -67,7 +68,7 @@ public class Application extends BaseBusEntity implements ClientDetails {
     /**
      * 支持的路由空间
      */
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "NUWA_APPLICATION_ROUTESPACE",
         joinColumns = @JoinColumn(name = "APPLICATION_ID"),
         inverseJoinColumns = @JoinColumn(name = "ROUTESPACE_ID"),
@@ -87,14 +88,14 @@ public class Application extends BaseBusEntity implements ClientDetails {
     /**
      * 客服端 ID
      */
-    @Column(name = "CLIENT_ID", length = 20, updatable = false)
+    @Column(name = "CLIENT_ID", length = 20, updatable = false, nullable = false)
     private String clientId;
     /**
      * 客服端密钥
      */
-    @OneToMany(cascade = {CascadeType.REMOVE}, fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @OrderBy(" createdAt desc ")
-    @JoinColumn(name = "CLIENT_ID", referencedColumnName = "CLIENT_ID")
+    @JoinColumn(name = "CLIENT_ID", referencedColumnName = "CLIENT_ID", updatable = false)
     private List<ClientSecret> clientSecretsAlias;
 
     @Override
