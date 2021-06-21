@@ -72,6 +72,14 @@ public class ApplicationService implements ClientDetailsService {
         return optional.get();
     }
 
+    public Optional<Application> findByClientIdWithRoute(String id, String space) {
+        return this.applicationDao.findByClientIdWithRoute(id, space);
+    }
+
+    public Optional<Application> findByIdWithRoute(Long id, String space) {
+        return this.applicationDao.findByIdWithRoute(id, space);
+    }
+
     public Application createApplication(OAuthApplication app) {
         String clientId = StringUtil.generateNonceString(NONCE_CHARS, 20);
         String clientSecret = StringUtil.generateNonceString(NONCE_CHARS, 40);
@@ -147,4 +155,5 @@ public class ApplicationService implements ClientDetailsService {
         this.componentDao.deleteAll(components);
 
     }
+
 }

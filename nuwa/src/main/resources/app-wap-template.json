@@ -1,0 +1,31 @@
+{
+  "name": "默认 WAP 模版",
+  "routes": [
+    {
+      "name": "根路由",
+      "type": "ROUTE",
+      "path": "/",
+      "routes": [
+        {
+          "name": "布局路由",
+          "type": "ROUTE",
+          "path": "/",
+          "authorized": true,
+          "component": {
+            "template": "cn.asany.ui.wap.base.HomePage",
+            "props": []
+          }
+        },
+        {
+          "name": "登录路由",
+          "type": "ROUTE",
+          "path": "/login",
+          "component": {
+            "template": "cn.asany.ui.wap.base.BasicLogin",
+            "props": []
+          }
+        }
+      ]
+    }
+  ]
+}

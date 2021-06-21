@@ -3,23 +3,23 @@ package cn.asany.organization.employee.bean;
 import cn.asany.organization.core.bean.Department;
 import cn.asany.organization.core.bean.EmployeeGroup;
 import cn.asany.organization.core.bean.Organization;
-import cn.asany.organization.relationship.bean.OrganizationEmployee;
 import cn.asany.organization.core.bean.enums.LinkType;
 import cn.asany.organization.employee.bean.enums.Sex;
 import cn.asany.organization.relationship.bean.EmployeePosition;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import cn.asany.organization.relationship.bean.OrganizationEmployee;
+import cn.asany.storage.api.FileObject;
+import cn.asany.storage.api.converter.FileObjectConverter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.framework.dao.hibernate.converter.StringArrayConverter;
 import org.jfantasy.framework.util.common.ObjectUtil;
-import org.jfantasy.storage.FileObject;
-import org.jfantasy.storage.converter.FileObjectConverter;
 
 import javax.persistence.*;
-import java.util.*;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -186,58 +186,6 @@ public class Employee extends BaseBusEntity {
     public String getLinkId(LinkType idType) {
         Optional<EmployeeLink> optional = this.getLinks().stream().filter(item -> item.getType().name().equals(idType.name())).findAny();
         return optional.map(EmployeeLink::getLinkId).orElse(null);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        Employee employee = (Employee) o;
-
-        return new EqualsBuilder()
-            .appendSuper(super.equals(o))
-            .append(id, employee.id)
-            .append(status, employee.status)
-            .append(jobNumber, employee.jobNumber)
-            .append(tags, employee.tags)
-            .append(name, employee.name)
-            .append(birthday, employee.birthday)
-            .append(sex, employee.sex)
-            .append(mobile, employee.mobile)
-            .append(tel, employee.tel)
-            .append(email, employee.email)
-            .append(getDepartmentIds(), employee.getDepartmentIds())
-            .isEquals();
-    }
-
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder(17, 37)
-            .appendSuper(super.hashCode())
-            .append(id)
-            .append(status)
-            .append(jobNumber)
-            .append(tags)
-            .append(name)
-            .append(birthday)
-            .append(sex)
-            .append(mobile)
-            .append(tel)
-            .append(email)
-            .append(getDepartmentIds())
-            .toHashCode();
-    }
-
-    @JsonIgnore
-    public Set<String> getAuthoritys() {
-        Set<String> authoritys = new HashSet<>();
-        return authoritys;
     }
 
 }

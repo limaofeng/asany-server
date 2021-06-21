@@ -5,7 +5,7 @@ buildscript {
         mavenLocal()
     }
     dependencies {
-        classpath "org.hibernate:hibernate-gradle-plugin:5.4.10.Final"
+        classpath "org.hibernate:hibernate-gradle-plugin:${PLUGIN_HIBERNATE_VER}"
     }
 }
 

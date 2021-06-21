@@ -1,9 +1,8 @@
 dependencies {
     implementation 'com.nimbusds:nimbus-jose-jwt:8.16'
+    implementation "org.springframework.boot:spring-boot-starter-data-redis"
     implementation project(":asany-base")
     implementation project(":asany-organization")
-    implementation "org.springframework.boot:spring-boot-starter-data-redis"
-    implementation "org.jfantasy:jfantasy-storage:$LIB_JFAN_VER"
     compileOnly "org.projectlombok:lombok:${LIB_LOMBOK_VER}"
     annotationProcessor "org.projectlombok:lombok:$LIB_LOMBOK_VER"
     testCompileOnly "org.projectlombok:lombok:${LIB_LOMBOK_VER}"

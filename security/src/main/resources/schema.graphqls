@@ -138,7 +138,7 @@ extend type Query {
     # 系统•当前登录用户
     viewer(organization: ID): LoginUser @auth(requires: "USER")
     # 用户会话
-    sessions(uid: ID): [Session]
+    sessions: [Session]
     # 查询个人 Token
     personalAccessTokens: [PersonalAccessToken]
 }

@@ -15,17 +15,3 @@ spring:
       database: ${MONGODB_DATABASE_NAME}
       repositories:
         type: none
-
-grpc:
-  server:
-    port: 6565
-    address: 0.0.0.0
-  client:
-    GLOBAL:
-      address: static://localhost:6565
-      enableKeepAlive: true
-      keepAliveWithoutCalls: true
-      negotiationType: plaintext
-
-#storage:
-#  url: ${UPLOAD_SERVER_URL}

@@ -10,11 +10,9 @@ import java.util.List;
 import java.util.Set;
 
 public class RoutespaceDaoImpl extends ComplexJpaRepository<Routespace, String> implements RoutespaceDao {
-    private  EntityManager entityManager;
 
     public RoutespaceDaoImpl(EntityManager entityManager) {
         super(Routespace.class, entityManager);
-        this.entityManager = entityManager;
     }
 
     @Override

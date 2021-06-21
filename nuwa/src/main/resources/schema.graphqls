@@ -1,3 +1,7 @@
+enum ApplicationIdType {
+    CLIENT_ID, ID
+}
+
 input ApplicationFilter {
     id_in: [String]
     # 分类
@@ -76,7 +80,7 @@ input RouteComponentInput {
     # 渲染组件
     template: String
     # 组件配置数据
-#    props: JSON
+    #    props: JSON
     # 路由配置
     #    routeWrapper: RouteComponentWrapperInput
 }
@@ -94,7 +98,7 @@ type RouteComponent {
     # 模版
     template: String
     # 组件配置数据
-#    props: JSON
+    #    props: JSON
     # 路由配置
     #    routeWrapper: RouteComponentWrapper
 }
@@ -105,11 +109,7 @@ type RouteComponentWrapper {
     # 模版
     template: String
     # 组件配置数据
-#    props: JSON
-}
-
-type Organization {
-    id: String
+    #    props: JSON
 }
 
 input ApplicationCreateInput {
@@ -166,8 +166,8 @@ type Application {
     logo: String
     # 应用访问地址
     url: String
-#    # 组织
-#    organization: Organization
+    #    # 组织
+    #    organization: Organization
     # 是否启用
     enabled: Boolean
     # 路由
@@ -257,7 +257,7 @@ extend type Query {
     # 所有的应用
     applications(filter: ApplicationFilter = {}): [Application]
     # 查询单个应用的信息
-    application(id: ID!, space: ID = "web"): Application
+    application(id: ID!, idType: ApplicationIdType = ID, space: ID = "web"): Application
 }
 
 extend type Mutation {

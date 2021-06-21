@@ -420,7 +420,7 @@ enum Sex {
 }
 
 # 组织
-type Organization{
+type Organization {
     id: ID
     name: String
     # 组织部门
@@ -432,9 +432,9 @@ type Organization{
     # 组织职位
     jobs(orderBy: OrderBy): [Job]
     # 创建人
-    creator: String
+    createdBy: String
     # 修改人
-    modifier: String
+    updatedBy: String
     # 创建时间
     createdAt: Date
     # 修改时间

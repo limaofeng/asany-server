@@ -13,9 +13,10 @@ import org.jfantasy.framework.dao.BaseBusEntity;
 import javax.persistence.*;
 
 /**
+ * 授予权限
+ *
  * @author limaofeng
  * @version V1.0
- * @Description: TODO
  * @date 2019-06-11 20:10
  */
 @Data
