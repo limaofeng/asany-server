@@ -20,8 +20,23 @@ import java.util.stream.Collectors;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = false, of = "id")
 @ToString(exclude = {"routespaces", "routes", "clientSecretsAlias"})
+@NamedEntityGraph(
+    name = "Graph.Application.FetchRoute",
+    attributeNodes = {
+        @NamedAttributeNode(value = "routes", subgraph = "SubGraph.ApplicationRoute.FetchComponent")
+    },
+    subgraphs = {
+        @NamedSubgraph(
+            name = "SubGraph.ApplicationRoute.FetchComponent",
+            attributeNodes = {
+                @NamedAttributeNode(value = "parent"),
+                @NamedAttributeNode(value = "component")
+            }
+        )
+    }
+)
 @Entity
 @Table(name = "NUWA_APPLICATION", uniqueConstraints = {@UniqueConstraint(name = "UK_APPLICATION_CLIENT_ID", columnNames = "CLIENT_ID")})
 public class Application extends BaseBusEntity implements ClientDetails {

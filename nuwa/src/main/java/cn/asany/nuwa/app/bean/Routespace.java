@@ -16,7 +16,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = false, of = "id")
 @ToString(exclude = {"applications", "applicationTemplate"})
 @Entity
 @Table(name = "NUWA_ROUTESPACE")
@@ -29,10 +29,10 @@ import java.util.List;
         @NamedSubgraph(
             name = "SubGraph.ApplicationTemplate.FetchRoute",
             attributeNodes = {
-                @NamedAttributeNode(value = "routes", subgraph = "SubGraph.ApplicationTemplateRoute.FetchChildren")
+                @NamedAttributeNode(value = "routes", subgraph = "SubGraph.ApplicationTemplateRoute.FetchComponent")
             }),
         @NamedSubgraph(
-            name = "SubGraph.ApplicationTemplateRoute.FetchChildren",
+            name = "SubGraph.ApplicationTemplateRoute.FetchComponent",
             attributeNodes = {
                 @NamedAttributeNode(value = "parent"),
                 @NamedAttributeNode(value = "component")

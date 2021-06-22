@@ -171,17 +171,17 @@ type Application {
     # 是否启用
     enabled: Boolean
     # 路由
-    routes(space: ID!): [Route]
+    routes(space: ID = "web"): [Route]
     # 路由命名空间
     routespaces: [Routespace]
     # 路由
-    route(path: String!): Route
+    route(space: ID = "web", path: String!): Route
     # 根路由
-    rootRoute(space: ID!): Route
+    rootRoute(space: ID = "web"): Route
     # 登录路由
-    loginRoute(space: ID!): Route
+    loginRoute(space: ID = "web"): Route
     # 布局路由
-    layoutRoute(space: ID!): Route
+    layoutRoute(space: ID = "web"): Route
     # 集成钉钉
     dingtalkIntegration: Boolean
     # 客户端 ID

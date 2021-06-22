@@ -5,6 +5,8 @@ import cn.asany.ui.resources.bean.Component;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.LazyToOne;
+import org.hibernate.annotations.LazyToOneOption;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.framework.dao.hibernate.converter.StringSetConverter;
 
@@ -21,10 +23,16 @@ import java.util.Set;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = false)
-@ToString(exclude = {"parent", "application"})
+@EqualsAndHashCode(callSuper = false, of = "id")
+@ToString(exclude = {"parent", "application", "space", "routes"})
 @Entity
 @Table(name = "NUWA_APPLICATION_ROUTE")
+@NamedEntityGraph(
+    name = "Graph.ApplicationRoute.FetchComponent",
+    attributeNodes = {
+        @NamedAttributeNode(value = "component")
+    }
+)
 public class ApplicationRoute extends BaseBusEntity {
 
     @Id
@@ -41,6 +49,7 @@ public class ApplicationRoute extends BaseBusEntity {
      * 路由所属类型 PC端/M站
      */
     @ManyToOne(fetch = FetchType.LAZY)
+    @LazyToOne(LazyToOneOption.NO_PROXY)
     @JoinColumn(name = "SPACE", foreignKey = @ForeignKey(name = "FK_APPLICATION_ROUTE_SPACE"), updatable = false, nullable = false)
     private Routespace space;
     /**
@@ -124,6 +133,7 @@ public class ApplicationRoute extends BaseBusEntity {
      * 应用
      */
     @ManyToOne(fetch = FetchType.LAZY)
+    @LazyToOne(LazyToOneOption.NO_PROXY)
     @JoinColumn(name = "APPLICATION_ID", foreignKey = @ForeignKey(name = "FK_APPLICATION_ROUTE_APPID"), updatable = false, nullable = false)
     private Application application;
     /**

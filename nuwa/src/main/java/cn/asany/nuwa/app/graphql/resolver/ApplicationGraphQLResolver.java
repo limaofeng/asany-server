@@ -3,11 +3,11 @@ package cn.asany.nuwa.app.graphql.resolver;
 import cn.asany.nuwa.app.bean.Application;
 import cn.asany.nuwa.app.bean.ApplicationRoute;
 import cn.asany.nuwa.app.bean.ClientSecret;
-import cn.asany.nuwa.app.bean.Routespace;
+import cn.asany.nuwa.app.service.ApplicationService;
 import graphql.kickstart.tools.GraphQLResolver;
+import graphql.schema.DataFetchingEnvironment;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -16,7 +16,13 @@ import java.util.List;
 @Component
 public class ApplicationGraphQLResolver implements GraphQLResolver<Application> {
 
-    public ApplicationRoute route(Application application, String path) {
+    private final ApplicationService applicationService;
+
+    public ApplicationGraphQLResolver(ApplicationService applicationService) {
+        this.applicationService = applicationService;
+    }
+
+    public ApplicationRoute route(Application application, String space, String path) {
         return null;
     }
 
@@ -32,12 +38,12 @@ public class ApplicationGraphQLResolver implements GraphQLResolver<Application> 
         return null;
     }
 
-    public List<ApplicationRoute> routes(Application application, String space) {
-        return new ArrayList<>();
-    }
-
-    public List<Routespace> routespaces(Application application) {
-        return new ArrayList<>();
+    public List<ApplicationRoute> routes(Application application, String space, DataFetchingEnvironment environment) {
+        String parentArgsBySpace = environment.getExecutionStepInfo().getParent().getArgument("space");
+        if (space.equals(parentArgsBySpace)) {
+            return application.getRoutes();
+        }
+        return this.applicationService.findRouteAllByApplicationAndSpaceWithComponent(application.getId(), space);
     }
 
     public Boolean dingtalkIntegration(Application application) {

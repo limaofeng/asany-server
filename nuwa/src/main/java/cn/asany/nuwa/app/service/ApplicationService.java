@@ -72,14 +72,22 @@ public class ApplicationService implements ClientDetailsService {
         return optional.get();
     }
 
+    @Transactional
     public Optional<Application> findByClientIdWithRoute(String id, String space) {
         return this.applicationDao.findByClientIdWithRoute(id, space);
     }
 
+    @Transactional
     public Optional<Application> findByIdWithRoute(Long id, String space) {
         return this.applicationDao.findByIdWithRoute(id, space);
     }
 
+    @Transactional
+    public List<ApplicationRoute> findRouteAllByApplicationAndSpaceWithComponent(Long applicationId, String space) {
+        return this.applicationRouteDao.findAllByApplicationAndSpaceWithComponent(applicationId, space);
+    }
+
+    @Transactional
     public Application createApplication(OAuthApplication app) {
         String clientId = StringUtil.generateNonceString(NONCE_CHARS, 20);
         String clientSecret = StringUtil.generateNonceString(NONCE_CHARS, 40);
