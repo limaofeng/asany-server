@@ -18,7 +18,7 @@ public class OrganizationDeserializer extends JsonDeserializer<Organization> {
         if (StringUtil.isBlank(jp.getValueAsString())) {
             return null;
         }
-        return Organization.builder().id(jp.getValueAsString()).build();
+        return Organization.builder().id(jp.getValueAsLong()).build();
     }
 
 }

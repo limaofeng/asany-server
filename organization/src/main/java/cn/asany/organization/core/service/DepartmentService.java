@@ -123,7 +123,7 @@ public class DepartmentService {
         return optional.orElse(null);
     }
 
-    public List<Department> findAllByOrg(String orgId) {
+    public List<Department> findAllByOrg(Long orgId) {
         Example example = Example.of(Department.builder()
             .organization(Organization.builder().id(orgId).build())
             .build());
@@ -217,7 +217,7 @@ public class DepartmentService {
      * @param departmentName
      * @return
      */
-    public Department getDepartmentByName(String departmentName, String organization) {
+    public Department getDepartmentByName(String departmentName, Long organization) {
         return this.departmentDao.findOne(Example.of(Department.builder().name(departmentName)
             .organization(Organization.builder().id(organization).build())
             .build())).orElse(null);
@@ -230,7 +230,7 @@ public class DepartmentService {
      * @param organization
      * @return
      */
-    public List<Department> getDepartmentsByName(String departmentName, String organization) {
+    public List<Department> getDepartmentsByName(String departmentName, Long organization) {
         PropertyFilterBuilder builder = new PropertyFilterBuilder();
         builder.contains("name", departmentName);
         builder.equal("organization.id", organization);

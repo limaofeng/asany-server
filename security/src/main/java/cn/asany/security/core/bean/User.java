@@ -1,5 +1,6 @@
 package cn.asany.security.core.bean;
 
+import cn.asany.base.common.Ownership;
 import cn.asany.security.core.bean.databind.RolesDeserializer;
 import cn.asany.security.core.bean.enums.UserType;
 import cn.asany.security.core.validators.UsernameCannotRepeatValidator;
@@ -26,7 +27,7 @@ import java.util.*;
  * @author limaofeng
  */
 @Data
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -34,9 +35,11 @@ import java.util.*;
 @Table(name = "AUTH_USER")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "user_groups", "website", "menus", "authorities"})
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class User extends BaseBusEntity {
+public class User extends BaseBusEntity implements Ownership {
 
     private static final long serialVersionUID = 5507435998232223911L;
+
+    public static final String OWNERSHIP_KEY = "PERSONAL";
 
     @Transient
     private String code;
@@ -192,4 +195,16 @@ public class User extends BaseBusEntity {
 //        authoritys.addAll(this.getRoles().stream().map(role -> SecurityScope.newInstance(SecurityType.role, role.getId()).toString()).collect(Collectors.toList()));
         return authoritys;
     }
+
+    @Override
+    public String getName() {
+        return this.nickName;
+    }
+
+    @Override
+    @Transient
+    public String getOwnerType() {
+        return OWNERSHIP_KEY;
+    }
+
 }

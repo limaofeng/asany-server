@@ -25,6 +25,8 @@ import java.util.List;
 @Table(name = "NUWA_COMPONENT")
 public class Component extends BaseBusEntity {
 
+    public static final String RESOURCE_NAME = "COMPONENT";
+
     @Id
     @Column(name = "ID", length = 50, updatable = false)
     @GeneratedValue(generator = "fantasy-sequence")

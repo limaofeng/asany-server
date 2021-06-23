@@ -20,7 +20,7 @@ import javax.persistence.Table;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "ORG_BUSINESS_SCOPE")
+@Table(name = "ORG_ROLE_SCOPE")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class RoleScope extends BaseBusEntity {
     @Id

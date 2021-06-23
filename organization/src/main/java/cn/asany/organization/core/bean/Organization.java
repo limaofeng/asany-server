@@ -1,5 +1,6 @@
 package cn.asany.organization.core.bean;
 
+import cn.asany.base.common.Ownership;
 import cn.asany.organization.core.bean.databind.OrganizationDeserializer;
 import cn.asany.organization.core.bean.databind.OrganizationSerializer;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -10,6 +11,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.*;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
 import javax.persistence.*;
@@ -31,14 +33,19 @@ import java.util.List;
 @Table(name = "ORG_ORGANIZATION")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "children", "employees"})
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class Organization extends BaseBusEntity {
+public class Organization extends BaseBusEntity implements Ownership {
 
-    /**
-     * 机构简写
-     */
+    public static final String OWNERSHIP_KEY = "ORGANIZATION";
+
     @Id
-    @Column(name = "ID", length = 10)
-    private String id;
+    @GeneratedValue(generator = "fantasy-sequence")
+    @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+    private Long id;
+    /**
+     * 编码
+     */
+    @Column(name = "CODE", length = 10)
+    private String code;
     /**
      * 机构名称
      */
@@ -101,5 +108,10 @@ public class Organization extends BaseBusEntity {
     @Column(name = "MULTI_SECTORAL_NUMBER")
     private Long multiSectoralNumber;
 
+    @Override
+    @Transient
+    public String getOwnerType() {
+        return OWNERSHIP_KEY;
+    }
 
 }

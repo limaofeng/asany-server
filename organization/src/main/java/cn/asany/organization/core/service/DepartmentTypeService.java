@@ -21,7 +21,7 @@ public class DepartmentTypeService {
     @Autowired
     private DepartmentDao departmentDao;
 
-    public DepartmentType createDepartmentType(String name, String code, String organization, Boolean multiSectoral, Long andPost) {
+    public DepartmentType createDepartmentType(String name, String code, Long organization, Boolean multiSectoral, Long andPost) {
         DepartmentType departmentType = new DepartmentType();
         Organization organization1 = new Organization();
         departmentType.setMultiSectoral(multiSectoral);
@@ -47,7 +47,7 @@ public class DepartmentTypeService {
         return departmentTypeDao.findAll();
     }
 
-    public List<DepartmentType> selectDepartmentTypeByOrganization(String organizationId) {
+    public List<DepartmentType> selectDepartmentTypeByOrganization(Long organizationId) {
         Organization organization = Organization.builder().id(organizationId).build();
         return departmentTypeDao.findByOrganization(organization);
     }

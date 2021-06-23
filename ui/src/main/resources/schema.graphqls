@@ -1,0 +1,44 @@
+enum LibraryType {
+    # 图标
+    ICONS
+    # 组件
+    COMPONENT
+    # 设计系统
+    DESIGN_SYSTEM
+}
+
+type Collection {
+    id: ID
+}
+
+interface Library {
+    id: ID
+}
+
+type Icon {
+    id: ID
+    name: String
+    content: String
+}
+
+type IconLibrary implements Library {
+    id: ID
+    # 名称
+    name: String
+    # 描述
+    description: String
+    # 图标
+    icons: [Icon]
+}
+
+input OwnershipInput {
+    id: ID!
+    type: String!
+}
+
+extend type Query {
+    # 库
+    libraries(type: LibraryType!, ownership: OwnershipInput = {type: "PERSONAL", id: "me"}): [Library]
+    # 图标库
+    iconLibrary(id: ID!): IconLibrary
+}

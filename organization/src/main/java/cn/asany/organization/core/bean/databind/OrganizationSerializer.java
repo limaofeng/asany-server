@@ -10,6 +10,6 @@ import java.io.IOException;
 public class OrganizationSerializer extends JsonSerializer<Organization> {
     @Override
     public void serialize(Organization organization, JsonGenerator jgen, SerializerProvider provider) throws IOException {
-        jgen.writeString(organization.getId() != null ? organization.getId() : "");
+        jgen.writeNumber(organization.getId() != null ? organization.getId() : null);
     }
 }

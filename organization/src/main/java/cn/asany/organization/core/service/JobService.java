@@ -34,7 +34,7 @@ public class JobService {
     @Autowired
     private EmployeePositionDao employeePositionDao;
 
-    public List<Job> findAll(String org, OrderBy orderBy) {
+    public List<Job> findAll(Long org, OrderBy orderBy) {
         if (orderBy == null) {
             orderBy = new OrderBy("createdAt", OrderBy.Direction.DESC);
         }

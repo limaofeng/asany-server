@@ -37,7 +37,7 @@ public class EmployeeGroupScopeService {
         return employeeGroupScopeDao.update(groupScope, merge);
     }
 
-    public List<EmployeeGroupScope> findAll(String organization,String name){
+    public List<EmployeeGroupScope> findAll(Long organization,String name){
         PropertyFilterBuilder builder = new PropertyFilterBuilder();
         builder.equal("organization.id",organization);
         if (StringUtils.isNotBlank(name)){

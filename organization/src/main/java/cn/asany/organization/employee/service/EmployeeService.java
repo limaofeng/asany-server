@@ -8,7 +8,7 @@ import cn.asany.organization.core.dao.DepartmentDao;
 import cn.asany.organization.core.service.OrganizationService;
 import cn.asany.organization.employee.bean.Employee;
 import cn.asany.organization.employee.bean.EmployeeLink;
-import cn.asany.organization.employee.bean.EmployeePhone;
+import cn.asany.organization.employee.bean.EmployeePhoneNumber;
 import cn.asany.organization.employee.dao.*;
 import cn.asany.organization.relationship.bean.EmployeePosition;
 import cn.asany.organization.relationship.bean.OrganizationEmployee;
@@ -96,7 +96,7 @@ public class EmployeeService {
 
     public Employee save(Employee employee, List<OrganizationEmployee> organizationEmployees,
 //                         List<EmployeeEmail> employeeEmails,
-                         List<EmployeePhone> phoneList) {
+                         List<EmployeePhoneNumber> phoneList) {
         // 添加该用户是否可以在多部门中
         Boolean supportMultiSectoral = supportMultiSectoral(organizationEmployees);
         if (supportMultiSectoral) {
@@ -115,8 +115,8 @@ public class EmployeeService {
 //            employee.setEmails(employeeEmails);
 //            employeeEmailDao.saveAll(employeeEmails);
 
-            for (EmployeePhone employeePhone : phoneList) {
-                employeePhone.setEmployee(employee);
+            for (EmployeePhoneNumber employeePhoneNumber : phoneList) {
+                employeePhoneNumber.setEmployee(employee);
             }
             employee.setPhones(phoneList);
 //            employeePhoneDao.saveAll(phoneList);
@@ -531,7 +531,7 @@ public class EmployeeService {
         return employeePositionDao.count(Example.of(EmployeePosition.builder().department(department).organization(department.getOrganization()).build()));
     }
 
-    public EmployeePosition findPositionOne(Long employeeId, Long originalDeparmentId, String organizationId) {
+    public EmployeePosition findPositionOne(Long employeeId, Long originalDeparmentId, Long organizationId) {
         List<EmployeePosition> list = employeePositionDao.findAll(Example.of(EmployeePosition.builder().employee(Employee.builder().id(employeeId).build()).department(Department.builder().id(originalDeparmentId).build()).organization(Organization.builder().id(organizationId).build()).build()));
         if (list.size() > 1) {
             for (EmployeePosition employeePosition : list) {

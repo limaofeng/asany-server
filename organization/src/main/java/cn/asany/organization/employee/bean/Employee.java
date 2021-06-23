@@ -135,7 +135,7 @@ public class Employee extends BaseBusEntity {
      * 电话列表
      */
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "employee", cascade = CascadeType.REMOVE)
-    private List<EmployeePhone> phones;
+    private List<EmployeePhoneNumber> phones;
 
     /**
      * 部门

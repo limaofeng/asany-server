@@ -35,6 +35,7 @@ task dev {
 }
 
 dependencies {
+    implementation project(":asany-ui")
     implementation project(":asany-base")
     implementation project(":asany-nuwa")
     implementation project(":asany-storage")

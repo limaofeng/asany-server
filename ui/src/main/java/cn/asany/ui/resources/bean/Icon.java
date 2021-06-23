@@ -1,5 +1,6 @@
 package cn.asany.ui.resources.bean;
 
+import cn.asany.ui.resources.UIResource;
 import cn.asany.ui.resources.bean.enums.IconType;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
@@ -14,7 +15,9 @@ import javax.persistence.*;
 @EqualsAndHashCode(callSuper = false)
 @Entity
 @Table(name = "UI_ICON")
-public class Icon extends BaseBusEntity {
+public class Icon extends BaseBusEntity implements UIResource {
+
+    public static final String RESOURCE_NAME = "ICON";
     @Id
     @Column(name = "ID")
     @GeneratedValue(generator = "fantasy-sequence")

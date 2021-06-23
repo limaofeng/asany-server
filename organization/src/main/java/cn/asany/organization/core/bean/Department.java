@@ -129,7 +129,6 @@ public class Department extends BaseBusEntity {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "department", cascade = CascadeType.REMOVE)
     private List<DepartmentAttribute> attributes;
 
-
     /**
      * 部门权限
      */
@@ -152,7 +151,7 @@ public class Department extends BaseBusEntity {
         return this.parent != null ? this.parent.getId() : null;
     }
 
-    public String getOrganizationId() {
+    public Long getOrganizationId() {
         return this.organization != null ? this.organization.getId() : null;
     }
 

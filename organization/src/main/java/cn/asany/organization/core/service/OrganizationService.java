@@ -28,7 +28,7 @@ public class OrganizationService {
         return this.organizationDao.save(department);
     }
 
-    public Organization get(String id) {
+    public Organization get(Long id) {
         Optional<Organization> byId = organizationDao.findById(id);
         if (byId.isPresent()) {
             return byId.get();
@@ -37,12 +37,12 @@ public class OrganizationService {
        // return this.organizationDao.findById(id).orElse(null);
     }
 
-    public Organization update(String id, boolean merge, Organization department) {
+    public Organization update(Long id, boolean merge, Organization department) {
         department.setId(id);
         return this.organizationDao.update(department, merge);
     }
 
-    public void delete(String id) {
+    public void delete(Long id) {
         this.organizationDao.deleteById(id);
     }
 

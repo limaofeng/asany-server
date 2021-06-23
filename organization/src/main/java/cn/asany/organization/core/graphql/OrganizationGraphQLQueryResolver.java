@@ -41,7 +41,7 @@ public class OrganizationGraphQLQueryResolver implements GraphQLQueryResolver {
         return organizationService.findAll(builder.build());
     }
 
-    public Organization organization(String id) {
+    public Organization organization(Long id) {
         return organizationService.get(id);
     }
 

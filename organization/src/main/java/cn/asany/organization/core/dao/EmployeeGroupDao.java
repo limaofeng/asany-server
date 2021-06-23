@@ -19,5 +19,5 @@ import java.util.List;
 public interface EmployeeGroupDao extends JpaRepository<EmployeeGroup, Long> {
 
     @Query(nativeQuery = true, value = "SELECT * FROM org_employee_group where locate(:name, `name`)>0 and scope = (SELECT id FROM org_employee_group_scope where id= :scope AND organization_id= :organization )")
-    List<EmployeeGroup> findEmployeeGroups(@Param("name")String name, @Param("scope")String scope, @Param("organization")String organization);
+    List<EmployeeGroup> findEmployeeGroups(@Param("name")Long name, @Param("scope")String scope, @Param("organization")String organization);
 }

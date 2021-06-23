@@ -83,7 +83,7 @@ public class EmployeeGroupService {
     }
 
 
-    public List<EmployeeGroup> groups(String organization, String scope, String name) {
+    public List<EmployeeGroup> groups(Long organization, String scope, String name) {
         EmployeeGroup.EmployeeGroupBuilder builder = EmployeeGroup.builder();
         if (StringUtil.isNotBlank(organization)) {
             builder.scope(EmployeeGroupScope.builder().organization(Organization.builder().id(organization).build()).build());
@@ -112,7 +112,7 @@ public class EmployeeGroupService {
         this.employeeGroupDao.deleteById(id);
     }
 
-    public List<EmployeeGroupScope> findScopes(String organization) {
+    public List<EmployeeGroupScope> findScopes(Long organization) {
         Example example = Example.of(EmployeeGroupScope.builder()
             .organization(Organization.builder().id(organization).build())
             .build());

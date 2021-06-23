@@ -12,5 +12,5 @@ import org.springframework.stereotype.Repository;
  * @date 2019-04-24 17:00
  */
 @Repository
-public interface OrganizationDao extends JpaRepository<Organization, String> {
+public interface OrganizationDao extends JpaRepository<Organization, Long> {
 }
