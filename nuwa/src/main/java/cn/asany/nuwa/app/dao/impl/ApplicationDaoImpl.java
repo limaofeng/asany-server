@@ -15,19 +15,13 @@ public class ApplicationDaoImpl extends ComplexJpaRepository<Application, Long> 
     }
 
     @Override
-    public Optional<Application> findByClientIdWithRoute(String clientId, String space) {
-        return this.findOne(PropertyFilter.builder()
-            .equal("clientId", clientId)
-            .equal("routes.space.id", space)
-            .build());
+    public Optional<Application> findByClientIdWithRoute(String clientId) {
+        return this.findOne(PropertyFilter.builder().equal("clientId", clientId).build());
     }
 
     @Override
-    public Optional<Application> findByIdWithRoute(Long id, String space) {
-        return this.findOne(PropertyFilter.builder()
-            .equal("id", id)
-            .equal("routes.space.id", space)
-            .build());
+    public Optional<Application> findByIdWithRoute(Long id) {
+        return this.findOne(PropertyFilter.builder().equal("id", id).build());
     }
 
 }

@@ -74,12 +74,12 @@ public class ApplicationService implements ClientDetailsService {
 
     @Transactional
     public Optional<Application> findByClientIdWithRoute(String id, String space) {
-        return this.applicationDao.findByClientIdWithRoute(id, space);
+        return this.applicationDao.findByClientIdWithRoute(id);
     }
 
     @Transactional
     public Optional<Application> findByIdWithRoute(Long id, String space) {
-        return this.applicationDao.findByIdWithRoute(id, space);
+        return this.applicationDao.findByIdWithRoute(id);
     }
 
     @Transactional

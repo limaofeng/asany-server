@@ -5,8 +5,6 @@ import cn.asany.ui.resources.bean.Component;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.LazyToOne;
-import org.hibernate.annotations.LazyToOneOption;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.framework.dao.hibernate.converter.StringSetConverter;
 
@@ -49,7 +47,6 @@ public class ApplicationRoute extends BaseBusEntity {
      * 路由所属类型 PC端/M站
      */
     @ManyToOne(fetch = FetchType.LAZY)
-    @LazyToOne(LazyToOneOption.NO_PROXY)
     @JoinColumn(name = "SPACE", foreignKey = @ForeignKey(name = "FK_APPLICATION_ROUTE_SPACE"), updatable = false, nullable = false)
     private Routespace space;
     /**
@@ -62,7 +59,7 @@ public class ApplicationRoute extends BaseBusEntity {
      * 层级
      */
     @Column(name = "LEVEL")
-    private String level;
+    private Integer level;
     /**
      * 路径
      */
@@ -133,7 +130,6 @@ public class ApplicationRoute extends BaseBusEntity {
      * 应用
      */
     @ManyToOne(fetch = FetchType.LAZY)
-    @LazyToOne(LazyToOneOption.NO_PROXY)
     @JoinColumn(name = "APPLICATION_ID", foreignKey = @ForeignKey(name = "FK_APPLICATION_ROUTE_APPID"), updatable = false, nullable = false)
     private Application application;
     /**

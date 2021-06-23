@@ -2,6 +2,10 @@ package cn.asany.nuwa.app.bean;
 
 import cn.asany.nuwa.template.bean.ApplicationTemplate;
 import lombok.*;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+import org.hibernate.annotations.LazyToOne;
+import org.hibernate.annotations.LazyToOneOption;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
 import javax.persistence.*;
@@ -46,10 +50,12 @@ public class Routespace extends BaseBusEntity {
     @Column(name = "NAME", length = 50)
     private String name;
     @ManyToOne(fetch = FetchType.LAZY)
+    @LazyToOne(LazyToOneOption.NO_PROXY)
     @JoinColumn(name = "APP_TEMPLATE_ID", foreignKey = @ForeignKey(name = "FK_ROUTESPACE_APP_TEMP_ID"), nullable = false)
     private ApplicationTemplate applicationTemplate;
 
     @ManyToMany(fetch = FetchType.LAZY)
+    @LazyCollection(LazyCollectionOption.EXTRA)
     @JoinTable(name = "NUWA_APPLICATION_ROUTESPACE",
         joinColumns = @JoinColumn(name = "ROUTESPACE_ID"),
         inverseJoinColumns = @JoinColumn(name = "APPLICATION_ID"),

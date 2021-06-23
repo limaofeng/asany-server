@@ -31,6 +31,7 @@ import java.util.stream.Collectors;
         @NamedSubgraph(
             name = "SubGraph.ApplicationRoute.FetchComponent",
             attributeNodes = {
+                @NamedAttributeNode(value = "space"),
                 @NamedAttributeNode(value = "parent"),
                 @NamedAttributeNode(value = "component")
             }

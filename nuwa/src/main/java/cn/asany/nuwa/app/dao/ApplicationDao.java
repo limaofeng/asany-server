@@ -11,9 +11,9 @@ import java.util.Optional;
 public interface ApplicationDao extends JpaRepository<Application, Long> {
 
     @EntityGraph(value = "Graph.Application.FetchRoute", type = EntityGraph.EntityGraphType.FETCH)
-    Optional<Application> findByClientIdWithRoute(String clientId, String space);
+    Optional<Application> findByClientIdWithRoute(String clientId);
 
     @EntityGraph(value = "Graph.Application.FetchRoute", type = EntityGraph.EntityGraphType.FETCH)
-    Optional<Application> findByIdWithRoute(Long id, String space);
+    Optional<Application> findByIdWithRoute(Long id);
 
 }
