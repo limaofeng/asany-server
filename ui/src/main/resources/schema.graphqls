@@ -36,9 +36,25 @@ input OwnershipInput {
     type: String!
 }
 
+input IconInput {
+    # 名称
+    name: String
+    # 描述
+    description: String
+    # 正文
+    content: String!
+}
+
 extend type Query {
     # 库
     libraries(type: LibraryType!, ownership: OwnershipInput = {type: "PERSONAL", id: "me"}): [Library]
     # 图标库
+    iconLibraries(ownership: OwnershipInput = {type: "PERSONAL", id: "me"}): [IconLibrary]
+    # 图标库
     iconLibrary(id: ID!): IconLibrary
+}
+
+extend type Mutation {
+    # 导入图标
+    importIcons(library: ID!, icons: [IconInput]!): IconLibrary
 }

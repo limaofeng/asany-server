@@ -30,6 +30,12 @@ public class LibraryItem extends BaseBusEntity {
     @JoinColumn(name = "LIBRARY_ID", foreignKey = @ForeignKey(name = "FK_LIBRARY_ITEM_LID"), nullable = false)
     private Library library;
 
+    @Column(name = "RESOURCE_ID", length = 20)
+    private Long resourceId;
+
+    @Column(name = "RESOURCE_TYPE", length = 10)
+    private String resourceType;
+
     @Any(
         metaColumn = @Column(name = "RESOURCE_TYPE", length = 10, insertable = false, updatable = false),
         fetch = FetchType.LAZY

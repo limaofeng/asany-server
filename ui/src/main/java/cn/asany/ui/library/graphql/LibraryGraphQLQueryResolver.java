@@ -26,6 +26,13 @@ public class LibraryGraphQLQueryResolver implements GraphQLQueryResolver {
         this.libraryConverter = libraryConverter;
     }
 
+    public List<ILibrary> libraries(LibraryType type, OwnershipInput ownership) {
+        if (type == LibraryType.ICONS) {
+            return iconLibraries(ownership).stream().collect(Collectors.toList());
+        }
+        return new ArrayList<>();
+    }
+
     public IconLibrary iconLibrary(Long id) {
         Optional<Library> library = libraryService.get(id);
         if (!library.isPresent()) {
@@ -34,12 +41,9 @@ public class LibraryGraphQLQueryResolver implements GraphQLQueryResolver {
         return this.libraryConverter.toIconLibrary(library.get());
     }
 
-    public List<ILibrary> libraries(LibraryType type, OwnershipInput ownership) {
-        List<Library> libraries = libraryService.libraries(type);
-        if (type == LibraryType.ICONS) {
-            return libraryConverter.toIconLibraries(libraries).stream().collect(Collectors.toList());
-        }
-        return new ArrayList<>();
+    public List<IconLibrary> iconLibraries(OwnershipInput ownership) {
+        List<Library> libraries = libraryService.libraries(LibraryType.ICONS);
+        return libraryConverter.toIconLibraries(libraries);
     }
 
 }

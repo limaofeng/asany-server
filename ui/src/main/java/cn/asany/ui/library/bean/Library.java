@@ -1,10 +1,10 @@
 package cn.asany.ui.library.bean;
 
+import cn.asany.base.common.Ownership;
 import cn.asany.organization.core.bean.Organization;
 import cn.asany.security.core.bean.User;
 import cn.asany.ui.library.bean.enums.LibraryType;
 import lombok.*;
-import net.bytebuddy.description.modifier.Ownership;
 import org.hibernate.annotations.Any;
 import org.hibernate.annotations.AnyMetaDef;
 import org.hibernate.annotations.GenericGenerator;

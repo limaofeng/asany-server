@@ -42,6 +42,6 @@ public class Icon extends BaseBusEntity implements UIResource {
     /**
      * 内容
      */
-    @Column(name = "CONTENT")
+    @Column(name = "CONTENT", columnDefinition = "TEXT")
     private String content;
 }
