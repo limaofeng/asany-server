@@ -13,7 +13,6 @@ import org.springframework.web.client.RestTemplate;
  * @author 2u
  * @version 0.1
  */
-@Configuration
 public class RestTemplateConfiguration {
 
     @Bean
