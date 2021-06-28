@@ -7,7 +7,7 @@ stages:
 
 build:
   stage: build
-  image: core.harbor.thuni-h.com/library/java-protoc:v2
+  image: library/java:8
   cache:
     paths:
       - .gradle/caches/
@@ -24,7 +24,7 @@ build:
 
 test:
   stage: test
-  image: core.harbor.thuni-h.com/library/java-protoc:v2
+  image: library/java:8
   cache:
     paths:
       - .gradle/caches/
