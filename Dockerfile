@@ -1,4 +1,4 @@
-FROM core.harbor.thuni-h.com/library/java:8
+FROM library/java:8
 
 ARG version_number=0
 

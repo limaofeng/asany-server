@@ -1,0 +1,11 @@
+description = "自定义建模"
+
+dependencies {
+    implementation "org.wltea.ik-analyzer:ik-analyzer:7.7.2"
+    implementation "com.hankcs:hanlp:portable-1.7.1"
+    compileOnly "org.projectlombok:lombok:${LIB_LOMBOK_VER}"
+    annotationProcessor "org.projectlombok:lombok:$LIB_LOMBOK_VER"
+    testCompileOnly "org.projectlombok:lombok:${LIB_LOMBOK_VER}"
+    testAnnotationProcessor "org.projectlombok:lombok:$LIB_LOMBOK_VER"
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
