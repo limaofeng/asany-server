@@ -7,17 +7,19 @@ import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = false, of = "id")
 @Entity
 @Table(name = "UI_ICON")
 public class Icon extends BaseBusEntity implements UIResource {
 
     public static final String RESOURCE_NAME = "ICON";
+
     @Id
     @Column(name = "ID")
     @GeneratedValue(generator = "fantasy-sequence")
@@ -29,6 +31,11 @@ public class Icon extends BaseBusEntity implements UIResource {
     @Enumerated(EnumType.STRING)
     @Column(name = "TYPE", length = 20, nullable = false)
     private IconType type;
+    /**
+     * 编码
+     */
+    @Column(name = "UNICODE", length = 10)
+    private String unicode;
     /**
      * 名称
      */
@@ -44,4 +51,8 @@ public class Icon extends BaseBusEntity implements UIResource {
      */
     @Column(name = "CONTENT", columnDefinition = "TEXT")
     private String content;
+    /**
+     * 标签
+     */
+    private transient List<String> tags;
 }

@@ -34,7 +34,7 @@ public class LibraryGraphQLQueryResolver implements GraphQLQueryResolver {
     }
 
     public IconLibrary iconLibrary(Long id) {
-        Optional<Library> library = libraryService.get(id);
+        Optional<Library> library = libraryService.findByIdWithIcon(id);
         if (!library.isPresent()) {
             return null;
         }

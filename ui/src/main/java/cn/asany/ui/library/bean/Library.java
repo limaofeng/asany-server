@@ -12,13 +12,28 @@ import org.hibernate.annotations.MetaValue;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
 import javax.persistence.*;
-import java.util.List;
+import java.util.Set;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
+@NamedEntityGraph(
+    name = "Graph.Library.FetchIcon",
+    attributeNodes = {
+        @NamedAttributeNode(value = "items",  subgraph = "SubGraph.LibraryItem.FetchIconResource")
+    },
+    subgraphs = {
+        @NamedSubgraph(
+            name = "SubGraph.LibraryItem.FetchIconResource",
+            attributeNodes = {
+                @NamedAttributeNode(value = "tags"),
+                @NamedAttributeNode(value = "icon")
+            }
+        ),
+    }
+)
 @Entity
 @Table(name = "UI_LIBRARY")
 public class Library extends BaseBusEntity {
@@ -48,7 +63,7 @@ public class Library extends BaseBusEntity {
      * 库内资源
      */
     @OneToMany(mappedBy = "library", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE}, fetch = FetchType.LAZY)
-    private List<LibraryItem> items;
+    private Set<LibraryItem> items;
 
     /**
      * 所有者

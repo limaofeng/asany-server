@@ -1,12 +1,14 @@
 spring:
+  jackson:
+    default-property-inclusion: non_null
   jfantasy:
     sequence:
-      pool-size: 100
+      pool-size: 1
   application:
     name: server
   datasource:
     name: datasource
-    url: jdbc:mysql://api.thuni-h.com:30306/demo?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&rewriteBatchedStatements=true
+    url: jdbc:mysql://api.thuni-h.com:30306/demo?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull
     username: admin
     password: CU:4icgD4MF6Q!u^
     druid:
@@ -19,3 +21,6 @@ spring:
     host: api.dev.thuni-h.com
     port: 32519
     password: Y0HfNA{PdjSINZyy
+
+storage:
+  url: http://demo.homeword.cn/files

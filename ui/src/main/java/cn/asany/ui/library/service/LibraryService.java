@@ -3,9 +3,9 @@ package cn.asany.ui.library.service;
 import cn.asany.ui.library.bean.Library;
 import cn.asany.ui.library.bean.enums.LibraryType;
 import cn.asany.ui.library.dao.LibraryDao;
-import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,11 +19,18 @@ public class LibraryService {
     }
 
     public List<Library> libraries(LibraryType type) {
-        return this.libraryDao.findAll(PropertyFilter.builder().equal("type", type).build());
+        if (LibraryType.ICONS == type) {
+            return this.libraryDao.findAllWithIcon();
+        }
+        return new ArrayList<>();
     }
 
-    public Optional<Library> get(Long id) {
+    public Optional<Library> findById(Long id) {
         return this.libraryDao.findById(id);
+    }
+
+    public Optional<Library> findByIdWithIcon(Long id) {
+        return this.libraryDao.findByIdWithIcon(id);
     }
 
 }

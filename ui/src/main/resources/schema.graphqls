@@ -18,6 +18,8 @@ interface Library {
 type Icon {
     id: ID
     name: String
+    tags: [String]
+    unicode: String
     content: String
 }
 
@@ -39,6 +41,10 @@ input OwnershipInput {
 input IconInput {
     # 名称
     name: String
+    # 编码
+    unicode: String
+    # 标签
+    tags: [String]
     # 描述
     description: String
     # 正文

@@ -8,6 +8,7 @@ import cn.asany.ui.resources.bean.Icon;
 import org.mapstruct.*;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring", builder = @Builder, unmappedTargetPolicy = ReportingPolicy.IGNORE, nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
@@ -22,7 +23,19 @@ public interface LibraryConverter {
     IconLibrary toIconLibrary(Library libraries);
 
     default List<Icon> toIcons(List<LibraryItem> items) {
-        return items.stream().map(item -> (Icon) item.getResource()).collect(Collectors.toList());
+        return items.stream().map(item -> {
+            Icon icon = item.getResource(Icon.class);
+            icon.setTags(item.getTags());
+            return icon;
+        }).collect(Collectors.toList());
+    }
+
+    default List<Icon> toIcons(Set<LibraryItem> items) {
+        return items.stream().map(item -> {
+            Icon icon = item.getResource(Icon.class);
+            icon.setTags(item.getTags());
+            return icon;
+        }).collect(Collectors.toList());
     }
 
     Icon toIcon(IconInput input);

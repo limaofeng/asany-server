@@ -2,6 +2,8 @@ package cn.asany.ui.library.graphql.input;
 
 import lombok.*;
 
+import java.util.List;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -13,6 +15,10 @@ public class IconInput {
      */
     private String name;
     /**
+     * 名称
+     */
+    private String unicode;
+    /**
      * 描述
      */
     private String description;
@@ -20,4 +26,8 @@ public class IconInput {
      * 正文
      */
     private String content;
+    /**
+     * 标签
+     */
+    private List<String> tags;
 }

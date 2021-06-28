@@ -14,9 +14,15 @@ spring:
       testOnReturn: true
       poolPreparedStatements: true
       maxOpenPreparedStatements: 20
+  redis:
+    jedis:
+      pool:
+        max-active: 8
+        max-wait: 300
+        max-idle: 100
+        min-idle: 100
+      timeout: 1000
   jpa:
-    generate-ddl: false
-    open-in-view: true
     hibernate:
       ddl-auto: update
       use-new-id-generator-mappings: true
@@ -24,8 +30,8 @@ spring:
         implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyJpaCompliantImpl
     properties:
       hibernate:
+        open-in-view: true
         jdbc:
-          batch_size: 200
           time_zone: GMT+8
         session_factory:
           interceptor: org.jfantasy.framework.dao.hibernate.interceptors.BusEntityInterceptor
@@ -39,14 +45,8 @@ spring:
         show_sql: true
         ejb:
           identifier_generator_strategy_provider: org.jfantasy.framework.dao.hibernate.spi.CustomIdentifierGeneratorStrategyProvider
-  redis:
-    jedis:
-      pool:
-        max-active: 8
-        max-wait: 300
-        max-idle: 100
-        min-idle: 100
-      timeout: 1000
+    generate-ddl: false
+    open-in-view: false
   quartz:
     properties:
       org:
@@ -75,7 +75,7 @@ graphql:
     exception-handlers-enabled: true
     cors-enabled: true
     cors:
-      allowed-origin-patterns: "*"
+      allowed-origins: "*"
       allowed-methods: GET, HEAD, POST
       allowed-headers: Accept, Origin, Authorization, Content-Type, Last-Modified
       allow-credentials: true

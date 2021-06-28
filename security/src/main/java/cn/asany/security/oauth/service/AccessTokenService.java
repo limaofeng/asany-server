@@ -17,6 +17,7 @@ import org.jfantasy.framework.security.oauth2.core.OAuth2Authentication;
 import org.jfantasy.framework.security.oauth2.core.OAuth2AuthenticationDetails;
 import org.jfantasy.framework.security.oauth2.core.TokenType;
 import org.jfantasy.framework.security.oauth2.jwt.JwtUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -34,7 +35,7 @@ public class AccessTokenService {
     private final DefaultTokenServices tokenServices;
     private final AccessTokenConverter accessTokenConverter;
 
-    public AccessTokenService(AccessTokenDao accessTokenDao, DefaultTokenServices tokenServices, AccessTokenConverter accessTokenConverter) {
+    public AccessTokenService(AccessTokenDao accessTokenDao, @Autowired(required = false) DefaultTokenServices tokenServices, AccessTokenConverter accessTokenConverter) {
         this.accessTokenDao = accessTokenDao;
         this.tokenServices = tokenServices;
         this.accessTokenConverter = accessTokenConverter;
