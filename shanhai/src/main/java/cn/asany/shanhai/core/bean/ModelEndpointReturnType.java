@@ -15,6 +15,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false, of = "id")
+@ToString(of = "id")
 @Entity
 @Table(name = "SH_MODEL_ENDPOINT_RETURN_TYPE")
 public class ModelEndpointReturnType {

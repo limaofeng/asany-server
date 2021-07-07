@@ -1,5 +1,16 @@
 description = "自定义建模"
 
+apply plugin: 'org.hibernate.orm'
+
+hibernate {
+    enhance {
+        enableLazyInitialization = true
+        enableDirtyTracking = true
+        enableAssociationManagement = true
+        enableExtendedEnhancement = false
+    }
+}
+
 dependencies {
     implementation "org.wltea.ik-analyzer:ik-analyzer:7.7.2"
     implementation "com.hankcs:hanlp:portable-1.7.1"

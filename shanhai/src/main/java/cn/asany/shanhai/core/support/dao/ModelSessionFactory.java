@@ -27,7 +27,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class ModelSessionFactory implements InitializingBean, ModelRepositoryFactory {
 
-    @Autowired(required = false)
+    @Autowired
     private EntityManagerFactory entityManagerFactory;
     private SessionFactory sessionFactory;
     private MetadataSources metadataSources;
@@ -38,12 +38,11 @@ public class ModelSessionFactory implements InitializingBean, ModelRepositoryFac
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        SessionFactory sessionFactory = entityManagerFactory.unwrap(SessionFactory.class);
+        sessionFactory = entityManagerFactory.unwrap(SessionFactory.class);
         StandardServiceRegistry serviceRegistry = sessionFactory.getSessionFactoryOptions().getServiceRegistry();
         this.metadataSources = new MetadataSources(serviceRegistry);
         this.hibernateMappingHelper = new HibernateMappingHelper();
         this.hibernateMappingHelper.afterPropertiesSet();
-        sessionFactory.getSessionFactoryOptions();
     }
 
     public void addMetadataSource(String xml) {

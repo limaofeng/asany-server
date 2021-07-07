@@ -15,6 +15,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false, of = "id")
+@ToString(of = "id")
 @Entity
 @Table(name = "SH_MODEL_FIELD_METADATA")
 @JsonInclude(value = JsonInclude.Include.NON_NULL)

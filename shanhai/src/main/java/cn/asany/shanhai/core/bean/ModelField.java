@@ -8,7 +8,7 @@ import org.hibernate.annotations.LazyToOneOption;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
 import javax.persistence.*;
-import java.util.List;
+import java.util.Set;
 
 /**
  * 实体字段
@@ -20,6 +20,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false, of = "id")
+@ToString(of = "id")
 @Entity
 @NamedEntityGraph(
     name = "Graph.ModelField.FetchModelAndType",
@@ -76,6 +77,7 @@ public class ModelField extends BaseBusEntity implements ModelGroupResource {
      */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "TYPE_ID", foreignKey = @ForeignKey(name = "FK_MODEL_FIELD_TID"))
+    @LazyToOne(LazyToOneOption.NO_PROXY)
     private Model type;
     /**
      * 是否唯一
@@ -105,6 +107,7 @@ public class ModelField extends BaseBusEntity implements ModelGroupResource {
      */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MODEL_ID", foreignKey = @ForeignKey(name = "FK_MODEL_FIELD_MODEL_ID"), nullable = false)
+    @LazyToOne(LazyToOneOption.NO_PROXY)
     private Model model;
     /**
      * 元数据
@@ -122,7 +125,7 @@ public class ModelField extends BaseBusEntity implements ModelGroupResource {
      * 参数
      */
     @OneToMany(mappedBy = "field", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE}, fetch = FetchType.LAZY)
-    private List<ModelFieldArgument> arguments;
+    private Set<ModelFieldArgument> arguments;
 
     public static class ModelFieldBuilder {
 
@@ -147,20 +150,4 @@ public class ModelField extends BaseBusEntity implements ModelGroupResource {
         }
     }
 
-    @Override
-    public String toString() {
-        return "ModelField{" +
-            "id=" + id +
-            ", name='" + name + '\'' +
-            ", description='" + description + '\'' +
-            ", defaultValue='" + defaultValue + '\'' +
-            ", required=" + required +
-            ", primaryKey=" + primaryKey +
-            ", type='" + type + '\'' +
-            ", unique=" + unique +
-            ", system=" + system +
-            ", list=" + list +
-            ", sort=" + sort +
-            '}';
-    }
 }

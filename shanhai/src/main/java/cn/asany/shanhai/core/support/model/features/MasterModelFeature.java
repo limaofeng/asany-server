@@ -17,9 +17,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -49,15 +47,15 @@ public class MasterModelFeature implements IModelFeature, InitializingBean {
         return endpoints;
     }
 
-    private List<ModelField> cloneObjectFields(List<ModelField> fields) {
+    private Set<ModelField> cloneObjectFields(Set<ModelField> fields) {
         return cloneModelFields(fields, item -> true);
     }
 
-    private List<ModelField> cloneInputFields(List<ModelField> fields) {
+    private Set<ModelField> cloneInputFields(Set<ModelField> fields) {
         return cloneModelFields(fields, item -> !item.getPrimaryKey() && !item.getSystem());
     }
 
-    private List<ModelField> cloneModelFields(List<ModelField> fields, Predicate<ModelField> predicate) {
+    private Set<ModelField> cloneModelFields(Set<ModelField> fields, Predicate<ModelField> predicate) {
         return fields.stream().filter(predicate).map(item ->
             ModelField.builder()
                 .code(item.getCode())
@@ -65,10 +63,10 @@ public class MasterModelFeature implements IModelFeature, InitializingBean {
                 .list(item.getList())
                 .type(item.getType())
                 .build())
-            .collect(Collectors.toList());
+            .collect(Collectors.toSet());
     }
 
-    private Model buildType(ModelType type, String code, String name, List<ModelField> fields) {
+    private Model buildType(ModelType type, String code, String name, Set<ModelField> fields) {
         return Model.builder().type(type).code(code).name(name).fields(fields).build();
     }
 
@@ -92,8 +90,8 @@ public class MasterModelFeature implements IModelFeature, InitializingBean {
         return model.getCode() + "Connection";
     }
 
-    private List<ModelField> buildWhereFields(Model model) {
-        List<ModelField> fields = new ArrayList<>();
+    private Set<ModelField> buildWhereFields(Model model) {
+        Set<ModelField> fields = new HashSet<>();
         fields.add(ModelField.builder().code("AND").type(getWhereInputTypeName(model)).list(true).name("Logical AND on all given filters.").build());
         fields.add(ModelField.builder().code("OR").type(getWhereInputTypeName(model)).list(true).name("Logical OR on all given filters.").build());
         fields.add(ModelField.builder().code("NOT").type(getWhereInputTypeName(model)).list(true).name("Logical NOT on all given filters combined by AND.").build());
@@ -108,15 +106,15 @@ public class MasterModelFeature implements IModelFeature, InitializingBean {
         return fields;
     }
 
-    private List<ModelField> buildEdgeFields(Model model) {
-        List<ModelField> fields = new ArrayList<>();
+    private Set<ModelField> buildEdgeFields(Model model) {
+        Set<ModelField> fields = new HashSet<>();
         fields.add(ModelField.builder().code("node").type(model).required(true).name("The item at the end of the edge.").build());
         fields.add(ModelField.builder().code("cursor").type(FieldType.String).required(true).name("A cursor for use in pagination.").build());
         return fields;
     }
 
-    private static List<ModelField> buildOrderByFields(Model model) {
-        List<ModelField> fields = new ArrayList<>();
+    private static Set<ModelField> buildOrderByFields(Model model) {
+        Set<ModelField> fields = new HashSet<>();
         for (ModelField field : model.getFields().stream().filter(item -> !item.getPrimaryKey()).collect(Collectors.toList())) {
             fields.add(ModelField.builder().code(field.getCode() + "_ASC").name(field.getName() + " 升序").build());
             fields.add(ModelField.builder().code(field.getCode() + "_DESC").name(field.getName() + " 降序").build());
@@ -124,8 +122,8 @@ public class MasterModelFeature implements IModelFeature, InitializingBean {
         return fields;
     }
 
-    private static List<ModelField> buildConnectionFields(Model model) {
-        List<ModelField> fields = new ArrayList<>();
+    private static Set<ModelField> buildConnectionFields(Model model) {
+        Set<ModelField> fields = new HashSet<>();
         fields.add(ModelField.builder().code("totalCount").type(FieldType.Int).name("总数据条数").required(true).build());
         fields.add(ModelField.builder().code("pageSize").type(FieldType.Int).name("每页数据条数").required(true).build());
         fields.add(ModelField.builder().code("totalPage").type(FieldType.Int).name("总页数").required(true).build());

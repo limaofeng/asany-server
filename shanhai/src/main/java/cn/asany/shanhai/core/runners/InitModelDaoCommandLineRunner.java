@@ -4,11 +4,12 @@ import cn.asany.shanhai.autoconfigure.ModelAutoConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 @Component
-@ConditionalOnExpression("#{!environment.getProperty(\"spring.profiles.active\").contains(\"test\")}")
+@Profile("!test")
 public class InitModelDaoCommandLineRunner implements CommandLineRunner {
 
     @Autowired
@@ -17,6 +18,6 @@ public class InitModelDaoCommandLineRunner implements CommandLineRunner {
     @Override
     @Transactional(readOnly = true)
     public void run(String... args) {
-//        configuration.load();
+        configuration.load();
     }
 }

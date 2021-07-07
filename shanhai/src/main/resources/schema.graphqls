@@ -79,9 +79,9 @@ type Model {
     # 字段
     fields: [ModelField]
     # 创建人
-    creator: String
+    createdBy: String
     # 修改人
-    updator: String
+    updatedBy: String
     # 创建时间
     createdAt: Date
     # 修改时间
@@ -241,4 +241,3 @@ extend type Mutation {
     """
     deleteModel(id: [ID]!): Int
 }
-

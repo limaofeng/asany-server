@@ -1,6 +1,5 @@
 package cn.asany.shanhai.core.rest;
 
-import cn.asany.shanhai.core.support.dao.ManualTransactionManager;
 import cn.asany.shanhai.core.support.dao.ModelSessionFactory;
 import cn.asany.shanhai.core.support.graphql.GraphQLServer;
 import com.jayway.jsonpath.JsonPath;
@@ -25,26 +24,15 @@ public class GraphQLEndpoint {
 
     @PostMapping("/latest/graphql")
     public Map<String, Object> graphql(@RequestBody String body) {
-        ManualTransactionManager transactionManager = new ManualTransactionManager(sessionFactory);
-        transactionManager.bindSession();
-        transactionManager.beginTransaction();
-        try {
-            log.debug("请求体:" + body);
-            ReadContext context = JsonPath.parse(body);
+        log.debug("请求体:" + body);
+        ReadContext context = JsonPath.parse(body);
 
-            String query = JSON.getObjectMapper().convertValue(context.read("$.query"), String.class);
-            String operationName = JSON.getObjectMapper().convertValue(context.read("$.operationName"), String.class);
-            Map<String, Object> variables = JSON.getObjectMapper().convertValue(context.read("$.variables"), HashMap.class);
+        String query = JSON.getObjectMapper().convertValue(context.read("$.query"), String.class);
+        String operationName = JSON.getObjectMapper().convertValue(context.read("$.operationName"), String.class);
+        Map<String, Object> variables = JSON.getObjectMapper().convertValue(context.read("$.variables"), HashMap.class);
 
-            Map<String, Object> result = graphQLServer.execute(query, operationName, variables);
-            transactionManager.commitTransaction();
-            return result;
-        } catch (Exception e) {
-            transactionManager.rollbackTransaction();
-            throw e;
-        } finally {
-            transactionManager.unbindSession();
-        }
+        Map<String, Object> result = graphQLServer.execute(query, operationName, variables);
+        return result;
     }
 
 }

@@ -14,11 +14,8 @@ import java.util.List;
  */
 public class ModelFieldDaoImpl extends ComplexJpaRepository<ModelField, Long> implements ModelFieldDao {
 
-    private  EntityManager entityManager;
-
     public ModelFieldDaoImpl(EntityManager entityManager) {
         super(ModelField.class, entityManager);
-        this.entityManager = entityManager;
     }
 
     @Override

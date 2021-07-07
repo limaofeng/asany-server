@@ -1,11 +1,13 @@
 package cn.asany.shanhai;
 
+import graphql.kickstart.spring.web.boot.GraphQLWebAutoConfiguration;
+import graphql.kickstart.tools.boot.GraphQLJavaToolsAutoConfiguration;
 import lombok.extern.slf4j.Slf4j;
+import org.jfantasy.autoconfigure.GraphQLAutoConfiguration;
 import org.jfantasy.framework.dao.jpa.ComplexJpaRepository;
 import org.springframework.boot.actuate.autoconfigure.audit.AuditAutoConfiguration;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
-import org.springframework.boot.autoconfigure.elasticsearch.rest.RestClientAutoConfiguration;
 import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
 import org.springframework.boot.autoconfigure.quartz.QuartzAutoConfiguration;
 import org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration;
@@ -16,10 +18,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 /**
+ * 测试程序入口
+ *
  * @author limaofeng
  * @version V1.0
- * @Description: 测试程序入口
- * @date 2019/2/13 4:04 PM
  */
 @Slf4j
 @Configuration
@@ -39,7 +41,15 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
     },
     repositoryBaseClass = ComplexJpaRepository.class
 )
-@EnableAutoConfiguration(exclude = {RestClientAutoConfiguration.class, MongoAutoConfiguration.class, QuartzAutoConfiguration.class, WebMvcAutoConfiguration.class, AuditAutoConfiguration.class})
+@EnableAutoConfiguration(exclude = {
+    MongoAutoConfiguration.class,
+    QuartzAutoConfiguration.class,
+    WebMvcAutoConfiguration.class,
+    AuditAutoConfiguration.class,
+    GraphQLAutoConfiguration.class,
+    GraphQLWebAutoConfiguration.class,
+    GraphQLJavaToolsAutoConfiguration.class
+})
 public class TestApplication {
 
 }

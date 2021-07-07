@@ -96,7 +96,7 @@ public class ModelService {
         Optional<ModelField> idFieldOptional = modelUtils.getId(model);
         if (!idFieldOptional.isPresent()) {
             ModelField idField = modelUtils.generatePrimaryKeyField();
-            model.getFields().add(0, modelUtils.install(model, idField));
+            model.getFields().add(modelUtils.install(model, idField));
         }
 
         // 特征处理
@@ -206,8 +206,8 @@ public class ModelService {
         return this.modelDao.findAll();
     }
 
-    public List<Model> findAll(final ModelType... types) {
-        return this.modelDao.findAll(PropertyFilter.builder().in("type", types).build());
+    public List<Model> findAll(ModelType... types) {
+        return this.modelDao.findAllByTypesWithMetadataAndFields(types);
     }
 
     public void saveInBatch(Model... models) {

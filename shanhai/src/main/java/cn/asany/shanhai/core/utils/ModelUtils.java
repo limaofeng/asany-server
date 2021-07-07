@@ -60,10 +60,10 @@ public class ModelUtils {
     public void initialize(Model model) {
         model.setType(ObjectUtil.defaultValue(model.getType(), ModelType.ENTITY));
         model.setCode(ObjectUtil.defaultValue(model.getCode(), () -> StringUtil.upperCaseFirst(StringUtil.camelCase(PinyinUtils.getAll(model.getName())))));
-        model.setFields(new ArrayList<>((ObjectUtil.defaultValue(model.getFields(), Collections.emptyList()))));
-        model.setFeatures(new ArrayList<>(ObjectUtil.defaultValue(model.getFeatures(), Collections.emptyList())));
-        model.setEndpoints(new ArrayList<>(ObjectUtil.defaultValue(model.getEndpoints(), Collections.emptyList())));
-        model.setRelations(new ArrayList<>(ObjectUtil.defaultValue(model.getRelations(), Collections.emptyList())));
+        model.setFields(new HashSet<>((ObjectUtil.defaultValue(model.getFields(), Collections.emptyList()))));
+        model.setFeatures(new HashSet<>(ObjectUtil.defaultValue(model.getFeatures(), Collections.emptyList())));
+        model.setEndpoints(new HashSet<>(ObjectUtil.defaultValue(model.getEndpoints(), Collections.emptyList())));
+        model.setRelations(new HashSet<>(ObjectUtil.defaultValue(model.getRelations(), Collections.emptyList())));
 
         if (StringUtil.isNotBlank(model.getName()) && StringUtil.length(model.getName()) > 100) {
             if (StringUtil.isBlank(model.getDescription())) {
@@ -185,7 +185,7 @@ public class ModelUtils {
             throw new ValidationException("0000000", String.format("模型特征[%s]不存在", modelFeature.getId()));
         }
         IModelFeature feature = modelFeatureRegistry.get(modelFeature.getId());
-        List<ModelField> fields = model.getFields();
+        Set<ModelField> fields = model.getFields();
         // 设置 Field
         for (ModelField field : feature.fields()) {
             fields.add(this.install(model, field));
@@ -217,7 +217,7 @@ public class ModelUtils {
     @SneakyThrows
     public void reinstall(Model model, ModelFeature modelFeature) {
         IModelFeature feature = modelFeatureRegistry.get(modelFeature.getId());
-        List<ModelField> fields = model.getFields();
+        Set<ModelField> fields = model.getFields();
         // 设置 Field
         for (ModelField field : feature.fields()) {
             if (ObjectUtil.exists(fields, "code", field.getCode())) {
@@ -279,8 +279,8 @@ public class ModelUtils {
     }
 
     @SneakyThrows
-    public void mergeFields(Model model, List<ModelField> nextFields) {
-        List<ModelField> prevFields = model.getFields();
+    public void mergeFields(Model model, Set<ModelField> nextFields) {
+        Set<ModelField> prevFields = model.getFields();
         DiffObject diffObject = diff(prevFields.stream().filter(item -> !item.getSystem()).collect(Collectors.toList()), nextFields, (prev, next) -> prev.equals(next) ? 0 : -1);
 
         List<ModelField> newFields = diffObject.getAppendItems();
@@ -299,8 +299,8 @@ public class ModelUtils {
         }
     }
 
-    public void mergeFeatures(Model model, List<ModelFeature> nextFeatures) {
-        List<ModelFeature> prevFeatures = model.getFeatures();
+    public void mergeFeatures(Model model, Set<ModelFeature> nextFeatures) {
+        Set<ModelFeature> prevFeatures = model.getFeatures();
         DiffObject diffObject = diff(prevFeatures, nextFeatures, (prev, next) -> prev.equals(next) ? 0 : -1);
         List<ModelFeature> newFeatures = diffObject.getAppendItems();
         List<ModelFeature> oldFeatures = diffObject.getModifiedItems();
@@ -318,7 +318,7 @@ public class ModelUtils {
         }
     }
 
-    public <T> DiffObject diff(List<T> prev, List<T> next, Comparator<T> comparator) {
+    public <T> DiffObject diff(Collection<T> prev, Collection<T> next, Comparator<T> comparator) {
         DiffObject diffObject = new DiffObject();
         List<T> olds = new ArrayList<>(prev);
         for (T obj : next) {

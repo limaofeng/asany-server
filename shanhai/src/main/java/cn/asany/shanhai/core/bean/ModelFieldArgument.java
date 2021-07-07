@@ -10,6 +10,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false, of = "id")
+@ToString(of = "id")
 @Entity
 @Table(name = "SH_MODEL_FIELD_ARGUMENT")
 public class ModelFieldArgument {

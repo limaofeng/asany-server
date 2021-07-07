@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.jfantasy.framework.error.ValidationException;
 import org.springframework.orm.hibernate5.SessionHolder;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
@@ -62,13 +63,17 @@ public class ManualTransactionManager {
 
     public void bindSession() {
         SessionFactory sessionFactory = this.buildCurrentSessionFactory();
-        while (sessionFactory == null) {
+        int retryCount = 0;
+        while (sessionFactory == null && ++retryCount <= 3) {
             try {
                 Thread.sleep(TimeUnit.SECONDS.toMillis(5));
             } catch (InterruptedException e) {
                 log.error(e.getMessage(), e);
             }
             sessionFactory = this.buildCurrentSessionFactory();
+        }
+        if (sessionFactory == null) {
+            throw new ValidationException("Build SessionFactory Failure");
         }
         Session session = sessionFactory.openSession();
         SessionHolder sessionHolder = new SessionHolder(session);

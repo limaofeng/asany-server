@@ -1,6 +1,7 @@
 package cn.asany.shanhai.core.support.graphql;
 
 import cn.asany.shanhai.TestApplication;
+import cn.asany.shanhai.autoconfigure.ModelAutoConfiguration;
 import cn.asany.shanhai.core.bean.Model;
 import cn.asany.shanhai.core.bean.enums.ModelType;
 import cn.asany.shanhai.core.service.ModelService;
@@ -14,11 +15,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(classes = TestApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(classes = {TestApplication.class, RestTemplate.class}, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 @Slf4j
 class GraphQLServerTest {
@@ -29,6 +31,8 @@ class GraphQLServerTest {
     private ModelSessionFactory modelSessionFactory;
     @Autowired
     private GraphQLServer graphQLServer;
+    @Autowired
+    private ModelAutoConfiguration configuration;
 
     @Test
     @Transactional
@@ -50,5 +54,7 @@ class GraphQLServerTest {
 
     @Test
     void buildServer() {
+        configuration.load();
     }
+
 }

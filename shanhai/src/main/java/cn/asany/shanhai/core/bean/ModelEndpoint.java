@@ -19,6 +19,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false, of = "id")
+@ToString(of = "id")
 @Entity
 @Table(name = "SH_MODEL_ENDPOINT", uniqueConstraints = @UniqueConstraint(columnNames = {"MODEL_ID", "TYPE", "CODE"}, name = "UK_MODEL_ENDPOINT_KEY"))
 @JsonInclude(value = JsonInclude.Include.NON_NULL)

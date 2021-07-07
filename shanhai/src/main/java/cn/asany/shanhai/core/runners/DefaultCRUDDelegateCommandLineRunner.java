@@ -6,11 +6,11 @@ import cn.asany.shanhai.core.service.ModelDelegateService;
 import cn.asany.shanhai.core.support.graphql.resolvers.base.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 @Component
-@ConditionalOnExpression("#{!environment.getProperty(\"spring.profiles.active\").contains(\"test\")}")
+@Profile("!test")
 public class DefaultCRUDDelegateCommandLineRunner implements CommandLineRunner {
 
     @Autowired

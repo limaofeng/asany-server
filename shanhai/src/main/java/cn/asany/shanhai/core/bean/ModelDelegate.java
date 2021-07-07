@@ -20,6 +20,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false, of = "id")
+@ToString(of = "id")
 @Entity
 @Table(name = "SH_MODEL_DELEGATE")
 @JsonInclude(value = JsonInclude.Include.NON_NULL)

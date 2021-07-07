@@ -14,10 +14,7 @@ import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.framework.dao.hibernate.converter.StringArrayConverter;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Data
@@ -25,9 +22,29 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false, of = "id")
+@ToString(of = "id")
+@NamedEntityGraph(
+    name = "Graph.Model.FetchMetadataAndFields",
+    attributeNodes = {
+        @NamedAttributeNode(value = "type"),
+        @NamedAttributeNode(value = "metadata"),
+        @NamedAttributeNode(value = "fields", subgraph = "SubGraph.ModelField.FetchAttributes")
+    },
+    subgraphs = {
+        @NamedSubgraph(
+            name = "SubGraph.ModelField.FetchAttributes",
+            attributeNodes = {
+                @NamedAttributeNode(value = "type"),
+                @NamedAttributeNode(value = "metadata"),
+                @NamedAttributeNode(value = "delegate"),
+                @NamedAttributeNode(value = "arguments")
+            }
+        )
+    }
+)
+@NamedEntityGraph(name = "Model.Graph", attributeNodes = {@NamedAttributeNode("fields")})
 @Entity
 @Table(name = "SH_MODEL")
-@NamedEntityGraph(name = "Model.Graph", attributeNodes = {@NamedAttributeNode("fields")})
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class Model extends BaseBusEntity implements ModelGroupResource {
     @Id
@@ -66,7 +83,7 @@ public class Model extends BaseBusEntity implements ModelGroupResource {
      * 关联引用
      */
     @OneToMany(mappedBy = "model", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE}, fetch = FetchType.LAZY)
-    private List<ModelRelation> relations;
+    private Set<ModelRelation> relations;
     /**
      * 标签
      */
@@ -76,14 +93,14 @@ public class Model extends BaseBusEntity implements ModelGroupResource {
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "SH_MODEL_FEATURE_RELATION", joinColumns = {@JoinColumn(name = "MODEL_ID")}, inverseJoinColumns = {@JoinColumn(name = "FEATURE_ID")}, foreignKey = @ForeignKey(name = "FK_MODEL_FEATURE_RELATION_MID"))
-    private List<ModelFeature> features;
+    private Set<ModelFeature> features;
 
     @OrderBy("sort asc ")
     @OneToMany(mappedBy = "model", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE}, fetch = FetchType.LAZY)
-    private List<ModelField> fields;
+    private Set<ModelField> fields;
 
     @OneToMany(mappedBy = "model", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE}, fetch = FetchType.LAZY)
-    private List<ModelEndpoint> endpoints;
+    private Set<ModelEndpoint> endpoints;
     /**
      * 元数据
      */
@@ -101,7 +118,7 @@ public class Model extends BaseBusEntity implements ModelGroupResource {
     @Transient
     public void connect(Model model, ModelConnectType connectType) {
         if (this.relations == null) {
-            this.relations = new ArrayList<>();
+            this.relations = new HashSet<>();
         }
         Optional<ModelRelation> optional = this.relations.stream().filter(item -> item.getInverse().getCode().equals(model.getCode()) && item.getRelation().equals(connectType.relation) && item.getType().equals(connectType.type)).findAny();
         if (optional.isPresent()) {
@@ -126,13 +143,13 @@ public class Model extends BaseBusEntity implements ModelGroupResource {
         }
 
         public ModelBuilder features(String... features) {
-            this.features = Arrays.stream(features).map(id -> ModelFeature.builder().id(id).build()).collect(Collectors.toList());
+            this.features = Arrays.stream(features).map(id -> ModelFeature.builder().id(id).build()).collect(Collectors.toSet());
             return this;
         }
 
         public ModelBuilder field(Long id, String code, String name, Model type) {
             if (this.fields == null) {
-                this.fields = new ArrayList<>();
+                this.fields = new HashSet<>();
             }
             this.fields.add(ModelField.builder().id(id).code(code).name(name).type(type).build());
             return this;
@@ -140,7 +157,7 @@ public class Model extends BaseBusEntity implements ModelGroupResource {
 
         public ModelBuilder field(String code, String name, String type) {
             if (this.fields == null) {
-                this.fields = new ArrayList<>();
+                this.fields = new HashSet<>();
             }
             this.fields.add(ModelField.builder().code(code).name(name).type(type).build());
             return this;
@@ -148,36 +165,23 @@ public class Model extends BaseBusEntity implements ModelGroupResource {
 
         public ModelBuilder field(String code, String name, Model type) {
             if (this.fields == null) {
-                this.fields = new ArrayList<>();
+                this.fields = new HashSet<>();
             }
             this.fields.add(ModelField.builder().code(code).name(name).type(type).build());
             return this;
         }
 
-        public ModelBuilder fields(List<ModelField> fields) {
+        public ModelBuilder fields(Set<ModelField> fields) {
             this.fields = fields;
             return this;
         }
 
         public ModelBuilder fields(ModelField... fields) {
             if (this.fields == null) {
-                this.fields = new ArrayList<>();
+                this.fields = new HashSet<>();
             }
             this.fields.addAll(Arrays.asList(fields));
             return this;
         }
-    }
-
-    @Override
-    public String toString() {
-        return "Model{" +
-            "id=" + id +
-            ", code='" + code + '\'' +
-            ", name='" + name + '\'' +
-            ", description='" + description + '\'' +
-            ", labels=" + Arrays.toString(labels) +
-            ", features=" + features +
-            ", fields=" + fields +
-            '}';
     }
 }

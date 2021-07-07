@@ -10,17 +10,18 @@ import org.jfantasy.framework.util.ognl.OgnlUtil;
 
 import javax.persistence.AttributeConverter;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ModelResultTransformer implements ResultTransformer {
 
-    private List<ModelField> fields;
+    private Collection<ModelField> fields;
     private OgnlUtil ognlUtil;
     private Map<String, AttributeConverter> converterMap = new ConcurrentHashMap<>();
 
-    public ModelResultTransformer(List<ModelField> fields) {
+    public ModelResultTransformer(Collection<ModelField> fields) {
         FieldTypeRegistry registry = SpringContextUtil.getBeanByType(FieldTypeRegistry.class);
         this.fields = fields;
         for (ModelField field : fields) {

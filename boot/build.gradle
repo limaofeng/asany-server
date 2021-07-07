@@ -38,6 +38,7 @@ dependencies {
     implementation project(":asany-ui")
     implementation project(":asany-base")
     implementation project(":asany-nuwa")
+    implementation project(":asany-shanhai")
     implementation project(":asany-storage")
     implementation project(":asany-security")
     implementation project(":asany-storage-api")

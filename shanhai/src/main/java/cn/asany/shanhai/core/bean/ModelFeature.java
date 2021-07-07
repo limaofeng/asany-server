@@ -11,6 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false, of = "id")
+@ToString(of = "id")
 @Entity
 @Table(name = "SH_MODEL_FEATURE")
 public class ModelFeature extends BaseBusEntity {
@@ -26,11 +27,4 @@ public class ModelFeature extends BaseBusEntity {
     @JoinTable(name = "SH_MODEL_FEATURE_RELATION", joinColumns = {@JoinColumn(name = "FEATURE_ID")}, inverseJoinColumns = {@JoinColumn(name = "MODEL_ID")}, foreignKey = @ForeignKey(name = "FK_MODEL_FEATURE_RELATION_FID"))
     private List<Model> models;
 
-    @Override
-    public String toString() {
-        return "ModelFeature{" +
-            "id='" + id + '\'' +
-            ", name='" + name + '\'' +
-            '}';
-    }
 }
