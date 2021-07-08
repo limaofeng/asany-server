@@ -66,7 +66,9 @@ public interface FieldType<JAVA extends Object, DB extends Object> extends Attri
      *
      * @return
      */
-    DatabaseColumn getColumn(ModelFieldMetadata metadata);
+    default DatabaseColumn getColumn(ModelFieldMetadata metadata) {
+        return DatabaseColumn.builder().name(metadata.getDatabaseColumnName()).updatable(true).nullable(true).build();
+    }
 
     @Override
     default DB convertToDatabaseColumn(JAVA attribute) {
@@ -81,4 +83,5 @@ public interface FieldType<JAVA extends Object, DB extends Object> extends Attri
     default MatchType[] filters() {
         return new MatchType[0];
     }
+
 }

@@ -3,6 +3,8 @@ package cn.asany.shanhai.core.dao;
 import cn.asany.shanhai.core.bean.Model;
 import cn.asany.shanhai.core.bean.enums.ModelType;
 import org.jfantasy.framework.dao.jpa.JpaRepository;
+import org.jfantasy.framework.dao.jpa.PropertyFilter;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -20,5 +22,7 @@ public interface ModelDao extends JpaRepository<Model, Long> {
     @EntityGraph(value = "Graph.Model.FetchMetadataAndFields", type = EntityGraph.EntityGraphType.FETCH)
     List<Model> findAllByTypesWithMetadataAndFields(ModelType... types);
 
+    @EntityGraph(value = "Graph.Model.FetchMetadataAndFields", type = EntityGraph.EntityGraphType.FETCH)
+    List<Model> findAllWithMetadataAndFields(List<PropertyFilter> filters, Sort sort);
 
 }

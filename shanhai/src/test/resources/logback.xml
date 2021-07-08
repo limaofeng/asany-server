@@ -54,11 +54,9 @@
    <!-- hibernate日志输入 -->
     <logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="ERROR"/>
     <logger name="org.hibernate.type.descriptor.sql.BasicExtractor" level="ERROR"/>
-    <logger name="org.hibernate.SQL" level="DEBUG"/>
-    <logger name="org.hibernate.engine.QueryParameters" level="DEBUG"/>
-    <logger name="org.hibernate.engine.query.HQLQueryPlan" level="DEBUG"/>
     <logger name="org.jfantasy.framework" level="ERROR"/>
-
+    <logger name="org.hibernate.engine.QueryParameters" level="TRACE"/>
+    <logger name="org.hibernate.engine.query.HQLQueryPlan" level="TRACE"/>
     <logger name="cn.asany.shanhai.core" level="DEBUG"/>
 
     <root level="INFO">

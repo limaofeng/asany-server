@@ -4,6 +4,7 @@ import cn.asany.shanhai.core.bean.*;
 import cn.asany.shanhai.core.bean.enums.ModelConnectType;
 import cn.asany.shanhai.core.bean.enums.ModelDelegateType;
 import cn.asany.shanhai.core.bean.enums.ModelType;
+import cn.asany.shanhai.core.dao.ModelDao;
 import cn.asany.shanhai.core.dao.ModelDelegateDao;
 import cn.asany.shanhai.core.dao.ModelEndpointDao;
 import cn.asany.shanhai.core.dao.ModelFieldDao;
@@ -20,6 +21,7 @@ import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.jfantasy.framework.error.ValidationException;
+import org.jfantasy.framework.spring.SpringContextUtil;
 import org.jfantasy.framework.util.PinyinUtils;
 import org.jfantasy.framework.util.common.ClassUtil;
 import org.jfantasy.framework.util.common.ObjectUtil;
@@ -33,6 +35,7 @@ import javax.persistence.Column;
 import java.lang.reflect.Field;
 import java.util.*;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -50,11 +53,19 @@ public class ModelUtils {
     @Autowired
     private ModelFieldDao modelFieldDao;
     @Autowired
+    private ModelDao modelDao;
+    @Autowired
     private ModelDelegateDao modelDelegateDao;
     @Autowired
     private ModelEndpointDao modelEndpointDao;
 
+    private final static ThreadLocal<ModelUtilCache> HOLDER = new ThreadLocal<>();
+
     private OgnlUtil ognlUtil = OgnlUtil.getInstance();
+
+    public static ModelUtils getInstance() {
+        return SpringContextUtil.getBeanByType(ModelUtils.class);
+    }
 
     @SneakyThrows
     public void initialize(Model model) {
@@ -160,6 +171,11 @@ public class ModelUtils {
             return null;
         }
         return Model.builder().id(optional.get().getId()).build();
+    }
+
+    public Model getModelById(Long id) {
+        ModelUtilCache cache = this.cache();
+        return cache.getModel(id, () -> this.modelDao.findById(id));
     }
 
     public Model getModelByCode(Model model, String code) {
@@ -387,12 +403,76 @@ public class ModelUtils {
         return null;
     }
 
+    public void clear() {
+        this.HOLDER.remove();
+    }
+
+    public ModelUtilCache newCache(List<Model> types, List<Model> inputTypes, List<Model> scalars) {
+        ModelUtilCache cache = HOLDER.get();
+        if (cache == null) {
+            HOLDER.set(new ModelUtilCache(types, inputTypes, scalars));
+            return HOLDER.get();
+        }
+        return HOLDER.get();
+    }
+
+    public ModelUtilCache cache() {
+        ModelUtilCache cache = HOLDER.get();
+        if (cache == null) {
+            HOLDER.set(new ModelUtilCache());
+            return HOLDER.get();
+        }
+        return HOLDER.get();
+    }
+
     @Data
     @NoArgsConstructor
     static class DiffObject<T> {
         private List<T> appendItems = new ArrayList<>();
         private List<T> modifiedItems = new ArrayList<>();
         private List<T> deletedItems = new ArrayList<>();
+    }
+
+    public static class ModelUtilCache {
+        private List<Model> models = new ArrayList<>();
+        private final List<ModelField> fields = new ArrayList<>();
+        private Map<Long, Model> modelsById = new HashMap<>();
+
+        public ModelUtilCache() {
+        }
+
+        public ModelUtilCache(List<Model> types, List<Model> inputTypes, List<Model> scalars) {
+            for (Model model : types) {
+                this.putModel(model.getId(), model);
+            }
+            for (Model model : inputTypes) {
+                this.putModel(model.getId(), model);
+            }
+            for (Model model : scalars) {
+                this.putModel(model.getId(), model);
+            }
+        }
+
+        public boolean containsModel(Long id) {
+            return modelsById.containsKey(id);
+        }
+
+        public Model getModel(Long id, Supplier<Optional<Model>> override) {
+            if (modelsById.containsKey(id)) {
+                return modelsById.get(id);
+            }
+            Optional<Model> optional = override.get();
+            if (optional.isPresent()) {
+                this.putModel(id, optional.get());
+                return optional.get();
+            }
+            return null;
+        }
+
+        private void putModel(Long id, Model model) {
+            this.modelsById.put(id, model);
+        }
+
     }
 
 }

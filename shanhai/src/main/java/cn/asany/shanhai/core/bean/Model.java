@@ -26,7 +26,6 @@ import java.util.stream.Collectors;
 @NamedEntityGraph(
     name = "Graph.Model.FetchMetadataAndFields",
     attributeNodes = {
-        @NamedAttributeNode(value = "type"),
         @NamedAttributeNode(value = "metadata"),
         @NamedAttributeNode(value = "fields", subgraph = "SubGraph.ModelField.FetchAttributes")
     },
@@ -34,7 +33,6 @@ import java.util.stream.Collectors;
         @NamedSubgraph(
             name = "SubGraph.ModelField.FetchAttributes",
             attributeNodes = {
-                @NamedAttributeNode(value = "type"),
                 @NamedAttributeNode(value = "metadata"),
                 @NamedAttributeNode(value = "delegate"),
                 @NamedAttributeNode(value = "arguments")

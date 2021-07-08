@@ -5,6 +5,7 @@ import cn.asany.shanhai.core.bean.ModelEndpoint;
 import cn.asany.shanhai.core.bean.enums.ModelEndpointType;
 import cn.asany.shanhai.core.bean.enums.ModelType;
 import cn.asany.shanhai.core.support.dao.ModelRepository;
+import cn.asany.shanhai.core.utils.ModelUtils;
 import cn.asany.shanhai.core.utils.TemplateDataOfEndpoint;
 import cn.asany.shanhai.core.utils.TemplateDataOfModel;
 import com.github.jknack.handlebars.Options;
@@ -49,6 +50,8 @@ public class GraphQLServer implements InitializingBean {
     private ModelDelegateFactory delegateFactory;
     @Autowired
     private GraphQLScalarType dateScalar;
+    @Autowired
+    private ModelUtils modelUtils;
 
     private Template template;
 
@@ -79,6 +82,8 @@ public class GraphQLServer implements InitializingBean {
     @SneakyThrows
     @Transactional
     public String buildScheme() {
+        modelUtils.clear();
+
         List<Model> models = new ArrayList<>(modelMap.values());
         List<ModelEndpoint> queries = new ArrayList<>(this.queries.values());
         List<ModelEndpoint> mutations = new ArrayList<>(this.mutations.values());
@@ -88,10 +93,9 @@ public class GraphQLServer implements InitializingBean {
         List<Model> inputTypes = new ArrayList<>(this.inputTypeMap.values());
         List<Model> scalars = new ArrayList<>(this.scalarMap.values());
 
-        scheme = template.apply(new TemplateRootData(queries, mutations, types, inputTypes, scalars, enumerations));
-        log.debug("SCHEME: " + scheme);
+        modelUtils.newCache(types, inputTypes, scalars);
 
-        return scheme;
+        return this.scheme = template.apply(new TemplateRootData(queries, mutations, types, inputTypes, scalars, enumerations));
     }
 
     public void addModel(Model model, ModelRepository repository) {

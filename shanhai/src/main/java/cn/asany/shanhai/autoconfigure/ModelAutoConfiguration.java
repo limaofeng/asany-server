@@ -73,10 +73,22 @@ public class ModelAutoConfiguration {
         return registry;
     }
 
-    public void load() {
-        List<Model> types = modelService.findAll(ModelType.SCALAR, ModelType.OBJECT, ModelType.INPUT_OBJECT, ModelType.ENUM);
-        List<Model> models = modelService.findAll(ModelType.ENTITY);
+    public String fromNow(long time) {
+        long times = System.currentTimeMillis() - time;
+        if (times < 1000) {
+            return times + "ms";
+        }
+        times = times / 1000;
+        return times + "s";
+    }
 
+    public void load() {
+        long start = System.currentTimeMillis();
+        List<Model> types = modelService.findAll(ModelType.SCALAR, ModelType.OBJECT, ModelType.INPUT_OBJECT, ModelType.ENUM);
+        System.out.println("耗时:" + fromNow(start));
+        start = System.currentTimeMillis();
+        List<Model> models = modelService.findAll(ModelType.ENTITY);
+        System.out.println("耗时:" + fromNow(start));
         graphQLServer.setTypes(types);
 
         for (Model model : models) {

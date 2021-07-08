@@ -1,4 +1,8 @@
 spring:
+  jpa:
+    properties:
+      hibernate:
+        show_sql: true
   jackson:
     default-property-inclusion: non_null
   jfantasy:

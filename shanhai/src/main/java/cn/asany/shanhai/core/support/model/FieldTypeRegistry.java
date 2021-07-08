@@ -1,13 +1,13 @@
 package cn.asany.shanhai.core.support.model;
 
-import org.jfantasy.framework.dao.jpa.PropertyFilter;
-
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 public class FieldTypeRegistry {
 
-    public static Map<String, FieldType> caches = new ConcurrentHashMap<>();
+    private Map<String, FieldType> caches = new ConcurrentHashMap<>();
 
     public void addType(FieldType type) {
         caches.put(type.getId(), type);
@@ -15,6 +15,10 @@ public class FieldTypeRegistry {
 
     public FieldType getType(String type) {
         return caches.get(type);
+    }
+
+    public List<FieldType> types() {
+        return caches.values().stream().collect(Collectors.toList());
     }
 
 }

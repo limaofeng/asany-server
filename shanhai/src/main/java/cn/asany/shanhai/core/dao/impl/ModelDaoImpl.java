@@ -6,6 +6,7 @@ import cn.asany.shanhai.core.dao.ModelDao;
 import org.jfantasy.framework.dao.jpa.ComplexJpaRepository;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.error.IgnoreException;
+import org.springframework.data.domain.Sort;
 
 import javax.persistence.EntityManager;
 import java.util.List;
@@ -24,6 +25,11 @@ public class ModelDaoImpl extends ComplexJpaRepository<Model, Long> implements M
     @Override
     public List<Model> findAllByTypesWithMetadataAndFields(ModelType... types) {
         return super.findAll(PropertyFilter.builder().in("type", types).build());
+    }
+
+    @Override
+    public List<Model> findAllWithMetadataAndFields(List<PropertyFilter> filters, Sort sort) {
+        return super.findAll(filters, sort);
     }
 
 }
