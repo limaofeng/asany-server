@@ -19,7 +19,7 @@ import java.util.Set;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = false, of = "id")
+@EqualsAndHashCode(callSuper = false, of = {"id", "code"})
 @ToString(of = "id")
 @Entity
 @NamedEntityGraph(
@@ -77,8 +77,12 @@ public class ModelField extends BaseBusEntity implements ModelGroupResource {
      */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "TYPE_ID", foreignKey = @ForeignKey(name = "FK_MODEL_FIELD_TID"))
-    @LazyToOne(LazyToOneOption.NO_PROXY)
     private Model type;
+//    /**
+//     * 字段类型 ID
+//     */
+//    @Column(name = "TYPE_ID", length = 20, insertable = false, updatable = false)
+//    private Long typeId;
     /**
      * 是否唯一
      */
@@ -113,7 +117,6 @@ public class ModelField extends BaseBusEntity implements ModelGroupResource {
      * 元数据
      */
     @OneToOne(mappedBy = "field", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
-    @LazyToOne(LazyToOneOption.NO_PROXY)
     private ModelFieldMetadata metadata;
     /**
      * 委派

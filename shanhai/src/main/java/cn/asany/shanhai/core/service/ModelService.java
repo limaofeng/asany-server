@@ -4,11 +4,9 @@ import cn.asany.shanhai.core.bean.*;
 import cn.asany.shanhai.core.bean.enums.ModelRelationType;
 import cn.asany.shanhai.core.bean.enums.ModelStatus;
 import cn.asany.shanhai.core.bean.enums.ModelType;
-import cn.asany.shanhai.core.dao.ModelDao;
-import cn.asany.shanhai.core.dao.ModelEndpointDao;
-import cn.asany.shanhai.core.dao.ModelFieldDao;
-import cn.asany.shanhai.core.dao.ModelRelationDao;
-import cn.asany.shanhai.core.support.ModelSaveContext;
+import cn.asany.shanhai.core.dao.*;
+import cn.asany.shanhai.core.runners.InitModelDaoCommandLineRunner;
+import cn.asany.shanhai.core.support.model.FieldTypeRegistry;
 import cn.asany.shanhai.core.utils.FieldTypeNotFoundException;
 import cn.asany.shanhai.core.utils.ModelUtils;
 import cn.asany.shanhai.gateway.bean.ModelGroupItem;
@@ -20,64 +18,69 @@ import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
 import org.jfantasy.framework.error.ValidationException;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.common.StringUtil;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
 @Service
-@Transactional
 public class ModelService {
-    @Autowired
-    private ModelDao modelDao;
-    @Autowired
-    private ModelFieldDao modelFieldDao;
-    @Autowired
-    private ModelEndpointDao modelEndpointDao;
-    @Autowired
-    private ModelRelationDao modelRelationDao;
-    @Autowired
-    private ModelFeatureService modelFeatureService;
-    @Autowired
-    public ModelUtils modelUtils;
+    private final ModelDao modelDao;
+    private final ModelFieldDao modelFieldDao;
+    private final ModelEndpointDao modelEndpointDao;
+    private final ModelRelationDao modelRelationDao;
+    private final ModelFeatureService modelFeatureService;
+    private final FieldTypeRegistry fieldTypeRegistry;
+    private final ModelMetadataDao modelMetadataDao;
+    private final ModelFieldMetadataDao modelFieldMetadataDao;
+    private final ModelFieldArgumentDao modelFieldArgumentDao;
+
+    public ModelService(ModelDao modelDao, ModelFieldDao modelFieldDao, ModelEndpointDao modelEndpointDao, ModelRelationDao modelRelationDao, ModelFeatureService modelFeatureService, FieldTypeRegistry fieldTypeRegistry, ModelFieldArgumentDao modelFieldArgumentDao, ModelMetadataDao modelMetadataDao, ModelFieldMetadataDao modelFieldMetadataDao) {
+        this.modelDao = modelDao;
+        this.modelFieldDao = modelFieldDao;
+        this.modelEndpointDao = modelEndpointDao;
+        this.modelRelationDao = modelRelationDao;
+        this.modelFeatureService = modelFeatureService;
+        this.fieldTypeRegistry = fieldTypeRegistry;
+        this.modelFieldArgumentDao = modelFieldArgumentDao;
+        this.modelMetadataDao = modelMetadataDao;
+        this.modelFieldMetadataDao = modelFieldMetadataDao;
+    }
 
     public Pager<Model> findPager(Pager<Model> pager, List<PropertyFilter> filters) {
         return modelDao.findPager(pager, filters);
     }
 
-    @SneakyThrows
+    @Transactional
     public Model save(Model model) {
+        ModelUtils modelUtils = ModelUtils.getInstance();
+        return save(model, modelUtils);
+    }
+
+    @SneakyThrows
+    public Model save(Model model, ModelUtils modelUtils) {
         // 检查 Model Metadata 设置
         modelUtils.initialize(model);
 
         if (model.getType() == ModelType.SCALAR) {
-            return modelDao.save(model);
+            return modelUtils.saveWithCache(model);
         }
 
-        log.debug("实体" + model.getCode());
-
         // 检查 ModelField Metadata 设置
-        Iterator<ModelField> iter = model.getFields().iterator();
-        while (iter.hasNext()) {
-            ModelField field = iter.next();
+        Iterator<ModelField> iterator = model.getFields().iterator();
+        while (iterator.hasNext()) {
+            ModelField field = iterator.next();
             try {
                 modelUtils.install(model, field);
             } catch (FieldTypeNotFoundException e) {
-                ModelSaveContext context = ModelSaveContext.getContext();
-                if (context == null) {
+                if (!modelUtils.isLazySave()) {
                     throw e;
                 }
-                context.addField(field);
-                iter.remove();
-                log.error(e.getMessage());
+                modelUtils.lazySave(field);
+                iterator.remove();
             }
         }
 
@@ -86,10 +89,8 @@ public class ModelService {
             modelUtils.install(model, endpoint);
         }
 
-        modelDao.save(model);
-
         if (model.getType() != ModelType.ENTITY) {
-            return model;
+            return modelUtils.saveWithCache(model);
         }
 
         // 检查主键
@@ -113,17 +114,57 @@ public class ModelService {
             relation.setModel(model);
         }
 
-        Model result = modelDao.save(model);
+        return modelUtils.saveWithCache(model);
+    }
 
-        ModelSaveContext saveContext = ModelSaveContext.getContext();
-        if (saveContext != null) {
-            saveContext.getModels().add(result);
+    public void saveAllInBatch(List<Model> models) {
+        ModelUtils modelUtils = ModelUtils.getInstance();
+        modelUtils.clear();
+
+        List<Model> types = this.modelDao.findAllByTypesWithMetadataAndFields(ModelType.OBJECT, ModelType.SCALAR, ModelType.INPUT_OBJECT, ModelType.ENUM, ModelType.INTERFACE, ModelType.UNION);
+        modelUtils.newCache(types);
+        modelUtils.enableLazySave();
+
+        long start = System.currentTimeMillis();
+        // 去掉默认类型
+        models = models.stream().filter(item -> !ObjectUtil.exists(ModelUtils.DEFAULT_SCALARS, "code", item.getCode())).collect(Collectors.toList());
+
+        List<ModelField> queries = new ArrayList<>();
+        List<ModelField> mutations = new ArrayList<>();
+
+        for (Model model : models) {
+            if ("Query".equals(model.getCode())) {
+                queries.addAll(model.getFields());
+            } else if ("Mutation".equals(model.getCode())) {
+                mutations.addAll(model.getFields());
+            } else {
+                this.save(model, modelUtils);
+            }
         }
 
-        return result;
+        String x = InitModelDaoCommandLineRunner.fromNow(start);
+        System.out.println("总耗时: " + x);
+
+        ModelUtils.ModelLazySaveContext context = modelUtils.getModelLazySaveContext();
+
+        long xstart = System.currentTimeMillis();
+
+        Model Query = modelUtils.getModelByCode("Query").get();
+        Model Mutation = modelUtils.getModelByCode("Mutation").get();
+
+        this.modelDao.saveAllInBatch(context.saves);
+        this.modelFieldDao.saveAllInBatch(context.savesByField.stream().map(item -> modelUtils.install(item.getModel(), item)).collect(Collectors.toList()));
+        this.modelFieldDao.saveAllInBatch(queries.stream().map(item -> modelUtils.install(Query, item)).collect(Collectors.toList()));
+        this.modelFieldDao.saveAllInBatch(mutations.stream().map(item -> modelUtils.install(Mutation, item)).collect(Collectors.toList()));
+        String ss = InitModelDaoCommandLineRunner.fromNow(xstart);
+        System.out.println("批量保存耗时: " + ss);
+
+        modelUtils.clear();
+        modelUtils.disableLazySave();
     }
 
     public Model update(Model model) {
+        ModelUtils modelUtils = ModelUtils.getInstance();
         modelUtils.initialize(model);
 
         if (ObjectUtil.isNull(model.getId()) && StringUtil.isBlank(model.getCode())) {
@@ -152,7 +193,7 @@ public class ModelService {
     }
 
     public void publish(Long id) {
-        Model model = modelDao.getOne(id);
+        Model model = modelDao.getById(id);
         ModelMetadata metadata = model.getMetadata();
 //        String xml = hibernateMappingHelper.generateXML(model);
 //        metadata.setHbm(xml);
@@ -172,12 +213,33 @@ public class ModelService {
     }
 
     public void delete(Long id) {
-        this.modelDao.delete(this.modelDao.getOne(id));
+        this.modelDao.delete(this.modelDao.getById(id));
+    }
+
+    private void aggregate(List<Model> models, Set<Long> modelIds, Set<Long> fieldIds, Set<Long> argumentIds) {
+        models.stream().forEach(model -> {
+            modelIds.add(model.getId());
+            aggregate(model, fieldIds, argumentIds);
+        });
+    }
+
+    private void aggregate(Model model, Set<Long> fieldIds, Set<Long> argumentIds) {
+        model.getFields().forEach(field -> {
+            fieldIds.add(field.getId());
+            argumentIds.addAll(field.getArguments().stream().map(arg -> arg.getId()).collect(Collectors.toSet()));
+        });
     }
 
     public void delete(Model model) {
         if (model.getType() != ModelType.ENTITY) {
-            this.modelDao.delete(model);
+            Set<Long> fieldIds = new HashSet<>();
+            Set<Long> argumentIds = new HashSet<>();
+            aggregate(model, fieldIds, argumentIds);
+            this.modelFieldDao.deleteAllByIdInBatch(fieldIds);
+            List<Model> ids = new ArrayList<>();
+            ids.add(model);
+            this.modelDao.deleteAllInBatch(ids);
+            log.debug("删除" + model.getCode());
             return;
         }
         for (ModelEndpoint endpoint : model.getEndpoints()) {
@@ -195,11 +257,27 @@ public class ModelService {
 
     public void clear() {
         PropertyFilterBuilder builder = PropertyFilter.builder();
-        builder.notIn("type", ModelType.SCALAR);
-        List<Model> models = this.modelDao.findAll(builder.build(), Sort.by(Sort.Direction.DESC, "createdAt"));
-        for (Model model : models) {
-            this.delete(model);
+        List<Model> models = this.modelDao.findAllWithMetadataAndFields(builder.build(), Sort.by(Sort.Direction.DESC, "createdAt"));
+        Set<Long> modelIds = new HashSet<>();
+        Set<Long> fieldIds = new HashSet<>();
+        Set<Long> argumentIds = new HashSet<>();
+
+        models = models.stream().filter(item -> !ObjectUtil.exists(ModelUtils.DEFAULT_TYPES, "id", item.getId())).collect(Collectors.toList());
+
+        aggregate(models, modelIds, fieldIds, argumentIds);
+
+        if (!argumentIds.isEmpty()) {
+            this.modelFieldArgumentDao.deleteAllByIdInBatch(argumentIds);
         }
+        if (!fieldIds.isEmpty()) {
+            this.modelFieldMetadataDao.deleteAllByIdInBatch(fieldIds);
+            this.modelFieldDao.deleteAllByIdInBatch(fieldIds);
+        }
+        if (!modelIds.isEmpty()) {
+            this.modelMetadataDao.deleteAllByIdInBatch(modelIds);
+            this.modelDao.deleteAllByIdInBatch(modelIds);
+        }
+        System.out.println("....");
     }
 
     public List<Model> findAll() {
@@ -221,24 +299,18 @@ public class ModelService {
     }
 
     public Optional<Model> findByCode(String code) {
-        ModelSaveContext saveContext = ModelSaveContext.getContext();
-        if (saveContext != null) {
-            Model model = ObjectUtil.find(saveContext.getModels(), "code", code);
-            return model != null ? Optional.of(model) : Optional.empty();
-        }
-        return this.modelDao.findOne(Example.of(Model.builder().code(code).build()));
+        ModelUtils modelUtils = ModelUtils.getInstance();
+        return modelUtils.getModelByCode(code);
     }
 
     public boolean exists(String code) {
-        ModelSaveContext saveContext = ModelSaveContext.getContext();
-        if (saveContext != null) {
-            return ObjectUtil.exists(saveContext.getModels(), "code", code);
-        }
-        return this.modelDao.exists(Example.of(Model.builder().code(code).build()));
+        ModelUtils modelUtils = ModelUtils.getInstance();
+        return modelUtils.getModelByCode(code).isPresent();
     }
 
     @SneakyThrows
     public void save(ModelField field) {
+        ModelUtils modelUtils = ModelUtils.getInstance();
         modelFieldDao.save(modelUtils.install(field.getModel(), field));
     }
 
@@ -279,4 +351,5 @@ public class ModelService {
         builder.equal("code", code);
         return this.modelFieldDao.findOne(builder.build());
     }
+
 }

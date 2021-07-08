@@ -53,8 +53,8 @@ class GraphQLServerTest {
     }
 
     @Test
+    @Transactional
     void buildServer() {
-        configuration.load();
     }
 
 }

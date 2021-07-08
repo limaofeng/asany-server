@@ -47,12 +47,13 @@ public class TemplateDataOfModelField {
     }
 
     public String getGraphQLType() {
-        Model modelType = this.field.getType();
+        ModelUtils modelUtils = ModelUtils.getInstance();
+        Model modelType = modelUtils.getModelById(this.field.getType().getId()).get();
         String graphQLType = modelType.getCode();
         if (modelType.getType() == ModelType.SCALAR) {
             FieldTypeRegistry registry = SpringContextUtil.getBeanByType(FieldTypeRegistry.class);
-            FieldType type = registry.getType(this.field.getType().getCode());
-            graphQLType = type.getGraphQLType(this.field.getMetadata());
+            FieldType type = registry.getType(modelType.getCode());
+            graphQLType = type == null ? graphQLType : type.getGraphQLType(this.field.getMetadata());
         }
         Boolean isList = this.field.getList();
         return isList ? "[" + graphQLType + "]" : graphQLType;

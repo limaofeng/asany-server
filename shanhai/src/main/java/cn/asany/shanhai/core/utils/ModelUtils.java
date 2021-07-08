@@ -4,6 +4,7 @@ import cn.asany.shanhai.core.bean.*;
 import cn.asany.shanhai.core.bean.enums.ModelConnectType;
 import cn.asany.shanhai.core.bean.enums.ModelDelegateType;
 import cn.asany.shanhai.core.bean.enums.ModelType;
+import cn.asany.shanhai.core.dao.ModelDao;
 import cn.asany.shanhai.core.dao.ModelDelegateDao;
 import cn.asany.shanhai.core.dao.ModelEndpointDao;
 import cn.asany.shanhai.core.dao.ModelFieldDao;
@@ -20,6 +21,7 @@ import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.jfantasy.framework.error.ValidationException;
+import org.jfantasy.framework.spring.SpringContextUtil;
 import org.jfantasy.framework.util.PinyinUtils;
 import org.jfantasy.framework.util.common.ClassUtil;
 import org.jfantasy.framework.util.common.ObjectUtil;
@@ -33,6 +35,7 @@ import javax.persistence.Column;
 import java.lang.reflect.Field;
 import java.util.*;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -50,11 +53,67 @@ public class ModelUtils {
     @Autowired
     private ModelFieldDao modelFieldDao;
     @Autowired
+    private ModelDao modelDao;
+    @Autowired
     private ModelDelegateDao modelDelegateDao;
     @Autowired
     private ModelEndpointDao modelEndpointDao;
 
+    private final static ThreadLocal<ModelUtilCache> HOLDER = new ThreadLocal<>();
+    private final static ThreadLocal<ModelLazySaveContext> LAZY = new ThreadLocal<>();
+
     private OgnlUtil ognlUtil = OgnlUtil.getInstance();
+
+    public static ModelUtils getInstance() {
+        return SpringContextUtil.getBeanByType(ModelUtils.class);
+    }
+
+    public final static Set<Model> DEFAULT_TYPES = new HashSet<>();
+
+    public final static Set<Model> DEFAULT_SCALARS = new HashSet<>();
+
+    static {
+        DEFAULT_SCALARS.add(FieldType.ID);
+        DEFAULT_SCALARS.add(FieldType.Int);
+        DEFAULT_SCALARS.add(FieldType.Float);
+        DEFAULT_SCALARS.add(FieldType.String);
+        DEFAULT_SCALARS.add(FieldType.Boolean);
+        DEFAULT_SCALARS.add(FieldType.Date);
+        DEFAULT_TYPES.addAll(DEFAULT_SCALARS);
+        DEFAULT_TYPES.add(FieldType.Query);
+        DEFAULT_TYPES.add(FieldType.Mutation);
+    }
+
+    public void enableLazySave() {
+        LAZY.set(new ModelLazySaveContext());
+    }
+
+    public void disableLazySave() {
+        LAZY.remove();
+    }
+
+    public boolean isLazySave() {
+        ModelLazySaveContext context = LAZY.get();
+        return context != null;
+    }
+
+    public void lazySave(ModelField modelField) {
+        ModelLazySaveContext context = LAZY.get();
+        context.addLazySave(LazySaveOperations.SAVE, modelField);
+    }
+
+    public void lazySave(Model model) {
+        ModelLazySaveContext context = LAZY.get();
+        Optional<Model> optional = this.getModelByCode(model.getCode());
+        if (!optional.isPresent()) {
+            context.addLazySave(LazySaveOperations.SAVE, model);
+            this.cache(model);
+            return;
+        }
+        Model source = optional.get();
+        source.getFields().addAll(model.getFields());
+        context.addLazySave(LazySaveOperations.UPDATE, source);
+    }
 
     @SneakyThrows
     public void initialize(Model model) {
@@ -88,7 +147,9 @@ public class ModelUtils {
     }
 
     public ModelField install(Model model, ModelField field) throws FieldTypeNotFoundException {
-        field.setModel(model);
+        if (!ObjectUtil.exists(model.getFields(), "code", field.getCode())) {
+            field.setModel(model);
+        }
         field.setPrimaryKey(ObjectUtil.defaultValue(field.getPrimaryKey(), Boolean.FALSE));
         field.setCode(ObjectUtil.defaultValue(field.getCode(), () -> StringUtil.lowerCaseFirst(StringUtil.camelCase(PinyinUtils.getAll(field.getName())))));
 
@@ -99,21 +160,16 @@ public class ModelUtils {
             field.setName(StringUtil.ellipsis(field.getName(), 100, "..."));
         }
 
-        if (StringUtil.isNotBlank(field.getName())) {
-            System.out.println(">>>>" + field.getName() + "(" + StringUtil.length(field.getName()) + ")");
-        }
-
-
         if (model.getType() == ModelType.ENUM) {
             return field;
         }
 
         if (field.getType().getId() == null) {
-            Model type = getModelByCode(model, field.getType().getCode());
-            if (type == null) {
+            Optional<Model> type = getModelByCode(field.getType().getCode());
+            if (!type.isPresent()) {
                 throw new FieldTypeNotFoundException(field.getType().getCode());
             }
-            field.setType(type);
+            field.setType(type.get());
         }
 
         if (model.getType() != ModelType.ENTITY) {
@@ -154,21 +210,29 @@ public class ModelUtils {
         return model.getFields().stream().filter(item -> ObjectUtil.defaultValue(item.getPrimaryKey(), Boolean.FALSE)).findAny();
     }
 
-    public Model getModelByCode(String code) {
-        Optional<Model> optional = modelService.findByCode(code);
-        if (!optional.isPresent()) {
-            return null;
+    public Optional<Model> getModelByCode(String code) {
+        ModelUtilCache cache = this.cache();
+        if (this.isLazySave()) {
+            return cache.getModelByCode(code, () -> Optional.empty());
         }
-        return Model.builder().id(optional.get().getId()).build();
+        return cache.getModelByCode(code, () -> this.modelDao.findOne(Example.of(Model.builder().code(code).build())));
     }
 
-    public Model getModelByCode(Model model, String code) {
-        if (model.getCode().equals(code)) {
-            return model;
+    public Optional<Model> getModelById(Long id) {
+        ModelUtilCache cache = this.cache();
+        if (this.isLazySave()) {
+            return cache.getModelById(id, () -> Optional.empty());
         }
-        Optional<Model> modelType = model.getRelations().stream().map(item -> item.getInverse()).filter(item -> item.getCode().equals(code)).findAny();
-        return modelType.orElseGet(() -> this.getModelByCode(code));
+        return cache.getModelById(id, () -> this.modelDao.findById(id));
     }
+
+//    public Model getModelByCode(Model model, String code) {
+//        if (model.getCode().equals(code)) {
+//            return model;
+//        }
+//        Optional<Model> modelType = model.getRelations().stream().map(item -> item.getInverse()).filter(item -> item.getCode().equals(code)).findAny();
+//        return modelType.orElseGet(() -> this.getModelByCode(code).get());
+//    }
 
     public ModelField generatePrimaryKeyField() {
         return ModelField.builder().code(FieldType.ID.getCode().toLowerCase()).name(FieldType.ID.getCode()).type(FieldType.ID).system(true).primaryKey(true).build();
@@ -192,11 +256,11 @@ public class ModelUtils {
         }
 
         for (Model type : feature.getTypes(model)) {
-            Optional<Model> optional = modelService.findByCode(type.getCode());
+            Optional<Model> optional = this.getModelByCode(type.getCode());
             if (optional.isPresent()) {
                 model.connect(optional.get(), getModelConnectType(type.getType()));
             } else {
-                model.connect(modelService.save(type), getModelConnectType(type.getType()));
+                model.connect(modelService.save(type, this), getModelConnectType(type.getType()));
             }
         }
 
@@ -227,7 +291,7 @@ public class ModelUtils {
         }
 
         for (Model type : feature.getTypes(model)) {
-            Optional<Model> optional = modelService.findByCode(type.getCode());
+            Optional<Model> optional = this.getModelByCode(type.getCode());
             // 如果之前存在对象，查询填充 ID 字段
             if (optional.isPresent()) {
                 Model oldType = optional.get();
@@ -241,7 +305,7 @@ public class ModelUtils {
                 }
                 model.connect(modelService.update(type), getModelConnectType(type.getType()));
             } else {
-                model.connect(modelService.save(type), getModelConnectType(type.getType()));
+                model.connect(modelService.save(type, this), getModelConnectType(type.getType()));
             }
         }
 
@@ -264,12 +328,12 @@ public class ModelUtils {
             if (argument.getType().getId() != null) {
                 continue;
             }
-            argument.setType(this.getModelByCode(model, argument.getType().getCode()));
+            argument.setType(this.getModelByCode(argument.getType().getCode()).get());
         }
         ModelEndpointReturnType returnType = endpoint.getReturnType();
         returnType.setEndpoint(endpoint);
         if (returnType.getType().getId() == null) {
-            returnType.setType(this.getModelByCode(model, returnType.getType().getCode()));
+            returnType.setType(this.getModelByCode(returnType.getType().getCode()).get());
         }
         endpoint.setModel(model);
         modelEndpointDao.save(endpoint);
@@ -387,12 +451,150 @@ public class ModelUtils {
         return null;
     }
 
+    public void clear() {
+        this.HOLDER.remove();
+    }
+
+    public ModelUtilCache newCache(List<Model> types) {
+        ModelUtilCache cache = HOLDER.get();
+        if (cache == null) {
+            HOLDER.set(new ModelUtilCache(types));
+            return HOLDER.get();
+        }
+        return HOLDER.get();
+    }
+
+    public ModelUtilCache newCache(List<Model> types, List<Model> inputTypes, List<Model> scalars) {
+        List<Model> newTypes = new ArrayList<>();
+        newTypes.addAll(types);
+        newTypes.addAll(inputTypes);
+        newTypes.addAll(scalars);
+        return newCache(newTypes);
+    }
+
+    public ModelUtilCache cache() {
+        ModelUtilCache cache = HOLDER.get();
+        if (cache == null) {
+            HOLDER.set(new ModelUtilCache());
+            return HOLDER.get();
+        }
+        return HOLDER.get();
+    }
+
+    public void cache(Model result) {
+        ModelUtilCache cache = HOLDER.get();
+        if (cache == null) {
+            return;
+        }
+        cache.putModel(result);
+    }
+
+    public Model saveWithCache(Model entity) {
+        if (!this.isLazySave()) {
+            this.modelDao.save(entity);
+            // 添加到缓存
+            this.cache(entity);
+        } else {
+            this.lazySave(entity);
+        }
+        return entity;
+    }
+
+    public ModelLazySaveContext getModelLazySaveContext() {
+        return LAZY.get();
+    }
+
     @Data
     @NoArgsConstructor
     static class DiffObject<T> {
         private List<T> appendItems = new ArrayList<>();
         private List<T> modifiedItems = new ArrayList<>();
         private List<T> deletedItems = new ArrayList<>();
+    }
+
+    public static class ModelUtilCache {
+        private List<Model> models = new ArrayList<>();
+        private final List<ModelField> fields = new ArrayList<>();
+        private Map<Long, Model> modelsById = new HashMap<>();
+        private Map<String, Model> modelsByCode = new HashMap<>();
+
+        public ModelUtilCache() {
+        }
+
+        public ModelUtilCache(List<Model> types) {
+            for (Model model : types) {
+                this.putModel(model);
+            }
+        }
+
+        public boolean containsModel(Long id) {
+            return modelsById.containsKey(id);
+        }
+
+        public Optional<Model> getModelById(Long id, Supplier<Optional<Model>> override) {
+            if (modelsById.containsKey(id)) {
+                return Optional.of(modelsById.get(id));
+            }
+            Optional<Model> optional = override.get();
+            if (optional.isPresent()) {
+                this.putModel(optional.get());
+                return optional;
+            }
+            return Optional.empty();
+        }
+
+        public Optional<Model> getModelByCode(String code, Supplier<Optional<Model>> override) {
+            if (modelsByCode.containsKey(code)) {
+                return Optional.of(modelsByCode.get(code));
+            }
+            Optional<Model> optional = override.get();
+            if (optional.isPresent()) {
+                this.putModel(optional.get());
+                return optional;
+            }
+            return Optional.empty();
+        }
+
+        private void putModel(Model model) {
+            this.modelsById.put(model.getId(), model);
+            this.modelsByCode.put(model.getCode(), model);
+        }
+    }
+
+    public static class ModelLazySaveContext {
+        public final List<Model> saves = new ArrayList<>();
+        public final List<Model> updates = new ArrayList<>();
+        public final List<ModelField> savesByField = new ArrayList<>();
+        public final List<ModelField> updatesByField = new ArrayList<>();
+
+        public void addLazySave(LazySaveOperations operations, Model model) {
+            if (operations == LazySaveOperations.SAVE) {
+                saves.add(model);
+            } else {
+                updates.add(model);
+            }
+        }
+
+        public void addLazySave(LazySaveOperations operations, ModelField field) {
+            if (operations == LazySaveOperations.SAVE) {
+                savesByField.add(field);
+            } else {
+                updatesByField.add(field);
+            }
+        }
+
+        public void addLazySave(LazySaveOperations operations, Set<ModelField> fields) {
+            if (operations == LazySaveOperations.SAVE) {
+                this.savesByField.addAll(fields);
+            } else {
+                this.updatesByField.addAll(fields);
+            }
+        }
+
+    }
+
+    public enum LazySaveOperations {
+        SAVE, UPDATE
     }
 
 }

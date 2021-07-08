@@ -3,7 +3,6 @@ package cn.asany.shanhai.gateway.service;
 import cn.asany.shanhai.core.bean.Model;
 import cn.asany.shanhai.core.bean.ModelField;
 import cn.asany.shanhai.core.service.ModelService;
-import cn.asany.shanhai.core.support.ModelSaveContext;
 import cn.asany.shanhai.gateway.bean.Service;
 import cn.asany.shanhai.gateway.bean.ServiceSchema;
 import cn.asany.shanhai.gateway.bean.ServiceSchemaVersion;
@@ -12,8 +11,8 @@ import cn.asany.shanhai.gateway.dao.ServiceSchemaDao;
 import cn.asany.shanhai.gateway.dao.ServiceSchemaVersionDao;
 import cn.asany.shanhai.gateway.dao.ServiceSchemaVersionPatchDao;
 import cn.asany.shanhai.gateway.util.GraphQLField;
-import cn.asany.shanhai.gateway.util.GraphQLSchema;
 import cn.asany.shanhai.gateway.util.GraphQLObjectType;
+import cn.asany.shanhai.gateway.util.GraphQLSchema;
 import cn.asany.shanhai.gateway.util.SchemaUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
@@ -108,23 +107,11 @@ public class ServiceSchemaService {
 
     @Transactional(rollbackFor = RuntimeException.class)
     public void save(GraphQLSchema schema) {
-        ModelSaveContext saveContext = ModelSaveContext.newInstance();
-
-        saveContext.setModels(this.modelService.findAll());
-
         List<GraphQLObjectType> typeDefinitions = schema.getTypeMap().values().stream().collect(Collectors.toList());
 
-        System.out.println(saveContext.getModels().get(0).getMetadata());
-
-        typeDefinitions.add(schema.getMutationType());
-        typeDefinitions.add(schema.getQueryType());
+        List<Model> models = new ArrayList<>();
 
         for (GraphQLObjectType definition : typeDefinitions) {
-            System.out.println("新增 ModelType : " + definition.getId());
-
-            if (modelService.exists(definition.getId())) {
-                continue;
-            }
 
             Model.ModelBuilder builder = Model.builder()
                 .code(definition.getId())
@@ -137,12 +124,16 @@ public class ServiceSchemaService {
 
             Model model = builder.build();
 
-            this.modelService.save(model);
+            models.add(model);
         }
 
-        lazySaveFields(saveContext.getFields());
+        this.modelService.saveAllInBatch(models);
 
-        ModelSaveContext.clear();
+        System.out.println("TODO:执行延时保存");
+
+//        lazySaveFields(saveContext.getFields());
+
+//        ModelSaveContext.clear();
     }
 
     private void lazySaveFields(List<ModelField> fields) {

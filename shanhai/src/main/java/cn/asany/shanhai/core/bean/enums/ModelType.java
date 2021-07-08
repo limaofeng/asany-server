@@ -14,7 +14,7 @@ public enum ModelType {
      */
     OBJECT,
     /**
-     *
+     * 实体
      */
     ENTITY,
     /**

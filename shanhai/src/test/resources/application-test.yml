@@ -1,9 +1,13 @@
 spring:
+  jpa:
+    properties:
+      hibernate:
+        show_sql: true
   jackson:
     default-property-inclusion: non_null
   jfantasy:
     sequence:
-      pool-size: 1
+      pool-size: 500
   application:
     name: server
   datasource:
