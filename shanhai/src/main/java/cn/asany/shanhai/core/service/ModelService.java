@@ -262,9 +262,15 @@ public class ModelService {
         Set<Long> fieldIds = new HashSet<>();
         Set<Long> argumentIds = new HashSet<>();
 
+        Set<ModelField> queries = ObjectUtil.find(models, "code", "Query").getFields();
+        Set<ModelField> mutations = ObjectUtil.find(models, "code", "Mutation").getFields();
+
         models = models.stream().filter(item -> !ObjectUtil.exists(ModelUtils.DEFAULT_TYPES, "id", item.getId())).collect(Collectors.toList());
 
         aggregate(models, modelIds, fieldIds, argumentIds);
+
+        this.modelFieldDao.deleteAllByIdInBatch(queries.stream().map(item -> item.getId()).collect(Collectors.toList()));
+        this.modelFieldDao.deleteAllByIdInBatch(mutations.stream().map(item -> item.getId()).collect(Collectors.toList()));
 
         if (!argumentIds.isEmpty()) {
             this.modelFieldArgumentDao.deleteAllByIdInBatch(argumentIds);
