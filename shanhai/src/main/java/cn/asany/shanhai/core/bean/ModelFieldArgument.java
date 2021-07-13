@@ -9,7 +9,7 @@ import javax.persistence.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = false, of = "id")
+@EqualsAndHashCode(callSuper = false, of = {"id", "name"})
 @ToString(of = "id")
 @Entity
 @Table(name = "SH_MODEL_FIELD_ARGUMENT")
@@ -42,6 +42,12 @@ public class ModelFieldArgument {
     @Column(name = "DESCRIPTION", length = 200)
     private String description;
     /**
+     * 默认值
+     */
+    @Column(name = "DEFAULT_VALUE", length = 50)
+    private String defaultValue;
+
+    /**
      * 接口
      */
     @ManyToOne(fetch = FetchType.LAZY)
@@ -49,6 +55,7 @@ public class ModelFieldArgument {
     private ModelField field;
 
     public static class ModelFieldArgumentBuilder {
+
         public ModelFieldArgumentBuilder type(String type) {
             this.type = Model.builder().code(type).build();
             return this;
@@ -58,5 +65,6 @@ public class ModelFieldArgument {
             this.type = type;
             return this;
         }
+
     }
 }

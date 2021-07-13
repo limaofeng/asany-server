@@ -131,6 +131,22 @@ public class ModelUtils {
             model.setName(StringUtil.ellipsis(model.getName(), 100, "..."));
         }
 
+        model.setImplementz(model.getImplementz().stream().map(item -> {
+            Optional<Model> optional = this.getModelByCode(item.getCode());
+            if (!optional.isPresent()) {
+                throw new TypeNotFoundException(item.getCode());
+            }
+            return optional.get();
+        }).collect(Collectors.toSet()));
+
+        model.setMemberTypes(model.getMemberTypes().stream().map(item -> {
+            Optional<Model> optional = this.getModelByCode(item.getCode());
+            if (!optional.isPresent()) {
+                throw new TypeNotFoundException(item.getCode());
+            }
+            return optional.get();
+        }).collect(Collectors.toSet()));
+
         if (model.getType() != ModelType.ENTITY) {
             return;
         }
@@ -146,7 +162,7 @@ public class ModelUtils {
         }
     }
 
-    public ModelField install(Model model, ModelField field) throws FieldTypeNotFoundException {
+    public ModelField install(Model model, ModelField field) throws TypeNotFoundException {
         if (!ObjectUtil.exists(model.getFields(), "code", field.getCode())) {
             field.setModel(model);
         }
@@ -167,9 +183,17 @@ public class ModelUtils {
         if (field.getType().getId() == null) {
             Optional<Model> type = getModelByCode(field.getType().getCode());
             if (!type.isPresent()) {
-                throw new FieldTypeNotFoundException(field.getType().getCode());
+                throw new TypeNotFoundException(field.getType().getCode());
             }
             field.setType(type.get());
+        }
+
+        for (ModelFieldArgument argument : field.getArguments()) {
+            Optional<Model> type = getModelByCode(argument.getType().getCode());
+            if (!type.isPresent()) {
+                throw new TypeNotFoundException(field.getType().getCode());
+            }
+            argument.setType(type.get());
         }
 
         if (model.getType() != ModelType.ENTITY) {
@@ -213,7 +237,7 @@ public class ModelUtils {
     public Optional<Model> getModelByCode(String code) {
         ModelUtilCache cache = this.cache();
         if (this.isLazySave()) {
-            return cache.getModelByCode(code, () -> Optional.empty());
+            return cache.getModelByCode(code, Optional::empty);
         }
         return cache.getModelByCode(code, () -> this.modelDao.findOne(Example.of(Model.builder().code(code).build())));
     }

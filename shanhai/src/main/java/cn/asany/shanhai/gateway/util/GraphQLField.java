@@ -18,6 +18,8 @@ public class GraphQLField {
     private String id;
     private String description;
     private String type;
+    private boolean list;
+    private boolean required;
     private GraphQLSchema schema;
     private Map<String, GraphQLFieldArgument> arguments;
 
@@ -33,6 +35,10 @@ public class GraphQLField {
 
     public static class GraphQLFieldBuilder {
 
+        public GraphQLFieldBuilder() {
+            this.arguments = new HashMap<>();
+        }
+
         public GraphQLFieldBuilder type(Type type) {
             this.type = GraphQLSchema.typeName(type);
             return this;
@@ -42,7 +48,13 @@ public class GraphQLField {
             Map<String, GraphQLFieldArgument> arguments = new HashMap<>();
             for (InputValueDefinition input : inputValueDefinitions) {
                 String description = input.getDescription() != null ? input.getDescription().content : null;
-                arguments.put(input.getName(), GraphQLFieldArgument.builder().schema(this.schema).id(input.getName()).type(GraphQLSchema.typeName(input.getType())).description(description).build());
+                arguments.put(input.getName(), GraphQLFieldArgument.builder()
+                    .schema(this.schema)
+                    .id(input.getName())
+                    .type(GraphQLSchema.typeName(input.getType()))
+                    .description(description)
+                    .defaultValue(input.getDefaultValue())
+                    .build());
             }
             this.arguments = arguments;
             return this;

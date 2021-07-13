@@ -14,7 +14,7 @@ import javax.persistence.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = false, of = "id")
+@EqualsAndHashCode(callSuper = false, of = {"id", "type"})
 @ToString(of = "id")
 @Entity
 @Table(name = "SH_MODEL_ENDPOINT_RETURN_TYPE")

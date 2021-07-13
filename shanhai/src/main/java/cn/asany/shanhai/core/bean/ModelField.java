@@ -6,8 +6,10 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.LazyToOne;
 import org.hibernate.annotations.LazyToOneOption;
 import org.jfantasy.framework.dao.BaseBusEntity;
+import org.jfantasy.framework.jackson.JSON;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -132,6 +134,10 @@ public class ModelField extends BaseBusEntity implements ModelGroupResource {
 
     public static class ModelFieldBuilder {
 
+        public ModelFieldBuilder() {
+            this.arguments = new HashSet<>();
+        }
+
         public ModelFieldBuilder metadata(boolean insertable, boolean updatable) {
             this.metadata = ModelFieldMetadata.builder().insertable(insertable).updatable(updatable).build();
             return this;
@@ -151,6 +157,63 @@ public class ModelField extends BaseBusEntity implements ModelGroupResource {
             this.type = type;
             return this;
         }
+
+        public ModelFieldBuilder argument(String name, String type) {
+            if (this.arguments == null) {
+                this.arguments = new HashSet<>();
+            }
+            this.arguments.add(ModelFieldArgument.builder().name(name).type(type).build());
+            return this;
+        }
+
+        public ModelFieldBuilder argument(String name, Model type, String description) {
+            if (this.arguments == null) {
+                this.arguments = new HashSet<>();
+            }
+            this.arguments.add(ModelFieldArgument.builder().name(name).type(type).description(description).build());
+            return this;
+        }
+
+        public ModelFieldBuilder argument(String name, String type, Boolean required) {
+            if (this.arguments == null) {
+                this.arguments = new HashSet<>();
+            }
+            this.arguments.add(ModelFieldArgument.builder().name(name).required(required).type(type).build());
+            return this;
+        }
+
+        public ModelFieldBuilder argument(String name, String type, String description) {
+            if (this.arguments == null) {
+                this.arguments = new HashSet<>();
+            }
+            this.arguments.add(ModelFieldArgument.builder().name(name).description(description).type(type).build());
+            return this;
+        }
+
+        public ModelFieldBuilder argument(String name, String type, String description, Object defaultValue) {
+            if (this.arguments == null) {
+                this.arguments = new HashSet<>();
+            }
+            this.arguments.add(ModelFieldArgument.builder().name(name).description(description).type(type).defaultValue(JSON.serialize(defaultValue)).build());
+            return this;
+        }
+
+        public ModelFieldBuilder argument(String name, Model type, String description, Object defaultValue) {
+            if (this.arguments == null) {
+                this.arguments = new HashSet<>();
+            }
+            this.arguments.add(ModelFieldArgument.builder().name(name).description(description).type(type).defaultValue(JSON.serialize(defaultValue)).build());
+            return this;
+        }
+
+        public ModelFieldBuilder argument(String name, String type, Boolean required, String description, Object defaultValue) {
+            if (this.arguments == null) {
+                this.arguments = new HashSet<>();
+            }
+            this.arguments.add(ModelFieldArgument.builder().name(name).required(required).description(description).type(type).defaultValue(JSON.serialize(defaultValue)).build());
+            return this;
+        }
+
     }
 
 }

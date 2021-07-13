@@ -7,10 +7,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.beans.Transient;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author limaofeng
@@ -22,6 +19,8 @@ public class GraphQLObjectType {
     private String id;
     private String description;
     private GraphQLType type;
+    private List<String> implementz;
+    private List<String> memberTypes;
     private transient GraphQLSchema schema;
     private int boost;
     private Map<String, GraphQLField> fieldMap;
@@ -49,13 +48,36 @@ public class GraphQLObjectType {
 
     public static class GraphQLObjectTypeBuilder {
 
+        public GraphQLObjectTypeBuilder() {
+            this.implementz = Collections.emptyList();
+            this.memberTypes = Collections.emptyList();
+        }
+
+        public GraphQLObjectTypeBuilder implementz(List<String> types) {
+            this.implementz = types;
+            return this;
+        }
+
+        public GraphQLObjectTypeBuilder memberTypes(List<String> types) {
+            this.memberTypes = types;
+            return this;
+        }
+
         public GraphQLObjectTypeBuilder field(String name, FieldDefinition field) {
             if (this.fieldMap == null) {
                 this.fieldMap = new LinkedHashMap<>();
             }
             String description = field.getDescription() != null ? field.getDescription().content : null;
 
-            this.fieldMap.put(name, GraphQLField.builder().schema(this.schema).id(name).arguments(field.getInputValueDefinitions()).type(field.getType()).description(description).build());
+            this.fieldMap.put(name, GraphQLField.builder()
+                .schema(this.schema)
+                .id(name)
+                .arguments(field.getInputValueDefinitions())
+                .type(field.getType())
+                .required(GraphQLSchema.isRequired(field.getType()))
+                .list(GraphQLSchema.isList(field.getType()))
+                .description(description)
+                .build());
             return this;
         }
 

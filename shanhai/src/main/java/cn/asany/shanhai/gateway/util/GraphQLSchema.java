@@ -11,6 +11,7 @@ import org.jfantasy.framework.util.common.ObjectUtil;
 
 import java.beans.Transient;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static graphql.schema.idl.SchemaPrinter.Options.defaultOptions;
 
@@ -139,6 +140,8 @@ public class GraphQLSchema {
 
         buildGraphQLFields(builder, definition.getFieldDefinitions().toArray(new FieldDefinition[0]));
 
+        builder.implementz(definition.getImplements().stream().map((item) -> ((TypeName) item).getName()).collect(Collectors.toList()));
+
         String description = definition.getDescription() != null ? definition.getDescription().content : null;
         builder.description(description);
 
@@ -165,7 +168,9 @@ public class GraphQLSchema {
     }
 
     private GraphQLObjectType buildGraphQLType(UnionTypeDefinition definition) {
-        return GraphQLObjectType.builder().schema(this).id(definition.getName()).type(GraphQLType.Union).build();
+        GraphQLObjectTypeBuilder builder = GraphQLObjectType.builder().schema(this).id(definition.getName()).type(GraphQLType.Union);
+        builder.memberTypes(definition.getMemberTypes().stream().map((item) -> ((TypeName) item).getName()).collect(Collectors.toList()));
+        return builder.build();
     }
 
     public void removeType(String type) {
@@ -333,6 +338,8 @@ public class GraphQLSchema {
 
             schema.setTypeDefinitionRegistry(registry);
 
+            loadTypeDefinitions(registry.types().values(), registry, schema);
+
             loadFieldDefinitions(queries, registry, schema);
             schema.buildGraphQLFields(queryTypeBuilder, queries.toArray(new FieldDefinition[0]));
 
@@ -345,6 +352,12 @@ public class GraphQLSchema {
             schema.setQueryType(queryTypeBuilder.build());
             schema.setMutationType(mutationTypeBuilder.build());
             schema.setSubscriptionType(subscriptionTypeBuilder.build());
+        }
+
+        private void loadTypeDefinitions(Collection<TypeDefinition> typeDefinitions, TypeDefinitionRegistry registry, GraphQLSchema schema) {
+            for (TypeDefinition typeDefinition : typeDefinitions) {
+                loadTypeDefinition(typeDefinition, registry, schema);
+            }
         }
 
         private void loadTypeDefinition(TypeDefinition definition, TypeDefinitionRegistry registry, GraphQLSchema schema) {
@@ -471,6 +484,27 @@ public class GraphQLSchema {
             type = ((ListType) type).getType();
         }
         return ((TypeName) type).getName();
+    }
+
+    public static boolean isRequired(Type type) {
+        if (type instanceof NonNullType) {
+            return true;
+        }
+        if (type instanceof ListType) {
+            return isRequired(((ListType) type).getType());
+        }
+        return false;
+    }
+
+    public static boolean isList(Type type) {
+        if (type instanceof ListType) {
+            return true;
+        }
+        if (type instanceof NonNullType) {
+            return isList(((NonNullType) type).getType());
+        }
+
+        return false;
     }
 
 }

@@ -7,7 +7,7 @@ import cn.asany.shanhai.core.bean.enums.ModelType;
 import cn.asany.shanhai.core.dao.*;
 import cn.asany.shanhai.core.runners.InitModelDaoCommandLineRunner;
 import cn.asany.shanhai.core.support.model.FieldTypeRegistry;
-import cn.asany.shanhai.core.utils.FieldTypeNotFoundException;
+import cn.asany.shanhai.core.utils.TypeNotFoundException;
 import cn.asany.shanhai.core.utils.ModelUtils;
 import cn.asany.shanhai.gateway.bean.ModelGroupItem;
 import lombok.SneakyThrows;
@@ -75,7 +75,7 @@ public class ModelService {
             ModelField field = iterator.next();
             try {
                 modelUtils.install(model, field);
-            } catch (FieldTypeNotFoundException e) {
+            } catch (TypeNotFoundException e) {
                 if (!modelUtils.isLazySave()) {
                     throw e;
                 }
@@ -132,13 +132,20 @@ public class ModelService {
         List<ModelField> queries = new ArrayList<>();
         List<ModelField> mutations = new ArrayList<>();
 
-        for (Model model : models) {
+        for (int i = 0; i < models.size(); i++) {
+            Model model  = models.get(i);
             if ("Query".equals(model.getCode())) {
                 queries.addAll(model.getFields());
             } else if ("Mutation".equals(model.getCode())) {
                 mutations.addAll(model.getFields());
             } else {
-                this.save(model, modelUtils);
+                try {
+                    this.save(model, modelUtils);
+                } catch (TypeNotFoundException e) {
+                    models.remove(i);
+                    i--;
+                    models.add(model);
+                }
             }
         }
 
@@ -147,7 +154,7 @@ public class ModelService {
 
         ModelUtils.ModelLazySaveContext context = modelUtils.getModelLazySaveContext();
 
-        long xstart = System.currentTimeMillis();
+        long x_start = System.currentTimeMillis();
 
         Model Query = modelUtils.getModelByCode("Query").get();
         Model Mutation = modelUtils.getModelByCode("Mutation").get();
@@ -156,7 +163,7 @@ public class ModelService {
         this.modelFieldDao.saveAllInBatch(context.savesByField.stream().map(item -> modelUtils.install(item.getModel(), item)).collect(Collectors.toList()));
         this.modelFieldDao.saveAllInBatch(queries.stream().map(item -> modelUtils.install(Query, item)).collect(Collectors.toList()));
         this.modelFieldDao.saveAllInBatch(mutations.stream().map(item -> modelUtils.install(Mutation, item)).collect(Collectors.toList()));
-        String ss = InitModelDaoCommandLineRunner.fromNow(xstart);
+        String ss = InitModelDaoCommandLineRunner.fromNow(x_start);
         System.out.println("批量保存耗时: " + ss);
 
         modelUtils.clear();
@@ -194,7 +201,7 @@ public class ModelService {
 
     public void publish(Long id) {
         Model model = modelDao.getById(id);
-        ModelMetadata metadata = model.getMetadata();
+//        ModelMetadata metadata = model.getMetadata();
 //        String xml = hibernateMappingHelper.generateXML(model);
 //        metadata.setHbm(xml);
         model.setStatus(ModelStatus.PUBLISHED);
@@ -207,7 +214,7 @@ public class ModelService {
 
     public int delete(Long[] ids) {
         for (Long id : ids) {
-            this.modelDao.delete(this.modelDao.getOne(id));
+            this.modelDao.delete(this.modelDao.getById(id));
         }
         return ids.length;
     }
@@ -216,8 +223,19 @@ public class ModelService {
         this.modelDao.delete(this.modelDao.getById(id));
     }
 
+    private void aggregate(Set<ModelField> queries, Set<ModelField> mutations, Set<Long> apiFieldIds, Set<Long> apiFieldArgumentIds) {
+        for (ModelField field : queries) {
+            apiFieldIds.add(field.getId());
+            apiFieldArgumentIds.addAll(field.getArguments().stream().map(ModelFieldArgument::getId).collect(Collectors.toSet()));
+        }
+        for (ModelField field : mutations) {
+            apiFieldIds.add(field.getId());
+            apiFieldArgumentIds.addAll(field.getArguments().stream().map(ModelFieldArgument::getId).collect(Collectors.toSet()));
+        }
+    }
+
     private void aggregate(List<Model> models, Set<Long> modelIds, Set<Long> fieldIds, Set<Long> argumentIds) {
-        models.stream().forEach(model -> {
+        models.forEach(model -> {
             modelIds.add(model.getId());
             aggregate(model, fieldIds, argumentIds);
         });
@@ -226,7 +244,7 @@ public class ModelService {
     private void aggregate(Model model, Set<Long> fieldIds, Set<Long> argumentIds) {
         model.getFields().forEach(field -> {
             fieldIds.add(field.getId());
-            argumentIds.addAll(field.getArguments().stream().map(arg -> arg.getId()).collect(Collectors.toSet()));
+            argumentIds.addAll(field.getArguments().stream().map(ModelFieldArgument::getId).collect(Collectors.toSet()));
         });
     }
 
@@ -262,15 +280,23 @@ public class ModelService {
         Set<Long> fieldIds = new HashSet<>();
         Set<Long> argumentIds = new HashSet<>();
 
+        Set<Long> apiFieldIds = new HashSet<>();
+        Set<Long> apiFieldArgumentIds = new HashSet<>();
+
         Set<ModelField> queries = ObjectUtil.find(models, "code", "Query").getFields();
         Set<ModelField> mutations = ObjectUtil.find(models, "code", "Mutation").getFields();
 
         models = models.stream().filter(item -> !ObjectUtil.exists(ModelUtils.DEFAULT_TYPES, "id", item.getId())).collect(Collectors.toList());
 
         aggregate(models, modelIds, fieldIds, argumentIds);
+        aggregate(queries, mutations, apiFieldIds, apiFieldArgumentIds);
 
-        this.modelFieldDao.deleteAllByIdInBatch(queries.stream().map(item -> item.getId()).collect(Collectors.toList()));
-        this.modelFieldDao.deleteAllByIdInBatch(mutations.stream().map(item -> item.getId()).collect(Collectors.toList()));
+        if (!apiFieldArgumentIds.isEmpty()) {
+            this.modelFieldArgumentDao.deleteAllByIdInBatch(apiFieldArgumentIds);
+        }
+        if (!apiFieldIds.isEmpty()) {
+            this.modelFieldDao.deleteAllByIdInBatch(apiFieldIds);
+        }
 
         if (!argumentIds.isEmpty()) {
             this.modelFieldArgumentDao.deleteAllByIdInBatch(argumentIds);
@@ -340,10 +366,10 @@ public class ModelService {
         List<ModelGroupItem> items = new ArrayList<>();
         int i = 0;
         for (ModelField field : this.modelFieldDao.findByUngrouped()) {
-            items.add(ModelGroupItem.builder().id(Long.valueOf(--i)).resourceId(field.getId()).resourceType("ENDPOINT").resource(field).build());
+            items.add(ModelGroupItem.builder().id((long) --i).resourceId(field.getId()).resourceType("ENDPOINT").resource(field).build());
         }
         for (Model model : this.modelDao.findByUngrouped()) {
-            items.add(ModelGroupItem.builder().id(Long.valueOf(--i)).resourceId(model.getId()).resourceType("MODEL").resource(model).build());
+            items.add(ModelGroupItem.builder().id((long) --i).resourceId(model.getId()).resourceType("MODEL").resource(model).build());
         }
         return items;
     }

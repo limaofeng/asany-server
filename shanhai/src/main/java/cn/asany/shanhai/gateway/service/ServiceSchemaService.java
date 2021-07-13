@@ -1,7 +1,6 @@
 package cn.asany.shanhai.gateway.service;
 
 import cn.asany.shanhai.core.bean.Model;
-import cn.asany.shanhai.core.bean.ModelField;
 import cn.asany.shanhai.core.service.ModelService;
 import cn.asany.shanhai.gateway.bean.Service;
 import cn.asany.shanhai.gateway.bean.ServiceSchema;
@@ -27,7 +26,6 @@ import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * @author limaofeng
@@ -107,23 +105,18 @@ public class ServiceSchemaService {
 
     @Transactional(rollbackFor = RuntimeException.class)
     public void save(GraphQLSchema schema) {
-        List<GraphQLObjectType> typeDefinitions = schema.getTypeMap().values().stream().collect(Collectors.toList());
+        List<GraphQLObjectType> typeDefinitions = new ArrayList<>(schema.getTypeMap().values());
 
         List<Model> models = new ArrayList<>();
 
         for (GraphQLObjectType definition : typeDefinitions) {
-
-            Model.ModelBuilder builder = Model.builder()
-                .code(definition.getId())
-                .type(definition.getType().toModelType())
-                .name(definition.getDescription());
+            Model.ModelBuilder builder = Model.builder().code(definition.getId()).name(definition.getDescription()).type(definition.getType().toModelType()).implementz(definition.getImplementz()).memberTypes(definition.getMemberTypes());
 
             for (GraphQLField field : ObjectUtil.defaultValue(definition.getFields(), new ArrayList<GraphQLField>())) {
-                builder.field(field.getId(), field.getDescription(), field.getType());
+                builder.field(field.getId(), field.getDescription(), field.getType(), field.isList(), field.isRequired(), new ArrayList<>(field.getArguments().values()));
             }
 
             Model model = builder.build();
-
             models.add(model);
         }
 
@@ -134,12 +127,6 @@ public class ServiceSchemaService {
 //        lazySaveFields(saveContext.getFields());
 
 //        ModelSaveContext.clear();
-    }
-
-    private void lazySaveFields(List<ModelField> fields) {
-        for (ModelField field : fields) {
-            this.modelService.save(field);
-        }
     }
 
 }

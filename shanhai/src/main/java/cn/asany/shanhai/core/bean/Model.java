@@ -5,15 +5,19 @@ import cn.asany.shanhai.core.bean.enums.ModelStatus;
 import cn.asany.shanhai.core.bean.enums.ModelType;
 import cn.asany.shanhai.gateway.bean.ModelGroupResource;
 import cn.asany.shanhai.gateway.bean.Service;
+import cn.asany.shanhai.gateway.util.GraphQLFieldArgument;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.LazyToOne;
-import org.hibernate.annotations.LazyToOneOption;
+import org.hibernate.annotations.*;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.framework.dao.hibernate.converter.StringArrayConverter;
 
 import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
+import javax.persistence.OrderBy;
+import javax.persistence.Table;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -21,7 +25,7 @@ import java.util.stream.Collectors;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = false, of = "id")
+@EqualsAndHashCode(callSuper = false, of = {"id", "code"})
 @ToString(of = "id")
 @NamedEntityGraph(
     name = "Graph.Model.FetchMetadataAndFields",
@@ -77,6 +81,29 @@ public class Model extends BaseBusEntity implements ModelGroupResource {
     @Enumerated(EnumType.STRING)
     @Column(name = "STATUS", length = 20)
     private ModelStatus status;
+    /**
+     * 实现接口
+     */
+    @ManyToMany(fetch = FetchType.LAZY)
+    @LazyCollection(LazyCollectionOption.EXTRA)
+    @JoinTable(name = "SH_MODEL_IMPLEMENT",
+        joinColumns = @JoinColumn(name = "MODEL_ID"),
+        inverseJoinColumns = @JoinColumn(name = "INTERFACE_ID", foreignKey = @ForeignKey(name = "FK_MODEL_IMPLEMENT_IID")),
+        foreignKey = @ForeignKey(name = "FK_MODEL_IMPLEMENT_MID")
+    )
+    private Set<Model> implementz;
+    /**
+     * UNION 包含的类型
+     */
+    @ManyToMany(fetch = FetchType.LAZY)
+    @LazyCollection(LazyCollectionOption.EXTRA)
+    @JoinTable(name = "SH_MODEL_MEMBER_TYPE",
+        joinColumns = @JoinColumn(name = "MODEL_ID"),
+        inverseJoinColumns = @JoinColumn(name = "MEMBER_TYPE", foreignKey = @ForeignKey(name = "FK_MODEL_MEMBER_TYPE_TID")),
+        foreignKey = @ForeignKey(name = "FK_MODEL_MEMBER_TYPE_MID")
+    )
+    private Set<Model> memberTypes;
+
     /**
      * 关联引用
      */
@@ -135,6 +162,16 @@ public class Model extends BaseBusEntity implements ModelGroupResource {
             return this;
         }
 
+        public ModelBuilder implementz(List<String> types) {
+            this.implementz = types.stream().map(item -> Model.builder().code(item).build()).collect(Collectors.toSet());
+            return this;
+        }
+
+        public ModelBuilder memberTypes(List<String> types) {
+            this.memberTypes = types.stream().map(item -> Model.builder().code(item).build()).collect(Collectors.toSet());
+            return this;
+        }
+
         public ModelBuilder metadata(ModelMetadata metadata) {
             this.metadata = metadata;
             return this;
@@ -150,6 +187,35 @@ public class Model extends BaseBusEntity implements ModelGroupResource {
                 this.fields = new HashSet<>();
             }
             this.fields.add(ModelField.builder().id(id).code(code).name(name).type(type).build());
+            return this;
+        }
+
+        public ModelBuilder field(Long id, String code, String name, Model type, List<GraphQLFieldArgument> arguments) {
+            if (this.fields == null) {
+                this.fields = new HashSet<>();
+            }
+            ModelField.ModelFieldBuilder fieldBuilder = ModelField.builder().id(id).code(code).name(name).type(type);
+            for (GraphQLFieldArgument argument : arguments) {
+                fieldBuilder.argument(argument.getId(), argument.getType(), argument.getDescription());
+            }
+            this.fields.add(fieldBuilder.build());
+            return this;
+        }
+
+        public ModelBuilder field(String code, String name, String type, boolean list, boolean required, List<GraphQLFieldArgument> arguments) {
+            if (this.fields == null) {
+                this.fields = new HashSet<>();
+            }
+            ModelField.ModelFieldBuilder fieldBuilder = ModelField.builder()
+                .code(code)
+                .name(name)
+                .list(list)
+                .required(required)
+                .type(type);
+            for (GraphQLFieldArgument argument : arguments) {
+                fieldBuilder.argument(argument.getId(), argument.getType(), argument.getDescription());
+            }
+            this.fields.add(fieldBuilder.build());
             return this;
         }
 
