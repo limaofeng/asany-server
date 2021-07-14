@@ -72,8 +72,8 @@ jobs:
           push: true
           tags: limaofeng/asany-server:latest
 
-  push_to_packages:
-    name: Push Docker image to GitHub Packages
+  push_to_releases:
+    name: GitHub Releases
     runs-on: ubuntu-latest
     needs: build
     permissions:
@@ -82,22 +82,17 @@ jobs:
     steps:
       - name: Check out the repo
         uses: actions/checkout@v2
-      - name: Download Artifacts
-        uses: actions/download-artifact@main
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
         with:
-          name: app.jar
-          path: build/app.jar
-      - name: Log in to GitHub Docker Registry
-        uses: docker/login-action@v1
-        with:
-          registry: docker.pkg.github.com
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Build container image
-        uses: docker/build-push-action@v2
-        with:
-          context: ./build
-          file: ./Dockerfile
-          push: true
-          tags: |
-            docker.pkg.github.com/${{ github.repository }}/asany-server:beta-0.0.1
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          body: |
+            Changes in this Release
+            - First Change
+            - Second Change
+          draft: false
+          prerelease: false
