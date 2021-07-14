@@ -52,5 +52,6 @@ jobs:
       - name: Push to Docker Hub
         uses: docker/build-push-action@v2
         with:
+          context: ./build
           push: true
           tags: limaofeng/asany-server:latest
