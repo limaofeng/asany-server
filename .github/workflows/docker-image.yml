@@ -2,8 +2,11 @@ name: Docker Image CI
 
 on:
   push:
-    tags:
-      - 'v*'
+    branches: [ master ]
+#on:
+#  push:
+#    tags:
+#      - 'v*'
 
 jobs:
 
@@ -42,6 +45,10 @@ jobs:
         uses: actions/download-artifact@main
         with:
           path: build/
+      - name: Check Artifacts
+        run: |
+          - ls
+          - ls build
       - name: Log in to Docker Hub
         uses: docker/login-action@v1
         with:
