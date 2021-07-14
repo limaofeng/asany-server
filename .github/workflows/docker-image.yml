@@ -56,6 +56,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: ./build/artifact
+          file: ./Dockerfile
           push: true
           tags: limaofeng/asany-server:latest
 #            limaofeng/asany-server:${{ env.RELEASE_VERSION }}
