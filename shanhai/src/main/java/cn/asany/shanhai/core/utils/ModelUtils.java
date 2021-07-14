@@ -119,10 +119,12 @@ public class ModelUtils {
     public void initialize(Model model) {
         model.setType(ObjectUtil.defaultValue(model.getType(), ModelType.ENTITY));
         model.setCode(ObjectUtil.defaultValue(model.getCode(), () -> StringUtil.upperCaseFirst(StringUtil.camelCase(PinyinUtils.getAll(model.getName())))));
-        model.setFields(new HashSet<>((ObjectUtil.defaultValue(model.getFields(), Collections.emptyList()))));
-        model.setFeatures(new HashSet<>(ObjectUtil.defaultValue(model.getFeatures(), Collections.emptyList())));
-        model.setEndpoints(new HashSet<>(ObjectUtil.defaultValue(model.getEndpoints(), Collections.emptyList())));
-        model.setRelations(new HashSet<>(ObjectUtil.defaultValue(model.getRelations(), Collections.emptyList())));
+        model.setFields((ObjectUtil.defaultValue(model.getFields(), Collections.emptySet())));
+        model.setFeatures(ObjectUtil.defaultValue(model.getFeatures(), Collections.emptySet()));
+        model.setEndpoints(ObjectUtil.defaultValue(model.getEndpoints(), Collections.emptySet()));
+        model.setRelations(ObjectUtil.defaultValue(model.getRelations(), Collections.emptySet()));
+        model.setImplementz(ObjectUtil.defaultValue(model.getImplementz(), Collections.emptySet()));
+        model.setMemberTypes(ObjectUtil.defaultValue(model.getMemberTypes(), Collections.emptySet()));
 
         if (StringUtil.isNotBlank(model.getName()) && StringUtil.length(model.getName()) > 100) {
             if (StringUtil.isBlank(model.getDescription())) {

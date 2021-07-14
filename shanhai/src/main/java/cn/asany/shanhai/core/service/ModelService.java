@@ -320,6 +320,7 @@ public class ModelService {
         return this.modelDao.findAllByTypesWithMetadataAndFields(types);
     }
 
+    @Transactional
     public void saveInBatch(Model... models) {
         for (Model model : models) {
             if (this.modelDao.existsById(model.getId())) {
