@@ -32,6 +32,7 @@ jobs:
         with:
           name: app.jar
           path: build/app.jar
+          retention-days: 1
 
   push_to_registry:
     needs: build
@@ -74,6 +75,7 @@ jobs:
 
   github-release:
     needs: build
+    name: Github Release
     runs-on: self-hosted
     steps:
       - uses: actions/checkout@v2
