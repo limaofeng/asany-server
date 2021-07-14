@@ -60,7 +60,7 @@ jobs:
           context: .
           push: true
           tags: |
-            limaofeng/asany-server:${{ env.RELEASE_VERSION }}
+#            limaofeng/asany-server:${{ env.RELEASE_VERSION }}
             limaofeng/asany-server:latest
 
   github-release:
