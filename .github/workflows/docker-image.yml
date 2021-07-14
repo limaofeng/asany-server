@@ -18,18 +18,18 @@ jobs:
         with:
           java-version: '11'
           distribution: 'adopt'
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
-      - name: Build with Gradle
-        run: ./gradlew clean build -x test
-      - name: Rename Boot Jar
-        run: mv boot/build/libs/asany-boot.jar build/app.jar
       - name: Cache Gradle packages
         uses: actions/cache@v2
         with:
           path: |
             build/app.jar
           key: gradle-artifacts
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+      - name: Build with Gradle
+        run: ./gradlew clean build -x test
+      - name: Rename Boot Jar
+        run: mv boot/build/libs/asany-boot.jar build/app.jar
       - name: Build the Docker image
         run: docker build . --file Dockerfile --tag limaofeng/asany-server:$(date +%s)
 
