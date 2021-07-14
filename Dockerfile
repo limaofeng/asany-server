@@ -2,7 +2,7 @@ FROM library/java:8
 
 ARG version_number=0
 
-ADD app.jar /tmp/app/app.jar
+ADD /app.jar /tmp/app/app.jar
 
 # 构建应用
 RUN cd /tmp/app && \
