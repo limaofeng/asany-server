@@ -25,7 +25,7 @@ services:
       - db
     links:
       - db
-    image: limaofeng/asany-server:v0.0.4
+    image: limaofeng/asany-server:v0.0.6
     ports:
       - "8080:8080"
     restart: always

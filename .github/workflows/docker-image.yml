@@ -22,12 +22,12 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew clean build -x test
       - name: Rename Boot Jar
-        run: mv boot/build/libs/asany-boot.jar app.jar
+        run: mv boot/build/libs/asany-boot.jar build/app.jar
       - name: Upload Artifacts
         uses: actions/upload-artifact@main
         with:
           name: app.jar
-          path: app.jar
+          path: build/app.jar
           retention-days: 1
 
   push_to_registry:
@@ -43,7 +43,8 @@ jobs:
         uses: actions/download-artifact@main
         with:
           name: app.jar
-          path: app.jar
+          path: build/app.jar
+          retention-days: 1
       - name: Log in to Docker Hub
         uses: docker/login-action@v1
         with:
