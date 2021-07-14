@@ -46,9 +46,7 @@ jobs:
         with:
           path: build/
       - name: Check Artifacts
-        run: ls
-      - name: Check Artifacts 1
-        run: ls build
+        run: ls -R
       - name: Log in to Docker Hub
         uses: docker/login-action@v1
         with:
