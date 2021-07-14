@@ -37,6 +37,7 @@ jobs:
     steps:
       - name: Check out the repo
         uses: actions/checkout@v2
+        run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
       - name: Download Artifacts
         uses: actions/download-artifact@main
         with:
@@ -51,13 +52,8 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
       - name: Build base image
         run: |
-          echo $SOURCE_NAME
-          echo $SOURCE_BRANCH
-          echo $SOURCE_TAG
-        env:
-          SOURCE_NAME: ${{ steps.branch_name.outputs.SOURCE_NAME }}
-          SOURCE_BRANCH: ${{ steps.branch_name.outputs.SOURCE_BRANCH }}
-          SOURCE_TAG: ${{ steps.branch_name.outputs.SOURCE_TAG }}
+          echo $RELEASE_VERSION
+          echo ${{ env.RELEASE_VERSION }}
       - name: Push to Docker Hub
         uses: docker/build-push-action@v2
         with:
