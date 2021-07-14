@@ -95,5 +95,4 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: |
-            docker.pkg.github.com/${{ github.repository }}/asany-server:${{ github.sha }}
-            docker.pkg.github.com/${{ github.repository }}/asany-server:${{ github.ref }}
+            docker.pkg.github.com/${{ github.repository }}/asany-server:beta-0.0.1
