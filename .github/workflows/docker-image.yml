@@ -2,11 +2,8 @@ name: Docker Image CI
 
 on:
   push:
-    branches: [ master ]
-#on:
-#  push:
-#    tags:
-#      - 'v*'
+    tags:
+      - 'v*'
 
 jobs:
 
@@ -45,8 +42,6 @@ jobs:
         uses: actions/download-artifact@main
         with:
           path: build/
-      - name: Check Artifacts
-        run: ls -R
       - name: Log in to Docker Hub
         uses: docker/login-action@v1
         with:
@@ -58,9 +53,9 @@ jobs:
           context: ./build/artifact
           file: ./Dockerfile
           push: true
-          tags: limaofeng/asany-server:latest
-#            limaofeng/asany-server:${{ env.RELEASE_VERSION }}
-
+          tags: |
+            limaofeng/asany-server:latest
+            limaofeng/asany-server:${{ env.RELEASE_VERSION }}
 
   github-release:
     needs: build
