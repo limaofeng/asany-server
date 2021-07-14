@@ -73,7 +73,7 @@ jobs:
           tags: limaofeng/asany-server:latest
 
   github-release:
-    needs: publish
+    needs: build
     runs-on: self-hosted
     steps:
       - uses: actions/checkout@v2
