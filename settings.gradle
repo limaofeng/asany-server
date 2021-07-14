@@ -1,3 +1,17 @@
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+    }
+    resolutionStrategy {
+        eachPlugin {
+            print('>>>>>>>>>>>>' + requested.id.id)
+            if (requested.id.id == "ru.netris.commitlint") {
+                useModule("ru.netris:commitlint-plugin:${requested.version}")
+            }
+        }
+    }
+}
+
 rootProject.name = 'shanhai'
 include ":asany-shanhai",
         ":asany-organization",

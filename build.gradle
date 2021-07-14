@@ -13,6 +13,8 @@ plugins {
     id 'idea'
     id "io.spring.dependency-management" version "${PLUGIN_SPRING_DEPENDENCY_MANAGEMENT_VER}"
     id "org.zeroturnaround.gradle.jrebel" version "${PLUGIN_JREBEL_VER}" apply false
+    id "com.star-zero.gradle.githook" version "1.2.0"
+    id "ru.netris.commitlint" version "1.4"
 }
 
 allprojects {
@@ -60,6 +62,16 @@ allprojects {
                 groupId project.group
                 artifactId project.name
                 version project.version
+            }
+        }
+    }
+
+    githook {
+        failOnMissingHooksDir = false
+        createHooksDirIfNotExist = false
+        hooks {
+            "commit-msg" {
+                task = "commitlint -Dmsgfile=\$1"
             }
         }
     }
