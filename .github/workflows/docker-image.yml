@@ -22,6 +22,6 @@ jobs:
     - name: Build with Gradle
       run: ./gradlew clean build -x test
     - name: Rename Boot Jar
-      run: mv boot/build/libs/*.jar boot/build/app.jar
+      run: mv boot/build/libs/asany-boot.jar boot/build/app.jar
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag limaofeng/asany-server:$(date +%s)
