@@ -1,4 +1,8 @@
-# [](https://github.com/limaofeng/asany-server/compare/v0.0.4...v) (2021-07-14)
+# [](https://github.com/limaofeng/asany-server/compare/v0.0.5...v) (2021-07-14)
+
+
+
+## [0.0.5](https://github.com/limaofeng/asany-server/compare/v0.0.4...v0.0.5) (2021-07-14)
 
 
 
