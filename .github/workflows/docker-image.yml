@@ -2,8 +2,12 @@ name: Docker Image CI
 
 on:
   push:
-    tags:
-      - 'v*'
+    branches: [ master ]
+
+#on:
+#  push:
+#    tags:
+#      - 'v*'
 
 jobs:
 
@@ -67,3 +71,28 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: limaofeng/asany-server:latest
+
+  push_to_packages:
+    name: Push Docker image to GitHub Packages
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v2
+      - name: Log in to GitHub Docker Registry
+        uses: docker/login-action@v1
+        with:
+          registry: docker.pkg.github.com
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build container image
+        uses: docker/build-push-action@v2
+        with:
+          context: ./build
+          file: ./Dockerfile
+          push: true
+          tags: |
+            docker.pkg.github.com/${{ github.repository }}/asany-server:${{ github.sha }}
+            docker.pkg.github.com/${{ github.repository }}/asany-server:${{ github.ref }}
