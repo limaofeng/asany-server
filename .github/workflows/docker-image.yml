@@ -22,7 +22,13 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew clean build -x test
       - name: Rename Boot Jar
-        run: mv boot/build/libs/asany-boot.jar boot/build/app.jar
+        run: mv boot/build/libs/asany-boot.jar build/app.jar
+      - name: Cache Gradle packages
+        uses: actions/cache@v2
+        with:
+          path: |
+            build/app.jar
+          key: gradle-artifacts
       - name: Build the Docker image
         run: docker build . --file Dockerfile --tag limaofeng/asany-server:$(date +%s)
 
@@ -33,8 +39,14 @@ jobs:
     steps:
       - name: Check out the repo
         uses: actions/checkout@v2
+      - name: Cache Gradle packages
+        uses: actions/cache@v2
+        with:
+          path: |
+            build/app.jar
+          key: gradle-artifacts
       - name: Images
-        run: docker images
+        run: ls
 #      - name: Log in to Docker Hub
 #        uses: docker/login-action@v1
 #        with:
