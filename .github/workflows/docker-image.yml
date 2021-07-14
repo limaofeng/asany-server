@@ -27,6 +27,7 @@ jobs:
         run: docker build . --file Dockerfile --tag limaofeng/asany-server:$(date +%s)
 
   push_to_registry:
+    needs: build
     name: Push Docker image to Docker Hub
     runs-on: ubuntu-latest
     steps:
