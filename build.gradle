@@ -17,15 +17,15 @@ plugins {
     id "ru.netris.commitlint" version "1.4"
 }
 
-//githook {
-//    failOnMissingHooksDir = false
-//    createHooksDirIfNotExist = false
-//    hooks {
-//        "commit-msg" {
-//            task = "commitlint -Dmsgfile=\$1"
-//        }
-//    }
-//}
+githook {
+    failOnMissingHooksDir = false
+    createHooksDirIfNotExist = false
+    hooks {
+        "commit-msg" {
+            task = "commitlint -Dmsgfile=\$1"
+        }
+    }
+}
 
 allprojects {
     apply plugin: 'maven-publish'
