@@ -13,9 +13,7 @@ import org.jfantasy.framework.util.common.ObjectUtil;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -52,8 +50,11 @@ public class ApplicationTemplateService {
     @Transactional
     public ApplicationTemplate createApplicationTemplate(ApplicationTemplate application) {
         List<ApplicationTemplateRoute> routes = setupDefault(application.getRoutes());
+        application.setRoutes(Collections.emptyList());
+        this.applicationTemplateDao.save(application);
         application.setRoutes(routes);
-        return this.applicationTemplateDao.save(application);
+        this.applicationTemplateRouteDao.saveAllInBatch(routes);
+        return application;
     }
 
     @Transactional
@@ -89,6 +90,10 @@ public class ApplicationTemplateService {
                 route.setComponent(optionalComponent.get());
             } else {
                 route.setComponent(null);
+            }
+
+            if (route.getApplication() == null || route.getApplication().getId() == null) {
+                System.out.println(route);
             }
 
             if (route.getRoutes() != null) {

@@ -257,7 +257,7 @@ extend type Query {
     # 所有的应用
     applications(filter: ApplicationFilter = {}): [Application]
     # 查询单个应用的信息
-    application(id: ID!, idType: ApplicationIdType = ID, space: ID = "web"): Application
+    application(id: ID!, idType: ApplicationIdType, space: ID = "web"): Application
 }
 
 extend type Mutation {

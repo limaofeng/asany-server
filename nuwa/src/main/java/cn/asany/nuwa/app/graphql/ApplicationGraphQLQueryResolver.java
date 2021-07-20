@@ -5,6 +5,9 @@ import cn.asany.nuwa.app.graphql.input.ApplicationFilter;
 import cn.asany.nuwa.app.graphql.type.ApplicationIdType;
 import cn.asany.nuwa.app.service.ApplicationService;
 import graphql.kickstart.tools.GraphQLQueryResolver;
+import org.jfantasy.framework.util.common.ObjectUtil;
+import org.jfantasy.framework.util.regexp.RegexpConstant;
+import org.jfantasy.framework.util.regexp.RegexpUtil;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -25,6 +28,7 @@ public class ApplicationGraphQLQueryResolver implements GraphQLQueryResolver {
     }
 
     public Optional<Application> application(String id, ApplicationIdType idType, String space) {
+        idType = ObjectUtil.defaultValue(idType, () -> RegexpUtil.isMatch(id, RegexpConstant.VALIDATOR_INTEGE) ? ApplicationIdType.ID:ApplicationIdType.CLIENT_ID);
         if (ApplicationIdType.CLIENT_ID.equals(idType)) {
             return applicationService.findByClientIdWithRoute(id, space);
         }

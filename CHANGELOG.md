@@ -1,4 +1,13 @@
-# [](https://github.com/limaofeng/asany-server/compare/v0.0.8...v) (2021-07-14)
+# [](https://github.com/limaofeng/asany-server/compare/v0.0.9...v) (2021-07-20)
+
+
+
+## [0.0.9](https://github.com/limaofeng/asany-server/compare/v0.0.8...v0.0.9) (2021-07-14)
+
+
+### Bug Fixes
+
+* 解决启动时，默认类型的装载问题 ([0f1afa3](https://github.com/limaofeng/asany-server/commit/0f1afa330fd3d43e91ae2a01d4bc9844e3caeaf5))
 
 
 
