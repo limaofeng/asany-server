@@ -51,6 +51,36 @@ input IconInput {
     content: String!
 }
 
+input IconUpdateInput {
+    # 名称
+    name: String
+    # 编码
+    unicode: String
+    # 标签
+    tags: [String]
+    # 描述
+    description: String
+    # 正文
+    content: String
+    # 库 ID
+    libraryId: ID!
+}
+
+input IconCreateInput {
+    # 名称
+    name: String
+    # 编码
+    unicode: String
+    # 标签
+    tags: [String]
+    # 描述
+    description: String
+    # 正文
+    content: String
+    # 库 ID
+    libraryId: ID!
+}
+
 extend type Query {
     # 库
     libraries(type: LibraryType!, ownership: OwnershipInput = {type: "PERSONAL", id: "me"}): [Library]
@@ -63,4 +93,10 @@ extend type Query {
 extend type Mutation {
     # 导入图标
     importIcons(library: ID!, icons: [IconInput]!): IconLibrary
+    # 添加图标
+    createIcon(input: IconCreateInput!): Icon
+    # 更新图标
+    updateIcon(id: ID!, input: IconUpdateInput!): Icon
+    # 删除图标
+    deleteIcon(id: ID!): Boolean
 }

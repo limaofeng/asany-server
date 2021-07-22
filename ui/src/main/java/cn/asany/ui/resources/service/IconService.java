@@ -1,4 +1,4 @@
-package cn.asany.ui.library.service;
+package cn.asany.ui.resources.service;
 
 import cn.asany.ui.library.bean.Library;
 import cn.asany.ui.library.bean.LibraryItem;
@@ -9,6 +9,8 @@ import cn.asany.ui.library.dao.LibraryItemDao;
 import cn.asany.ui.resources.bean.Icon;
 import cn.asany.ui.resources.bean.enums.IconType;
 import cn.asany.ui.resources.dao.IconDao;
+import org.jfantasy.framework.dao.jpa.PropertyFilter;
+import org.jfantasy.framework.error.ValidationException;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.springframework.stereotype.Service;
 
@@ -36,7 +38,7 @@ public class IconService {
         return this.libraryConverter.toIcons(this.libraryItemDao.findAllByTagWithIcon(libraryId, tag));
     }
 
-    public void delete(Long libraryId) {
+    public void deleteLibrary(Long libraryId) {
         Optional<Library> optional = this.libraryDao.findByIdWithIcon(libraryId);
         if (!optional.isPresent()) {
             return;
@@ -46,7 +48,18 @@ public class IconService {
             return;
         }
         this.libraryItemDao.deleteById(libraryId);
-        this.iconDao.deleteAllByIdInBatch(library.getItems().stream().map(item -> item.getResourceId()).collect(Collectors.toList()));
+        this.iconDao.deleteAllByIdInBatch(library.getItems().stream().map(LibraryItem::getResourceId).collect(Collectors.toList()));
+    }
+
+    public void delete(Long id) {
+        Optional<Icon> optionalIcon = this.iconDao.findById(id);
+        Optional<LibraryItem> optionalItem = this.libraryItemDao.findOne(PropertyFilter.builder().equal("resourceId", id).equal("resourceType", Icon.RESOURCE_NAME).build());
+        if (!optionalIcon.isPresent() || !optionalItem.isPresent()) {
+            throw new ValidationException("图标{" + id + "}不存在");
+        }
+        this.libraryItemDao.delete(optionalItem.get());
+        this.iconDao.delete(optionalIcon.get());
+
     }
 
     public void importIcons(Long libraryId, List<Icon> icons) {
@@ -92,6 +105,53 @@ public class IconService {
         long times = System.currentTimeMillis() - start;
 
         System.out.println("保存成功" + icons.size() + " times = " + times);
+    }
+
+    public Icon save(Long libraryId, Icon icon) {
+        icon.setType(IconType.SVG);
+
+        Optional<Library> optional = this.libraryDao.findByIdWithIcon(libraryId);
+        if (!optional.isPresent()) {
+            throw new ValidationException("图标库{" + libraryId + "}不存在");
+        }
+        Library library = optional.get();
+        if (library.getType() != LibraryType.ICONS) {
+            throw new ValidationException("库{" + libraryId + "}, 类型不正确");
+        }
+
+        List<LibraryItem> existed = new ArrayList<>(library.getItems());
+        LibraryItem item;
+        if (icon.getId() != null) {
+            item = ObjectUtil.find(existed, "resource.id", icon.getId());
+        } else {
+            item = ObjectUtil.find(existed, "resource.unicode", icon.getUnicode());
+        }
+
+        if (item != null) {
+            Icon oldIcon = item.getResource(Icon.class);
+            if (icon.getName() != null) {
+                oldIcon.setName(icon.getName());
+            }
+            if (icon.getTags() != null) {
+                oldIcon.setTags(icon.getTags());
+            }
+            if (icon.getDescription() != null) {
+                oldIcon.setDescription(icon.getDescription());
+            }
+            if (icon.getContent() != null) {
+                oldIcon.setContent(icon.getContent());
+            }
+            this.iconDao.update(oldIcon);
+            if (icon.getTags() != null && !icon.getTags().isEmpty()) {
+                item.setTags(icon.getTags());
+                this.libraryItemDao.update(item);
+            }
+            return oldIcon;
+        }
+        this.iconDao.save(icon);
+        item = LibraryItem.builder().library(library).tags(icon.getTags()).resourceType(Icon.RESOURCE_NAME).resourceId(icon.getId()).resource(icon).build();
+        this.libraryItemDao.save(item);
+        return icon;
     }
 
 }

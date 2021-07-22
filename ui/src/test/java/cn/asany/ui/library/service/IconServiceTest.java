@@ -2,6 +2,7 @@ package cn.asany.ui.library.service;
 
 import cn.asany.ui.TestApplication;
 import cn.asany.ui.resources.bean.Icon;
+import cn.asany.ui.resources.service.IconService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

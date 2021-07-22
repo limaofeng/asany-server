@@ -4,6 +4,7 @@ import cn.asany.base.common.Ownership;
 import cn.asany.organization.core.bean.Organization;
 import cn.asany.security.core.bean.User;
 import cn.asany.ui.library.bean.enums.LibraryType;
+import cn.asany.ui.library.dao.listener.OplogListener;
 import lombok.*;
 import org.hibernate.annotations.Any;
 import org.hibernate.annotations.AnyMetaDef;
@@ -36,6 +37,7 @@ import java.util.Set;
 )
 @Entity
 @Table(name = "UI_LIBRARY")
+@EntityListeners(value = {OplogListener.class})
 public class Library extends BaseBusEntity {
     @Id
     @Column(name = "ID")

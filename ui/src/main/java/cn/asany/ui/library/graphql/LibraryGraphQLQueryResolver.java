@@ -13,7 +13,6 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Component
 public class LibraryGraphQLQueryResolver implements GraphQLQueryResolver {
@@ -28,22 +27,24 @@ public class LibraryGraphQLQueryResolver implements GraphQLQueryResolver {
 
     public List<ILibrary> libraries(LibraryType type, OwnershipInput ownership) {
         if (type == LibraryType.ICONS) {
-            return iconLibraries(ownership).stream().collect(Collectors.toList());
+            return new ArrayList<>(iconLibraries(ownership));
         }
         return new ArrayList<>();
     }
 
     public IconLibrary iconLibrary(Long id) {
         Optional<Library> library = libraryService.findByIdWithIcon(id);
-        if (!library.isPresent()) {
-            return null;
-        }
-        return this.libraryConverter.toIconLibrary(library.get());
+        return library.map(this.libraryConverter::toIconLibrary).orElse(null);
     }
 
     public List<IconLibrary> iconLibraries(OwnershipInput ownership) {
         List<Library> libraries = libraryService.libraries(LibraryType.ICONS);
         return libraryConverter.toIconLibraries(libraries);
     }
+
+//    public List<Icon> icons() {
+//        List<Icon> libraries = libraryService.icons(LibraryType.ICONS);
+//        return
+//    }
 
 }

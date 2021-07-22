@@ -1,5 +1,6 @@
 package cn.asany.ui.library.bean;
 
+import cn.asany.ui.library.dao.listener.OplogListener;
 import cn.asany.ui.resources.UIResource;
 import cn.asany.ui.resources.bean.Component;
 import cn.asany.ui.resources.bean.Icon;
@@ -28,6 +29,7 @@ import java.util.List;
 )
 @Entity
 @Table(name = "UI_LIBRARY_ITEM")
+@EntityListeners(value = {OplogListener.class})
 public class LibraryItem extends BaseBusEntity {
     @Id
     @Column(name = "ID")

@@ -1,5 +1,6 @@
 package cn.asany.ui.resources.bean;
 
+import cn.asany.ui.library.dao.listener.OplogListener;
 import cn.asany.ui.resources.UIResource;
 import cn.asany.ui.resources.bean.enums.IconType;
 import lombok.*;
@@ -16,6 +17,7 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = false, of = "id")
 @Entity
 @Table(name = "UI_ICON")
+@EntityListeners(value = {OplogListener.class})
 public class Icon extends BaseBusEntity implements UIResource {
 
     public static final String RESOURCE_NAME = "ICON";
