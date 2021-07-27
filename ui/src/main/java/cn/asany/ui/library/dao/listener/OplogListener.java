@@ -1,5 +1,6 @@
 package cn.asany.ui.library.dao.listener;
 
+import cn.asany.ui.library.bean.enums.Operation;
 import cn.asany.ui.library.service.OplogService;
 import org.jfantasy.framework.spring.SpringContextUtil;
 
@@ -7,46 +8,31 @@ import javax.persistence.*;
 
 public class OplogListener {
 
-    private OplogService oplogService;
+    private OplogService _oplogService;
 
     private OplogService getOplogService() {
-        if(this.oplogService == null) {
-            this.oplogService = SpringContextUtil.getBeanByType(OplogService.class);
+        if (this._oplogService == null) {
+            this._oplogService = SpringContextUtil.getBeanByType(OplogService.class);
         }
-        return this.oplogService;
-    }
-
-    @PrePersist
-    public void prePersist(Object source) {
-        System.out.println("@PrePersist：" + source);
+        return this._oplogService;
     }
 
     @PostPersist
     public void postPersist(Object source) {
-        System.out.println("@PostPersist：" + source);
-    }
-
-    @PreUpdate
-    public void preUpdate(Object source) {
         OplogService oplogService = getOplogService();
-//        oplogService.log();
-
-        System.out.println("@PrePersist：" + source);
+        oplogService.log(Operation.INSERT, source);
     }
 
     @PostUpdate
     public void postUpdate(Object source) {
-        System.out.println("@PostPersist：" + source);
-    }
-
-    @PreRemove
-    public void preRemove(Object source) {
-        System.out.println("@PrePersist：" + source);
+        OplogService oplogService = getOplogService();
+        oplogService.log(Operation.UPDATE, source);
     }
 
     @PostRemove
     public void postRemove(Object source) {
-        System.out.println("@PostPersist：" + source);
+        OplogService oplogService = getOplogService();
+        oplogService.log(Operation.DELETE, source);
     }
 
 }

@@ -3,6 +3,7 @@ package cn.asany.ui.library.bean;
 import cn.asany.base.common.Ownership;
 import cn.asany.organization.core.bean.Organization;
 import cn.asany.security.core.bean.User;
+import cn.asany.ui.library.OplogDataCollector;
 import cn.asany.ui.library.bean.enums.LibraryType;
 import cn.asany.ui.library.dao.listener.OplogListener;
 import lombok.*;
@@ -23,7 +24,7 @@ import java.util.Set;
 @NamedEntityGraph(
     name = "Graph.Library.FetchIcon",
     attributeNodes = {
-        @NamedAttributeNode(value = "items",  subgraph = "SubGraph.LibraryItem.FetchIconResource")
+        @NamedAttributeNode(value = "items", subgraph = "SubGraph.LibraryItem.FetchIconResource")
     },
     subgraphs = {
         @NamedSubgraph(
@@ -38,7 +39,7 @@ import java.util.Set;
 @Entity
 @Table(name = "UI_LIBRARY")
 @EntityListeners(value = {OplogListener.class})
-public class Library extends BaseBusEntity {
+public class Library extends BaseBusEntity implements OplogDataCollector {
     @Id
     @Column(name = "ID")
     @GeneratedValue(generator = "fantasy-sequence")
@@ -84,4 +85,12 @@ public class Library extends BaseBusEntity {
     @JoinColumn(name = "OWNERSHIP_ID", insertable = false, updatable = false)
     private Ownership ownership;
 
+    @Override
+    @Transient
+    public String getEntityName() {
+        if (this.type == null) {
+            return null;
+        }
+        return this.type.getName();
+    }
 }

@@ -2,20 +2,49 @@ package cn.asany.ui.library.converter;
 
 import cn.asany.ui.library.bean.Library;
 import cn.asany.ui.library.bean.LibraryItem;
+import cn.asany.ui.library.bean.enums.LibraryType;
 import cn.asany.ui.library.graphql.input.IconInput;
+import cn.asany.ui.library.graphql.input.LibraryCreateInput;
+import cn.asany.ui.library.graphql.input.LibraryUpdateInput;
+import cn.asany.ui.library.graphql.type.ILibrary;
 import cn.asany.ui.library.graphql.type.IconLibrary;
 import cn.asany.ui.resources.bean.Icon;
 import org.mapstruct.*;
 
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring", builder = @Builder, unmappedTargetPolicy = ReportingPolicy.IGNORE, nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
 public interface LibraryConverter {
 
-    @IterableMapping(elementTargetType = IconLibrary.class)
-    List<IconLibrary> toIconLibraries(List<Library> libraries);
+    default List<IconLibrary> toLibraries(List<Library> libraries) {
+        List<IconLibrary> iconLibraries = new ArrayList<>();
+        for (Library library : libraries) {
+            iconLibraries.add(toIconSimplifyLibrary(library));
+        }
+        return iconLibraries;
+    }
+
+    @Mappings({
+        @Mapping(source = "items", target = "icons", ignore = true)
+    })
+    IconLibrary toIconSimplifyLibrary(Library libraries);
+
+
+    default ILibrary toLibrary(Library library) {
+        if (library.getType() == LibraryType.ICONS) {
+            return toIconLibrary(library);
+        }
+        return null;
+    }
+
+    default List<IconLibrary> toIconLibraries(List<Library> libraries) {
+        List<IconLibrary> iconLibraries = new ArrayList<>();
+        for (Library library : libraries) {
+            iconLibraries.add(toIconLibrary(library));
+        }
+        return iconLibraries;
+    }
 
     @Mappings({
         @Mapping(source = "items", target = "icons", qualifiedByName = "toIcons")
@@ -31,6 +60,9 @@ public interface LibraryConverter {
     }
 
     default List<Icon> toIcons(Set<LibraryItem> items) {
+        if (items == null) {
+            return Collections.emptyList();
+        }
         return items.stream().map(item -> {
             Icon icon = item.getResource(Icon.class);
             icon.setTags(item.getTags());
@@ -39,4 +71,9 @@ public interface LibraryConverter {
     }
 
     Icon toIcon(IconInput input);
+
+    Library toLibrary(LibraryCreateInput input);
+
+    Library toLibrary(LibraryUpdateInput input);
+
 }

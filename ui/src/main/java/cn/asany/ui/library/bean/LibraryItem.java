@@ -1,6 +1,5 @@
 package cn.asany.ui.library.bean;
 
-import cn.asany.ui.library.dao.listener.OplogListener;
 import cn.asany.ui.resources.UIResource;
 import cn.asany.ui.resources.bean.Component;
 import cn.asany.ui.resources.bean.Icon;
@@ -29,7 +28,6 @@ import java.util.List;
 )
 @Entity
 @Table(name = "UI_LIBRARY_ITEM")
-@EntityListeners(value = {OplogListener.class})
 public class LibraryItem extends BaseBusEntity {
     @Id
     @Column(name = "ID")
@@ -78,7 +76,7 @@ public class LibraryItem extends BaseBusEntity {
     /**
      * 用于级联加载
      */
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
     @JoinColumn(name = "RESOURCE_ID", foreignKey = @ForeignKey(name = "NONE", value = ConstraintMode.NO_CONSTRAINT), insertable = false, updatable = false)
     private Icon icon;
 

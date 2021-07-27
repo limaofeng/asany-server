@@ -3,6 +3,7 @@ package cn.asany.ui.library.service;
 import cn.asany.ui.library.bean.Library;
 import cn.asany.ui.library.bean.enums.LibraryType;
 import cn.asany.ui.library.dao.LibraryDao;
+import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -18,9 +19,10 @@ public class LibraryService {
         this.libraryDao = libraryDao;
     }
 
-    public List<Library> libraries(LibraryType type) {
+    public List<Library> libraries(PropertyFilterBuilder builder, LibraryType type, boolean with) {
         if (LibraryType.ICONS == type) {
-            return this.libraryDao.findAllWithIcon();
+            builder.equal("type", LibraryType.ICONS);
+            return with ? this.libraryDao.findAllWithIcon(builder.build()) : this.libraryDao.findAll(builder.build());
         }
         return new ArrayList<>();
     }
@@ -33,4 +35,18 @@ public class LibraryService {
         return this.libraryDao.findByIdWithIcon(id);
     }
 
+    public Library save(Library library) {
+        return this.libraryDao.save(library);
+    }
+
+    public Library update(Long id, Library library) {
+        Library oldLibrary = this.libraryDao.getById(id);
+        oldLibrary.setName(library.getName());
+        oldLibrary.setDescription(library.getDescription());
+        return this.libraryDao.update(oldLibrary);
+    }
+
+    public void delete(Long id) {
+        this.libraryDao.deleteById(id);
+    }
 }

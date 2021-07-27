@@ -6,6 +6,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Data
 @Builder
@@ -21,16 +22,23 @@ public class Oplog extends BaseBusEntity {
     @GeneratedValue(generator = "fantasy-sequence")
     @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
     private Long id;
+    @Column(name = "CLAZZ", length = 200)
+    private String clazz;
     @Column(name = "ENTITY_NAME", length = 100)
     private String entityName;
     @Column(name = "TABLE_NAME", length = 100)
     private String tableName;
+    @Column(name = "PRIMARY_KEY_NAME", length = 100)
+    private String primarykeyName;
+    @Column(name = "PRIMARY_KEY_VALUE", length = 100)
+    private String primarykeyValue;
     @Enumerated(EnumType.STRING)
     @Column(name = "OPERATION", length = 20, nullable = false)
     private Operation operation;
-    @Column(name = "data_before", columnDefinition = "TEXT")
-    private String dataBefore;
-    @Column(name = "data_after", columnDefinition = "TEXT")
-    private String dataAfter;
-
+    @Column(name = "data", columnDefinition = "TEXT")
+    private String data;
+    @ElementCollection
+    @CollectionTable(name = "SYS_OPLOG_OWNER", foreignKey = @ForeignKey(name = "FK_OPLOG_SCOPE"), joinColumns = @JoinColumn(name = "LOG_ID"))
+    @Column(name = "OWNER")
+    private List<String> owners;
 }

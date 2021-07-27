@@ -85,6 +85,7 @@ public class IconService {
             if (item != null) {
                 Icon oldIcon = item.getResource(Icon.class);
                 oldIcon.setContent(icon.getContent());
+                oldIcon.set(Icon.METADATA_LIBRARY_ID, libraryId.toString());
                 updateEntities.add(oldIcon);
                 if (!icon.getTags().isEmpty()) {
                     item.setTags(icon.getTags());
@@ -146,12 +147,17 @@ public class IconService {
                 item.setTags(icon.getTags());
                 this.libraryItemDao.update(item);
             }
+            oldIcon.set(Icon.METADATA_LIBRARY_ID, libraryId.toString());
             return oldIcon;
         }
+        icon.set(Icon.METADATA_LIBRARY_ID, libraryId.toString());
         this.iconDao.save(icon);
         item = LibraryItem.builder().library(library).tags(icon.getTags()).resourceType(Icon.RESOURCE_NAME).resourceId(icon.getId()).resource(icon).build();
         this.libraryItemDao.save(item);
         return icon;
     }
 
+    public List<Icon> findAll(List<PropertyFilter> filters) {
+        return this.iconDao.findAll(filters);
+    }
 }

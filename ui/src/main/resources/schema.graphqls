@@ -13,14 +13,21 @@ type Collection {
 
 interface Library {
     id: ID
+    # 名称
+    name: String
+    # 描述
+    description: String
 }
 
 type Icon {
     id: ID
     name: String
+    description: String
     tags: [String]
     unicode: String
     content: String
+    # 库 ID
+    libraryId: ID
 }
 
 type IconLibrary implements Library {
@@ -81,13 +88,62 @@ input IconCreateInput {
     libraryId: ID!
 }
 
+enum Operation {
+    DELETE
+    UPDATE
+    INSERT
+}
+
+type Oplog {
+    id: ID
+    clazz: String
+    entityName: String
+    tableName: String
+    primarykeyName: String
+    primarykeyValue: String
+    operation: Operation
+    data: JSON
+}
+
+input OplogFilter {
+    entityName: String
+    primarykeyName: String
+    primarykeyValue: String
+    createdAt_gt: Date
+    entityName_in: [String]
+}
+
+input IconFilter {
+    id_in: [ID]
+    library: ID
+}
+
+input IconLibraryFilter {
+    id_in: [ID]
+}
+
+input LibraryCreateInput {
+    type: LibraryType!
+    name: String!
+    description: String
+}
+
+input LibraryUpdateInput {
+    name: String
+    description: String
+}
+
 extend type Query {
     # 库
     libraries(type: LibraryType!, ownership: OwnershipInput = {type: "PERSONAL", id: "me"}): [Library]
     # 图标库
-    iconLibraries(ownership: OwnershipInput = {type: "PERSONAL", id: "me"}): [IconLibrary]
+    iconLibraries(filter: IconLibraryFilter, ownership: OwnershipInput = {type: "PERSONAL", id: "me"}): [IconLibrary]
     # 图标库
     iconLibrary(id: ID!): IconLibrary
+    # 查询图标
+    icons(filter: IconFilter): [Icon]
+    # 查询日志
+    oplogs(filter: OplogFilter): [Oplog]
 }
 
 extend type Mutation {
@@ -98,5 +154,11 @@ extend type Mutation {
     # 更新图标
     updateIcon(id: ID!, input: IconUpdateInput!): Icon
     # 删除图标
-    deleteIcon(id: ID!): Boolean
+    deleteLibrary(id: ID!): Boolean
+    # 添加库
+    createLibrary(input: LibraryCreateInput!): Library
+    # 更新库
+    updateLibrary(id: ID!, input: LibraryUpdateInput!): Library
+    # 删除库
+    deleteLibrary(id: ID!): Boolean
 }

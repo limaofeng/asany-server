@@ -1,7 +1,6 @@
 package cn.asany.ui.library.dao.impl;
 
 import cn.asany.ui.library.bean.Library;
-import cn.asany.ui.library.bean.enums.LibraryType;
 import cn.asany.ui.library.dao.LibraryDao;
 import org.jfantasy.framework.dao.jpa.ComplexJpaRepository;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
@@ -22,8 +21,8 @@ public class LibraryDaoImpl extends ComplexJpaRepository<Library, Long> implemen
     }
 
     @Override
-    public List<Library> findAllWithIcon() {
-        return this.findAll(PropertyFilter.builder().equal("type", LibraryType.ICONS).build());
+    public List<Library> findAllWithIcon(List<PropertyFilter> filters) {
+        return this.findAll(filters);
     }
 
 }

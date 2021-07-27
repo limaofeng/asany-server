@@ -4,13 +4,23 @@ public enum LibraryType {
     /**
      * 图标
      */
-    ICONS,
+    ICONS("IconLibrary"),
     /**
      * 设计系统
      */
-    DESIGN_SYSTEM,
+    DESIGN_SYSTEM("DesignSystem"),
     /**
      * 组件
      */
-    COMPONENT
+    COMPONENT("ComponentLibrary");
+
+    private String name;
+
+    LibraryType(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
 }

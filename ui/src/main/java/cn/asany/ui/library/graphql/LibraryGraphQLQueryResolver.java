@@ -4,10 +4,13 @@ import cn.asany.base.common.graphql.input.OwnershipInput;
 import cn.asany.ui.library.bean.Library;
 import cn.asany.ui.library.bean.enums.LibraryType;
 import cn.asany.ui.library.converter.LibraryConverter;
+import cn.asany.ui.library.graphql.input.IconLibraryFilter;
 import cn.asany.ui.library.graphql.type.ILibrary;
 import cn.asany.ui.library.graphql.type.IconLibrary;
 import cn.asany.ui.library.service.LibraryService;
 import graphql.kickstart.tools.GraphQLQueryResolver;
+import graphql.schema.DataFetchingEnvironment;
+import org.jfantasy.framework.util.common.ObjectUtil;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -25,9 +28,9 @@ public class LibraryGraphQLQueryResolver implements GraphQLQueryResolver {
         this.libraryConverter = libraryConverter;
     }
 
-    public List<ILibrary> libraries(LibraryType type, OwnershipInput ownership) {
+    public List<ILibrary> libraries(LibraryType type, OwnershipInput ownership, DataFetchingEnvironment environment) {
         if (type == LibraryType.ICONS) {
-            return new ArrayList<>(iconLibraries(ownership));
+            return new ArrayList<>(iconLibraries(new IconLibraryFilter(), ownership, environment));
         }
         return new ArrayList<>();
     }
@@ -37,14 +40,14 @@ public class LibraryGraphQLQueryResolver implements GraphQLQueryResolver {
         return library.map(this.libraryConverter::toIconLibrary).orElse(null);
     }
 
-    public List<IconLibrary> iconLibraries(OwnershipInput ownership) {
-        List<Library> libraries = libraryService.libraries(LibraryType.ICONS);
+    public List<IconLibrary> iconLibraries(IconLibraryFilter filter, OwnershipInput ownership, DataFetchingEnvironment environment) {
+        filter = ObjectUtil.defaultValue(filter, () -> new IconLibraryFilter());
+        boolean with = environment.getSelectionSet().contains("icons");
+        List<Library> libraries = libraryService.libraries(filter.getBuilder(), LibraryType.ICONS, with);
+        if(!with) {
+            return libraryConverter.toLibraries(libraries);
+        }
         return libraryConverter.toIconLibraries(libraries);
     }
-
-//    public List<Icon> icons() {
-//        List<Icon> libraries = libraryService.icons(LibraryType.ICONS);
-//        return
-//    }
 
 }
