@@ -1,7 +1,6 @@
 package cn.asany.ui.resources.graphql;
 
 import cn.asany.ui.resources.bean.Icon;
-import cn.asany.ui.resources.bean.spec.LibrarySpecification;
 import cn.asany.ui.resources.converter.IconConverter;
 import cn.asany.ui.resources.graphql.input.IconFilter;
 import cn.asany.ui.resources.service.IconService;
@@ -26,11 +25,11 @@ public class IconGraphQLQueryResolver implements GraphQLQueryResolver {
     public List<Icon> icons(IconFilter filter) {
         filter = ObjectUtil.defaultValue(filter, IconFilter::new);
         PropertyFilterBuilder builder = filter.getBuilder();
-        if (filter.getLibrary_in() != null) {
-            builder.and(new LibrarySpecification(filter.getLibrary_in()));
-        } else if (filter.getLibrary() != null) {
-            builder.and(new LibrarySpecification(filter.getLibrary()));
-        }
+//        if (filter.getLibrary_in() != null) {
+//            builder.and(new LibrarySpecification(filter.getLibrary_in()));
+//        } else if (filter.getLibrary() != null) {
+//            builder.and(new LibrarySpecification(filter.getLibrary()));
+//        }
         return this.iconService.findAll(builder.build());
     }
 

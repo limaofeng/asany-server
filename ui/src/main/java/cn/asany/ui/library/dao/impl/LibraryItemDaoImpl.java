@@ -22,4 +22,8 @@ public class LibraryItemDaoImpl extends ComplexJpaRepository<LibraryItem, Long> 
         return this.findAll(builder.equal("library.id", libraryId).build());
     }
 
+    @Override
+    public List<LibraryItem> findAllByTagWithIcon(List<PropertyFilter> filters) {
+        return super.findAll(filters);
+    }
 }

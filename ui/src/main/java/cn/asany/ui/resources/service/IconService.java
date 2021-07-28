@@ -15,6 +15,7 @@ import org.jfantasy.framework.util.common.ObjectUtil;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -143,7 +144,7 @@ public class IconService {
                 oldIcon.setContent(icon.getContent());
             }
             this.iconDao.update(oldIcon);
-            if (icon.getTags() != null && !icon.getTags().isEmpty()) {
+            if (icon.getTags() != null && !icon.getTags().isEmpty() && !Arrays.equals(icon.getTags().toArray(), item.getTags().toArray())) {
                 item.setTags(icon.getTags());
                 this.libraryItemDao.update(item);
             }
@@ -158,6 +159,6 @@ public class IconService {
     }
 
     public List<Icon> findAll(List<PropertyFilter> filters) {
-        return this.iconDao.findAll(filters);
+        return libraryConverter.toIcons(this.libraryItemDao.findAllByTagWithIcon(filters));
     }
 }

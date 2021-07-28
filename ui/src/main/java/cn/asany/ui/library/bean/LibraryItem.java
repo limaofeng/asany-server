@@ -1,5 +1,7 @@
 package cn.asany.ui.library.bean;
 
+import cn.asany.ui.library.OplogDataCollector;
+import cn.asany.ui.library.dao.listener.OplogListener;
 import cn.asany.ui.resources.UIResource;
 import cn.asany.ui.resources.bean.Component;
 import cn.asany.ui.resources.bean.Icon;
@@ -19,6 +21,7 @@ import java.util.List;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false, of = "id")
 @ToString(exclude = {"resource", "icon", "library"})
+@EntityListeners(value = {OplogListener.class})
 @NamedEntityGraph(
     name = "Graph.LibraryItem.FetchIcon",
     attributeNodes = {
@@ -28,7 +31,7 @@ import java.util.List;
 )
 @Entity
 @Table(name = "UI_LIBRARY_ITEM")
-public class LibraryItem extends BaseBusEntity {
+public class LibraryItem extends BaseBusEntity implements OplogDataCollector {
     @Id
     @Column(name = "ID")
     @GeneratedValue(generator = "fantasy-sequence")
@@ -82,5 +85,26 @@ public class LibraryItem extends BaseBusEntity {
 
     public <T extends UIResource> T getResource(Class<T> resourceClass) {
         return (T) this.resource;
+    }
+
+    @Override
+    public Class getEntityClass() {
+        if (Icon.RESOURCE_NAME.equals(this.resourceType)) {
+            return Icon.class;
+        }
+        return null;
+    }
+
+    @Override
+    public String getEntityName() {
+        if (Icon.RESOURCE_NAME.equals(this.resourceType)) {
+            return Icon.class.getSimpleName();
+        }
+        return null;
+    }
+
+    @Override
+    public Object getPrimarykey() {
+        return this.resourceId;
     }
 }

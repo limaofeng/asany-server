@@ -1,8 +1,9 @@
-# [](https://github.com/limaofeng/asany-server/compare/v0.0.9...v) (2021-07-27)
+# [](https://github.com/limaofeng/asany-server/compare/v0.0.9...v) (2021-07-28)
 
 
 ### Features
 
+* 图标库及图标的维护接口 ([1e322ed](https://github.com/limaofeng/asany-server/commit/1e322ed7094779c69c11f4c08d82903c414c4bc3))
 * 添加操作日志 ([c2693a8](https://github.com/limaofeng/asany-server/commit/c2693a88776bad9b500ee507c94e976ec922a91e))
 
 
