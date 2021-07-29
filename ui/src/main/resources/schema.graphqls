@@ -148,7 +148,7 @@ extend type Query {
 
 extend type Mutation {
     # 导入图标
-    importIcons(library: ID!, icons: [IconInput]!): IconLibrary
+    importIcons(library: ID!, icons: [IconInput]!): [Icon]
     # 添加图标
     createIcon(input: IconCreateInput!): Icon
     # 更新图标

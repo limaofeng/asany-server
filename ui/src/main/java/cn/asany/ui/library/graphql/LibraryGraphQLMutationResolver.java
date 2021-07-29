@@ -6,8 +6,8 @@ import cn.asany.ui.library.graphql.input.IconInput;
 import cn.asany.ui.library.graphql.input.LibraryCreateInput;
 import cn.asany.ui.library.graphql.input.LibraryUpdateInput;
 import cn.asany.ui.library.graphql.type.ILibrary;
-import cn.asany.ui.library.graphql.type.IconLibrary;
 import cn.asany.ui.library.service.LibraryService;
+import cn.asany.ui.resources.bean.Icon;
 import cn.asany.ui.resources.service.IconService;
 import graphql.kickstart.tools.GraphQLMutationResolver;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,9 +33,8 @@ public class LibraryGraphQLMutationResolver implements GraphQLMutationResolver {
         this.queryResolver = queryResolver;
     }
 
-    public IconLibrary importIcons(Long library, List<IconInput> icons) {
-        this.iconService.importIcons(library, icons.stream().map(libraryConverter::toIcon).collect(Collectors.toList()));
-        return queryResolver.iconLibrary(library);
+    public List<Icon> importIcons(Long library, List<IconInput> icons) {
+        return this.iconService.importIcons(library, icons.stream().map(libraryConverter::toIcon).collect(Collectors.toList()));
     }
 
     public ILibrary createLibrary(LibraryCreateInput input) {

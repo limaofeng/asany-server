@@ -63,16 +63,16 @@ public class IconService {
 
     }
 
-    public void importIcons(Long libraryId, List<Icon> icons) {
+    public List<Icon> importIcons(Long libraryId, List<Icon> icons) {
         long start = System.currentTimeMillis();
 
         Optional<Library> optional = this.libraryDao.findByIdWithIcon(libraryId);
         if (!optional.isPresent()) {
-            return;
+            throw new ValidationException("图标库{" + libraryId + "}不正确");
         }
         Library library = optional.get();
         if (library.getType() != LibraryType.ICONS) {
-            return;
+            throw new ValidationException("图标库{" + libraryId + "}不正确");
         }
 
         List<LibraryItem> existed = new ArrayList<>(library.getItems());
@@ -81,6 +81,7 @@ public class IconService {
         List<Icon> updateEntities = new ArrayList<>();
         List<Icon> saveEntities = new ArrayList<>();
 
+        List<LibraryItem> returnVal = new ArrayList<>();
         for (Icon icon : icons) {
             LibraryItem item = ObjectUtil.find(existed, "resource.unicode", icon.getUnicode());
             if (item != null) {
@@ -88,12 +89,15 @@ public class IconService {
                 oldIcon.setContent(icon.getContent());
                 oldIcon.set(Icon.METADATA_LIBRARY_ID, libraryId.toString());
                 updateEntities.add(oldIcon);
-                if (!icon.getTags().isEmpty()) {
+                if (icon.getTags() != null && !icon.getTags().isEmpty() && !Arrays.equals(icon.getTags().toArray(), item.getTags().toArray())) {
                     item.setTags(icon.getTags());
                     itemUpdateEntities.add(item);
+                } else {
+                    returnVal.add(item);
                 }
                 continue;
             }
+            icon.set(Icon.METADATA_LIBRARY_ID, libraryId.toString());
             icon.setType(IconType.SVG);
             saveEntities.add(icon);
             itemSaveEntities.add(LibraryItem.builder().library(library).tags(icon.getTags()).resourceType(Icon.RESOURCE_NAME).resourceId(icon.getId()).resource(icon).build());
@@ -106,7 +110,10 @@ public class IconService {
 
         long times = System.currentTimeMillis() - start;
 
-        System.out.println("保存成功" + icons.size() + " times = " + times);
+        returnVal.addAll(itemSaveEntities);
+        returnVal.addAll(itemUpdateEntities);
+        System.out.println("保存成功:" + icons.size() + "\t times = " + times);
+        return this.libraryConverter.toIcons(returnVal);
     }
 
     public Icon save(Long libraryId, Icon icon) {
@@ -140,15 +147,18 @@ public class IconService {
             if (icon.getDescription() != null) {
                 oldIcon.setDescription(icon.getDescription());
             }
+            if (icon.getUnicode() != null) {
+                oldIcon.setUnicode(icon.getUnicode());
+            }
             if (icon.getContent() != null) {
                 oldIcon.setContent(icon.getContent());
             }
+            oldIcon.set(Icon.METADATA_LIBRARY_ID, libraryId.toString());
             this.iconDao.update(oldIcon);
             if (icon.getTags() != null && !icon.getTags().isEmpty() && !Arrays.equals(icon.getTags().toArray(), item.getTags().toArray())) {
                 item.setTags(icon.getTags());
                 this.libraryItemDao.update(item);
             }
-            oldIcon.set(Icon.METADATA_LIBRARY_ID, libraryId.toString());
             return oldIcon;
         }
         icon.set(Icon.METADATA_LIBRARY_ID, libraryId.toString());
