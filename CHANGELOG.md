@@ -3,6 +3,7 @@
 
 ### Features
 
+* importIcons 返回值修改未 Icon[] ([d1d75f1](https://github.com/limaofeng/asany-server/commit/d1d75f1471ca71260faf58cfd5eb582dd800e81e))
 * 优化同步时的日志记录方式 ([ef4befb](https://github.com/limaofeng/asany-server/commit/ef4befbe96125fa28bedee0c6f9365a68c533ad7))
 * 图标库及图标的维护接口 ([1e322ed](https://github.com/limaofeng/asany-server/commit/1e322ed7094779c69c11f4c08d82903c414c4bc3))
 * 添加操作日志 ([c2693a8](https://github.com/limaofeng/asany-server/commit/c2693a88776bad9b500ee507c94e976ec922a91e))

@@ -39,19 +39,6 @@ public class IconService {
         return this.libraryConverter.toIcons(this.libraryItemDao.findAllByTagWithIcon(libraryId, tag));
     }
 
-    public void deleteLibrary(Long libraryId) {
-        Optional<Library> optional = this.libraryDao.findByIdWithIcon(libraryId);
-        if (!optional.isPresent()) {
-            return;
-        }
-        Library library = optional.get();
-        if (library.getType() != LibraryType.ICONS) {
-            return;
-        }
-        this.libraryItemDao.deleteById(libraryId);
-        this.iconDao.deleteAllByIdInBatch(library.getItems().stream().map(LibraryItem::getResourceId).collect(Collectors.toList()));
-    }
-
     public void delete(Long id) {
         Optional<Icon> optionalIcon = this.iconDao.findById(id);
         Optional<LibraryItem> optionalItem = this.libraryItemDao.findOne(PropertyFilter.builder().equal("resourceId", id).equal("resourceType", Icon.RESOURCE_NAME).build());
