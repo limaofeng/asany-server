@@ -72,10 +72,22 @@ public class IconService {
         for (Icon icon : icons) {
             LibraryItem item = ObjectUtil.find(existed, "resource.unicode", icon.getUnicode());
             if (item != null) {
+                boolean modified = false;
                 Icon oldIcon = item.getResource(Icon.class);
-                oldIcon.setContent(icon.getContent());
-                oldIcon.set(Icon.METADATA_LIBRARY_ID, libraryId.toString());
-                updateEntities.add(oldIcon);
+                if (!oldIcon.getName().equals(icon.getName())) {
+                    modified = true;
+                    oldIcon.setName(icon.getName());
+                }
+                if (!oldIcon.getContent().equals(icon.getContent())) {
+                    modified = true;
+                    oldIcon.setContent(icon.getContent());
+                }
+                if (oldIcon.get(Icon.METADATA_LIBRARY_ID) == null) {
+                    oldIcon.set(Icon.METADATA_LIBRARY_ID, libraryId.toString());
+                }
+                if (modified) {
+                    updateEntities.add(oldIcon);
+                }
                 if (icon.getTags() != null && !icon.getTags().isEmpty() && !Arrays.equals(icon.getTags().toArray(), item.getTags().toArray())) {
                     item.setTags(icon.getTags());
                     itemUpdateEntities.add(item);
@@ -99,7 +111,7 @@ public class IconService {
 
         returnVal.addAll(itemSaveEntities);
         returnVal.addAll(itemUpdateEntities);
-        System.out.println("保存成功:" + icons.size() + "\t times = " + times);
+        System.out.println("处理图标:" + icons.size() + "个\t times = " + times);
         return this.libraryConverter.toIcons(returnVal);
     }
 

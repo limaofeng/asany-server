@@ -67,7 +67,6 @@ public class Library extends BaseBusEntity implements OplogDataCollector {
      */
     @OneToMany(mappedBy = "library", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE}, fetch = FetchType.LAZY)
     private Set<LibraryItem> items;
-
     /**
      * 所有者
      */

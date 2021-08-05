@@ -25,5 +25,4 @@ public class IconLibrary implements ILibrary {
      * 图标
      */
     private List<Icon> icons;
-
 }

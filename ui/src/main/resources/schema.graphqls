@@ -38,6 +38,8 @@ type IconLibrary implements Library {
     description: String
     # 图标
     icons: [Icon]
+    # 数量
+    total: Int
 }
 
 input OwnershipInput {
