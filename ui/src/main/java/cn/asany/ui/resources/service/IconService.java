@@ -74,10 +74,6 @@ public class IconService {
             if (item != null) {
                 boolean modified = false;
                 Icon oldIcon = item.getResource(Icon.class);
-                if (!oldIcon.getName().equals(icon.getName())) {
-                    modified = true;
-                    oldIcon.setName(icon.getName());
-                }
                 if (!oldIcon.getContent().equals(icon.getContent())) {
                     modified = true;
                     oldIcon.setContent(icon.getContent());
