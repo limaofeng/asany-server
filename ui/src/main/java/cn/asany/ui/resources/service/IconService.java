@@ -12,6 +12,7 @@ import cn.asany.ui.resources.dao.IconDao;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.error.ValidationException;
 import org.jfantasy.framework.util.common.ObjectUtil;
+import org.jfantasy.framework.util.common.StringUtil;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -70,7 +71,9 @@ public class IconService {
 
         List<LibraryItem> returnVal = new ArrayList<>();
         for (Icon icon : icons) {
-            LibraryItem item = ObjectUtil.find(existed, "resource.unicode", icon.getUnicode());
+            String key = StringUtil.isNotBlank(icon.getUnicode()) ? "unicode" : "name";
+            String value = StringUtil.isNotBlank(icon.getUnicode()) ? icon.getUnicode() : icon.getName();
+            LibraryItem item = ObjectUtil.find(existed, "resource." + key, value);
             if (item != null) {
                 boolean modified = false;
                 Icon oldIcon = item.getResource(Icon.class);
