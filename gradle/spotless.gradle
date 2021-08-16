@@ -1,0 +1,13 @@
+apply plugin: "com.diffplug.spotless"
+
+spotless {
+    java {
+        target 'src/*/java/**/*.java'
+
+        removeUnusedImports()
+        indentWithTabs(2)
+        indentWithSpaces(4)
+
+        googleJavaFormat()
+    }
+}

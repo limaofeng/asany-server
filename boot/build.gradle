@@ -1,9 +1,3 @@
-buildscript {
-    repositories {
-        maven { url "https://maven.thuni-h.com/repository/maven-public" }
-    }
-}
-
 plugins {
     id 'org.springframework.boot' version "${LIB_SPRING_BOOT_VER}"
 }
@@ -19,16 +13,11 @@ jar {
     }
 }
 
-model {
-    tasks.generatePomFileForMavenPublication {
-        enabled = false
-    }
-    tasks.publishMavenPublicationToMavenRepository {
-        enabled = false
-    }
-}
-
 tasks.publish.enabled = false
+
+tasks.withType(Test) { enabled = false }
+
+tasks.withType(PublishToMavenRepository).configureEach { it.enabled = false }
 
 task dev {
     bootRun.systemProperty 'spring.profiles.active', 'dev'

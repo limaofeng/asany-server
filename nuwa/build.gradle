@@ -1,4 +1,5 @@
 apply plugin: 'org.hibernate.orm'
+apply plugin: 'jacoco'
 
 hibernate {
     enhance {

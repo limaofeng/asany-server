@@ -83,8 +83,3 @@ graphql:
   tools:
     introspection-enabled: true
 
-logging:
-  config: classpath:logback.xml
-  file:
-    path: ~/logs
-

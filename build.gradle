@@ -1,20 +1,18 @@
 buildscript {
-    repositories {
-        maven { url "https://maven.thuni-h.com/repository/maven-public" }
-        mavenCentral()
-        mavenLocal()
-    }
     dependencies {
         classpath "org.hibernate:hibernate-gradle-plugin:${PLUGIN_HIBERNATE_VER}"
     }
 }
 
 plugins {
-    id 'idea'
+    id 'java'
+    id 'jacoco'
     id "io.spring.dependency-management" version "${PLUGIN_SPRING_DEPENDENCY_MANAGEMENT_VER}"
     id "org.zeroturnaround.gradle.jrebel" version "${PLUGIN_JREBEL_VER}" apply false
+    id 'com.github.kt3k.coveralls' version '2.12.0'
     id "com.star-zero.gradle.githook" version "1.2.0"
-    id "ru.netris.commitlint" version "1.4"
+    id "ru.netris.commitlint" version "1.4.1"
+    id "com.diffplug.spotless" version "5.14.2"
 }
 
 githook {
@@ -25,30 +23,31 @@ githook {
             task = "commitlint -Dmsgfile=\$1"
         }
         "pre-commit" {
-            shell = "conventional-changelog -p angular -i CHANGELOG.md -s -r 0 && git add CHANGELOG.md"
+            shell = "sh ./gradle/spotless.sh"
         }
     }
 }
 
 allprojects {
-    apply plugin: 'maven-publish'
-    apply plugin: 'idea'
-
-    group = 'com.thuni.his'
-    description = "演示项目"
-    version = System.getenv()['CI_BUILD_TAG']
+    group = 'cn.asany.chaos'
+    version = System.getenv().getOrDefault('RELEASE_VERSION', 'v0.0.0').replaceAll(/^v/, "")
     status = 'integration'
 
     repositories {
-        maven { url "https://maven.thuni-h.com/repository/maven-public" }
         maven { url "https://jcenter.bintray.com" }
+        mavenCentral()
+        mavenLocal()
     }
+}
 
-    configurations {
-        apply plugin: 'java'
-        apply plugin: 'idea'
-        apply plugin: 'io.spring.dependency-management'
-    }
+subprojects {
+    apply from: "$rootDir/gradle/spotless.gradle"
+
+    apply plugin: 'java'
+    apply plugin: 'idea'
+    apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'maven-publish'
+    apply plugin: 'signing'
 
     idea {
         module {
@@ -58,68 +57,26 @@ allprojects {
         }
     }
 
-    publishing {
-        repositories {
-            maven {
-                credentials {
-                    username System.getenv()['MAVEN_USER']
-                    password System.getenv()['MAVEN_PASS']
-                }
-                url "https://maven.thuni-h.com/repository/" + System.getenv()['MAVEN_REPO_KEY']
-            }
-        }
-
-        publications {
-            maven(MavenPublication) {
-                from components.java
-                groupId project.group
-                artifactId project.name
-                version project.version
-            }
-        }
-    }
-}
-
-subprojects {
-    apply plugin: 'java'
-    apply plugin: "jacoco"
-
-    jar {
-        manifest {
-            attributes 'provider': 'gradle'
-        }
-    }
-
-    compileJava {
-        sourceCompatibility = 1.8
-        targetCompatibility = 1.8
-    }
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
 
     [compileJava, compileTestJava, javadoc]*.options*.encoding = 'UTF-8'
 
     compileJava.dependsOn(processResources)
 
-    plugins.withId('java') {
-        project.apply plugin: 'org.zeroturnaround.gradle.jrebel'
-        def jarTask = project.tasks.findByName('jar')
-        if (jarTask) {
-            jarTask.dependsOn(generateRebel)
-        }
-        def warTask = project.tasks.findByName('war')
-        if (warTask) {
-            warTask.dependsOn(generateRebel)
-        }
+    manifest {
+        attributes 'provider': 'gradle'
     }
 
     dependencyManagement {
         imports {
-            mavenBom("org.springframework.boot:spring-boot-dependencies:${LIB_SPRING_BOOT_VER}")
+            mavenBom "org.springframework.boot:spring-boot-dependencies:${LIB_SPRING_BOOT_VER}"
         }
     }
-
+  
     dependencies {
-        implementation "org.jfantasy:jfantasy-core:$LIB_JFAN_VER"
-        implementation "org.jfantasy:jfantasy-graphql:$LIB_JFAN_VER"
+        implementation "cn.asany.chaos:jfantasy-core:$LIB_JFAN_VER"
+        implementation "cn.asany.chaos:jfantasy-graphql:$LIB_JFAN_VER"
         compileOnly "org.mapstruct:mapstruct:$LIB_MAPSTRUCT_VER"
         compileOnly "org.projectlombok:lombok:$LIB_LOMBOK_VER"
         annotationProcessor "org.projectlombok:lombok:$LIB_LOMBOK_VER"
@@ -136,46 +93,47 @@ subprojects {
         testImplementation("org.springframework.boot:spring-boot-starter-web")
     }
 
-    configurations {
-        published
+    plugins.withId('java') {
+        project.apply plugin: 'org.zeroturnaround.gradle.jrebel'
+        def jarTask = project.tasks.findByName('jar')
+        if (jarTask) {
+            jarTask.dependsOn(generateRebel)
+        }
+        def warTask = project.tasks.findByName('war')
+        if (warTask) {
+            warTask.dependsOn(generateRebel)
+        }
     }
 
-    task sourceJar(type: Jar) {
-        from sourceSets.main.allSource
-        archiveClassifier = 'sources'
+    tasks.withType(Test).configureEach {
+        useJUnitPlatform()
+
+        ignoreFailures = true
     }
 
-    task copyDependencies(type: Sync) {
-        from configurations.compileClasspath
-        from configurations.compileOnly
-        into 'build/dependencies'
-    }
+}
 
-    publishing {
-        publications {
-            maven(MavenPublication) {
-                artifact sourceJar
+tasks.register("codeCoverageReport", JacocoReport) {
+    subprojects { subproject ->
+        subproject.plugins.withType(JacocoPlugin).configureEach {
+            subproject.tasks.matching({ t -> t.extensions.findByType(JacocoTaskExtension) }).configureEach { testTask ->
+                sourceSets subproject.sourceSets.main
+                executionData(testTask)
+            }
+            subproject.tasks.matching({ t -> t.extensions.findByType(JacocoTaskExtension) }).forEach {
+                rootProject.tasks.codeCoverageReport.dependsOn(it)
             }
         }
     }
 
-    jacocoTestReport {
-        reports {
-            xml.enabled true
-            html.enabled false
-            xml.destination file("${buildDir}/reports/Coverage.xml")
-        }
+    reports {
+        xml.enabled true
+        html.enabled false
+        xml.destination file("${buildDir}/reports/Coverage.xml")
     }
+}
 
-    test {
-        useJUnitPlatform()
-
-        ignoreFailures = true
-
-        jacoco {
-            destinationFile = file("$buildDir/jacoco/jacocoTest.exec")
-            classDumpDir = file("$buildDir/jacoco/classpathdumps")
-        }
-
-    }
+coveralls {
+    sourceDirs = subprojects.sourceSets.main.allSource.srcDirs.flatten()
+    jacocoReportPath 'build/reports/Coverage.xml'
 }
