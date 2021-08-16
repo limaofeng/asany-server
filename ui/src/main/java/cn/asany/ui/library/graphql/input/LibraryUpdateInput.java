@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 public class LibraryUpdateInput {
-    private LibraryType type;
-    private String name;
-    private String description;
+  private LibraryType type;
+  private String name;
+  private String description;
 }

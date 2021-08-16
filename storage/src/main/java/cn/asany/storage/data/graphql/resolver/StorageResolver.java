@@ -5,6 +5,4 @@ import graphql.kickstart.tools.GraphQLResolver;
 import org.springframework.stereotype.Component;
 
 @Component
-public class StorageResolver implements GraphQLResolver<StorageConfig> {
-
-}
+public class StorageResolver implements GraphQLResolver<StorageConfig> {}

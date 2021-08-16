@@ -1,26 +1,26 @@
 package cn.asany.security.oauth.bean;
 //
-//import lombok.Data;
-//import org.hibernate.annotations.Any;
-//import org.hibernate.annotations.AnyMetaDef;
-//import org.hibernate.annotations.GenericGenerator;
-//import org.hibernate.annotations.MetaValue;
-//import org.jfantasy.framework.dao.BaseBusEntity;
-//import org.jfantasy.framework.dao.hibernate.converter.MapConverter;
+// import lombok.Data;
+// import org.hibernate.annotations.Any;
+// import org.hibernate.annotations.AnyMetaDef;
+// import org.hibernate.annotations.GenericGenerator;
+// import org.hibernate.annotations.MetaValue;
+// import org.jfantasy.framework.dao.BaseBusEntity;
+// import org.jfantasy.framework.dao.hibernate.converter.MapConverter;
 //
-//import javax.persistence.*;
-//import java.util.Date;
-//import java.util.Map;
+// import javax.persistence.*;
+// import java.util.Date;
+// import java.util.Map;
 //
-///**
+/// **
 // * API 授权
 // *
 // * @author limaofeng
 // */
-//@Data
-//@Entity
-//@Table(name = "OAUTH_APIKEY")
-//public class ApiKey extends BaseBusEntity {
+// @Data
+// @Entity
+// @Table(name = "OAUTH_APIKEY")
+// public class ApiKey extends BaseBusEntity {
 //
 //    /**
 //     * 调用 api key
@@ -45,7 +45,8 @@ package cn.asany.security.oauth.bean;
 //     * 对应的应用
 //     */
 //    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "APP_ID", updatable = false, foreignKey = @ForeignKey(name = "FK_OAUTH_APPKEY_APPID"))
+//    @JoinColumn(name = "APP_ID", updatable = false, foreignKey = @ForeignKey(name =
+// "FK_OAUTH_APPKEY_APPID"))
 //    private Application application;
 //    /**
 //     * 到期时间
@@ -61,7 +62,8 @@ package cn.asany.security.oauth.bean;
 //    private String platform;
 //
 //    @Any(
-//        metaColumn = @Column(name = "OWNERSHIP_TYPE", length = 10, insertable = false, updatable = false),
+//        metaColumn = @Column(name = "OWNERSHIP_TYPE", length = 10, insertable = false, updatable =
+// false),
 //        fetch = FetchType.LAZY
 //    )
 //    @AnyMetaDef(
@@ -74,4 +76,4 @@ package cn.asany.security.oauth.bean;
 //    @JoinColumn(name = "OWNERSHIP_ID", insertable = false, updatable = false)
 //    private Ownership ownership;
 //
-//}
+// }

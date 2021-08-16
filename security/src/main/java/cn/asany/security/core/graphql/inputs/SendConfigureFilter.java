@@ -1,7 +1,7 @@
 package cn.asany.security.core.graphql.inputs;
 
-import lombok.Data;
 import cn.asany.security.core.bean.enums.PsdSendType;
+import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
 
@@ -12,18 +12,17 @@ import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
  */
 @Data
 public class SendConfigureFilter {
-    private PropertyFilterBuilder builder = new PropertyFilterBuilder();
+  private PropertyFilterBuilder builder = new PropertyFilterBuilder();
 
-
-    public void setAppId(String appId) {
-        if(StringUtils.isNotBlank(appId)) {
-            builder.equal("appId", appId);
-        }
+  public void setAppId(String appId) {
+    if (StringUtils.isNotBlank(appId)) {
+      builder.equal("appId", appId);
     }
+  }
 
-    public void setType(PsdSendType type) {
-        if(type != null) {
-            builder.equal("type", type);
-        }
+  public void setType(PsdSendType type) {
+    if (type != null) {
+      builder.equal("type", type);
     }
+  }
 }

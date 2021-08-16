@@ -8,10 +8,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class ApplicationGraphQLSubscriptionResolver implements GraphQLSubscriptionResolver {
 
-    private StockTickerRxPublisher stockTickerPublisher;
+  private StockTickerRxPublisher stockTickerPublisher;
 
-    public Publisher<ApplicationTemplateRoute> updateRoute() {
-        return stockTickerPublisher.getPublisher();
-    }
-
+  public Publisher<ApplicationTemplateRoute> updateRoute() {
+    return stockTickerPublisher.getPublisher();
+  }
 }

@@ -17,13 +17,11 @@ import org.springframework.stereotype.Component;
 @Profile("!test")
 public class PresetModelCommandLineRunner implements CommandLineRunner {
 
-    @Autowired
-    private ModelService modelService;
+  @Autowired private ModelService modelService;
 
-
-    @Override
-    public void run(String... args) {
-        // 基础类型
-        modelService.saveInBatch(ModelUtils.DEFAULT_TYPES.toArray(new Model[0]));
-    }
+  @Override
+  public void run(String... args) {
+    // 基础类型
+    modelService.saveInBatch(ModelUtils.DEFAULT_TYPES.toArray(new Model[0]));
+  }
 }

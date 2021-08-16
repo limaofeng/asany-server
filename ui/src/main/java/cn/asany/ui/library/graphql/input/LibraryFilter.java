@@ -7,5 +7,4 @@ import org.jfantasy.graphql.inputs.QueryFilter;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class LibraryFilter extends QueryFilter<LibraryFilter, Library> {
-}
+public class LibraryFilter extends QueryFilter<LibraryFilter, Library> {}

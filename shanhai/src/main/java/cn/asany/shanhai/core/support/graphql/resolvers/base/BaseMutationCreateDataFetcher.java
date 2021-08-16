@@ -7,14 +7,15 @@ import cn.asany.shanhai.core.support.graphql.resolvers.MutationCreateDataFetcher
 
 public class BaseMutationCreateDataFetcher implements MutationCreateDataFetcher {
 
-    private ModelRepository repository;
+  private ModelRepository repository;
 
-    public BaseMutationCreateDataFetcher(Model model, ModelEndpoint endpoint, ModelRepository repository) {
-        this.repository = repository;
-    }
+  public BaseMutationCreateDataFetcher(
+      Model model, ModelEndpoint endpoint, ModelRepository repository) {
+    this.repository = repository;
+  }
 
-    @Override
-    public Object create(Object input) {
-        return this.repository.save(input);
-    }
+  @Override
+  public Object create(Object input) {
+    return this.repository.save(input);
+  }
 }

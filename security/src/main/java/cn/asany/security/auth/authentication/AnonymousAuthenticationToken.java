@@ -8,7 +8,7 @@ import org.jfantasy.framework.security.authentication.SimpleAuthenticationToken;
  * @author limaofeng
  */
 public class AnonymousAuthenticationToken extends SimpleAuthenticationToken<String> {
-    public AnonymousAuthenticationToken() {
-        super("ANONYMOUS");
-    }
+  public AnonymousAuthenticationToken() {
+    super("ANONYMOUS");
+  }
 }

@@ -6,12 +6,8 @@ package cn.asany.ui.resources.bean.enums;
  * @author limaofeng
  */
 public enum ComponentType {
-    /**
-     * 路由
-     */
-    ROUTE,
-    /**
-     * 通用
-     */
-    GLOBAL
+  /** 路由 */
+  ROUTE,
+  /** 通用 */
+  GLOBAL
 }

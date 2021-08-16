@@ -9,14 +9,13 @@ import java.io.IOException;
  */
 public interface UploadService {
 
-    /**
-     * 上传接口
-     *
-     * @param object  上传文件对象
-     * @param options 上传选项
-     * @return
-     * @throws IOException
-     */
-    FileObject upload(FileObject object, UploadOptions options) throws IOException;
-
+  /**
+   * 上传接口
+   *
+   * @param object 上传文件对象
+   * @param options 上传选项
+   * @return
+   * @throws IOException
+   */
+  FileObject upload(FileObject object, UploadOptions options) throws IOException;
 }

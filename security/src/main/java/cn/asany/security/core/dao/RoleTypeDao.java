@@ -10,5 +10,4 @@ import org.springframework.stereotype.Repository;
  * @create: 2020/6/9 15:10
  */
 @Repository
-public interface RoleTypeDao extends JpaRepository<RoleType, String> {
-}
+public interface RoleTypeDao extends JpaRepository<RoleType, String> {}

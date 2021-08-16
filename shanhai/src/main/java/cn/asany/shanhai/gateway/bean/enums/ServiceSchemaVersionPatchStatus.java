@@ -1,8 +1,8 @@
 package cn.asany.shanhai.gateway.bean.enums;
 
-/**
- * @author limaofeng
- */
+/** @author limaofeng */
 public enum ServiceSchemaVersionPatchStatus {
-    ADDED, MODIFIED, DELETE
+  ADDED,
+  MODIFIED,
+  DELETE
 }

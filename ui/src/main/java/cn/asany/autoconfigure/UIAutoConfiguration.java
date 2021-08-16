@@ -8,20 +8,17 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
-/**
- * @author limaofeng
- */
+/** @author limaofeng */
 @Configuration
 @EntityScan("cn.asany.ui.*.bean")
 @ComponentScan({"cn.asany.ui.*.service", "cn.asany.ui.*.graphql"})
 public class UIAutoConfiguration {
 
-    @Bean
-    public SchemaParserDictionaryBuilder uiSchemaParserDictionaryBuilder() {
-        return dictionary -> {
-            dictionary.add("Library", ILibrary.class);
-            dictionary.add("IconLibrary", IconLibrary.class);
-        };
-    }
-
+  @Bean
+  public SchemaParserDictionaryBuilder uiSchemaParserDictionaryBuilder() {
+    return dictionary -> {
+      dictionary.add("Library", ILibrary.class);
+      dictionary.add("IconLibrary", IconLibrary.class);
+    };
+  }
 }

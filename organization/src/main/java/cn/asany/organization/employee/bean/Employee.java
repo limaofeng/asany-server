@@ -10,17 +10,16 @@ import cn.asany.organization.relationship.bean.OrganizationEmployee;
 import cn.asany.storage.api.FileObject;
 import cn.asany.storage.api.converter.FileObjectConverter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.*;
-import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.dao.hibernate.converter.StringArrayConverter;
-import org.jfantasy.framework.util.common.ObjectUtil;
-
-import javax.persistence.*;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import javax.persistence.*;
+import lombok.*;
+import org.jfantasy.framework.dao.BaseBusEntity;
+import org.jfantasy.framework.dao.hibernate.converter.StringArrayConverter;
+import org.jfantasy.framework.util.common.ObjectUtil;
 
 /**
  * 员工
@@ -38,154 +37,142 @@ import java.util.stream.Collectors;
 @Table(name = "ORG_EMPLOYEE")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "employeePositions", "links", "user"})
 public class Employee extends BaseBusEntity {
-    @Id
-    @Column(name = "ID", precision = 22)
-    @GeneratedValue(generator = "org_employee_gen")
-    @TableGenerator(name = "org_employee_gen", table = "sys_sequence", pkColumnName = "gen_name", pkColumnValue = "org_employee:id", valueColumnName = "gen_value")
-    private Long id;
-    /**
-     * 状态
-     */
-    @Transient
-    private String status;
-    /**
-     * 头像
-     */
-    @Convert(converter = FileObjectConverter.class)
-    @Column(name = "avatar", precision = 500)
-    private FileObject avatar;
-    /**
-     * 工号
-     */
-    @Column(name = "SN", nullable = false, precision = 20)
-    private String jobNumber;
-    /**
-     * 用户标签，用于筛选用户
-     */
-    @Column(name = "TAGS", precision = 300)
-    @Convert(converter = StringArrayConverter.class)
-    private String[] tags;
-    /**
-     * 名称
-     */
-    @Column(name = "NAME", length = 30)
-    private String name;
-    /**
-     * 生日
-     */
-    @Column(name = "BIRTHDAY")
-    @Temporal(TemporalType.DATE)
-    private Date birthday;
-    /**
-     * 性别
-     */
-    @Enumerated(EnumType.STRING)
-    @Column(name = "SEX", length = 10)
-    private Sex sex;
-    /**
-     * 移动电话
-     */
-    @Column(name = "MOBILE", length = 20)
-    private String mobile;
-    /**
-     * 固定电话
-     */
-    @Column(name = "TEL", length = 20)
-    private String tel;
-    /**
-     * E-mail
-     */
-    @Column(name = "EMAIL", length = 50)
-    private String email;
-    /**
-     * 员工类型
-     */
-    @Column(name = "EMPLOYEETYPE", length = 50)
-    private String employeetype;
-    /**
-     * 是否双培养
-     */
-    @Column(name = "FOSTER", length = 10)
-    private String foster;
-    /**
-     * 加入日期
-     */
-    @Column(name = "JOINDAY")
-    @Temporal(TemporalType.DATE)
-    private Date joinday;
-    /**
-     * 是否双培养
-     */
-    @Column(name = "PARTYMEMBERSORIGIN", length = 50)
-    private String partymembersorigin;
+  @Id
+  @Column(name = "ID", precision = 22)
+  @GeneratedValue(generator = "org_employee_gen")
+  @TableGenerator(
+      name = "org_employee_gen",
+      table = "sys_sequence",
+      pkColumnName = "gen_name",
+      pkColumnValue = "org_employee:id",
+      valueColumnName = "gen_value")
+  private Long id;
+  /** 状态 */
+  @Transient private String status;
+  /** 头像 */
+  @Convert(converter = FileObjectConverter.class)
+  @Column(name = "avatar", precision = 500)
+  private FileObject avatar;
+  /** 工号 */
+  @Column(name = "SN", nullable = false, precision = 20)
+  private String jobNumber;
+  /** 用户标签，用于筛选用户 */
+  @Column(name = "TAGS", precision = 300)
+  @Convert(converter = StringArrayConverter.class)
+  private String[] tags;
+  /** 名称 */
+  @Column(name = "NAME", length = 30)
+  private String name;
+  /** 生日 */
+  @Column(name = "BIRTHDAY")
+  @Temporal(TemporalType.DATE)
+  private Date birthday;
+  /** 性别 */
+  @Enumerated(EnumType.STRING)
+  @Column(name = "SEX", length = 10)
+  private Sex sex;
+  /** 移动电话 */
+  @Column(name = "MOBILE", length = 20)
+  private String mobile;
+  /** 固定电话 */
+  @Column(name = "TEL", length = 20)
+  private String tel;
+  /** E-mail */
+  @Column(name = "EMAIL", length = 50)
+  private String email;
+  /** 员工类型 */
+  @Column(name = "EMPLOYEETYPE", length = 50)
+  private String employeetype;
+  /** 是否双培养 */
+  @Column(name = "FOSTER", length = 10)
+  private String foster;
+  /** 加入日期 */
+  @Column(name = "JOINDAY")
+  @Temporal(TemporalType.DATE)
+  private Date joinday;
+  /** 是否双培养 */
+  @Column(name = "PARTYMEMBERSORIGIN", length = 50)
+  private String partymembersorigin;
 
-    /**
-     * 地址列表
-     */
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "employee", cascade = CascadeType.REMOVE)
-    private List<EmployeeAddress> addresses;
+  /** 地址列表 */
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "employee", cascade = CascadeType.REMOVE)
+  private List<EmployeeAddress> addresses;
 
-    /**
-     * 邮箱列表
-     */
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "employee", cascade = CascadeType.REMOVE)
-    private List<EmployeeEmail> emails;
+  /** 邮箱列表 */
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "employee", cascade = CascadeType.REMOVE)
+  private List<EmployeeEmail> emails;
 
-    /**
-     * 电话列表
-     */
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "employee", cascade = CascadeType.REMOVE)
-    private List<EmployeePhoneNumber> phones;
+  /** 电话列表 */
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "employee", cascade = CascadeType.REMOVE)
+  private List<EmployeePhoneNumber> phones;
 
-    /**
-     * 部门
-     */
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "employee", cascade = CascadeType.REMOVE)
-    private List<EmployeePosition> employeePositions;
+  /** 部门 */
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "employee", cascade = CascadeType.REMOVE)
+  private List<EmployeePosition> employeePositions;
 
-    /**
-     * 链接到的账户
-     */
-    @OneToMany(mappedBy = "employee", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
-    private List<EmployeeLink> links;
+  /** 链接到的账户 */
+  @OneToMany(
+      mappedBy = "employee",
+      fetch = FetchType.LAZY,
+      cascade = {CascadeType.REMOVE})
+  private List<EmployeeLink> links;
 
-//    /**
-//     * 管理用户
-//     */
-//    @OneToOne(mappedBy = "employee", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
-//    private User user;
+  //    /**
+  //     * 管理用户
+  //     */
+  //    @OneToOne(mappedBy = "employee", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
+  //    private User user;
 
-    @Transient
-    private Organization currentOrganization;
+  @Transient private Organization currentOrganization;
 
-    @OneToMany(mappedBy = "employee", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
-    private List<OrganizationEmployee> organizationEmployees;
+  @OneToMany(
+      mappedBy = "employee",
+      fetch = FetchType.LAZY,
+      cascade = {CascadeType.REMOVE})
+  private List<OrganizationEmployee> organizationEmployees;
 
-    /**
-     * 群组
-     */
-    @ManyToMany(targetEntity = EmployeeGroup.class, fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
-    @JoinTable(name = "ORG_EMPLOYEE_GROUP_EMPLOYEE", joinColumns = @JoinColumn(name = "EMPLOYEE_ID"), inverseJoinColumns = @JoinColumn(name = "GROUP_ID"), foreignKey = @ForeignKey(name = "FK_EMPLOYEE_GROUP_EID"))
-    private List<EmployeeGroup> groups;
+  /** 群组 */
+  @ManyToMany(
+      targetEntity = EmployeeGroup.class,
+      fetch = FetchType.LAZY,
+      cascade = {CascadeType.REMOVE})
+  @JoinTable(
+      name = "ORG_EMPLOYEE_GROUP_EMPLOYEE",
+      joinColumns = @JoinColumn(name = "EMPLOYEE_ID"),
+      inverseJoinColumns = @JoinColumn(name = "GROUP_ID"),
+      foreignKey = @ForeignKey(name = "FK_EMPLOYEE_GROUP_EID"))
+  private List<EmployeeGroup> groups;
 
-    @OneToMany(mappedBy = "stargazer", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
-    private List<Star> stars;
+  @OneToMany(
+      mappedBy = "stargazer",
+      fetch = FetchType.LAZY,
+      cascade = {CascadeType.REMOVE})
+  private List<Star> stars;
 
-    public List<Long> getDepartmentIds() {
-        return ObjectUtil.defaultValue(employeePositions, Collections.<EmployeePosition>emptyList()).stream().map(item -> item.getDepartment().getId()).collect(Collectors.toList());
-    }
+  public List<Long> getDepartmentIds() {
+    return ObjectUtil.defaultValue(employeePositions, Collections.<EmployeePosition>emptyList())
+        .stream()
+        .map(item -> item.getDepartment().getId())
+        .collect(Collectors.toList());
+  }
 
-    public void setDepartmentIds(List<Long> departmentIds) {
-        this.employeePositions = departmentIds.stream().map(id -> {
-            EmployeePosition position = new EmployeePosition();
-            position.setDepartment(Department.builder().id(id).build());
-            return position;
-        }).collect(Collectors.toList());
-    }
+  public void setDepartmentIds(List<Long> departmentIds) {
+    this.employeePositions =
+        departmentIds.stream()
+            .map(
+                id -> {
+                  EmployeePosition position = new EmployeePosition();
+                  position.setDepartment(Department.builder().id(id).build());
+                  return position;
+                })
+            .collect(Collectors.toList());
+  }
 
-    public String getLinkId(LinkType idType) {
-        Optional<EmployeeLink> optional = this.getLinks().stream().filter(item -> item.getType().name().equals(idType.name())).findAny();
-        return optional.map(EmployeeLink::getLinkId).orElse(null);
-    }
-
+  public String getLinkId(LinkType idType) {
+    Optional<EmployeeLink> optional =
+        this.getLinks().stream()
+            .filter(item -> item.getType().name().equals(idType.name()))
+            .findAny();
+    return optional.map(EmployeeLink::getLinkId).orElse(null);
+  }
 }

@@ -9,71 +9,74 @@ import cn.asany.ui.library.graphql.input.LibraryUpdateInput;
 import cn.asany.ui.library.graphql.type.ILibrary;
 import cn.asany.ui.library.graphql.type.IconLibrary;
 import cn.asany.ui.resources.bean.Icon;
-import org.mapstruct.*;
-
 import java.util.*;
 import java.util.stream.Collectors;
+import org.mapstruct.*;
 
-@Mapper(componentModel = "spring", builder = @Builder, unmappedTargetPolicy = ReportingPolicy.IGNORE, nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
+@Mapper(
+    componentModel = "spring",
+    builder = @Builder,
+    unmappedTargetPolicy = ReportingPolicy.IGNORE,
+    nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
 public interface LibraryConverter {
 
-    default List<IconLibrary> toLibraries(List<Library> libraries) {
-        List<IconLibrary> iconLibraries = new ArrayList<>();
-        for (Library library : libraries) {
-            iconLibraries.add(toIconSimplifyLibrary(library));
-        }
-        return iconLibraries;
+  default List<IconLibrary> toLibraries(List<Library> libraries) {
+    List<IconLibrary> iconLibraries = new ArrayList<>();
+    for (Library library : libraries) {
+      iconLibraries.add(toIconSimplifyLibrary(library));
     }
+    return iconLibraries;
+  }
 
-    @Mappings({
-        @Mapping(source = "items", target = "icons", ignore = true)
-    })
-    IconLibrary toIconSimplifyLibrary(Library libraries);
+  @Mappings({@Mapping(source = "items", target = "icons", ignore = true)})
+  IconLibrary toIconSimplifyLibrary(Library libraries);
 
-
-    default ILibrary toLibrary(Library library) {
-        if (library.getType() == LibraryType.ICONS) {
-            return toIconLibrary(library);
-        }
-        return null;
+  default ILibrary toLibrary(Library library) {
+    if (library.getType() == LibraryType.ICONS) {
+      return toIconLibrary(library);
     }
+    return null;
+  }
 
-    default List<IconLibrary> toIconLibraries(List<Library> libraries) {
-        List<IconLibrary> iconLibraries = new ArrayList<>();
-        for (Library library : libraries) {
-            iconLibraries.add(toIconLibrary(library));
-        }
-        return iconLibraries;
+  default List<IconLibrary> toIconLibraries(List<Library> libraries) {
+    List<IconLibrary> iconLibraries = new ArrayList<>();
+    for (Library library : libraries) {
+      iconLibraries.add(toIconLibrary(library));
     }
+    return iconLibraries;
+  }
 
-    @Mappings({
-        @Mapping(source = "items", target = "icons", qualifiedByName = "toIcons")
-    })
-    IconLibrary toIconLibrary(Library libraries);
+  @Mappings({@Mapping(source = "items", target = "icons", qualifiedByName = "toIcons")})
+  IconLibrary toIconLibrary(Library libraries);
 
-    default List<Icon> toIcons(List<LibraryItem> items) {
-        return items.stream().map(item -> {
-            Icon icon = item.getResource(Icon.class);
-            icon.setTags(item.getTags());
-            return icon;
-        }).collect(Collectors.toList());
+  default List<Icon> toIcons(List<LibraryItem> items) {
+    return items.stream()
+        .map(
+            item -> {
+              Icon icon = item.getResource(Icon.class);
+              icon.setTags(item.getTags());
+              return icon;
+            })
+        .collect(Collectors.toList());
+  }
+
+  default List<Icon> toIcons(Set<LibraryItem> items) {
+    if (items == null) {
+      return Collections.emptyList();
     }
+    return items.stream()
+        .map(
+            item -> {
+              Icon icon = item.getResource(Icon.class);
+              icon.setTags(item.getTags());
+              return icon;
+            })
+        .collect(Collectors.toList());
+  }
 
-    default List<Icon> toIcons(Set<LibraryItem> items) {
-        if (items == null) {
-            return Collections.emptyList();
-        }
-        return items.stream().map(item -> {
-            Icon icon = item.getResource(Icon.class);
-            icon.setTags(item.getTags());
-            return icon;
-        }).collect(Collectors.toList());
-    }
+  Icon toIcon(IconInput input);
 
-    Icon toIcon(IconInput input);
+  Library toLibrary(LibraryCreateInput input);
 
-    Library toLibrary(LibraryCreateInput input);
-
-    Library toLibrary(LibraryUpdateInput input);
-
+  Library toLibrary(LibraryUpdateInput input);
 }

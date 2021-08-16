@@ -19,37 +19,33 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 /**
  * @author limaofeng
- * @version V1.0
- * @Description: 测试程序入口
+ * @version V1.0 @Description: 测试程序入口
  * @date 2019/2/13 4:04 PM
  */
 @Slf4j
 @Configuration
 @ComponentScan({"cn.asany.*.*.service", "cn.asany.*.*.converter"})
 @EntityScan({
-    "cn.asany.*.*.bean",
+  "cn.asany.*.*.bean",
 })
 @EnableJpaRepositories(
     includeFilters = {
-        @ComponentScan.Filter(
-            type = FilterType.ASSIGNABLE_TYPE,
-            value = {JpaRepository.class}
-        )
+      @ComponentScan.Filter(
+          type = FilterType.ASSIGNABLE_TYPE,
+          value = {JpaRepository.class})
     },
     basePackages = {
-        "cn.asany.*.*.dao",
+      "cn.asany.*.*.dao",
     },
-    repositoryBaseClass = ComplexJpaRepository.class
-)
-@EnableAutoConfiguration(exclude = {
-    MongoAutoConfiguration.class,
-    QuartzAutoConfiguration.class,
-    WebMvcAutoConfiguration.class,
-    AuditAutoConfiguration.class,
-    GraphQLAutoConfiguration.class,
-    GraphQLWebAutoConfiguration.class,
-    GraphQLJavaToolsAutoConfiguration.class
-})
-public class TestApplication {
-
-}
+    repositoryBaseClass = ComplexJpaRepository.class)
+@EnableAutoConfiguration(
+    exclude = {
+      MongoAutoConfiguration.class,
+      QuartzAutoConfiguration.class,
+      WebMvcAutoConfiguration.class,
+      AuditAutoConfiguration.class,
+      GraphQLAutoConfiguration.class,
+      GraphQLWebAutoConfiguration.class,
+      GraphQLJavaToolsAutoConfiguration.class
+    })
+public class TestApplication {}

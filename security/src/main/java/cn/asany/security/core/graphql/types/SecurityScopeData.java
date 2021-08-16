@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 @Builder
 public class SecurityScopeData {
-    private String id;
-    private SecurityType type;
-    private Object value;
+  private String id;
+  private SecurityType type;
+  private Object value;
 }

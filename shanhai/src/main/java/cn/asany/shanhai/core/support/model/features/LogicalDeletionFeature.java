@@ -5,6 +5,6 @@ import lombok.Data;
 
 @Data
 public class LogicalDeletionFeature implements IModelFeature {
-    public static final String ID = "logical-deletion";
-    private String id = ID;
+  public static final String ID = "logical-deletion";
+  private String id = ID;
 }

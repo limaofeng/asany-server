@@ -4,10 +4,9 @@ import java.util.List;
 
 public interface UIResource {
 
-    Long getId();
+  Long getId();
 
-    List<String> getTags();
+  List<String> getTags();
 
-    void setTags(List<String> tags);
-
+  void setTags(List<String> tags);
 }

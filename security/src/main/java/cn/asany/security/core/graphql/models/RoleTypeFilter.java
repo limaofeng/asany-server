@@ -12,12 +12,12 @@ import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
  */
 @Data
 public class RoleTypeFilter {
-    private PropertyFilterBuilder builder = new PropertyFilterBuilder();
+  private PropertyFilterBuilder builder = new PropertyFilterBuilder();
 
-    @JsonProperty("name_like")
-    public void setNameLike(String value) {
-        if(StringUtils.isNotBlank(value)) {
-            builder.contains("name", value);
-        }
+  @JsonProperty("name_like")
+  public void setNameLike(String value) {
+    if (StringUtils.isNotBlank(value)) {
+      builder.contains("name", value);
     }
+  }
 }

@@ -6,12 +6,8 @@ package cn.asany.nuwa.app.bean.enums;
  * @author limaofeng
  */
 public enum ClientType {
-    /**
-     * 桌面端
-     */
-    WEB,
-    /**
-     * 移动端
-     */
-    WAP,
+  /** 桌面端 */
+  WEB,
+  /** 移动端 */
+  WAP,
 }

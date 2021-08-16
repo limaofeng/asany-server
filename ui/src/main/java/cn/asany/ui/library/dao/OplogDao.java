@@ -5,6 +5,4 @@ import org.jfantasy.framework.dao.jpa.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface OplogDao extends JpaRepository<Oplog, Long> {
-
-}
+public interface OplogDao extends JpaRepository<Oplog, Long> {}

@@ -6,12 +6,8 @@ import org.springframework.stereotype.Repository;
 
 /**
  * @author limaofeng
- * @version V1.0
- * @Description: TODO
+ * @version V1.0 @Description: TODO
  * @date 2019-04-12 14:26
  */
 @Repository
-public interface EmployeePositionDao extends JpaRepository<EmployeePosition, Long> {
-
-
-}
+public interface EmployeePositionDao extends JpaRepository<EmployeePosition, Long> {}

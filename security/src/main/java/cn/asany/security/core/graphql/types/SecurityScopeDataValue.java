@@ -1,8 +1,7 @@
 package cn.asany.security.core.graphql.types;
 
-
 public interface SecurityScopeDataValue {
-    String getId();
+  String getId();
 
-    String getName();
+  String getName();
 }

@@ -7,14 +7,13 @@ import cn.asany.storage.api.FileObjectMetadata;
 import io.minio.ListObjectsArgs;
 import io.minio.Result;
 import io.minio.messages.Item;
-import lombok.SneakyThrows;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
+import lombok.SneakyThrows;
 
 /**
  * 文件对象
@@ -23,80 +22,86 @@ import java.util.stream.Collectors;
  */
 public class MinIOFileObject implements FileObject {
 
-    private final MinIOStorage storage;
-    private final FileObjectMetadata metadata;
-    private final String remotePath;
+  private final MinIOStorage storage;
+  private final FileObjectMetadata metadata;
+  private final String remotePath;
 
-    public MinIOFileObject(MinIOStorage storage, String remotePath, FileObjectMetadata metadata) {
-        this.storage = storage;
-        this.metadata = metadata;
-        this.remotePath = remotePath;
-    }
+  public MinIOFileObject(MinIOStorage storage, String remotePath, FileObjectMetadata metadata) {
+    this.storage = storage;
+    this.metadata = metadata;
+    this.remotePath = remotePath;
+  }
 
-    @Override
-    public String getName() {
-        return null;
-    }
+  @Override
+  public String getName() {
+    return null;
+  }
 
-    @Override
-    public boolean isDirectory() {
-        return false;
-    }
+  @Override
+  public boolean isDirectory() {
+    return false;
+  }
 
-    @Override
-    public long getSize() {
-        return 0;
-    }
+  @Override
+  public long getSize() {
+    return 0;
+  }
 
-    @Override
-    public String getContentType() {
-        return null;
-    }
+  @Override
+  public String getContentType() {
+    return null;
+  }
 
-    @Override
-    public FileObject getParentFile() {
-        return null;
-    }
+  @Override
+  public FileObject getParentFile() {
+    return null;
+  }
 
-    @Override
-    @SneakyThrows
-    public List<FileObject> listFiles() {
-        Iterable<Result<Item>> results = this.storage.client.listObjects(ListObjectsArgs.builder().prefix(remotePath).includeUserMetadata(true).bucket(this.storage.bucketName).build());
-        List<FileObject> fileObjects = new ArrayList<>();
-        for (Result<Item> itemResult : results) {
-            Item item = itemResult.get();
-            fileObjects.add(this.storage.retrieveFileItem(item.objectName(), item));
-        }
-        return fileObjects;
+  @Override
+  @SneakyThrows
+  public List<FileObject> listFiles() {
+    Iterable<Result<Item>> results =
+        this.storage.client.listObjects(
+            ListObjectsArgs.builder()
+                .prefix(remotePath)
+                .includeUserMetadata(true)
+                .bucket(this.storage.bucketName)
+                .build());
+    List<FileObject> fileObjects = new ArrayList<>();
+    for (Result<Item> itemResult : results) {
+      Item item = itemResult.get();
+      fileObjects.add(this.storage.retrieveFileItem(item.objectName(), item));
     }
+    return fileObjects;
+  }
 
-    @Override
-    public String getAbsolutePath() {
-        return this.remotePath;
-    }
+  @Override
+  public String getAbsolutePath() {
+    return this.remotePath;
+  }
 
-    @Override
-    public Date lastModified() {
-        return this.metadata.getLastModified();
-    }
+  @Override
+  public Date lastModified() {
+    return this.metadata.getLastModified();
+  }
 
-    @Override
-    public List<FileObject> listFiles(FileItemFilter filter) {
-        return this.listFiles().stream().filter(filter::accept).collect(Collectors.toList());
-    }
+  @Override
+  public List<FileObject> listFiles(FileItemFilter filter) {
+    return this.listFiles().stream().filter(filter::accept).collect(Collectors.toList());
+  }
 
-    @Override
-    public List<FileObject> listFiles(FileItemSelector selector) {
-        return this.listFiles().stream().filter(selector::includeFile).collect(Collectors.toList());
-    }
+  @Override
+  public List<FileObject> listFiles(FileItemSelector selector) {
+    return this.listFiles().stream().filter(selector::includeFile).collect(Collectors.toList());
+  }
 
-    @Override
-    public FileObjectMetadata getMetadata() {
-        return this.metadata;
-    }
+  @Override
+  public FileObjectMetadata getMetadata() {
+    return this.metadata;
+  }
 
-    @Override
-    public InputStream getInputStream() throws IOException {
-        return null;
-    }
+  @Override
+  public InputStream getInputStream() throws IOException {
+    return null;
+  }
 }

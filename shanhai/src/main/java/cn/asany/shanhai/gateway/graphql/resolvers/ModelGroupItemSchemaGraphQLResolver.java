@@ -4,18 +4,15 @@ import cn.asany.shanhai.gateway.bean.ModelGroupItem;
 import graphql.kickstart.tools.GraphQLResolver;
 import org.springframework.stereotype.Component;
 
-/**
- * @author limaofeng
- */
+/** @author limaofeng */
 @Component
 public class ModelGroupItemSchemaGraphQLResolver implements GraphQLResolver<ModelGroupItem> {
 
-    public Long resourceId(ModelGroupItem item) {
-        return item.getResourceId();
-    }
+  public Long resourceId(ModelGroupItem item) {
+    return item.getResourceId();
+  }
 
-    public String resourceType(ModelGroupItem item) {
-        return item.getResourceType();
-    }
-
+  public String resourceType(ModelGroupItem item) {
+    return item.getResourceType();
+  }
 }

@@ -6,10 +6,8 @@ import org.springframework.stereotype.Repository;
 
 /**
  * @author limaofeng
- * @version V1.0
- * @Description: TODO
+ * @version V1.0 @Description: TODO
  * @date 2019-05-28 14:19
  */
 @Repository
-public interface DepartmentLinkDao extends JpaRepository<DepartmentLink, Long> {
-}
+public interface DepartmentLinkDao extends JpaRepository<DepartmentLink, Long> {}

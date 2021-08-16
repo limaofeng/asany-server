@@ -7,8 +7,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class ServiceGraphQLResolver implements GraphQLResolver<Service> {
 
-    public String protocol(Service service) {
-        return service.getProtocol().toString();
-    }
-
+  public String protocol(Service service) {
+    return service.getProtocol().toString();
+  }
 }

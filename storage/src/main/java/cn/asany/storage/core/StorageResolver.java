@@ -10,14 +10,13 @@ import cn.asany.storage.api.Storage;
  */
 public interface StorageResolver {
 
-    Storage resolve(String id);
+  Storage resolve(String id);
 
-    /**
-     * 解析并构建 Storage
-     *
-     * @param config
-     * @return
-     */
-    Storage resolve(IStorageConfig config);
-
+  /**
+   * 解析并构建 Storage
+   *
+   * @param config
+   * @return
+   */
+  Storage resolve(IStorageConfig config);
 }

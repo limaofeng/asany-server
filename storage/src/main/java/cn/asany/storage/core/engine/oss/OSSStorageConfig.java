@@ -9,11 +9,10 @@ import lombok.EqualsAndHashCode;
 @Data
 @Builder
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 public class OSSStorageConfig extends AbstractStorageConfig {
-    private String accessKeyId;
-    private String accessKeySecret;
-    private String endpoint;
-    private String bucketName;
-
+  private String accessKeyId;
+  private String accessKeySecret;
+  private String endpoint;
+  private String bucketName;
 }

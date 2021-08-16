@@ -7,15 +7,14 @@ import cn.asany.shanhai.core.support.graphql.resolvers.QueryGetDataFetcher;
 
 public class BaseQueryGetDataFetcher implements QueryGetDataFetcher {
 
-    private ModelRepository repository;
+  private ModelRepository repository;
 
-    public BaseQueryGetDataFetcher(Model model, ModelEndpoint endpoint, ModelRepository repository) {
-        this.repository = repository;
-    }
+  public BaseQueryGetDataFetcher(Model model, ModelEndpoint endpoint, ModelRepository repository) {
+    this.repository = repository;
+  }
 
-    @Override
-    public Object get(Long id) {
-        return this.repository.findById(id);
-    }
-
+  @Override
+  public Object get(Long id) {
+    return this.repository.findById(id);
+  }
 }

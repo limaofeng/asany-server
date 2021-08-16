@@ -8,12 +8,11 @@ import org.springframework.stereotype.Repository;
 
 /**
  * @author limaofeng
- * @version V1.0
- * @Description: TODO
+ * @version V1.0 @Description: TODO
  * @date 2019-05-28 16:39
  */
 @Repository
 public interface EmployeeLinkDao extends JpaRepository<EmployeeLink, Long> {
 
-    EmployeeLink findByEmployee(@Param("employee") Employee employee);
+  EmployeeLink findByEmployee(@Param("employee") Employee employee);
 }

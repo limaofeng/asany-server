@@ -8,19 +8,18 @@ import org.springframework.stereotype.Component;
 @Data
 @Component
 public class IntField implements FieldType {
-    private String id = "Int";
-    private String name = "整数型";
-    private String javaType = Long.class.getName();
-    private String graphQLType = "Int";
+  private String id = "Int";
+  private String name = "整数型";
+  private String javaType = Long.class.getName();
+  private String graphQLType = "Int";
 
-    @Override
-    public String getJavaType(ModelFieldMetadata metadata) {
-        return this.javaType;
-    }
+  @Override
+  public String getJavaType(ModelFieldMetadata metadata) {
+    return this.javaType;
+  }
 
-    @Override
-    public String getGraphQLType(ModelFieldMetadata metadata) {
-        return graphQLType;
-    }
-
+  @Override
+  public String getGraphQLType(ModelFieldMetadata metadata) {
+    return graphQLType;
+  }
 }

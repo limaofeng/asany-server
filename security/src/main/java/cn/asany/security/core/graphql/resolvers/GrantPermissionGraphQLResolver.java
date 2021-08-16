@@ -12,77 +12,79 @@ import org.springframework.stereotype.Component;
 
 /**
  * @author limaofeng
- * @version V1.0
- * @Description: TODO
+ * @version V1.0 @Description: TODO
  * @date 2019-07-17 17:30
  */
 @Component
 public class GrantPermissionGraphQLResolver implements GraphQLResolver<GrantPermission> {
 
-//    @Autowired
-//    private DepartmentService departmentService;
-//    @Autowired
-//    private EmployeeService employeeService;
-    @Autowired
-    private UserService userService;
+  //    @Autowired
+  //    private DepartmentService departmentService;
+  //    @Autowired
+  //    private EmployeeService employeeService;
+  @Autowired private UserService userService;
 
-    public String resourceType(GrantPermission grantPermission) {
-        return grantPermission.getPermission().getResourceType();
+  public String resourceType(GrantPermission grantPermission) {
+    return grantPermission.getPermission().getResourceType();
+  }
+
+  private Long getObjectId(GrantPermission grantPermission, SecurityType type) {
+    if (type != grantPermission.getSecurityType()) {
+      return null;
     }
-
-    private Long getObjectId(GrantPermission grantPermission, SecurityType type) {
-        if (type != grantPermission.getSecurityType()) {
-            return null;
-        }
-        if (StringUtil.isBlank(grantPermission.getValue())) {
-            return null;
-        }
-        return Long.valueOf(grantPermission.getValue());
+    if (StringUtil.isBlank(grantPermission.getValue())) {
+      return null;
     }
+    return Long.valueOf(grantPermission.getValue());
+  }
 
-    private Long getObjectId(GrantPermission grantPermission, String type) {
-        String resourceType = grantPermission.getPermission().getResourceType();
-        if (!type.equals(resourceType)) {
-            return null;
-        }
-        if (StringUtil.isBlank(grantPermission.getResource())) {
-            return null;
-        }
-        return Long.valueOf(grantPermission.getResource());
+  private Long getObjectId(GrantPermission grantPermission, String type) {
+    String resourceType = grantPermission.getPermission().getResourceType();
+    if (!type.equals(resourceType)) {
+      return null;
     }
-
-    private Long getObjectId(GrantPermission grantPermission, GrantPermissionReturnObjectType type, SecurityType securityType) {
-        Long objectId = null;
-        if (type == GrantPermissionReturnObjectType.resource) {
-            objectId = getObjectId(grantPermission, securityType.name());
-        } else if (type == GrantPermissionReturnObjectType.security) {
-            objectId = getObjectId(grantPermission, securityType);
-        }
-        return objectId;
+    if (StringUtil.isBlank(grantPermission.getResource())) {
+      return null;
     }
+    return Long.valueOf(grantPermission.getResource());
+  }
 
-//    public Department department(GrantPermission grantPermission, GrantPermissionReturnObjectType type) {
-//        Long objectId = getObjectId(grantPermission, type, SecurityType.department);
-//        if (objectId == null) {
-//            return null;
-//        }
-//        return this.departmentService.get(objectId);
-//    }
-
-//    public Employee employee(GrantPermission grantPermission, GrantPermissionReturnObjectType type) {
-//        Long objectId = getObjectId(grantPermission, type, SecurityType.employee);
-//        if (objectId == null) {
-//            return null;
-//        }
-//        return this.employeeService.get(objectId);
-//    }
-
-    public User user(GrantPermission grantPermission, GrantPermissionReturnObjectType type) {
-        Long objectId = getObjectId(grantPermission, type, SecurityType.user);
-        if (objectId == null) {
-            return null;
-        }
-        return this.userService.get(objectId).orElse(null);
+  private Long getObjectId(
+      GrantPermission grantPermission,
+      GrantPermissionReturnObjectType type,
+      SecurityType securityType) {
+    Long objectId = null;
+    if (type == GrantPermissionReturnObjectType.resource) {
+      objectId = getObjectId(grantPermission, securityType.name());
+    } else if (type == GrantPermissionReturnObjectType.security) {
+      objectId = getObjectId(grantPermission, securityType);
     }
+    return objectId;
+  }
 
+  //    public Department department(GrantPermission grantPermission,
+  // GrantPermissionReturnObjectType type) {
+  //        Long objectId = getObjectId(grantPermission, type, SecurityType.department);
+  //        if (objectId == null) {
+  //            return null;
+  //        }
+  //        return this.departmentService.get(objectId);
+  //    }
+
+  //    public Employee employee(GrantPermission grantPermission, GrantPermissionReturnObjectType
+  // type) {
+  //        Long objectId = getObjectId(grantPermission, type, SecurityType.employee);
+  //        if (objectId == null) {
+  //            return null;
+  //        }
+  //        return this.employeeService.get(objectId);
+  //    }
+
+  public User user(GrantPermission grantPermission, GrantPermissionReturnObjectType type) {
+    Long objectId = getObjectId(grantPermission, type, SecurityType.user);
+    if (objectId == null) {
+      return null;
+    }
+    return this.userService.get(objectId).orElse(null);
+  }
 }

@@ -15,12 +15,11 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @Slf4j
 class ModelGraphQLSchemaFactoryTest {
 
-    @Autowired
-    private GraphQLServer graphQLServer;
+  @Autowired private GraphQLServer graphQLServer;
 
-    @Test
-    void buildScheme() {
-        String scheme = graphQLServer.buildScheme();
-        log.debug("Scheme: " + scheme);
-    }
+  @Test
+  void buildScheme() {
+    String scheme = graphQLServer.buildScheme();
+    log.debug("Scheme: " + scheme);
+  }
 }

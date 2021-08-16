@@ -11,6 +11,6 @@ import lombok.Data;
 @Data
 @Builder
 public class MassageData {
-    private String key;
-    private Object value;
+  private String key;
+  private Object value;
 }

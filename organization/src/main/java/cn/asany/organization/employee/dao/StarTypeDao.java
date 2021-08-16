@@ -6,10 +6,8 @@ import org.springframework.stereotype.Repository;
 
 /**
  * @author limaofeng
- * @version V1.0
- * @Description: TODO
+ * @version V1.0 @Description: TODO
  * @date 2019-06-25 13:02
  */
 @Repository
-public interface StarTypeDao extends JpaRepository<StarType, String> {
-}
+public interface StarTypeDao extends JpaRepository<StarType, String> {}

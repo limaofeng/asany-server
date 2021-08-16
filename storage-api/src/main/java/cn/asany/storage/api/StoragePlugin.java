@@ -2,8 +2,7 @@ package cn.asany.storage.api;
 
 public interface StoragePlugin {
 
-    boolean supports(UploadContext context);
+  boolean supports(UploadContext context);
 
-    FileObject upload(UploadContext context);
-
+  FileObject upload(UploadContext context);
 }

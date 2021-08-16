@@ -7,21 +7,29 @@ import lombok.Data;
 @Builder
 public class GraphQLSchemaChangeItem {
 
-    private String id;
+  private String id;
 
-    private String description;
+  private String description;
 
-    private String type;
+  private String type;
 
-    private String status;
+  private String status;
 
-    @Override
-    public String toString() {
-        return "GraphQLSchemaChangeItem{" +
-            "id='" + id + '\'' +
-            ", description='" + description + '\'' +
-            ", type='" + type + '\'' +
-            ", status='" + status + '\'' +
-            '}';
-    }
+  @Override
+  public String toString() {
+    return "GraphQLSchemaChangeItem{"
+        + "id='"
+        + id
+        + '\''
+        + ", description='"
+        + description
+        + '\''
+        + ", type='"
+        + type
+        + '\''
+        + ", status='"
+        + status
+        + '\''
+        + '}';
+  }
 }

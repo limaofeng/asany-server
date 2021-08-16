@@ -10,6 +10,5 @@ import lombok.EqualsAndHashCode;
  * @create: 2020/6/9 17:14
  */
 @Data
-@EqualsAndHashCode(callSuper=false)
-public class PermissionTypeInput extends PermissionType {
-}
+@EqualsAndHashCode(callSuper = false)
+public class PermissionTypeInput extends PermissionType {}

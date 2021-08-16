@@ -27,29 +27,26 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @Configuration
 @ComponentScan("cn.asany.shanhai.*")
 @EntityScan({
-    "cn.asany.shanhai.*.bean",
+  "cn.asany.shanhai.*.bean",
 })
 @EnableJpaRepositories(
     includeFilters = {
-        @ComponentScan.Filter(
-            type = FilterType.ASSIGNABLE_TYPE,
-            value = {JpaRepository.class}
-        )
+      @ComponentScan.Filter(
+          type = FilterType.ASSIGNABLE_TYPE,
+          value = {JpaRepository.class})
     },
     basePackages = {
-        "cn.asany.shanhai.*.dao",
+      "cn.asany.shanhai.*.dao",
     },
-    repositoryBaseClass = ComplexJpaRepository.class
-)
-@EnableAutoConfiguration(exclude = {
-    MongoAutoConfiguration.class,
-    QuartzAutoConfiguration.class,
-    WebMvcAutoConfiguration.class,
-    AuditAutoConfiguration.class,
-    GraphQLAutoConfiguration.class,
-    GraphQLWebAutoConfiguration.class,
-    GraphQLJavaToolsAutoConfiguration.class
-})
-public class TestApplication {
-
-}
+    repositoryBaseClass = ComplexJpaRepository.class)
+@EnableAutoConfiguration(
+    exclude = {
+      MongoAutoConfiguration.class,
+      QuartzAutoConfiguration.class,
+      WebMvcAutoConfiguration.class,
+      AuditAutoConfiguration.class,
+      GraphQLAutoConfiguration.class,
+      GraphQLWebAutoConfiguration.class,
+      GraphQLJavaToolsAutoConfiguration.class
+    })
+public class TestApplication {}

@@ -7,8 +7,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class SchemaGraphQLQueryResolver implements GraphQLQueryResolver {
 
-    public GraphQLSchema schema(String id) {
-        return GraphQLSchema.builder().id(id).build();
-    }
-
+  public GraphQLSchema schema(String id) {
+    return GraphQLSchema.builder().id(id).build();
+  }
 }

@@ -5,5 +5,4 @@ import org.jfantasy.framework.dao.jpa.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ModelRelationDao extends JpaRepository<ModelRelation, Long> {
-}
+public interface ModelRelationDao extends JpaRepository<ModelRelation, Long> {}

@@ -6,15 +6,12 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-/**
- * @author limaofeng
- */
+/** @author limaofeng */
 @Data
 @Builder
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 public class LocalStorageConfig extends AbstractStorageConfig {
 
-    private String defaultDir;
-
+  private String defaultDir;
 }

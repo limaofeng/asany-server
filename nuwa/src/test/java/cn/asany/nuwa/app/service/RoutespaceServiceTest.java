@@ -12,26 +12,20 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @Slf4j
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(classes = TestApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(
+    classes = TestApplication.class,
+    webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 class RoutespaceServiceTest {
 
-    @Autowired
-    private RoutespaceService routespaceService;
+  @Autowired private RoutespaceService routespaceService;
 
-    @Test
-    void createRoutespace() {
-        this.routespaceService.createRoutespace(Routespace.builder()
-            .id("web")
-            .name("PC Web")
-            .applicationTemplate(1L)
-            .build());
+  @Test
+  void createRoutespace() {
+    this.routespaceService.createRoutespace(
+        Routespace.builder().id("web").name("PC Web").applicationTemplate(1L).build());
 
-        this.routespaceService.createRoutespace(Routespace.builder()
-            .id("wap")
-            .name("Wap 网站")
-            .applicationTemplate(1L)
-            .build());
-    }
-
+    this.routespaceService.createRoutespace(
+        Routespace.builder().id("wap").name("Wap 网站").applicationTemplate(1L).build());
+  }
 }

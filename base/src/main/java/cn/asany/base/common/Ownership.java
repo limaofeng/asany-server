@@ -7,10 +7,9 @@ package cn.asany.base.common;
  */
 public interface Ownership {
 
-    Long getId();
+  Long getId();
 
-    String getName();
+  String getName();
 
-    String getOwnerType();
-
+  String getOwnerType();
 }

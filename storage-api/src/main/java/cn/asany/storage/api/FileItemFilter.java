@@ -9,6 +9,5 @@ package cn.asany.storage.api;
  */
 public interface FileItemFilter {
 
-    boolean accept(FileObject item);
-
+  boolean accept(FileObject item);
 }

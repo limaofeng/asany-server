@@ -10,28 +10,32 @@ import org.springframework.stereotype.Component;
 @Data
 @Component
 public class IdField implements FieldType {
-    private String id = "ID";
-    private String name = "ID";
-    private String javaType = Long.class.getName();
-    private String graphQLType = "ID";
+  private String id = "ID";
+  private String name = "ID";
+  private String javaType = Long.class.getName();
+  private String graphQLType = "ID";
 
-    @Override
-    public String getJavaType(ModelFieldMetadata metadata) {
-        return this.javaType;
-    }
+  @Override
+  public String getJavaType(ModelFieldMetadata metadata) {
+    return this.javaType;
+  }
 
-    @Override
-    public String getGraphQLType(ModelFieldMetadata metadata) {
-        return graphQLType;
-    }
+  @Override
+  public String getGraphQLType(ModelFieldMetadata metadata) {
+    return graphQLType;
+  }
 
-    @Override
-    public DatabaseColumn getColumn(ModelFieldMetadata metadata) {
-        return DatabaseColumn.builder().name(metadata.getDatabaseColumnName()).updatable(false).nullable(false).build();
-    }
+  @Override
+  public DatabaseColumn getColumn(ModelFieldMetadata metadata) {
+    return DatabaseColumn.builder()
+        .name(metadata.getDatabaseColumnName())
+        .updatable(false)
+        .nullable(false)
+        .build();
+  }
 
-    @Override
-    public MatchType[] filters() {
-        return new MatchType[]{MatchType.EQ};
-    }
+  @Override
+  public MatchType[] filters() {
+    return new MatchType[] {MatchType.EQ};
+  }
 }

@@ -7,5 +7,4 @@ import org.jfantasy.graphql.inputs.QueryFilter;
  *
  * @author limaofeng
  */
-public class ApplicationFilter extends QueryFilter {
-}
+public class ApplicationFilter extends QueryFilter {}

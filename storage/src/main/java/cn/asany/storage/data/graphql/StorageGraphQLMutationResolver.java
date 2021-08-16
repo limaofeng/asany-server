@@ -7,24 +7,20 @@ import cn.asany.storage.data.bean.FileDetail;
 import cn.asany.storage.utils.UploadUtils;
 import graphql.kickstart.tools.GraphQLMutationResolver;
 import graphql.schema.DataFetchingEnvironment;
+import java.io.IOException;
+import javax.servlet.http.Part;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.servlet.http.Part;
-import java.io.IOException;
-
-/**
- * @author limaofeng
- */
+/** @author limaofeng */
 @Component
 public class StorageGraphQLMutationResolver implements GraphQLMutationResolver {
 
-    @Autowired
-    private UploadService uploadService;
+  @Autowired private UploadService uploadService;
 
-    public FileDetail upload(Part part, UploadOptions options, DataFetchingEnvironment env) throws IOException {
-        FileObject object = UploadUtils.partToObject(part);
-        return (FileDetail) uploadService.upload(object, options);
-    }
-
+  public FileDetail upload(Part part, UploadOptions options, DataFetchingEnvironment env)
+      throws IOException {
+    FileObject object = UploadUtils.partToObject(part);
+    return (FileDetail) uploadService.upload(object, options);
+  }
 }

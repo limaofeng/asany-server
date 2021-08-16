@@ -1,4 +1,3 @@
 package cn.asany.shanhai.core.utils;
 
-public class TemplateDataOfModelQuery {
-}
+public class TemplateDataOfModelQuery {}

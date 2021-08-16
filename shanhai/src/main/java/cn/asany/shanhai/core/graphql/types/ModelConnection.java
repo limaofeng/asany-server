@@ -1,11 +1,10 @@
 package cn.asany.shanhai.core.graphql.types;
 
 import cn.asany.shanhai.core.bean.Model;
+import java.util.List;
 import lombok.*;
 import org.jfantasy.graphql.Edge;
 import org.jfantasy.graphql.types.BaseConnection;
-
-import java.util.List;
 
 /**
  * Model 分页对象
@@ -13,16 +12,16 @@ import java.util.List;
  * @author limaofeng
  */
 @Data
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 public class ModelConnection extends BaseConnection<ModelConnection.ModelEdge> {
-    private List<ModelEdge> edges;
+  private List<ModelEdge> edges;
 
-    @Data
-    @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class ModelEdge implements Edge<Model> {
-        private String cursor;
-        private Model node;
-    }
+  @Data
+  @Builder
+  @NoArgsConstructor
+  @AllArgsConstructor
+  public static class ModelEdge implements Edge<Model> {
+    private String cursor;
+    private Model node;
+  }
 }

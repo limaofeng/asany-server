@@ -9,19 +9,19 @@ import cn.asany.security.auth.graphql.types.LoginType;
  * @author limaofeng
  */
 public class LoginAuthenticationDetails {
-    private LoginType loginType;
-    private LoginOptions options;
+  private LoginType loginType;
+  private LoginOptions options;
 
-    public LoginAuthenticationDetails(LoginType loginType, LoginOptions options) {
-        this.loginType = loginType;
-        this.options = options;
-    }
+  public LoginAuthenticationDetails(LoginType loginType, LoginOptions options) {
+    this.loginType = loginType;
+    this.options = options;
+  }
 
-    public LoginType getLoginType() {
-        return loginType;
-    }
+  public LoginType getLoginType() {
+    return loginType;
+  }
 
-    public LoginOptions getOptions() {
-        return options;
-    }
+  public LoginOptions getOptions() {
+    return options;
+  }
 }

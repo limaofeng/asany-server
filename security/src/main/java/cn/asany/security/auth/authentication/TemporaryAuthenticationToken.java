@@ -9,9 +9,7 @@ import org.jfantasy.framework.security.authentication.SimpleAuthenticationToken;
  */
 public class TemporaryAuthenticationToken extends SimpleAuthenticationToken<String> {
 
-    public TemporaryAuthenticationToken(String jobNumber) {
-        super(jobNumber);
-    }
-
+  public TemporaryAuthenticationToken(String jobNumber) {
+    super(jobNumber);
+  }
 }
-

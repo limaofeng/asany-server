@@ -10,6 +10,4 @@ import org.springframework.stereotype.Repository;
  * @author limaofeng
  */
 @Repository
-public interface ModelEndpointDao extends JpaRepository<ModelEndpoint, Long> {
-
-}
+public interface ModelEndpointDao extends JpaRepository<ModelEndpoint, Long> {}

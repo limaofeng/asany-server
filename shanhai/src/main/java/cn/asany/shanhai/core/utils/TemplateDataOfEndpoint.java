@@ -2,41 +2,41 @@ package cn.asany.shanhai.core.utils;
 
 import cn.asany.shanhai.core.bean.ModelEndpoint;
 import cn.asany.shanhai.core.bean.ModelEndpointReturnType;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.jfantasy.framework.util.common.StringUtil;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 @AllArgsConstructor
 public class TemplateDataOfEndpoint {
-    private ModelEndpoint endpoint;
+  private ModelEndpoint endpoint;
 
-    public String getCode() {
-        return endpoint.getCode();
-    }
+  public String getCode() {
+    return endpoint.getCode();
+  }
 
-    public String getName() {
-        return endpoint.getName();
-    }
+  public String getName() {
+    return endpoint.getName();
+  }
 
-    public String getDescription() {
-        return endpoint.getDescription();
-    }
+  public String getDescription() {
+    return endpoint.getDescription();
+  }
 
-    public Boolean getIsArg() {
-        return !endpoint.getArguments().isEmpty();
-    }
+  public Boolean getIsArg() {
+    return !endpoint.getArguments().isEmpty();
+  }
 
-    public List<TemplateDataOfEndpointArgument> getArguments() {
-        return endpoint.getArguments().stream().map(item -> new TemplateDataOfEndpointArgument(item)).collect(Collectors.toList());
-    }
+  public List<TemplateDataOfEndpointArgument> getArguments() {
+    return endpoint.getArguments().stream()
+        .map(item -> new TemplateDataOfEndpointArgument(item))
+        .collect(Collectors.toList());
+  }
 
-    public String getReturnType() {
-        ModelEndpointReturnType returnType = endpoint.getReturnType();
-        Boolean isList = returnType.getList();
-        String type = StringUtil.upperCaseFirst(returnType.getType().getCode());
-        return (isList ? "[" + type + "]" : type) + (returnType.getRequired() ? "!" : "");
-    }
-
+  public String getReturnType() {
+    ModelEndpointReturnType returnType = endpoint.getReturnType();
+    Boolean isList = returnType.getList();
+    String type = StringUtil.upperCaseFirst(returnType.getType().getCode());
+    return (isList ? "[" + type + "]" : type) + (returnType.getRequired() ? "!" : "");
+  }
 }

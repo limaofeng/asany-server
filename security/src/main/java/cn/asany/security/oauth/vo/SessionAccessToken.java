@@ -1,8 +1,7 @@
 package cn.asany.security.oauth.vo;
 
-import lombok.Data;
-
 import java.util.Date;
+import lombok.Data;
 
 /**
  * 会话
@@ -11,21 +10,12 @@ import java.util.Date;
  */
 @Data
 public class SessionAccessToken {
-    /**
-     * ID
-     */
-    private Long id;
-    /**
-     * 设备
-     */
-    private String device;
-    /**
-     * 位置信息
-     */
-    private Geolocation location;
-    /**
-     * 登录时间
-     */
-    private Date loginTime;
-
+  /** ID */
+  private Long id;
+  /** 设备 */
+  private String device;
+  /** 位置信息 */
+  private Geolocation location;
+  /** 登录时间 */
+  private Date loginTime;
 }

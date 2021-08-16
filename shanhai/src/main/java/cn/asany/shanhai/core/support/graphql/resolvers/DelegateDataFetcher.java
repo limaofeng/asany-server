@@ -4,10 +4,9 @@ import graphql.schema.DataFetchingEnvironment;
 
 public interface DelegateDataFetcher {
 
-    String method();
+  String method();
 
-    Object[] args(DataFetchingEnvironment environment);
+  Object[] args(DataFetchingEnvironment environment);
 
-    String getName();
-
+  String getName();
 }

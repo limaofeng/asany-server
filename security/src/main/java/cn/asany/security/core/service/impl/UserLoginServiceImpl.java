@@ -1,23 +1,23 @@
-package cn.asany.security.core.service.impl;//package cn.asany.security.core.service.impl;
+package cn.asany.security.core.service.impl; // package cn.asany.security.core.service.impl;
 //
-//import net.whir.hos.organization.bean.Employee;
-//import cn.asany.security.core.bean.User;
-//import cn.asany.security.core.service.UserService;
-//import org.jfantasy.framework.security.LoginService;
-//import org.jfantasy.framework.security.LoginUser;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.stereotype.Service;
+// import net.whir.hos.organization.bean.Employee;
+// import cn.asany.security.core.bean.User;
+// import cn.asany.security.core.service.UserService;
+// import org.jfantasy.framework.security.LoginService;
+// import org.jfantasy.framework.security.LoginUser;
+// import org.springframework.beans.factory.annotation.Autowired;
+// import org.springframework.stereotype.Service;
 //
-//import static net.whir.hos.organization.service.DataConstant.FIELD_EMPLOYEE;
+// import static net.whir.hos.organization.service.DataConstant.FIELD_EMPLOYEE;
 //
-///**
+/// **
 // * @author limaofeng
 // * @version V1.0
 // * @Description: TODO
 // * @date 2019-05-27 14:34
 // */
-//@Service
-//public class UserLoginServiceImpl implements LoginService {
+// @Service
+// public class UserLoginServiceImpl implements LoginService {
 //
 //    @Autowired
 //    private UserService userService;
@@ -57,4 +57,4 @@ package cn.asany.security.core.service.impl;//package cn.asany.security.core.ser
 //        loginUser.set(FIELD_EMPLOYEE, employee);
 //        return loginUser;
 //    }
-//}
+// }

@@ -5,5 +5,4 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @EntityScan({"cn.asany.organization.*.bean"})
-public class OrganizationAutoConfiguration {
-}
+public class OrganizationAutoConfiguration {}

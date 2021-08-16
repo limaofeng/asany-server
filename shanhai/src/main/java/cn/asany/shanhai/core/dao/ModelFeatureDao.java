@@ -10,5 +10,4 @@ import org.springframework.stereotype.Repository;
  * @author limaofeng
  */
 @Repository
-public interface ModelFeatureDao extends JpaRepository<ModelFeature, String> {
-}
+public interface ModelFeatureDao extends JpaRepository<ModelFeature, String> {}

@@ -2,10 +2,9 @@ package cn.asany.storage.api;
 
 public interface IStorageConfig {
 
-    String id();
+  String id();
 
-    String getId();
+  String getId();
 
-    void setId(String id);
-
+  void setId(String id);
 }

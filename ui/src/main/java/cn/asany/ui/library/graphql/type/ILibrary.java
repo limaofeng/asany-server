@@ -2,8 +2,7 @@ package cn.asany.ui.library.graphql.type;
 
 public interface ILibrary {
 
-    Long getId();
+  Long getId();
 
-    void setId(Long id);
-
+  void setId(Long id);
 }

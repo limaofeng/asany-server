@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OwnershipInput {
-    private String id;
-    public String type;
+  private String id;
+  public String type;
 }

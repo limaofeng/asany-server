@@ -8,115 +8,122 @@ import cn.asany.nuwa.template.dao.ApplicationTemplateRouteDao;
 import cn.asany.ui.resources.bean.Component;
 import cn.asany.ui.resources.bean.enums.ComponentScope;
 import cn.asany.ui.resources.dao.ComponentDao;
+import java.util.*;
+import java.util.stream.Collectors;
+import javax.transaction.Transactional;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
-import java.util.*;
-import java.util.stream.Collectors;
-
 @Service
 public class ApplicationTemplateService {
 
-    private final ComponentDao componentDao;
-    private final ApplicationTemplateDao applicationTemplateDao;
-    private final ApplicationTemplateRouteDao applicationTemplateRouteDao;
+  private final ComponentDao componentDao;
+  private final ApplicationTemplateDao applicationTemplateDao;
+  private final ApplicationTemplateRouteDao applicationTemplateRouteDao;
 
-    public ApplicationTemplateService(ApplicationTemplateDao applicationTemplateDao, ApplicationTemplateRouteDao applicationTemplateRouteDao, ComponentDao componentDao) {
-        this.componentDao = componentDao;
-        this.applicationTemplateDao = applicationTemplateDao;
-        this.applicationTemplateRouteDao = applicationTemplateRouteDao;
+  public ApplicationTemplateService(
+      ApplicationTemplateDao applicationTemplateDao,
+      ApplicationTemplateRouteDao applicationTemplateRouteDao,
+      ComponentDao componentDao) {
+    this.componentDao = componentDao;
+    this.applicationTemplateDao = applicationTemplateDao;
+    this.applicationTemplateRouteDao = applicationTemplateRouteDao;
+  }
+
+  public List<ApplicationTemplate> findAll() {
+    return this.applicationTemplateDao.findAll();
+  }
+
+  @Transactional
+  public void deleteApplicationTemplate(Long applicationId) {
+    List<ApplicationTemplateRoute> routes =
+        this.applicationTemplateRouteDao.findAll(
+            PropertyFilter.builder()
+                .equal("application.id", applicationId)
+                .equal("component.scope", ComponentScope.ROUTE)
+                .isNotNull("component")
+                .build());
+    Set<Long> componentIds =
+        routes.stream().map(item -> item.getComponent().getId()).collect(Collectors.toSet());
+    // 删除应用模版
+    applicationTemplateDao.deleteById(applicationId);
+    // 删除对应的路由组件
+    this.componentDao.deleteAllById(componentIds);
+  }
+
+  @Transactional
+  public ApplicationTemplate createApplicationTemplate(ApplicationTemplate application) {
+    List<ApplicationTemplateRoute> routes = setupDefault(application.getRoutes());
+    application.setRoutes(Collections.emptyList());
+    this.applicationTemplateDao.save(application);
+    application.setRoutes(routes);
+    this.applicationTemplateRouteDao.saveAllInBatch(routes);
+    return application;
+  }
+
+  @Transactional
+  public ApplicationTemplate updateApplicationTemplate(ApplicationTemplate application) {
+    ApplicationTemplate oldObject = this.applicationTemplateDao.getById(application.getId());
+    ObjectUtil.copy(application, oldObject, "routes", "id");
+    List<ApplicationTemplateRoute> routes = setupDefault(application.getRoutes());
+    this.applicationTemplateDao.update(oldObject);
+    oldObject.setRoutes(routes);
+    return oldObject;
+  }
+
+  private List<ApplicationTemplateRoute> setupDefault(List<ApplicationTemplateRoute> routes) {
+    setupDefault(routes, null);
+    return ObjectUtil.flat(routes, "routes");
+  }
+
+  private void setupDefault(
+      List<ApplicationTemplateRoute> routes, ApplicationTemplateRoute parent) {
+    long index = 1;
+    for (ApplicationTemplateRoute route : routes) {
+      route.setLevel(parent == null ? 0 : parent.getLevel() + 1);
+      route.setEnabled(Boolean.TRUE);
+      route.setType(ObjectUtil.defaultValue(route.getType(), RouteType.ROUTE));
+      route.setAuthorized(ObjectUtil.defaultValue(route.getAuthorized(), Boolean.FALSE));
+      route.setHideInMenu(ObjectUtil.defaultValue(route.getHideInMenu(), Boolean.FALSE));
+      route.setHideChildrenInMenu(
+          ObjectUtil.defaultValue(route.getHideChildrenInMenu(), Boolean.FALSE));
+      route.setHideInBreadcrumb(
+          ObjectUtil.defaultValue(route.getHideInBreadcrumb(), Boolean.FALSE));
+      route.setIndex(index++);
+
+      Optional<Component> optionalComponent = setupComponent(route.getComponent());
+      if (optionalComponent.isPresent()) {
+        route.setComponent(optionalComponent.get());
+      } else {
+        route.setComponent(null);
+      }
+
+      if (route.getApplication() == null || route.getApplication().getId() == null) {
+        System.out.println(route);
+      }
+
+      if (route.getRoutes() != null) {
+        setupDefault(route.getRoutes(), route);
+      }
     }
+  }
 
-    public List<ApplicationTemplate> findAll() {
-        return this.applicationTemplateDao.findAll();
+  private Optional<Component> setupComponent(Component component) {
+    if (component == null) {
+      return Optional.empty();
     }
-
-    @Transactional
-    public void deleteApplicationTemplate(Long applicationId) {
-        List<ApplicationTemplateRoute> routes = this.applicationTemplateRouteDao.findAll(PropertyFilter.builder()
-            .equal("application.id", applicationId)
-            .equal("component.scope", ComponentScope.ROUTE)
-            .isNotNull("component")
-            .build());
-        Set<Long> componentIds = routes.stream().map(item -> item.getComponent().getId()).collect(Collectors.toSet());
-        // 删除应用模版
-        applicationTemplateDao.deleteById(applicationId);
-        // 删除对应的路由组件
-        this.componentDao.deleteAllById(componentIds);
+    if (component.getCode() != null) {
+      return this.componentDao.findOne(
+          PropertyFilter.builder().equal("code", component.getCode()).build());
     }
-
-    @Transactional
-    public ApplicationTemplate createApplicationTemplate(ApplicationTemplate application) {
-        List<ApplicationTemplateRoute> routes = setupDefault(application.getRoutes());
-        application.setRoutes(Collections.emptyList());
-        this.applicationTemplateDao.save(application);
-        application.setRoutes(routes);
-        this.applicationTemplateRouteDao.saveAllInBatch(routes);
-        return application;
+    if (component.getScope() != ComponentScope.ROUTE) {
+      component.setScope(ComponentScope.ROUTE);
     }
+    return Optional.of(this.componentDao.save(component));
+  }
 
-    @Transactional
-    public ApplicationTemplate updateApplicationTemplate(ApplicationTemplate application) {
-        ApplicationTemplate oldObject = this.applicationTemplateDao.getById(application.getId());
-        ObjectUtil.copy(application, oldObject, "routes", "id");
-        List<ApplicationTemplateRoute> routes = setupDefault(application.getRoutes());
-        this.applicationTemplateDao.update(oldObject);
-        oldObject.setRoutes(routes);
-        return oldObject;
-    }
-
-
-    private List<ApplicationTemplateRoute> setupDefault(List<ApplicationTemplateRoute> routes) {
-        setupDefault(routes, null);
-        return ObjectUtil.flat(routes, "routes");
-    }
-
-    private void setupDefault(List<ApplicationTemplateRoute> routes, ApplicationTemplateRoute parent) {
-        long index = 1;
-        for (ApplicationTemplateRoute route : routes) {
-            route.setLevel(parent == null ? 0 : parent.getLevel() + 1);
-            route.setEnabled(Boolean.TRUE);
-            route.setType(ObjectUtil.defaultValue(route.getType(), RouteType.ROUTE));
-            route.setAuthorized(ObjectUtil.defaultValue(route.getAuthorized(), Boolean.FALSE));
-            route.setHideInMenu(ObjectUtil.defaultValue(route.getHideInMenu(), Boolean.FALSE));
-            route.setHideChildrenInMenu(ObjectUtil.defaultValue(route.getHideChildrenInMenu(), Boolean.FALSE));
-            route.setHideInBreadcrumb(ObjectUtil.defaultValue(route.getHideInBreadcrumb(), Boolean.FALSE));
-            route.setIndex(index++);
-
-            Optional<Component> optionalComponent = setupComponent(route.getComponent());
-            if (optionalComponent.isPresent()) {
-                route.setComponent(optionalComponent.get());
-            } else {
-                route.setComponent(null);
-            }
-
-            if (route.getApplication() == null || route.getApplication().getId() == null) {
-                System.out.println(route);
-            }
-
-            if (route.getRoutes() != null) {
-                setupDefault(route.getRoutes(), route);
-            }
-
-        }
-    }
-
-    private Optional<Component> setupComponent(Component component) {
-        if (component == null) {
-            return Optional.empty();
-        }
-        if (component.getCode() != null) {
-            return this.componentDao.findOne(PropertyFilter.builder().equal("code", component.getCode()).build());
-        }
-        if (component.getScope() != ComponentScope.ROUTE) {
-            component.setScope(ComponentScope.ROUTE);
-        }
-        return Optional.of(this.componentDao.save(component));
-    }
-
-    public Optional<ApplicationTemplate> getApplicationTemplate(Long id) {
-        return this.applicationTemplateDao.findById(id);
-    }
+  public Optional<ApplicationTemplate> getApplicationTemplate(Long id) {
+    return this.applicationTemplateDao.findById(id);
+  }
 }

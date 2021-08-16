@@ -4,6 +4,11 @@ import cn.asany.ui.library.OplogDataCollector;
 import cn.asany.ui.library.bean.Oplog;
 import cn.asany.ui.library.bean.enums.Operation;
 import cn.asany.ui.library.dao.OplogDao;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+import javax.transaction.Transactional;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.jfantasy.framework.dao.hibernate.util.HibernateUtils;
@@ -17,87 +22,94 @@ import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-
 @Slf4j
 @Service
 public class OplogService implements InitializingBean {
-    private LinkedQueue<Oplog> queue = new LinkedQueue();
+  private LinkedQueue<Oplog> queue = new LinkedQueue();
 
-    private final OplogDao oplogDao;
+  private final OplogDao oplogDao;
 
-    public OplogService(OplogDao oplogDao) {
-        this.oplogDao = oplogDao;
+  public OplogService(OplogDao oplogDao) {
+    this.oplogDao = oplogDao;
+  }
+
+  @Override
+  public void afterPropertiesSet() {
+    new Thread(() -> execute()).start();
+  }
+
+  @SneakyThrows
+  public void execute() {
+    List<Oplog> cache = new ArrayList<>();
+    OplogService oplogService = SpringContextUtil.getBeanByType(OplogService.class);
+    while (true) {
+      Oplog oplog = queue.poll(500, TimeUnit.MILLISECONDS);
+      if (oplog != null) {
+        cache.add(oplog);
+      } else if (!cache.isEmpty()) {
+        oplogService.save(cache);
+        cache.clear();
+      }
     }
+  }
 
-    @Override
-    public void afterPropertiesSet() {
-        new Thread(() -> execute()).start();
-    }
+  @Transactional
+  public void save(List<Oplog> logs) {
+    this.oplogDao.saveAllInBatch(logs);
+  }
 
-    @SneakyThrows
-    public void execute() {
-        List<Oplog> cache = new ArrayList<>();
-        OplogService oplogService = SpringContextUtil.getBeanByType(OplogService.class);
-        while (true) {
-            Oplog oplog = queue.poll(500, TimeUnit.MILLISECONDS);
-            if (oplog != null) {
-                cache.add(oplog);
-            } else if (!cache.isEmpty()) {
-                oplogService.save(cache);
-                cache.clear();
-            }
-        }
-    }
+  public Oplog buildOplog(Operation operation, Object entity) {
+    OplogDataCollector collector =
+        entity instanceof OplogDataCollector
+            ? (OplogDataCollector) entity
+            : OplogDataCollector.EMPTY_OPLOG_DATA_COLLECTOR;
+    Class entityClass =
+        ObjectUtil.defaultValue(
+            collector.getEntityClass(), () -> ClassUtil.getRealClass(entity.getClass()));
+    String entityName =
+        ObjectUtil.defaultValue(
+            collector.getEntityName(), () -> HibernateUtils.getEntityName(entityClass));
+    String tableName =
+        ObjectUtil.defaultValue(
+            collector.getTableName(), () -> HibernateUtils.getTableName(entityClass));
+    String primarykeyName =
+        ObjectUtil.defaultValue(
+            collector.getPrimarykeyName(), () -> HibernateUtils.getIdName(entityClass));
+    Object primarykey =
+        ObjectUtil.defaultValue(
+            collector.getPrimarykey(), () -> HibernateUtils.getIdValue(entityClass, entity));
+    List<String> owners = ObjectUtil.defaultValue(collector.getOwners(), Collections.emptyList());
+    return Oplog.builder()
+        .operation(operation)
+        .clazz(entityClass.getName())
+        .entityName(entityName)
+        .tableName(tableName)
+        .primarykeyName(primarykeyName)
+        .primarykeyValue(primarykey.toString())
+        .owners(owners)
+        .build();
+  }
 
-    @Transactional
-    public void save(List<Oplog> logs) {
-        this.oplogDao.saveAllInBatch(logs);
+  @Async
+  public void log(Operation operation, Object entity) {
+    try {
+      this.queue.put(buildOplog(operation, entity));
+    } catch (InterruptedException e) {
+      log.error(e.getMessage());
     }
+  }
 
-    public Oplog buildOplog(Operation operation, Object entity) {
-        OplogDataCollector collector = entity instanceof OplogDataCollector ? (OplogDataCollector) entity : OplogDataCollector.EMPTY_OPLOG_DATA_COLLECTOR;
-        Class entityClass = ObjectUtil.defaultValue(collector.getEntityClass(), () -> ClassUtil.getRealClass(entity.getClass()));
-        String entityName = ObjectUtil.defaultValue(collector.getEntityName(), () -> HibernateUtils.getEntityName(entityClass));
-        String tableName = ObjectUtil.defaultValue(collector.getTableName(), () -> HibernateUtils.getTableName(entityClass));
-        String primarykeyName = ObjectUtil.defaultValue(collector.getPrimarykeyName(), () -> HibernateUtils.getIdName(entityClass));
-        Object primarykey = ObjectUtil.defaultValue(collector.getPrimarykey(), () -> HibernateUtils.getIdValue(entityClass, entity));
-        List<String> owners = ObjectUtil.defaultValue(collector.getOwners(), Collections.emptyList());
-        return Oplog.builder()
-            .operation(operation)
-            .clazz(entityClass.getName())
-            .entityName(entityName)
-            .tableName(tableName)
-            .primarykeyName(primarykeyName)
-            .primarykeyValue(primarykey.toString())
-            .owners(owners)
-            .build();
+  public void log(Operation operation, List<Object> objects) {
+    try {
+      for (Object obj : objects) {
+        this.queue.put(buildOplog(operation, obj));
+      }
+    } catch (InterruptedException e) {
+      log.error(e.getMessage());
     }
+  }
 
-    @Async
-    public void log(Operation operation, Object entity) {
-        try {
-            this.queue.put(buildOplog(operation, entity));
-        } catch (InterruptedException e) {
-            log.error(e.getMessage());
-        }
-    }
-
-    public void log(Operation operation, List<Object> objects) {
-        try {
-            for (Object obj : objects) {
-                this.queue.put(buildOplog(operation, obj));
-            }
-        } catch (InterruptedException e) {
-            log.error(e.getMessage());
-        }
-    }
-
-    public List<Oplog> oplogs(List<PropertyFilter> filters) {
-        return this.oplogDao.findAll(filters, Sort.by("createdAt"));
-    }
+  public List<Oplog> oplogs(List<PropertyFilter> filters) {
+    return this.oplogDao.findAll(filters, Sort.by("createdAt"));
+  }
 }

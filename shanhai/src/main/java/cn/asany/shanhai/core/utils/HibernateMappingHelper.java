@@ -8,21 +8,20 @@ import org.springframework.beans.factory.InitializingBean;
 
 public class HibernateMappingHelper implements InitializingBean {
 
-    private Template template;
+  private Template template;
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        template = HandlebarsTemplateUtils.template("/hibernate-mapping");
-    }
+  @Override
+  public void afterPropertiesSet() throws Exception {
+    template = HandlebarsTemplateUtils.template("/hibernate-mapping");
+  }
 
-    /**
-     * 生成 Hibernate Mapping XML
-     *
-     * @param model
-     */
-    @SneakyThrows
-    public String generateXML(Model model) {
-        return template.apply(new TemplateDataOfModel(model));
-    }
-
+  /**
+   * 生成 Hibernate Mapping XML
+   *
+   * @param model
+   */
+  @SneakyThrows
+  public String generateXML(Model model) {
+    return template.apply(new TemplateDataOfModel(model));
+  }
 }

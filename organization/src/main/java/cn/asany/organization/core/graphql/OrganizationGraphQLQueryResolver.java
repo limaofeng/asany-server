@@ -8,12 +8,11 @@ import cn.asany.organization.core.service.EmployeeGroupService;
 import cn.asany.organization.core.service.OrganizationService;
 import cn.asany.organization.employee.service.EmployeeService;
 import graphql.kickstart.tools.GraphQLQueryResolver;
+import java.util.List;
 import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 /**
  * 组织
@@ -25,24 +24,19 @@ import java.util.List;
 @Component
 public class OrganizationGraphQLQueryResolver implements GraphQLQueryResolver {
 
-    @Autowired
-    private OrganizationService organizationService;
-    @Autowired
-    private DepartmentService departmentService;
-    @Autowired
-    private EmployeeService employeeService;
-    @Autowired
-    private EmployeeGroupService employeeGroupService;
-    @Autowired
-    private OrganizationGraphQLResolver organizationGraphQLResolver;
+  @Autowired private OrganizationService organizationService;
+  @Autowired private DepartmentService departmentService;
+  @Autowired private EmployeeService employeeService;
+  @Autowired private EmployeeGroupService employeeGroupService;
+  @Autowired private OrganizationGraphQLResolver organizationGraphQLResolver;
 
-    public List<Organization> organizations(OrganizationFilter filter) {
-        PropertyFilterBuilder builder = ObjectUtil.defaultValue(filter, new OrganizationFilter()).getBuilder();
-        return organizationService.findAll(builder.build());
-    }
+  public List<Organization> organizations(OrganizationFilter filter) {
+    PropertyFilterBuilder builder =
+        ObjectUtil.defaultValue(filter, new OrganizationFilter()).getBuilder();
+    return organizationService.findAll(builder.build());
+  }
 
-    public Organization organization(Long id) {
-        return organizationService.get(id);
-    }
-
+  public Organization organization(Long id) {
+    return organizationService.get(id);
+  }
 }

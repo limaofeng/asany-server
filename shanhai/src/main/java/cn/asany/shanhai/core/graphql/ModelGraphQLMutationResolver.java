@@ -6,24 +6,21 @@ import graphql.kickstart.tools.GraphQLMutationResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-/**
- * @author limaofeng
- */
+/** @author limaofeng */
 @Component
 public class ModelGraphQLMutationResolver implements GraphQLMutationResolver {
 
-    @Autowired
-    private ModelService modelService;
+  @Autowired private ModelService modelService;
 
-    public Model createModel(Model input) {
-        return modelService.save(input);
-    }
+  public Model createModel(Model input) {
+    return modelService.save(input);
+  }
 
-    public Model updateModel(Long id, Model input) {
-        return modelService.update(input);
-    }
+  public Model updateModel(Long id, Model input) {
+    return modelService.update(input);
+  }
 
-    public int deleteModel(Long[] ids) {
-        return modelService.delete(ids);
-    }
+  public int deleteModel(Long[] ids) {
+    return modelService.delete(ids);
+  }
 }

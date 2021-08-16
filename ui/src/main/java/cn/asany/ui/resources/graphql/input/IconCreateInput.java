@@ -8,6 +8,5 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class IconCreateInput extends IconInput {
 
-    private Long libraryId;
-
+  private Long libraryId;
 }

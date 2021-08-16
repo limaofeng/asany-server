@@ -17,38 +17,34 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 /**
  * @author limaofeng
- * @version V1.0
- * @Description: 应用程序入口
+ * @version V1.0 @Description: 应用程序入口
  * @date 2019/2/13 4:04 PM
  */
 @Slf4j
 @Configuration
 @ComponentScan({"cn.asany.*.*.service", "cn.asany.*.*.converter", "cn.asany.*.*.graphql"})
 @EntityScan({
-    "cn.asany.*.*.bean",
+  "cn.asany.*.*.bean",
 })
 @EnableJpaRepositories(
     includeFilters = {
-        @ComponentScan.Filter(
-            type = FilterType.ASSIGNABLE_TYPE,
-            value = {JpaRepository.class}
-        )
+      @ComponentScan.Filter(
+          type = FilterType.ASSIGNABLE_TYPE,
+          value = {JpaRepository.class})
     },
     basePackages = {
-        "cn.asany.*.*.dao",
+      "cn.asany.*.*.dao",
     },
-    repositoryBaseClass = ComplexJpaRepository.class
-)
+    repositoryBaseClass = ComplexJpaRepository.class)
 @EnableAutoConfiguration(exclude = {MongoAutoConfiguration.class, QuartzAutoConfiguration.class})
 public class Application extends SpringBootServletInitializer {
 
-    public static void main(String[] args) {
-        SpringApplication.run(Application.class);
-    }
+  public static void main(String[] args) {
+    SpringApplication.run(Application.class);
+  }
 
-    @Override
-    protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
-        return builder.sources(Application.class);
-    }
-
+  @Override
+  protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
+    return builder.sources(Application.class);
+  }
 }

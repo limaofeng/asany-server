@@ -6,12 +6,8 @@ import org.springframework.stereotype.Repository;
 
 /**
  * @author limaofeng
- * @version V1.0
- * @Description: TODO
+ * @version V1.0 @Description: TODO
  * @date 2019-06-17 15:52
  */
 @Repository
-public interface EmployeePhoneDao extends JpaRepository<EmployeePhoneNumber, Long> {
-
-
-}
+public interface EmployeePhoneDao extends JpaRepository<EmployeePhoneNumber, Long> {}

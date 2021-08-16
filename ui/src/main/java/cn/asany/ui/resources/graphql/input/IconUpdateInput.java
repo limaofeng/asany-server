@@ -7,5 +7,5 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class IconUpdateInput extends IconInput {
-    private Long libraryId;
+  private Long libraryId;
 }

@@ -14,12 +14,13 @@ import org.springframework.stereotype.Component;
  */
 @Slf4j
 @Component
-public class WeChatUserDetailsService implements SimpleUserDetailsService<WeChatAuthenticationToken.WeChatCredentials> {
+public class WeChatUserDetailsService
+    implements SimpleUserDetailsService<WeChatAuthenticationToken.WeChatCredentials> {
 
-    @Override
-    public UserDetails loadUserByToken(WeChatAuthenticationToken.WeChatCredentials credentials) throws UsernameNotFoundException {
-        String authCode = credentials.getAuthCode();
-        return null;
-    }
-
+  @Override
+  public UserDetails loadUserByToken(WeChatAuthenticationToken.WeChatCredentials credentials)
+      throws UsernameNotFoundException {
+    String authCode = credentials.getAuthCode();
+    return null;
+  }
 }

@@ -12,19 +12,20 @@ import cn.asany.shanhai.core.support.graphql.resolvers.MutationDeleteDataFetcher
  */
 public class BaseMutationDeleteDataFetcher implements MutationDeleteDataFetcher {
 
-    private ModelRepository repository;
+  private ModelRepository repository;
 
-    public BaseMutationDeleteDataFetcher(Model model, ModelEndpoint endpoint, ModelRepository repository) {
-        this.repository = repository;
-    }
+  public BaseMutationDeleteDataFetcher(
+      Model model, ModelEndpoint endpoint, ModelRepository repository) {
+    this.repository = repository;
+  }
 
-    @Override
-    public Object delete(Long id) {
-        Object entity = this.repository.findById(id);
-        if (entity == null) {
-            return null;
-        }
-        this.repository.delete(id);
-        return entity;
+  @Override
+  public Object delete(Long id) {
+    Object entity = this.repository.findById(id);
+    if (entity == null) {
+      return null;
     }
+    this.repository.delete(id);
+    return entity;
+  }
 }

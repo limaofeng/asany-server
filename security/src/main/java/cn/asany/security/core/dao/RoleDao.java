@@ -4,10 +4,6 @@ import cn.asany.security.core.bean.Role;
 import org.jfantasy.framework.dao.jpa.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-/**
- * @author limaofeng
- */
+/** @author limaofeng */
 @Repository("fantasy.auth.hibernate.RoleDao")
-public interface RoleDao extends JpaRepository<Role, String> {
-
-}
+public interface RoleDao extends JpaRepository<Role, String> {}

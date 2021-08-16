@@ -19,36 +19,33 @@ import org.springframework.stereotype.Component;
 @Component
 public class ApplicationGraphQLMutationResolver implements GraphQLMutationResolver {
 
-    @Autowired
-    private ApplicationService applicationService;
+  @Autowired private ApplicationService applicationService;
 
-    public Application createApplication(ApplicationCreateInput input) {
-        return applicationService.createApplication(new OAuthApplication());
-    }
+  public Application createApplication(ApplicationCreateInput input) {
+    return applicationService.createApplication(new OAuthApplication());
+  }
 
-    public Application updateApplication(Long id, ApplicationCreateInput input, Boolean merge) {
-        return new Application();
-    }
+  public Application updateApplication(Long id, ApplicationCreateInput input, Boolean merge) {
+    return new Application();
+  }
 
-    public Boolean removeApplication(Long id) {
-        return Boolean.TRUE;
-    }
+  public Boolean removeApplication(Long id) {
+    return Boolean.TRUE;
+  }
 
-    public ApplicationRoute createRoute(RouteCreateInput input) {
-        return null;
-    }
+  public ApplicationRoute createRoute(RouteCreateInput input) {
+    return null;
+  }
 
-    public ApplicationRoute updateRoute(Long id, RouteUpdateInput input, Boolean merge) {
-        return null;
-    }
+  public ApplicationRoute updateRoute(Long id, RouteUpdateInput input, Boolean merge) {
+    return null;
+  }
 
-    public ApplicationRoute removeRoute(Long id) {
-        return null;
-    }
+  public ApplicationRoute removeRoute(Long id) {
+    return null;
+  }
 
-    public ApplicationRoute moveRoute(Long id, Long parentRoute, int location) {
-        return null;
-    }
-
-
+  public ApplicationRoute moveRoute(Long id, Long parentRoute, int location) {
+    return null;
+  }
 }

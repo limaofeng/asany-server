@@ -9,8 +9,8 @@ import lombok.Data;
  */
 @Data
 public class OAuthApplication {
-    private String name;
-    private String url;
-    private String description;
-    private String callbackUrl;
+  private String name;
+  private String url;
+  private String description;
+  private String callbackUrl;
 }

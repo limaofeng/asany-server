@@ -10,10 +10,8 @@ import lombok.EqualsAndHashCode;
  * @create: 2020/6/9 17:14
  */
 @Data
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 public class PermissionUpdateInput extends Permission {
-    /**
-     * 权限分类输入
-     */
-    private String permissionTypeInput;
+  /** 权限分类输入 */
+  private String permissionTypeInput;
 }

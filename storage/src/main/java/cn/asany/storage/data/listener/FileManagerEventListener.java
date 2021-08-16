@@ -13,30 +13,28 @@ import org.springframework.stereotype.Component;
 @Component
 public class FileManagerEventListener extends AbstractChangedListener<StorageConfig> {
 
-    private static final long serialVersionUID = 1082020263270806626L;
+  private static final long serialVersionUID = 1082020263270806626L;
 
-    @Autowired
-    private FileManagerFactory factory;
+  @Autowired private FileManagerFactory factory;
 
-    public FileManagerEventListener() {
-        super(EventType.POST_INSERT, EventType.POST_UPDATE, EventType.POST_DELETE);
+  public FileManagerEventListener() {
+    super(EventType.POST_INSERT, EventType.POST_UPDATE, EventType.POST_DELETE);
+  }
+
+  @Override
+  public void onPostDelete(StorageConfig config, PostDeleteEvent event) {
+    factory.remove(config);
+  }
+
+  @Override
+  public void onPostUpdate(StorageConfig config, PostUpdateEvent event) {
+    if (modify(event, "configParamStore")) {
+      //            factory.register(config.getId(), config.getType(), config.getConfigParams());
     }
+  }
 
-    @Override
-    public void onPostDelete(StorageConfig config, PostDeleteEvent event) {
-        factory.remove(config);
-    }
-
-    @Override
-    public void onPostUpdate(StorageConfig config, PostUpdateEvent event) {
-        if (modify(event, "configParamStore")) {
-//            factory.register(config.getId(), config.getType(), config.getConfigParams());
-        }
-    }
-
-    @Override
-    public void onPostInsert(StorageConfig config, PostInsertEvent event) {
-//        factory.register(config.getId(), config.getType(), config.getConfigParams());
-    }
-
+  @Override
+  public void onPostInsert(StorageConfig config, PostInsertEvent event) {
+    //        factory.register(config.getId(), config.getType(), config.getConfigParams());
+  }
 }

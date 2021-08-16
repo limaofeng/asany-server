@@ -1,18 +1,14 @@
 package cn.asany.organization.core.bean;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.util.List;
+import javax.persistence.*;
 import lombok.*;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
-import javax.persistence.*;
-import java.util.List;
-
-/**
- * 用戶組分类
- */
-
+/** 用戶組分类 */
 @Data
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -21,25 +17,23 @@ import java.util.List;
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class EmployeeGroupScope extends BaseBusEntity {
 
-    @Id
-    @Column(name = "ID", precision = 22)
-    private String id;
+  @Id
+  @Column(name = "ID", precision = 22)
+  private String id;
 
-    @Column(name = "NAME")
-    private String name;
+  @Column(name = "NAME")
+  private String name;
 
-    /**
-     * 用户组范围
-     */
-    @OneToMany(mappedBy = "scope", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-    private List<EmployeeGroup> employeeGroups;
+  /** 用户组范围 */
+  @OneToMany(mappedBy = "scope", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+  private List<EmployeeGroup> employeeGroups;
 
-    /**
-     * 所属组织
-     */
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ORGANIZATION_ID", foreignKey = @ForeignKey(name = "FK_GROUP_SCOPE_OID"), updatable = false, nullable = false)
-    private Organization organization;
-
-
+  /** 所属组织 */
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(
+      name = "ORGANIZATION_ID",
+      foreignKey = @ForeignKey(name = "FK_GROUP_SCOPE_OID"),
+      updatable = false,
+      nullable = false)
+  private Organization organization;
 }

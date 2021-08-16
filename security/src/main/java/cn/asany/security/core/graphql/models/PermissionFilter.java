@@ -12,26 +12,26 @@ import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
  */
 @Data
 public class PermissionFilter {
-    private PropertyFilterBuilder builder = new PropertyFilterBuilder();
+  private PropertyFilterBuilder builder = new PropertyFilterBuilder();
 
-    @JsonProperty("name_like")
-    public void setNameLike(String value) {
-        if(StringUtils.isNotBlank(value)) {
-            builder.contains("name", value);
-        }
+  @JsonProperty("name_like")
+  public void setNameLike(String value) {
+    if (StringUtils.isNotBlank(value)) {
+      builder.contains("name", value);
     }
+  }
 
-    @JsonProperty("permissionType")
-    public void setPermissionType(String value) {
-        if(StringUtils.isNotBlank(value)) {
-            builder.equal("permissionType.id", value);
-        }
+  @JsonProperty("permissionType")
+  public void setPermissionType(String value) {
+    if (StringUtils.isNotBlank(value)) {
+      builder.equal("permissionType.id", value);
     }
+  }
 
-    @JsonProperty("id")
-    public void setId(String value) {
-        if(StringUtils.isNotBlank(value)) {
-            builder.equal("id", value);
-        }
+  @JsonProperty("id")
+  public void setId(String value) {
+    if (StringUtils.isNotBlank(value)) {
+      builder.equal("id", value);
     }
+  }
 }

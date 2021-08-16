@@ -1,17 +1,14 @@
 package cn.asany.shanhai.gateway.bean;
 
+import java.util.List;
+import javax.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.LazyToOne;
 import org.hibernate.annotations.LazyToOneOption;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
-import javax.persistence.*;
-import java.util.List;
-
-/**
- * @author limaofeng
- */
+/** @author limaofeng */
 @Data
 @Builder
 @NoArgsConstructor
@@ -21,29 +18,35 @@ import java.util.List;
 @Table(name = "SH_SERVICE_SCHEMA")
 public class ServiceSchema extends BaseBusEntity {
 
-    @Id
-    @Column(name = "SERVICE_ID", nullable = false, updatable = false, precision = 22, scale = 0)
-    @GenericGenerator(name = "ServiceSchemaPkGenerator", strategy = "foreign", parameters = {@org.hibernate.annotations.Parameter(name = "property", value = "service")})
-    @GeneratedValue(generator = "ServiceSchemaPkGenerator")
-    private Long id;
+  @Id
+  @Column(name = "SERVICE_ID", nullable = false, updatable = false, precision = 22, scale = 0)
+  @GenericGenerator(
+      name = "ServiceSchemaPkGenerator",
+      strategy = "foreign",
+      parameters = {@org.hibernate.annotations.Parameter(name = "property", value = "service")})
+  @GeneratedValue(generator = "ServiceSchemaPkGenerator")
+  private Long id;
 
-    @Basic(fetch = FetchType.LAZY)
-    @Column(name = "`SCHEMA`", columnDefinition = "mediumtext")
-    private String schema;
+  @Basic(fetch = FetchType.LAZY)
+  @Column(name = "`SCHEMA`", columnDefinition = "mediumtext")
+  private String schema;
 
-    @LazyToOne(LazyToOneOption.NO_PROXY)
-    @OneToOne(fetch = FetchType.LAZY, targetEntity = Service.class, mappedBy = "schema")
-    private Service service;
+  @LazyToOne(LazyToOneOption.NO_PROXY)
+  @OneToOne(fetch = FetchType.LAZY, targetEntity = Service.class, mappedBy = "schema")
+  private Service service;
 
-    @OrderBy("createdAt desc")
-    @OneToMany(mappedBy = "schema", cascade = {CascadeType.REMOVE}, fetch = FetchType.LAZY)
-    private List<ServiceSchemaVersion> versions;
+  @OrderBy("createdAt desc")
+  @OneToMany(
+      mappedBy = "schema",
+      cascade = {CascadeType.REMOVE},
+      fetch = FetchType.LAZY)
+  private List<ServiceSchemaVersion> versions;
 
-    @Transient
-    public ServiceSchemaVersion latest() {
-        if (this.getVersions().isEmpty()) {
-            return null;
-        }
-        return this.getVersions().get(0);
+  @Transient
+  public ServiceSchemaVersion latest() {
+    if (this.getVersions().isEmpty()) {
+      return null;
     }
+    return this.getVersions().get(0);
+  }
 }

@@ -7,16 +7,10 @@ package cn.asany.security.core.bean.enums;
  */
 public enum PsdSendType {
 
-    /**
-     * 邮件
-     */
-    email,
-    /**
-     * 信息
-     */
-    massage,
-    /**
-     * 流程
-     */
-    flow
+  /** 邮件 */
+  email,
+  /** 信息 */
+  massage,
+  /** 流程 */
+  flow
 }

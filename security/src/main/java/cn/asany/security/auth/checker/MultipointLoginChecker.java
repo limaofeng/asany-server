@@ -12,9 +12,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class MultipointLoginChecker implements PostUserDetailsChecker {
 
-    @Override
-    public void check(UserDetails user) {
-        System.out.println("...MultipointLoginChecker");
-    }
-
+  @Override
+  public void check(UserDetails user) {
+    System.out.println("...MultipointLoginChecker");
+  }
 }

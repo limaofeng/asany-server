@@ -12,6 +12,4 @@ import org.jfantasy.graphql.inputs.QueryFilter;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class DepartmentFilter extends QueryFilter<OrganizationFilter, Organization> {
-
-}
+public class DepartmentFilter extends QueryFilter<OrganizationFilter, Organization> {}

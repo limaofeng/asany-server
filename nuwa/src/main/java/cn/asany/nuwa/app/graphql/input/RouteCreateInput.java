@@ -5,6 +5,5 @@ import lombok.Data;
 @Data
 public class RouteCreateInput {
 
-    private RouteComponentInput component;
-
+  private RouteComponentInput component;
 }

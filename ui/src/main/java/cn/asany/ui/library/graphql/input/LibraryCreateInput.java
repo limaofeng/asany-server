@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 public class LibraryCreateInput {
-    private LibraryType type;
-    private String name;
-    private String description;
+  private LibraryType type;
+  private String name;
+  private String description;
 }

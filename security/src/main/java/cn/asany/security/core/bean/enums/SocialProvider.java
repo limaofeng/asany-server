@@ -6,12 +6,8 @@ package cn.asany.security.core.bean.enums;
  * @author limaofeng
  */
 public enum SocialProvider {
-    /**
-     * 钉钉
-     */
-    dingtalk,
-    /**
-     * 微信
-     */
-    WeChat
+  /** 钉钉 */
+  dingtalk,
+  /** 微信 */
+  WeChat
 }

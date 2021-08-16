@@ -12,24 +12,28 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(classes = TestApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(
+    classes = TestApplication.class,
+    webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 @Slf4j
 class ModelDelegateServiceTest {
 
-    private DefaultCRUDDelegateCommandLineRunner runner;
+  private DefaultCRUDDelegateCommandLineRunner runner;
 
-    @SneakyThrows
-    @BeforeEach
-    void setUp() {
-        runner = SpringContextUtil.createBean(DefaultCRUDDelegateCommandLineRunner.class, SpringContextUtil.AutoType.AUTOWIRE_BY_TYPE);
-    }
+  @SneakyThrows
+  @BeforeEach
+  void setUp() {
+    runner =
+        SpringContextUtil.createBean(
+            DefaultCRUDDelegateCommandLineRunner.class,
+            SpringContextUtil.AutoType.AUTOWIRE_BY_TYPE);
+  }
 
-    @Test
-    @SneakyThrows
-    void save() {
-        runner.run(new String[0]);
-    }
+  @Test
+  @SneakyThrows
+  void save() {
+    runner.run(new String[0]);
+  }
 }

@@ -14,10 +14,9 @@ import lombok.*;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 public class MinIOStorageConfig extends AbstractStorageConfig {
-    private String endpoint;
-    private String accessKeyId;
-    private String accessKeySecret;
-    private String bucketName;
-    private boolean useSSL;
-
+  private String endpoint;
+  private String accessKeyId;
+  private String accessKeySecret;
+  private String bucketName;
+  private boolean useSSL;
 }

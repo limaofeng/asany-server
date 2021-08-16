@@ -1,4 +1,3 @@
 package cn.asany.nuwa.app.graphql.input;
 
-public class RouteComponentInput {
-}
+public class RouteComponentInput {}

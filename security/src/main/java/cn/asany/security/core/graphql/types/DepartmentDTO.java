@@ -1,39 +1,36 @@
 package cn.asany.security.core.graphql.types;
 
-import lombok.Data;
-
 import java.util.Date;
+import lombok.Data;
 
 @Data
 public class DepartmentDTO {
 
-    private Long id;
+  private Long id;
 
-    private String name;
+  private String name;
 
-    private String description;
+  private String description;
 
-    private String path;
+  private String path;
 
-    private String sn;
+  private String sn;
 
-    private Integer sort;
+  private Integer sort;
 
-    private String organizationId;
+  private String organizationId;
 
-    private Long pid;
+  private Long pid;
 
-    private Boolean enabled;
+  private Boolean enabled;
 
-    private String creator;
+  private String creator;
 
-    private Date createTime;
+  private Date createTime;
 
-    private String modifier;
+  private String modifier;
 
-    private Date modifyTime;
+  private Date modifyTime;
 
-    private Long type;
-
-
+  private Long type;
 }

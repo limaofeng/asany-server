@@ -12,14 +12,15 @@ import cn.asany.shanhai.core.support.graphql.resolvers.MutationUpdateDataFetcher
  */
 public class BaseMutationUpdateDataFetcher implements MutationUpdateDataFetcher {
 
-    private ModelRepository repository;
+  private ModelRepository repository;
 
-    public BaseMutationUpdateDataFetcher(Model model, ModelEndpoint endpoint, ModelRepository repository) {
-        this.repository = repository;
-    }
+  public BaseMutationUpdateDataFetcher(
+      Model model, ModelEndpoint endpoint, ModelRepository repository) {
+    this.repository = repository;
+  }
 
-    @Override
-    public Object update(Long id, Object input) {
-        return this.repository.update(id, input);
-    }
+  @Override
+  public Object update(Long id, Object input) {
+    return this.repository.update(id, input);
+  }
 }

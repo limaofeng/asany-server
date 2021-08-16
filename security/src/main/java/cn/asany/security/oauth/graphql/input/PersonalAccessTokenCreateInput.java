@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class PersonalAccessTokenCreateInput {
-    private String clientId;
-    private String name;
+  private String clientId;
+  private String name;
 }

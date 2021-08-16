@@ -1,12 +1,11 @@
 package cn.asany.nuwa.app.graphql.type;
 
 import cn.asany.nuwa.app.bean.Application;
+import java.util.List;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.jfantasy.graphql.Edge;
 import org.jfantasy.graphql.types.BaseConnection;
-
-import java.util.List;
 
 /**
  * 应用分页对象
@@ -14,15 +13,14 @@ import java.util.List;
  * @author limaofeng
  */
 @Data
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 public class ApplicationConnection extends BaseConnection<ApplicationConnection.ApplicationEdge> {
 
-    private List<ApplicationEdge> edges;
+  private List<ApplicationEdge> edges;
 
-    @Data
-    public static class ApplicationEdge implements Edge<Application> {
-        private String cursor;
-        private Application node;
-
-    }
+  @Data
+  public static class ApplicationEdge implements Edge<Application> {
+    private String cursor;
+    private Application node;
+  }
 }

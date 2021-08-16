@@ -6,16 +6,14 @@ import lombok.EqualsAndHashCode;
 
 /**
  * @author limaofeng
- * @version V1.0
- * @Description: TODO
+ * @version V1.0 @Description: TODO
  * @date 2019-05-05 09:53
  */
 @Data
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 public class RoleInput extends Role {
 
+  private String scopes;
 
-    private String scopes;
-
-    private String roleTypeInput;
+  private String roleTypeInput;
 }

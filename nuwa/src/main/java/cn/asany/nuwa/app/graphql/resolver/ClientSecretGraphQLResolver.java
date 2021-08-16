@@ -13,9 +13,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class ClientSecretGraphQLResolver implements GraphQLResolver<ClientSecret> {
 
-    public String secret(ClientSecret clientSecret, DataFetchingEnvironment environment) {
-        boolean isCreated = environment.getExecutionStepInfo().getPath().toString().startsWith("/createApplication/");
-        return isCreated ? clientSecret.getSecret() : "*****" + clientSecret.getSecret().substring(32);
-    }
-
+  public String secret(ClientSecret clientSecret, DataFetchingEnvironment environment) {
+    boolean isCreated =
+        environment.getExecutionStepInfo().getPath().toString().startsWith("/createApplication/");
+    return isCreated ? clientSecret.getSecret() : "*****" + clientSecret.getSecret().substring(32);
+  }
 }

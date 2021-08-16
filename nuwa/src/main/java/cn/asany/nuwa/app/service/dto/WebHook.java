@@ -6,6 +6,6 @@ package cn.asany.nuwa.app.service.dto;
  * @author limaofeng
  */
 public class WebHook {
-    private String url;
-    private String secret;
+  private String url;
+  private String secret;
 }

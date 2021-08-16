@@ -1,10 +1,8 @@
 package cn.asany.storage.core;
 
-/**
- * @author limaofeng
- */
+/** @author limaofeng */
 public class FileStoreException extends RuntimeException {
-    public FileStoreException(String message) {
-        super(message);
-    }
+  public FileStoreException(String message) {
+    super(message);
+  }
 }

@@ -1,24 +1,23 @@
 package cn.asany.shanhai.gateway.util;
 
+import java.util.List;
 import lombok.Builder;
 import lombok.Data;
 
-import java.util.List;
-
-/**
- * @author limaofeng
- */
+/** @author limaofeng */
 @Builder
 @Data
 public class DiffObject {
-    private String path;
-    private DiffStatus status;
-    private Object prev;
-    private Object current;
+  private String path;
+  private DiffStatus status;
+  private Object prev;
+  private Object current;
 
-    private List<DiffObject> diffObjects;
+  private List<DiffObject> diffObjects;
 
-    public static enum DiffStatus {
-        M, D, A;
-    }
+  public static enum DiffStatus {
+    M,
+    D,
+    A;
+  }
 }
