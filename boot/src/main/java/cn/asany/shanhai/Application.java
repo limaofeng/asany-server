@@ -1,6 +1,5 @@
 package cn.asany.shanhai;
 
-import lombok.extern.slf4j.Slf4j;
 import org.jfantasy.framework.dao.jpa.ComplexJpaRepository;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -20,7 +19,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
  * @version V1.0 @Description: 应用程序入口
  * @date 2019/2/13 4:04 PM
  */
-@Slf4j
 @Configuration
 @ComponentScan({"cn.asany.*.*.service", "cn.asany.*.*.converter", "cn.asany.*.*.graphql"})
 @EntityScan({

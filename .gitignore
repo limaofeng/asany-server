@@ -1,3 +1,11 @@
+# IDE for VSCode
+.vscode
+.settings
+.classpath
+.project
+out
+bin
+
 ### IDEA
 .idea
 *.iml
