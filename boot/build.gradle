@@ -19,8 +19,8 @@ tasks.withType(Test) { enabled = false }
 
 tasks.withType(PublishToMavenRepository).configureEach { it.enabled = false }
 
-task dev {
-    bootRun.systemProperty 'spring.profiles.active', 'dev'
+bootRun {
+    systemProperty "spring.profiles.active", "dev"
 }
 
 dependencies {

@@ -16,8 +16,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
+ * 组织查询
+ *
  * @author limaofeng
- * @version V1.0 @Description: TODO
+ * @version V1.0
  * @date 2019-04-02 12:01
  */
 @Component
@@ -25,8 +27,6 @@ public class OrganizationGraphQLResolver implements GraphQLResolver<Organization
 
   @Autowired private DepartmentService departmentService;
   @Autowired private EmployeeService employeeService;
-  //    @Autowired
-  //    private RoleService roleService;
   @Autowired private JobService jobService;
   @Autowired private DepartmentTypeService departmentTypeService;
   @Autowired private OrganizationEmployeeService organizationEmployeeService;

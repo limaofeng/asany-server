@@ -13,6 +13,7 @@ plugins {
     id "com.star-zero.gradle.githook" version "1.2.0"
     id "ru.netris.commitlint" version "1.4.1"
     id "com.diffplug.spotless" version "5.14.2"
+    id "com.diffplug.eclipse.apt" version "3.31.0"
 }
 
 githook {
@@ -29,9 +30,33 @@ githook {
 }
 
 allprojects {
+    apply plugin: 'java'
+    apply plugin: 'idea'
+    apply plugin: 'eclipse'
+    apply plugin: "com.diffplug.eclipse.apt"
+
     group = 'cn.asany.chaos'
     version = System.getenv().getOrDefault('RELEASE_VERSION', 'v0.0.0').replaceAll(/^v/, "")
     status = 'integration'
+
+    eclipse {
+        jdt {
+            apt {
+                aptEnabled = true
+                reconcileEnabled = true
+                
+                genSrcDir = file('build/generated')
+                genTestSrcDir = file('build/generated_tests')
+
+                processorOptions = compileJava.aptOptions.processorArgs
+            }
+        }
+        classpath {
+            file.beforeMerged { cp ->
+                cp.entries.add( new org.gradle.plugins.ide.eclipse.model.SourceFolder('build/generated/sources/annotationProcessor/java/main/', null) )
+            }
+        }
+    }
 
     repositories {
         maven { url "https://jcenter.bintray.com" }
@@ -43,8 +68,7 @@ allprojects {
 subprojects {
     apply from: "$rootDir/gradle/spotless.gradle"
 
-    apply plugin: 'java'
-    apply plugin: 'idea'
+
     apply plugin: 'io.spring.dependency-management'
     apply plugin: 'maven-publish'
     apply plugin: 'signing'
@@ -73,7 +97,7 @@ subprojects {
             mavenBom "org.springframework.boot:spring-boot-dependencies:${LIB_SPRING_BOOT_VER}"
         }
     }
-  
+
     dependencies {
         implementation "cn.asany.chaos:jfantasy-core:$LIB_JFAN_VER"
         implementation "cn.asany.chaos:jfantasy-graphql:$LIB_JFAN_VER"
@@ -111,25 +135,24 @@ subprojects {
         ignoreFailures = true
     }
 
-}
-
-tasks.register("codeCoverageReport", JacocoReport) {
-    subprojects { subproject ->
-        subproject.plugins.withType(JacocoPlugin).configureEach {
-            subproject.tasks.matching({ t -> t.extensions.findByType(JacocoTaskExtension) }).configureEach { testTask ->
-                sourceSets subproject.sourceSets.main
-                executionData(testTask)
-            }
-            subproject.tasks.matching({ t -> t.extensions.findByType(JacocoTaskExtension) }).forEach {
-                rootProject.tasks.codeCoverageReport.dependsOn(it)
+    tasks.register("codeCoverageReport", JacocoReport) {
+        subprojects { subproject ->
+            subproject.plugins.withType(JacocoPlugin).configureEach {
+                subproject.tasks.matching({ t -> t.extensions.findByType(JacocoTaskExtension) }).configureEach { testTask ->
+                    sourceSets subproject.sourceSets.main
+                    executionData(testTask)
+                }
+                subproject.tasks.matching({ t -> t.extensions.findByType(JacocoTaskExtension) }).forEach {
+                    rootProject.tasks.codeCoverageReport.dependsOn(it)
+                }
             }
         }
-    }
 
-    reports {
-        xml.enabled true
-        html.enabled false
-        xml.destination file("${buildDir}/reports/Coverage.xml")
+        reports {
+            xml.enabled true
+            html.enabled false
+            xml.destination file("${buildDir}/reports/Coverage.xml")
+        }
     }
 }
 

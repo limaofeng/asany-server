@@ -20,17 +20,3 @@ spring:
       initialSize: 10
       maxWait: 60000
       minIdle: 1
-
-grpc:
-  server:
-    port: 6565
-    address: 0.0.0.0
-  client:
-    GLOBAL:
-      address: static://localhost:6565
-      enableKeepAlive: true
-      keepAliveWithoutCalls: true
-      negotiationType: plaintext
-
-storage:
-  url: http://demo.homeword.cn/files

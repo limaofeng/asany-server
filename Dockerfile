@@ -21,4 +21,4 @@ EXPOSE 8080 9090 50983
 
 ENV VERSION_NUMBER=$version_number
 
-ENTRYPOINT java -server -Dfile.encoding=UTF-8 -Xmx512m -Xss256k -Xdebug -Xnoagent -Djava.compiler=NONE -Dspring.profiles.active=prod -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=50983 -Djava.security.egd=file:/dev/./urandom -jar /app/app.jar
+ENTRYPOINT java -server -Dfile.encoding=UTF-8 -Xmx512m -Xss256k -Xnoagent -Djava.compiler=NONE -Dspring.profiles.active=prod -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=50983 -Djava.security.egd=file:/dev/./urandom -jar /app/app.jar
