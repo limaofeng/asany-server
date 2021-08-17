@@ -13,6 +13,7 @@ plugins {
     id "com.star-zero.gradle.githook" version "1.2.0"
     id "ru.netris.commitlint" version "1.4.1"
     id "com.diffplug.spotless" version "5.14.2"
+    id "com.diffplug.eclipse.apt" version "3.31.0"
 }
 
 githook {
@@ -29,8 +30,10 @@ githook {
 }
 
 allprojects {
+    apply plugin: 'java'
     apply plugin: 'idea'
     apply plugin: 'eclipse'
+    apply plugin: "com.diffplug.eclipse.apt"
 
     group = 'cn.asany.chaos'
     version = System.getenv().getOrDefault('RELEASE_VERSION', 'v0.0.0').replaceAll(/^v/, "")
@@ -45,6 +48,18 @@ allprojects {
     }
 
     eclipse {
+        jdt {
+            apt {
+                aptEnabled = true
+                reconcileEnabled = true
+                
+                genSrcDir = file('build/generated/sources/annotationProcessor/java/main')
+                genTestSrcDir = file('build/generated_tests')
+
+                processorOptions = compileJava.aptOptions.processorArgs
+            }
+        }
+
         classpath {
             file.beforeMerged { cp ->
                 cp.entries.add( new org.gradle.plugins.ide.eclipse.model.SourceFolder('build/generated/sources/annotationProcessor/java/main/', null) )
@@ -62,7 +77,6 @@ allprojects {
 subprojects {
     apply from: "$rootDir/gradle/spotless.gradle"
 
-    apply plugin: 'java'
     apply plugin: 'io.spring.dependency-management'
     apply plugin: 'maven-publish'
     apply plugin: 'signing'
