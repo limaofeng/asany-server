@@ -1,7 +1,7 @@
 package cn.asany.ui.library.graphql.type;
 
 import cn.asany.ui.resources.bean.Icon;
-import java.util.List;
+import java.util.Set;
 import lombok.*;
 
 @Data
@@ -17,5 +17,5 @@ public class IconLibrary implements ILibrary {
   /** 描述 */
   private String description;
   /** 图标 */
-  private List<Icon> icons;
+  private Set<Icon> icons;
 }

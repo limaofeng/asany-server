@@ -28,7 +28,7 @@ public interface LibraryConverter {
     return iconLibraries;
   }
 
-  @Mappings({@Mapping(source = "items", target = "icons", ignore = true)})
+  @Mappings(value = @Mapping(target = "icons", ignore = true))
   IconLibrary toIconSimplifyLibrary(Library libraries);
 
   default ILibrary toLibrary(Library library) {
@@ -46,23 +46,13 @@ public interface LibraryConverter {
     return iconLibraries;
   }
 
-  @Mappings({@Mapping(source = "items", target = "icons", qualifiedByName = "toIcons")})
+  @Mappings(value = @Mapping(source = "items", target = "icons", qualifiedByName = "toIcons"))
   IconLibrary toIconLibrary(Library libraries);
 
-  default List<Icon> toIcons(List<LibraryItem> items) {
-    return items.stream()
-        .map(
-            item -> {
-              Icon icon = item.getResource(Icon.class);
-              icon.setTags(item.getTags());
-              return icon;
-            })
-        .collect(Collectors.toList());
-  }
-
-  default List<Icon> toIcons(Set<LibraryItem> items) {
+  @Named("toIcons")
+  default Set<Icon> toIcons(Set<LibraryItem> items) {
     if (items == null) {
-      return Collections.emptyList();
+      return Collections.emptySet();
     }
     return items.stream()
         .map(
@@ -71,7 +61,7 @@ public interface LibraryConverter {
               icon.setTags(item.getTags());
               return icon;
             })
-        .collect(Collectors.toList());
+        .collect(Collectors.toSet());
   }
 
   Icon toIcon(IconInput input);

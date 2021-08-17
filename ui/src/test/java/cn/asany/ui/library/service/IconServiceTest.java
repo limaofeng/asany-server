@@ -3,7 +3,7 @@ package cn.asany.ui.library.service;
 import cn.asany.ui.TestApplication;
 import cn.asany.ui.resources.bean.Icon;
 import cn.asany.ui.resources.service.IconService;
-import java.util.List;
+import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,7 +24,7 @@ class IconServiceTest {
 
   @Test
   void findAllByTag() {
-    List<Icon> icons = iconService.findAllByTag(1L, "地图");
+    Set<Icon> icons = iconService.findAllByTag(1L, "地图");
     log.debug(String.format("map icons = %d", icons.size()));
     print(icons);
 
@@ -33,7 +33,7 @@ class IconServiceTest {
     print(icons);
   }
 
-  void print(List<Icon> icons) {
+  void print(Set<Icon> icons) {
     icons.stream()
         .forEach(
             item -> {

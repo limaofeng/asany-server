@@ -11,6 +11,7 @@ import cn.asany.ui.resources.bean.Icon;
 import cn.asany.ui.resources.service.IconService;
 import graphql.kickstart.tools.GraphQLMutationResolver;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 
@@ -34,7 +35,7 @@ public class LibraryGraphQLMutationResolver implements GraphQLMutationResolver {
     this.libraryService = libraryService;
   }
 
-  public List<Icon> importIcons(Long library, List<IconInput> icons) {
+  public Set<Icon> importIcons(Long library, List<IconInput> icons) {
     return this.iconService.importIcons(
         library, icons.stream().map(libraryConverter::toIcon).collect(Collectors.toList()));
   }

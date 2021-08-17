@@ -9,10 +9,7 @@ import cn.asany.ui.library.dao.LibraryItemDao;
 import cn.asany.ui.resources.bean.Icon;
 import cn.asany.ui.resources.bean.enums.IconType;
 import cn.asany.ui.resources.dao.IconDao;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.error.ValidationException;
@@ -39,8 +36,10 @@ public class IconService {
     this.libraryConverter = libraryConverter;
   }
 
-  public List<Icon> findAllByTag(Long libraryId, String tag) {
-    return this.libraryConverter.toIcons(this.libraryItemDao.findAllByTagWithIcon(libraryId, tag));
+  public Set<Icon> findAllByTag(Long libraryId, String tag) {
+    return this.libraryConverter.toIcons(
+        this.libraryItemDao.findAllByTagWithIcon(libraryId, tag).stream()
+            .collect(Collectors.toSet()));
   }
 
   public void delete(Long id) {
@@ -58,7 +57,7 @@ public class IconService {
     this.iconDao.delete(optionalIcon.get());
   }
 
-  public List<Icon> importIcons(Long libraryId, List<Icon> icons) {
+  public Set<Icon> importIcons(Long libraryId, List<Icon> icons) {
     long start = System.currentTimeMillis();
 
     Optional<Library> optional = this.libraryDao.findByIdWithIcon(libraryId);
@@ -130,7 +129,7 @@ public class IconService {
     returnVal.addAll(itemSaveEntities);
     returnVal.addAll(itemUpdateEntities);
     System.out.println("处理图标:" + icons.size() + "个\t times = " + times);
-    return this.libraryConverter.toIcons(returnVal);
+    return this.libraryConverter.toIcons(returnVal.stream().collect(Collectors.toSet()));
   }
 
   public Icon save(Long libraryId, Icon icon) {
@@ -194,7 +193,8 @@ public class IconService {
     return icon;
   }
 
-  public List<Icon> findAll(List<PropertyFilter> filters) {
-    return libraryConverter.toIcons(this.libraryItemDao.findAllByTagWithIcon(filters));
+  public Set<Icon> findAll(List<PropertyFilter> filters) {
+    return libraryConverter.toIcons(
+        this.libraryItemDao.findAllByTagWithIcon(filters).stream().collect(Collectors.toSet()));
   }
 }

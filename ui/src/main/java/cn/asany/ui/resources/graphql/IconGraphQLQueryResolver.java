@@ -5,7 +5,7 @@ import cn.asany.ui.resources.converter.IconConverter;
 import cn.asany.ui.resources.graphql.input.IconFilter;
 import cn.asany.ui.resources.service.IconService;
 import graphql.kickstart.tools.GraphQLQueryResolver;
-import java.util.List;
+import java.util.Set;
 import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.springframework.stereotype.Component;
@@ -21,7 +21,7 @@ public class IconGraphQLQueryResolver implements GraphQLQueryResolver {
     this.iconConverter = iconConverter;
   }
 
-  public List<Icon> icons(IconFilter filter) {
+  public Set<Icon> icons(IconFilter filter) {
     filter = ObjectUtil.defaultValue(filter, IconFilter::new);
     PropertyFilterBuilder builder = filter.getBuilder();
     //        if (filter.getLibrary_in() != null) {
