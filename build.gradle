@@ -39,7 +39,7 @@ allprojects {
     version = System.getenv().getOrDefault('RELEASE_VERSION', 'v0.0.0').replaceAll(/^v/, "")
     status = 'integration'
 
-   idea {
+    idea {
         module {
             outputDir file("$buildDir/classes/java/main")
             testOutputDir file("$buildDir/classes/java/test")
@@ -50,19 +50,13 @@ allprojects {
     eclipse {
         jdt {
             apt {
-                aptEnabled = true
-                reconcileEnabled = true
-                
                 genSrcDir = file('build/generated/sources/annotationProcessor/java/main')
                 genTestSrcDir = file('build/generated_tests')
-
-                processorOptions = compileJava.aptOptions.processorArgs
             }
         }
-
         classpath {
             file.beforeMerged { cp ->
-                cp.entries.add( new org.gradle.plugins.ide.eclipse.model.SourceFolder('build/generated/sources/annotationProcessor/java/main/', null) )
+                cp.entries.add(new org.gradle.plugins.ide.eclipse.model.SourceFolder('build/generated/sources/annotationProcessor/java/main/', null))
             }
         }
     }
@@ -106,6 +100,7 @@ subprojects {
         annotationProcessor "org.projectlombok:lombok:$LIB_LOMBOK_VER"
         annotationProcessor "org.mapstruct:mapstruct-processor:$LIB_MAPSTRUCT_VER"
         annotationProcessor "org.springframework.boot:spring-boot-configuration-processor:$LIB_SPRING_BOOT_VER"
+        annotationProcessor "org.projectlombok:lombok-mapstruct-binding:0.2.0"
         testCompileOnly "org.projectlombok:lombok:$LIB_LOMBOK_VER"
         testAnnotationProcessor "org.projectlombok:lombok:$LIB_LOMBOK_VER"
         testAnnotationProcessor "org.mapstruct:mapstruct-processor:$LIB_MAPSTRUCT_VER"

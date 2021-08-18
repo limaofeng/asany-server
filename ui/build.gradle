@@ -1,13 +1,13 @@
 apply plugin: 'jacoco'
 
 dependencies {
-    implementation project(":asany-base")
-    implementation project(":asany-security")
-    implementation project(":asany-storage-api")
-    implementation project(":asany-organization")
-    compileOnly "org.projectlombok:lombok:${LIB_LOMBOK_VER}"
-    annotationProcessor "org.projectlombok:lombok:$LIB_LOMBOK_VER"
-    testCompileOnly "org.projectlombok:lombok:${LIB_LOMBOK_VER}"
-    testAnnotationProcessor "org.projectlombok:lombok:$LIB_LOMBOK_VER"
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	implementation project(":asany-base")
+	implementation project(":asany-security")
+	implementation project(":asany-storage-api")
+	implementation project(":asany-organization")
+	compileOnly "org.projectlombok:lombok:${LIB_LOMBOK_VER}"
+	annotationProcessor "org.projectlombok:lombok:$LIB_LOMBOK_VER"
+	testCompileOnly "org.projectlombok:lombok:${LIB_LOMBOK_VER}"
+	testAnnotationProcessor "org.projectlombok:lombok:$LIB_LOMBOK_VER"
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }

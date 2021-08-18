@@ -4,19 +4,19 @@ apply plugin: 'org.hibernate.orm'
 apply plugin: 'jacoco'
 
 hibernate {
-    enhance {
-        enableLazyInitialization = true
-        enableDirtyTracking = true
-        enableAssociationManagement = true
-        enableExtendedEnhancement = false
-    }
+	enhance {
+		enableLazyInitialization = true
+		enableDirtyTracking = true
+		enableAssociationManagement = true
+		enableExtendedEnhancement = false
+	}
 }
 
 dependencies {
-    implementation "com.hankcs:hanlp:portable-1.7.1"
-    compileOnly "org.projectlombok:lombok:${LIB_LOMBOK_VER}"
-    annotationProcessor "org.projectlombok:lombok:$LIB_LOMBOK_VER"
-    testCompileOnly "org.projectlombok:lombok:${LIB_LOMBOK_VER}"
-    testAnnotationProcessor "org.projectlombok:lombok:$LIB_LOMBOK_VER"
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	implementation "com.hankcs:hanlp:portable-1.7.1"
+	compileOnly "org.projectlombok:lombok:${LIB_LOMBOK_VER}"
+	annotationProcessor "org.projectlombok:lombok:$LIB_LOMBOK_VER"
+	testCompileOnly "org.projectlombok:lombok:${LIB_LOMBOK_VER}"
+	testAnnotationProcessor "org.projectlombok:lombok:$LIB_LOMBOK_VER"
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
