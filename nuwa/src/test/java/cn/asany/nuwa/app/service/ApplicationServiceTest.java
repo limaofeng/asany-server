@@ -37,10 +37,6 @@ class ApplicationServiceTest {
   @Test
   void deleteApplication() {
     List<Application> applications = applicationService.findAll(PropertyFilter.builder().build());
-    applications.stream()
-        .forEach(
-            item -> {
-              applicationService.deleteApplication(item.getId());
-            });
+    applications.forEach(item -> applicationService.deleteApplication(item.getId()));
   }
 }

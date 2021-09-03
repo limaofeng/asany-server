@@ -1,0 +1,364 @@
+extend type Mutation {
+    #添加课程
+    createCourse(input: CourseInput): Course
+    #修改课程
+    updateCourse(id: ID!, input: CourseInput, merge: Boolean = true): Course
+    #删除课程
+    removeCourse(id: ID!): Boolean
+    #添加章节
+    createLesson(input: LessonInput): Lesson
+    #修改章节
+    updateLesson(id:ID!, merge: Boolean = true, input: LessonInput): Lesson
+    # 删除章节
+    removeLesson(id: ID!): Boolean
+    # 添加学习记录
+    updateLearningProgress(
+        #课程ID
+        course:ID!
+        #章节ID
+        lesson: ID!
+        # 学习人
+        learner: ID!
+        #学习进度 0 - 100
+        progress: Int!
+        # 学习人类型
+        type: LearnerType!): LessonRecord
+    # 添加学习人（在用户学习之后再添加当前用户为学习人）
+    createLearner(input: LearnerInput): Learner
+}
+
+extend type Query {
+    #根据ID查询课程详情
+    course(id: ID!): Course
+    # 查询所有课程
+    courses(filter: CourseFilter, page: Int= 1, pageSize:Int = 15): CourseConnection
+    # 查询学习人关联的课程
+    #  learners(filter: LearnerFilter, page: Int= 1, pageSize:Int = 15, orderBy: OrderBy): LearnerConnection
+    # 查询学习记录
+    lessonRecords(filter: LessonRecordFilter, page: Int= 1, pageSize:Int = 15, orderBy: OrderBy): LessonRecordConnection
+    # 查询章节详情
+    lesson(id: ID!): Lesson
+}
+
+input LessonRecordFilter {
+    employee: ID!
+    type: LearnerType
+    course: ID
+    lessonScheduleType: String
+}
+
+type Course{
+    id: ID
+    #课程名
+    name: String
+    #课程封面
+    cover: FileObject
+    #发布时间
+    publishDate: Date @dateFormat
+    #发布人
+    publishUser: Employee
+    #课程描述
+    introduction: String
+    #课程学习人
+    learners(filter: LearnerFilter, page: Int = 1, pageSize: Int = 15, orderBy: OrderBy): LearnerConnection
+    #课程章节
+    lessons: [Lesson]
+    #课程类型
+    type: String @dict
+    #置顶
+    top: Boolean
+    #时长
+    duration: Float
+    #提醒类型
+    notificationType: JSON
+    #互动控制
+    controlType :JSON
+    #学习进度
+    learningProgress(learner: ID): String
+    #学习记录
+    lessonRecords(filter: LessonRecordFilter!, page: Int= 1, pageSize:Int = 15, orderBy: OrderBy): LessonRecordConnection
+    #包含学生必修课和学习记录
+    compulsoryCourseAndRecords(filter: LearnerFilter,page: Int= 1, pageSize:Int = 15, orderBy: OrderBy): CourseConnection
+    # 学习人
+    learnerScopes: [LearnerScope]
+    # 评论
+    comments(filter: CommentFilter, page: Int = 1, pageSize: Int = 15, orderBy: OrderBy): CommentConnection
+    # 课程更新时间
+    updatedAt: Date @dateFormat
+    # 累计学习时间
+    totalLearningTime(employee: ID!): Float
+    # 必修人
+    # scopes(filter: LearnerScopeFilter,page: Int = 1, pageSize: Int = 15, orderBy: OrderBy): LearnerScopeConnection
+    #是否加入
+    hasJoined(employee: ID!): Boolean
+}
+type Learner{
+    id: ID
+    #学习者类型
+    type: LearnerType
+    #课程
+    course: Course
+    #订阅人关联的用户
+    employee: Employee
+    #是否学习完成
+    learningProgress: Int
+    # 学习时长
+    lengthStudy: Float
+    # 最后学习时间
+    lastStudyTime(page: Int = 1, pageSize: Int = 15):Date @dateFormat
+
+}
+type LessonRecord{
+    id: ID
+    course:Course
+    lesson:Lesson
+    learner: Learner
+    lessonLearningProgress: Int
+    lessonScheduleType: LessonScheduleType
+}
+
+type LearnerScope {
+    id: ID
+    # 课程
+    course: Course
+    # 作用范围
+    scope: String
+    # 是否学习完成
+    learningProgress: Int
+    # 学习时长
+    lengthStudy: Float
+    # 最后学习时间
+    lastStudyTime(page: Int = 1, pageSize: Int = 15):Date @dateFormat
+    #学习人
+    employee: Employee
+}
+type Lesson{
+    id:ID
+    #章节类型
+    lessonType: LessonType
+    #课程
+    course: Course
+    #内容
+    content: String
+    #标题
+    title: String
+    # 章节文件
+    attachments: [FileObject]
+    # 章节类型
+    category: ArticleCategory
+    # 栏目
+    channels: [ArticleChannel]
+    # 章节时长(通过课程的总时间取平均值)
+    lessonDuration: Float
+    # 章节的进度
+    lessonProgress(employee: ID!): Float
+
+}
+input CourseInput {
+    #名称
+    name:String!
+    #课程分类ID
+    type: String
+    #简介
+    introduction: String
+    #学习时长
+    duration: Float
+    #学习人范围
+    learnerScope: [String]
+    #封面
+    cover: FileObject
+    #发布人
+    publishUser: ID
+    #消息提醒类型
+    notificationType: JSON
+    #互动控制
+    controlType: JSON
+    #置顶
+    top: Boolean
+}
+
+input LearnerScopeInput {
+    scope: [String]
+}
+
+input LessonRecordInput {
+    #课程ID
+    course:ID!
+    #章节ID
+    lesson: ID!
+    #学习人
+    employee: ID!
+    #学习进度
+    lessonLearningProgress: Int
+
+}
+input LearnerInput{
+    #    id:ID
+    #学习人类型
+    type: LearnerType
+    #用户ID
+    employee: ID
+    #课程ID
+    course: ID
+}
+
+input LessonInput {
+    # 课程ID
+    course: ID!
+    # 章节类型
+    lessonType: LessonType!
+    # 标题
+    title: String
+    #内容
+    content: String
+    # 栏目
+    channels: [ID]
+    # 文章类型
+    category: ArticleCategory!
+    # 章节附件
+    attachments: [FileObject]
+    # 组织
+    organization: String!
+}
+#章节类型
+enum LessonType {
+    #图片
+    image
+    #文件
+    file
+    #视频
+    video
+}
+
+enum  LearnerType{
+    #必修课程
+    compulsory
+    #选修
+    elective
+}
+
+enum LessonScheduleType{
+    #已完成
+    completed
+    #未开始
+    unStart
+    #进行中
+    processing
+}
+
+input CourseFilter {
+    # 类型ID
+    type: String
+    # 课程名
+    name: String
+    # 发布人
+    publishUser: ID
+    # 发布时间 例: 2019-09-11
+    publishDate: String
+    # 用户ID
+    learner: ID
+    # 课程学习类型
+    learnerType: LearnerType
+    # 学习者用户名
+    userName: String
+    # 查询用户可以选修的课程
+    electiveEmployee: ID
+    # 查询用户已经选修或者必修的课程
+    learnerAndType: LearnerAndTypeInput
+}
+
+input LearnerAndTypeInput{
+    learner: ID
+    learnerType: LearnerType
+}
+
+input LearnerFilter {
+    #用户ID
+    employee: ID
+    #课程类型
+    type: LearnerType
+    #姓名
+    name: String
+    #部门
+    department: ID
+    # 是否完成
+    learningProgress: Int
+}
+type CourseConnection {
+    # 总数据条数
+    totalCount: Int
+    # 每页显示条数
+    pageSize: Int
+    # 总页数
+    totalPage: Int
+    # 当前页
+    currentPage: Int
+    edges: [CourseEdge]
+    pageInfo: PageInfo
+
+}
+type LessonRecordConnection {
+    # 总数据条数
+    totalCount: Int
+    # 每页显示条数
+    pageSize: Int
+    # 总页数
+    totalPage: Int
+    # 当前页
+    currentPage: Int
+    edges: [LessonRecordEdge]
+    pageInfo: PageInfo
+}
+type LessonRecordEdge {
+    cursor: String
+    node: LessonRecord
+}
+
+type CourseEdge {
+    cursor: String
+    node: Course
+}
+
+type LearnerEdge {
+    cursor: String
+    node: Learner
+}
+
+type LearnerConnection {
+    # 总数据条数
+    totalCount: Int
+    # 每页显示条数
+    pageSize: Int
+    # 总页数
+    totalPage: Int
+    # 当前页
+    currentPage: Int
+    edges: [LearnerEdge]
+    pageInfo: PageInfo
+}
+
+input LearnerScopeFilter {
+    course: ID!
+    name: String
+    employeeId: ID
+    department: ID
+    learningProgress: Int
+}
+
+type LearnerScopeConnection {
+    # 总数据条数
+    totalCount: Int
+    # 每页显示条数
+    pageSize: Int
+    # 总页数
+    totalPage: Int
+    # 当前页
+    currentPage: Int
+    edges: [LearnerScopeEdge]
+    pageInfo: PageInfo
+}
+
+type LearnerScopeEdge {
+    cursor: String
+    node: LearnerScope
+}

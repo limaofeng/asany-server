@@ -20,6 +20,7 @@ include ":asany-shanhai",
         ":asany-storage",
         ":asany-nuwa",
         ":asany-ui",
+        ":asany-cms",
         ":asany-boot"
 
 // 基础
@@ -38,5 +39,7 @@ project(':asany-storage').projectDir = "$rootDir/storage" as File
 project(':asany-nuwa').projectDir = "$rootDir/nuwa" as File
 
 project(':asany-ui').projectDir = "$rootDir/ui" as File
+// 内容管理
+project(':asany-cms').projectDir = "$rootDir/cms" as File
 // 启动
 project(':asany-boot').projectDir = "$rootDir/boot" as File

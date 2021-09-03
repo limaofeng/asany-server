@@ -1,0 +1,110 @@
+extend type Query {
+    # 查询评论
+    comments(targetType: CommentTargetType!, targetId:String, filter: CommentFilter, page: Int = 1, pageSize: Int = 15, orderBy: OrderBy): CommentConnection
+}
+
+type Mutation {
+    # 修改评论
+    updateComment(id:ID!, merge:Boolean= true, input:CommentInput!):Comment
+    # 添加评论
+    createComment(targetType: CommentTargetType!, targetId: ID!, input:CommentInput!): Comment
+    # 删除评论
+    removeComment(id: ID!): Boolean
+}
+
+input CommentFilter {
+    #第一级评论，查询 forComment 为空的评论
+    forComment_isEmpty: Boolean
+    # forComment 为 null 时，查询所有，为0时查询第一级，其他值时查询该文章下所有一级评论
+    forComment:ID
+    # 根据ID查询，查询该文章下所有子集
+    id_startsWith: ID
+    # 查询 ID 不包含
+    id_ne: ID
+    #用户ID
+    uid: ID
+    #评论状态
+    status: String
+}
+
+#评论状态
+enum CommentStatus{
+    #等待检测或审核
+    pending
+    #审核通过
+    published
+    # 评论被删除
+    removed
+    # 审批不通过
+    spam
+    #等待审批
+    unapproved
+}
+
+type CommentConnection {
+    # 总数据条数
+    totalCount: Int
+    # 每页显示条数
+    pageSize: Int
+    # 总页数
+    totalPage: Int
+    # 当前页
+    currentPage: Int
+    edges: [CommentEdge]
+    pageInfo: PageInfo
+}
+
+type CommentEdge {
+    cursor: String
+    node: Comment
+}
+
+#评论的类型
+enum CommentTargetType{
+    #文章
+    article
+    #会议
+    meeting
+    #课程
+    section
+}
+enum CommentStarType{
+    #点赞
+    likes
+}
+
+input CommentInput{
+    #评论标题
+    title:String
+    #评论内容
+    content:String!
+    #引用的评论
+    forComment:ID
+    #用户ID
+    uid:ID!
+}
+
+type Comment {
+    # 评论的ID
+    id:ID
+    # 评论标题
+    title:String
+    # 评论内容
+    content:String
+    # 评论状态
+    status: CommentStatus
+    # 评论的类型
+    targetType: CommentTargetType
+    # 引用的评论ID
+    forComment:Comment
+    # 该评论的评论
+    comments(filter: CommentFilter): [Comment]
+    # 用户ID
+    user: Employee
+    # 创建时间
+    createdAt:Date @dateFormat
+    # 统计计数，是否点赞
+    starrable(starType: CommentStarType!): Starrable
+    # 评论完整路径
+    path: String
+}
