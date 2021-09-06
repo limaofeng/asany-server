@@ -9,6 +9,7 @@ import cn.asany.organization.core.service.OrganizationService;
 import cn.asany.organization.employee.service.EmployeeService;
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import java.util.List;
+import java.util.Optional;
 import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +37,7 @@ public class OrganizationGraphQLQueryResolver implements GraphQLQueryResolver {
     return organizationService.findAll(builder.build());
   }
 
-  public Organization organization(Long id) {
+  public Optional<Organization> organization(Long id) {
     return organizationService.get(id);
   }
 }

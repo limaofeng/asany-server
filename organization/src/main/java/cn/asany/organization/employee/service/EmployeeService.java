@@ -833,16 +833,6 @@ public class EmployeeService {
     return department;
   }
 
-  private Organization getEmployeeOrganizatio(Organization organization) {
-    organization = organizationService.get(organization.getId());
-    return Organization.builder()
-        .id(organization.getId())
-        .name(organization.getName())
-        .multiSectoral(organization.getMultiSectoral())
-        .multiSectoralNumber(organization.getMultiSectoralNumber())
-        .build();
-  }
-
   //    public Long getTouristJobNumber() {
   //        long touristId = this.userDao.getTouristId();
   //        this.userDao.updateTouristId();

@@ -29,7 +29,9 @@ import org.jfantasy.framework.dao.BaseBusEntity;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "ORG_ORGANIZATION")
+@Table(
+    name = "ORG_ORGANIZATION",
+    uniqueConstraints = @UniqueConstraint(columnNames = "CODE", name = "UK_ORGANIZATION_CODE"))
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "children", "employees"})
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Organization extends BaseBusEntity implements Ownership {
@@ -52,7 +54,6 @@ public class Organization extends BaseBusEntity implements Ownership {
   /** 机构描述信息 */
   @Column(name = "DESCRIPTION", length = 150)
   private String description;
-
   /** 备注 */
   @Column(name = "remark", length = 300)
   private String remark;
