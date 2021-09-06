@@ -11,7 +11,7 @@ import org.jfantasy.framework.dao.BaseBusEntity;
  * @author limaofeng
  */
 @Data
-@EqualsAndHashCode(of = "id")
+@EqualsAndHashCode(of = "id", callSuper = false)
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

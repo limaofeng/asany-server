@@ -7,10 +7,7 @@ import cn.asany.cms.learn.bean.enums.LessonScheduleType;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import javax.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
 /**
@@ -24,6 +21,7 @@ import org.jfantasy.framework.dao.BaseBusEntity;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "CMS_COURSE_LESSON_RECORD")
 @JsonIgnoreProperties({"hibernateLazyInitializer"})

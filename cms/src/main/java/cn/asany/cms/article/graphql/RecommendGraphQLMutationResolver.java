@@ -13,11 +13,11 @@ public class RecommendGraphQLMutationResolver implements GraphQLMutationResolver
   @Autowired private RecommendService service;
 
   public Recommend createRecommend(RecommendInput input) {
-    return service.createRecommend(input.build());
+    return service.createRecommend(input);
   }
 
   public Recommend updateRecommend(Long id, Boolean merge, RecommendInput input) {
-    return service.updateRecommend(id, merge, input.build());
+    return service.updateRecommend(id, merge, input);
   }
 
   public Boolean deleteRecommend(Long id) {

@@ -1,14 +1,12 @@
 package cn.asany.cms.article.graphql.resolvers;
 
-import cn.asany.cms.article.bean.ArticleTag;
+import cn.asany.cms.article.bean.ArticleChannel;
 import cn.asany.cms.article.graphql.converters.ArticleChannelConverter;
-import cn.asany.cms.article.graphql.types.ArticleChannel;
 import cn.asany.cms.article.graphql.types.Starrable;
-import cn.asany.cms.article.service.ArticleTagService;
+import cn.asany.cms.article.service.ArticleChannelService;
 import cn.asany.cms.permission.bean.Permission;
 import graphql.kickstart.tools.GraphQLResolver;
 import java.util.List;
-import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -20,7 +18,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class ArticleChannelGraphQLResolver implements GraphQLResolver<ArticleChannel> {
 
-  @Autowired private ArticleTagService articleTagService;
+  @Autowired private ArticleChannelService articleChannelService;
 
   @Autowired private ArticleChannelConverter articleChannelConverter;
 
@@ -54,10 +52,5 @@ public class ArticleChannelGraphQLResolver implements GraphQLResolver<ArticleCha
     // String.valueOf(channel.getId())));
     //        }
     return channel.getPermissions();
-  }
-
-  public ArticleChannel parent(ArticleChannel channel) {
-    Optional<ArticleTag> articleTag = articleTagService.get(channel.getId());
-    return articleTag.map(tag -> articleChannelConverter.toChannel(tag.getParent())).orElse(null);
   }
 }

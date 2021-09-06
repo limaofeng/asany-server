@@ -3,24 +3,18 @@ package cn.asany.cms.article.graphql.resolvers;
 import cn.asany.cms.article.bean.Article;
 import cn.asany.cms.article.bean.Content;
 import cn.asany.cms.article.bean.enums.ArticleCategory;
-import cn.asany.cms.article.bean.enums.ArticleType;
 import cn.asany.cms.article.bean.enums.CommentTargetType;
 import cn.asany.cms.article.graphql.CommentGraphQLQueryResolver;
 import cn.asany.cms.article.graphql.converters.ArticleChannelConverter;
 import cn.asany.cms.article.graphql.enums.ArticleStarType;
 import cn.asany.cms.article.graphql.inputs.CommentFilter;
 import cn.asany.cms.article.graphql.inputs.ContentFormat;
-import cn.asany.cms.article.graphql.type.IContent;
-import cn.asany.cms.article.graphql.types.ArticleChannel;
 import cn.asany.cms.article.graphql.types.CommentConnection;
 import cn.asany.cms.article.graphql.types.Starrable;
-import cn.asany.cms.article.util.ClassConverts;
 import cn.asany.cms.permission.bean.Permission;
 import graphql.kickstart.tools.GraphQLResolver;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.jfantasy.framework.dao.OrderBy;
-import org.jfantasy.framework.error.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -34,30 +28,31 @@ public class ArticleGraphQLResolver implements GraphQLResolver<Article> {
   @Autowired private CommentGraphQLQueryResolver resolver;
   @Autowired private ArticleChannelConverter articleChannelConverter;
 
-  public IContent content(Article article, ContentFormat format) {
-    if (article.getContent() == null
-        || article.getContent().getText() == null
-        || article.getContent().getType() == null) {
-      return null;
-    }
-    Content content = article.getContent();
-    switch (content.getType()) {
-      case file:
-        IContent iContent = ClassConverts.toContent(article.getType(), content.getType(), content);
-        return iContent;
-      case json:
-        if (article.getType() == ArticleType.picture) {
-          // 图片类型
-          return ClassConverts.toContent(article.getType(), content.getType(), content);
-        }
-      case html:
-        return ClassConverts.toContent(article.getType(), content.getType(), content);
-      case link:
-        return ClassConverts.toContent(article.getType(), content.getType(), content);
-      case markdown:
-        throw new ValidationException("暂不支持 markdown 格式");
-    }
-    return null;
+  public Content content(Article article, ContentFormat format) {
+    //    if (article.getContent() == null
+    //        || article.getContent().getText() == null
+    //        || article.getContent().getType() == null) {
+    //      return null;
+    //    }
+    //    Content content = article.getContent();
+    //    switch (content.getType()) {
+    //      case file:
+    //        IContent iContent = ClassConverts.toContent(article.getType(), content.getType(),
+    // content);
+    //        return iContent;
+    //      case json:
+    //        if (article.getType() == ArticleType.picture) {
+    //          // 图片类型
+    //          return ClassConverts.toContent(article.getType(), content.getType(), content);
+    //        }
+    //      case html:
+    //        return ClassConverts.toContent(article.getType(), content.getType(), content);
+    //      case link:
+    //        return ClassConverts.toContent(article.getType(), content.getType(), content);
+    //      case markdown:
+    //        throw new ValidationException("暂不支持 markdown 格式");
+    //    }
+    return article.getContent();
   }
 
   public Starrable starrable(final Article article, ArticleStarType starType) {
@@ -112,12 +107,6 @@ public class ArticleGraphQLResolver implements GraphQLResolver<Article> {
   //        }
   //        return organizationGrpcInvoke.employee(Long.valueOf(article.getUpdator()));
   //    }
-
-  public List<ArticleChannel> channels(Article article) {
-    return article.getChannels().stream()
-        .map(item -> articleChannelConverter.toChannel(item))
-        .collect(Collectors.toList());
-  }
 
   public CommentConnection comments(
       Article article, CommentFilter filter, int page, int pageSize, OrderBy orderBy) {

@@ -52,44 +52,14 @@ extend type Query {
     recommend(id:ID!): Recommend
 }
 
-#type Employee {
-#    id: ID
-#    name: String
-##    starredArticleChannels(starType: ArticleChannelStarType!): [ArticleChannel]
-##    starredArticles(starType: ArticleStarType!, filter: ArticleFilter = {}, page: Int = 1, pageSize: Int = 15, orderBy: OrderBy): ArticleConnection
+#enum ArticlePermissionKey {
+#    # 查看人
+#    viewer,
+#    # 下载人
+#    downloader,
+#    # 打印人
+#    printer
 #}
-type Employee {
-    id: ID
-}
-
-
-enum SecurityType {
-    #部门
-    department
-    #员工
-    employee
-    #群组
-    employeeGroup
-    #岗位
-    job
-    #组织
-    organization
-    #职务
-    position
-    #角色
-    role
-    #登录用户
-    user
-}
-
-enum ArticlePermissionKey {
-    # 查看人
-    viewer,
-    # 下载人
-    downloader,
-    # 打印人
-    printer
-}
 
 input ArticleChannelCreateInput {
     # 栏目名称
@@ -107,15 +77,7 @@ input ArticleChannelCreateInput {
     # 组织
     organization: ID!
     # 授予权限
-    permissions: [PermissionInput]
-    # ​提醒方式​
-    promptType: PromptType
-    #​ 评论是否审核
-    isCommentApprove: Boolean
-    # 流程key
-    approveId: String
-    # 展示模版
-    displayTemplate: [FieldValueInput]
+#    permissions: [PermissionInput]
     # 元数据
     meta: MetaData
 }
@@ -142,15 +104,7 @@ input ArticleChannelUpdateInput {
     # 组织
     organization: ID!
     # 授予权限
-    permissions: [PermissionInput]
-    # ​提醒方式​
-    promptType: PromptType
-    #​ 评论是否审核
-    isCommentApprove: Boolean
-    # 流程key
-    approveId: String
-    # 展示模版
-    displayTemplate: [FieldValueInput]
+#    permissions: [PermissionInput]
     # 元数据
     meta: MetaData
 }
@@ -175,7 +129,7 @@ input ArticleFilter {
     # 发布时间
     publishedAt: String
     # 发布人
-    creator: String
+    createdBy: String
     # 文章类型
     category: ArticleCategory
     # 用户id
@@ -204,15 +158,6 @@ type ArticleEdge {
     node: Article
 }
 
-enum ArticleTagCategory {
-    #标签
-    tag
-    #栏目
-    channel
-    #班组学习
-    bzxx
-}
-
 enum ContentFormat {
     html
 }
@@ -234,7 +179,8 @@ type Meta {
 
 type ArticleChannel {
     id: ID!
-    url: String
+    # 编码
+    code: String
     # 名称
     name: String
     # 描述
@@ -249,35 +195,14 @@ type ArticleChannel {
     parent: ArticleChannel
     meta: Meta
     # 栏目 / 频道 关注
-    starrable: Starrable
-    # ​提醒方式​
-    promptType: PromptType
-    #​ 评论是否审核
-    isCommentApprove: Boolean
-    # 流程
-    process: Process
+#    starrable: Starrable
     # 展示模版
-    displayTemplate: [FieldValue]
+#    displayTemplate: [FieldValue]
     # 权限设置
-    permissions: Permission
-
-    createdAt: Date @dateFormat
-    updatedAt: Date @dateFormat
+#    permissions: Permission
+    createdAt: Date
+    updatedAt: Date
     children:[ArticleChannel]
-}
-
-type Process {
-    name: String
-    key: String
-}
-
-enum PromptType{
-    MAIL
-}
-type FieldValue{
-    name: String
-    code: String
-    value: String
 }
 
 # 支持层级，亦可栏目使用
@@ -293,10 +218,8 @@ type ArticleTag {
     # 排序
     sort: Int
     meta: Meta
-    createdAt: Date @dateFormat
-    updatedAt: Date @dateFormat
-    #类型
-    category:ArticleTagCategory
+    createdAt: Date
+    updatedAt: Date
 }
 
 # 文章类型, 比如： 图片， 文本 等。
@@ -328,15 +251,13 @@ type Article {
     # 分类
     category: ArticleCategory!
     # 作者
-    author: Employee
-    # 发布人
-    publisher: Employee
+    author: String
     # 发布时间
-    publishedAt: Date @dateFormat
+    publishedAt: Date
     # 内容
     content(format: ContentFormat): Content
     #查询评论
-    comments(filter: CommentFilter, page: Int = 1, pageSize: Int = 15, orderBy: OrderBy): CommentConnection
+#    comments(filter: CommentFilter, page: Int = 1, pageSize: Int = 15, orderBy: OrderBy): CommentConnection
     # 频道
     channels: [ArticleChannel]
     # 标签
@@ -354,31 +275,20 @@ type Article {
     # 附件
     attachments: [FileObject]
     # 统计计数
-    # 统计计数
-    starrable(starType: ArticleStarType!): Starrable!
+#    starrable(starType: ArticleStarType!): Starrable!
     # 权限设置
     permissions: Permission
-    creator: String
-    modifier: String
-    createdAt: Date @dateFormat
-    updatedAt: Date @dateFormat
+    createdBy: Int
+    updatedBy: Int
+    createdAt: Date
+    updatedAt: Date
     # 文章类型
     type:ArticleType
-    # 附件
-    file:FileObject
-}
-
-type ValidityDate{
-    # 开始
-    startDate: Date @dateFormat
-    # 结束
-    endDate: Date @dateFormat
 }
 
 # 文章内容
 interface Content {
     id: ID
-    type: ContentType
 }
 
 enum ContentType {
@@ -388,37 +298,7 @@ enum ContentType {
 # html格式内容
 type HtmlContent implements Content {
     id: ID
-    type: ContentType
-    html: String
-}
-# 图片格式内容
-type PictureContent implements Content {
-    id: ID
-    type: ContentType
-    pictures: [ContentPicture]
-}
-# 视频格式内容
-type VideoContent implements Content {
-    id: ID
-    type: ContentType
-    video: ContentVideo
-}
-
-# 链接格式内容
-type LinkContent implements Content {
-    id: ID
-    type: ContentType
-    url: String
-}
-
-type ContentVideo {
-    id: ID
-    video: FileObject
-}
-
-type ContentPicture {
-    picture: FileObject
-    digest: String
+    text: String
 }
 
 enum ArticleType{
@@ -493,7 +373,7 @@ input ArticleCreateInput {
     # 元数据
     meta: MetaData
     # 作者
-    author: ID
+    author: String
 }
 
 input MetaData{
@@ -549,7 +429,7 @@ input ArticleUpdateInput {
     # 附件
     attachments: [FileObject]
     # 作者
-    author: ID
+    author: String
     # 文章类型
     type:ArticleType
     # 有效期限 true 永久 false 短期
@@ -597,8 +477,6 @@ input ArticleChannelFilter {
     path_startsWith: String
     # 父级
     parent: ID
-    #标签
-    category: ArticleTagCategory
     # 用户id
     viewer: ID
     # 用户创建id
@@ -614,18 +492,12 @@ input PermissionInput {
 input RecommendFilter{
     # 名称
     name: String
-    # 是否启用流程
-    enableProcess: Boolean
 }
 input RecommendCreateInput{
     # 名称
     name: String!
     # 描述
     description: String
-    # 是否启用流程 true 启用，false 不启用
-    enableProcess: Boolean
-    # 流程key
-    processId: String
     # 编码
     code: String
     # 组织
@@ -637,10 +509,6 @@ input RecommendUpdateInput{
     name: String!
     # 描述
     description: String
-    # 是否启用流程 true 启用，false 不启用
-    enableProcess: Boolean
-    # 流程id
-    processId: String
     # 编码
     code: String
     # 组织
@@ -674,10 +542,6 @@ type Recommend{
     name: String
     # 描述
     description: String
-    # 是否启用流程 true 启用，false 不启用
-    enableProcess: Boolean
-    # 流程
-    process: Process
     # 编码
     code: String
 }
@@ -692,8 +556,4 @@ type PageInfo {
     startCursor: String
     # 数据页最后一个游标
     endCursor: String
-}
-
-type Starrable {
-    id: ID
 }

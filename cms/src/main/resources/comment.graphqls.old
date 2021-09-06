@@ -102,7 +102,7 @@ type Comment {
     # 用户ID
     user: Employee
     # 创建时间
-    createdAt:Date @dateFormat
+    createdAt:Date
     # 统计计数，是否点赞
     starrable(starType: CommentStarType!): Starrable
     # 评论完整路径

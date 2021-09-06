@@ -1,12 +1,13 @@
 package cn.asany.cms.article.graphql.inputs;
 
-import cn.asany.cms.article.bean.enums.ArticleCategory;
 import cn.asany.cms.article.bean.enums.ArticleStatus;
 import cn.asany.cms.article.service.ArticleService;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 import lombok.Data;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
@@ -84,11 +85,6 @@ public class ArticleFilter {
     List<String> publishedAts = Arrays.asList(publishDateArray);
     builder.between(
         "publishedAt", format.parse(publishedAts.get(0)), format.parse(publishedAts.get(1)));
-  }
-
-  @JsonProperty("category")
-  public void setCategory(ArticleCategory category) {
-    builder.equal("category", category);
   }
 
   @JsonProperty("viewer")

@@ -14,14 +14,12 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Hibernate;
-import org.htmlcleaner.TagNode;
 import org.jfantasy.framework.dao.OrderBy;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.jackson.JSON;
 import org.jfantasy.framework.util.common.DateUtil;
 import org.jfantasy.framework.util.common.StringUtil;
-import org.jfantasy.framework.util.htmlcleaner.HtmlCleanerUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.Example;
@@ -159,18 +157,18 @@ public class ArticleService {
   /**
    * 设置文章摘要，如果文章存在摘要，则跳过
    *
-   * @param article
-   * @return
+   * @param article 文章
+   * @return 文章
    */
   private Article updateContentAndSummary(Article article) {
-    if (StringUtil.isBlank(article.getSummary())
-        && StringUtil.isNotBlank(article.getContent())
-        && article.getContent().getText() != null) {
-      TagNode node = HtmlCleanerUtil.htmlCleaner(article.getContent().getText());
-      String content = node.getText().toString().trim().replace("\n", "");
-      String summary = content.substring(0, Math.min(content.length(), 10));
-      article.setSummary(summary);
-    }
+    //    if (StringUtil.isBlank(article.getSummary())
+    //        && StringUtil.isNotBlank(article.getContent())
+    //        && article.getContent() != null) {
+    //      TagNode node = HtmlCleanerUtil.htmlCleaner(article.getContent());
+    //      String content = node.getText().toString().trim().replace("\n", "");
+    //      String summary = content.substring(0, Math.min(content.length(), 10));
+    //      article.setSummary(summary);
+    //    }
     return article;
   }
 

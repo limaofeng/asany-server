@@ -7,9 +7,6 @@ import cn.asany.cms.learn.dao.CourseDao;
 import cn.asany.cms.learn.dao.LearnerScopeDao;
 import cn.asany.cms.learn.dao.LessonRecordDao;
 import cn.asany.cms.learn.graphql.inputs.CourseInput;
-import cn.asany.storage.api.FileObject;
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.Unirest;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.collections.CollectionUtils;
@@ -19,7 +16,6 @@ import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.util.common.DateUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,9 +32,6 @@ public class CourseService {
 
   @Autowired private LearnerScopeDao learnerScopeDao;
   @Autowired private LessonRecordDao lessonRecordDao;
-
-  @Value("${storage.url}")
-  private String requestUrl;
 
   public Course findById(Long id) {
     return courseDao.findById(id).orElse(null);
@@ -158,22 +151,5 @@ public class CourseService {
     learnerScopes.forEach(learnerScope -> learnerScopeDao.delete(learnerScope));
     courseDao.deleteById(id);
     return true;
-  }
-
-  private FileObject getFile(String fileIds) {
-    if (StringUtils.isNotBlank(fileIds)) {
-      // 如果存在多个文件使用“,”切割
-      String[] filedArray = fileIds.split(",");
-      for (String fileId : filedArray) {
-        try {
-          HttpResponse<FileObject> response =
-              Unirest.get(requestUrl + "/files/" + fileId).asObject(FileObject.class);
-          return response.getBody();
-        } catch (Exception e) {
-          e.printStackTrace();
-        }
-      }
-    }
-    return null;
   }
 }

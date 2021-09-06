@@ -1,7 +1,6 @@
 package cn.asany.cms.article.service;
 
 import cn.asany.cms.article.bean.ArticleTag;
-import cn.asany.cms.article.bean.enums.ArticleTagCategory;
 import cn.asany.cms.article.dao.ArticleTagDao;
 import java.util.List;
 import java.util.Optional;
@@ -62,7 +61,7 @@ public class ArticleTagService {
     return this.tagDao.update(tag, patch);
   }
 
-  public ArticleTag save(String name, ArticleTagCategory category) {
+  public ArticleTag save(String name) {
     ArticleTag tag = new ArticleTag();
     //        try {
     //            tag.setCode(PinyinUtils.getAll(name, "-"));
@@ -71,7 +70,6 @@ public class ArticleTagService {
     //            tag.setCode(name);
     //        }
     tag.setName(name);
-    tag.setCategory(category);
     tag = this.tagDao.save(tag);
     tag.setPath(
         tag.getParent() == null

@@ -10,12 +10,11 @@ import javax.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.framework.lucene.annotations.IndexEmbedBy;
 
 /**
- * 文章 - 标签
+ * 文章 - 频道 / 栏目
  *
  * @author limaofeng
  */
@@ -26,15 +25,13 @@ import org.jfantasy.framework.lucene.annotations.IndexEmbedBy;
 @AllArgsConstructor
 @Entity
 @Table(
-    name = "CMS_ARTICLE_TAG",
-    uniqueConstraints = @UniqueConstraint(name = "UK_ARTICLE_TAG_CODE", columnNames = "CODE"))
+    name = "CMS_ARTICLE_CHANNEL",
+    uniqueConstraints = @UniqueConstraint(name = "UK_ARTICLE_CHANNEL_CODE", columnNames = "CODE"))
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class ArticleTag extends BaseBusEntity {
+public class ArticleChannel extends BaseBusEntity {
 
   @Id
   @Column(name = "ID", length = 10)
-  @GeneratedValue(generator = "fantasy-sequence")
-  @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
   /** 编码 */
   @Column(name = "CODE", nullable = false, length = 100)
@@ -66,8 +63,8 @@ public class ArticleTag extends BaseBusEntity {
   /** 上级栏目 */
   @JsonProperty("parent_id")
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "PID", foreignKey = @ForeignKey(name = "FK_ARTICLE_TAG_PARENT"))
-  private ArticleTag parent;
+  @JoinColumn(name = "PID", foreignKey = @ForeignKey(name = "FK_ARTICLE_CHANNEL_PARENT"))
+  private ArticleChannel parent;
 
   /** 下级栏目 */
   @OneToMany(
@@ -76,7 +73,7 @@ public class ArticleTag extends BaseBusEntity {
       cascade = {CascadeType.REMOVE})
   @OrderBy("sort ASC")
   @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-  private List<ArticleTag> children;
+  private List<ArticleChannel> children;
 
   @Transient private List<Permission> permissions;
 }

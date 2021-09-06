@@ -1,7 +1,6 @@
 package cn.asany.cms.article.graphql.inputs;
 
 import cn.asany.cms.article.bean.MetaData;
-import cn.asany.cms.article.bean.enums.ArticleCategory;
 import cn.asany.cms.article.bean.enums.ArticleStatus;
 import cn.asany.cms.article.bean.enums.ArticleType;
 import cn.asany.storage.api.FileObject;
@@ -32,7 +31,6 @@ public class ArticleInput {
   private String organization;
   private Date publishedAt;
   private List<FileObject> attachments;
-  private ArticleCategory category;
   private List<PermissionInput> permissions;
   private Boolean validity;
   private Date validityStartDate;

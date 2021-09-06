@@ -6,10 +6,7 @@ import java.util.Date;
 import java.util.List;
 import javax.persistence.*;
 import javax.tools.FileObject;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
@@ -18,6 +15,7 @@ import org.jfantasy.framework.dao.BaseBusEntity;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "CMS_SPECIAL")
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)

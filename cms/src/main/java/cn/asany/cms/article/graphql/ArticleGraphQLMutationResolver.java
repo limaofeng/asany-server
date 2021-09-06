@@ -1,8 +1,8 @@
 package cn.asany.cms.article.graphql;
 
 import cn.asany.cms.article.bean.Article;
+import cn.asany.cms.article.bean.ArticleChannel;
 import cn.asany.cms.article.bean.ArticleTag;
-import cn.asany.cms.article.bean.enums.ArticleTagCategory;
 import cn.asany.cms.article.bean.enums.ContentType;
 import cn.asany.cms.article.graphql.converters.ArticleChannelConverter;
 import cn.asany.cms.article.graphql.converters.ArticleConverter;
@@ -10,7 +10,7 @@ import cn.asany.cms.article.graphql.inputs.ArticleChannelInput;
 import cn.asany.cms.article.graphql.inputs.ArticleInput;
 import cn.asany.cms.article.graphql.inputs.ArticleTagInput;
 import cn.asany.cms.article.graphql.inputs.ContentInput;
-import cn.asany.cms.article.graphql.types.ArticleChannel;
+import cn.asany.cms.article.service.ArticleChannelService;
 import cn.asany.cms.article.service.ArticleService;
 import cn.asany.cms.article.service.ArticleTagService;
 import graphql.kickstart.tools.GraphQLMutationResolver;
@@ -31,6 +31,7 @@ public class ArticleGraphQLMutationResolver implements GraphQLMutationResolver {
   @Autowired private ArticleConverter articleConverter;
   @Autowired private ArticleService articleService;
   @Autowired private ArticleTagService articleTagService;
+  @Autowired private ArticleChannelService articleChannelService;
   @Autowired protected Environment environment;
   /**
    * 保存文章
@@ -130,21 +131,20 @@ public class ArticleGraphQLMutationResolver implements GraphQLMutationResolver {
    * @return
    */
   public ArticleChannel createChannel(ArticleChannelInput input) {
-    ArticleTag channel = articleChannelConverter.toChannel(input);
-    channel.setCategory(ArticleTagCategory.channel);
+    ArticleChannel channel = articleChannelConverter.toChannel(input);
     Long parent = input.getParent();
     if (parent != null) {
-      ArticleTag articleTag = articleTagService.findOne(parent);
-      channel.setParent(articleTag);
+      ArticleChannel articleChannel = articleChannelService.findOne(parent);
+      channel.setParent(articleChannel);
     }
-    ArticleChannel channel1 = articleChannelConverter.toChannel(articleTagService.save(channel));
+    channel = articleChannelService.save(channel);
     // 保存权限
     //    if (input.getPermissions() != null) {
     //      channel1.setPermissions(
     //          securityGrpcInvoke.updateGrantPermissions(
     //              "ArticleChannel", channel1.getId(), input.getPermissions()));
     //    }
-    return channel1;
+    return channel;
   }
 
   /**
@@ -156,16 +156,15 @@ public class ArticleGraphQLMutationResolver implements GraphQLMutationResolver {
    * @return
    */
   public ArticleChannel updateChannel(Long id, Boolean merge, ArticleChannelInput input) {
-    ArticleTag channel = articleChannelConverter.toChannel(input);
-    ArticleChannel channel1 =
-        articleChannelConverter.toChannel(articleTagService.update(id, merge, channel));
+    ArticleChannel channel = articleChannelConverter.toChannel(input);
+    channel = articleChannelService.update(id, merge, channel);
     // 保存权限
     //    if (input.getPermissions() != null) {
     //      channel1.setPermissions(
     //          securityGrpcInvoke.updateGrantPermissions(
     //              "ArticleChannel", channel1.getId(), input.getPermissions()));
     //    }
-    return channel1;
+    return channel;
   }
 
   /**
@@ -186,7 +185,6 @@ public class ArticleGraphQLMutationResolver implements GraphQLMutationResolver {
    */
   public ArticleTag createArticleTag(ArticleTagInput input) {
     ArticleTag articleTag = articleChannelConverter.toArticle(input);
-    articleTag.setCategory(ArticleTagCategory.tag);
     return articleTagService.save(articleTag);
   }
   /**

@@ -1,17 +1,11 @@
 package cn.asany.cms.article.graphql.converters;
 
 import cn.asany.cms.article.bean.*;
-import cn.asany.cms.article.bean.enums.ContentType;
 import cn.asany.cms.article.graphql.inputs.ArticleInput;
 import cn.asany.cms.article.graphql.inputs.ContentInput;
-import cn.asany.cms.article.graphql.inputs.ContentPictureInput;
-import cn.asany.storage.api.FileObject;
-import cn.asany.storage.api.converter.FileObjectConverter;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.jfantasy.framework.error.ValidationException;
-import org.jfantasy.framework.jackson.JSON;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 
@@ -37,7 +31,6 @@ public interface ArticleConverter {
         target = "tags", /*qualifiedByName = "parseChannels",*/
         ignore = true),
     @Mapping(source = "recommend", target = "recommend", qualifiedByName = "parseRecommend"),
-    @Mapping(source = "organization", target = "organization"),
     @Mapping(target = "permissions", ignore = true)
   })
   Article toArticle(ArticleInput input);
@@ -46,9 +39,9 @@ public interface ArticleConverter {
     //    @Mapping(source = "content", target = "content", qualifiedByName = "parseContentFile"),
     @Mapping(source = "channels", target = "channels", qualifiedByName = "parseChannels"),
     @Mapping(source = "tags", target = "tags", ignore = true),
-    @Mapping(source = "organization", target = "organization"),
     @Mapping(target = "permissions", ignore = true),
     @Mapping(source = "recommend", target = "recommend", qualifiedByName = "parseRecommend"),
+    @Mapping(source = "content", target = "content", qualifiedByName = "parseContent")
   })
   Article toArticleFile(ArticleInput input);
 
@@ -62,29 +55,31 @@ public interface ArticleConverter {
     if (source == null) {
       return null;
     }
-    switch (source.getType()) {
-      case file:
-        FileObject videoUrl = source.getVideo();
-        FileObjectConverter converter = new FileObjectConverter();
-        return Content.builder()
-            .type(source.getType())
-            .text(converter.convertToDatabaseColumn(videoUrl))
-            .build();
-      case json:
-        List<ContentPictureInput> pictures = source.getPictures();
-        return Content.builder().type(source.getType()).text(JSON.serialize(pictures)).build();
-      case html:
-        String html = source.getHtml();
-        return Content.builder().type(source.getType()).text(html).build();
-      case link:
-        String link = source.getLink();
-        return Content.builder().type(source.getType()).text(link).build();
-      case markdown:
-        throw new ValidationException("暂不支持 markdown 格式");
-
-      default:
-        throw new IllegalStateException("Unexpected value: " + source.getType());
-    }
+    //    switch (source.getType()) {
+    //      case file:
+    //        FileObject videoUrl = source.getVideo();
+    //        FileObjectConverter converter = new FileObjectConverter();
+    //        return Content.builder()
+    //            .type(source.getType())
+    //            .text(converter.convertToDatabaseColumn(videoUrl))
+    //            .build();
+    //      case json:
+    //        List<ContentPictureInput> pictures = source.getPictures();
+    //        return
+    // Content.builder().type(source.getType()).text(JSON.serialize(pictures)).build();
+    //      case html:
+    //        String html = source.getHtml();
+    //        return Content.builder().type(source.getType()).text(html).build();
+    //      case link:
+    //        String link = source.getLink();
+    //        return Content.builder().type(source.getType()).text(link).build();
+    //      case markdown:
+    //        throw new ValidationException("暂不支持 markdown 格式");
+    //
+    //      default:
+    //        throw new IllegalStateException("Unexpected value: " + source.getType());
+    //    }
+    return null;
   }
 
   @Named("parseContentFile")
@@ -92,16 +87,16 @@ public interface ArticleConverter {
     if (source == null) {
       return null;
     }
-    return Content.builder().text(source).type(ContentType.file).build();
+    return null; // Content.builder().text(source).type(ContentType.file).build();
   }
 
   @Named("parseChannels")
-  default List<ArticleTag> parseChannels(List<Long> source) {
+  default List<ArticleChannel> parseChannels(List<Long> source) {
     if (source == null) {
       return null;
     }
     return source.stream()
-        .map(item -> ArticleTag.builder().id(item).build())
+        .map(item -> ArticleChannel.builder().id(item).build())
         .collect(Collectors.toList());
   }
 

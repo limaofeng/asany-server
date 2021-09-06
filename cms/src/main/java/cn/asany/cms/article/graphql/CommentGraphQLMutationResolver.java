@@ -14,11 +14,11 @@ public class CommentGraphQLMutationResolver implements GraphQLMutationResolver {
   @Autowired private CommentService commentService;
 
   public Comment createComment(CommentTargetType targetType, String targetId, CommentInput input) {
-    return this.commentService.addComment(targetType, targetId, input.build());
+    return this.commentService.addComment(targetType, targetId, input);
   }
 
   public Comment updateComment(Long id, Boolean merge, CommentInput input) {
-    return this.commentService.updateComment(id, merge, input.build());
+    return this.commentService.updateComment(id, merge, input);
   }
 
   public Boolean removeComment(Long id) {

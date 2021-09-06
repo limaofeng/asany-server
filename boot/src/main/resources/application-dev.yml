@@ -6,10 +6,7 @@ spring:
     name: server
   datasource:
     name: datasource
-    #    url: jdbc:mysql://api.thuni-h.com:30306/demo?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&rewriteBatchedStatements=true
-    #    username: admin
-    #    password: CU:4icgD4MF6Q!u^
-    url: jdbc:mysql://104.243.31.210:3306/asany?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&rewriteBatchedStatements=true
+    url: jdbc:mysql://127.0.0.1:3306/asany?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&rewriteBatchedStatements=true
     username: root
     password: yV2jJxvNs8BD
     druid:

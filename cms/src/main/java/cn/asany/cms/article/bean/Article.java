@@ -1,25 +1,30 @@
 package cn.asany.cms.article.bean;
 
 import cn.asany.cms.article.bean.converter.MetaDataConverter;
-import cn.asany.cms.article.bean.databind.ContentDeserializer;
 import cn.asany.cms.article.bean.enums.ArticleCategory;
+import cn.asany.cms.article.bean.enums.ArticleContentType;
 import cn.asany.cms.article.bean.enums.ArticleStatus;
 import cn.asany.cms.article.bean.enums.ArticleType;
 import cn.asany.cms.permission.bean.Permission;
+import cn.asany.organization.core.bean.Organization;
+import cn.asany.security.core.bean.User;
 import cn.asany.storage.api.FileObject;
 import cn.asany.storage.api.converter.FileObjectConverter;
 import cn.asany.storage.api.converter.FileObjectsConverter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
+import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Null;
 import lombok.*;
+import net.bytebuddy.description.modifier.Ownership;
+import org.hibernate.annotations.*;
 import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.CreationTimestamp;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.framework.lucene.annotations.IndexProperty;
 import org.jfantasy.framework.lucene.annotations.Indexed;
@@ -74,7 +79,7 @@ public class Article extends BaseBusEntity {
           @JoinColumn(
               name = "CHANNEL_ID",
               foreignKey = @ForeignKey(name = "FK_CMS_ARTICLE_CHANNEL_CID")))
-  private List<ArticleTag> channels;
+  private List<ArticleChannel> channels;
   /** 类型 */
   @Enumerated(EnumType.STRING)
   @Column(name = "TYPE", length = 20)
@@ -133,18 +138,41 @@ public class Article extends BaseBusEntity {
   @Enumerated(EnumType.STRING)
   @Column(name = "CATEGORY", nullable = false, length = 25)
   private ArticleCategory category;
+
+  @Enumerated(EnumType.STRING)
+  @Column(name = "CONTENT_TYPE", length = 25)
+  private ArticleContentType contentType;
+
   /** 文章正文 */
-  @IndexProperty(analyze = true, store = true)
-  @JoinColumn(name = "CONTENT_ID", foreignKey = @ForeignKey(name = "FK_CMS_ARTICLE_CONTENT"))
-  @JsonDeserialize(using = ContentDeserializer.class)
-  @OneToOne(
-      targetEntity = Content.class,
-      fetch = FetchType.LAZY,
-      cascade = {CascadeType.ALL, CascadeType.REMOVE})
+  @Any(
+      metaColumn =
+          @Column(name = "CONTENT_TYPE", length = 25, insertable = false, updatable = false),
+      fetch = FetchType.LAZY)
+  @AnyMetaDef(
+      idType = "long",
+      metaType = "string",
+      metaValues = {
+        @MetaValue(targetEntity = HtmlContent.class, value = HtmlContent.TYPE_KEY),
+        @MetaValue(targetEntity = MarkdownContent.class, value = MarkdownContent.TYPE_KEY)
+      })
+  @JoinColumn(name = "OWNERSHIP_ID", insertable = false, updatable = false)
   private Content content;
-  /** 组织机构 */
-  @Column(name = "ORGANIZATION_ID", updatable = false, nullable = false)
-  private Long organization;
+
+  /** 所有者 */
+  @Any(
+      metaColumn =
+          @Column(name = "OWNERSHIP_TYPE", length = 10, insertable = false, updatable = false),
+      fetch = FetchType.LAZY)
+  @AnyMetaDef(
+      idType = "long",
+      metaType = "string",
+      metaValues = {
+        @MetaValue(targetEntity = User.class, value = User.OWNERSHIP_KEY),
+        @MetaValue(targetEntity = Organization.class, value = Organization.OWNERSHIP_KEY)
+      })
+  @JoinColumn(name = "OWNERSHIP_ID", insertable = false, updatable = false)
+  private Ownership ownership;
+
   /** 最后评论时间 */
   @Temporal(TemporalType.TIMESTAMP)
   @Column(name = "LAST_COMMENT_TIME")
@@ -159,9 +187,6 @@ public class Article extends BaseBusEntity {
   /** 有效期限 结束时间 */
   @Column(name = "VALIDITY_END_DATE")
   private Date validityEndDate;
-  /** 标志位 flag 1：删除 0：未删除 */
-  @Column(name = "flag")
-  private boolean flag;
 
   @Transient private List<Permission> permissions;
 }

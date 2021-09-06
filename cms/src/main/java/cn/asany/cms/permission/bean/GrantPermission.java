@@ -12,7 +12,9 @@ import org.jfantasy.framework.dao.BaseBusEntity;
  */
 @Getter
 @Setter
-@EqualsAndHashCode(of = {"securityType", "value", "resource", "permission"})
+@EqualsAndHashCode(
+    of = {"securityType", "value", "resource", "permission"},
+    callSuper = false)
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

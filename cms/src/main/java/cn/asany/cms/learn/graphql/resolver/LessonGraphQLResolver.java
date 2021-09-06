@@ -1,9 +1,8 @@
 package cn.asany.cms.learn.graphql.resolver;
 
 import cn.asany.cms.article.bean.Article;
-import cn.asany.cms.article.bean.enums.ArticleCategory;
+import cn.asany.cms.article.bean.ArticleChannel;
 import cn.asany.cms.article.graphql.converters.ArticleChannelConverter;
-import cn.asany.cms.article.graphql.types.ArticleChannel;
 import cn.asany.cms.article.service.ArticleService;
 import cn.asany.cms.learn.bean.Course;
 import cn.asany.cms.learn.bean.Learner;
@@ -16,7 +15,6 @@ import cn.asany.cms.learn.service.LessonService;
 import cn.asany.storage.api.FileObject;
 import graphql.kickstart.tools.GraphQLResolver;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -43,9 +41,9 @@ public class LessonGraphQLResolver implements GraphQLResolver<Lesson> {
 
   public String content(Lesson lesson) {
     Article article = articleService.get(lesson.getArticle().getId());
-    if (article.getContent() != null) {
-      return article.getContent().getText();
-    }
+    //    if (article.getContent() != null) {
+    //      return article.getContent();
+    //    }
     return null;
   }
 
@@ -53,14 +51,12 @@ public class LessonGraphQLResolver implements GraphQLResolver<Lesson> {
     return articleService.get(lesson.getArticle().getId()).getTitle();
   }
 
-  public ArticleCategory category(Lesson lesson) {
-    return articleService.get(lesson.getArticle().getId()).getCategory();
-  }
+  //  public ArticleCategory category(Lesson lesson) {
+  //    return articleService.get(lesson.getArticle().getId()).getCategory();
+  //  }
 
   public List<ArticleChannel> channels(Lesson lesson) {
-    return lesson.getArticle().getChannels().stream()
-        .map(item -> articleChannelConverter.toChannel(item))
-        .collect(Collectors.toList());
+    return lesson.getArticle().getChannels();
   }
 
   public List<FileObject> attachments(Lesson lesson) {

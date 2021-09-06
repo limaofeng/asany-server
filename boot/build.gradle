@@ -20,13 +20,15 @@ tasks.withType(Test) { enabled = false }
 tasks.withType(PublishToMavenRepository).configureEach { it.enabled = false }
 
 bootRun {
-	systemProperty "spring.profiles.active", "dev"
+	mainClass = 'cn.asany.sanhai.Application'
+	args '--spring.profiles.active=dev'
 }
 
 dependencies {
 	implementation project(":asany-ui")
 	implementation project(":asany-base")
 	implementation project(":asany-nuwa")
+	implementation project(":asany-cms")
 	implementation project(":asany-shanhai")
 	implementation project(":asany-storage")
 	implementation project(":asany-security")

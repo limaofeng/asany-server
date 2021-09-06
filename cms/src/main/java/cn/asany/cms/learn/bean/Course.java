@@ -47,7 +47,6 @@ public class Course extends BaseBusEntity {
   private FileObject cover;
 
   /** 发布人 */
-  @OneToOne(fetch = FetchType.LAZY)
   @Column(
       name = "EMPLOYEE" /*, foreignKey = @ForeignKey(name = "FK_COURSE_EMPLOYEE_EMP_ID")*/,
       updatable = false,
