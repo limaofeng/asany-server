@@ -5,7 +5,7 @@ import cn.asany.storage.data.bean.enums.StorageType;
 import cn.asany.storage.data.dao.FileManagerConfigDao;
 import java.util.List;
 import java.util.Map;
-import org.jfantasy.framework.spring.SpringContextUtil;
+import org.jfantasy.framework.spring.SpringBeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -57,6 +57,6 @@ public class StorageService {
   }
 
   public static List<StorageConfig> getFileManagers() {
-    return SpringContextUtil.getBeanByType(StorageService.class).listFileManager();
+    return SpringBeanUtils.getBeanByType(StorageService.class).listFileManager();
   }
 }

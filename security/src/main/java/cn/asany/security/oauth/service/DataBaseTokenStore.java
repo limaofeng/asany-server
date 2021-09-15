@@ -13,6 +13,7 @@ import org.jfantasy.framework.security.oauth2.core.AbstractTokenStore;
 import org.jfantasy.framework.security.oauth2.core.OAuth2AccessToken;
 import org.jfantasy.framework.security.oauth2.jwt.JwtUtils;
 import org.jfantasy.framework.util.common.ObjectUtil;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 /**
@@ -25,7 +26,8 @@ public class DataBaseTokenStore extends AbstractTokenStore {
 
   private final AccessTokenDao accessTokenDao;
 
-  public DataBaseTokenStore(AccessTokenDao accessTokenDao) {
+  public DataBaseTokenStore(StringRedisTemplate redisTemplate, AccessTokenDao accessTokenDao) {
+    super(redisTemplate);
     this.accessTokenDao = accessTokenDao;
   }
 

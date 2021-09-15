@@ -24,19 +24,19 @@ import org.jfantasy.framework.dao.BaseBusEntity;
 @Entity
 @Table(name = "NUWA_ROUTESPACE")
 @NamedEntityGraph(
-    name = "Graph.Routespace.FetchApplicationTemplateRoute",
+    name = "Graph.Routespace.FetchApplicationTemplate",
     attributeNodes = {
       @NamedAttributeNode(
           value = "applicationTemplate",
-          subgraph = "SubGraph.ApplicationTemplate.FetchRoute"),
+          subgraph = "SubGraph.ApplicationTemplate.FetchDetails"),
     },
     subgraphs = {
       @NamedSubgraph(
-          name = "SubGraph.ApplicationTemplate.FetchRoute",
+          name = "SubGraph.ApplicationTemplate.FetchDetails",
           attributeNodes = {
             @NamedAttributeNode(
                 value = "routes",
-                subgraph = "SubGraph.ApplicationTemplateRoute.FetchComponent")
+                subgraph = "SubGraph.ApplicationTemplateRoute.FetchComponent"),
           }),
       @NamedSubgraph(
           name = "SubGraph.ApplicationTemplateRoute.FetchComponent",
@@ -46,6 +46,12 @@ import org.jfantasy.framework.dao.BaseBusEntity;
           })
     })
 public class Routespace extends BaseBusEntity {
+
+  public static Routespace DEFAULT_ROUTESPACE_WEB =
+      Routespace.builder().id("web").name("PC Web").build();
+  public static Routespace DEFAULT_ROUTESPACE_WAP =
+      Routespace.builder().id("wap").name("Wap 网站").build();
+
   @Id
   @Column(name = "ID", length = 40)
   private String id;
@@ -57,8 +63,7 @@ public class Routespace extends BaseBusEntity {
   @LazyToOne(LazyToOneOption.NO_PROXY)
   @JoinColumn(
       name = "APP_TEMPLATE_ID",
-      foreignKey = @ForeignKey(name = "FK_ROUTESPACE_APP_TEMP_ID"),
-      nullable = false)
+      foreignKey = @ForeignKey(name = "FK_ROUTESPACE_APP_TEMP_ID"))
   private ApplicationTemplate applicationTemplate;
 
   @ManyToMany(fetch = FetchType.LAZY)

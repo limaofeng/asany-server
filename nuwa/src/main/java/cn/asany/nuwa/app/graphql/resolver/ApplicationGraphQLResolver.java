@@ -22,20 +22,6 @@ public class ApplicationGraphQLResolver implements GraphQLResolver<Application> 
     this.applicationService = applicationService;
   }
 
-  public Optional<ApplicationRoute> route(
-      Application application, String space, String path, DataFetchingEnvironment environment) {
-    List<ApplicationRoute> routes = this.routes(application, space, environment);
-    return routes.stream().filter(item -> path.equals(item.getPath())).findAny();
-  }
-
-  public Optional<ApplicationRoute> rootRoute(
-      Application application, String space, DataFetchingEnvironment environment) {
-    List<ApplicationRoute> routes = this.routes(application, space, environment);
-    return routes.stream()
-        .filter(item -> "/".equals(item.getPath()) && item.getLevel() == 0)
-        .findAny();
-  }
-
   public Optional<ApplicationRoute> layoutRoute(
       Application application, String space, DataFetchingEnvironment environment) {
     List<ApplicationRoute> routes = this.routes(application, space, environment);

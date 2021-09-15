@@ -16,6 +16,5 @@ spring:
       minIdle: 1
   redis:
     database: 0
-    host: api.dev.thuni-h.com
-    port: 32519
-    password: Y0HfNA{PdjSINZyy
+    host: 127.0.0.1
+    port: 6379

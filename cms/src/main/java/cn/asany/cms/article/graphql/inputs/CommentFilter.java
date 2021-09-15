@@ -7,7 +7,7 @@ import java.util.List;
 import lombok.Data;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
-import org.jfantasy.framework.spring.SpringContextUtil;
+import org.jfantasy.framework.spring.SpringBeanUtils;
 
 @Data
 public class CommentFilter {
@@ -41,7 +41,7 @@ public class CommentFilter {
 
   @JsonProperty(value = "id_startsWith")
   public void setIdStartsWith(Long id) {
-    Comment comment = SpringContextUtil.getBeanByType(CommentService.class).get(id);
+    Comment comment = SpringBeanUtils.getBeanByType(CommentService.class).get(id);
     this.builder.contains("path", comment.getPath() + "%");
   }
 

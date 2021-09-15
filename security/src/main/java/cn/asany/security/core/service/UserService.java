@@ -1,5 +1,7 @@
 package cn.asany.security.core.service;
 
+import cn.asany.base.common.bean.enums.EmailStatus;
+import cn.asany.base.common.bean.enums.PhoneNumberStatus;
 import cn.asany.security.core.bean.Role;
 import cn.asany.security.core.bean.User;
 import cn.asany.security.core.dao.GrantPermissionDao;
@@ -13,6 +15,7 @@ import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.error.ValidationException;
 import org.jfantasy.framework.security.LoginUser;
+import org.jfantasy.framework.security.LoginUser.LoginUserBuilder;
 import org.jfantasy.framework.security.core.userdetails.UserDetails;
 import org.jfantasy.framework.security.core.userdetails.UserDetailsService;
 import org.jfantasy.framework.security.core.userdetails.UsernameNotFoundException;
@@ -307,35 +310,28 @@ public class UserService implements UserDetailsService {
   }
 
   public LoginUser buildLoginUser(User user) {
-    LoginUser loginUser =
+    LoginUserBuilder builder =
         LoginUser.builder()
-            .uid(user.getId().toString())
+            .uid(user.getId())
             .type(user.getUserType().name())
             .username(user.getUsername())
+            .title(user.getTitle())
             .name(user.getNickName())
             .password(user.getPassword())
             .enabled(user.getEnabled())
             .accountNonExpired(user.getAccountNonExpired())
             .accountNonLocked(user.getAccountNonLocked())
             .credentialsNonExpired(user.getCredentialsNonExpired())
-            .phone(user.get("tel"))
-            .build();
-    //        loginUser.set("user", user);
-    //        loginUser.set(FIELD_EMPLOYEE, user.getEmployee());
-    return loginUser;
-  }
+            .authorities(user.getAuthorities());
 
-  //    public LoginUser buildLoginUser(Employee employee) {
-  //        User user = employee.getUser();
-  //        LoginUser loginUser = LoginUser.builder()
-  //            .uid(employee.getId().toString())
-  //            .name(employee.getName())
-  //            .type(FIELD_EMPLOYEE)
-  //            .build();
-  //        if (user != null) {
-  //            loginUser.set("user", user);
-  //        }
-  //        loginUser.set(FIELD_EMPLOYEE, employee);
-  //        return loginUser;
-  //    }
+    if (user.getPhone() != null && user.getPhone().getStatus() == PhoneNumberStatus.VERIFIED) {
+      builder.phone(user.getPhone().getNumber());
+    }
+
+    if (user.getEmail() != null && user.getEmail().getStatus() == EmailStatus.VERIFIED) {
+      builder.phone(user.getEmail().getAddress());
+    }
+
+    return builder.build();
+  }
 }

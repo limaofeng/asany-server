@@ -1,16 +1,22 @@
 package cn.asany.cms.article.bean;
 
 import cn.asany.cms.article.bean.converter.MetaDataConverter;
-import cn.asany.cms.permission.bean.Permission;
+import cn.asany.organization.core.bean.Organization;
+import cn.asany.security.core.bean.User;
 import cn.asany.storage.api.FileObject;
 import cn.asany.storage.api.converter.FileObjectConverter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
+import javax.persistence.OrderBy;
+import javax.persistence.Table;
 import lombok.*;
+import net.bytebuddy.description.modifier.Ownership;
+import org.hibernate.annotations.*;
 import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.framework.lucene.annotations.IndexEmbedBy;
 
@@ -55,14 +61,11 @@ public class ArticleTag extends BaseBusEntity {
   private String description;
   /** 排序字段 */
   @Column(name = "SORT")
-  private Integer sort;
+  private Integer index;
   /** SEO 优化字段 */
   @Column(name = "META_DATA", length = 250, columnDefinition = "json")
   @Convert(converter = MetaDataConverter.class)
   private MetaData meta;
-  /** 组织机构 */
-  @Column(name = "ORGANIZATION_ID", updatable = false, nullable = false)
-  private Long organization;
   /** 上级栏目 */
   @JsonProperty("parent_id")
   @ManyToOne(fetch = FetchType.LAZY)
@@ -78,5 +81,18 @@ public class ArticleTag extends BaseBusEntity {
   @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
   private List<ArticleTag> children;
 
-  @Transient private List<Permission> permissions;
+  /** 所有者 */
+  @Any(
+      metaColumn =
+          @Column(name = "OWNERSHIP_TYPE", length = 10, insertable = false, updatable = false),
+      fetch = FetchType.LAZY)
+  @AnyMetaDef(
+      idType = "long",
+      metaType = "string",
+      metaValues = {
+        @MetaValue(targetEntity = User.class, value = User.OWNERSHIP_KEY),
+        @MetaValue(targetEntity = Organization.class, value = Organization.OWNERSHIP_KEY)
+      })
+  @JoinColumn(name = "OWNERSHIP_ID", insertable = false, updatable = false)
+  private Ownership ownership;
 }

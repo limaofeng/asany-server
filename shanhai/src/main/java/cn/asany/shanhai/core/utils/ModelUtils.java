@@ -27,7 +27,7 @@ import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.jfantasy.framework.error.ValidationException;
-import org.jfantasy.framework.spring.SpringContextUtil;
+import org.jfantasy.framework.spring.SpringBeanUtils;
 import org.jfantasy.framework.util.PinyinUtils;
 import org.jfantasy.framework.util.common.ClassUtil;
 import org.jfantasy.framework.util.common.ObjectUtil;
@@ -56,7 +56,7 @@ public class ModelUtils {
   private OgnlUtil ognlUtil = OgnlUtil.getInstance();
 
   public static ModelUtils getInstance() {
-    return SpringContextUtil.getBeanByType(ModelUtils.class);
+    return SpringBeanUtils.getBeanByType(ModelUtils.class);
   }
 
   public static final Set<Model> DEFAULT_TYPES = new HashSet<>();

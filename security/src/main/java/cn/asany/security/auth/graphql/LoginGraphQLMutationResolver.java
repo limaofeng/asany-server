@@ -3,26 +3,23 @@ package cn.asany.security.auth.graphql;
 import cn.asany.security.auth.authentication.*;
 import cn.asany.security.auth.graphql.types.LoginOptions;
 import cn.asany.security.auth.graphql.types.LoginType;
-import graphql.GraphQLError;
-import graphql.kickstart.spring.error.ErrorContext;
 import graphql.kickstart.tools.GraphQLMutationResolver;
 import graphql.schema.DataFetchingEnvironment;
 import lombok.extern.slf4j.Slf4j;
-import org.jfantasy.framework.security.AuthenticationException;
 import org.jfantasy.framework.security.AuthenticationManager;
 import org.jfantasy.framework.security.LoginUser;
 import org.jfantasy.framework.security.authentication.AbstractAuthenticationToken;
 import org.jfantasy.framework.security.authentication.Authentication;
 import org.jfantasy.framework.security.authentication.BadCredentialsException;
 import org.jfantasy.framework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.jfantasy.framework.security.oauth2.core.*;
+import org.jfantasy.framework.security.oauth2.core.OAuth2AccessToken;
+import org.jfantasy.framework.security.oauth2.core.OAuth2Authentication;
+import org.jfantasy.framework.security.oauth2.core.OAuth2AuthenticationDetails;
+import org.jfantasy.framework.security.oauth2.core.TokenType;
 import org.jfantasy.framework.security.oauth2.core.token.AuthorizationServerTokenServices;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.graphql.context.AuthorizationGraphQLServletContext;
-import org.jfantasy.graphql.context.GraphQLContextHolder;
-import org.jfantasy.graphql.util.GraphQLErrorUtils;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 
 /**
  * 登录服务
@@ -44,26 +41,30 @@ public class LoginGraphQLMutationResolver implements GraphQLMutationResolver {
     this.tokenServices = tokenServices;
   }
 
-  @ExceptionHandler(value = AuthenticationException.class)
-  public GraphQLError loginExceptionHandler(AuthenticationException e, ErrorContext context) {
-    AuthorizationGraphQLServletContext servletContext =
-        (AuthorizationGraphQLServletContext) GraphQLContextHolder.getContext();
-    servletContext.getResponse().setStatus(401);
-    return GraphQLErrorUtils.buildGraphQLError(context, e);
-  }
-
+  /**
+   * 登录接口
+   *
+   * @param loginType 登录方式
+   * @param clientId 客户端 ID
+   * @param username 用户名
+   * @param password 密码
+   * @param authCode 授权码
+   * @param tmpAuthCode 临时授权码
+   * @param options 选项
+   * @param environment 上下文
+   * @return 登录用户
+   */
   public LoginUser login(
       LoginType loginType,
+      String clientId,
       String username,
       String password,
       String authCode,
       String tmpAuthCode,
-      String singleCode,
       LoginOptions options,
       DataFetchingEnvironment environment) {
     Authentication token =
-        buildAuthenticationToken(
-            loginType, username, password, authCode, tmpAuthCode, singleCode, options);
+        buildAuthenticationToken(loginType, username, password, authCode, tmpAuthCode, options);
 
     Authentication authentication = authenticationManager.authenticate(token);
 
@@ -73,7 +74,7 @@ public class LoginGraphQLMutationResolver implements GraphQLMutationResolver {
     LoginUser loginUser = (LoginUser) authentication.getPrincipal();
     AuthorizationGraphQLServletContext context = environment.getContext();
     OAuth2AuthenticationDetails oAuth2AuthenticationDetails = new OAuth2AuthenticationDetails();
-    oAuth2AuthenticationDetails.setClientId("8b2ef1b9625d233ad852");
+    oAuth2AuthenticationDetails.setClientId(clientId);
     oAuth2AuthenticationDetails.setTokenType(TokenType.SESSION);
     OAuth2Authentication oAuth2Authentication =
         new OAuth2Authentication(authentication, oAuth2AuthenticationDetails);
@@ -88,7 +89,6 @@ public class LoginGraphQLMutationResolver implements GraphQLMutationResolver {
       String password,
       String authCode,
       String tmpAuthCode,
-      String singleCode,
       LoginOptions options) {
     options = ObjectUtil.defaultValue(options, LoginOptions.builder().build());
     LoginAuthenticationDetails details = new LoginAuthenticationDetails(loginType, options);
@@ -126,9 +126,6 @@ public class LoginGraphQLMutationResolver implements GraphQLMutationResolver {
         break;
       case tourist:
         authentication = new AnonymousAuthenticationToken();
-        break;
-      case single:
-        authentication = new TemporaryAuthenticationToken(singleCode);
         break;
       default:
         throw new IllegalStateException("Unexpected AuthenticationToken By: " + loginType);

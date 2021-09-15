@@ -10,7 +10,6 @@ import org.jfantasy.framework.security.LoginUser;
 import org.jfantasy.framework.security.SpringSecurityUtils;
 import org.jfantasy.framework.util.common.DateUtil;
 import org.jfantasy.framework.util.common.ObjectUtil;
-import org.jfantasy.framework.util.common.StringUtil;
 import org.jfantasy.framework.util.ognl.OgnlUtil;
 
 /**
@@ -19,10 +18,6 @@ import org.jfantasy.framework.util.ognl.OgnlUtil;
  * @author limaofeng
  */
 public class SystemFieldFillInterceptor extends EmptyInterceptor {
-  /** 默认编辑人 */
-  private static final String DEFAULT_MODIFIER = null;
-  /** 默认创建人 */
-  private static final String DEFAULT_CREATOR = null;
 
   private static final OgnlUtil OGNL_UTIL = OgnlUtil.getInstance();
 
@@ -34,24 +29,23 @@ public class SystemFieldFillInterceptor extends EmptyInterceptor {
       Object[] previousState,
       String[] propertyNames,
       Type[] types) {
-    if (Arrays.stream(propertyNames)
-        .anyMatch(
-            item ->
-                ObjectUtil.exists(
-                    new String[] {BaseBusEntity.FIELD_UPDATED_BY, BaseBusEntity.FIELD_UPDATED_AT},
-                    item))) {
-      String modifier = DEFAULT_MODIFIER;
+    if (hasBaseFields(propertyNames)) {
       LoginUser user = SpringSecurityUtils.getCurrentUser();
-      if (ObjectUtil.isNotNull(user)) {
-        modifier = user.getUid();
+      Long updatedBy = getFieldValue(entity, BaseBusEntity.FIELD_UPDATED_BY);
+      Object updatedAt = getFieldValue(entity, BaseBusEntity.FIELD_UPDATED_BY);
+      if (updatedBy == null && user != null) {
+        updatedBy = user.getUid();
+      }
+      if (updatedAt == null) {
+        updatedAt = DateUtil.now().clone();
       }
       int count = 0;
       for (int i = 0; i < propertyNames.length; i++) {
         if (BaseBusEntity.FIELD_UPDATED_BY.equals(propertyNames[i])) {
-          currentState[i] = modifier;
+          currentState[i] = updatedBy;
           count++;
         } else if (BaseBusEntity.FIELD_UPDATED_AT.equals(propertyNames[i])) {
-          currentState[i] = DateUtil.now().clone();
+          currentState[i] = updatedAt;
           count++;
         }
         if (count >= 2) {
@@ -62,26 +56,29 @@ public class SystemFieldFillInterceptor extends EmptyInterceptor {
     return super.onFlushDirty(entity, id, currentState, previousState, propertyNames, types);
   }
 
+  private <T> T getFieldValue(Object entity, String filedName) {
+    return OGNL_UTIL.getValue(filedName, entity);
+  }
+
+  private boolean hasBaseFields(String[] propertyNames) {
+    return Arrays.stream(propertyNames)
+        .anyMatch(item -> ObjectUtil.exists(BaseBusEntity.ALL_FIELD, item));
+  }
+
   @Override
   public boolean onSave(
       Object entity, Serializable id, Object[] state, String[] propertyNames, Type[] types) {
-    if (Arrays.stream(propertyNames)
-        .anyMatch(
-            item ->
-                ObjectUtil.exists(
-                    new String[] {
-                      BaseBusEntity.FIELD_CREATED_BY,
-                      BaseBusEntity.FIELD_CREATED_AT,
-                      BaseBusEntity.FIELD_CREATED_BY,
-                      BaseBusEntity.FIELD_UPDATED_AT
-                    },
-                    item))) {
+    if (hasBaseFields(propertyNames)) {
       LoginUser user = SpringSecurityUtils.getCurrentUser();
-      String creator =
-          ObjectUtil.isNotNull(user)
-              ? user.getUid()
-              : StringUtil.defaultValue(
-                  OGNL_UTIL.getValue(BaseBusEntity.FIELD_CREATED_BY, entity), DEFAULT_CREATOR);
+
+      Long createdBy = getFieldValue(entity, BaseBusEntity.FIELD_CREATED_BY);
+      Object createdAt = getFieldValue(entity, BaseBusEntity.FIELD_CREATED_AT);
+      if (createdBy == null && user != null) {
+        createdBy = user.getUid();
+      }
+      if (createdAt == null) {
+        createdAt = DateUtil.now().clone();
+      }
       int count = 0;
       int maxCount = 4;
       if (entity instanceof BaseBusBusinessEntity) {
@@ -90,11 +87,11 @@ public class SystemFieldFillInterceptor extends EmptyInterceptor {
       for (int i = 0; i < propertyNames.length; i++) {
         if (BaseBusEntity.FIELD_CREATED_BY.equals(propertyNames[i])
             || BaseBusEntity.FIELD_UPDATED_BY.equals(propertyNames[i])) {
-          state[i] = creator;
+          state[i] = createdBy;
           count++;
         } else if (BaseBusEntity.FIELD_CREATED_AT.equals(propertyNames[i])
             || BaseBusEntity.FIELD_UPDATED_AT.equals(propertyNames[i])) {
-          state[i] = DateUtil.now().clone();
+          state[i] = createdAt;
           count++;
         }
         if (count >= maxCount) {

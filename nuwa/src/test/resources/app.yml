@@ -1,0 +1,41 @@
+name: website
+title: 网站
+clientId: 270a4b1d81998819b04a
+clientSecret: cefc464c3f57a41696bc58e4991e9c9913ff1394
+menus:
+  - name: 首页
+    path: /
+  - name: 产品与服务
+    children:
+      - name: 产品与服务
+        path: /services/product
+      - name: 解决方案
+        path: /services/solution
+      - name: 客户案例
+        path: /services/cases
+  - name: 新闻动态
+    children:
+      - name: 互升新闻
+        path: /news/self
+      - name: 行业新闻
+        path: /news/industry
+  - name: 关于互升
+    children:
+      - name: 公司介绍
+        path: /about
+      - name: 客户服务评价
+        path: /testimonials
+  - name: 联系我们
+    path: /contact
+routes:
+  - path: /admin
+    component:
+    routes:
+      - path: /admin/login
+        component: cn.asany.ui.theme.metronic.authentication.SignIn
+      - path: /admin
+        authorized: true
+        redirect: /admin/login
+        component: cn.asany.ui.theme.metronic.Layout
+  - path: /
+    component: cn.asany.ui.theme.startp.BasicLayout

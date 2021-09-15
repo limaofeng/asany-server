@@ -3,6 +3,7 @@ package cn.asany.nuwa.app.service;
 import cn.asany.nuwa.app.bean.Routespace;
 import cn.asany.nuwa.app.dao.RoutespaceDao;
 import java.util.List;
+import java.util.Optional;
 import javax.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -19,8 +20,17 @@ public class RoutespaceService {
     return routespaceDao.findAll();
   }
 
-  @Transactional
+  public Optional<Routespace> findById(String id) {
+    return routespaceDao.findById(id);
+  }
+
+  @Transactional(rollbackOn = Exception.class)
   public Routespace createRoutespace(Routespace routespace) {
     return this.routespaceDao.save(routespace);
+  }
+
+  @Transactional(rollbackOn = Exception.class)
+  public void deleteRoutespace(String id) {
+    this.routespaceDao.deleteById(id);
   }
 }

@@ -11,7 +11,7 @@ import java.util.List;
 import lombok.Data;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
-import org.jfantasy.framework.spring.SpringContextUtil;
+import org.jfantasy.framework.spring.SpringBeanUtils;
 
 /**
  * @author limaofeng
@@ -89,14 +89,14 @@ public class ArticleFilter {
 
   @JsonProperty("viewer")
   public void setViewer(String viewer) {
-    ArticleService articleService = SpringContextUtil.getBeanByType(ArticleService.class);
+    ArticleService articleService = SpringBeanUtils.getBeanByType(ArticleService.class);
     //        Map<String, String> viewerValue = articleService.getViewerValue(viewer);
     //        builder.and(new PermissionSpecification("ARTICLE_VIEWER", viewerValue));
   }
 
   @JsonProperty("founder")
   public void setFounder(String founder) {
-    ArticleService articleService = SpringContextUtil.getBeanByType(ArticleService.class);
+    ArticleService articleService = SpringBeanUtils.getBeanByType(ArticleService.class);
     //        Map<String, String> viewerValue = articleService.getViewerValue(founder);
     //        builder.and(new PermissionSpecification("ARTICLE_CREATOR", viewerValue));
   }

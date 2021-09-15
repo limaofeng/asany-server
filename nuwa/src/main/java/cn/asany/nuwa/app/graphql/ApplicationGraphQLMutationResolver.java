@@ -2,13 +2,13 @@ package cn.asany.nuwa.app.graphql;
 
 import cn.asany.nuwa.app.bean.Application;
 import cn.asany.nuwa.app.bean.ApplicationRoute;
+import cn.asany.nuwa.app.converter.ApplicationConverter;
 import cn.asany.nuwa.app.graphql.input.ApplicationCreateInput;
 import cn.asany.nuwa.app.graphql.input.RouteCreateInput;
 import cn.asany.nuwa.app.graphql.input.RouteUpdateInput;
 import cn.asany.nuwa.app.service.ApplicationService;
-import cn.asany.nuwa.app.service.dto.OAuthApplication;
+import cn.asany.nuwa.app.service.dto.NativeApplication;
 import graphql.kickstart.tools.GraphQLMutationResolver;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -19,17 +19,26 @@ import org.springframework.stereotype.Component;
 @Component
 public class ApplicationGraphQLMutationResolver implements GraphQLMutationResolver {
 
-  @Autowired private ApplicationService applicationService;
+  private final ApplicationService applicationService;
+  public final ApplicationConverter applicationConverter;
+
+  public ApplicationGraphQLMutationResolver(
+      ApplicationService applicationService, ApplicationConverter applicationConverter) {
+    this.applicationService = applicationService;
+    this.applicationConverter = applicationConverter;
+  }
 
   public Application createApplication(ApplicationCreateInput input) {
-    return applicationService.createApplication(new OAuthApplication());
+    NativeApplication application = applicationConverter.toNativeApplication(input);
+    return applicationService.createApplication(application);
   }
 
   public Application updateApplication(Long id, ApplicationCreateInput input, Boolean merge) {
     return new Application();
   }
 
-  public Boolean removeApplication(Long id) {
+  public Boolean deleteApplication(Long id) {
+    this.applicationService.deleteApplication(id);
     return Boolean.TRUE;
   }
 
@@ -41,7 +50,7 @@ public class ApplicationGraphQLMutationResolver implements GraphQLMutationResolv
     return null;
   }
 
-  public ApplicationRoute removeRoute(Long id) {
+  public ApplicationRoute deleteRoute(Long id) {
     return null;
   }
 

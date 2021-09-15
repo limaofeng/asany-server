@@ -4,12 +4,10 @@ import cn.asany.nuwa.app.bean.enums.RouteType;
 import cn.asany.ui.resources.bean.Component;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import java.util.List;
-import java.util.Set;
 import javax.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.dao.hibernate.converter.StringSetConverter;
 
 /**
  * 路由
@@ -20,7 +18,9 @@ import org.jfantasy.framework.dao.hibernate.converter.StringSetConverter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = false, of = "id")
+@EqualsAndHashCode(
+    callSuper = false,
+    of = {"id", "path", "level", "index"})
 @ToString(exclude = {"parent", "application", "space", "routes"})
 @Entity
 @Table(name = "NUWA_APPLICATION_ROUTE")
@@ -80,25 +80,18 @@ public class ApplicationRoute extends BaseBusEntity {
       cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
   @OrderBy("index ASC")
   private List<ApplicationRoute> routes;
-  /** 可以访问的权限 */
-  @Convert(converter = StringSetConverter.class)
-  @Column(name = "AUTHORITY")
-  private Set<String> authority;
+  /** 访问权限 */
+  @Column(name = "access")
+  private String access;
   /** 必须授权才能访问 */
   @Column(name = "AUTHORIZED")
   private Boolean authorized;
   /** 是否启用 */
   @Column(name = "ENABLED")
   private Boolean enabled;
-  /** 不在菜单中显示子菜单 */
-  @Column(name = "HIDE_CHILDREN_IN_MENU")
-  private Boolean hideChildrenInMenu;
   /** 在面包屑中隐藏菜单 */
   @Column(name = "HIDE_IN_BREADCRUMB")
   private Boolean hideInBreadcrumb;
-  /** 不在菜单中显示 */
-  @Column(name = "HIDE_IN_MENU")
-  private Boolean hideInMenu;
   /** 应用 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(
@@ -109,5 +102,5 @@ public class ApplicationRoute extends BaseBusEntity {
   private Application application;
   /** 序号 */
   @Column(name = "SORT")
-  private Long index;
+  private Integer index;
 }

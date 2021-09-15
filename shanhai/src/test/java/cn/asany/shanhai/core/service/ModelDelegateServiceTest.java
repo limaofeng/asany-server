@@ -4,7 +4,7 @@ import cn.asany.shanhai.TestApplication;
 import cn.asany.shanhai.core.runners.DefaultCRUDDelegateCommandLineRunner;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.jfantasy.framework.spring.SpringContextUtil;
+import org.jfantasy.framework.spring.SpringBeanUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,9 +26,8 @@ class ModelDelegateServiceTest {
   @BeforeEach
   void setUp() {
     runner =
-        SpringContextUtil.createBean(
-            DefaultCRUDDelegateCommandLineRunner.class,
-            SpringContextUtil.AutoType.AUTOWIRE_BY_TYPE);
+        SpringBeanUtils.createBean(
+            DefaultCRUDDelegateCommandLineRunner.class, SpringBeanUtils.AutoType.AUTOWIRE_BY_TYPE);
   }
 
   @Test

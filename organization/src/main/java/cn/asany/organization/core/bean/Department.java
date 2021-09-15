@@ -3,9 +3,7 @@ package cn.asany.organization.core.bean;
 import cn.asany.organization.core.bean.databind.DepartmentDeserializer;
 import cn.asany.organization.core.bean.databind.DepartmentSerializer;
 import cn.asany.organization.core.bean.databind.OrganizationSerializer;
-import cn.asany.organization.core.bean.enums.LinkType;
 import cn.asany.organization.relationship.bean.EmployeePosition;
-import cn.asany.organization.relationship.bean.OrganizationEmployee;
 import cn.asany.organization.relationship.bean.Position;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -15,7 +13,6 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.security.Permission;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import javax.persistence.*;
 import lombok.*;
@@ -24,8 +21,10 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
 /**
+ * 部门
+ *
  * @author limaofeng
- * @version V1.0 @Description: 部门
+ * @version V1.0
  * @date 2019-03-11 14:35
  */
 @Getter
@@ -99,13 +98,6 @@ public class Department extends BaseBusEntity {
       fetch = FetchType.LAZY,
       cascade = {CascadeType.REMOVE})
   private List<Position> positions;
-  /** 部门拥有的角色 */
-  //    @JsonIgnore
-  //    @ManyToMany(targetEntity = Role.class, fetch = FetchType.LAZY)
-  //    @JoinTable(name = "AUTH_ROLE_DEPARTMENT", joinColumns = @JoinColumn(name = "DEPARTMENT_ID",
-  // foreignKey = @ForeignKey(name = "FK_AUTH_ROLE_DEPARTMENT_DID")), inverseJoinColumns =
-  // @JoinColumn(name = "ROLE_CODE"), foreignKey = @ForeignKey(name = "FK_ROLE_DEPARTMENT_RID"))
-  //    private List<Role> roles;
   /** 组织机构 */
   @JsonSerialize(using = OrganizationSerializer.class)
   @ManyToOne(fetch = FetchType.LAZY)
@@ -115,24 +107,12 @@ public class Department extends BaseBusEntity {
       updatable = false,
       nullable = false)
   private Organization organization;
-  /** 链接到的账户 */
-  @OneToMany(
-      mappedBy = "department",
-      fetch = FetchType.LAZY,
-      cascade = {CascadeType.REMOVE})
-  private List<DepartmentLink> links;
 
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "department", cascade = CascadeType.REMOVE)
   private List<DepartmentAttribute> attributes;
 
   /** 部门权限 */
   @Transient private List<Permission> permissions;
-
-  @OneToMany(
-      mappedBy = "department",
-      fetch = FetchType.LAZY,
-      cascade = {CascadeType.REMOVE})
-  private List<OrganizationEmployee> organizationEmployees;
 
   /** 签名图与部门关联 */
   @ManyToMany(
@@ -194,17 +174,6 @@ public class Department extends BaseBusEntity {
         .append(getParentId())
         .append(getOrganizationId())
         .toHashCode();
-  }
-
-  public String getLinkId(LinkType idType) {
-    Optional<DepartmentLink> link =
-        this.getLinks().stream()
-            .filter(item -> item.getType().name().equals(idType.name()))
-            .findAny();
-    if (!link.isPresent()) {
-      return null;
-    }
-    return link.get().getLinkId();
   }
 
   @JsonIgnore

@@ -1,8 +1,8 @@
 package cn.asany.cms.learn.service;
 
 import cn.asany.cms.article.bean.Article;
-import cn.asany.cms.article.graphql.ArticleGraphQLMutationResolver;
 import cn.asany.cms.article.graphql.inputs.ArticleInput;
+import cn.asany.cms.article.service.ArticleService;
 import cn.asany.cms.learn.bean.Course;
 import cn.asany.cms.learn.bean.Lesson;
 import cn.asany.cms.learn.bean.LessonRecord;
@@ -26,7 +26,7 @@ public class LessonService {
 
   @Autowired private LessonRecordDao lessonRecordDao;
 
-  @Autowired private ArticleGraphQLMutationResolver articleGraphQLMutationResolver;
+  @Autowired private ArticleService articleService;
 
   public List<Lesson> lessonsByCourseId(Course course) {
     return this.lessonDao.findByCourse(course);
@@ -65,7 +65,7 @@ public class LessonService {
   public Lesson createLesson(LessonInput input) {
     ArticleInput articleInput = new ArticleInput();
     BeanUtils.copyProperties(input, articleInput);
-    Article article = articleGraphQLMutationResolver.createArticle(articleInput);
+    Article article = null; // articleService.save(articleInput);
     Lesson lesson = new Lesson();
     lesson.setCourse(Course.builder().id(input.getCourse()).build());
     lesson.setArticle(article);
@@ -82,7 +82,7 @@ public class LessonService {
           lessonRecordDao.delete(lessonRecord);
         });
     lessonDao.deleteById(id);
-    articleGraphQLMutationResolver.removeArticle(lesson.getArticle().getId());
+    //    articleGraphQLMutationResolver.removeArticle(lesson.getArticle().getId());
     return true;
   }
 
@@ -98,7 +98,8 @@ public class LessonService {
     }
     ArticleInput articleInput = new ArticleInput();
     BeanUtils.copyProperties(input, articleInput);
-    articleGraphQLMutationResolver.updateArticle(lesson.getArticle().getId(), merge, articleInput);
+    //    articleGraphQLMutationResolver.updateArticle(lesson.getArticle().getId(), merge,
+    // articleInput);
     return lesson;
   }
 

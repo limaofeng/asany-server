@@ -52,24 +52,12 @@ public class ArticleGraphQLQueryResolver implements GraphQLQueryResolver {
    * @return
    */
   public ArticleConnection articles(
-      String organization,
-      ArticleFilter filter,
-      Boolean isLimit,
-      int first,
-      int page,
-      int pageSize,
-      OrderBy orderBy) {
+      ArticleFilter filter, int first, int page, int pageSize, OrderBy orderBy) {
     PropertyFilterBuilder builder =
         ObjectUtil.defaultValue(filter, new ArticleFilter()).getBuilder();
-    builder.equal("organization.id", organization);
-    Pager<Article> pager = null;
-    if (isLimit == true) {
-      pager =
-          new Pager<>(ObjectUtil.defaultValue(orderBy, OrderBy.desc("createdAt")), first, pageSize);
-    } else {
-      pager =
-          new Pager<>(page, pageSize, ObjectUtil.defaultValue(orderBy, OrderBy.desc("createdAt")));
-    }
+    Pager<Article> pager = Pager.<Article>builder().pageSize(pageSize).pageSize(pageSize).build();
+
+    pager.setOrderBy(ObjectUtil.defaultValue(orderBy, OrderBy.desc("createdAt")));
 
     return Kit.connection(
         articleService.findPager(pager, builder.build()), ArticleConnection.class);
@@ -78,16 +66,11 @@ public class ArticleGraphQLQueryResolver implements GraphQLQueryResolver {
   /**
    * 查询所有栏目
    *
-   * @param organization
    * @return
    */
-  public List<ArticleChannel> articleChannels(
-      String organization, ArticleChannelFilter filter, OrderBy orderBy) {
+  public List<ArticleChannel> articleChannels(ArticleChannelFilter filter, OrderBy orderBy) {
     PropertyFilterBuilder builder =
         ObjectUtil.defaultValue(filter, new ArticleChannelFilter()).getBuilder();
-    //    if (organization != null) {
-    //      builder.equal("organization.id", organization);
-    //    }
     if (orderBy != null) {
       return channelService.findAllArticle(builder.build(), orderBy.toSort());
     } else {

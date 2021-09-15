@@ -1,4 +1,4 @@
-package cn.asany.nuwa.app.graphql;
+package cn.asany.nuwa.app.graphql.subscription;
 
 import cn.asany.nuwa.template.bean.ApplicationTemplateRoute;
 import graphql.kickstart.tools.GraphQLSubscriptionResolver;

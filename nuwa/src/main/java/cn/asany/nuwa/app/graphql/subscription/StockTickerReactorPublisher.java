@@ -1,11 +1,6 @@
-package cn.asany.nuwa.app.graphql;
+package cn.asany.nuwa.app.graphql.subscription;
 
 import cn.asany.nuwa.template.bean.ApplicationTemplateRoute;
-import io.reactivex.BackpressureStrategy;
-import io.reactivex.Flowable;
-import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
-import io.reactivex.observables.ConnectableObservable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -13,29 +8,32 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.ConnectableFlux;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.FluxSink;
 
 @Slf4j
 @Component
-public class StockTickerRxPublisher {
+public class StockTickerReactorPublisher {
 
-  private final Flowable<ApplicationTemplateRoute> publisher;
+  private final Flux<ApplicationTemplateRoute> publisher;
 
-  public StockTickerRxPublisher() {
-    Observable<ApplicationTemplateRoute> stockPriceUpdateObservable =
-        Observable.create(
+  public StockTickerReactorPublisher() {
+    Flux<ApplicationTemplateRoute> stockPriceUpdateFlux =
+        Flux.create(
             emitter -> {
               ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
               executorService.scheduleAtFixedRate(newStockTick(emitter), 0, 2, TimeUnit.SECONDS);
-            });
+            },
+            FluxSink.OverflowStrategy.BUFFER);
+    ConnectableFlux<ApplicationTemplateRoute> connectableFlux =
+        stockPriceUpdateFlux.share().publish();
+    connectableFlux.connect();
 
-    ConnectableObservable<ApplicationTemplateRoute> connectableObservable =
-        stockPriceUpdateObservable.share().publish();
-    connectableObservable.connect();
-
-    publisher = connectableObservable.toFlowable(BackpressureStrategy.BUFFER);
+    publisher = Flux.from(connectableFlux);
   }
 
-  private Runnable newStockTick(ObservableEmitter<ApplicationTemplateRoute> emitter) {
+  private Runnable newStockTick(FluxSink<ApplicationTemplateRoute> emitter) {
     return () -> {
       List<ApplicationTemplateRoute> stockPriceUpdates = getUpdates(5);
       if (stockPriceUpdates != null) {
@@ -45,25 +43,25 @@ public class StockTickerRxPublisher {
   }
 
   private void emitStocks(
-      ObservableEmitter<ApplicationTemplateRoute> emitter,
+      FluxSink<ApplicationTemplateRoute> emitter,
       List<ApplicationTemplateRoute> stockPriceUpdates) {
     for (ApplicationTemplateRoute stockPriceUpdate : stockPriceUpdates) {
       try {
-        emitter.onNext(stockPriceUpdate);
+        emitter.next(stockPriceUpdate);
       } catch (RuntimeException e) {
         log.error("Cannot send StockUpdate", e);
       }
     }
   }
 
-  public Flowable<ApplicationTemplateRoute> getPublisher() {
+  public Flux<ApplicationTemplateRoute> getPublisher() {
     return publisher;
   }
 
-  public Flowable<ApplicationTemplateRoute> getPublisher(List<String> stockCodes) {
+  public Flux<ApplicationTemplateRoute> getPublisher(List<String> stockCodes) {
     if (stockCodes != null) {
       return publisher.filter(
-          stockPriceUpdate -> true /*stockCodes.contains(stockPriceUpdate.getStockCode())*/);
+          stockPriceUpdate -> true /*stockCodes.contains(stockPriceUpdate.getStockCode()*/);
     }
     return publisher;
   }

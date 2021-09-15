@@ -4,11 +4,9 @@ import cn.asany.cms.special.bean.enums.SubscriberType;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.Date;
 import javax.persistence.*;
-import javax.validation.constraints.Null;
 import lombok.*;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.spring.validation.RESTful;
 
 /** 订阅记录 */
 @Data
@@ -29,7 +27,7 @@ import org.jfantasy.framework.spring.validation.RESTful;
 public class Subscriber extends BaseBusEntity {
   /** 订阅人ID */
   @Id
-  @Null(groups = RESTful.POST.class)
+  //  @Null(groups = RESTful.POST.class)
   @Column(name = "ID", nullable = false, precision = 22)
   @GeneratedValue(strategy = GenerationType.TABLE, generator = "subscriber_gen")
   @TableGenerator(

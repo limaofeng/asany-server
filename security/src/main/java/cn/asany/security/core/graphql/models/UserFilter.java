@@ -27,7 +27,7 @@ public class UserFilter {
   @JsonProperty("department")
   public void setDepartment(Long id) {
     //        DepartmentService departmentService =
-    // SpringContextUtil.getBeanByType(DepartmentService.class);
+    // SpringBeanUtils.getBeanByType(DepartmentService.class);
     //        Department department = departmentService.get(id);
     //        List<Department> departments =
     // departmentService.departmentsByPath(department.getPath());
@@ -69,7 +69,7 @@ public class UserFilter {
   public void setDeptName(String value) {
     //        if (StringUtils.isNotBlank(value)) {
     //            DepartmentService departmentService =
-    // SpringContextUtil.getBeanByType(DepartmentService.class);
+    // SpringBeanUtils.getBeanByType(DepartmentService.class);
     //            List<PropertyFilter> filters = new DepartmentFilter().getBuilder()
     //                    .contains("name", value)
     //                    .build();

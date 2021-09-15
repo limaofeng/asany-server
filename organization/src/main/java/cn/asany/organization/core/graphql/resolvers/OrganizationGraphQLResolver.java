@@ -8,7 +8,6 @@ import cn.asany.organization.core.service.DepartmentService;
 import cn.asany.organization.core.service.DepartmentTypeService;
 import cn.asany.organization.core.service.JobService;
 import cn.asany.organization.employee.service.EmployeeService;
-import cn.asany.organization.relationship.service.OrganizationEmployeeService;
 import graphql.kickstart.tools.GraphQLResolver;
 import java.util.List;
 import org.jfantasy.framework.dao.OrderBy;
@@ -29,7 +28,6 @@ public class OrganizationGraphQLResolver implements GraphQLResolver<Organization
   @Autowired private EmployeeService employeeService;
   @Autowired private JobService jobService;
   @Autowired private DepartmentTypeService departmentTypeService;
-  @Autowired private OrganizationEmployeeService organizationEmployeeService;
 
   public List<Job> jobs(Organization organization, OrderBy orderBy) {
     return jobService.findAll(organization.getId(), orderBy);

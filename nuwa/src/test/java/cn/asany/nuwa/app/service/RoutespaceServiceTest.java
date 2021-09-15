@@ -2,6 +2,7 @@ package cn.asany.nuwa.app.service;
 
 import cn.asany.nuwa.TestApplication;
 import cn.asany.nuwa.app.bean.Routespace;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,11 +20,16 @@ class RoutespaceServiceTest {
   @Autowired private RoutespaceService routespaceService;
 
   @Test
-  void createRoutespace() {
-    this.routespaceService.createRoutespace(
-        Routespace.builder().id("web").name("PC Web").applicationTemplate(1L).build());
+  void clearRoutespace() {
+    List<Routespace> routespaces = routespaceService.findAll();
+    for (Routespace routespace : routespaces) {
+      routespaceService.deleteRoutespace(routespace.getId());
+    }
+  }
 
-    this.routespaceService.createRoutespace(
-        Routespace.builder().id("wap").name("Wap 网站").applicationTemplate(1L).build());
+  @Test
+  void createRoutespace() {
+    this.routespaceService.createRoutespace(Routespace.DEFAULT_ROUTESPACE_WEB);
+    this.routespaceService.createRoutespace(Routespace.DEFAULT_ROUTESPACE_WAP);
   }
 }

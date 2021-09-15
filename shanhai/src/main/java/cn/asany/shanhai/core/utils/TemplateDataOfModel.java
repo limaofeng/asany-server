@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
-import org.jfantasy.framework.spring.SpringContextUtil;
+import org.jfantasy.framework.spring.SpringBeanUtils;
 
 @AllArgsConstructor
 public class TemplateDataOfModel {
@@ -26,13 +26,13 @@ public class TemplateDataOfModel {
   }
 
   public TemplateDataOfModelField getIdField() {
-    ModelUtils modelUtils = SpringContextUtil.getBeanByType(ModelUtils.class);
+    ModelUtils modelUtils = SpringBeanUtils.getBeanByType(ModelUtils.class);
     Optional<ModelField> idFieldOptional = modelUtils.getId(model);
     return idFieldOptional.map(TemplateDataOfModelField::new).orElse(null);
   }
 
   public List<TemplateDataOfModelField> getFields() {
-    ModelUtils modelUtils = SpringContextUtil.getBeanByType(ModelUtils.class);
+    ModelUtils modelUtils = SpringBeanUtils.getBeanByType(ModelUtils.class);
     return modelUtils.getFields(model).stream()
         .map(item -> new TemplateDataOfModelField(item))
         .collect(Collectors.toList());

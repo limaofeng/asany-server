@@ -6,7 +6,7 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import java.io.IOException;
-import org.jfantasy.framework.spring.SpringContextUtil;
+import org.jfantasy.framework.spring.SpringBeanUtils;
 import org.jfantasy.framework.util.common.StringUtil;
 
 public class ImageDeserializer extends JsonDeserializer<Image> {
@@ -25,7 +25,7 @@ public class ImageDeserializer extends JsonDeserializer<Image> {
 
   private static FileService getFileService() {
     if (fileService == null) {
-      fileService = SpringContextUtil.getBeanByType(FileService.class);
+      fileService = SpringBeanUtils.getBeanByType(FileService.class);
     }
     return fileService;
   }

@@ -5,11 +5,9 @@ import cn.asany.storage.api.converter.FileObjectConverter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import javax.persistence.*;
 import javax.tools.FileObject;
-import javax.validation.constraints.Null;
 import lombok.*;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.spring.validation.RESTful;
 
 @Data
 @Builder
@@ -23,7 +21,7 @@ import org.jfantasy.framework.spring.validation.RESTful;
 public class SpecialArticle extends BaseBusEntity {
 
   @Id
-  @Null(groups = RESTful.POST.class)
+  //  @Null(groups = RESTful.POST.class)
   @Column(name = "ID", nullable = false, precision = 22)
   @GeneratedValue(strategy = GenerationType.TABLE, generator = "special_article_gen")
   @TableGenerator(

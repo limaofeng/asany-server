@@ -3,15 +3,20 @@ package cn.asany.base.common.bean;
 import cn.asany.base.common.bean.enums.PhoneNumberStatus;
 import javax.persistence.*;
 
+/**
+ * 电话
+ *
+ * @author limaofeng
+ */
 @Embeddable
-public class PhoneNumber {
+public class Phone {
   /** 状态 */
   @Enumerated(EnumType.STRING)
   @Column(name = "STATUS", nullable = false, length = 20)
   private PhoneNumberStatus status;
   /** 电话 */
-  @Column(name = "phone", nullable = false, length = 25)
-  private String phone;
+  @Column(name = "NUMBER", nullable = false, length = 25)
+  private String number;
 
   public PhoneNumberStatus getStatus() {
     return status;
@@ -21,11 +26,11 @@ public class PhoneNumber {
     this.status = status;
   }
 
-  public String getPhone() {
-    return phone;
+  public String getNumber() {
+    return number;
   }
 
-  public void setPhone(String phone) {
-    this.phone = phone;
+  public void setNumber(String number) {
+    this.number = number;
   }
 }

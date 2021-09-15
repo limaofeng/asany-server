@@ -6,7 +6,7 @@ import cn.asany.shanhai.core.bean.enums.ModelType;
 import cn.asany.shanhai.core.support.model.FieldType;
 import cn.asany.shanhai.core.support.model.FieldTypeRegistry;
 import lombok.AllArgsConstructor;
-import org.jfantasy.framework.spring.SpringContextUtil;
+import org.jfantasy.framework.spring.SpringBeanUtils;
 import org.jfantasy.framework.util.common.ObjectUtil;
 
 @AllArgsConstructor
@@ -26,7 +26,7 @@ public class TemplateDataOfModelField {
   }
 
   public String getJavaType() {
-    FieldTypeRegistry registry = SpringContextUtil.getBeanByType(FieldTypeRegistry.class);
+    FieldTypeRegistry registry = SpringBeanUtils.getBeanByType(FieldTypeRegistry.class);
     FieldType type = registry.getType(this.field.getType().getCode());
     return type.getJavaType(this.field.getMetadata());
   }
@@ -40,7 +40,7 @@ public class TemplateDataOfModelField {
   }
 
   public String getHibernateType() {
-    FieldTypeRegistry registry = SpringContextUtil.getBeanByType(FieldTypeRegistry.class);
+    FieldTypeRegistry registry = SpringBeanUtils.getBeanByType(FieldTypeRegistry.class);
     FieldType type = registry.getType(this.field.getType().getCode());
     return type.getHibernateType(this.field.getMetadata());
   }
@@ -50,7 +50,7 @@ public class TemplateDataOfModelField {
     Model modelType = modelUtils.getModelById(this.field.getType().getId()).get();
     String graphQLType = modelType.getCode();
     if (modelType.getType() == ModelType.SCALAR) {
-      FieldTypeRegistry registry = SpringContextUtil.getBeanByType(FieldTypeRegistry.class);
+      FieldTypeRegistry registry = SpringBeanUtils.getBeanByType(FieldTypeRegistry.class);
       FieldType type = registry.getType(modelType.getCode());
       graphQLType = type == null ? graphQLType : type.getGraphQLType(this.field.getMetadata());
     }

@@ -28,11 +28,7 @@ input RouteCreateInput {
     # 路由类型
     type: RouteType
     # 需要提供的权限
-    authority: [String]
-    # 在菜单中隐藏
-    hideInMenu: Boolean
-    # 在菜单中隐藏子节点
-    hideChildrenInMenu: Boolean
+    access: String
     # 在面包屑中隐藏菜单
     hideInBreadcrumb: Boolean
     # 重定向的路径
@@ -58,12 +54,8 @@ input RouteUpdateInput {
     path: String
     # 必须登录
     authorized: Boolean
-    # 需要提供的权限
-    authority: [String]
-    # 在菜单中隐藏
-    hideInMenu: Boolean
-    # 在菜单中隐藏子节点
-    hideChildrenInMenu: Boolean
+    # 访问权限
+    access: String
     # 在面包屑中隐藏菜单
     hideInBreadcrumb: Boolean
     # 重定向的路径
@@ -85,12 +77,45 @@ input RouteComponentInput {
     #    routeWrapper: RouteComponentWrapperInput
 }
 
-#input RouteComponentWrapperInput {
-#    # 渲染组件
-#    template: String
-#    # 组件配置数据
-#    props: JSON
-#}
+input MenuCreateInput {
+    # 名称
+    name: String!
+    # 对应的图标
+    icon: String
+    # 菜单类型
+    type: MenuType
+    # 路径
+    path: String
+    # 必须登录
+    authorized: Boolean
+    # 需要提供的权限
+    authority: [String]
+    # 父路由
+    parentMenu: ID
+    # 默认位置
+    index: Int
+    # 应用
+    application: ID
+}
+
+input MenuUpdateInput {
+    # 名称
+    name: String!
+    # 对应的图标
+    icon: String
+    # 菜单类型
+    type: MenuType
+    # 路径
+    path: String
+    # 必须登录
+    authorized: Boolean
+    # 需要提供的权限
+    authority: [String]
+    # 父路由
+    parentMenu: ID
+    # 默认位置
+    index: Int
+}
 
 type RouteComponent {
     # 渲染组件
@@ -117,18 +142,8 @@ input ApplicationCreateInput {
     name: String!
     # 简介
     description: String
-    # 应用 LOGO
-    logo: String
-    # 封面图
-    cover: String
-    # 组织
-    organization: String
-    # 应用根路径
-    path: String
-    # 是否启用
-    enabled: Boolean
-    # 集成钉钉
-    dingtalkIntegration: Boolean
+    # 路由空间
+    routespaces: [String] = ["web"]
 }
 
 input ApplicationUpdateInput {
@@ -156,6 +171,36 @@ type ClientSecret {
     secret: String
 }
 
+type Menu {
+    id: ID
+    # 菜单名称
+    name: String
+    # 路由类型
+    type: MenuType
+    # 对应的图标
+    icon: String
+    # 树路径
+    path: String
+    # 必须登录
+    authorized: Boolean
+    # 在面包屑中隐藏菜单
+    hideInBreadcrumb: Boolean
+    # 需要提供的权限
+    authority: [String]
+    # 序号
+    index: Int
+    # 子菜单
+    children: [Menu]
+    # 父菜单
+    parent: Menu
+    # 菜单层级
+    level: Int
+    # 是否启用
+    enabled: Boolean
+    # 路由对应的应用
+    application: Application
+}
+
 type Application {
     id: ID
     # 名称
@@ -166,18 +211,14 @@ type Application {
     logo: String
     # 应用访问地址
     url: String
-    #    # 组织
-    #    organization: Organization
     # 是否启用
     enabled: Boolean
     # 路由
     routes(space: ID = "web"): [Route]
+    # 菜单
+    menus: [Menu]
     # 路由命名空间
     routespaces: [Routespace]
-    # 路由
-    route(space: ID = "web", path: String!): Route
-    # 根路由
-    rootRoute(space: ID = "web"): Route
     # 登录路由
     loginRoute(space: ID = "web"): Route
     # 布局路由
@@ -188,13 +229,7 @@ type Application {
     clientId: String
     # 客户端密钥
     clientSecrets: [ClientSecret]
-    #钉钉
-    #    dingtalk: DingtalkDataSource
 }
-
-#type DingtalkDataSource {
-#    id: ID
-#}
 
 type ApplicationVariable {
     key: String
@@ -212,6 +247,15 @@ enum RouteType {
     ROUTE
 }
 
+enum MenuType {
+    # 链接地址
+    URL,
+    # 菜单
+    MENU,
+    # 脚本
+    SCRIPT
+}
+
 type Route {
     id: ID
     # 菜单名称
@@ -224,12 +268,8 @@ type Route {
     path: String
     # 必须登录
     authorized: Boolean
-    # 需要提供的权限
-    authority: [String]
-    # 在菜单中隐藏
-    hideInMenu: Boolean
-    # 在菜单中隐藏子节点
-    hideChildrenInMenu: Boolean
+    # 访问权限
+    access: String
     # 在面包屑中隐藏菜单
     hideInBreadcrumb: Boolean
     # 重定向
@@ -252,12 +292,13 @@ type Route {
 
 union StarValue = Application
 
-
 extend type Query {
     # 所有的应用
     applications(filter: ApplicationFilter = {}): [Application]
     # 查询单个应用的信息
     application(id: ID!, idType: ApplicationIdType, space: ID = "web"): Application
+    # 查询路由
+    route(id: ID!): Route
 }
 
 extend type Mutation {
@@ -266,13 +307,21 @@ extend type Mutation {
     # 更新应用信息
     updateApplication(id: ID!, input: ApplicationUpdateInput!, merge: Boolean = true): Application
     # 删除应用
-    removeApplication(id: ID!): Boolean
+    deleteApplication(id: ID!): Boolean
     # 创建路由
     createRoute(input: RouteCreateInput!): Route
     # 更新路由信息
     updateRoute(id: ID!, input: RouteUpdateInput!, merge: Boolean = true): Route
     # 删除路由
-    removeRoute(id: ID!): Boolean
+    deleteRoute(id: ID!): Boolean
     # 移动路由
     moveRoute(id: ID!, parentRoute: ID, location: Int!): Route
+    # 创建菜单
+    createMenu(input: MenuCreateInput!): Menu
+    # 更新菜单
+    updateMenu(id: ID!, input: MenuUpdateInput!, merge: Boolean = true): Menu
+    # 删除菜单
+    deleteMenu(id: ID!): Boolean
+    # 移动菜单
+    moveMenu(id: ID!, parentMenu: ID, location: Int!): Menu
 }

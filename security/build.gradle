@@ -2,6 +2,7 @@ dependencies {
 	implementation 'com.nimbusds:nimbus-jose-jwt:8.16'
 	implementation "org.springframework.boot:spring-boot-starter-data-redis"
 	implementation project(":asany-base")
+	implementation project(":asany-storage-api")
 	implementation project(":asany-organization")
 	compileOnly "org.projectlombok:lombok:${LIB_LOMBOK_VER}"
 	annotationProcessor "org.projectlombok:lombok:$LIB_LOMBOK_VER"

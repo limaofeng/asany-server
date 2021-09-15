@@ -11,7 +11,7 @@ import javax.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.spring.SpringContextUtil;
+import org.jfantasy.framework.spring.SpringBeanUtils;
 
 @Data
 @Builder
@@ -182,7 +182,7 @@ public class ModelEndpoint extends BaseBusEntity {
     }
 
     public ModelEndpointBuilder delegate(Class<? extends DelegateDataFetcher> resolverClass) {
-      ModelUtils modelUtils = SpringContextUtil.getBeanByType(ModelUtils.class);
+      ModelUtils modelUtils = SpringBeanUtils.getBeanByType(ModelUtils.class);
       this.delegate = modelUtils.getDelegate(resolverClass);
       return this;
     }

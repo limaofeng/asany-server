@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.persistence.AttributeConverter;
 import org.hibernate.transform.ResultTransformer;
-import org.jfantasy.framework.spring.SpringContextUtil;
+import org.jfantasy.framework.spring.SpringBeanUtils;
 import org.jfantasy.framework.util.common.ClassUtil;
 import org.jfantasy.framework.util.ognl.OgnlUtil;
 
@@ -21,7 +21,7 @@ public class ModelResultTransformer implements ResultTransformer {
   private Map<String, AttributeConverter> converterMap = new ConcurrentHashMap<>();
 
   public ModelResultTransformer(Collection<ModelField> fields) {
-    FieldTypeRegistry registry = SpringContextUtil.getBeanByType(FieldTypeRegistry.class);
+    FieldTypeRegistry registry = SpringBeanUtils.getBeanByType(FieldTypeRegistry.class);
     this.fields = fields;
     for (ModelField field : fields) {
       AttributeConverter type = registry.getType(field.getType().getCode());

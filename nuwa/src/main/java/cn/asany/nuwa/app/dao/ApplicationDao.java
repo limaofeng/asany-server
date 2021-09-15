@@ -6,12 +6,28 @@ import org.jfantasy.framework.dao.jpa.JpaRepository;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.stereotype.Repository;
 
+/**
+ * 应用存储库
+ *
+ * @author limaofeng
+ */
 @Repository
 public interface ApplicationDao extends JpaRepository<Application, Long> {
 
-  @EntityGraph(value = "Graph.Application.FetchRoute", type = EntityGraph.EntityGraphType.FETCH)
-  Optional<Application> findByClientIdWithRoute(String clientId);
-
-  @EntityGraph(value = "Graph.Application.FetchRoute", type = EntityGraph.EntityGraphType.FETCH)
-  Optional<Application> findByIdWithRoute(Long id);
+  /**
+   * 获取应用详情
+   *
+   * @param clientId 客户端ID
+   * @return 应用详情
+   */
+  @EntityGraph(value = "Graph.Application.FetchDetails", type = EntityGraph.EntityGraphType.FETCH)
+  Optional<Application> findDetailsByClientId(String clientId);
+  /**
+   * 获取应用详情
+   *
+   * @param id 应用ID
+   * @return 应用详情
+   */
+  @EntityGraph(value = "Graph.Application.FetchDetails", type = EntityGraph.EntityGraphType.FETCH)
+  Optional<Application> findDetailsById(Long id);
 }

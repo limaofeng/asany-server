@@ -1,6 +1,6 @@
 package cn.asany.organization.employee.bean;
 
-import cn.asany.base.common.bean.PhoneNumber;
+import cn.asany.base.common.bean.Phone;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import javax.persistence.*;
 import lombok.*;
@@ -40,7 +40,7 @@ public class EmployeePhoneNumber extends BaseBusEntity {
   @Column(name = "LABEL", length = 30)
   private String label;
   /** 电话 */
-  @Embedded private PhoneNumber phone;
+  @Embedded private Phone phone;
   /** 员工 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(

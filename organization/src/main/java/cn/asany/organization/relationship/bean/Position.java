@@ -6,6 +6,7 @@ import cn.asany.organization.core.bean.Organization;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import javax.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
 /**
@@ -29,13 +30,8 @@ public class Position extends BaseBusEntity {
   /** 职位编码 */
   @Id
   @Column(name = "ID", precision = 22)
-  @GeneratedValue(generator = "org_job_gen")
-  @TableGenerator(
-      name = "org_job_gen",
-      table = "sys_sequence",
-      pkColumnName = "gen_name",
-      pkColumnValue = "org_job:id",
-      valueColumnName = "gen_value")
+  @GeneratedValue(generator = "fantasy-sequence")
+  @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
   /** 职位名称 */
   @Column(name = "NAME", nullable = false, length = 50)

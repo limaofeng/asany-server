@@ -1,6 +1,7 @@
 package cn.asany.security.auth.graphql;
 
 import cn.asany.security.auth.error.UnauthorizedException;
+import cn.asany.security.auth.graphql.types.CurrentUser;
 import cn.asany.security.core.bean.User;
 import cn.asany.security.core.exception.UserNotFoundException;
 import cn.asany.security.core.service.UserService;
@@ -9,7 +10,6 @@ import graphql.schema.DataFetchingEnvironment;
 import java.util.Optional;
 import org.jfantasy.framework.security.LoginUser;
 import org.jfantasy.framework.security.SpringSecurityUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -22,24 +22,28 @@ import org.springframework.stereotype.Component;
 @Component
 public class LoginGraphQLQueryResolver implements GraphQLQueryResolver {
 
-  @Autowired private UserService userService;
+  private final UserService userService;
+
+  public LoginGraphQLQueryResolver(UserService userService) {
+    this.userService = userService;
+  }
 
   /**
    * 获取当前用户
    *
-   * @param organization 设置当前组织
    * @param environment 上下文对象
-   * @return
-   * @throws UserNotFoundException
+   * @return LoginUser 登录用户
+   * @throws UserNotFoundException 用户不存在
    */
-  public LoginUser viewer(String organization, DataFetchingEnvironment environment)
-      throws UserNotFoundException {
+  public CurrentUser viewer(DataFetchingEnvironment environment) throws UserNotFoundException {
     LoginUser loginUser = SpringSecurityUtils.getCurrentUser();
     if (loginUser == null) {
       throw new UnauthorizedException("需要登录");
     }
-    Optional<User> optionalUser = userService.get(Long.valueOf(loginUser.getUid()));
-    return userService.buildLoginUser(
-        optionalUser.orElseThrow(() -> new UserNotFoundException(loginUser.getUid() + "对应的用户不存在")));
+    Optional<User> optionalUser = userService.get(loginUser.getUid());
+    if (!optionalUser.isPresent()) {
+      throw new UserNotFoundException(loginUser.getUid() + "对应的用户不存在");
+    }
+    return new CurrentUser(userService.buildLoginUser(optionalUser.get()));
   }
 }

@@ -13,12 +13,14 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import org.jfantasy.framework.spring.SpringContextUtil;
+import org.jfantasy.framework.spring.SpringBeanUtils;
 import org.jfantasy.framework.util.common.StringUtil;
 
 /**
+ * 授予权限
+ *
  * @author limaofeng
- * @version V1.0 @Description: TODO
+ * @version V1.0
  * @date 2019-06-27 10:07
  */
 public class GrantPermissionUtils {
@@ -27,7 +29,7 @@ public class GrantPermissionUtils {
 
   private static GrantPermissionService getGrantPermissionService() {
     if (grantPermissionService == null) {
-      grantPermissionService = SpringContextUtil.getBeanByType(GrantPermissionService.class);
+      grantPermissionService = SpringBeanUtils.getBeanByType(GrantPermissionService.class);
     }
     return grantPermissionService;
   }
@@ -80,15 +82,15 @@ public class GrantPermissionUtils {
                   .filter(item -> item.getSecurityType() == SecurityType.user)
                   .filter(item -> StringUtil.isNotBlank(item.getValue()))
                   .map(item -> getUserService().get(Long.valueOf(item.getValue())))
-                  .filter(item -> item.isPresent())
-                  .map(item -> item.get())
+                  .filter(Optional::isPresent)
+                  .map(Optional::get)
                   .collect(Collectors.toList()));
         });
     return users.stream();
   }
 
   private static UserService getUserService() {
-    return SpringContextUtil.getBeanByType(UserService.class);
+    return SpringBeanUtils.getBeanByType(UserService.class);
   }
 
   public static List<Permission> getPermissions(List<Permission> grants, String permissionKey) {

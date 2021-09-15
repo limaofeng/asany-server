@@ -97,13 +97,13 @@ public class EmployeeGroupService {
     } else {
       all = this.employeeGroupDao.findAll(Example.of(builder.build()));
     }
-    all.forEach(
-        po ->
-            po.getEmployees()
-                .forEach(
-                    vo ->
-                        vo.setCurrentOrganization(
-                            Organization.builder().id(organization).build())));
+    //    all.forEach(
+    //        po ->
+    //            po.getEmployees()
+    //                .forEach(
+    //                    vo ->
+    //                        vo.setCurrentOrganization(
+    //                            Organization.builder().id(organization).build())));
     return all;
   }
 

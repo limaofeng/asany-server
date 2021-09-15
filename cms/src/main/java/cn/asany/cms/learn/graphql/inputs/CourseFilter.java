@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 import lombok.Data;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
-import org.jfantasy.framework.spring.SpringContextUtil;
+import org.jfantasy.framework.spring.SpringBeanUtils;
 
 @Data
 public class CourseFilter {
@@ -63,14 +63,14 @@ public class CourseFilter {
       builder.equal("learners.employee.id", this.learner);
     } else {
       //            EmployeeService employeeService =
-      // SpringContextUtil.getBeanByType(EmployeeService.class);
+      // SpringBeanUtils.getBeanByType(EmployeeService.class);
       //            Employee employee = employeeService.get(this.learner);
       //            builder.in("learnerScope.scope", employee.getAuthoritys());
     }
   }
 
   public void setElectiveEmployee(Long employeeId) {
-    LearnerService learnerService = SpringContextUtil.getBeanByType(LearnerService.class);
+    LearnerService learnerService = SpringBeanUtils.getBeanByType(LearnerService.class);
     List<Long> ids =
         learnerService.findAllByEmployee(employeeId).stream()
             .map(Learner::getCourse)
@@ -78,7 +78,7 @@ public class CourseFilter {
             .stream()
             .map(Course::getId)
             .collect(Collectors.toList());
-    LearnerScopeService service = SpringContextUtil.getBeanByType(LearnerScopeService.class);
+    LearnerScopeService service = SpringBeanUtils.getBeanByType(LearnerScopeService.class);
     ids.addAll(
         service.findAllByLearnerScope("EMPLOYEE_" + employeeId).stream()
             .map(Course::getId)

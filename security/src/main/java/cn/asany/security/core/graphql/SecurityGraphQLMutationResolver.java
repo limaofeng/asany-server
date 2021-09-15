@@ -115,7 +115,7 @@ public class SecurityGraphQLMutationResolver implements GraphQLMutationResolver 
     roles.add(Role.builder().id("USER").build());
 
     user.setRoles(roles);
-    user.setUserType(UserType.employee);
+    user.setUserType(UserType.USER);
     user = userService.save(user);
     // 保存权限
     if (input.getGrants() != null) {

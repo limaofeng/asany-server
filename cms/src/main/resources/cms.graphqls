@@ -32,10 +32,10 @@ extend type Mutation {
 extend type Query {
     # 单个文章
     article(id: ID!): Article
-    # 全部文章 isLimit true 时走下标查询使用first
-    articles(organization: ID!, filter: ArticleFilter,isLimit: Boolean = false, first: Int = 0, page: Int = 1, pageSize: Int = 15, orderBy: OrderBy): ArticleConnection
+    # 全部文章
+    articles(filter: ArticleFilter, first: Int = 0, page: Int = 1, pageSize: Int = 15, orderBy: OrderBy): ArticleConnection
     # 文章栏目
-    articleChannels(organization: ID!, filter: ArticleChannelFilter, orderBy: OrderBy): [ArticleChannel]
+    articleChannels(filter: ArticleChannelFilter, orderBy: OrderBy): [ArticleChannel]
     # 文章标签
     articleTags(organization: ID!, filter: ArticleChannelFilter, orderBy: OrderBy): [ArticleTag]
     # 文章权限
@@ -73,7 +73,7 @@ input ArticleChannelCreateInput {
     # 上级栏目
     parent: ID
     # 排序
-    sort: Int
+    index: Int
     # 组织
     organization: ID!
     # 授予权限
@@ -98,7 +98,7 @@ input ArticleChannelUpdateInput {
     # 描述
     description: String
     # 排序
-    sort: Int
+    index: Int
     # 上级栏目
     parent: ID
     # 组织
@@ -190,7 +190,7 @@ type ArticleChannel {
     # 全路径
     path: String
     # 排序
-    sort: Int
+    index: Int
     # 上级栏目
     parent: ArticleChannel
     meta: Meta
@@ -216,7 +216,7 @@ type ArticleTag {
     # 全路径
     path: String
     # 排序
-    sort: Int
+    index: Int
     meta: Meta
     createdAt: Date
     updatedAt: Date
@@ -453,7 +453,7 @@ input ArticleTagUpdateInput{
     # 描述
     description: String
     # 排序
-    sort: Int
+    index: Int
 }
 
 input ArticleTagCreateInput{
@@ -468,7 +468,7 @@ input ArticleTagCreateInput{
     # 组织
     organization: ID!
     # 排序
-    sort: Int
+    index: Int
 }
 
 input ArticleChannelFilter {

@@ -14,7 +14,7 @@ import java.util.Set;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.jfantasy.framework.spring.SpringContextUtil;
+import org.jfantasy.framework.spring.SpringBeanUtils;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.common.StreamUtil;
 import org.jfantasy.framework.util.common.file.FileUtil;
@@ -42,11 +42,11 @@ public class FileUploadService implements UploadService {
     this.fileService = fileService;
     this.storageResolver = storageResolver;
     StoragePlugin fragment =
-        SpringContextUtil.createBean(
-            FragmentStoragePlugin.class, SpringContextUtil.AutoType.AUTOWIRE_BY_TYPE);
+        SpringBeanUtils.createBean(
+            FragmentStoragePlugin.class, SpringBeanUtils.AutoType.AUTOWIRE_BY_TYPE);
     StoragePlugin base =
-        SpringContextUtil.createBean(
-            BaseStoragePlugin.class, SpringContextUtil.AutoType.AUTOWIRE_BY_TYPE);
+        SpringBeanUtils.createBean(
+            BaseStoragePlugin.class, SpringBeanUtils.AutoType.AUTOWIRE_BY_TYPE);
     plugins.put("fragment", fragment);
     plugins.put("base", base);
   }

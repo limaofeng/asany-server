@@ -11,6 +11,11 @@ import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.framework.dao.hibernate.converter.StringSetConverter;
 
+/**
+ * 应用模版 - 路由
+ *
+ * @author limaofeng
+ */
 @Data
 @Builder
 @NoArgsConstructor

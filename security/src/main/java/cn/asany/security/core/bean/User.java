@@ -1,25 +1,25 @@
 package cn.asany.security.core.bean;
 
 import cn.asany.base.common.Ownership;
+import cn.asany.base.common.bean.Email;
+import cn.asany.base.common.bean.Phone;
 import cn.asany.security.core.bean.databind.RolesDeserializer;
 import cn.asany.security.core.bean.enums.UserType;
-import cn.asany.security.core.validators.UsernameCannotRepeatValidator;
+import cn.asany.storage.api.converter.FileObjectConverter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.*;
 import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
+import javax.tools.FileObject;
 import lombok.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.validator.constraints.Length;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.framework.dao.hibernate.converter.MapConverter;
-import org.jfantasy.framework.spring.validation.RESTful;
-import org.jfantasy.framework.spring.validation.Use;
+import org.jfantasy.framework.security.core.GrantedAuthority;
+import org.jfantasy.framework.security.core.SimpleGrantedAuthority;
 import org.jfantasy.framework.util.common.ClassUtil;
 
 /** @author limaofeng */
@@ -28,6 +28,7 @@ import org.jfantasy.framework.util.common.ClassUtil;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString(exclude = {"password", "properties", "roles"})
 @Entity
 @Table(name = "AUTH_USER")
 @JsonIgnoreProperties({
@@ -40,8 +41,6 @@ import org.jfantasy.framework.util.common.ClassUtil;
 })
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class User extends BaseBusEntity implements Ownership {
-
-  private static final long serialVersionUID = 5507435998232223911L;
 
   public static final String OWNERSHIP_KEY = "PERSONAL";
 
@@ -59,14 +58,14 @@ public class User extends BaseBusEntity implements Ownership {
   private Long id;
 
   /** 用户登录名称 */
-  @NotEmpty(groups = {RESTful.POST.class, RESTful.PUT.class})
-  @Length(
-      min = 6,
-      max = 20,
-      groups = {RESTful.POST.class, RESTful.PUT.class})
-  @Use(
-      vali = UsernameCannotRepeatValidator.class,
-      groups = {RESTful.POST.class})
+  //  @NotEmpty(groups = {Operation.CREATE, Operation.UPDATE})
+  //  @Length(
+  //      min = 6,
+  //      max = 20,
+  //      groups = {Operation.CREATE, Operation.UPDATE})
+  //  @Use(
+  //      value = UsernameCannotRepeatValidator.class,
+  //      groups = {Operation.CREATE})
   @Column(name = "USERNAME", length = 20, updatable = false, nullable = false, unique = true)
   private String username;
   /** 登录密码 */
@@ -78,9 +77,30 @@ public class User extends BaseBusEntity implements Ownership {
   @Enumerated(EnumType.STRING)
   @Column(name = "USER_TYPE", length = 20, nullable = false)
   private UserType userType;
+  /** 头像 */
+  @Convert(converter = FileObjectConverter.class)
+  @Column(name = "avatar", precision = 500)
+  private FileObject avatar;
   /** 用户显示昵称 */
   @Column(name = "NICK_NAME", length = 50)
   private String nickName;
+  /** 用户显示昵称 */
+  @Column(name = "TITLE", length = 50)
+  private String title;
+  /** 电话 */
+  @Embedded
+  @AttributeOverrides({
+    @AttributeOverride(name = "status", column = @Column(name = "PHONE_STATUS")),
+    @AttributeOverride(name = "number", column = @Column(name = "PHONE_NUMBER")),
+  })
+  private Phone phone;
+  /** 邮箱 */
+  @Embedded
+  @AttributeOverrides({
+    @AttributeOverride(name = "status", column = @Column(name = "EMAIL_STATUS")),
+    @AttributeOverride(name = "address", column = @Column(name = "EMAIL_ADDRESS")),
+  })
+  private Email email;
   /** 是否启用 */
   @Column(name = "ENABLED")
   private Boolean enabled;
@@ -110,25 +130,13 @@ public class User extends BaseBusEntity implements Ownership {
       foreignKey = @ForeignKey(name = "FK_ROLE_USER_UID"))
   @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
   private List<Role> roles;
-
-  /** 管理人员 */
-  //    @OneToOne(fetch = FetchType.LAZY)
-  //    @JoinColumn(name = "EMPLOYEE_ID", foreignKey = @ForeignKey(name = "FK_AUTH_USER_EMPLOYEE"))
-  //    private Employee employee;
-
-  /** 所属组织 */
-  //    @ManyToOne(fetch = FetchType.LAZY)
-  //    @JoinColumn(name = "ORGANIZATION_ID", foreignKey = @ForeignKey(name =
-  // "FK_USER_ORGANIZATION"), updatable = false, nullable = false)
-  //    private Organization organization;
-
-  /** 用户权限 */
-  @Transient private List<GrantPermission> grants;
-
   /** 扩展字段 */
   @Convert(converter = MapConverter.class)
   @Column(name = "PROPERTIES", columnDefinition = "Text")
   private Map<String, Object> properties;
+
+  /** 用户权限 */
+  @Transient private List<GrantPermission> grants;
 
   @JsonAnySetter
   public void set(String key, Object value) {
@@ -155,47 +163,15 @@ public class User extends BaseBusEntity implements Ownership {
     return ClassUtil.newInstance(toClass, value);
   }
 
-  @Override
-  public String toString() {
-    return "User{"
-        + "id="
-        + id
-        + ", username='"
-        + username
-        + '\''
-        + ", nickName='"
-        + nickName
-        + '\''
-        + ", enabled="
-        + enabled
-        + ", accountNonExpired="
-        + accountNonExpired
-        + ", accountNonLocked="
-        + accountNonLocked
-        + ", credentialsNonExpired="
-        + credentialsNonExpired
-        + ", lockTime="
-        + lockTime
-        + ", lastLoginTime="
-        + lastLoginTime
-        + '}';
-  }
-
-  @JsonIgnore
-  public Set<String> getAuthoritys() {
-    Set<String> authoritys = new HashSet<>();
-    //        authoritys.add(SecurityScope.newInstance(SecurityType.user,
-    // this.getId().toString()).toString());
-    //        // 添加登录账户对应的组织，如果为 employee 时，忽略该组织
-    //        if (!"employee".equals(this.userType.name())) {
-    //            authoritys.add(SecurityScope.newInstance(SecurityType.organization,
-    // this.getOrganization().getId()).toString());
-    //        }
-    //        // 添加登录账户分配的角色
-    //        authoritys.addAll(this.getRoles().stream().map(role ->
-    // SecurityScope.newInstance(SecurityType.role,
-    // role.getId()).toString()).collect(Collectors.toList()));
-    return authoritys;
+  @Transient
+  public Set<? extends GrantedAuthority> getAuthorities() {
+    Set<GrantedAuthority> authorities = new HashSet<>();
+    if (this.userType == UserType.ADMIN) {
+      authorities.add(SimpleGrantedAuthority.newInstance("ROLE_ADMIN"));
+    } else {
+      authorities.add(SimpleGrantedAuthority.newInstance("ROLE_USER"));
+    }
+    return authorities;
   }
 
   @Override

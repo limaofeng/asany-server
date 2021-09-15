@@ -46,7 +46,7 @@ spring:
         max-wait: 300
         max-idle: 100
         min-idle: 100
-      timeout: 1000
+    timeout: 1000
   quartz:
     properties:
       org:

@@ -1,6 +1,7 @@
 package cn.asany.nuwa.app.graphql;
 
 import cn.asany.nuwa.app.bean.Application;
+import cn.asany.nuwa.app.bean.ApplicationRoute;
 import cn.asany.nuwa.app.graphql.input.ApplicationFilter;
 import cn.asany.nuwa.app.graphql.type.ApplicationIdType;
 import cn.asany.nuwa.app.service.ApplicationService;
@@ -26,21 +27,25 @@ public class ApplicationGraphQLQueryResolver implements GraphQLQueryResolver {
     this.applicationService = applicationService;
   }
 
+  private static ApplicationIdType getDefaultApplicationIdType(String id) {
+    return RegexpUtil.isMatch(id, RegexpConstant.VALIDATOR_INTEGE)
+        ? ApplicationIdType.ID
+        : ApplicationIdType.CLIENT_ID;
+  }
+
   public Optional<Application> application(String id, ApplicationIdType idType, String space) {
-    idType =
-        ObjectUtil.defaultValue(
-            idType,
-            () ->
-                RegexpUtil.isMatch(id, RegexpConstant.VALIDATOR_INTEGE)
-                    ? ApplicationIdType.ID
-                    : ApplicationIdType.CLIENT_ID);
+    idType = ObjectUtil.defaultValue(idType, () -> getDefaultApplicationIdType(id));
     if (ApplicationIdType.CLIENT_ID.equals(idType)) {
-      return applicationService.findByClientIdWithRoute(id, space);
+      return applicationService.findDetailsByClientId(id);
     }
-    return applicationService.findByIdWithRoute(Long.valueOf(id), space);
+    return applicationService.findDetailsById(Long.valueOf(id));
   }
 
   public List<Application> applications(ApplicationFilter filter) {
     return applicationService.findAll(filter.build());
+  }
+
+  public Optional<ApplicationRoute> route(Long id) {
+    return applicationService.getRoute(id);
   }
 }

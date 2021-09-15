@@ -9,7 +9,7 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import org.jfantasy.framework.spring.SpringContextUtil;
+import org.jfantasy.framework.spring.SpringBeanUtils;
 import org.jfantasy.framework.util.common.StringUtil;
 
 public class ImagesDeserializer extends JsonDeserializer<Image[]> {
@@ -36,7 +36,7 @@ public class ImagesDeserializer extends JsonDeserializer<Image[]> {
 
   private static FileService getFileService() {
     if (fileService == null) {
-      fileService = SpringContextUtil.getBeanByType(FileService.class);
+      fileService = SpringBeanUtils.getBeanByType(FileService.class);
     }
     return fileService;
   }

@@ -1,0 +1,30 @@
+package cn.asany.nuwa.app.runner;
+
+import cn.asany.nuwa.app.bean.Routespace;
+import cn.asany.nuwa.app.service.RoutespaceService;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Component;
+
+@Component
+@Profile("!test")
+@Slf4j
+public class InitCommandLineRunner implements CommandLineRunner {
+
+  private final RoutespaceService routespaceService;
+
+  public InitCommandLineRunner(RoutespaceService routespaceService) {
+    this.routespaceService = routespaceService;
+  }
+
+  @Override
+  public void run(String... args) throws Exception {
+    if (!routespaceService.findById(Routespace.DEFAULT_ROUTESPACE_WEB.getId()).isPresent()) {
+      this.routespaceService.createRoutespace(Routespace.DEFAULT_ROUTESPACE_WEB);
+    }
+    if (!routespaceService.findById(Routespace.DEFAULT_ROUTESPACE_WAP.getId()).isPresent()) {
+      this.routespaceService.createRoutespace(Routespace.DEFAULT_ROUTESPACE_WAP);
+    }
+  }
+}

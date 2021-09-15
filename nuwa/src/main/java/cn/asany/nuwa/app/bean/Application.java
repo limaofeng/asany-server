@@ -22,11 +22,17 @@ import org.jfantasy.framework.security.oauth2.core.ClientDetails;
 @EqualsAndHashCode(callSuper = false, of = "id")
 @ToString(exclude = {"routespaces", "routes", "clientSecretsAlias"})
 @NamedEntityGraph(
-    name = "Graph.Application.FetchRoute",
+    name = "Graph.Application.FetchDetails",
     attributeNodes = {
+      @NamedAttributeNode(value = "menus"),
       @NamedAttributeNode(value = "routes", subgraph = "SubGraph.ApplicationRoute.FetchComponent")
     },
     subgraphs = {
+      @NamedSubgraph(
+          name = "SubGraph.ApplicationMenu.FetchAll",
+          attributeNodes = {
+            @NamedAttributeNode(value = "parent"),
+          }),
       @NamedSubgraph(
           name = "SubGraph.ApplicationRoute.FetchComponent",
           attributeNodes = {
@@ -39,6 +45,7 @@ import org.jfantasy.framework.security.oauth2.core.ClientDetails;
 @Table(
     name = "NUWA_APPLICATION",
     uniqueConstraints = {
+      @UniqueConstraint(name = "UK_APPLICATION_NAME", columnNames = "NAME"),
       @UniqueConstraint(name = "UK_APPLICATION_CLIENT_ID", columnNames = "CLIENT_ID")
     })
 public class Application extends BaseBusEntity implements ClientDetails {
@@ -52,8 +59,8 @@ public class Application extends BaseBusEntity implements ClientDetails {
   @Enumerated(EnumType.STRING)
   @Column(name = "TYPE", length = 20, nullable = false)
   private ApplicationType type;
-  /** 名称 */
-  @Column(name = "NAME")
+  /** 名称 (全英文) */
+  @Column(name = "NAME", length = 50)
   private String name;
   /** 应用访问地址 */
   @Column(name = "URL")
@@ -62,6 +69,9 @@ public class Application extends BaseBusEntity implements ClientDetails {
   @Builder.Default
   @Column(name = "ENABLED")
   private Boolean enabled = true;
+  /** 标题 */
+  @Column(name = "TITLE")
+  private String title;
   /** 简介 */
   @Column(name = "DESCRIPTION")
   private String description;
@@ -81,7 +91,13 @@ public class Application extends BaseBusEntity implements ClientDetails {
       mappedBy = "application",
       cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
       fetch = FetchType.LAZY)
-  private List<ApplicationRoute> routes;
+  private Set<ApplicationRoute> routes;
+  /** 菜单 */
+  @OneToMany(
+      mappedBy = "application",
+      cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
+      fetch = FetchType.LAZY)
+  private Set<ApplicationMenu> menus;
   /** 授权回调 URL */
   @Column(name = "CALLBACK_URL", length = 100)
   private String callbackUrl;

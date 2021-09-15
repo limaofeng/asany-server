@@ -34,7 +34,12 @@ import org.jfantasy.framework.dao.BaseBusEntity;
           }),
     })
 @Entity
-@Table(name = "UI_LIBRARY")
+@Table(
+    name = "UI_LIBRARY",
+    uniqueConstraints =
+        @UniqueConstraint(
+            columnNames = {"TYPE", "NAME"},
+            name = "UK_LIBRARY_NAME"))
 @EntityListeners(value = {OplogListener.class})
 public class Library extends BaseBusEntity implements OplogDataCollector {
   @Id

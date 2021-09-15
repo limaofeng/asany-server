@@ -75,14 +75,6 @@ public class EmployeePosition extends BaseBusEntity {
       nullable = false)
   private Organization organization;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(
-      name = "ORGANIZATION_EMPLOYEE_ID",
-      foreignKey = @ForeignKey(name = "FK_ORGANIZATION_EMPLOYEE_TID"),
-      updatable = false,
-      nullable = false)
-  private OrganizationEmployee status;
-
   @JsonIgnore
   public Set<String> getAuthoritys() {
     Set<String> authoritys = new HashSet<>();

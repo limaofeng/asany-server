@@ -6,6 +6,11 @@ import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
+/**
+ * 应用模版
+ *
+ * @author limaofeng
+ */
 @Data
 @Builder
 @NoArgsConstructor
@@ -14,9 +19,10 @@ import org.jfantasy.framework.dao.BaseBusEntity;
 @Entity
 @Table(name = "NUWA_APPLICATION_TEMPLATE")
 @NamedEntityGraph(
-    name = "Graph.ApplicationTemplate.FetchRoute",
+    name = "Graph.ApplicationTemplate.FetchDetails",
     attributeNodes = {
       @NamedAttributeNode(value = "routes"),
+      @NamedAttributeNode(value = "menus"),
     })
 public class ApplicationTemplate extends BaseBusEntity {
 
@@ -25,7 +31,6 @@ public class ApplicationTemplate extends BaseBusEntity {
   @GeneratedValue(generator = "fantasy-sequence")
   @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
-
   /** 名称 */
   @Column(name = "NAME", length = 50)
   private String name;
@@ -38,4 +43,10 @@ public class ApplicationTemplate extends BaseBusEntity {
       cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
       fetch = FetchType.LAZY)
   private List<ApplicationTemplateRoute> routes;
+  /** 菜单 */
+  @OneToMany(
+      mappedBy = "application",
+      cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
+      fetch = FetchType.LAZY)
+  private List<ApplicationTemplateMenu> menus;
 }

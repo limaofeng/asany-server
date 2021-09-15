@@ -1,11 +1,8 @@
 package cn.asany.organization.relationship.service;
 
 import cn.asany.organization.core.bean.OrganizationEmployeeStatus;
-import cn.asany.organization.relationship.bean.OrganizationEmployee;
-import cn.asany.organization.relationship.dao.OrganizationEmployeeDao;
 import cn.asany.organization.relationship.dao.OrganizationEmployeeStatusDao;
 import java.util.List;
-import org.apache.commons.collections.CollectionUtils;
 import org.jfantasy.framework.dao.OrderBy;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class OrganizationEmployeeStatusService {
   @Autowired private OrganizationEmployeeStatusDao employeeStatusDao;
-  @Autowired OrganizationEmployeeDao organizationEmployeeDao;
 
   public OrganizationEmployeeStatus get(Long id) {
     return this.employeeStatusDao
@@ -42,16 +38,6 @@ public class OrganizationEmployeeStatusService {
   }
 
   public Boolean remove(Long id) {
-    List<OrganizationEmployee> organizationEmployeeDaoAll =
-        organizationEmployeeDao.findAll(
-            Example.of(
-                OrganizationEmployee.builder()
-                    .status(OrganizationEmployeeStatus.builder().id(id).build())
-                    .build()));
-    // 组织人员状态已被员工使用则不可删除
-    if (CollectionUtils.isNotEmpty(organizationEmployeeDaoAll)) {
-      return false;
-    }
     this.employeeStatusDao.deleteById(id);
     return true;
   }

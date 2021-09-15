@@ -1,28 +1,29 @@
 package cn.asany.nuwa.app.service;
 
-import cn.asany.nuwa.app.bean.Application;
-import cn.asany.nuwa.app.bean.ApplicationRoute;
-import cn.asany.nuwa.app.bean.ClientSecret;
-import cn.asany.nuwa.app.bean.Routespace;
+import cn.asany.nuwa.app.bean.*;
 import cn.asany.nuwa.app.bean.enums.ApplicationType;
+import cn.asany.nuwa.app.bean.enums.RouteType;
 import cn.asany.nuwa.app.converter.ApplicationConverter;
 import cn.asany.nuwa.app.dao.ApplicationDao;
 import cn.asany.nuwa.app.dao.ApplicationRouteDao;
 import cn.asany.nuwa.app.dao.ClientSecretDao;
 import cn.asany.nuwa.app.dao.RoutespaceDao;
 import cn.asany.nuwa.app.service.dto.NativeApplication;
+import cn.asany.nuwa.app.service.dto.NuwaMenu;
+import cn.asany.nuwa.app.service.dto.NuwaRoute;
 import cn.asany.nuwa.app.service.dto.OAuthApplication;
+import cn.asany.nuwa.template.bean.ApplicationTemplate;
+import cn.asany.nuwa.template.bean.ApplicationTemplateMenu;
 import cn.asany.nuwa.template.bean.ApplicationTemplateRoute;
-import cn.asany.security.oauth.dao.AccessTokenDao;
+import cn.asany.nuwa.template.dao.ApplicationTemplateDao;
 import cn.asany.ui.resources.bean.Component;
 import cn.asany.ui.resources.bean.enums.ComponentScope;
 import cn.asany.ui.resources.dao.ComponentDao;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
+import org.jfantasy.framework.error.ValidationException;
 import org.jfantasy.framework.security.oauth2.core.ClientDetails;
 import org.jfantasy.framework.security.oauth2.core.ClientDetailsService;
 import org.jfantasy.framework.security.oauth2.core.ClientRegistrationException;
@@ -40,10 +41,10 @@ public class ApplicationService implements ClientDetailsService {
 
   private static final String NONCE_CHARS = "abcdef0123456789";
 
-  private final AccessTokenDao accessTokenDao;
   private final ApplicationDao applicationDao;
   private final ClientSecretDao clientSecretDao;
   private final ApplicationRouteDao applicationRouteDao;
+  private final ApplicationTemplateDao applicationTemplateDao;
   private final ComponentDao componentDao;
   private final RoutespaceDao routespaceDao;
   private final ApplicationConverter applicationConverter;
@@ -55,14 +56,14 @@ public class ApplicationService implements ClientDetailsService {
       RoutespaceDao routespaceDao,
       ApplicationConverter applicationConverter,
       ApplicationRouteDao applicationRouteDao,
-      AccessTokenDao accessTokenDao) {
+      ApplicationTemplateDao applicationTemplateDao) {
     this.applicationDao = applicationDao;
     this.clientSecretDao = clientSecretDao;
     this.componentDao = componentDao;
     this.routespaceDao = routespaceDao;
     this.applicationConverter = applicationConverter;
     this.applicationRouteDao = applicationRouteDao;
-    this.accessTokenDao = accessTokenDao;
+    this.applicationTemplateDao = applicationTemplateDao;
   }
 
   public List<Application> findAll(List<PropertyFilter> filter) {
@@ -81,13 +82,13 @@ public class ApplicationService implements ClientDetailsService {
   }
 
   @Transactional
-  public Optional<Application> findByClientIdWithRoute(String id, String space) {
-    return this.applicationDao.findByClientIdWithRoute(id);
+  public Optional<Application> findDetailsByClientId(String id) {
+    return this.applicationDao.findDetailsByClientId(id);
   }
 
   @Transactional
-  public Optional<Application> findByIdWithRoute(Long id, String space) {
-    return this.applicationDao.findByIdWithRoute(id);
+  public Optional<Application> findDetailsById(Long id) {
+    return this.applicationDao.findDetailsById(id);
   }
 
   @Transactional
@@ -98,21 +99,53 @@ public class ApplicationService implements ClientDetailsService {
 
   @Transactional
   public Application createApplication(OAuthApplication app) {
+    Application application = this.applicationConverter.oauthAppToApp(app);
     String clientId = StringUtil.generateNonceString(NONCE_CHARS, 20);
     String clientSecret = StringUtil.generateNonceString(NONCE_CHARS, 40);
     List<ClientSecret> clientSecrets = new ArrayList<>();
     clientSecrets.add(ClientSecret.builder().id(1L).client(clientId).secret(clientSecret).build());
-    return Application.builder().clientId(clientId).clientSecretsAlias(clientSecrets).build();
+    application.setClientId(clientId);
+    application.setClientSecretsAlias(clientSecrets);
+    return application;
   }
 
   @Transactional
   public Application createApplication(NativeApplication nativeApplication) {
-    List<Routespace> routespaces =
-        this.routespaceDao.findByIdsWithApplicationTemplateRoute(
-            nativeApplication.getRoutespaces());
+    return createApplication(nativeApplication, Optional.empty());
+  }
 
-    String clientId = StringUtil.generateNonceString(NONCE_CHARS, 20);
-    String clientSecretStr = StringUtil.generateNonceString(NONCE_CHARS, 40);
+  @Transactional
+  public Application createApplication(NativeApplication nativeApplication, Long template) {
+    Optional<ApplicationTemplate> optionalTemplate = this.applicationTemplateDao.findById(template);
+    if (!optionalTemplate.isPresent()) {
+      throw new ValidationException("应用模版" + template + "不存在");
+    }
+    return createApplication(nativeApplication, optionalTemplate);
+  }
+
+  public Application createApplication(
+      NativeApplication nativeApplication, Optional<ApplicationTemplate> template) {
+
+    if (StringUtil.isBlank(nativeApplication.getRoutespace())) {
+      nativeApplication.setRoutespace(Routespace.DEFAULT_ROUTESPACE_WEB.getId());
+    }
+
+    Optional<Routespace> optionalRoutespace =
+        this.routespaceDao.findByIdWithApplicationTemplate(nativeApplication.getRoutespace());
+
+    if (!optionalRoutespace.isPresent()) {
+      throw new ValidationException("应用路由 Space " + template + "不存在");
+    }
+
+    Routespace routespace = optionalRoutespace.get();
+
+    String clientId =
+        ObjectUtil.defaultValue(
+            nativeApplication.getClientId(), () -> StringUtil.generateNonceString(NONCE_CHARS, 20));
+    String clientSecretStr =
+        ObjectUtil.defaultValue(
+            nativeApplication.getClientSecret(),
+            () -> StringUtil.generateNonceString(NONCE_CHARS, 40));
 
     // 创建密钥
     List<ClientSecret> clientSecrets = new ArrayList<>();
@@ -129,45 +162,41 @@ public class ApplicationService implements ClientDetailsService {
             .description(nativeApplication.getDescription())
             .clientId(clientId)
             .clientSecretsAlias(clientSecrets)
-            .routespaces(routespaces)
-            .routes(new ArrayList<>())
+            .routespaces(Arrays.stream(new Routespace[] {routespace}).collect(Collectors.toList()))
+            .routes(new HashSet<>())
             .build();
 
     // 生成应用路由
-    List<ApplicationRoute> routes = new ArrayList<>();
-    for (Routespace routespace : routespaces) {
-      List<ApplicationTemplateRoute> templateRoutes =
-          ObjectUtil.tree(
-              routespace.getApplicationTemplate().getRoutes(),
-              "id",
-              "parent.id",
-              "routes",
-              item -> {
-                ApplicationTemplateRoute route =
-                    ObjectUtil.clone(item, "routes", "application", "component");
-                Component component = item.getComponent();
-                if (component == null) {
-                  return route;
-                }
-                if (component.getScope() == ComponentScope.ROUTE) {
-                  route.setComponent(this.componentDao.save(ObjectUtil.clone(component, "id")));
-                } else {
-                  route.setComponent(Component.builder().id(component.getId()).build());
-                }
-                return route;
-              });
-      List<ApplicationRoute> spaceRoutes =
-          applicationConverter.toRoutes(templateRoutes, routespace);
-      routes.addAll(ObjectUtil.flat(spaceRoutes, "routes"));
+    ApplicationTemplate applicationTemplate = template.orElse(routespace.getApplicationTemplate());
+    if (nativeApplication.getRoutes() != null && !nativeApplication.getRoutes().isEmpty()) {
+      application.setRoutes(getRoutesFromNuwa(nativeApplication.getRoutes(), routespace));
+    } else if (applicationTemplate != null) {
+      application.setRoutes(getRoutesFromTemplate(applicationTemplate, routespace));
     }
-    application.setRoutes(routes);
+
+    // 生成菜单
+    if (nativeApplication.getMenus() != null && !nativeApplication.getMenus().isEmpty()) {
+      application.setMenus(getMenusFromNuwa(nativeApplication.getMenus()));
+    } else if (applicationTemplate != null) {
+      application.setMenus(getMenusFromTemplate(applicationTemplate));
+    }
 
     // 保存应用
     this.applicationDao.save(application);
     return application;
   }
 
-  @Transactional
+  @Transactional(rollbackOn = Exception.class)
+  public void deleteApplication(String name) {
+    Optional<Application> application =
+        this.applicationDao.findOne(PropertyFilter.builder().equal("name", name).build());
+    if (!application.isPresent()) {
+      return;
+    }
+    deleteApplication(application.get().getId());
+  }
+
+  @Transactional(rollbackOn = Exception.class)
   public void deleteApplication(Long id) {
     List<ApplicationRoute> routes =
         this.applicationRouteDao.findAll(
@@ -177,11 +206,91 @@ public class ApplicationService implements ClientDetailsService {
                 .isNotNull("component")
                 .build());
     List<Component> components =
-        routes.stream().map(item -> item.getComponent()).collect(Collectors.toList());
+        routes.stream().map(ApplicationRoute::getComponent).collect(Collectors.toList());
 
     this.applicationDao.deleteById(id);
 
     // 删除对应的路由组件
     this.componentDao.deleteAll(components);
+  }
+
+  private Set<ApplicationMenu> getMenusFromNuwa(List<NuwaMenu> nuwaMenus) {
+    List<ApplicationMenu> menus =
+        ObjectUtil.recursive(
+            nuwaMenus,
+            (item, context) -> {
+              ApplicationMenu menu = this.applicationConverter.toMenuFromNuwa(item);
+              menu.setIndex(context.getIndex());
+              menu.setLevel(context.getLevel());
+              menu.setEnabled(ObjectUtil.defaultValue(menu.getEnabled(), true));
+              menu.setAuthorized(ObjectUtil.defaultValue(menu.getAuthorized(), false));
+              menu.setHideInBreadcrumb(ObjectUtil.defaultValue(menu.getHideInBreadcrumb(), false));
+              return menu;
+            });
+    menus = ObjectUtil.flat(menus, "children");
+    return new HashSet<>(menus);
+  }
+
+  private Set<ApplicationMenu> getMenusFromTemplate(ApplicationTemplate applicationTemplate) {
+    List<ApplicationTemplateMenu> templateMenus =
+        ObjectUtil.tree(applicationTemplate.getMenus(), "id", "parent.id", "children");
+    List<ApplicationMenu> menus = applicationConverter.toMenusFromTemplate(templateMenus);
+    return new HashSet<>(ObjectUtil.flat(menus, "children"));
+  }
+
+  private Set<ApplicationRoute> getRoutesFromNuwa(
+      List<NuwaRoute> nuwaRoutes, Routespace routespace) {
+    List<ApplicationRoute> routes =
+        ObjectUtil.recursive(
+            nuwaRoutes,
+            (item, context) -> {
+              ApplicationRoute route = this.applicationConverter.toRouteFromNuwa(item);
+              route.setIndex(context.getIndex());
+              route.setLevel(context.getLevel());
+              route.setSpace(routespace);
+              route.setType(RouteType.ROUTE);
+              route.setEnabled(ObjectUtil.defaultValue(route.getEnabled(), true));
+              route.setAuthorized(ObjectUtil.defaultValue(route.getAuthorized(), false));
+              route.setHideInBreadcrumb(
+                  ObjectUtil.defaultValue(route.getHideInBreadcrumb(), false));
+              Component component = route.getComponent();
+              if (component == null) {
+                return route;
+              }
+              component.setScope(ComponentScope.ROUTE);
+              this.componentDao.save(component);
+              return route;
+            });
+    return new HashSet<>(ObjectUtil.flat(routes, "routes"));
+  }
+
+  private Set<ApplicationRoute> getRoutesFromTemplate(
+      ApplicationTemplate applicationTemplate, Routespace routespace) {
+    List<ApplicationTemplateRoute> templateRoutes =
+        ObjectUtil.tree(
+            applicationTemplate.getRoutes(),
+            "id",
+            "parent.id",
+            "routes",
+            item -> {
+              ApplicationTemplateRoute route =
+                  ObjectUtil.clone(item, "routes", "application", "component");
+              Component component = item.getComponent();
+              if (component == null) {
+                return route;
+              }
+              if (component.getScope() == ComponentScope.ROUTE) {
+                route.setComponent(this.componentDao.save(ObjectUtil.clone(component, "id")));
+              } else {
+                route.setComponent(Component.builder().id(component.getId()).build());
+              }
+              return route;
+            });
+    List<ApplicationRoute> spaceRoutes = applicationConverter.toRoutes(templateRoutes, routespace);
+    return new HashSet<>(ObjectUtil.flat(spaceRoutes, "routes"));
+  }
+
+  public Optional<ApplicationRoute> getRoute(Long id) {
+    return this.applicationRouteDao.findById(id);
   }
 }

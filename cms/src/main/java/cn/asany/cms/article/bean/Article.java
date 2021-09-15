@@ -19,7 +19,6 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
 import javax.persistence.Table;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Null;
 import lombok.*;
 import net.bytebuddy.description.modifier.Ownership;
@@ -28,7 +27,7 @@ import org.hibernate.annotations.Cache;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.framework.lucene.annotations.IndexProperty;
 import org.jfantasy.framework.lucene.annotations.Indexed;
-import org.jfantasy.framework.spring.validation.RESTful;
+import org.jfantasy.framework.spring.validation.Operation;
 
 /**
  * 文章表
@@ -51,10 +50,8 @@ import org.jfantasy.framework.spring.validation.RESTful;
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "target", "comments"})
 public class Article extends BaseBusEntity {
 
-  private static final long serialVersionUID = 3480217915594201004L;
-
   @Id
-  @Null(groups = RESTful.POST.class)
+  @Null(groups = Operation.Create.class)
   @Column(name = "ID", nullable = false, precision = 22)
   @GeneratedValue(strategy = GenerationType.TABLE, generator = "article_gen")
   @TableGenerator(
@@ -68,17 +65,17 @@ public class Article extends BaseBusEntity {
   @Column(name = "SN", length = 200)
   private String url;
   /** 文章对应的 频道 / 栏目 */
-  @ManyToMany(targetEntity = ArticleTag.class, fetch = FetchType.LAZY)
+  @ManyToMany(targetEntity = ArticleChannel.class, fetch = FetchType.LAZY)
   @JoinTable(
-      name = "CMS_ARTICLE_CHANNEL",
+      name = "CMS_ARTICLE_CHANNEL_ITEM",
       joinColumns =
           @JoinColumn(
               name = "ARTICLE_ID",
-              foreignKey = @ForeignKey(name = "FK_CMS_ARTICLE_CHANNEL_AID")),
+              foreignKey = @ForeignKey(name = "FK_CMS_ARTICLE_CHANNEL_ITEM_AID")),
       inverseJoinColumns =
           @JoinColumn(
               name = "CHANNEL_ID",
-              foreignKey = @ForeignKey(name = "FK_CMS_ARTICLE_CHANNEL_CID")))
+              foreignKey = @ForeignKey(name = "FK_CMS_ARTICLE_CHANNEL_ITEM_CID")))
   private List<ArticleChannel> channels;
   /** 类型 */
   @Enumerated(EnumType.STRING)
@@ -89,7 +86,7 @@ public class Article extends BaseBusEntity {
   @Column(name = "STATUS", length = 20, nullable = false)
   private ArticleStatus status;
   /** 文章标题 */
-  @NotEmpty(groups = RESTful.POST.class)
+  //  @NotEmpty(groups = RESTful.POST.class)
   @IndexProperty(analyze = true, store = true)
   @Column(name = "TITLE")
   private String title;
@@ -111,13 +108,13 @@ public class Article extends BaseBusEntity {
   /** 标签 */
   @ManyToMany(targetEntity = ArticleTag.class, fetch = FetchType.LAZY)
   @JoinTable(
-      name = "CMS_ARTICLE_TAGS",
+      name = "CMS_ARTICLE_TAG_ITEM",
       joinColumns =
           @JoinColumn(
               name = "ARTICLE_ID",
-              foreignKey = @ForeignKey(name = "FK_ARTICLE_TAGS_ARTICLE")),
+              foreignKey = @ForeignKey(name = "FK_ARTICLE_TAG_ITEM_ARTICLE")),
       inverseJoinColumns =
-          @JoinColumn(name = "TAG_ID", foreignKey = @ForeignKey(name = "FK_ARTICLE_TAGS_TAG")))
+          @JoinColumn(name = "TAG_ID", foreignKey = @ForeignKey(name = "FK_ARTICLE_TAG_ITEM_TAG")))
   private List<ArticleTag> tags;
   /** 推荐位 */
   @OneToMany(

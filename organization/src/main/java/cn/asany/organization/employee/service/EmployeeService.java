@@ -11,12 +11,9 @@ import cn.asany.organization.employee.bean.EmployeeLink;
 import cn.asany.organization.employee.bean.EmployeePhoneNumber;
 import cn.asany.organization.employee.dao.*;
 import cn.asany.organization.relationship.bean.EmployeePosition;
-import cn.asany.organization.relationship.bean.OrganizationEmployee;
 import cn.asany.organization.relationship.bean.Position;
-import cn.asany.organization.relationship.dao.OrganizationEmployeeDao;
 import cn.asany.organization.relationship.dao.OrganizationEmployeeStatusDao;
 import cn.asany.organization.relationship.dao.PositionDao;
-import cn.asany.organization.relationship.service.OrganizationEmployeeService;
 import cn.asany.organization.relationship.service.PositionService;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +51,6 @@ public class EmployeeService {
   @Autowired private EmployeePositionDao employeePositionDao;
   @Autowired private PositionDao positionDao;
   @Autowired private EmployeeLinkDao employeeLinkDao;
-  @Autowired private OrganizationEmployeeDao organizationEmployeeDao;
   @Autowired private OrganizationEmployeeStatusDao organizationEmployeeStatusDao;
   //    @Autowired
   //    private AddressDao addressDao;
@@ -67,7 +63,6 @@ public class EmployeeService {
   //    private EmailDao emailDao;
   //    @Autowired
   //    private PhoneDao phoneDao;
-  @Autowired private OrganizationEmployeeService organizationEmployeeService;
   @Autowired private DepartmentDao departmentDao;
   //    @Autowired
   //    private UserService userService;
@@ -81,11 +76,11 @@ public class EmployeeService {
 
   public Employee save(
       Employee employee,
-      List<OrganizationEmployee> organizationEmployees,
+      //      List<OrganizationEmployee> organizationEmployees,
       //                         List<EmployeeEmail> employeeEmails,
       List<EmployeePhoneNumber> phoneList) {
     // 添加该用户是否可以在多部门中
-    Boolean supportMultiSectoral = supportMultiSectoral(organizationEmployees);
+    Boolean supportMultiSectoral = supportMultiSectoral();
     if (supportMultiSectoral) {
       employee = this.employeeDao.save(employee);
       //            if (StringUtil.isNotBlank(user.getPassword())) {
@@ -113,7 +108,7 @@ public class EmployeeService {
       //            if (CollectionUtils.isNotEmpty(organizationEmployees)) {
       //                saveOrganzationEmployees(employee, organizationEmployees);
       //            }
-      employee.getOrganizationEmployees().forEach(item -> item.setPositions(null));
+      //      employee.getOrganizationEmployees().forEach(item -> item.setPositions(null));
       return employee;
     }
     return null;
@@ -125,7 +120,7 @@ public class EmployeeService {
    * @param organizationEmployees 员工所在组织集合
    * @return
    */
-  public Boolean supportMultiSectoral(List<OrganizationEmployee> organizationEmployees) {
+  public Boolean supportMultiSectoral() {
     //        if (organizationEmployees.size() <= 0) {
     //            return false;
     //        }
@@ -483,15 +478,6 @@ public class EmployeeService {
                 (root, query, builder) ->
                     builder.equal(
                         root.join("employeePositions").join("organization").get("id"), orgId));
-    employees.stream()
-        .forEach(
-            employee ->
-                employee.getEmployeePositions().stream()
-                    .forEach(
-                        item -> {
-                          item.getPosition().getName();
-                          item.getDepartment().getName();
-                        }));
     return employees;
   }
 

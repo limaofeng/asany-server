@@ -9,6 +9,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
+import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.common.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -60,6 +61,35 @@ public class ArticleChannelService {
 
   public ArticleChannel update(ArticleChannel channel, boolean patch) {
     return this.channelDao.update(channel, patch);
+  }
+
+  /**
+   * 批量保存
+   *
+   * @param channels 栏目
+   * @return List<ArticleChannel>
+   */
+  public List<ArticleChannel> saveAll(List<ArticleChannel> channels) {
+    channels =
+        ObjectUtil.recursive(
+            channels,
+            (item, context) -> {
+              int index = context.getIndex();
+              int level = context.getLevel();
+              ArticleChannel parent = context.getParent();
+              if (parent == null) {
+                item.setPath(item.getCode() + "/");
+              } else {
+                item.setPath(parent.getPath() + item.getCode() + "/");
+              }
+              item.setParent(parent);
+              item.setIndex(index);
+              item.setLevel(level);
+              return item;
+            });
+    channels = ObjectUtil.flat(channels, "children");
+    this.channelDao.saveAllInBatch(channels);
+    return channels;
   }
 
   public ArticleChannel save(String name) {

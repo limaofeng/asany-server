@@ -50,6 +50,6 @@ public class Component extends BaseBusEntity {
   private String template;
   /** 组件数据 */
   @Convert(converter = ComponentDataConverter.class)
-  @Column(name = "PROPS", columnDefinition = "JSON")
-  private List<ComponentData> props;
+  @Column(name = "BLOCKS", columnDefinition = "JSON")
+  private List<ComponentData> blocks;
 }

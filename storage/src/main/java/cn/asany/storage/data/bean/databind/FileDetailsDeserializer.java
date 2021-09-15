@@ -11,7 +11,7 @@ import java.lang.reflect.Array;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jfantasy.framework.jackson.JSON;
-import org.jfantasy.framework.spring.SpringContextUtil;
+import org.jfantasy.framework.spring.SpringBeanUtils;
 import org.jfantasy.framework.util.common.ClassUtil;
 import org.jfantasy.framework.util.common.StringUtil;
 
@@ -57,7 +57,7 @@ public class FileDetailsDeserializer extends JsonDeserializer<FileDetail[]> {
 
   private static FileService getFileService() {
     if (fileService == null) {
-      fileService = SpringContextUtil.getBeanByType(FileService.class);
+      fileService = SpringBeanUtils.getBeanByType(FileService.class);
     }
     return fileService;
   }

@@ -4,8 +4,10 @@ import cn.asany.storage.api.FileObject;
 import cn.asany.storage.api.Storage;
 import cn.asany.storage.data.bean.FileDetail;
 import cn.asany.storage.data.service.FileService;
-import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URLEncoder;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -13,11 +15,9 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.jfantasy.framework.util.common.ImageUtil;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.common.StreamUtil;
 import org.jfantasy.framework.util.common.StringUtil;
-import org.jfantasy.framework.util.common.file.FileUtil;
 import org.jfantasy.framework.util.regexp.RegexpUtil;
 import org.jfantasy.framework.util.web.ServletUtils;
 import org.jfantasy.framework.util.web.WebUtil;
@@ -90,18 +90,19 @@ public class FileFilter extends GenericFilterBean {
       RegexpUtil.Group group = RegexpUtil.parseFirstGroup(url, regex);
       // 图片缩放
       assert group != null;
-      BufferedImage image =
-          ImageUtil.reduce(
-              fileObject.getInputStream(),
-              Integer.valueOf(group.$(1)),
-              Integer.valueOf(group.$(2)));
-      // 创建临时文件
-      File tmp = FileUtil.tmp();
-      ImageUtil.write(image, tmp);
+      // TODO: 缺少缩放逻辑
+      //      BufferedImage image =
+      //          ImageUtil.reduce(
+      //              fileObject.getInputStream(),
+      //              Integer.valueOf(group.$(1)),
+      //              Integer.valueOf(group.$(2)));
+      //      // 创建临时文件
+      //      File tmp = FileUtil.tmp();
+      //      ImageUtil.write(image, tmp);
       //            fileDetail = fileUploadService.upload(tmp, url, "haolue-upload");
       // 删除临时文件
-      FileUtil.delFile(tmp);
-      writeFile(request, response, Storage.getFileItem(fileDetail.getPath()));
+      //      FileUtil.delFile(tmp);
+      //      writeFile(request, response, Storage.getFileItem(fileDetail.getPath()));
     } else {
       chain.doFilter(request, response);
     }

@@ -13,7 +13,7 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.jfantasy.framework.dao.hibernate.util.HibernateUtils;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
-import org.jfantasy.framework.spring.SpringContextUtil;
+import org.jfantasy.framework.spring.SpringBeanUtils;
 import org.jfantasy.framework.util.common.ClassUtil;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.concurrent.LinkedQueue;
@@ -41,7 +41,7 @@ public class OplogService implements InitializingBean {
   @SneakyThrows
   public void execute() {
     List<Oplog> cache = new ArrayList<>();
-    OplogService oplogService = SpringContextUtil.getBeanByType(OplogService.class);
+    OplogService oplogService = SpringBeanUtils.getBeanByType(OplogService.class);
     while (true) {
       Oplog oplog = queue.poll(500, TimeUnit.MILLISECONDS);
       if (oplog != null) {

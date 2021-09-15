@@ -5,7 +5,6 @@ import cn.asany.cms.article.bean.ArticleTag;
 import cn.asany.cms.article.graphql.inputs.ArticleChannelInput;
 import cn.asany.cms.article.graphql.inputs.ArticleTagInput;
 import org.mapstruct.*;
-import org.mapstruct.factory.Mappers;
 
 /**
  * 文章栏目转换器
@@ -14,16 +13,18 @@ import org.mapstruct.factory.Mappers;
  * @version V1.0
  * @date 2019-08-15 09:50
  */
-@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
+@Mapper(
+    componentModel = "spring",
+    builder = @Builder,
+    unmappedTargetPolicy = ReportingPolicy.IGNORE,
+    nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
 public interface ArticleChannelConverter {
-  ArticleChannelConverter INSTANCE = Mappers.getMapper(ArticleChannelConverter.class);
 
   @Mappings({
     @Mapping(source = "url", target = "code"),
     @Mapping(target = "id", ignore = true),
     @Mapping(target = "path", ignore = true),
     @Mapping(target = "parent", source = "parent", qualifiedByName = "formatChannelParent"),
-    @Mapping(target = "permissions", ignore = true)
   })
   ArticleChannel toChannel(ArticleChannelInput tag);
 

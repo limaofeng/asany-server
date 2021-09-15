@@ -1,0 +1,22 @@
+channels:
+  - code: services
+    name: 服务
+    children:
+      - code: solution
+        name: 解决方案
+      - code: cases
+        name: 客户案例
+  - code: news
+    name: 新闻动态
+    children:
+      - code: self
+        name: 互升新闻
+      - code: industry
+        name: 行业新闻
+  - code: about
+    name: 关于
+    children:
+      - code: introduce
+        name: 互升新闻
+      - code: testimonials
+        name: 行业新闻

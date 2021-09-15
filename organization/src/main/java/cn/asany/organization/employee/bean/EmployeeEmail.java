@@ -1,6 +1,6 @@
 package cn.asany.organization.employee.bean;
 
-import cn.asany.organization.employee.bean.enums.EmailStatus;
+import cn.asany.base.common.bean.enums.EmailStatus;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import javax.persistence.*;
 import lombok.*;

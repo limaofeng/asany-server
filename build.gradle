@@ -62,6 +62,7 @@ allprojects {
     }
 
     repositories {
+        maven { url "https://s01.oss.sonatype.org/content/groups/staging/" }
         maven { url "https://jcenter.bintray.com" }
         mavenCentral()
         mavenLocal()
@@ -95,18 +96,20 @@ subprojects {
     dependencies {
         implementation "cn.asany.chaos:jfantasy-core:$LIB_JFAN_VER"
         implementation "cn.asany.chaos:jfantasy-graphql:$LIB_JFAN_VER"
+        implementation("org.springframework:spring-web")
+        implementation("com.jayway.jsonpath:json-path")
+        implementation("com.fasterxml.jackson.core:jackson-databind")
         compileOnly "org.mapstruct:mapstruct:$LIB_MAPSTRUCT_VER"
         compileOnly "org.projectlombok:lombok:$LIB_LOMBOK_VER"
         annotationProcessor "org.projectlombok:lombok:$LIB_LOMBOK_VER"
         annotationProcessor "org.mapstruct:mapstruct-processor:$LIB_MAPSTRUCT_VER"
+        annotationProcessor "org.projectlombok:lombok-mapstruct-binding:${LIB_LOMBOK_MAPSTRUCT_BINDING_VER}"
         annotationProcessor "org.springframework.boot:spring-boot-configuration-processor:$LIB_SPRING_BOOT_VER"
-        annotationProcessor "org.projectlombok:lombok-mapstruct-binding:0.2.0"
+        testCompileOnly 'org.yaml:snakeyaml:1.25'
         testCompileOnly "org.projectlombok:lombok:$LIB_LOMBOK_VER"
         testAnnotationProcessor "org.projectlombok:lombok:$LIB_LOMBOK_VER"
         testAnnotationProcessor "org.mapstruct:mapstruct-processor:$LIB_MAPSTRUCT_VER"
-        implementation("org.springframework:spring-web")
-        implementation("com.fasterxml.jackson.core:jackson-databind")
-        implementation("com.jayway.jsonpath:json-path")
+        testAnnotationProcessor "org.projectlombok:lombok-mapstruct-binding:${LIB_LOMBOK_MAPSTRUCT_BINDING_VER}"
         testImplementation "com.graphql-java-kickstart:graphql-spring-boot-starter-test:$LIB_GRAPHQL_VER"
         testImplementation("org.springframework.boot:spring-boot-starter-test")
         testImplementation("org.springframework.boot:spring-boot-starter-web")

@@ -3,7 +3,7 @@ package cn.asany.ui.library.dao.listener;
 import cn.asany.ui.library.bean.enums.Operation;
 import cn.asany.ui.library.service.OplogService;
 import javax.persistence.*;
-import org.jfantasy.framework.spring.SpringContextUtil;
+import org.jfantasy.framework.spring.SpringBeanUtils;
 
 public class OplogListener {
 
@@ -11,7 +11,7 @@ public class OplogListener {
 
   private OplogService getOplogService() {
     if (this._oplogService == null) {
-      this._oplogService = SpringContextUtil.getBeanByType(OplogService.class);
+      this._oplogService = SpringBeanUtils.getBeanByType(OplogService.class);
     }
     return this._oplogService;
   }

@@ -355,7 +355,7 @@ public class GraphQLSchema {
   }
 
   public static class GraphQLSchemaBuilder {
-    private List<String> parsing = new ArrayList<>();
+    private final List<String> parsing = new ArrayList<>();
     private String content;
 
     public GraphQLSchemaBuilder schema(String schemaInput) {
