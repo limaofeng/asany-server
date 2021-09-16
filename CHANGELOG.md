@@ -1,3 +1,22 @@
+# Changelog
+
+All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+
+### [0.0.13](https://github.com/limaofeng/asany-server/compare/v0.0.12...v0.0.13) (2021-09-16)
+
+
+### Features
+
+* 添加 Banner 接口 ([a14814c](https://github.com/limaofeng/asany-server/commit/a14814c8a7ae272d031541f876dda9b00b2b68fa))
+* 添加 CMS 模块 ([125c0f3](https://github.com/limaofeng/asany-server/commit/125c0f3c3b86acd53d7c203e3b2ba21f46c8a79a))
+* 添加 FileObjectFormatDirective 指令 ([587ae87](https://github.com/limaofeng/asany-server/commit/587ae875db4c6b3a6b0fbc7c0c61c24b0ad5aae4))
+* 添加菜单及banner ([4b35c70](https://github.com/limaofeng/asany-server/commit/4b35c70dd388493ccf78377671f9c62b1ace23e5))
+
+
+### Bug Fixes
+
+* 解决 CMS 模块编译问题 ([41918b9](https://github.com/limaofeng/asany-server/commit/41918b978f081e179e5903c1283c717ae6ff007d))
+
 ## [0.0.10](https://github.com/limaofeng/asany-server/compare/v0.0.9...v0.0.10) (2021-07-29)
 
 
@@ -8,6 +27,3 @@
 * 删除 deleteLibrary 方法 ([dee69b5](https://github.com/limaofeng/asany-server/commit/dee69b5a6db38db66d83cd1812eaaa2b11f01ef4))
 * 图标库及图标的维护接口 ([1e322ed](https://github.com/limaofeng/asany-server/commit/1e322ed7094779c69c11f4c08d82903c414c4bc3))
 * 添加操作日志 ([c2693a8](https://github.com/limaofeng/asany-server/commit/c2693a88776bad9b500ee507c94e976ec922a91e))
-
-
-
