@@ -1,10 +1,11 @@
 package cn.asany.cms.article.bean;
 
-import cn.asany.cms.article.bean.enums.MediaType;
+import cn.asany.cms.article.bean.enums.BackgroundType;
 import cn.asany.storage.api.FileObject;
 import cn.asany.storage.api.converter.FileObjectConverter;
 import javax.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.framework.lucene.annotations.Indexed;
@@ -22,6 +23,7 @@ import org.jfantasy.framework.lucene.annotations.Indexed;
 @Indexed
 @Entity
 @Table(name = "CMS_BANNER")
+@DynamicUpdate
 public class Banner extends BaseBusEntity {
   @Id
   @Column(name = "ID")
@@ -34,17 +36,23 @@ public class Banner extends BaseBusEntity {
   /** 标题 */
   @Column(name = "TITLE", length = 200)
   private String title;
+  /** 副标题 */
+  @Column(name = "SUBTITLE", length = 200)
+  private String subtitle;
   /** 描述 */
   @Column(name = "description", length = 500)
   private String description;
+  /** 是否启用 */
+  @Column(name = "ENABLED")
+  private Boolean enabled;
   /** 媒介 */
-  @Column(name = "MEDIA", length = 20)
+  @Column(name = "BACKGROUND_TYPE", length = 20)
   @Enumerated(EnumType.STRING)
-  private MediaType mediaType;
+  private BackgroundType backgroundType;
   /** 媒介 */
-  @Column(name = "MEDIA", length = 500)
+  @Column(name = "BACKGROUND", columnDefinition = "TINYTEXT")
   @Convert(converter = FileObjectConverter.class)
-  private FileObject media;
+  private FileObject background;
   /** 地址 */
   @Column(name = "URL", length = 100)
   private String url;

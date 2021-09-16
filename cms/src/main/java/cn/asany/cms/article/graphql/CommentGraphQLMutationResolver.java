@@ -2,7 +2,7 @@ package cn.asany.cms.article.graphql;
 
 import cn.asany.cms.article.bean.Comment;
 import cn.asany.cms.article.bean.enums.CommentTargetType;
-import cn.asany.cms.article.graphql.inputs.CommentInput;
+import cn.asany.cms.article.graphql.input.CommentInput;
 import cn.asany.cms.article.service.CommentService;
 import graphql.kickstart.tools.GraphQLMutationResolver;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -226,7 +226,7 @@ public class OSSStorage implements Storage {
     @Override
     public FileObject getParentFile() {
       return this.fileManager.retrieveFileItem(
-          RegexpUtil.replace(this.getAbsolutePath(), "[^/]+[/]{0,1}$", ""));
+          RegexpUtil.replace(this.getPath(), "[^/]+[/]{0,1}$", ""));
     }
 
     @Override

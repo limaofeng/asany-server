@@ -3,6 +3,11 @@ package cn.asany.storage.data.bean;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+/**
+ * 图片
+ *
+ * @author limaofeng
+ */
 public class Image extends FileDetail implements Comparable<Image> {
 
   /** 排序 */

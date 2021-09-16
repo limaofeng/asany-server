@@ -3,19 +3,17 @@ package cn.asany.cms.article.graphql;
 import cn.asany.cms.article.bean.Article;
 import cn.asany.cms.article.bean.ArticleChannel;
 import cn.asany.cms.article.bean.ArticleTag;
-import cn.asany.cms.article.graphql.converters.ArticleChannelConverter;
+import cn.asany.cms.article.converter.ArticleChannelConverter;
 import cn.asany.cms.article.graphql.enums.ArticleChannelStarType;
 import cn.asany.cms.article.graphql.enums.ArticleStarType;
-import cn.asany.cms.article.graphql.inputs.ArticleChannelFilter;
-import cn.asany.cms.article.graphql.inputs.ArticleFilter;
-import cn.asany.cms.article.graphql.types.ArticleConnection;
+import cn.asany.cms.article.graphql.input.ArticleChannelFilter;
+import cn.asany.cms.article.graphql.input.ArticleFilter;
+import cn.asany.cms.article.graphql.type.ArticleConnection;
 import cn.asany.cms.article.service.ArticleChannelService;
 import cn.asany.cms.article.service.ArticleService;
 import cn.asany.cms.article.service.ArticleTagService;
 import cn.asany.cms.permission.specification.StarSpecification;
 import graphql.kickstart.tools.GraphQLQueryResolver;
-import java.util.List;
-import java.util.Optional;
 import org.jfantasy.framework.dao.OrderBy;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
@@ -24,6 +22,9 @@ import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.graphql.util.Kit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.Optional;
 
 /**
  * @author limaofeng

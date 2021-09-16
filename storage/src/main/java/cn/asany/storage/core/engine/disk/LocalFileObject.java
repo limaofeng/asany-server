@@ -2,16 +2,17 @@ package cn.asany.storage.core.engine.disk;
 
 import cn.asany.storage.api.FileItemFilter;
 import cn.asany.storage.api.FileItemSelector;
-import cn.asany.storage.api.FileObject;
 import cn.asany.storage.api.FileObjectMetadata;
-import cn.asany.storage.core.*;
+import cn.asany.storage.api.FileObject;
+import cn.asany.storage.core.AbstractFileObject;
+import org.jfantasy.framework.error.IgnoreException;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import org.jfantasy.framework.error.IgnoreException;
 
 public class LocalFileObject extends AbstractFileObject {
 
@@ -87,6 +88,6 @@ public class LocalFileObject extends AbstractFileObject {
     if (this.isDirectory()) {
       throw new IgnoreException("当前对象为一个目录,不能获取 InputStream ");
     }
-    return this.fileManager.readFile(this.getAbsolutePath());
+    return this.fileManager.readFile(this.getPath());
   }
 }

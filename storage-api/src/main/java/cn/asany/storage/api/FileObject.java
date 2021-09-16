@@ -1,11 +1,14 @@
 package cn.asany.storage.api;
 
+import cn.asany.storage.databind.DefaultFileObjectSerializer;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -19,6 +22,7 @@ import java.util.List;
  * @version 1.0
  * @since 2013-9-8 下午4:49:25
  */
+@JsonDeserialize(using = DefaultFileObjectSerializer.class)
 public interface FileObject {
 
   /**
@@ -69,7 +73,7 @@ public interface FileObject {
    *
    * @return string
    */
-  String getAbsolutePath();
+  String getPath();
 
   /**
    * 最后修改日期
@@ -108,7 +112,7 @@ public interface FileObject {
    * 获取文件输入流
    *
    * @return InputStream
-   * @throws IOException
+   * @throws IOException IO 异常
    */
   @JsonIgnore
   InputStream getInputStream() throws IOException;
@@ -118,7 +122,7 @@ public interface FileObject {
     @Override
     public void serialize(FileObject fileObject, JsonGenerator jgen, SerializerProvider provider)
         throws IOException {
-      jgen.writeString(fileObject.getAbsolutePath());
+      jgen.writeString(fileObject.getPath());
     }
   }
 
@@ -126,7 +130,7 @@ public interface FileObject {
     private Util() {}
 
     public static List<FileObject> flat(List<FileObject> items, FileItemSelector selector) {
-      List<FileObject> fileObjects = new ArrayList<FileObject>();
+      List<FileObject> fileObjects = new ArrayList<>();
       for (FileObject item : items) {
         boolean include = selector.includeFile(item);
         if (include) {

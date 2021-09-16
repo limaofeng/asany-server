@@ -1,7 +1,7 @@
 package cn.asany.cms.article.graphql;
 
 import cn.asany.cms.article.bean.Recommend;
-import cn.asany.cms.article.graphql.inputs.RecommendInput;
+import cn.asany.cms.article.graphql.input.RecommendInput;
 import cn.asany.cms.article.service.RecommendService;
 import graphql.kickstart.tools.GraphQLMutationResolver;
 import org.springframework.beans.factory.annotation.Autowired;

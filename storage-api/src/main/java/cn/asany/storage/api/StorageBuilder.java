@@ -1,9 +1,25 @@
 package cn.asany.storage.api;
 
-/** @author limaofeng */
+/**
+ * 存储构建器
+ *
+ * @author limaofeng
+ */
 public interface StorageBuilder<T extends Storage, C extends IStorageConfig> {
 
-  public boolean supports(Class<C> config);
+  /**
+   * 支持
+   *
+   * @param clazz 类型
+   * @return Boolean
+   */
+  boolean supports(Class<C> clazz);
 
-  T build(C config);
+  /**
+   * 构建方法
+   *
+   * @param clazz 类型
+   * @return T
+   */
+  T build(C clazz);
 }

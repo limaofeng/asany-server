@@ -1,0 +1,66 @@
+package cn.asany.cms.article.graphql.resolver;
+
+import cn.asany.cms.article.bean.ArticleTag;
+import cn.asany.cms.article.graphql.converters.ArticleChannelConverter;
+import cn.asany.cms.article.graphql.inputs.ArticleFilter;
+import cn.asany.cms.permission.specification.StarSpecification;
+import graphql.kickstart.tools.GraphQLResolver;
+import cn.asany.cms.article.graphql.type.ArticleChannel;
+import cn.asany.cms.article.graphql.enums.ArticleChannelStarType;
+import cn.asany.cms.article.graphql.type.ArticleConnection;
+import cn.asany.cms.article.graphql.enums.ArticleStarType;
+import cn.asany.cms.article.service.ArticleService;
+import cn.asany.cms.article.service.ArticleTagService;
+import org.apache.commons.lang3.StringUtils;
+import org.jfantasy.framework.dao.OrderBy;
+import org.jfantasy.framework.dao.Pager;
+import org.jfantasy.framework.dao.jpa.PropertyFilter;
+import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
+import org.jfantasy.framework.util.common.ObjectUtil;
+import org.jfantasy.graphql.util.Kit;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import java.util.List;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+
+/**
+ * @author limaofeng
+ * @version V1.0
+ * @Description: TODO
+ * @date 2019-08-19 13:35
+ */
+@Component
+public class EmployeeExpansionByArticleGraphQLResolver implements GraphQLResolver<Employee> {
+
+    @Autowired
+    private ArticleChannelConverter articleChannelConverter;
+    @Autowired
+    private ArticleService articleService;
+    @Autowired
+    private ArticleTagService articleTagService;
+
+    public List<ArticleChannel> starredArticleChannels(Long employee, ArticleChannelStarType starType) {
+        PropertyFilterBuilder builder = PropertyFilter.builder();
+        builder.and(new StarSpecification(employee, starType.getValue()));
+        List<ArticleTag> articleTags = articleTagService.findAll(builder.build());
+        return articleTags.stream().map(item -> articleChannelConverter.toChannel(item)).collect(Collectors.toList());
+    }
+
+    public ArticleConnection starredArticles(Long employee, ArticleStarType starType, ArticleFilter filter, int page, int pageSize, OrderBy orderBy) {
+        PropertyFilterBuilder builder = ObjectUtil.defaultValue(filter, new ArticleFilter()).getBuilder();
+        if (filter != null && !StringUtils.isEmpty(filter.getCreator())){
+            Pattern pattern = Pattern.compile("^[-\\+]?[\\d]*$");
+            if (pattern.matcher(filter.getCreator()).matches()){
+                builder.equal("creator", filter.getCreator());
+            }
+//            else {
+//                List<Employee> list = organizationGrpcInvoke.findAllEmployeesFilter(filter.getCreator());
+//                        List<String> creators = list.stream().map(item -> item.getId().toString()).collect(Collectors.toList());
+//                builder.in("creator",creators);
+//            }
+        }
+        builder.and(new StarSpecification(employee, starType.getValue()));
+        return Kit.connection(articleService.findPager(new Pager<>(page, pageSize, ObjectUtil.defaultValue(orderBy, OrderBy.desc("createdAt"))), builder.build()), ArticleConnection.class);
+    }
+}

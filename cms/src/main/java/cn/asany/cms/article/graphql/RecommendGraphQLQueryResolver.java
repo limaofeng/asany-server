@@ -1,7 +1,7 @@
 package cn.asany.cms.article.graphql;
 
 import cn.asany.cms.article.bean.Recommend;
-import cn.asany.cms.article.graphql.inputs.RecommendFilter;
+import cn.asany.cms.article.graphql.input.RecommendFilter;
 import cn.asany.cms.article.service.RecommendService;
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import java.util.List;

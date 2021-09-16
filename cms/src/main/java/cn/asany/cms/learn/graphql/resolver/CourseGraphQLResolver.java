@@ -1,9 +1,9 @@
 package cn.asany.cms.learn.graphql.resolver;
 
 import cn.asany.cms.article.bean.Article;
-import cn.asany.cms.article.graphql.inputs.CommentFilter;
-import cn.asany.cms.article.graphql.resolvers.ArticleGraphQLResolver;
-import cn.asany.cms.article.graphql.types.CommentConnection;
+import cn.asany.cms.article.graphql.input.CommentFilter;
+import cn.asany.cms.article.graphql.resolver.ArticleGraphQLResolver;
+import cn.asany.cms.article.graphql.type.CommentConnection;
 import cn.asany.cms.article.service.ArticleService;
 import cn.asany.cms.learn.bean.Course;
 import cn.asany.cms.learn.bean.LearnerScope;

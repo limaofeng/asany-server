@@ -2,6 +2,7 @@ package cn.asany.storage.api.converter;
 
 import cn.asany.storage.api.FileObject;
 import javax.persistence.AttributeConverter;
+
 import org.jfantasy.framework.jackson.JSON;
 import org.jfantasy.framework.util.common.StringUtil;
 

@@ -1,7 +1,7 @@
 package cn.asany.cms.learn.service;
 
 import cn.asany.cms.article.bean.Article;
-import cn.asany.cms.article.graphql.inputs.ArticleInput;
+import cn.asany.cms.article.graphql.input.ArticleInput;
 import cn.asany.cms.article.service.ArticleService;
 import cn.asany.cms.learn.bean.Course;
 import cn.asany.cms.learn.bean.Lesson;

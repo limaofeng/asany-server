@@ -5,23 +5,29 @@ import cn.asany.storage.api.FileItemSelector;
 import cn.asany.storage.api.FileObject;
 import cn.asany.storage.api.FileObjectMetadata;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.net.ftp.FTPFile;
 import org.jfantasy.framework.error.IgnoreException;
 import org.jfantasy.framework.util.common.file.FileUtil;
 import org.jfantasy.framework.util.regexp.RegexpUtil;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+/**
+ * FTP 文件类型
+ *
+ * @author limaofeng
+ */
 @Slf4j
 public class FTPFileObject implements FileObject {
-  private FTPStorage fileManager;
+  private final FTPStorage fileManager;
+  private final String parentPath;
+  private final String absolutePath;
   private FTPFile ftpFile;
-  private String parentPath;
-  private String absolutePath;
 
   public FTPFileObject(final FTPFile ftpFile, String parentPath, FTPStorage fileManager) {
     this.ftpFile = ftpFile;
@@ -72,11 +78,11 @@ public class FTPFileObject implements FileObject {
       if (!this.isDirectory()) {
         return fileObjects;
       }
-      for (FTPFile ftpFile : fileManager.ftpService.listFiles(this.getAbsolutePath() + "/")) {
+      for (FTPFile ftpFile : fileManager.ftpService.listFiles(this.getPath() + "/")) {
         if (RegexpUtil.find(ftpFile.getName(), "^[.]{1,}$")) {
           continue;
         }
-        fileObjects.add(fileManager.retrieveFileItem(ftpFile, this.getAbsolutePath()));
+        fileObjects.add(fileManager.retrieveFileItem(ftpFile, this.getPath()));
       }
       return fileObjects;
     } catch (IOException e) {
@@ -101,7 +107,7 @@ public class FTPFileObject implements FileObject {
 
   @Override
   public FileObject getParentFile() {
-    return "/".equals(this.getAbsolutePath())
+    return "/".equals(this.getPath())
         ? null
         : new FTPFileObject(this.parentPath, fileManager);
   }
@@ -122,7 +128,7 @@ public class FTPFileObject implements FileObject {
   }
 
   @Override
-  public String getAbsolutePath() {
+  public String getPath() {
     return this.absolutePath;
   }
 
@@ -131,7 +137,7 @@ public class FTPFileObject implements FileObject {
     if (this.isDirectory()) {
       throw new IgnoreException("当前对象为一个目录,不能获取 InputStream ");
     }
-    return fileManager.ftpService.getInputStream(getAbsolutePath());
+    return fileManager.ftpService.getInputStream(getPath());
   }
 
   @JsonIgnore

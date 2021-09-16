@@ -8,7 +8,7 @@ import cn.asany.cms.article.bean.enums.ArticleStatus;
 import cn.asany.cms.article.dao.ArticleDao;
 import cn.asany.cms.article.dao.ArticleRecommendDao;
 import cn.asany.cms.article.event.ArticleUpdateEvent;
-import cn.asany.cms.article.graphql.inputs.PermissionInput;
+import cn.asany.cms.article.graphql.input.PermissionInput;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;

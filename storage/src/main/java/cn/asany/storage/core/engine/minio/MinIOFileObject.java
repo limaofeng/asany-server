@@ -76,7 +76,7 @@ public class MinIOFileObject implements FileObject {
   }
 
   @Override
-  public String getAbsolutePath() {
+  public String getPath() {
     return this.remotePath;
   }
 

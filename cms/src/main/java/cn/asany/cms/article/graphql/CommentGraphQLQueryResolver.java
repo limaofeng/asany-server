@@ -2,8 +2,8 @@ package cn.asany.cms.article.graphql;
 
 import cn.asany.cms.article.bean.Comment;
 import cn.asany.cms.article.bean.enums.CommentTargetType;
-import cn.asany.cms.article.graphql.inputs.CommentFilter;
-import cn.asany.cms.article.graphql.types.CommentConnection;
+import cn.asany.cms.article.graphql.input.CommentFilter;
+import cn.asany.cms.article.graphql.type.CommentConnection;
 import cn.asany.cms.article.service.CommentService;
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import org.jfantasy.framework.dao.OrderBy;

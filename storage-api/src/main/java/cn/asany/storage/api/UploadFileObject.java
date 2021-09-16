@@ -45,7 +45,7 @@ public class UploadFileObject implements FileObject {
   }
 
   @Override
-  public String getAbsolutePath() {
+  public String getPath() {
     return this.file.getAbsolutePath();
   }
 
