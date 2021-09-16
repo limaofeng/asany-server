@@ -512,6 +512,8 @@ type Banner {
     name: String
     # 标题
     title: String
+    # 副标题
+    subtitle: String
     # 描述
     description: String
     # 媒体类型
@@ -531,6 +533,8 @@ input BannerCreateInput {
     name: String
     # 标题
     title: String
+    # 副标题
+    subtitle: String
     # 描述
     description: String
     # 媒体类型
@@ -550,6 +554,8 @@ input BannerUpdateInput {
     name: String
     # 标题
     title: String
+    # 副标题
+    subtitle: String
     # 描述
     description: String
     # 媒体类型
