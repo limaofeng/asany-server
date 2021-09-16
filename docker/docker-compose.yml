@@ -5,8 +5,7 @@ services:
     ports:
       - '3306:3306'
     volumes:
-      - '/srv/asany/mysql/data:/var/lib/mysql'
-      - './database:/docker-entrypoint-initdb.d/'
+      - db-data:/var/lib/mysql/data
     restart: always
     command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --lower_case_table_names=1
     environment:

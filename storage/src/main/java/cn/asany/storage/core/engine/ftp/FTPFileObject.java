@@ -5,17 +5,16 @@ import cn.asany.storage.api.FileItemSelector;
 import cn.asany.storage.api.FileObject;
 import cn.asany.storage.api.FileObjectMetadata;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.net.ftp.FTPFile;
-import org.jfantasy.framework.error.IgnoreException;
-import org.jfantasy.framework.util.common.file.FileUtil;
-import org.jfantasy.framework.util.regexp.RegexpUtil;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.net.ftp.FTPFile;
+import org.jfantasy.framework.error.IgnoreException;
+import org.jfantasy.framework.util.common.file.FileUtil;
+import org.jfantasy.framework.util.regexp.RegexpUtil;
 
 /**
  * FTP 文件类型
@@ -107,9 +106,7 @@ public class FTPFileObject implements FileObject {
 
   @Override
   public FileObject getParentFile() {
-    return "/".equals(this.getPath())
-        ? null
-        : new FTPFileObject(this.parentPath, fileManager);
+    return "/".equals(this.getPath()) ? null : new FTPFileObject(this.parentPath, fileManager);
   }
 
   @Override
@@ -118,7 +115,7 @@ public class FTPFileObject implements FileObject {
   }
 
   @Override
-  public String getContentType() {
+  public String getMimeType() {
     try {
       return FileUtil.getMimeType(getInputStream());
     } catch (IOException e) {

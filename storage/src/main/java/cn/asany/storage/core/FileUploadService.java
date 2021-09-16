@@ -75,7 +75,7 @@ public class FileUploadService implements UploadService {
       // 构建上传上下文对象
       UploadContext context =
           UploadContext.builder()
-              .uploadService(this)
+              //              .uploadService(this)
               .object(file)
               .file(temp)
               .location(space.getPath())

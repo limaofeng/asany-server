@@ -2,11 +2,10 @@ package cn.asany.storage.core;
 
 import cn.asany.storage.api.FileObject;
 import cn.asany.storage.api.FileObjectMetadata;
-import org.jfantasy.framework.util.common.StringUtil;
-import org.jfantasy.framework.util.regexp.RegexpUtil;
-
 import java.io.File;
 import java.util.Date;
+import org.jfantasy.framework.util.common.StringUtil;
+import org.jfantasy.framework.util.regexp.RegexpUtil;
 
 public abstract class AbstractFileObject implements FileObject {
   private String absolutePath;
@@ -64,7 +63,7 @@ public abstract class AbstractFileObject implements FileObject {
   }
 
   @Override
-  public String getContentType() {
+  public String getMimeType() {
     return this.metadata.getContentType();
   }
 

@@ -4,16 +4,15 @@ import cn.asany.storage.api.FileItemFilter;
 import cn.asany.storage.api.FileItemSelector;
 import cn.asany.storage.api.FileObject;
 import cn.asany.storage.api.FileObjectMetadata;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import org.hibernate.annotations.GenericGenerator;
-import org.jfantasy.framework.dao.BaseBusEntity;
-
-import javax.persistence.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
 import java.util.List;
+import javax.persistence.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import org.hibernate.annotations.GenericGenerator;
+import org.jfantasy.framework.dao.BaseBusEntity;
 
 /**
  * 文件信息表
@@ -82,11 +81,6 @@ public class FileDetail extends BaseBusEntity implements Cloneable, FileObject {
   @Override
   public long getSize() {
     return this.length;
-  }
-
-  @Override
-  public String getContentType() {
-    return this.mimeType;
   }
 
   @Override

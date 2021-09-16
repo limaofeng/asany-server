@@ -5,10 +5,9 @@ import cn.asany.storage.dto.SimpleFileObject;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
+import java.io.IOException;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.common.StringUtil;
-
-import java.io.IOException;
 
 /**
  * 默认文件对象反序列化
@@ -22,15 +21,14 @@ public class DefaultFileObjectSerializer extends JsonDeserializer<FileObject> {
     if (!p.isExpectedStartObjectToken()) {
       return new SimpleFileObject(p.getValueAsString());
     }
-    p.nextTextValue();
-    String value;
+
     SimpleFileObject object = new SimpleFileObject();
+    String key = p.nextFieldName();
     do {
-      String key = p.getValueAsString();
-      value = p.nextTextValue();
+      String value = p.nextTextValue();
       ObjectUtil.setValue(key, object, value);
-      value = p.nextTextValue();
-    } while (StringUtil.isNotBlank(value));
+      key = p.nextFieldName();
+    } while (StringUtil.isNotBlank(key));
     return object;
   }
 }

@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 import lombok.Getter;
 
+/** @author limaofeng */
 public class UploadFileObject implements FileObject {
   @Getter private File file;
   @Getter private String name;
@@ -40,7 +41,7 @@ public class UploadFileObject implements FileObject {
   }
 
   @Override
-  public String getContentType() {
+  public String getMimeType() {
     return this.metadata.getContentType();
   }
 

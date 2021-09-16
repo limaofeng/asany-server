@@ -5,14 +5,13 @@ import cn.asany.storage.api.FileItemSelector;
 import cn.asany.storage.api.FileObject;
 import cn.asany.storage.api.FileObjectMetadata;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLConnection;
 import java.util.Date;
 import java.util.List;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * 默认的对象, 用于穿梭或者数据序列化
@@ -26,7 +25,7 @@ public class SimpleFileObject implements FileObject {
   /** 文件名称 */
   private String name;
   /** 文件类型 */
-  private String contentType;
+  private String mimeType;
   /** 文件长度 */
   private long size;
   /** 虚拟文件路径 */
@@ -36,20 +35,20 @@ public class SimpleFileObject implements FileObject {
 
   public SimpleFileObject(String path) {
     this.path = path;
-    this.contentType = URLConnection.guessContentTypeFromName(path);
+    this.mimeType = URLConnection.guessContentTypeFromName(path);
   }
 
   public void setUrl(String url) {
     this.url = url;
-    if (this.contentType == null) {
-      this.contentType = URLConnection.guessContentTypeFromName(url);
+    if (this.mimeType == null) {
+      this.mimeType = URLConnection.guessContentTypeFromName(url);
     }
   }
 
   public void setPath(String path) {
     this.path = path;
-    if (this.contentType == null) {
-      this.contentType = URLConnection.guessContentTypeFromName(path);
+    if (this.mimeType == null) {
+      this.mimeType = URLConnection.guessContentTypeFromName(path);
     }
   }
 

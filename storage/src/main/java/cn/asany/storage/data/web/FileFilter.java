@@ -83,7 +83,7 @@ public class FileFilter extends GenericFilterBean {
         return;
       }
       // 只自动缩放 image/jpeg 格式的图片
-      if (!fileObject.getContentType().contains("image/")) {
+      if (!fileObject.getMimeType().contains("image/")) {
         chain.doFilter(request, response);
         return;
       }
@@ -112,7 +112,7 @@ public class FileFilter extends GenericFilterBean {
       HttpServletRequest request, HttpServletResponse response, FileObject fileObject)
       throws IOException {
     if ("POST".equalsIgnoreCase(WebUtil.getMethod(request))) {
-      response.setContentType(fileObject.getContentType());
+      response.setContentType(fileObject.getMimeType());
       response.setCharacterEncoding("UTF-8");
       response.setHeader("Expires", "0");
       response.setHeader("Cache-Control", "must-revalidate, post-check=0, pre-check=0");
@@ -128,7 +128,7 @@ public class FileFilter extends GenericFilterBean {
       ServletUtils.setExpiresHeader(response, 1000 * 60 * 5L);
       ServletUtils.setLastModifiedHeader(response, fileObject.lastModified().getTime());
     }
-    if (fileObject.getContentType().startsWith("video/")) {
+    if (fileObject.getMimeType().startsWith("video/")) {
       response.addHeader("Accept-Ranges", "bytes");
       response.addHeader("Cneonction", "close");
 
@@ -154,7 +154,7 @@ public class FileFilter extends GenericFilterBean {
         int contentLength = end - start + 1;
 
         response.setHeader("Connection", "keep-alive");
-        response.setHeader("Content-Type", fileObject.getContentType());
+        response.setHeader("Content-Type", fileObject.getMimeType());
         response.setHeader("Cache-Control", "max-age=1024");
         ServletUtils.setLastModifiedHeader(response, fileObject.lastModified().getTime());
         response.setHeader(
@@ -196,7 +196,7 @@ public class FileFilter extends GenericFilterBean {
       if (ServletUtils.checkIfModifiedSince(
           request, response, fileObject.lastModified().getTime())) {
         try {
-          response.setHeader("Content-Type", fileObject.getContentType());
+          response.setHeader("Content-Type", fileObject.getMimeType());
           StreamUtil.copy(fileObject.getInputStream(), response.getOutputStream());
         } catch (FileNotFoundException e) {
           logger.error(e.getMessage(), e);

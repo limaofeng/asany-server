@@ -3,15 +3,14 @@ package cn.asany.cms.article.service;
 import cn.asany.cms.article.bean.Banner;
 import cn.asany.cms.article.bean.enums.BackgroundType;
 import cn.asany.cms.article.dao.BannerDao;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import org.jfantasy.framework.dao.OrderBy;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
 
 /**
  * 横幅广告
@@ -40,8 +39,8 @@ public class BannerService {
   public Banner save(Banner banner) {
     if (banner.getBackgroundType() == null
         && banner.getBackground() != null
-        && banner.getBackground().getContentType() != null) {
-      banner.setBackgroundType(BackgroundType.resolve(banner.getBackground().getContentType()));
+        && banner.getBackground().getMimeType() != null) {
+      banner.setBackgroundType(BackgroundType.resolve(banner.getBackground().getMimeType()));
     }
     if (banner.getEnabled() == null) {
       banner.setEnabled(true);

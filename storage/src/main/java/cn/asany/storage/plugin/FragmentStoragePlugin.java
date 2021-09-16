@@ -48,7 +48,7 @@ public class FragmentStoragePlugin implements StoragePlugin {
     String location = context.getLocation();
 
     String fileName = object.getName();
-    String contentType = object.getContentType();
+    String contentType = object.getMimeType();
     // 判断是否为分段上传
     boolean isPart = options.isPart();
     // 生成分段上传的文件名

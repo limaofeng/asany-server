@@ -517,7 +517,7 @@ type Banner {
     # 媒体类型
     backgroundType: BannerBackgroundType
     # 媒介
-    background: FileObject
+    background: FileObject @fileObjectFormat
     # 跳转地址
     url: String
     # 跳转按钮文本

@@ -55,7 +55,7 @@ public class BaseStoragePlugin implements StoragePlugin {
         fileService.saveFileDetail(
             absolutePath,
             object.getName(),
-            ObjectUtil.defaultValue(mimeType, object.getContentType()),
+            ObjectUtil.defaultValue(mimeType, object.getMimeType()),
             object.getSize(),
             md5,
             context.getStorageId(),

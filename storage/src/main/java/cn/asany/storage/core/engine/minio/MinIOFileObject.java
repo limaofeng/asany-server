@@ -48,7 +48,7 @@ public class MinIOFileObject implements FileObject {
   }
 
   @Override
-  public String getContentType() {
+  public String getMimeType() {
     return null;
   }
 

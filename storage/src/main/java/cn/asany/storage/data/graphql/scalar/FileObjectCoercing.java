@@ -1,6 +1,6 @@
 package cn.asany.storage.data.graphql.scalar;
 
-import cn.asany.storage.data.bean.FileDetail;
+import cn.asany.storage.api.FileObject;
 import cn.asany.storage.data.service.FileService;
 import graphql.language.StringValue;
 import graphql.schema.Coercing;
@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @date 2020/3/7 7:44 下午
  */
 @Slf4j
-public class FileObjectCoercing implements Coercing<FileDetail, Object> {
+public class FileObjectCoercing implements Coercing<FileObject, Object> {
 
   @Autowired private FileService fileService;
 
@@ -28,11 +28,14 @@ public class FileObjectCoercing implements Coercing<FileDetail, Object> {
 
   @Override
   public Object serialize(Object input) throws CoercingSerializeException {
-    return input instanceof FileDetail ? input : input;
+    if (input instanceof FileObject) {
+      return (FileObject) input;
+    }
+    return input;
   }
 
   @Override
-  public FileDetail parseValue(Object input) throws CoercingParseValueException {
+  public FileObject parseValue(Object input) throws CoercingParseValueException {
     String fileId = null;
     if (input instanceof String) {
       fileId = input.toString();
@@ -45,14 +48,11 @@ public class FileObjectCoercing implements Coercing<FileDetail, Object> {
     if (fileId == null) {
       return null;
     }
-    //            HttpResponse<FileObject> response = Unirest.get(this.fileServerUrl + "/files/" +
-    // fileId).asObject(FileObject.class);
-    //            return response.getBody();
-    return null;
+    return fileService.findById(Long.valueOf(fileId)).orElse(null);
   }
 
   @Override
-  public FileDetail parseLiteral(Object input) throws CoercingParseLiteralException {
+  public FileObject parseLiteral(Object input) throws CoercingParseLiteralException {
     return parseValue(input);
   }
 }

@@ -5,8 +5,10 @@ import cn.asany.storage.api.StorageBuilder;
 import cn.asany.storage.core.DefaultStorageResolver;
 import cn.asany.storage.core.StorageResolver;
 import cn.asany.storage.core.engine.minio.MinIOStorageConfig;
+import cn.asany.storage.data.graphql.directive.FileObjectFormatDirective;
 import cn.asany.storage.data.graphql.scalar.FileObjectCoercing;
 import graphql.kickstart.servlet.apollo.ApolloScalars;
+import graphql.kickstart.tools.boot.SchemaDirective;
 import graphql.schema.GraphQLScalarType;
 import java.util.List;
 import org.jfantasy.graphql.SchemaParserDictionaryBuilder;
@@ -46,5 +48,10 @@ public class StorageAutoConfiguration {
       dictionary.add("StorageProperties", IStorageConfig.class);
       dictionary.add("MinIOProperties", MinIOStorageConfig.class);
     };
+  }
+
+  @Bean
+  public SchemaDirective fileObjectFormatDirective() {
+    return new SchemaDirective("fileObjectFormat", new FileObjectFormatDirective());
   }
 }
