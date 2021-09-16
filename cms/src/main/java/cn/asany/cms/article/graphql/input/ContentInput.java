@@ -2,9 +2,7 @@ package cn.asany.cms.article.graphql.input;
 
 import cn.asany.cms.article.bean.enums.ContentType;
 import cn.asany.storage.api.FileObject;
-
 import java.util.List;
-
 import lombok.Builder;
 import lombok.Data;
 

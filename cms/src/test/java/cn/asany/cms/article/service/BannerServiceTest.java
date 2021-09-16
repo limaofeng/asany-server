@@ -1,5 +1,7 @@
 package cn.asany.cms.article.service;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import cn.asany.cms.TestApplication;
 import cn.asany.cms.article.bean.Banner;
 import cn.asany.cms.article.converter.BannerConverter;
@@ -7,6 +9,11 @@ import cn.asany.cms.article.graphql.input.BannerCreateInput;
 import cn.asany.cms.article.graphql.input.BannerFilter;
 import cn.asany.cms.article.graphql.input.BannerUpdateInput;
 import com.fasterxml.jackson.core.type.TypeReference;
+import java.io.InputStream;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.jfantasy.framework.dao.OrderBy;
@@ -19,14 +26,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-
-import java.io.InputStream;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @Slf4j
 @ExtendWith(SpringExtension.class)

@@ -4,10 +4,9 @@ import cn.asany.cms.article.bean.*;
 import cn.asany.cms.article.graphql.input.ArticleInput;
 import cn.asany.cms.article.graphql.input.ContentInput;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import org.mapstruct.*;
-
 import java.util.List;
 import java.util.stream.Collectors;
+import org.mapstruct.*;
 
 /**
  * 文章转换

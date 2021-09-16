@@ -4,10 +4,9 @@ import cn.asany.cms.article.bean.MetaData;
 import cn.asany.cms.article.bean.enums.ArticleStatus;
 import cn.asany.cms.article.bean.enums.ArticleType;
 import cn.asany.storage.api.FileObject;
-import lombok.Data;
-
 import java.util.Date;
 import java.util.List;
+import lombok.Data;
 
 /**
  * 文章新增对象

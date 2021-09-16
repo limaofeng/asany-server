@@ -6,9 +6,8 @@ import cn.asany.cms.article.graphql.input.BannerCreateInput;
 import cn.asany.cms.article.graphql.input.BannerUpdateInput;
 import cn.asany.cms.article.service.BannerService;
 import graphql.kickstart.tools.GraphQLMutationResolver;
-import org.springframework.stereotype.Component;
-
 import java.util.Set;
+import org.springframework.stereotype.Component;
 
 @Component
 public class BannerGraphQLMutationResolver implements GraphQLMutationResolver {
