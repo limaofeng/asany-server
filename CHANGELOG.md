@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.15](https://github.com/limaofeng/asany-server/compare/v0.0.14...v0.0.15) (2021-09-17)
+
+
+### Features
+
+* 为 Banner 添加 subtitle 字段 ([d270348](https://github.com/limaofeng/asany-server/commit/d270348e1c64b0848797c16bff1f814b353aac75))
+
 ### [0.0.14](https://github.com/limaofeng/asany-server/compare/v0.0.13...v0.0.14) (2021-09-16)
 
 ### [0.0.13](https://github.com/limaofeng/asany-server/compare/v0.0.12...v0.0.13) (2021-09-16)
