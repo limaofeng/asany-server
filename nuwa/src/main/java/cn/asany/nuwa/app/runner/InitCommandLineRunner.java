@@ -7,6 +7,11 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
+/**
+ * 初始化 路由空间
+ *
+ * @author limaofeng
+ */
 @Component
 @Profile("!test")
 @Slf4j
@@ -19,7 +24,7 @@ public class InitCommandLineRunner implements CommandLineRunner {
   }
 
   @Override
-  public void run(String... args) throws Exception {
+  public void run(String... args) {
     if (!routespaceService.findById(Routespace.DEFAULT_ROUTESPACE_WEB.getId()).isPresent()) {
       this.routespaceService.createRoutespace(Routespace.DEFAULT_ROUTESPACE_WEB);
     }

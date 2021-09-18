@@ -240,6 +240,7 @@ public class ApplicationService implements ClientDetailsService {
 
   private Set<ApplicationRoute> getRoutesFromNuwa(
       List<NuwaRoute> nuwaRoutes, Routespace routespace) {
+    List<Component> components = new ArrayList<>();
     List<ApplicationRoute> routes =
         ObjectUtil.recursive(
             nuwaRoutes,
@@ -258,9 +259,11 @@ public class ApplicationService implements ClientDetailsService {
                 return route;
               }
               component.setScope(ComponentScope.ROUTE);
-              this.componentDao.save(component);
+              components.add(component);
               return route;
-            });
+            },
+            "routes");
+    this.componentDao.saveAllInBatch(components);
     return new HashSet<>(ObjectUtil.flat(routes, "routes"));
   }
 
