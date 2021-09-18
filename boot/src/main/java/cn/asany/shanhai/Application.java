@@ -20,7 +20,12 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
  * @date 2019/2/13 4:04 PM
  */
 @Configuration
-@ComponentScan({"cn.asany.*.*.service", "cn.asany.*.*.converter", "cn.asany.*.*.graphql"})
+@ComponentScan({
+  "cn.asany.*.*.service",
+  "cn.asany.*.*.runner",
+  "cn.asany.*.*.converter",
+  "cn.asany.*.*.graphql"
+})
 @EntityScan({
   "cn.asany.*.*.bean",
 })
