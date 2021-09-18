@@ -47,6 +47,8 @@ spring:
         max-idle: 100
         min-idle: 100
     timeout: 1000
+    database: 0
+    port: 6379
   quartz:
     properties:
       org:

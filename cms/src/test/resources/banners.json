@@ -1,7 +1,7 @@
 [
   {
     "id": "1",
-    "background": "images/agency-portfolio-main-banner/ap-main-banner-img1.jpg",
+    "background": "/images/agency-portfolio-main-banner/ap-main-banner-img1.jpg",
     "title": "Digital Agency",
     "subtitle": "We are Creative",
     "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore.",
@@ -11,7 +11,7 @@
   {
     "id": "2",
     "background": {
-      "path": "images/agency-portfolio-main-banner/ap-main-banner-img2.jpg"
+      "path": "/images/agency-portfolio-main-banner/ap-main-banner-img2.jpg"
     },
     "title": "UX/UI Design",
     "subtitle": "We are Digital",
@@ -22,7 +22,7 @@
   {
     "id": "3",
     "background": {
-      "url": "images/agency-portfolio-main-banner/ap-main-banner-img3.jpg"
+      "url": "/images/agency-portfolio-main-banner/ap-main-banner-img3.jpg"
     },
     "title": "Digital Marketing",
     "subtitle": "We are Agency",

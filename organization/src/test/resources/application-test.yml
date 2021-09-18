@@ -18,9 +18,5 @@ spring:
       minIdle: 1
   redis:
     database: 0
-    host: api.dev.thuni-h.com
-    port: 32519
-    password: Y0HfNA{PdjSINZyy
-
-storage:
-  url: http://demo.homeword.cn/files
+    host: dev.local
+    password: sOmE_sEcUrE_pAsS

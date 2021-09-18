@@ -9,9 +9,8 @@ spring:
       initialSize: 20
       maxWait: 60000
       minIdle: 1
-  data:
-    mongodb:
-      uri: mongodb://${MONGODB_USER}:${MONGODB_PASSWORD}@${MONGODB_HOST_PORT}
-      database: ${MONGODB_DATABASE_NAME}
-      repositories:
-        type: none
+  redis:
+    database: 0
+    host: ${REDIS_HOST}
+    password: ${REDIS_PASSWORD}
+    port: 6379

@@ -6,7 +6,7 @@ spring:
     name: server
   datasource:
     name: datasource
-    url: jdbc:mysql://127.0.0.1:3306/asany?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&rewriteBatchedStatements=true
+    url: jdbc:mysql://dev.local:3306/asany?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&rewriteBatchedStatements=true
     username: root
     password: yV2jJxvNs8BD
     druid:
@@ -15,6 +15,5 @@ spring:
       maxWait: 60000
       minIdle: 1
   redis:
-    database: 0
-    host: 127.0.0.1
-    port: 6379
+    host: dev.local
+    password: sOmE_sEcUrE_pAsS

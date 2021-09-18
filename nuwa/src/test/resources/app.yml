@@ -39,3 +39,8 @@ routes:
         component: cn.asany.ui.theme.metronic.Layout
   - path: /
     component: cn.asany.ui.theme.startp.BasicLayout
+    routes:
+      - path: /services/product
+        component: cn.asany.ui.website.page.Services
+      - path: /
+        component: cn.asany.ui.website.page.Home
