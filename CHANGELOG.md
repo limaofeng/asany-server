@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.16](https://github.com/limaofeng/asany-server/compare/v0.0.15...v0.0.16) (2021-09-18)
+
+
+### Bug Fixes
+
+* 解决 cn.asany.*.*.runner 未加载的问题 ([50be23a](https://github.com/limaofeng/asany-server/commit/50be23a843607117dde3136b75b0032b40cf99b5))
+
 ### [0.0.15](https://github.com/limaofeng/asany-server/compare/v0.0.14...v0.0.15) (2021-09-17)
 
 
