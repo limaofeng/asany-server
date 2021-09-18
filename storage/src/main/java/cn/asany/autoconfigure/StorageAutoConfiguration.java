@@ -29,11 +29,16 @@ public class StorageAutoConfiguration {
   }
 
   @Bean
+  public FileObjectCoercing fileObjectCoercing() {
+    return new FileObjectCoercing();
+  }
+
+  @Bean
   public GraphQLScalarType fileByScalar() {
     return GraphQLScalarType.newScalar()
         .name("FileObject")
         .description("文件对象")
-        .coercing(new FileObjectCoercing())
+        .coercing(fileObjectCoercing())
         .build();
   }
 
