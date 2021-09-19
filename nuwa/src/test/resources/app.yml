@@ -28,19 +28,32 @@ menus:
   - name: 联系我们
     path: /contact
 routes:
+  - path: /admin/login
+    component: cn.asany.ui.theme.metronic.authentication.SignIn
   - path: /admin
-    component:
-    routes:
-      - path: /admin/login
-        component: cn.asany.ui.theme.metronic.authentication.SignIn
-      - path: /admin
-        authorized: true
-        redirect: /admin/login
-        component: cn.asany.ui.theme.metronic.Layout
+    authorized: true
+    redirect: /admin/login
+    component: cn.asany.ui.theme.metronic.Layout
   - path: /
     component: cn.asany.ui.theme.startp.BasicLayout
     routes:
       - path: /services/product
         component: cn.asany.ui.website.page.Services
+      - path: /services/solution
+        component: cn.asany.ui.website.page.Solution
+      - path: /services/cases
+        component: cn.asany.ui.website.page.Cases
+      - path: /news/self
+        component: cn.asany.ui.website.page.HotsoonNews
+      - path: /news/industry
+        component: cn.asany.ui.website.page.IndustryNews
+      - path: /news/details/:id
+        component: cn.asany.ui.website.page.NewsDetails
+      - path: /about
+        component: cn.asany.ui.website.page.About
+      - path: /testimonials
+        component: cn.asany.ui.website.page.Testimonials
+      - path: /contact
+        component: cn.asany.ui.website.page.ContactUs
       - path: /
         component: cn.asany.ui.website.page.Home

@@ -12,8 +12,8 @@ spring:
     username: root
     password: yV2jJxvNs8BD
     druid:
-      maxActive: 20
-      initialSize: 10
+      maxActive: 5
+      initialSize: 2
       maxWait: 60000
       minIdle: 1
   redis:
