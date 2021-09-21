@@ -1,7 +1,6 @@
 package cn.asany.security.core.dao;
 
-import cn.asany.security.core.bean.LocalRoleData;
-import java.util.List;
+import cn.asany.security.core.bean.RoleSpace;
 import org.jfantasy.framework.dao.jpa.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -10,7 +9,4 @@ import org.springframework.stereotype.Repository;
  * @date 15:40 2020-04-23
  */
 @Repository
-public interface LocalRoleDataDao extends JpaRepository<LocalRoleData, String> {
-
-  List<LocalRoleData> findByRoleIdAndBusinessId(String roleId, String businessId);
-}
+public interface RoleSpaceDao extends JpaRepository<RoleSpace, String> {}

@@ -18,9 +18,9 @@ import org.jfantasy.framework.dao.BaseBusEntity;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "AUTH_ROLE_SCOPE")
+@Table(name = "AUTH_ROLE_SPACE")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class RoleScope extends BaseBusEntity {
+public class RoleSpace extends BaseBusEntity {
   @Id
   @Column(name = "ID", length = 50)
   private String id;

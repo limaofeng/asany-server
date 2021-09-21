@@ -1,7 +1,9 @@
 spring:
+  jackson:
+    default-property-inclusion: NON_NULL
   jfantasy:
     sequence:
-      pool-size: 100
+      pool-size: 1
   application:
     name: server
   datasource:
@@ -10,10 +12,11 @@ spring:
     username: root
     password: yV2jJxvNs8BD
     druid:
-      maxActive: 20
-      initialSize: 10
+      maxActive: 5
+      initialSize: 2
       maxWait: 60000
-      minIdle: 10
+      minIdle: 1
   redis:
+    database: 0
     host: dev.local
     password: sOmE_sEcUrE_pAsS

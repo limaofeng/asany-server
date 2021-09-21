@@ -1,4 +1,4 @@
-package cn.asany.nuwa;
+package cn.asany.security;
 
 import graphql.kickstart.spring.web.boot.GraphQLWebAutoConfiguration;
 import graphql.kickstart.tools.boot.GraphQLJavaToolsAutoConfiguration;
@@ -11,7 +11,6 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
 import org.springframework.boot.autoconfigure.quartz.QuartzAutoConfiguration;
 import org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.FilterType;
@@ -49,9 +48,4 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
       GraphQLWebAutoConfiguration.class,
       GraphQLJavaToolsAutoConfiguration.class
     })
-public class TestApplication {
-  @Bean
-  public BeanInitCostTimeBeanPostProcessor beanInitCostTimeBeanPostProcessor() {
-    return new BeanInitCostTimeBeanPostProcessor();
-  }
-}
+public class TestApplication {}

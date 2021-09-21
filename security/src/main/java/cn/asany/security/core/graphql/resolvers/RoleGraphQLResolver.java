@@ -20,7 +20,7 @@ public class RoleGraphQLResolver implements GraphQLResolver<Role> {
   @Autowired private GrantPermissionService grantPermissionService;
 
   public List<Permission> permissions(Role role) {
-    return grantPermissionService.getPermissionsByRoleId(role.getId());
+    return grantPermissionService.getPermissionsByRoleId("");
   }
 
   //    public List<Department> departments(Role role) {

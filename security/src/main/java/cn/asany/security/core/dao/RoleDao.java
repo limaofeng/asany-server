@@ -6,4 +6,4 @@ import org.springframework.stereotype.Repository;
 
 /** @author limaofeng */
 @Repository("fantasy.auth.hibernate.RoleDao")
-public interface RoleDao extends JpaRepository<Role, String> {}
+public interface RoleDao extends JpaRepository<Role, Long> {}

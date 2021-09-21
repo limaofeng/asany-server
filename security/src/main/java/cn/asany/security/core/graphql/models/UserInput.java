@@ -2,6 +2,7 @@ package cn.asany.security.core.graphql.models;
 
 import cn.asany.security.core.graphql.inputs.GrantPermissionByUserInput;
 import java.util.List;
+import java.util.Set;
 import lombok.Data;
 
 /**
@@ -26,7 +27,7 @@ public class UserInput {
   private String nickName;
 
   /** 角色 */
-  private List<String> roles;
+  private Set<Long> roles;
   /** 授予权限 */
   private List<GrantPermissionByUserInput> grants;
 

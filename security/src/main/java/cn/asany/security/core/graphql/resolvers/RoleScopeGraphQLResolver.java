@@ -1,7 +1,7 @@
 package cn.asany.security.core.graphql.resolvers;
 
 import cn.asany.security.core.bean.Role;
-import cn.asany.security.core.bean.RoleScope;
+import cn.asany.security.core.bean.RoleSpace;
 import cn.asany.security.core.service.RoleService;
 import graphql.kickstart.tools.GraphQLResolver;
 import java.util.ArrayList;
@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
  * @date 2019-07-26 14:43
  */
 @Component
-public class RoleScopeGraphQLResolver implements GraphQLResolver<RoleScope> {
+public class RoleScopeGraphQLResolver implements GraphQLResolver<RoleSpace> {
   @Autowired private RoleService roleService;
 
   /**
@@ -26,9 +26,9 @@ public class RoleScopeGraphQLResolver implements GraphQLResolver<RoleScope> {
    * @param organization
    * @return
    */
-  public List<Role> roles(RoleScope roleScope, String organization) {
+  public List<Role> roles(RoleSpace roleScope, String organization) {
     if (StringUtil.isBlank(organization)) {
-      roleService.getAll(roleScope);
+      //      roleService.getAll(roleScope);
     }
     return new ArrayList<>(); // roleService.getAllByOrg(organization,roleScope);
   }

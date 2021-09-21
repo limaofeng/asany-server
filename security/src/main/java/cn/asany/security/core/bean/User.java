@@ -3,23 +3,27 @@ package cn.asany.security.core.bean;
 import cn.asany.base.common.Ownership;
 import cn.asany.base.common.bean.Email;
 import cn.asany.base.common.bean.Phone;
-import cn.asany.security.core.bean.databind.RolesDeserializer;
 import cn.asany.security.core.bean.enums.UserType;
+import cn.asany.security.core.validators.UsernameCannotRepeatValidator;
 import cn.asany.storage.api.converter.FileObjectConverter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.*;
 import javax.persistence.*;
 import javax.tools.FileObject;
+import javax.validation.constraints.NotEmpty;
 import lombok.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.validator.constraints.Length;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.framework.dao.hibernate.converter.MapConverter;
 import org.jfantasy.framework.security.core.GrantedAuthority;
 import org.jfantasy.framework.security.core.SimpleGrantedAuthority;
+import org.jfantasy.framework.spring.validation.Operation;
+import org.jfantasy.framework.spring.validation.Use;
 import org.jfantasy.framework.util.common.ClassUtil;
 
 /** @author limaofeng */
@@ -44,28 +48,21 @@ public class User extends BaseBusEntity implements Ownership {
 
   public static final String OWNERSHIP_KEY = "PERSONAL";
 
-  @Transient private String code;
-
   @Id
   @Column(name = "ID", nullable = false, updatable = false, precision = 22)
-  @GeneratedValue(generator = "auth_user_gen")
-  @TableGenerator(
-      name = "auth_user_gen",
-      table = "sys_sequence",
-      pkColumnName = "gen_name",
-      pkColumnValue = "auth_user:id",
-      valueColumnName = "gen_value")
+  @GeneratedValue(generator = "fantasy-sequence")
+  @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
 
   /** 用户登录名称 */
-  //  @NotEmpty(groups = {Operation.CREATE, Operation.UPDATE})
-  //  @Length(
-  //      min = 6,
-  //      max = 20,
-  //      groups = {Operation.CREATE, Operation.UPDATE})
-  //  @Use(
-  //      value = UsernameCannotRepeatValidator.class,
-  //      groups = {Operation.CREATE})
+  @NotEmpty(groups = {Operation.Create.class, Operation.Update.class})
+  @Length(
+      min = 6,
+      max = 20,
+      groups = {Operation.Create.class, Operation.Update.class})
+  @Use(
+      value = UsernameCannotRepeatValidator.class,
+      groups = {Operation.Create.class})
   @Column(name = "USERNAME", length = 20, updatable = false, nullable = false, unique = true)
   private String username;
   /** 登录密码 */
@@ -120,7 +117,6 @@ public class User extends BaseBusEntity implements Ownership {
   @Column(name = "LAST_LOGIN_TIME")
   private Date lastLoginTime;
   /** 用户对应的角色 */
-  @JsonDeserialize(using = RolesDeserializer.class)
   @ManyToMany(targetEntity = Role.class, fetch = FetchType.LAZY)
   @JoinTable(
       name = "AUTH_ROLE_USER",
@@ -141,7 +137,7 @@ public class User extends BaseBusEntity implements Ownership {
   @JsonAnySetter
   public void set(String key, Object value) {
     if (this.properties == null) {
-      this.properties = new HashMap<>();
+      this.properties = new HashMap<>(10);
     }
     this.properties.put(key, value);
   }

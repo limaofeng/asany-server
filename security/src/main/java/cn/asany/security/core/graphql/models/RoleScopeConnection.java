@@ -1,6 +1,6 @@
 package cn.asany.security.core.graphql.models;
 
-import cn.asany.security.core.bean.RoleScope;
+import cn.asany.security.core.bean.RoleSpace;
 import java.util.List;
 import lombok.*;
 import org.jfantasy.graphql.Edge;
@@ -16,8 +16,8 @@ public class RoleScopeConnection extends BaseConnection<RoleScopeConnection.Role
   @Builder
   @NoArgsConstructor
   @AllArgsConstructor
-  public static class RoleScopeEdge implements Edge<RoleScope> {
+  public static class RoleScopeEdge implements Edge<RoleSpace> {
     private String cursor;
-    private RoleScope node;
+    private RoleSpace node;
   }
 }

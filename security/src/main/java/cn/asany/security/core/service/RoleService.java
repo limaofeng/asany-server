@@ -2,17 +2,20 @@ package cn.asany.security.core.service;
 
 import cn.asany.security.core.bean.Permission;
 import cn.asany.security.core.bean.Role;
-import cn.asany.security.core.bean.RoleScope;
-import cn.asany.security.core.bean.RoleType;
-import cn.asany.security.core.dao.*;
+import cn.asany.security.core.bean.enums.RoleType;
+import cn.asany.security.core.dao.GrantPermissionDao;
+import cn.asany.security.core.dao.PermissionDao;
+import cn.asany.security.core.dao.RoleDao;
 import cn.asany.security.core.exception.ValidDataException;
 import cn.asany.security.core.graphql.enums.RoleAssignEntityTypeEnum;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
-import org.apache.commons.collections.CollectionUtils;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
+import org.jfantasy.framework.util.common.ObjectUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
@@ -22,10 +25,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class RoleService {
   @Autowired private final RoleDao roleDao;
-
-  @Autowired private RoleScopeDao roleScopeDao;
-
-  @Autowired private RoleTypeDao roleTypeDao;
 
   @Autowired private GrantPermissionDao grantPermissionDao;
 
@@ -45,10 +44,12 @@ public class RoleService {
   }
 
   public Role save(Role role) {
+    role.setEnabled(ObjectUtil.defaultValue(role.getEnabled(), true));
+    role.setType(ObjectUtil.defaultValue(role.getType(), RoleType.CLASSIC));
     return roleDao.save(role);
   }
 
-  public Role update(String id, boolean merge, Role role) {
+  public Role update(Long id, boolean merge, Role role) {
     if (!roleDao.existsById(id)) {
       throw new ValidDataException(ValidDataException.ROLE_NOTEXISTS, id);
     }
@@ -56,69 +57,20 @@ public class RoleService {
     return this.roleDao.save(role);
   }
 
-  public Role get(String id) {
-    return this.roleDao.getOne(id);
+  public Optional<Role> findById(Long id) {
+    return this.roleDao.findById(id);
   }
 
-  public void delete(String... ids) {
-    // 先删除关联关系
-    for (String id : ids) {
-      deleteRoleRelation(id);
-    }
-    this.roleDao.deleteInBatch(
-        Arrays.asList(ids).stream()
-            .map(id -> Role.builder().id(id).build())
-            .collect(Collectors.toList()));
+  public Optional<Role> findByCode(String role) {
+    return this.roleDao.findOne(PropertyFilter.builder().equal("code", role).build());
   }
 
-  private void deleteRoleRelation(String roleCode) {
-    deleteRoleEntity(roleCode, RoleAssignEntityTypeEnum.department.name());
-    deleteRoleEntity(roleCode, RoleAssignEntityTypeEnum.employeeGroup.name());
-    deleteRoleEntity(roleCode, RoleAssignEntityTypeEnum.employeePosition.name());
-    deleteRoleEntity(roleCode, RoleAssignEntityTypeEnum.user.name());
-    deleteRoleEntity(roleCode, RoleAssignEntityTypeEnum.permisstion.name());
+  public void delete(Long... ids) {
+    this.delete(Arrays.stream(ids).collect(Collectors.toSet()));
   }
 
-  //    public List<Role> getAllByOrg(String org, RoleScope scope) {
-  //        Example<Role> example =
-  // Example.of(Role.builder().scope(scope).organization(Organization.builder().id(org).build()).build());
-  //        return this.roleDao.findAll(example);
-  //    }
-
-  public List<Role> getAll(RoleScope scope) {
-    Example<Role> example = Example.of(Role.builder().scope(scope).build());
-    return this.roleDao.findAll(example);
-  }
-
-  public Pager<RoleType> findTypePager(Pager<RoleType> pager, List<PropertyFilter> filters) {
-    return this.roleTypeDao.findPager(pager, filters);
-  }
-
-  public RoleType saveRoleType(RoleType roleType) {
-    if (roleTypeDao.existsById(roleType.getId())) {
-      throw new ValidDataException(ValidDataException.ROLETYPE_EXISTS, roleType.getId());
-    }
-    return roleTypeDao.save(roleType);
-  }
-
-  public RoleType updateRoleType(String id, Boolean merge, RoleType roleType) {
-    if (!roleTypeDao.existsById(id)) {
-      throw new ValidDataException(ValidDataException.ROLETYPE_NOTEXISTS, id);
-    }
-    roleType.setId(id);
-    return roleTypeDao.save(roleType);
-  }
-
-  public void deleteRoleType(String id) {
-    if (!roleTypeDao.existsById(id)) {
-      throw new ValidDataException(ValidDataException.ROLETYPE_NOTEXISTS, id);
-    }
-    RoleType roleType = roleTypeDao.getOne(id);
-    if (CollectionUtils.isEmpty(roleType.getRoles()) || roleType.getRoles().size() == 0) {
-      roleTypeDao.delete(roleType);
-    } else {
-      throw new ValidDataException(ValidDataException.ROLETYPE_HAS_ROLES, id);
-    }
+  public void delete(Set<Long> ids) {
+    this.roleDao.deleteAllByIdInBatch(ids);
   }
 
   //    public List<Department> getRoleDepartments(String roleId) {
@@ -180,33 +132,12 @@ public class RoleService {
       String[] arr = values.split(":");
       String entityType = arr[0];
       // 先删除
-      deleteRoleEntity(roleId, entityType);
+      //      deleteRoleEntity(roleId, entityType);
       if (arr.length != 2) {
         continue;
       }
       String entityIds = arr[1];
       assignRolesToEntity(roleId, entityType, entityIds);
-    }
-  }
-
-  private void deleteRoleEntity(String roleCode, String entityType) {
-    if (RoleAssignEntityTypeEnum.department.name().equals(entityType)) {
-      //            roleOfDepartmentDao.deleteRoleOfDepartmentByPkRoleCode(roleCode);
-      //            roleOfDepartmentDao.flush();
-    } else if (RoleAssignEntityTypeEnum.employeeGroup.name().equals(entityType)) {
-      //            roleOfEmplyeeGroupDao.deleteRoleOfEmplyeeGroupByPkRoleCode(roleCode);
-      //            roleOfEmplyeeGroupDao.flush();
-    } else if (RoleAssignEntityTypeEnum.employeePosition.name().equals(entityType)) {
-      //            roleOfPositionDao.deleteRoleOfPositionByPkRoleCode(roleCode);
-      //            roleOfPositionDao.flush();
-    } else if (RoleAssignEntityTypeEnum.user.name().equals(entityType)) {
-      //            roleOfUserDao.deleteRoleOfUserByPkRoleCode(roleCode);
-      //            roleOfUserDao.flush();
-    } else if (RoleAssignEntityTypeEnum.permisstion.name().equals(entityType)) {
-      //            grantPermissionDao.deleteGrantPermissionsBySecurityTypeAndValue(
-      //                    SecurityType.role, roleCode
-      //            );
-      grantPermissionDao.flush();
     }
   }
 

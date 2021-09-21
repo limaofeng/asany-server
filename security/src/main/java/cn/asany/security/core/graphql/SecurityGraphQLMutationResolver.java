@@ -2,9 +2,11 @@ package cn.asany.security.core.graphql;
 
 import cn.asany.base.common.SecurityType;
 import cn.asany.security.core.bean.*;
-import cn.asany.security.core.bean.enums.UserType;
 import cn.asany.security.core.graphql.inputs.GrantPermissionByUserInput;
-import cn.asany.security.core.graphql.models.*;
+import cn.asany.security.core.graphql.models.PermissionTypeInput;
+import cn.asany.security.core.graphql.models.PermissionUpdateInput;
+import cn.asany.security.core.graphql.models.RoleInput;
+import cn.asany.security.core.graphql.models.UserInput;
 import cn.asany.security.core.service.*;
 import cn.asany.security.core.util.GrantPermissionUtils;
 import com.github.stuxuhai.jpinyin.PinyinException;
@@ -12,8 +14,6 @@ import graphql.kickstart.tools.GraphQLMutationResolver;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.jfantasy.framework.util.PinyinUtils;
-import org.jfantasy.framework.util.common.StringUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -43,11 +43,12 @@ public class SecurityGraphQLMutationResolver implements GraphQLMutationResolver 
     Role role = new Role();
     BeanUtils.copyProperties(input, role);
     //        role.setOrganization(Organization.builder().id(organization).build());
-    if (StringUtil.isBlank(role.getId())) {
-      role.setId((organization + "_" + PinyinUtils.getShort(input.getName())).toUpperCase());
-    }
-    role.setScope(RoleScope.builder().id(input.getScopes()).build());
-    role.setRoleType(RoleType.builder().id(getRoleTypeInput(input.getRoleTypeInput())).build());
+    //    if (StringUtil.isBlank(role.getId())) {
+    //      role.setId((organization + "_" + PinyinUtils.getShort(input.getName())).toUpperCase());
+    //    }
+    //    role.setScope(RoleScope.builder().id(input.getScopes()).build());
+    //
+    // role.setRoleType(RoleType.builder().id(getRoleTypeInput(input.getRoleTypeInput())).build());
     return roleService.save(role);
   }
 
@@ -59,19 +60,20 @@ public class SecurityGraphQLMutationResolver implements GraphQLMutationResolver 
    * @param input
    * @return
    */
-  public Role updateRole(String id, Boolean merge, RoleInput input) {
+  public Role updateRole(Long id, Boolean merge, RoleInput input) {
     Role role = new Role();
-    BeanUtils.copyProperties(input, role);
-    role.setScope(RoleScope.builder().id(input.getScopes()).build());
-    role.setRoleType(RoleType.builder().id(getRoleTypeInput(input.getRoleTypeInput())).build());
+    //    BeanUtils.copyProperties(input, role);
+    //    role.setScope(RoleScope.builder().id(input.getScopes()).build());
+    //
+    // role.setRoleType(RoleType.builder().id(getRoleTypeInput(input.getRoleTypeInput())).build());
     return roleService.update(id, merge, role);
   }
 
   // 处理分类类型
   private String getRoleTypeInput(String roleTypeInput) {
-    if (StringUtils.isEmpty(roleTypeInput)) {
-      return RoleType.UNKNOWN;
-    }
+    //    if (StringUtils.isEmpty(roleTypeInput)) {
+    //      return RoleType.UNKNOWN;
+    //    }
     return roleTypeInput;
   }
 
@@ -81,7 +83,7 @@ public class SecurityGraphQLMutationResolver implements GraphQLMutationResolver 
    * @param id
    * @return
    */
-  public Boolean removeRole(String id) {
+  public Boolean removeRole(Long id) {
     roleService.delete(id);
     return true;
   }
@@ -105,26 +107,26 @@ public class SecurityGraphQLMutationResolver implements GraphQLMutationResolver 
     //        if (input.getEmployee() != null) {
     //            user.setEmployee(Employee.builder().id(input.getEmployee()).build());
     //        }
-    List<Role> roles = new ArrayList<>();
-    if (input.getRoles() != null) {
-      for (String roleid : input.getRoles()) {
-        roles.add(Role.builder().id(roleid).build());
-      }
-    }
+    //    List<Role> roles = new ArrayList<>();
+    //    if (input.getRoles() != null) {
+    //      for (String roleid : input.getRoles()) {
+    //        roles.add(Role.builder().id(roleid).build());
+    //      }
+    //    }
     // 后加 默认添加用户角色
-    roles.add(Role.builder().id("USER").build());
+    //    roles.add(Role.builder().id("USER").build());
 
-    user.setRoles(roles);
-    user.setUserType(UserType.USER);
+    //    user.setRoles(roles);
+    //    user.setUserType(UserType.USER);
     user = userService.save(user);
     // 保存权限
-    if (input.getGrants() != null) {
-      user.setGrants(
-          GrantPermissionUtils.allocation(
-              SecurityType.user,
-              user.getId().toString(),
-              getGrantPermissionByUser(input.getGrants())));
-    }
+    //    if (input.getGrants() != null) {
+    //      user.setGrants(
+    //          GrantPermissionUtils.allocation(
+    //              SecurityType.user,
+    //              user.getId().toString(),
+    //              getGrantPermissionByUser(input.getGrants())));
+    //    }
     return user;
   }
 
@@ -164,8 +166,8 @@ public class SecurityGraphQLMutationResolver implements GraphQLMutationResolver 
     }
     if (input.getRoles() != null) {
       List<Role> roles = new ArrayList<>();
-      for (String roleid : input.getRoles()) {
-        roles.add(Role.builder().id(roleid).build());
+      for (Long roleId : input.getRoles()) {
+        roles.add(Role.builder().id(roleId).build());
       }
       user.setRoles(roles);
     }
@@ -191,56 +193,56 @@ public class SecurityGraphQLMutationResolver implements GraphQLMutationResolver 
     return true;
   }
 
-  public RoleScope updateBusiness(String id, Boolean merge, BusinessScopeInput input) {
-    RoleScope roleScope = new RoleScope();
-    BeanUtils.copyProperties(input, roleScope, "code");
-    roleScope.setId(id);
-    return roleScopeService.update(id, merge, roleScope);
-  }
+  //  public RoleScope updateBusiness(String id, Boolean merge, BusinessScopeInput input) {
+  //    RoleScope roleScope = new RoleScope();
+  //    BeanUtils.copyProperties(input, roleScope, "code");
+  //    roleScope.setId(id);
+  //    return roleScopeService.update(id, merge, roleScope);
+  //  }
 
-  public RoleScope createBusiness(BusinessScopeInput input) {
-    RoleScope roleScope = new RoleScope();
-    BeanUtils.copyProperties(input, roleScope);
-    roleScope.setId(input.getCode());
-    return roleScopeService.save(roleScope);
-  }
+  //  public RoleScope createBusiness(BusinessScopeInput input) {
+  //    RoleScope roleScope = new RoleScope();
+  //    BeanUtils.copyProperties(input, roleScope);
+  //    roleScope.setId(input.getCode());
+  //    return roleScopeService.save(roleScope);
+  //  }
 
-  /**
-   * 新增角色分类
-   *
-   * @param input
-   * @return
-   */
-  public RoleType createRoleType(RoleTypeInput input) throws PinyinException {
-    RoleType roleType = new RoleType();
-    BeanUtils.copyProperties(input, roleType);
-    return roleService.saveRoleType(roleType);
-  }
+  //  /**
+  //   * 新增角色分类
+  //   *
+  //   * @param input
+  //   * @return
+  //   */
+  //  public RoleType createRoleType(RoleTypeInput input) throws PinyinException {
+  //    RoleType roleType = new RoleType();
+  //    BeanUtils.copyProperties(input, roleType);
+  //    return roleService.saveRoleType(roleType);
+  //  }
 
-  /**
-   * 更新角色分类
-   *
-   * @param id
-   * @param merge
-   * @param input
-   * @return
-   */
-  public RoleType updateRoleType(String id, Boolean merge, RoleTypeInput input) {
-    RoleType roleType = new RoleType();
-    BeanUtils.copyProperties(input, roleType);
-    return roleService.updateRoleType(id, merge, roleType);
-  }
+  //  /**
+  //   * 更新角色分类
+  //   *
+  //   * @param id
+  //   * @param merge
+  //   * @param input
+  //   * @return
+  //   */
+  //  public RoleType updateRoleType(String id, Boolean merge, RoleTypeInput input) {
+  //    RoleType roleType = new RoleType();
+  //    BeanUtils.copyProperties(input, roleType);
+  //    return roleService.updateRoleType(id, merge, roleType);
+  //  }
 
-  /**
-   * 删除角色分类
-   *
-   * @param id
-   * @return
-   */
-  public Boolean removeRoleType(String id) {
-    roleService.deleteRoleType(id);
-    return true;
-  }
+  //  /**
+  //   * 删除角色分类
+  //   *
+  //   * @param id
+  //   * @return
+  //   */
+  //  public Boolean removeRoleType(String id) {
+  //    roleService.deleteRoleType(id);
+  //    return true;
+  //  }
 
   /**
    * 新增权限分类

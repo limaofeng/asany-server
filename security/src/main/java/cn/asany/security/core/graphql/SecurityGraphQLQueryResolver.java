@@ -181,24 +181,14 @@ public class SecurityGraphQLQueryResolver implements GraphQLQueryResolver {
   //        return securityService.scopesAnalysis(ids);
   //    }
 
-  public List<RoleScope> roleScopes(BusinessFilter filter) {
+  public List<RoleSpace> roleScopes(BusinessFilter filter) {
     PropertyFilterBuilder builder =
         ObjectUtil.defaultValue(filter, new BusinessFilter()).getBuilder();
     return roleScopeService.findAll(builder.build());
   }
 
-  public RoleScope roleScope(String id) {
+  public RoleSpace roleScope(String id) {
     return roleScopeService.get(id);
-  }
-
-  /** 查询角色分类 */
-  public RoleTypeConnection roleTypes(
-      RoleTypeFilter filter, int page, int pageSize, OrderBy orderBy) {
-    Pager<RoleType> pager = new Pager<>(page, pageSize, orderBy);
-    PropertyFilterBuilder builder =
-        ObjectUtil.defaultValue(filter, new RoleTypeFilter()).getBuilder();
-    return Kit.connection(
-        roleService.findTypePager(pager, builder.build()), RoleTypeConnection.class);
   }
 
   /** 查询角色 */

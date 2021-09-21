@@ -230,7 +230,7 @@ public class UserServiceUtil {
     List<Role> roles = user.getRoles();
     if (roles != null) {
       for (Role role : roles) {
-        roleCodes.add(role.getId());
+        roleCodes.add(role.getCode());
       }
     }
     // 不使用lamda方式，避免代码检查问题

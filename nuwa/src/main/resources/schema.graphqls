@@ -34,7 +34,7 @@ input RouteCreateInput {
     # 重定向的路径
     redirect: String
     # 组件
-    component: RouteComponentInput
+    component: NuwaComponentInput
     # 对应的图标
     icon: String
     # 父路由
@@ -61,20 +61,16 @@ input RouteUpdateInput {
     # 重定向的路径
     redirect: String
     # 组件
-    component: RouteComponentInput
+    component: NuwaComponentInput
     # 对应的图标
     icon: String
     # 父路由
     parentRoute: ID
 }
 
-input RouteComponentInput {
+input NuwaComponentInput {
     # 渲染组件
     template: String
-    # 组件配置数据
-    #    props: JSON
-    # 路由配置
-    #    routeWrapper: RouteComponentWrapperInput
 }
 
 input MenuCreateInput {
@@ -117,15 +113,13 @@ input MenuUpdateInput {
     index: Int
 }
 
-type RouteComponent {
+type NuwaComponent {
     # 渲染组件
     id: ID
     # 模版
     template: String
     # 组件配置数据
-    #    props: JSON
-    # 路由配置
-    #    routeWrapper: RouteComponentWrapper
+    blocks: JSON
 }
 
 type RouteComponentWrapper {
@@ -199,6 +193,8 @@ type Menu {
     enabled: Boolean
     # 路由对应的应用
     application: Application
+    # 组件
+    component: NuwaComponent
 }
 
 type Application {
@@ -275,7 +271,7 @@ type Route {
     # 重定向
     redirect: String
     # 组件
-    component: RouteComponent
+    component: NuwaComponent
     # 对应的图标
     icon: String
     # 序号

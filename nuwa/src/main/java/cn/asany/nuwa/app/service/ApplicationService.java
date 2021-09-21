@@ -2,12 +2,10 @@ package cn.asany.nuwa.app.service;
 
 import cn.asany.nuwa.app.bean.*;
 import cn.asany.nuwa.app.bean.enums.ApplicationType;
+import cn.asany.nuwa.app.bean.enums.MenuType;
 import cn.asany.nuwa.app.bean.enums.RouteType;
 import cn.asany.nuwa.app.converter.ApplicationConverter;
-import cn.asany.nuwa.app.dao.ApplicationDao;
-import cn.asany.nuwa.app.dao.ApplicationRouteDao;
-import cn.asany.nuwa.app.dao.ClientSecretDao;
-import cn.asany.nuwa.app.dao.RoutespaceDao;
+import cn.asany.nuwa.app.dao.*;
 import cn.asany.nuwa.app.service.dto.NativeApplication;
 import cn.asany.nuwa.app.service.dto.NuwaMenu;
 import cn.asany.nuwa.app.service.dto.NuwaRoute;
@@ -39,11 +37,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class ApplicationService implements ClientDetailsService {
 
-  private static final String NONCE_CHARS = "abcdef0123456789";
+  public static final String NONCE_CHARS = "abcdef0123456789";
 
   private final ApplicationDao applicationDao;
   private final ClientSecretDao clientSecretDao;
   private final ApplicationRouteDao applicationRouteDao;
+  private final ApplicationMenuDao applicationMenuDao;
   private final ApplicationTemplateDao applicationTemplateDao;
   private final ComponentDao componentDao;
   private final RoutespaceDao routespaceDao;
@@ -56,6 +55,7 @@ public class ApplicationService implements ClientDetailsService {
       RoutespaceDao routespaceDao,
       ApplicationConverter applicationConverter,
       ApplicationRouteDao applicationRouteDao,
+      ApplicationMenuDao applicationMenuDao,
       ApplicationTemplateDao applicationTemplateDao) {
     this.applicationDao = applicationDao;
     this.clientSecretDao = clientSecretDao;
@@ -63,6 +63,7 @@ public class ApplicationService implements ClientDetailsService {
     this.routespaceDao = routespaceDao;
     this.applicationConverter = applicationConverter;
     this.applicationRouteDao = applicationRouteDao;
+    this.applicationMenuDao = applicationMenuDao;
     this.applicationTemplateDao = applicationTemplateDao;
   }
 
@@ -97,7 +98,7 @@ public class ApplicationService implements ClientDetailsService {
     return this.applicationRouteDao.findAllByApplicationAndSpaceWithComponent(applicationId, space);
   }
 
-  @Transactional
+  @Transactional(rollbackOn = RuntimeException.class)
   public Application createApplication(OAuthApplication app) {
     Application application = this.applicationConverter.oauthAppToApp(app);
     String clientId = StringUtil.generateNonceString(NONCE_CHARS, 20);
@@ -198,6 +199,7 @@ public class ApplicationService implements ClientDetailsService {
 
   @Transactional(rollbackOn = Exception.class)
   public void deleteApplication(Long id) {
+    // 路由组件
     List<ApplicationRoute> routes =
         this.applicationRouteDao.findAll(
             PropertyFilter.builder()
@@ -208,25 +210,54 @@ public class ApplicationService implements ClientDetailsService {
     List<Component> components =
         routes.stream().map(ApplicationRoute::getComponent).collect(Collectors.toList());
 
+    // 菜单组件
+    List<ApplicationMenu> menus =
+        this.applicationMenuDao.findAll(
+            PropertyFilter.builder()
+                .equal("component.scope", ComponentScope.MENU)
+                .equal("application.id", id)
+                .isNotNull("component")
+                .build());
+    components.addAll(
+        menus.stream().map(ApplicationMenu::getComponent).collect(Collectors.toList()));
+
+    // 删除应用
     this.applicationDao.deleteById(id);
 
-    // 删除对应的路由组件
+    // 删除对应的组件
     this.componentDao.deleteAll(components);
   }
 
   private Set<ApplicationMenu> getMenusFromNuwa(List<NuwaMenu> nuwaMenus) {
+    List<Component> components = new ArrayList<>();
     List<ApplicationMenu> menus =
         ObjectUtil.recursive(
             nuwaMenus,
             (item, context) -> {
               ApplicationMenu menu = this.applicationConverter.toMenuFromNuwa(item);
+
               menu.setIndex(context.getIndex());
               menu.setLevel(context.getLevel());
+
               menu.setEnabled(ObjectUtil.defaultValue(menu.getEnabled(), true));
               menu.setAuthorized(ObjectUtil.defaultValue(menu.getAuthorized(), false));
               menu.setHideInBreadcrumb(ObjectUtil.defaultValue(menu.getHideInBreadcrumb(), false));
+
+              menu.setType(StringUtil.isBlank(menu.getPath()) ? MenuType.MENU : MenuType.URL);
+
+              Component component = menu.getComponent();
+              if (context.getLevel() != 1 && component != null) {
+                menu.setComponent(component = null);
+              }
+              if (component == null) {
+                return menu;
+              }
+              component.setScope(ComponentScope.MENU);
+              components.add(component);
+
               return menu;
             });
+    this.componentDao.saveAllInBatch(components);
     menus = ObjectUtil.flat(menus, "children");
     return new HashSet<>(menus);
   }

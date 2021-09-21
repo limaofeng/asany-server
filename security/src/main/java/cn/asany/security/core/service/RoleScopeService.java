@@ -1,7 +1,7 @@
 package cn.asany.security.core.service;
 
-import cn.asany.security.core.bean.RoleScope;
-import cn.asany.security.core.dao.RoleScopeDao;
+import cn.asany.security.core.bean.RoleSpace;
+import cn.asany.security.core.dao.RoleSpaceDao;
 import java.util.List;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
@@ -13,26 +13,26 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class RoleScopeService {
 
-  @Autowired private RoleScopeDao roleScopeDao;
+  @Autowired private RoleSpaceDao roleSpaceDao;
 
-  public Pager<RoleScope> findPager(Pager<RoleScope> pager, List<PropertyFilter> filters) {
-    return this.roleScopeDao.findPager(pager, filters);
+  public Pager<RoleSpace> findPager(Pager<RoleSpace> pager, List<PropertyFilter> filters) {
+    return this.roleSpaceDao.findPager(pager, filters);
   }
 
-  public RoleScope get(String id) {
-    return this.roleScopeDao.getOne(id);
+  public RoleSpace get(String id) {
+    return this.roleSpaceDao.getById(id);
   }
 
-  public RoleScope save(RoleScope scope) {
-    return roleScopeDao.save(scope);
+  public RoleSpace save(RoleSpace scope) {
+    return roleSpaceDao.save(scope);
   }
 
-  public List<RoleScope> findAll(List<PropertyFilter> filters) {
-    return roleScopeDao.findAll(filters);
+  public List<RoleSpace> findAll(List<PropertyFilter> filters) {
+    return roleSpaceDao.findAll(filters);
   }
 
-  public RoleScope update(String id, boolean merge, RoleScope scope) {
+  public RoleSpace update(String id, boolean merge, RoleSpace scope) {
     scope.setId(id);
-    return this.roleScopeDao.save(scope);
+    return this.roleSpaceDao.update(scope, merge);
   }
 }

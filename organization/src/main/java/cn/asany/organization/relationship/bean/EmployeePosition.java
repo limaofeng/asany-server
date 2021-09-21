@@ -13,6 +13,7 @@ import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
 /**
@@ -34,13 +35,8 @@ public class EmployeePosition extends BaseBusEntity {
 
   @Id
   @Column(name = "ID", precision = 22)
-  @GeneratedValue(generator = "org_employee_position_gen")
-  @TableGenerator(
-      name = "org_employee_position_gen",
-      table = "sys_sequence",
-      pkColumnName = "gen_name",
-      pkColumnValue = "org_employee_position:id",
-      valueColumnName = "gen_value")
+  @GeneratedValue(generator = "fantasy-sequence")
+  @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
   /** 是否为主部门 */
   @Column(name = "IS_PRIMARY")

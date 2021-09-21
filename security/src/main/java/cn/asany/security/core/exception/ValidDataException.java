@@ -38,14 +38,14 @@ public class ValidDataException extends RuntimeException {
     errMap.put(PARAM_INPUT_ERROR, "参数输入错误");
   }
 
-  public ValidDataException(String prop, String... values) {
+  public ValidDataException(String prop, Object... values) {
     String value = errMap.get(prop);
     if (value == null) {
       throw new ValidationException(prop);
     } else {
       int index = 0;
-      for (String v : values) {
-        value = value.replaceAll("\\{" + index++ + "}", v);
+      for (Object v : values) {
+        value = value.replaceAll("\\{" + index++ + "}", v.toString());
       }
       throw new ValidationException(value);
     }

@@ -4,6 +4,7 @@ import cn.asany.base.common.bean.enums.EmailStatus;
 import cn.asany.base.common.bean.enums.PhoneNumberStatus;
 import cn.asany.security.core.bean.Role;
 import cn.asany.security.core.bean.User;
+import cn.asany.security.core.bean.enums.UserType;
 import cn.asany.security.core.dao.GrantPermissionDao;
 import cn.asany.security.core.dao.UserDao;
 import java.util.*;
@@ -26,7 +27,6 @@ import org.jfantasy.framework.util.common.DateUtil;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.common.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
@@ -69,48 +69,44 @@ public class UserService implements UserDetailsService {
    *
    * @param user 用户对象
    */
-  @CacheEvict(
-      value = {"fantasy.security.userService"},
-      allEntries = true)
   public User save(User user) {
-    return save(user, true);
-  }
-
-  /**
-   * 保存用户
-   *
-   * @param user 用户对象
-   * @param flag 是否加密
-   */
-  @CacheEvict(
-      value = {"fantasy.security.userService"},
-      allEntries = true)
-  public User save(User user, boolean flag) {
-    User exist =
-        this.userDao
-            .findOne(Example.of(User.builder().username(user.getUsername()).build()))
-            .orElse(null);
-    if (exist != null) {
-      throw new NotFoundException("登录名[" + user.getUsername() + "]已经存在");
+    boolean existing =
+        this.userDao.exists(PropertyFilter.builder().equal("username", user.getUsername()).build());
+    if (existing) {
+      throw new ValidationException("登录名[" + user.getUsername() + "]已经存在");
     }
+
     // 默认昵称与用户名一致
     if (StringUtil.isBlank(user.getNickName())) {
       user.setNickName(user.getUsername());
     }
+
+    // 默认为 USER
+    if (user.getUserType() == null) {
+      user.setUserType(UserType.USER);
+    }
+
     // 初始化用户权限
     if (user.getRoles() == null) {
       user.setRoles(new ArrayList<>());
     }
+
+    if (UserType.ADMIN == user.getUserType()) {
+      user.getRoles().add(Role.ADMIN);
+    } else {
+      user.getRoles().add(Role.USER);
+    }
+
     // 初始化用户状态
     user.setEnabled(true);
     user.setAccountNonLocked(true);
     user.setAccountNonExpired(true);
     user.setCredentialsNonExpired(true);
-    if (flag) {
-      if (StringUtil.isNotBlank(user.getPassword())) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-      }
+
+    if (StringUtil.isNotBlank(user.getPassword())) {
+      user.setPassword(passwordEncoder.encode(user.getPassword()));
     }
+
     // 保存用户
     return this.userDao.save(user);
   }
@@ -143,12 +139,12 @@ public class UserService implements UserDetailsService {
     return this.userDao.findPager(pager, filters);
   }
 
-  @CacheEvict(
-      value = {"fantasy.security.userService"},
-      allEntries = true)
   public void delete(Long... ids) {
-    this.userDao.deleteInBatch(
-        Arrays.stream(ids).map(id -> User.builder().id(id).build()).collect(Collectors.toList()));
+    this.delete(Arrays.stream(ids).collect(Collectors.toSet()));
+  }
+
+  public void delete(Set<Long> ids) {
+    this.userDao.deleteAllByIdInBatch(ids);
   }
 
   public Optional<User> get(Long id) {
@@ -209,15 +205,20 @@ public class UserService implements UserDetailsService {
     throw new UnsupportedOperationException("暂不支持该操作");
   }
 
-  public List<Role> addRoles(Long id, boolean clear, String[] roles) {
-    User user = this.userDao.getOne(id);
+  public List<Role> addRoles(Long id, String[] roles, boolean clear) {
+    User user = this.userDao.getById(id);
     if (clear) {
       user.getRoles().clear();
     }
     for (String role : roles) {
-      if (!ObjectUtil.exists(user.getRoles(), "id", role)) {
-        user.getRoles().add(this.roleService.get(role));
+      if (ObjectUtil.exists(user.getRoles(), "code", role)) {
+        continue;
       }
+      Optional<Role> optionalRole = this.roleService.findByCode(role);
+      if (!optionalRole.isPresent()) {
+        continue;
+      }
+      user.getRoles().add(optionalRole.get());
     }
     this.userDao.save(user);
     return user.getRoles();

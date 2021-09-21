@@ -1,0 +1,28 @@
+name: admin
+title: 管理端
+clientId: 6068485332c5fc853a65
+clientSecret: 3c833cf785c71234d5024aca9668dd466f050453
+menus:
+  - name: 仪表盘
+    icon: Duotune/gen025
+  - name: 应用管理
+    icon: Duotune/abs027
+  - name: 内容管理
+    icon: Duotune/fin006
+    component: cn.asany.ui.admin.cms.ArticleSidebar
+  - name: 系统管理
+    icon: Duotune/gen032
+
+routes:
+  - path: /login
+    component: cn.asany.ui.theme.metronic.authentication.SignIn
+  - path: /
+    authorized: true
+    component: cn.asany.ui.theme.metronic.Layout
+    routes:
+      - path: /cms/articles
+        component: cn.asany.ui.admin.cms.ArticleList
+      - path: /cms/articles/:id
+        component: cn.asany.ui.admin.cms.ArticleDetails
+      - path: /
+        component: cn.asany.ui.admin.Home

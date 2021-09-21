@@ -1,6 +1,7 @@
 package cn.asany.nuwa.app.bean;
 
 import cn.asany.nuwa.app.bean.enums.MenuType;
+import cn.asany.ui.resources.bean.Component;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import java.util.List;
 import java.util.Set;
@@ -71,6 +72,15 @@ public class ApplicationMenu extends BaseBusEntity {
       cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
   @OrderBy("index ASC")
   private List<ApplicationMenu> children;
+  /**
+   * 组件<br>
+   * 可以为一级菜单设置一个展示组件
+   */
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(
+      name = "COMPONENT_ID",
+      foreignKey = @ForeignKey(name = "FK_APPLICATION_MENU_COMPONENT"))
+  private Component component;
   /** 授权后可见 */
   @Convert(converter = StringSetConverter.class)
   @Column(name = "AUTHORITY")

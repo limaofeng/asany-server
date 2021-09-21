@@ -50,4 +50,9 @@ public class Application extends SpringBootServletInitializer {
   protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
     return builder.sources(Application.class);
   }
+
+  //  @Bean
+  //  public BeanInitCostTimeBeanPostProcessor beanInitCostTimeBeanPostProcessor() {
+  //    return new BeanInitCostTimeBeanPostProcessor();
+  //  }
 }

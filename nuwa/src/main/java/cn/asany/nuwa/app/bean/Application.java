@@ -24,14 +24,15 @@ import org.jfantasy.framework.security.oauth2.core.ClientDetails;
 @NamedEntityGraph(
     name = "Graph.Application.FetchDetails",
     attributeNodes = {
-      @NamedAttributeNode(value = "menus"),
+      @NamedAttributeNode(value = "menus", subgraph = "SubGraph.ApplicationMenu.FetchComponent"),
       @NamedAttributeNode(value = "routes", subgraph = "SubGraph.ApplicationRoute.FetchComponent")
     },
     subgraphs = {
       @NamedSubgraph(
-          name = "SubGraph.ApplicationMenu.FetchAll",
+          name = "SubGraph.ApplicationMenu.FetchComponent",
           attributeNodes = {
             @NamedAttributeNode(value = "parent"),
+            @NamedAttributeNode(value = "component")
           }),
       @NamedSubgraph(
           name = "SubGraph.ApplicationRoute.FetchComponent",
@@ -109,6 +110,20 @@ public class Application extends BaseBusEntity implements ClientDetails {
   @OrderBy(" createdAt desc ")
   @JoinColumn(name = "CLIENT_ID", referencedColumnName = "CLIENT_ID", updatable = false)
   private List<ClientSecret> clientSecretsAlias;
+  /** 所有者 */
+  //  @Any(
+  //      metaColumn =
+  //          @Column(name = "OWNERSHIP_TYPE", length = 10, insertable = false, updatable = false),
+  //      fetch = FetchType.LAZY)
+  //  @AnyMetaDef(
+  //      idType = "long",
+  //      metaType = "string",
+  //      metaValues = {
+  //        @MetaValue(targetEntity = User.class, value = User.OWNERSHIP_KEY),
+  //        @MetaValue(targetEntity = Organization.class, value = Organization.OWNERSHIP_KEY)
+  //      })
+  //  @JoinColumn(name = "OWNERSHIP_ID", insertable = false, updatable = false)
+  //  private Ownership ownership;
 
   @Override
   public Map<String, Object> getAdditionalInformation() {
