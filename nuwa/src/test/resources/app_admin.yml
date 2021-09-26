@@ -12,7 +12,41 @@ menus:
     component: cn.asany.ui.admin.cms.ArticleSidebar
   - name: 系统管理
     icon: Duotune/gen032
-
+    children:
+      - name: 组织管理
+        icon: Duotune/gen032
+        children:
+          - name: 员工管理
+            path: /projects
+          - name: 部门管理
+            path: /projects
+            children:
+              - name: 群组管理
+                path: /projects
+              - name: 职务管理
+                path: /projects
+      - name: 用户管理
+        icon: Duotune/gen032
+        path: /projects
+  - name: 工单
+    icon: Duotune/gen032
+    children:
+      - name: 我的任务
+        type: SECTION
+      - name: x1
+        icon: Duotune/gen032
+        path: /projects
+      - name: x2
+        icon: Duotune/gen032
+        path: /projects
+      - name: 项目
+        type: SECTION
+      - name: x1
+        icon: Duotune/gen032
+        path: /projects
+      - name: x2
+        icon: Duotune/gen032
+        path: /projects
 routes:
   - path: /login
     component: cn.asany.ui.theme.metronic.authentication.SignIn
@@ -20,8 +54,16 @@ routes:
     authorized: true
     component: cn.asany.ui.theme.metronic.Layout
     routes:
-      - path: /cms/articles
-        component: cn.asany.ui.admin.cms.ArticleList
+      - path: /cms/channels/:id
+        component: cn.asany.ui.admin.cms.ArticleChannel
+        routes:
+          - path: /cms/channels/:id/articles
+            component: cn.asany.ui.admin.cms.ArticleList
+          - path: /cms/channels/:id/settings
+            component: cn.asany.ui.admin.cms.ArticleChannelSettings
+      - path: /cms/articles/new
+        component: cn.asany.ui.admin.cms.ArticleNew
+        layout: false
       - path: /cms/articles/:id
         component: cn.asany.ui.admin.cms.ArticleDetails
       - path: /

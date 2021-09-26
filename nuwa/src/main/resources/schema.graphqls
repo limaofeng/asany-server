@@ -244,12 +244,19 @@ enum RouteType {
 }
 
 enum MenuType {
+    # 章节
+    SECTION
     # 链接地址
     URL,
     # 菜单
     MENU,
     # 脚本
     SCRIPT
+}
+
+# 布局设置
+type LayoutSettings {
+    pure: Boolean
 }
 
 type Route {
@@ -266,6 +273,8 @@ type Route {
     authorized: Boolean
     # 访问权限
     access: String
+    # 布局设置
+    layout: LayoutSettings
     # 在面包屑中隐藏菜单
     hideInBreadcrumb: Boolean
     # 重定向

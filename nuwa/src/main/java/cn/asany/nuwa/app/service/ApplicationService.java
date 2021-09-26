@@ -243,7 +243,14 @@ public class ApplicationService implements ClientDetailsService {
               menu.setAuthorized(ObjectUtil.defaultValue(menu.getAuthorized(), false));
               menu.setHideInBreadcrumb(ObjectUtil.defaultValue(menu.getHideInBreadcrumb(), false));
 
-              menu.setType(StringUtil.isBlank(menu.getPath()) ? MenuType.MENU : MenuType.URL);
+              if (menu.getType() == null) {
+                // 这里使用的是 item， 因为子项在之后才会执行
+                if (item.getChildren() != null && !item.getChildren().isEmpty()) {
+                  menu.setType(MenuType.MENU);
+                } else {
+                  menu.setType(MenuType.URL);
+                }
+              }
 
               Component component = menu.getComponent();
               if (context.getLevel() != 1 && component != null) {

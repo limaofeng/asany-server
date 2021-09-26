@@ -138,14 +138,19 @@ type ArticleChannel {
     name: String
     # 描述
     description: String
+    # 对应的图标
+    icon: String
     # 栏目封面图
     cover: FileObject
     # 全路径
     path: String
     # 排序
     index: Int
+    # 层级
+    level: Int
     # 上级栏目
     parent: ArticleChannel
+    # 元数据
     meta: Meta
     # 栏目 / 频道 关注
     #    starrable: Starrable

@@ -52,6 +52,9 @@ public class ArticleChannel extends BaseBusEntity {
   /** 名称 */
   @Column(name = "NAME", nullable = false, length = 150)
   private String name;
+  /** 对应的图标 */
+  @Column(name = "ICON", length = 120)
+  private String icon;
   /** 封面 */
   @Column(name = "COVER", length = 500, columnDefinition = "json")
   @Convert(converter = FileObjectConverter.class)
@@ -69,13 +72,11 @@ public class ArticleChannel extends BaseBusEntity {
   @Column(name = "META_DATA", length = 250, columnDefinition = "json")
   @Convert(converter = MetaDataConverter.class)
   private MetaData meta;
-
   /** 上级栏目 */
   @JsonProperty("parent_id")
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "PID", foreignKey = @ForeignKey(name = "FK_ARTICLE_CHANNEL_PARENT"))
   private ArticleChannel parent;
-
   /** 下级栏目 */
   @OneToMany(
       mappedBy = "parent",
@@ -84,7 +85,6 @@ public class ArticleChannel extends BaseBusEntity {
   @OrderBy("sort ASC")
   @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
   private List<ArticleChannel> children;
-
   /** 所有者 */
   @Any(
       metaColumn =

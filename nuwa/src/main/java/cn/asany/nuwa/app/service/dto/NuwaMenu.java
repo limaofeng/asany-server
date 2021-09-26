@@ -1,5 +1,6 @@
 package cn.asany.nuwa.app.service.dto;
 
+import cn.asany.nuwa.app.bean.enums.MenuType;
 import java.util.List;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,7 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class NuwaMenu {
   private String name;
-  private String type;
+  private MenuType type;
   private String icon;
   private String path;
   private boolean hideInBreadcrumb;

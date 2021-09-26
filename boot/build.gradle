@@ -20,8 +20,7 @@ tasks.withType(Test) { enabled = false }
 tasks.withType(PublishToMavenRepository).configureEach { it.enabled = false }
 
 bootRun {
-	mainClass = 'cn.asany.sanhai.Application'
-	args '--spring.profiles.active=dev'
+	systemProperty "spring.profiles.active", "dev"
 }
 
 dependencies {

@@ -69,11 +69,6 @@ public class ModelField extends BaseBusEntity implements ModelGroupResource {
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "TYPE_ID", foreignKey = @ForeignKey(name = "FK_MODEL_FIELD_TID"))
   private Model type;
-  //    /**
-  //     * 字段类型 ID
-  //     */
-  //    @Column(name = "TYPE_ID", length = 20, insertable = false, updatable = false)
-  //    private Long typeId;
   /** 是否唯一 */
   @Builder.Default
   @Column(name = "IS_UNIQUE", length = 1)

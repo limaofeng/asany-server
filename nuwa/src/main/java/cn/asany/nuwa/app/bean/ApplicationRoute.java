@@ -67,7 +67,6 @@ public class ApplicationRoute extends BaseBusEntity {
   /** 对应的图标 */
   @Column(name = "ICON")
   private String icon;
-
   /** 父路由 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "PID", foreignKey = @ForeignKey(name = "FK_APPLICATION_ROUTE_PID"))
@@ -92,6 +91,12 @@ public class ApplicationRoute extends BaseBusEntity {
   /** 在面包屑中隐藏菜单 */
   @Column(name = "HIDE_IN_BREADCRUMB")
   private Boolean hideInBreadcrumb;
+  /** 布局设置 */
+  @Embedded
+  @AttributeOverrides({
+    @AttributeOverride(name = "pure", column = @Column(name = "LAYOUT_PURE")),
+  })
+  private LayoutSettings layout;
   /** 应用 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(
