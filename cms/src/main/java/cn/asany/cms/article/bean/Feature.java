@@ -1,11 +1,13 @@
 package cn.asany.cms.article.bean;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import java.util.List;
-import javax.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.framework.lucene.annotations.Indexed;
+
+import javax.persistence.*;
+import java.util.List;
 
 /**
  * 推荐位
@@ -20,18 +22,13 @@ import org.jfantasy.framework.lucene.annotations.Indexed;
 @AllArgsConstructor
 @Indexed
 @Entity
-@Table(name = "CMS_RECOMMEND")
+@Table(name = "CMS_FEATURE")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class Recommend extends BaseBusEntity {
+public class Feature extends BaseBusEntity {
   @Id
   @Column(name = "ID", length = 10)
-  @GeneratedValue(strategy = GenerationType.TABLE, generator = "recommend_gen")
-  @TableGenerator(
-      name = "recommend_gen",
-      table = "sys_sequence",
-      pkColumnName = "gen_name",
-      pkColumnValue = "recommend_gen:id",
-      valueColumnName = "gen_value")
+  @GeneratedValue(generator = "fantasy-sequence")
+  @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
   /** 编码 */
   @Column(name = "code")
@@ -40,15 +37,12 @@ public class Recommend extends BaseBusEntity {
   @Column(name = "NAME", nullable = false, length = 150)
   private String name;
   /** 是否启用流程 true 启用，false 不启用 */
-  @Column(name = "ENABLE_PROCESS")
-  private Boolean enableProcess;
+  @Column(name = "ENABLE_REVIEW")
+  private Boolean needReview;
   /** 描述 */
   @Column(name = "description")
   private String description;
-  /** 组织机构 */
-  @Column(name = "ORGANIZATION_ID", updatable = false, nullable = false)
-  private String organization;
 
-  @OneToMany(fetch = FetchType.LAZY, mappedBy = "recommend", cascade = CascadeType.REMOVE)
-  private List<ArticleRecommend> articleRecommends;
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "feature", cascade = CascadeType.REMOVE)
+  private List<ArticleFeature> articleFeatures;
 }

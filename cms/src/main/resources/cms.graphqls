@@ -180,16 +180,14 @@ type ArticleTag {
     updatedAt: Date
 }
 
-# 文章类型, 比如： 图片， 文本 等。
+# 文章类别
 enum ArticleCategory {
-    #信息
-    information,
-    #圈子
+    # 新闻
+    news,
+    # 圈子
     circle,
-    #博客
+    # 博客
     blog
-    #课程
-    section
 }
 
 # 文章
@@ -201,13 +199,13 @@ type Article {
     # 图片
     cover: FileObject
     # 标题
-    title: String!
+    title: String
     # 状态
-    status: ArticleStatus!
+    status: ArticleStatus
     # 摘要
     summary: String
     # 分类
-    category: ArticleCategory!
+    category: ArticleCategory
     # 作者
     author: String
     # 发布时间
@@ -221,7 +219,7 @@ type Article {
     # 标签
     tags: [ArticleTag]
     # 推荐位
-    recommend: [ArticleRecommend]
+    features: [ArticleRecommend]
     # 有效期限 true 永久 false 短期
     validity: Boolean
     # 有效期限 开始时间
@@ -250,7 +248,7 @@ interface Content {
 }
 
 enum ContentType {
-    json, link, html, file
+    HTML, MARKDOWN
 }
 
 # html格式内容
@@ -305,23 +303,21 @@ input ArticleCreateInput {
     # 文章标签
     tags: [ID]
     # 推荐位id
-    recommend: [ID]
+    features: [String]
     # 文章栏目
     channels: [ID]
     # 状态
-    status: ArticleStatus!
+    status: ArticleStatus
     # 发布日期
     publishedAt: String
     # 文章类别
     category: ArticleCategory!
-    # 组织
-    organization: ID!
     # 授予权限
-    permissions: [PermissionInput]
+    access: [String]
     # 附件
     attachments: [FileObject]
     # 文章类型
-    type:ArticleType
+    type: ArticleType
     # 有效期限 true 永久 false 短期
     validity: Boolean
     # 有效期限 开始时间
@@ -342,14 +338,10 @@ input MetaData{
 }
 
 input ContentInput {
-    # type: ContentType
-    html: String
-    # 链接url
-    link: String
-    # 图片
-    pictures: [ContentPictureInput]
-    # 视频
-    video: FileObject
+    # 正文类型
+    type: ContentType
+    # 文本
+    text: String
 }
 
 input ContentPictureInput {
@@ -375,7 +367,7 @@ input ArticleUpdateInput {
     # 文章标签
     tags: [ID]
     # 推荐位id
-    recommend: [ID]
+    features: [String]
     # 文章栏目
     channels: [ID]
     # 发布日期
@@ -480,18 +472,18 @@ type ArticleRecommend{
     # 文章
     article: Article
     # 推荐位
-    recommend: Recommend
+    feature: Recommend
     # 推荐天数
     aging: Int
 }
 
 enum ArticleRecommendStatus{
     # 待审核
-    waitAudit,
+    WAIT_REVIEW,
     # 显示
-    display,
+    PASSED,
     # 过期
-    expired
+    EXPIRED
 }
 
 type Recommend{
@@ -593,9 +585,9 @@ extend type Query {
     # 已加星标的文章
     starredArticles(uid: ID! ,starType: ArticleStarType!, filter: ArticleFilter = {}, page: Int = 1, pageSize: Int = 15, orderBy: OrderBy): ArticleConnection
     # 查询所有推荐位
-    recommends(organization: ID!,filter: RecommendFilter,orderBy: OrderBy): [Recommend]
+    features(organization: ID!,filter: RecommendFilter,orderBy: OrderBy): [Recommend]
     # 根据id查询推荐位
-    recommend(id:ID!): Recommend
+    feature(id:ID!): Recommend
     # 横幅广告
     banner(id: ID!): Banner
     # 横幅广告

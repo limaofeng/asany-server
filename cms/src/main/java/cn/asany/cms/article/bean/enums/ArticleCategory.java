@@ -1,17 +1,16 @@
 package cn.asany.cms.article.bean.enums;
 
 /**
+ * 文章类型
+ *
  * @author limaofeng
- * @version V1.0 @Description: TODO
  * @date 2019-06-26 19:00
  */
 public enum ArticleCategory {
-  /** 信息 */
-  information,
+  /** 新闻 */
+  news,
   /** 圈子 */
   circle,
   /** 博客 */
-  blog,
-  /** 章节 */
-  section
+  blog
 }

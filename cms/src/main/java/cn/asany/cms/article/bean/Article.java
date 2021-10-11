@@ -53,13 +53,8 @@ public class Article extends BaseBusEntity {
   @Id
   @Null(groups = Operation.Create.class)
   @Column(name = "ID", nullable = false, precision = 22)
-  @GeneratedValue(strategy = GenerationType.TABLE, generator = "article_gen")
-  @TableGenerator(
-      name = "article_gen",
-      table = "sys_sequence",
-      pkColumnName = "gen_name",
-      pkColumnValue = "cms_article:id",
-      valueColumnName = "gen_value")
+  @GeneratedValue(generator = "fantasy-sequence")
+  @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
   /** 文章编号，由于文章ID自增，有部分情况需要保证使用一个唯一，且有意义的标示符，定位到唯一的一篇文章 必须保证全局唯一 */
   @Column(name = "SN", length = 200)
@@ -121,7 +116,7 @@ public class Article extends BaseBusEntity {
       fetch = FetchType.LAZY,
       mappedBy = "article",
       cascade = {CascadeType.REMOVE})
-  private List<ArticleRecommend> recommend;
+  private List<ArticleFeature> features;
   /** SEO 优化字段 */
   @Column(name = "META_DATA", length = 250)
   @Convert(converter = MetaDataConverter.class)

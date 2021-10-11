@@ -3,9 +3,11 @@ package cn.asany.cms.article.converter;
 import cn.asany.cms.article.bean.*;
 import cn.asany.cms.article.graphql.input.ArticleInput;
 import cn.asany.cms.article.graphql.input.ContentInput;
+import cn.asany.cms.article.service.FeatureService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.jfantasy.framework.spring.SpringBeanUtils;
 import org.mapstruct.*;
 
 /**
@@ -24,21 +26,17 @@ public interface ArticleConverter {
   @Mappings({
     @Mapping(source = "content", target = "content", qualifiedByName = "parseContent"),
     @Mapping(source = "channels", target = "channels", qualifiedByName = "parseChannels"),
-    @Mapping(
-        source = "tags",
-        target = "tags", /*qualifiedByName = "parseChannels",*/
-        ignore = true),
-    @Mapping(source = "recommend", target = "recommend", qualifiedByName = "parseRecommend"),
+    @Mapping(source = "tags", target = "tags", ignore = true),
+    @Mapping(source = "features", target = "features", qualifiedByName = "parseFeature"),
     @Mapping(target = "permissions", ignore = true)
   })
   Article toArticle(ArticleInput input);
 
   @Mappings({
-    //    @Mapping(source = "content", target = "content", qualifiedByName = "parseContentFile"),
     @Mapping(source = "channels", target = "channels", qualifiedByName = "parseChannels"),
     @Mapping(source = "tags", target = "tags", ignore = true),
     @Mapping(target = "permissions", ignore = true),
-    @Mapping(source = "recommend", target = "recommend", qualifiedByName = "parseRecommend"),
+    @Mapping(source = "features", target = "features", qualifiedByName = "parseFeature"),
     @Mapping(source = "content", target = "content", qualifiedByName = "parseContent")
   })
   Article toArticleFile(ArticleInput input);
@@ -53,39 +51,12 @@ public interface ArticleConverter {
     if (source == null) {
       return null;
     }
-    //    switch (source.getType()) {
-    //      case file:
-    //        FileObject videoUrl = source.getVideo();
-    //        FileObjectConverter converter = new FileObjectConverter();
-    //        return Content.builder()
-    //            .type(source.getType())
-    //            .text(converter.convertToDatabaseColumn(videoUrl))
-    //            .build();
-    //      case json:
-    //        List<ContentPictureInput> pictures = source.getPictures();
-    //        return
-    // Content.builder().type(source.getType()).text(JSON.serialize(pictures)).build();
-    //      case html:
-    //        String html = source.getHtml();
-    //        return Content.builder().type(source.getType()).text(html).build();
-    //      case link:
-    //        String link = source.getLink();
-    //        return Content.builder().type(source.getType()).text(link).build();
-    //      case markdown:
-    //        throw new ValidationException("暂不支持 markdown 格式");
-    //
-    //      default:
-    //        throw new IllegalStateException("Unexpected value: " + source.getType());
-    //    }
-    return null;
-  }
-
-  @Named("parseContentFile")
-  default Content parseContentFile(String source) {
-    if (source == null) {
-      return null;
+    switch (source.getType()) {
+      case HTML:
+        return HtmlContent.builder().text(source.getText()).build();
+      default:
+        throw new IllegalStateException("Unexpected value: " + source.getType());
     }
-    return null; // Content.builder().text(source).type(ContentType.file).build();
   }
 
   @Named("parseChannels")
@@ -98,15 +69,16 @@ public interface ArticleConverter {
         .collect(Collectors.toList());
   }
 
-  @Named("parseRecommend")
-  default List<ArticleRecommend> parseRecommend(List<Long> source) {
+  @Named("parseFeature")
+  default List<ArticleFeature> parseFeature(List<String> source) {
     if (source == null) {
       return null;
     }
+    FeatureService featureService = SpringBeanUtils.getBeanByType(FeatureService.class);
     return source.stream()
-        .map(
-            item ->
-                ArticleRecommend.builder().recommend(Recommend.builder().id(item).build()).build())
+        .map(item -> featureService.findByCode(item))
+        .filter(item -> item.isPresent())
+        .map(item -> ArticleFeature.builder().feature(item.get()).build())
         .collect(Collectors.toList());
   }
 }

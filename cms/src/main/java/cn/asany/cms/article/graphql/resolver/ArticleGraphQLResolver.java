@@ -111,24 +111,10 @@ public class ArticleGraphQLResolver implements GraphQLResolver<Article> {
   public CommentConnection comments(
       Article article, CommentFilter filter, int page, int pageSize, OrderBy orderBy) {
     CommentConnection comments = new CommentConnection();
-    if (article.getCategory() == ArticleCategory.information) {
+    if (article.getCategory() == ArticleCategory.news) {
       comments =
           resolver.comments(
-              CommentTargetType.article,
-              article.getId().toString(),
-              filter,
-              page,
-              pageSize,
-              orderBy);
-    } else if (article.getCategory() == ArticleCategory.section) {
-      comments =
-          resolver.comments(
-              CommentTargetType.section,
-              article.getId().toString(),
-              filter,
-              page,
-              pageSize,
-              orderBy);
+              CommentTargetType.news, article.getId().toString(), filter, page, pageSize, orderBy);
     } else if (article.getCategory() == ArticleCategory.circle) {
       comments =
           resolver.comments(

@@ -6,6 +6,7 @@ package cn.asany.cms.article.bean;
  * @author 李茂峰
  */
 public interface Content {
+
   Long getId();
 
   void setId(Long id);

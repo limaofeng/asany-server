@@ -1,11 +1,13 @@
 package cn.asany.cms.article.bean;
 
-import cn.asany.cms.article.bean.enums.ArticleRecommendStatus;
+import cn.asany.cms.article.bean.enums.ArticleFeatureStatus;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import javax.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.framework.lucene.annotations.Indexed;
+
+import javax.persistence.*;
 
 /**
  * 文章推荐位
@@ -19,38 +21,33 @@ import org.jfantasy.framework.lucene.annotations.Indexed;
 @AllArgsConstructor
 @Indexed
 @Entity
-@Table(name = "CMS_ARTICLE_RECOMMEND")
+@Table(name = "CMS_ARTICLE_FEATURE")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class ArticleRecommend extends BaseBusEntity {
+public class ArticleFeature extends BaseBusEntity {
   @Id
   @Column(name = "ID", length = 10)
-  @GeneratedValue(strategy = GenerationType.TABLE, generator = "ARTICLE_RECOMMEND_GEN")
-  @TableGenerator(
-      name = "ARTICLE_RECOMMEND_GEN",
-      table = "sys_sequence",
-      pkColumnName = "gen_name",
-      pkColumnValue = "article_recommend_gen:id",
-      valueColumnName = "gen_value")
+  @GeneratedValue(generator = "fantasy-sequence")
+  @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
   /** 推荐状态 */
   @Enumerated(EnumType.STRING)
   @Column(name = "STATUS", length = 20, nullable = false)
-  private ArticleRecommendStatus status;
+  private ArticleFeatureStatus status;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(
       name = "ARTICLE_ID",
-      foreignKey = @ForeignKey(name = "FK_CMS_ARTICLE_RECOMMEND_ARTICLE_ID"),
+      foreignKey = @ForeignKey(name = "FK_CMS_ARTICLE_FEATURE_ARTICLE_ID"),
       nullable = false)
   private Article article;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(
-      name = "RECOMMEND_ID",
-      foreignKey = @ForeignKey(name = "FK_CMS_ARTICLE_RECOMMEND_RECOMMEND_ID"),
+      name = "FEATURE_ID",
+      foreignKey = @ForeignKey(name = "FK_CMS_ARTICLE_FEATURE_FID"),
       updatable = false,
       nullable = false)
-  private Recommend recommend;
+  private Feature feature;
   /** 时效 推荐天数 */
   @Column(name = "aging")
   private Integer aging;

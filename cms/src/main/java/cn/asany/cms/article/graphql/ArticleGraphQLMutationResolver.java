@@ -3,7 +3,6 @@ package cn.asany.cms.article.graphql;
 import cn.asany.cms.article.bean.Article;
 import cn.asany.cms.article.bean.ArticleChannel;
 import cn.asany.cms.article.bean.ArticleTag;
-import cn.asany.cms.article.bean.enums.ContentType;
 import cn.asany.cms.article.converter.ArticleChannelConverter;
 import cn.asany.cms.article.converter.ArticleConverter;
 import cn.asany.cms.article.graphql.input.ArticleChannelInput;
@@ -76,23 +75,23 @@ public class ArticleGraphQLMutationResolver implements GraphQLMutationResolver {
 
   public ArticleInput setContentType(ArticleInput input) {
     ContentInput content = input.getContent();
-    switch (input.getType()) {
-      case video:
-        content.setType(ContentType.file);
-        break;
-      case link:
-        content.setType(ContentType.link);
-        break;
-      case picture:
-        content.setType(ContentType.json);
-        break;
-      case text:
-        content.setType(ContentType.html);
-        break;
-      case file:
-        content.setType(ContentType.file);
-        break;
-    }
+    //    switch (input.getType()) {
+    //      case video:
+    //        content.setType(ContentType.file);
+    //        break;
+    //      case link:
+    //        content.setType(ContentType.link);
+    //        break;
+    //      case picture:
+    //        content.setType(ContentType.json);
+    //        break;
+    //      case text:
+    //        content.setType(ContentType.HTML);
+    //        break;
+    //      case file:
+    //        content.setType(ContentType.file);
+    //        break;
+    //    }
     input.setContent(content);
     return input;
   }
