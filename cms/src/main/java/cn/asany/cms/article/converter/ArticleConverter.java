@@ -3,7 +3,7 @@ package cn.asany.cms.article.converter;
 import cn.asany.cms.article.bean.*;
 import cn.asany.cms.article.graphql.input.ArticleInput;
 import cn.asany.cms.article.graphql.input.ContentInput;
-import cn.asany.cms.article.service.FeatureService;
+import cn.asany.cms.article.service.ArticleFeatureService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -74,11 +74,12 @@ public interface ArticleConverter {
     if (source == null) {
       return null;
     }
-    FeatureService featureService = SpringBeanUtils.getBeanByType(FeatureService.class);
+    ArticleFeatureService articleFeatureService =
+        SpringBeanUtils.getBeanByType(ArticleFeatureService.class);
     return source.stream()
-        .map(item -> featureService.findByCode(item))
+        .map(item -> articleFeatureService.findByCode(item))
         .filter(item -> item.isPresent())
-        .map(item -> ArticleFeature.builder().feature(item.get()).build())
+        .map(item -> item.get())
         .collect(Collectors.toList());
   }
 }

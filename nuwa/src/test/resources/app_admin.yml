@@ -9,6 +9,7 @@ menus:
     icon: Duotune/abs027
   - name: 内容管理
     icon: Duotune/fin006
+    path: /cms
     component: cn.asany.ui.admin.cms.ArticleSidebar
   - name: 系统管理
     icon: Duotune/gen032

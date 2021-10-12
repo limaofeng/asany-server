@@ -1,13 +1,9 @@
 package cn.asany.cms.article.service;
 
 import cn.asany.cms.article.bean.Article;
-import cn.asany.cms.article.bean.ArticleFeature;
-import cn.asany.cms.article.bean.Feature;
 import cn.asany.cms.article.bean.HtmlContent;
-import cn.asany.cms.article.bean.enums.ArticleFeatureStatus;
 import cn.asany.cms.article.bean.enums.ArticleStatus;
 import cn.asany.cms.article.dao.ArticleDao;
-import cn.asany.cms.article.dao.ArticleFeatureDao;
 import cn.asany.cms.article.event.ArticleUpdateEvent;
 import cn.asany.cms.article.graphql.input.PermissionInput;
 import java.util.List;
@@ -38,19 +34,24 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Slf4j
 @Service
-@Transactional
+@Transactional(rollbackFor = RuntimeException.class)
 public class ArticleService {
+  private final ApplicationContext applicationContext;
+  private final ArticleFeatureService featureService;
+  private final ArticleTagService tagService;
   private final ArticleDao articleDao;
 
   @Autowired
-  public ArticleService(ArticleDao articleDao) {
+  public ArticleService(
+      ArticleDao articleDao,
+      ApplicationContext applicationContext,
+      ArticleFeatureService featureService,
+      ArticleTagService tagService) {
     this.articleDao = articleDao;
+    this.applicationContext = applicationContext;
+    this.featureService = featureService;
+    this.tagService = tagService;
   }
-
-  @Autowired private ApplicationContext applicationContext;
-  @Autowired private ArticleFeatureDao articleRecommendDao;
-  @Autowired private FeatureService service;
-  @Autowired private ArticleTagService tagService;
 
   public Optional<Article> findUniqueByUrl(String url) {
     return this.articleDao.findOne(Example.of(Article.builder().url(url).build()));
@@ -111,7 +112,14 @@ public class ArticleService {
    */
   public void release(Article article, List<PermissionInput> permissions) {}
 
-  // 更新文章
+  /**
+   * 更新文章
+   *
+   * @param article
+   * @param merge
+   * @param id
+   * @return
+   */
   public Article update(Article article, boolean merge, Long id) {
     article.setId(id);
     if (StringUtil.isBlank(article.getUrl())) {
@@ -120,7 +128,7 @@ public class ArticleService {
     if (log.isDebugEnabled()) {
       log.debug("更新文章 > " + JSON.serialize(article));
     }
-    Article oldArticle = this.articleDao.getOne(article.getId());
+    Article oldArticle = this.articleDao.getById(article.getId());
     // 设置发布状态时，设置默认的发布时间
     if (oldArticle.getStatus() != ArticleStatus.published
         && article.getStatus() == ArticleStatus.published
@@ -128,8 +136,8 @@ public class ArticleService {
       article.setPublishedAt(DateUtil.now());
     }
     Article result = updateContentAndSummary(this.articleDao.update(article, merge));
-    articleRecommendDao.delete(ArticleFeature.builder().article(result).build());
-    saveArticleRecommend(article);
+    //      articleFeatureDao.delete(ArticleFeature.builder().article(result).build());
+    //    saveArticleRecommend(article);
     applicationContext.publishEvent(ArticleUpdateEvent.newInstance(article));
     return result;
   }
@@ -139,18 +147,18 @@ public class ArticleService {
    * @param article
    */
   private void saveArticleRecommend(Article article) {
-    if (article.getFeatures() != null) {
-      for (ArticleFeature item : article.getFeatures()) {
-        item.setArticle(article);
-        Feature feature = service.findById(item.getFeature().getId());
-        item.setFeature(feature);
-        item.setStatus(
-            feature.getNeedReview()
-                ? ArticleFeatureStatus.WAIT_REVIEW
-                : ArticleFeatureStatus.PASSED);
-      }
-      articleRecommendDao.saveAll(article.getFeatures());
-    }
+    //    if (article.getFeatures() != null) {
+    //      for (ArticleFeature item : article.getFeatures()) {
+    //        item.setArticle(article);
+    //        Feature feature = service.findById(item.getFeature().getId());
+    //        item.setFeature(feature);
+    //        item.setStatus(
+    //            feature.getNeedReview()
+    //                ? ArticleFeatureStatus.WAIT_REVIEW
+    //                : ArticleFeatureStatus.PASSED);
+    //      }
+    //      articleRecommendDao.saveAll(article.getFeatures());
+    //    }
   }
 
   public Article update(Article article) {

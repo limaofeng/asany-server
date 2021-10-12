@@ -15,7 +15,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.*;
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
 import javax.persistence.Table;
@@ -81,7 +80,6 @@ public class Article extends BaseBusEntity {
   @Column(name = "STATUS", length = 20, nullable = false)
   private ArticleStatus status;
   /** 文章标题 */
-  //  @NotEmpty(groups = RESTful.POST.class)
   @IndexProperty(analyze = true, store = true)
   @Column(name = "TITLE")
   private String title;
@@ -112,10 +110,17 @@ public class Article extends BaseBusEntity {
           @JoinColumn(name = "TAG_ID", foreignKey = @ForeignKey(name = "FK_ARTICLE_TAG_ITEM_TAG")))
   private List<ArticleTag> tags;
   /** 推荐位 */
-  @OneToMany(
-      fetch = FetchType.LAZY,
-      mappedBy = "article",
-      cascade = {CascadeType.REMOVE})
+  @ManyToMany(targetEntity = ArticleFeature.class, fetch = FetchType.LAZY)
+  @JoinTable(
+      name = "CMS_ARTICLE_FEATURE_ITEM",
+      joinColumns =
+          @JoinColumn(
+              name = "ARTICLE_ID",
+              foreignKey = @ForeignKey(name = "FK_ARTICLE_FEATURE_ITEM_ARTICLE")),
+      inverseJoinColumns =
+          @JoinColumn(
+              name = "FEATURE_ID",
+              foreignKey = @ForeignKey(name = "FK_ARTICLE_FEATURE_ITEM_FID")))
   private List<ArticleFeature> features;
   /** SEO 优化字段 */
   @Column(name = "META_DATA", length = 250)

@@ -18,31 +18,41 @@ import org.jfantasy.framework.util.common.ClassUtil;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.concurrent.LinkedQueue;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Sort;
+import org.springframework.scheduling.SchedulingTaskExecutor;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+/**
+ * 日志服务
+ *
+ * @author limaofeng
+ */
 @Slf4j
 @Service
 public class OplogService implements InitializingBean {
   private LinkedQueue<Oplog> queue = new LinkedQueue();
 
   private final OplogDao oplogDao;
+  private final SchedulingTaskExecutor executor;
 
-  public OplogService(OplogDao oplogDao) {
+  public OplogService(
+      OplogDao oplogDao, @Qualifier("taskExecutor") SchedulingTaskExecutor executor) {
     this.oplogDao = oplogDao;
+    this.executor = executor;
   }
 
   @Override
   public void afterPropertiesSet() {
-    new Thread(() -> execute()).start();
+    executor.execute(this::execute);
   }
 
   @SneakyThrows
   public void execute() {
     List<Oplog> cache = new ArrayList<>();
     OplogService oplogService = SpringBeanUtils.getBeanByType(OplogService.class);
-    while (true) {
+    do {
       Oplog oplog = queue.poll(500, TimeUnit.MILLISECONDS);
       if (oplog != null) {
         cache.add(oplog);
@@ -50,10 +60,10 @@ public class OplogService implements InitializingBean {
         oplogService.save(cache);
         cache.clear();
       }
-    }
+    } while (true);
   }
 
-  @Transactional
+  @Transactional(rollbackOn = Exception.class)
   public void save(List<Oplog> logs) {
     this.oplogDao.saveAllInBatch(logs);
   }

@@ -219,7 +219,7 @@ type Article {
     # 标签
     tags: [ArticleTag]
     # 推荐位
-    features: [ArticleRecommend]
+    features: [ArticleFeature]
     # 有效期限 true 永久 false 短期
     validity: Boolean
     # 有效期限 开始时间
@@ -439,61 +439,38 @@ input PermissionInput {
 }
 
 
-input RecommendFilter{
+input ArticleFeatureFilter {
     # 名称
     name: String
 }
-input RecommendCreateInput{
+input ArticleFeatureCreateInput {
+    # 编码
+    code: String
     # 名称
     name: String!
     # 描述
     description: String
-    # 编码
-    code: String
-    # 组织
-    organization: ID!
 }
 
-input RecommendUpdateInput{
+input ArticleFeatureUpdateInput {
+    # 编码
+    code: String
     # 名称
     name: String!
     # 描述
     description: String
+}
+
+type ArticleFeature {
+    id: ID
     # 编码
     code: String
-    # 组织
-    organization: ID!
-}
-
-type ArticleRecommend{
-    id: ID
-    # 推荐状态
-    status: ArticleRecommendStatus
-    # 文章
-    article: Article
-    # 推荐位
-    feature: Recommend
-    # 推荐天数
-    aging: Int
-}
-
-enum ArticleRecommendStatus{
-    # 待审核
-    WAIT_REVIEW,
-    # 显示
-    PASSED,
-    # 过期
-    EXPIRED
-}
-
-type Recommend{
-    id: ID
     # 名称
     name: String
+    # 是否启用流程
+    needReview: Boolean
     # 描述
     description: String
-    # 编码
-    code: String
 }
 
 enum BannerBackgroundType {
@@ -585,9 +562,9 @@ extend type Query {
     # 已加星标的文章
     starredArticles(uid: ID! ,starType: ArticleStarType!, filter: ArticleFilter = {}, page: Int = 1, pageSize: Int = 15, orderBy: OrderBy): ArticleConnection
     # 查询所有推荐位
-    features(organization: ID!,filter: RecommendFilter,orderBy: OrderBy): [Recommend]
+    articleFeatures(organization: ID!,filter: ArticleFeatureFilter,orderBy: OrderBy): [ArticleFeature]
     # 根据id查询推荐位
-    feature(id:ID!): Recommend
+    articleFeature(id:ID!): ArticleFeature
     # 横幅广告
     banner(id: ID!): Banner
     # 横幅广告
@@ -618,11 +595,11 @@ extend type Mutation {
     # 删除标签
     removeArticleTag(id:ID!):Boolean
     # 新增推荐位
-    createRecommend(input:RecommendCreateInput): Recommend
+    createArticleFeature(input:ArticleFeatureCreateInput): ArticleFeature
     # 更新推荐位
-    updateRecommend(id: ID!, merge: Boolean = true, input:RecommendUpdateInput): Recommend
+    updateArticleFeature(id: ID!, merge: Boolean = true, input:ArticleFeatureUpdateInput): ArticleFeature
     # 删除推荐位
-    deleteRecommend(id:ID!): Boolean
+    deleteArticleFeature(id:ID!): Boolean
     # 创建 Banner
     createBanner(input: BannerCreateInput!): Banner
     # 更新 Banner
