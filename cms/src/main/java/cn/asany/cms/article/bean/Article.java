@@ -2,7 +2,6 @@ package cn.asany.cms.article.bean;
 
 import cn.asany.cms.article.bean.converter.MetaDataConverter;
 import cn.asany.cms.article.bean.enums.ArticleCategory;
-import cn.asany.cms.article.bean.enums.ArticleContentType;
 import cn.asany.cms.article.bean.enums.ArticleStatus;
 import cn.asany.cms.article.bean.enums.ArticleType;
 import cn.asany.cms.permission.bean.Permission;
@@ -136,14 +135,9 @@ public class Article extends BaseBusEntity {
   @Column(name = "CATEGORY", nullable = false, length = 25)
   private ArticleCategory category;
 
-  @Enumerated(EnumType.STRING)
-  @Column(name = "CONTENT_TYPE", length = 25)
-  private ArticleContentType contentType;
-
   /** 文章正文 */
   @Any(
-      metaColumn =
-          @Column(name = "CONTENT_TYPE", length = 25, insertable = false, updatable = false),
+      metaColumn = @Column(name = "CONTENT_TYPE", length = 25, updatable = false),
       fetch = FetchType.LAZY)
   @AnyMetaDef(
       idType = "long",
@@ -152,13 +146,12 @@ public class Article extends BaseBusEntity {
         @MetaValue(targetEntity = HtmlContent.class, value = HtmlContent.TYPE_KEY),
         @MetaValue(targetEntity = MarkdownContent.class, value = MarkdownContent.TYPE_KEY)
       })
-  @JoinColumn(name = "OWNERSHIP_ID", insertable = false, updatable = false)
+  @JoinColumn(name = "CONTENT_ID", updatable = false)
   private Content content;
 
   /** 所有者 */
   @Any(
-      metaColumn =
-          @Column(name = "OWNERSHIP_TYPE", length = 10, insertable = false, updatable = false),
+      metaColumn = @Column(name = "OWNERSHIP_TYPE", length = 10, updatable = false),
       fetch = FetchType.LAZY)
   @AnyMetaDef(
       idType = "long",
@@ -167,7 +160,7 @@ public class Article extends BaseBusEntity {
         @MetaValue(targetEntity = User.class, value = User.OWNERSHIP_KEY),
         @MetaValue(targetEntity = Organization.class, value = Organization.OWNERSHIP_KEY)
       })
-  @JoinColumn(name = "OWNERSHIP_ID", insertable = false, updatable = false)
+  @JoinColumn(name = "OWNERSHIP_ID", updatable = false)
   private Ownership ownership;
 
   /** 最后评论时间 */

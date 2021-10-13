@@ -1,5 +1,6 @@
 package cn.asany.cms.article.bean;
 
+import cn.asany.cms.article.bean.enums.ArticleContentType;
 import javax.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
@@ -28,4 +29,9 @@ public class HtmlContent extends BaseBusEntity implements Content {
   /** 内容 */
   @Column(name = "CONTENT", columnDefinition = "mediumtext")
   private String text;
+
+  @Override
+  public ArticleContentType getType() {
+    return ArticleContentType.HTML;
+  }
 }

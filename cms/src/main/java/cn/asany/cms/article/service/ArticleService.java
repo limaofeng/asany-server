@@ -1,6 +1,7 @@
 package cn.asany.cms.article.service;
 
 import cn.asany.cms.article.bean.Article;
+import cn.asany.cms.article.bean.Content;
 import cn.asany.cms.article.bean.HtmlContent;
 import cn.asany.cms.article.bean.enums.ArticleStatus;
 import cn.asany.cms.article.dao.ArticleDao;
@@ -14,7 +15,6 @@ import org.htmlcleaner.TagNode;
 import org.jfantasy.framework.dao.OrderBy;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
-import org.jfantasy.framework.jackson.JSON;
 import org.jfantasy.framework.util.common.DateUtil;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.common.StringUtil;
@@ -40,17 +40,20 @@ public class ArticleService {
   private final ArticleFeatureService featureService;
   private final ArticleTagService tagService;
   private final ArticleDao articleDao;
+  @Autowired private ContentService contentService;
 
   @Autowired
   public ArticleService(
       ArticleDao articleDao,
       ApplicationContext applicationContext,
       ArticleFeatureService featureService,
-      ArticleTagService tagService) {
+      ArticleTagService tagService,
+      ContentService contentService) {
     this.articleDao = articleDao;
     this.applicationContext = applicationContext;
     this.featureService = featureService;
     this.tagService = tagService;
+    this.contentService = contentService;
   }
 
   public Optional<Article> findUniqueByUrl(String url) {
@@ -60,7 +63,7 @@ public class ArticleService {
   /**
    * 文章查询方法
    *
-   * @param pager  翻页对象
+   * @param pager 翻页对象
    * @param filters 筛选条件
    * @return string
    */
@@ -85,22 +88,21 @@ public class ArticleService {
     if (StringUtil.isBlank(article.getUrl())) {
       article.setUrl(null);
     }
-    if (log.isDebugEnabled()) {
-      log.debug("保存文章 > " + JSON.serialize(article));
-    }
-    updateContentAndSummary(article);
+
+    // 保存正文
+    saveContentAndSummary(article);
 
     if (article.getStatus() == null) {
-      article.setStatus(ArticleStatus.draft);
+      article.setStatus(ArticleStatus.DRAFT);
     }
 
     Article save = this.articleDao.save(article);
-    // 添加特征
-    saveArticleRecommend(article);
+
     // 判断是否需要审批
-    if (ArticleStatus.published == save.getStatus()) {
-      release(article, permissions);
+    if (ArticleStatus.PUBLISHED == save.getStatus()) {
+      publish(article, permissions);
     }
+
     return save;
   }
 
@@ -110,55 +112,28 @@ public class ArticleService {
    * @param article
    * @param permissions
    */
-  public void release(Article article, List<PermissionInput> permissions) {}
+  public void publish(Article article, List<PermissionInput> permissions) {}
 
   /**
    * 更新文章
    *
-   * @param article
-   * @param merge
-   * @param id
-   * @return
+   * @param article 文章
+   * @param merge 合并模式
+   * @param id ID
+   * @return 文章内容
    */
   public Article update(Article article, boolean merge, Long id) {
     article.setId(id);
     if (StringUtil.isBlank(article.getUrl())) {
       article.setUrl(null);
     }
-    if (log.isDebugEnabled()) {
-      log.debug("更新文章 > " + JSON.serialize(article));
-    }
-    Article oldArticle = this.articleDao.getById(article.getId());
-    // 设置发布状态时，设置默认的发布时间
-    if (oldArticle.getStatus() != ArticleStatus.published
-        && article.getStatus() == ArticleStatus.published
-        && oldArticle.getPublishedAt() == null) {
-      article.setPublishedAt(DateUtil.now());
-    }
-    Article result = updateContentAndSummary(this.articleDao.update(article, merge));
-    //      articleFeatureDao.delete(ArticleFeature.builder().article(result).build());
-    //    saveArticleRecommend(article);
+
+    saveContentAndSummary(article);
+
+    this.articleDao.update(article, merge);
+
     applicationContext.publishEvent(ArticleUpdateEvent.newInstance(article));
-    return result;
-  }
-  /**
-   * 保存文章推荐位数据
-   *
-   * @param article
-   */
-  private void saveArticleRecommend(Article article) {
-    //    if (article.getFeatures() != null) {
-    //      for (ArticleFeature item : article.getFeatures()) {
-    //        item.setArticle(article);
-    //        Feature feature = service.findById(item.getFeature().getId());
-    //        item.setFeature(feature);
-    //        item.setStatus(
-    //            feature.getNeedReview()
-    //                ? ArticleFeatureStatus.WAIT_REVIEW
-    //                : ArticleFeatureStatus.PASSED);
-    //      }
-    //      articleRecommendDao.saveAll(article.getFeatures());
-    //    }
+    return article;
   }
 
   public Article update(Article article) {
@@ -171,16 +146,28 @@ public class ArticleService {
    * @param article 文章
    * @return 文章
    */
-  private Article updateContentAndSummary(Article article) {
-    if (StringUtil.isBlank(article.getSummary()) && ObjectUtil.isNotNull(article.getContent())) {
-      if (article.getContent() instanceof HtmlContent) {
-        TagNode node = HtmlCleanerUtil.htmlCleaner(((HtmlContent) article.getContent()).getText());
-        String content = node.getText().toString().trim().replace("\n", "");
-        String summary = content.substring(0, Math.min(content.length(), 10));
+  private void saveContentAndSummary(Article article) {
+    Content content = article.getContent();
+    if (StringUtil.isBlank(article.getSummary()) && ObjectUtil.isNotNull(content)) {
+      if (content instanceof HtmlContent) {
+        TagNode node = HtmlCleanerUtil.htmlCleaner(((HtmlContent) content).getText());
+        String contentString = node.getText().toString().trim().replace("\n", "");
+        String summary = contentString.substring(0, Math.min(contentString.length(), 10));
         article.setSummary(summary);
+
+        if (null != article.getId()) {
+          // 编辑
+          Article oldArticle = this.articleDao.getById(article.getId());
+          ((HtmlContent) oldArticle.getContent()).setText(((HtmlContent) content).getText());
+          content = oldArticle.getContent();
+          this.contentService.update(content);
+          article.setContent(content);
+        } else {
+          // 保存
+          this.contentService.save(content);
+        }
       }
     }
-    return article;
   }
 
   /**
@@ -207,7 +194,7 @@ public class ArticleService {
    */
   public void publish(Long id) {
     Article article = this.get(id);
-    article.setStatus(ArticleStatus.published);
+    article.setStatus(ArticleStatus.PUBLISHED);
     if (article.getPublishedAt() == null) {
       article.setPublishedAt(DateUtil.now());
     }
@@ -221,7 +208,7 @@ public class ArticleService {
    */
   public void unpublish(Long id) {
     Article article = this.get(id);
-    article.setStatus(ArticleStatus.draft);
+    article.setStatus(ArticleStatus.DRAFT);
     this.articleDao.update(article, true);
   }
 

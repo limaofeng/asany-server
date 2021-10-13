@@ -7,11 +7,11 @@ package cn.asany.cms.article.bean.enums;
  */
 public enum ArticleStatus {
   /** 草稿 */
-  draft,
+  DRAFT,
   /** 发布 */
-  published,
+  PUBLISHED,
   /** 待发布 */
-  waitPublished,
+  SCHEDULED,
   /** 待审核 */
   waitAudit,
   /** 审核不通过 */

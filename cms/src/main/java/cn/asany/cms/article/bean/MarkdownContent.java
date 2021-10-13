@@ -1,5 +1,6 @@
 package cn.asany.cms.article.bean;
 
+import cn.asany.cms.article.bean.enums.ArticleContentType;
 import javax.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
@@ -20,4 +21,9 @@ public class MarkdownContent extends BaseBusEntity implements Content {
   @GeneratedValue(generator = "fantasy-sequence")
   @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
+
+  @Override
+  public ArticleContentType getType() {
+    return ArticleContentType.MARKDOWN;
+  }
 }

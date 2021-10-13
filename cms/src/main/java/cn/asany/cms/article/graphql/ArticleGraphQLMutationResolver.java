@@ -8,7 +8,6 @@ import cn.asany.cms.article.converter.ArticleConverter;
 import cn.asany.cms.article.graphql.input.ArticleChannelInput;
 import cn.asany.cms.article.graphql.input.ArticleInput;
 import cn.asany.cms.article.graphql.input.ArticleTagInput;
-import cn.asany.cms.article.graphql.input.ContentInput;
 import cn.asany.cms.article.service.ArticleChannelService;
 import cn.asany.cms.article.service.ArticleService;
 import cn.asany.cms.article.service.ArticleTagService;
@@ -39,16 +38,7 @@ public class ArticleGraphQLMutationResolver implements GraphQLMutationResolver {
    * @return
    */
   public Article createArticle(ArticleInput input) {
-    ArticleInput articleInput = setContentType(input);
-    Article article =
-        articleService.save(articleConverter.toArticle(articleInput), input.getPermissions());
-    // 保存权限
-    //    if (input.getPermissions() != null) {
-    //      article.setPermissions(
-    //          securityGrpcInvoke.updateGrantPermissions(
-    //              "Article", article.getId(), input.getPermissions()));
-    //    }
-    return article;
+    return articleService.save(articleConverter.toArticle(input), input.getPermissions());
   }
 
   /**
@@ -60,40 +50,7 @@ public class ArticleGraphQLMutationResolver implements GraphQLMutationResolver {
    * @return
    */
   public Article updateArticle(Long id, Boolean merge, ArticleInput input) {
-    Article build = Article.builder().build();
-    ArticleInput articleInput = setContentType(input);
-    build = articleService.update(articleConverter.toArticle(articleInput), merge, id);
-
-    // 保存权限
-    //    if (input.getPermissions() != null) {
-    //      build.setPermissions(
-    //          securityGrpcInvoke.updateGrantPermissions(
-    //              "Article", build.getId(), input.getPermissions()));
-    //    }
-    return build;
-  }
-
-  public ArticleInput setContentType(ArticleInput input) {
-    ContentInput content = input.getContent();
-    //    switch (input.getType()) {
-    //      case video:
-    //        content.setType(ContentType.file);
-    //        break;
-    //      case link:
-    //        content.setType(ContentType.link);
-    //        break;
-    //      case picture:
-    //        content.setType(ContentType.json);
-    //        break;
-    //      case text:
-    //        content.setType(ContentType.HTML);
-    //        break;
-    //      case file:
-    //        content.setType(ContentType.file);
-    //        break;
-    //    }
-    input.setContent(content);
-    return input;
+    return articleService.update(articleConverter.toArticle(input), merge, id);
   }
 
   /**

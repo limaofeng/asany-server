@@ -3,13 +3,21 @@ package cn.asany.cms.article.service;
 import cn.asany.cms.article.bean.Content;
 import cn.asany.cms.article.bean.HtmlContent;
 import cn.asany.cms.article.dao.HtmlContentDao;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * 内容服务
+ *
+ * @author limaofeng
+ */
 @Service
 public class ContentService {
 
-  @Autowired private HtmlContentDao htmlContentDao;
+  private final HtmlContentDao htmlContentDao;
+
+  public ContentService(HtmlContentDao htmlContentDao) {
+    this.htmlContentDao = htmlContentDao;
+  }
 
   public Content save(Content content) {
     if (!(content instanceof HtmlContent)) {

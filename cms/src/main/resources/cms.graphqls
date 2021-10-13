@@ -116,11 +116,12 @@ enum ContentFormat {
 }
 
 enum ArticleStatus {
-    draft
-    published
-    waitPublished
-    waitAudit
-    failureAudit
+    # 草稿
+    DRAFT
+    # 已发布
+    PUBLISHED
+    # 计划
+    SCHEDULED
 }
 
 type Meta {
