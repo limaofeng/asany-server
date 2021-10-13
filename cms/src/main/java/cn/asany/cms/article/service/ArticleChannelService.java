@@ -40,7 +40,7 @@ public class ArticleChannelService {
   }
 
   public Optional<ArticleChannel> get(String code) {
-    return channelDao.findOne(Example.of(ArticleChannel.builder().code(code).build()));
+    return channelDao.findOne(Example.of(ArticleChannel.builder().slug(code).build()));
   }
 
   public Optional<ArticleChannel> findUniqueByName(String name) {
@@ -78,9 +78,9 @@ public class ArticleChannelService {
               int level = context.getLevel();
               ArticleChannel parent = context.getParent();
               if (parent == null) {
-                item.setPath(item.getCode() + "/");
+                item.setPath(item.getId() + "/");
               } else {
-                item.setPath(parent.getPath() + item.getCode() + "/");
+                item.setPath(parent.getPath() + item.getId() + "/");
               }
               item.setParent(parent);
               item.setIndex(index);
@@ -110,10 +110,10 @@ public class ArticleChannelService {
    * @return
    */
   public ArticleChannel save(ArticleChannel channel) {
-    channel.setCode(
+    channel.setSlug(
         generateCode(
             channel.getId(),
-            StringUtil.defaultValue(channel.getCode(), pinyin(channel.getName())),
+            StringUtil.defaultValue(channel.getSlug(), pinyin(channel.getName())),
             channel.getName()));
     channel = channelDao.save(channel);
     channel.setPath(
@@ -126,10 +126,10 @@ public class ArticleChannelService {
   // 修改栏目
   public ArticleChannel update(Long channelId, boolean merge, ArticleChannel channel) {
     channel.setId(channelId);
-    channel.setCode(
+    channel.setSlug(
         generateCode(
             channel.getId(),
-            StringUtil.defaultValue(channel.getCode(), pinyin(channel.getName())),
+            StringUtil.defaultValue(channel.getSlug(), pinyin(channel.getName())),
             channel.getName()));
     channel = channelDao.update(channel, merge);
     channel.setPath(
@@ -151,7 +151,7 @@ public class ArticleChannelService {
 
   private String generateCode(Long channelId, String code, String name) {
     Optional<ArticleChannel> prevchannel =
-        channelDao.findOne(Example.of(ArticleChannel.builder().code(code).build()));
+        channelDao.findOne(Example.of(ArticleChannel.builder().slug(code).build()));
     if (!prevchannel.isPresent() || prevchannel.get().getId().equals(channelId)) {
       return code;
     }

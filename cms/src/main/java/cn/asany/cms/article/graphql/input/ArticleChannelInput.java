@@ -17,7 +17,7 @@ import lombok.Data;
 public class ArticleChannelInput {
   private String name;
   private String description;
-  private String url;
+  private String slug;
   private Integer sort;
   private List<PermissionInput> permissions;
   private Long parent;

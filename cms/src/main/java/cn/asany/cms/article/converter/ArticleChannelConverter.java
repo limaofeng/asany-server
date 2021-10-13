@@ -21,7 +21,7 @@ import org.mapstruct.*;
 public interface ArticleChannelConverter {
 
   @Mappings({
-    @Mapping(source = "url", target = "code"),
+    @Mapping(source = "slug", target = "slug"),
     @Mapping(target = "id", ignore = true),
     @Mapping(target = "path", ignore = true),
     @Mapping(target = "parent", source = "parent", qualifiedByName = "formatChannelParent"),

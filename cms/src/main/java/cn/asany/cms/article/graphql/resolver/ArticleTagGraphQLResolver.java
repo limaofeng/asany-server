@@ -13,12 +13,6 @@ import org.springframework.stereotype.Component;
 public class ArticleTagGraphQLResolver implements GraphQLResolver<ArticleTag> {
 
   public String url(ArticleTag tag) {
-    return tag.getCode();
+    return tag.getSlug();
   }
-
-  //    public List<GrantPermission> permissions(ArticleTag tag, String permissionKey) {
-  //        return GrantPermissionUtils.getGrantPermissions(tag.getGrants().stream().map(item ->
-  // (IGrantPermission)item), permissionKey);
-  //    }
-
 }

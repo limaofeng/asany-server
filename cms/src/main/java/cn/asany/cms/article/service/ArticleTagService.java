@@ -38,7 +38,7 @@ public class ArticleTagService {
   }
 
   public Optional<ArticleTag> get(String code) {
-    return tagDao.findOne(Example.of(ArticleTag.builder().code(code).build()));
+    return tagDao.findOne(Example.of(ArticleTag.builder().slug(code).build()));
   }
 
   public Optional<ArticleTag> findUniqueByName(String name) {
@@ -85,10 +85,10 @@ public class ArticleTagService {
    * @return
    */
   public ArticleTag save(ArticleTag tag) {
-    tag.setCode(
+    tag.setSlug(
         generateCode(
             tag.getId(),
-            StringUtil.defaultValue(tag.getCode(), pinyin(tag.getName())),
+            StringUtil.defaultValue(tag.getSlug(), pinyin(tag.getName())),
             tag.getName()));
     tag = tagDao.save(tag);
     tag.setPath(
@@ -101,10 +101,10 @@ public class ArticleTagService {
   // 修改栏目
   public ArticleTag update(Long tagId, boolean merge, ArticleTag tag) {
     tag.setId(tagId);
-    tag.setCode(
+    tag.setSlug(
         generateCode(
             tag.getId(),
-            StringUtil.defaultValue(tag.getCode(), pinyin(tag.getName())),
+            StringUtil.defaultValue(tag.getSlug(), pinyin(tag.getName())),
             tag.getName()));
     tag = tagDao.update(tag, merge);
     tag.setPath(
@@ -126,7 +126,7 @@ public class ArticleTagService {
 
   private String generateCode(Long tagId, String code, String name) {
     Optional<ArticleTag> prevTag =
-        tagDao.findOne(Example.of(ArticleTag.builder().code(code).build()));
+        tagDao.findOne(Example.of(ArticleTag.builder().slug(code).build()));
     if (!prevTag.isPresent() || prevTag.get().getId().equals(tagId)) {
       return code;
     }

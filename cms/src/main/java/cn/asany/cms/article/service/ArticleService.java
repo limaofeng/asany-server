@@ -56,8 +56,8 @@ public class ArticleService {
     this.contentService = contentService;
   }
 
-  public Optional<Article> findUniqueByUrl(String url) {
-    return this.articleDao.findOne(Example.of(Article.builder().url(url).build()));
+  public Optional<Article> findUniqueBySlug(String slug) {
+    return this.articleDao.findOne(Example.of(Article.builder().slug(slug).build()));
   }
 
   /**
@@ -85,8 +85,8 @@ public class ArticleService {
    * @return Article
    */
   public Article save(Article article, List<PermissionInput> permissions) {
-    if (StringUtil.isBlank(article.getUrl())) {
-      article.setUrl(null);
+    if (StringUtil.isBlank(article.getSlug())) {
+      article.setSlug(null);
     }
 
     // 保存正文
@@ -124,8 +124,8 @@ public class ArticleService {
    */
   public Article update(Article article, boolean merge, Long id) {
     article.setId(id);
-    if (StringUtil.isBlank(article.getUrl())) {
-      article.setUrl(null);
+    if (StringUtil.isBlank(article.getSlug())) {
+      article.setSlug(null);
     }
 
     saveContentAndSummary(article);

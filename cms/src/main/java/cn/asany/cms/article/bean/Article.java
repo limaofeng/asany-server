@@ -43,7 +43,7 @@ import org.jfantasy.framework.spring.validation.Operation;
 @Entity
 @Table(
     name = "CMS_ARTICLE",
-    uniqueConstraints = @UniqueConstraint(name = "UK_ARTICLE_URL", columnNames = "SN"))
+    uniqueConstraints = @UniqueConstraint(name = "UK_ARTICLE_SLUG", columnNames = "SLUG"))
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "target", "comments"})
 public class Article extends BaseBusEntity {
@@ -55,8 +55,8 @@ public class Article extends BaseBusEntity {
   @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
   /** 文章编号，由于文章ID自增，有部分情况需要保证使用一个唯一，且有意义的标示符，定位到唯一的一篇文章 必须保证全局唯一 */
-  @Column(name = "SN", length = 200)
-  private String url;
+  @Column(name = "SLUG", length = 200)
+  private String slug;
   /** 文章对应的 频道 / 栏目 */
   @ManyToMany(targetEntity = ArticleChannel.class, fetch = FetchType.LAZY)
   @JoinTable(

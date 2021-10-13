@@ -11,7 +11,7 @@ input ArticleChannelCreateInput {
     # 栏目名称
     name: String!
     # 地址
-    url: String
+    slug: String
     # 栏目封面图
     cover: FileObject
     # 描述
@@ -38,7 +38,7 @@ input ArticleChannelUpdateInput {
     # 栏目名称
     name: String
     # 地址
-    url: String
+    slug: String
     # 栏目封面图
     cover: FileObject
     # 描述
@@ -134,7 +134,7 @@ type Meta {
 type ArticleChannel {
     id: ID!
     # 编码
-    code: String
+    slug: String
     # 名称
     name: String
     # 描述
@@ -167,7 +167,8 @@ type ArticleChannel {
 # 支持层级，亦可栏目使用
 type ArticleTag {
     id: ID!
-    url: String
+    # 短标识
+    slug: String
     # 名称
     name: String
     # 描述
@@ -196,7 +197,7 @@ type Article {
     # 文章ID
     id: ID!
     # 链接
-    url: String
+    slug: String
     # 图片
     cover: FileObject
     # 标题
@@ -293,6 +294,7 @@ enum ArticleStarType {
 }
 
 input ArticleCreateInput {
+    slug: String
     # 文章标题
     title: String
     # 文章正文
@@ -356,7 +358,7 @@ input ArticleUpdateInput {
     # 文章标题
     title: String
     # 文章URL 必须唯一
-    url: String
+    slug: String
     # 文章发布状态
     status: ArticleStatus
     # 文章正文
@@ -396,7 +398,7 @@ input ArticleTagUpdateInput{
     # 标签名称
     name: String!
     # 标签code
-    code: String
+    slug: String
     # 标签图
     cover: FileObject
     # 组织
@@ -411,7 +413,7 @@ input ArticleTagCreateInput{
     # 标签名称
     name: String!
     # 标签code
-    code: String
+    slug: String
     # 标签图
     cover: FileObject
     # 描述

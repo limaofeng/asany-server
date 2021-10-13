@@ -33,7 +33,7 @@ import org.jfantasy.framework.lucene.annotations.IndexEmbedBy;
 @Entity
 @Table(
     name = "CMS_ARTICLE_CHANNEL",
-    uniqueConstraints = @UniqueConstraint(name = "UK_ARTICLE_CHANNEL_CODE", columnNames = "CODE"))
+    uniqueConstraints = @UniqueConstraint(name = "UK_ARTICLE_CHANNEL_SLUG", columnNames = "SLUG"))
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class ArticleChannel extends BaseBusEntity {
 
@@ -43,8 +43,8 @@ public class ArticleChannel extends BaseBusEntity {
   @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
   /** 编码 */
-  @Column(name = "CODE", nullable = false, length = 100)
-  private String code;
+  @Column(name = "SLUG", nullable = false, length = 100)
+  private String slug;
   /** 路径 */
   @IndexEmbedBy(value = Article.class)
   @Column(name = "PATH", length = 500)
