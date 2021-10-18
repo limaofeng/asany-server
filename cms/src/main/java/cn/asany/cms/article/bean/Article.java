@@ -14,6 +14,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.*;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
 import javax.persistence.Table;
@@ -95,8 +96,11 @@ public class Article extends BaseBusEntity {
   @Convert(converter = FileObjectsConverter.class)
   private List<FileObject> attachments;
   /** 作者 */
-  @Column(name = "AUTHOR", length = 50)
-  private String author;
+  @OneToMany(
+      mappedBy = "article",
+      fetch = FetchType.LAZY,
+      cascade = {CascadeType.REMOVE})
+  private List<ArticleAuthor> authors;
   /** 标签 */
   @ManyToMany(targetEntity = ArticleTag.class, fetch = FetchType.LAZY)
   @JoinTable(

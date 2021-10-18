@@ -1,6 +1,7 @@
 package cn.asany.nuwa.app.bean;
 
 import cn.asany.nuwa.app.bean.enums.ApplicationType;
+import cn.asany.organization.core.bean.Organization;
 import java.util.*;
 import java.util.stream.Collectors;
 import javax.persistence.*;
@@ -110,20 +111,10 @@ public class Application extends BaseBusEntity implements ClientDetails {
   @OrderBy(" createdAt desc ")
   @JoinColumn(name = "CLIENT_ID", referencedColumnName = "CLIENT_ID", updatable = false)
   private List<ClientSecret> clientSecretsAlias;
-  /** 所有者 */
-  //  @Any(
-  //      metaColumn =
-  //          @Column(name = "OWNERSHIP_TYPE", length = 10, insertable = false, updatable = false),
-  //      fetch = FetchType.LAZY)
-  //  @AnyMetaDef(
-  //      idType = "long",
-  //      metaType = "string",
-  //      metaValues = {
-  //        @MetaValue(targetEntity = User.class, value = User.OWNERSHIP_KEY),
-  //        @MetaValue(targetEntity = Organization.class, value = Organization.OWNERSHIP_KEY)
-  //      })
-  //  @JoinColumn(name = "OWNERSHIP_ID", insertable = false, updatable = false)
-  //  private Ownership ownership;
+  /** 所属组织 */
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "ORGANIZATION_ID", foreignKey = @ForeignKey(name = "FK_APPLICATION_ORG_ID"))
+  private Organization organization;
 
   @Override
   public Map<String, Object> getAdditionalInformation() {

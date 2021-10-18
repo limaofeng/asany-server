@@ -12,6 +12,7 @@ hibernate {
 
 dependencies {
 	implementation project(":asany-ui")
+    implementation project(":asany-base")
 	implementation project(":asany-security")
 	implementation "io.reactivex.rxjava2:rxjava"
 	implementation "io.projectreactor:reactor-core"

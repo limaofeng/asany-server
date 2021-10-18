@@ -1,7 +1,7 @@
-package cn.asany.security.core.service;
+package cn.asany.organization.core.service;
 
 import cn.asany.TestApplication;
-import cn.asany.security.core.bean.Role;
+import cn.asany.organization.core.bean.Organization;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,17 +16,26 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
     classes = TestApplication.class,
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
-class RoleServiceTest {
+class OrganizationServiceTest {
 
-  @Autowired private RoleService roleService;
+  @Autowired private OrganizationService organizationService;
 
   @Test
-  void defaultRoles() {
-    if (!this.roleService.findById(Role.USER.getId()).isPresent()) {
-      this.roleService.save(Role.USER);
-    }
-    if (!this.roleService.findById(Role.ADMIN.getId()).isPresent()) {
-      this.roleService.save(Role.ADMIN);
-    }
+  void save() {
+    Organization organization = Organization.builder().code("asany").name("管理端").build();
+    organizationService.save(organization);
+    log.debug("新增成功:" + organization.getId());
   }
+
+  @Test
+  void get() {}
+
+  @Test
+  void update() {}
+
+  @Test
+  void delete() {}
+
+  @Test
+  void findAll() {}
 }

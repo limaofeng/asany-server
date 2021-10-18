@@ -4,5 +4,4 @@ dependencies {
 	implementation project(":asany-base")
 	implementation project(":asany-security")
 	implementation project(":asany-storage-api")
-	implementation project(":asany-organization")
 }

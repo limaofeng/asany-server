@@ -1,6 +1,6 @@
 package cn.asany.security.core.service;
 
-import cn.asany.security.TestApplication;
+import cn.asany.TestApplication;
 import cn.asany.security.core.bean.User;
 import cn.asany.security.core.bean.enums.UserType;
 import java.util.HashSet;

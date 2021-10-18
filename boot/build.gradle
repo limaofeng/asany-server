@@ -32,5 +32,4 @@ dependencies {
 	implementation project(":asany-storage")
 	implementation project(":asany-security")
 	implementation project(":asany-storage-api")
-	implementation project(":asany-organization")
 }

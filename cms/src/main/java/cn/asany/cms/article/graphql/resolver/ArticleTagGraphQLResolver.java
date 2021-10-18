@@ -5,8 +5,10 @@ import graphql.kickstart.tools.GraphQLResolver;
 import org.springframework.stereotype.Component;
 
 /**
+ * 文章标签
+ *
  * @author limaofeng
- * @version V1.0 @Description: TODO
+ * @version V1.0
  * @date 2019-06-26 17:26
  */
 @Component

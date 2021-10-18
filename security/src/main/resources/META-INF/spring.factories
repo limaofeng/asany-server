@@ -1,2 +1,3 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-cn.asany.autoconfigure.SecurityAutoConfiguration
+cn.asany.autoconfigure.SecurityAutoConfiguration,\
+cn.asany.autoconfigure.OrganizationAutoConfiguration

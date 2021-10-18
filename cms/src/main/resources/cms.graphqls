@@ -192,6 +192,14 @@ enum ArticleCategory {
     blog
 }
 
+type ArticleAuthor {
+    id: ID
+    # 名称
+    name: String
+    # 员工
+    employee: Employee
+}
+
 # 文章
 type Article {
     # 文章ID
@@ -209,7 +217,7 @@ type Article {
     # 分类
     category: ArticleCategory
     # 作者
-    author: String
+    authors: [ArticleAuthor]
     # 发布时间
     publishedAt: Date
     # 内容
@@ -330,7 +338,7 @@ input ArticleCreateInput {
     # 元数据
     meta: MetaData
     # 作者
-    author: String
+    authors: [ID]
 }
 
 input MetaData{
@@ -382,7 +390,7 @@ input ArticleUpdateInput {
     # 附件
     attachments: [FileObject]
     # 作者
-    author: String
+    authors: [ID]
     # 文章类型
     type:ArticleType
     # 有效期限 true 永久 false 短期
