@@ -63,6 +63,6 @@ public class ArticleFeatureService {
   }
 
   public Optional<ArticleFeature> findByCode(String code) {
-    return this.articleFeatureDao.findBy("code", code);
+    return this.articleFeatureDao.findOneBy("code", code);
   }
 }
