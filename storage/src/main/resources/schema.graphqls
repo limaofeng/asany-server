@@ -1,55 +1,58 @@
 directive @fileObjectFormat on FIELD_DEFINITION
 
 interface StorageProperties {
-    id: ID
+  id: ID
 }
 
 type MinIOProperties implements StorageProperties {
-    id: ID
-    endpoint: String
-    accessKeyId: String
-    accessKeySecret: String
-    bucketName: String
-    useSSL: Boolean
+  id: ID
+  endpoint: String
+  accessKeyId: String
+  accessKeySecret: String
+  bucketName: String
+  useSSL: Boolean
 }
 
 type Storage {
-    id: ID
-    name: String
-    properties: StorageProperties
+  id: ID
+  name: String
+  properties: StorageProperties
 }
 
 type FileDetails {
-    id: ID
-    name: String
+  id: ID
+  name: String
 }
 
 input UploadOptions {
-    name: String
-    url: String
-    # 上传空间
-    space: String
-    # 插件 支持 fragment
-    plugin: String
-    # 文件名策略
-    nameStrategy: String
-    # 分段上传时的完整 文件名
-    entireFileName: String
-    # 分段上传时的 唯一标识
-    entireFileHash: String
-    # 分段上传时的 片段标识
-    partFileHash: String
+  name: String
+  url: String
+  # 上传空间
+  space: String
+  # 插件 支持 fragment
+  plugin: String
+  # 文件名策略
+  nameStrategy: String
+  # 分段上传时的完整 文件名
+  entireFileName: String
+  # 分段上传时的 唯一标识
+  entireFileHash: String
+  # 分段上传时的 片段标识
+  partFileHash: String
 }
 
 extend type Query {
-    # 存储器
-    storages: [Storage]
-    # 文件详情
-    file(id: ID): FileDetails
+  # 存储器
+  storages: [Storage]
+  # 文件详情
+  file(id: ID): FileDetails
 }
 
 extend type Mutation {
-    upload(file: Upload!, options: UploadOptions = { space: "default" }): FileDetails
+  upload(
+    file: Upload!
+    options: UploadOptions = { space: "default" }
+  ): FileDetails
 }
 
 scalar Upload

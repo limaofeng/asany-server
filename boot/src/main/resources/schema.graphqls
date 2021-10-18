@@ -1,15 +1,12 @@
-type Query {
-#    # 用户列表
-#    users(filter: UserFilter, page: Int = 1, pageSize: Int = 15, orderBy: OrderBy): UserConnection
-#    # 查询单个用户
-#    user(id: ID): User
-}
-
-type Mutation {
-#    createUser(input: UserCreateInput!): User
-}
-
 scalar Date
 scalar OrderBy
 scalar FileObject
 scalar JSON
+
+#type Query {
+#}
+#
+#type Mutation {
+#}
+
+

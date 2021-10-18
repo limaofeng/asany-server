@@ -1,161 +1,163 @@
 directive @auth(requires: String) on OBJECT | FIELD_DEFINITION
 
-enum LoginType{
-    #密码登录
-    password
+enum LoginType {
+  #密码登录
+  password
 }
 
 enum SocialProvider {
-    # 钉钉
-    dingtalk,
-    # 微信
-    WeChat
+  # 钉钉
+  dingtalk
+  # 微信
+  WeChat
 }
 
 input LoginOptions {
-    # 连接社交平台
-    connected: Boolean = true
-    # 社交平台
-    provider: SocialProvider
-    # 用户社交平台 USER_ID
-    snser: String
+  # 连接社交平台
+  connected: Boolean = true
+  # 社交平台
+  provider: SocialProvider
+  # 用户社交平台 USER_ID
+  snser: String
 }
 
 enum UIdType {
-    id, dingtalk
+  id
+  dingtalk
 }
 
 # 登录用户对象
 type LoginUser {
-    # 用户ID
-    uid: String
-    # 名称
-    name: String
-    # 称号
-    title: String
-    # 用户类型
-    type: String
-    # 头像
-    avatar: String
-    # 邮箱
-    email: String
-    # 签名
-    signature: String
-    # 组名
-    group: String
-    # 电话
-    phone: String
-    # 权限 -> authorities
-    authorities: [String]
-    # 令牌
-    token: String
-    # 部门
-    #    departments(organization: ID): [Department]
-    # 职务
-    #    positions(organization: ID,department: ID): [Position]
-    # 角色
-    #    roles: [Role]
-    #当前部门
-    #    currentDepartment(organization: ID!): Department
-    #当前职务
-    #    currentPosition(organization: ID!): Position
+  # 用户ID
+  uid: String
+  # 名称
+  name: String
+  # 称号
+  title: String
+  # 用户类型
+  type: String
+  # 头像
+  avatar: String
+  # 邮箱
+  email: String
+  # 签名
+  signature: String
+  # 组名
+  group: String
+  # 电话
+  phone: String
+  # 权限 -> authorities
+  authorities: [String]
+  # 令牌
+  token: String
+  # 部门
+  #    departments(organization: ID): [Department]
+  # 职务
+  #    positions(organization: ID,department: ID): [Position]
+  # 角色
+  #    roles: [Role]
+  #当前部门
+  #    currentDepartment(organization: ID!): Department
+  #当前职务
+  #    currentPosition(organization: ID!): Position
+}
+
+type User {
+  id: ID
 }
 
 type CurrentUser {
-    # 用户ID
-    uid(type: UIdType = id): String
-    # 名称
-    name: String
-    # 称号
-    title: String
-    # 用户类型
-    type: String
-    # 头像
-    avatar: String
-    # 电话
-    phone: String
-    # 邮箱
-    email: String
-    # 签名
-    signature: String
-    # 权限
-    authorities: [String]
+  # 用户ID
+  uid(type: UIdType = id): String
+  # 名称
+  name: String
+  # 称号
+  title: String
+  # 用户类型
+  type: String
+  # 头像
+  avatar: String
+  # 电话
+  phone: String
+  # 邮箱
+  email: String
+  # 签名
+  signature: String
+  # 权限
+  authorities: [String]
 }
 
 type PersonalAccessToken {
-    id: ID
-    # 名称
-    name: String
-    # 创建时间
-    issuedAt: Date
-    # 过期时间
-    expiresAt: Date
-    # 权限范围
-    scopes: [String]
+  id: ID
+  # 名称
+  name: String
+  # 创建时间
+  issuedAt: Date
+  # 过期时间
+  expiresAt: Date
+  # 权限范围
+  scopes: [String]
 }
 
 type Geolocation {
-    id: ID
-    # IP 地址
-    internetProtocolAddress: String
-    # 国家
-    country: String
-    # 省 / 州
-    state: String
-    # 城市
-    city: String
+  id: ID
+  # IP 地址
+  internetProtocolAddress: String
+  # 国家
+  country: String
+  # 省 / 州
+  state: String
+  # 城市
+  city: String
 }
 
 type Session {
-    id: ID
-    # 设备
-    device: String
-    # 位置
-    location: Geolocation
-    # 登录时间
-    loginTime: Date
+  id: ID
+  # 设备
+  device: String
+  # 位置
+  location: Geolocation
+  # 登录时间
+  loginTime: Date
 }
 
 extend type Query {
-    # 系统•当前登录用户
-    viewer(organization: ID): CurrentUser @auth(requires: "USER")
-    # 用户会话
-    sessions: [Session]
-    # 查询个人 Token
-    personalAccessTokens: [PersonalAccessToken]
+  # 系统•当前登录用户
+  viewer(organization: ID): CurrentUser @auth(requires: "USER")
+  # 用户会话
+  sessions: [Session]
+  # 查询个人 Token
+  personalAccessTokens: [PersonalAccessToken]
 }
 
 extend type Mutation {
-    # 系统•登录
-    login(
-        """
-        登录方式， 默认为 password
-        loginType = password 时 username 与 password 必填
-        loginType = dingtalk 时，  authCode 与 tmpAuthCode 其中一个不能为 NULL
-        """
-        loginType: LoginType = password,
-        # 客户端ID
-        clientId: String!,
-        # 用户名
-        username: String,
-        # 密码
-        password: String,
-        # 授权码
-        authCode: String,
-        # 临时授权码
-        tmpAuthCode: String,
-        #绑定第三方平台信息
-        options: LoginOptions
-    ): LoginUser
-    # 创建个人访问令牌
-    createPersonalAccessToken(
-        clientId: String,
-        name: String
-    ): PersonalAccessToken
-    # 撤销 Token
-    revokeToken(token: String): Boolean
-    # 撤销 Session
-    revokeSession(id: ID): Boolean
-    # 撤销个人 Token
-    revokePersonalAccessToken(id: ID): Boolean
+  # 系统•登录
+  login(
+    """
+    登录方式， 默认为 password
+    loginType = password 时 username 与 password 必填
+    loginType = dingtalk 时，  authCode 与 tmpAuthCode 其中一个不能为 NULL
+    """
+    loginType: LoginType = password
+    # 客户端ID
+    clientId: String!
+    # 用户名
+    username: String
+    # 密码
+    password: String
+    # 授权码
+    authCode: String
+    # 临时授权码
+    tmpAuthCode: String
+    #绑定第三方平台信息
+    options: LoginOptions
+  ): LoginUser
+  # 创建个人访问令牌
+  createPersonalAccessToken(clientId: String, name: String): PersonalAccessToken
+  # 撤销 Token
+  revokeToken(token: String): Boolean
+  # 撤销 Session
+  revokeSession(id: ID): Boolean
+  # 撤销个人 Token
+  revokePersonalAccessToken(id: ID): Boolean
 }
