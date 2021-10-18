@@ -1,10 +1,9 @@
 package cn.asany.organization.core.bean;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import javax.persistence.*;
 import lombok.*;
 import org.jfantasy.framework.dao.BaseBusEntity;
-
-import javax.persistence.*;
 
 /**
  * 组织状态

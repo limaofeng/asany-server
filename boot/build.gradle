@@ -1,5 +1,5 @@
 plugins {
-	id 'org.springframework.boot' version "${LIB_SPRING_BOOT_VER}"
+    id 'org.springframework.boot' version "${LIB_SPRING_BOOT_VER}"
 }
 
 description = "主框架 - 框架主体,包含基础的集成框架"
@@ -7,10 +7,10 @@ description = "主框架 - 框架主体,包含基础的集成框架"
 apply plugin: 'org.springframework.boot'
 
 jar {
-	manifest {
-		attributes 'provider': 'gradle'
-		attributes 'Main-Class': 'cn.asany.sanhai.Application'
-	}
+    manifest {
+        attributes 'provider': 'gradle'
+        attributes 'Main-Class': 'cn.asany.sanhai.Application'
+    }
 }
 
 tasks.publish.enabled = false
@@ -20,16 +20,16 @@ tasks.withType(Test) { enabled = false }
 tasks.withType(PublishToMavenRepository).configureEach { it.enabled = false }
 
 bootRun {
-	systemProperty "spring.profiles.active", "dev"
+    systemProperty "spring.profiles.active", "dev"
 }
 
 dependencies {
-	implementation project(":asany-ui")
-	implementation project(":asany-base")
-	implementation project(":asany-nuwa")
-	implementation project(":asany-cms")
-	implementation project(":asany-shanhai")
-	implementation project(":asany-storage")
-	implementation project(":asany-security")
-	implementation project(":asany-storage-api")
+    implementation project(":asany-ui")
+    implementation project(":asany-base")
+    implementation project(":asany-nuwa")
+    implementation project(":asany-cms")
+    implementation project(":asany-shanhai")
+    implementation project(":asany-storage")
+    implementation project(":asany-security")
+    implementation project(":asany-storage-api")
 }

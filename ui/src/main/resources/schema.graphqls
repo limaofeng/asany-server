@@ -1,166 +1,172 @@
 enum LibraryType {
-    # 图标
-    ICONS
-    # 组件
-    COMPONENT
-    # 设计系统
-    DESIGN_SYSTEM
+  # 图标
+  ICONS
+  # 组件
+  COMPONENT
+  # 设计系统
+  DESIGN_SYSTEM
 }
 
 type Collection {
-    id: ID
+  id: ID
 }
 
 interface Library {
-    id: ID
-    # 名称
-    name: String
-    # 描述
-    description: String
+  id: ID
+  # 名称
+  name: String
+  # 描述
+  description: String
 }
 
 type Icon {
-    id: ID
-    name: String
-    description: String
-    tags: [String]
-    unicode: String
-    content: String
-    # 库 ID
-    libraryId: ID
+  id: ID
+  name: String
+  description: String
+  tags: [String]
+  unicode: String
+  content: String
+  # 库 ID
+  libraryId: ID
 }
 
 type IconLibrary implements Library {
-    id: ID
-    # 名称
-    name: String
-    # 描述
-    description: String
-    # 图标
-    icons: [Icon]
-    # 数量
-    total: Int
+  id: ID
+  # 名称
+  name: String
+  # 描述
+  description: String
+  # 图标
+  icons: [Icon]
+  # 数量
+  total: Int
 }
 
 input OwnershipInput {
-    id: ID!
-    type: String!
+  id: ID!
+  type: String!
 }
 
 input IconInput {
-    # 名称
-    name: String
-    # 编码
-    unicode: String
-    # 标签
-    tags: [String]
-    # 描述
-    description: String
-    # 正文
-    content: String!
+  # 名称
+  name: String
+  # 编码
+  unicode: String
+  # 标签
+  tags: [String]
+  # 描述
+  description: String
+  # 正文
+  content: String!
 }
 
 input IconUpdateInput {
-    # 名称
-    name: String
-    # 编码
-    unicode: String
-    # 标签
-    tags: [String]
-    # 描述
-    description: String
-    # 正文
-    content: String
-    # 库 ID
-    libraryId: ID!
+  # 名称
+  name: String
+  # 编码
+  unicode: String
+  # 标签
+  tags: [String]
+  # 描述
+  description: String
+  # 正文
+  content: String
+  # 库 ID
+  libraryId: ID!
 }
 
 input IconCreateInput {
-    # 名称
-    name: String
-    # 编码
-    unicode: String
-    # 标签
-    tags: [String]
-    # 描述
-    description: String
-    # 正文
-    content: String
-    # 库 ID
-    libraryId: ID!
+  # 名称
+  name: String
+  # 编码
+  unicode: String
+  # 标签
+  tags: [String]
+  # 描述
+  description: String
+  # 正文
+  content: String
+  # 库 ID
+  libraryId: ID!
 }
 
 enum Operation {
-    DELETE
-    UPDATE
-    INSERT
+  DELETE
+  UPDATE
+  INSERT
 }
 
 type Oplog {
-    id: ID
-    clazz: String
-    entityName: String
-    tableName: String
-    primarykeyName: String
-    primarykeyValue: String
-    operation: Operation
-    data: JSON
+  id: ID
+  clazz: String
+  entityName: String
+  tableName: String
+  primarykeyName: String
+  primarykeyValue: String
+  operation: Operation
+  data: JSON
 }
 
 input OplogFilter {
-    entityName: String
-    primarykeyName: String
-    primarykeyValue: String
-    createdAt_gt: Date
-    entityName_in: [String]
+  entityName: String
+  primarykeyName: String
+  primarykeyValue: String
+  createdAt_gt: Date
+  entityName_in: [String]
 }
 
 input IconFilter {
-    id_in: [ID]
-    library: ID
+  id_in: [ID]
+  library: ID
 }
 
 input IconLibraryFilter {
-    id_in: [ID]
+  id_in: [ID]
 }
 
 input LibraryCreateInput {
-    type: LibraryType!
-    name: String!
-    description: String
+  type: LibraryType!
+  name: String!
+  description: String
 }
 
 input LibraryUpdateInput {
-    name: String
-    description: String
+  name: String
+  description: String
 }
 
 extend type Query {
-    # 库
-    libraries(type: LibraryType!, ownership: OwnershipInput = {type: "PERSONAL", id: "me"}): [Library]
-    # 图标库
-    iconLibraries(filter: IconLibraryFilter, ownership: OwnershipInput = {type: "PERSONAL", id: "me"}): [IconLibrary]
-    # 图标库
-    iconLibrary(id: ID!): IconLibrary
-    # 查询图标
-    icons(filter: IconFilter): [Icon]
-    # 查询日志
-    oplogs(filter: OplogFilter): [Oplog]
+  # 库
+  libraries(
+    type: LibraryType!
+    ownership: OwnershipInput = { type: "PERSONAL", id: "me" }
+  ): [Library]
+  # 图标库
+  iconLibraries(
+    filter: IconLibraryFilter
+    ownership: OwnershipInput = { type: "PERSONAL", id: "me" }
+  ): [IconLibrary]
+  # 图标库
+  iconLibrary(id: ID!): IconLibrary
+  # 查询图标
+  icons(filter: IconFilter): [Icon]
+  # 查询日志
+  oplogs(filter: OplogFilter): [Oplog]
 }
 
 extend type Mutation {
-    # 导入图标
-    importIcons(library: ID!, icons: [IconInput]!): [Icon]
-    # 添加图标
-    createIcon(input: IconCreateInput!): Icon
-    # 更新图标
-    updateIcon(id: ID!, input: IconUpdateInput!): Icon
-    # 删除图标
-    deleteLibrary(id: ID!): Boolean
-    # 添加库
-    createLibrary(input: LibraryCreateInput!): Library
-    # 更新库
-    updateLibrary(id: ID!, input: LibraryUpdateInput!): Library
-    # 删除库
-    deleteLibrary(id: ID!): Boolean
+  # 导入图标
+  importIcons(library: ID!, icons: [IconInput]!): [Icon]
+  # 添加图标
+  createIcon(input: IconCreateInput!): Icon
+  # 更新图标
+  updateIcon(id: ID!, input: IconUpdateInput!): Icon
+  # 删除图标
+  deleteLibrary(id: ID!): Boolean
+  # 添加库
+  createLibrary(input: LibraryCreateInput!): Library
+  # 更新库
+  updateLibrary(id: ID!, input: LibraryUpdateInput!): Library
+  # 删除库
+  deleteLibrary(id: ID!): Boolean
 }

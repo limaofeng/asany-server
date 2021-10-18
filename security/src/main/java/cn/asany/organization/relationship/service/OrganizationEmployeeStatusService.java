@@ -31,8 +31,7 @@ public class OrganizationEmployeeStatusService {
     return this.employeeStatusDao.save(employeeStatus);
   }
 
-  public EmployeeStatus update(
-      Long id, Boolean merge, EmployeeStatus employeeStatus) {
+  public EmployeeStatus update(Long id, Boolean merge, EmployeeStatus employeeStatus) {
     employeeStatus.setId(id);
     return this.employeeStatusDao.update(employeeStatus, merge);
   }

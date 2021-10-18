@@ -1,243 +1,249 @@
 input ModelCreateInput {
-    # 编码
-    code: String
-    # 名称
-    name: String
-    # 字段
-    fields: [ModelFieldCreateInput]
-    # 特征
-    features: [String]
+  # 编码
+  code: String
+  # 名称
+  name: String
+  # 字段
+  fields: [ModelFieldCreateInput]
+  # 特征
+  features: [String]
 }
 
 input ModelFieldCreateInput {
-    # 编码
-    code: String
-    # 名称
-    name: String
-    # 类型
-    type: String
+  # 编码
+  code: String
+  # 名称
+  name: String
+  # 类型
+  type: String
 }
 
 input ModelFilter {
-    type: ModelType
-    type_not: ModelType
-    type_in: [ModelType]
-    type_notIn: [ModelType]
-    code: String
-    code_contains: String
-    name: String
-    name_contains: String
-    AND: [ModelFilter]
-    OR: [ModelFilter]
-    NOT: [ModelFilter]
+  type: ModelType
+  type_not: ModelType
+  type_in: [ModelType]
+  type_notIn: [ModelType]
+  code: String
+  code_contains: String
+  name: String
+  name_contains: String
+  AND: [ModelFilter]
+  OR: [ModelFilter]
+  NOT: [ModelFilter]
 }
 
 type ModelConnection {
-    # 总数据条数
-    totalCount: Int
-    # 每页显示条数
-    pageSize: Int
-    # 总页数
-    totalPage: Int
-    # 当前页
-    currentPage: Int
-    edges: [ModelEdge]
-    #pageInfo: PageInfo
+  # 总数据条数
+  totalCount: Int
+  # 每页显示条数
+  pageSize: Int
+  # 总页数
+  totalPage: Int
+  # 当前页
+  currentPage: Int
+  edges: [ModelEdge]
+  #pageInfo: PageInfo
 }
-type ModelEdge{
-    cursor: String
-    node: Model
+type ModelEdge {
+  cursor: String
+  node: Model
 }
 
 enum ModelType {
-    # 输入对象
-    INPUT_OBJECT
-    # 标量
-    SCALAR
-    # 类型
-    OBJECT
-    # 实体
-    ENTITY
-    # 枚举
-    ENUM
-    # 联合
-    UNION
-    # 接口
-    INTERFACE
+  # 输入对象
+  INPUT_OBJECT
+  # 标量
+  SCALAR
+  # 类型
+  OBJECT
+  # 实体
+  ENTITY
+  # 枚举
+  ENUM
+  # 联合
+  UNION
+  # 接口
+  INTERFACE
 }
 
 type Model {
-    id: ID
-    # 编码
-    code: String
-    # 名称
-    name: String
-    # 类型
-    type: ModelType
-    # 描述
-    description: String
-    # 字段
-    fields: [ModelField]
-    # 创建人
-    createdBy: String
-    # 修改人
-    updatedBy: String
-    # 创建时间
-    createdAt: Date
-    # 修改时间
-    updatedAt: Date
+  id: ID
+  # 编码
+  code: String
+  # 名称
+  name: String
+  # 类型
+  type: ModelType
+  # 描述
+  description: String
+  # 字段
+  fields: [ModelField]
+  # 创建人
+  createdBy: String
+  # 修改人
+  updatedBy: String
+  # 创建时间
+  createdAt: Date
+  # 修改时间
+  updatedAt: Date
 }
 
 type ModelField {
-    id: ID
-    # 编码
-    code: String
-    # 名称
-    name: String
-    # 描述
-    description: String
-    # 类型
-    type: Model
-    # 必填
-    required: Boolean
-    # 是否主键
-    primaryKey: Boolean
-    # 是否唯一
-    unique: Boolean
-    # 存储值为列表
-    list: Boolean
-    # 是否为系统字段
-    system: Boolean
-    # 所属实体
-    model: Model
+  id: ID
+  # 编码
+  code: String
+  # 名称
+  name: String
+  # 描述
+  description: String
+  # 类型
+  type: Model
+  # 必填
+  required: Boolean
+  # 是否主键
+  primaryKey: Boolean
+  # 是否唯一
+  unique: Boolean
+  # 存储值为列表
+  list: Boolean
+  # 是否为系统字段
+  system: Boolean
+  # 所属实体
+  model: Model
 }
 
 enum ServiceIdType {
-    ID, CODE
+  ID
+  CODE
 }
 
 type Service {
-    id: ID
-    # 编码
-    code: String
-    # 名称
-    name: String
-    # 描述
-    description: String
-    # Web 协议
-    protocol: String
-    # Host 地址
-    host: String
-    # 端口
-    port: String
-    # PATH 地址
-    path: String
-    # 地址
-    url: String
+  id: ID
+  # 编码
+  code: String
+  # 名称
+  name: String
+  # 描述
+  description: String
+  # Web 协议
+  protocol: String
+  # Host 地址
+  host: String
+  # 端口
+  port: String
+  # PATH 地址
+  path: String
+  # 地址
+  url: String
 }
 
 type Consumer {
-    id: ID
+  id: ID
 }
 
 type GraphQLEndpoint {
-    id: ID
+  id: ID
 }
 
 enum GraphQLType {
-    # 输入对象
-    InputObject
-    # 标量
-    Scalar
-    # 类型
-    Object
-    # 枚举
-    Enum
-    # 联合
-    Union
-    # 接口
-    Interface
+  # 输入对象
+  InputObject
+  # 标量
+  Scalar
+  # 类型
+  Object
+  # 枚举
+  Enum
+  # 联合
+  Union
+  # 接口
+  Interface
 }
 
 enum ModelGroupItemResourceType {
-    # 查询
-    Query
-    # 突变
-    Mutation
-    # 标量
-    Scalar
-    # 模型
-    Model
-    # 输入
-    Input
-    # 枚举
-    ENUM
+  # 查询
+  Query
+  # 突变
+  Mutation
+  # 标量
+  Scalar
+  # 模型
+  Model
+  # 输入
+  Input
+  # 枚举
+  ENUM
 }
 
 type ModelGroupItemResource {
-    id: ID
-    name: String
-    type: ModelGroupItemResourceType
-    resourceId: Int
-    resourceType: String
+  id: ID
+  name: String
+  type: ModelGroupItemResourceType
+  resourceId: Int
+  resourceType: String
 }
 
 type ModelGroup {
-    id: ID
-    name: String
-    description: String
-    items: [ModelGroupItemResource]
+  id: ID
+  name: String
+  description: String
+  items: [ModelGroupItemResource]
 }
 
 type GraphQLSchema {
-    id: ID
-    name: String
-    ungrouped: [ModelGroupItemResource]
-    groups: [ModelGroup]
-    endpoints: [ModelField]
-    queries: [ModelField]
-    mutations: [ModelField]
-    types: [Model]
+  id: ID
+  name: String
+  ungrouped: [ModelGroupItemResource]
+  groups: [ModelGroup]
+  endpoints: [ModelField]
+  queries: [ModelField]
+  mutations: [ModelField]
+  types: [Model]
 }
 
 enum ModelIdType {
-    id
-    code
+  id
+  code
 }
 
 enum EndpointIdType {
-    id
-    code
+  id
+  code
 }
 
 extend type Query {
-    # 用户列表
-    models(filter: ModelFilter, page: Int = 1, pageSize: Int = 15, orderBy: OrderBy): ModelConnection
-    # 查询单个模型
-    model(id: ID, idType: ModelIdType = id): Model
-    # 查询单个接口
-    endpoint(id: ID, idType: EndpointIdType = id): ModelField
-    # 查询单个服务
-    service(id: ID!, idType: ServiceIdType = ID): Service
-    # 服务
-    services: [Service]
-    # 消费者
-    consumers: [Consumer]
-    #  GraphQL 架构图
-    schema(id: ID!): GraphQLSchema
+  # 用户列表
+  models(
+    filter: ModelFilter
+    page: Int = 1
+    pageSize: Int = 15
+    orderBy: OrderBy
+  ): ModelConnection
+  # 查询单个模型
+  model(id: ID, idType: ModelIdType = id): Model
+  # 查询单个接口
+  endpoint(id: ID, idType: EndpointIdType = id): ModelField
+  # 查询单个服务
+  service(id: ID!, idType: ServiceIdType = ID): Service
+  # 服务
+  services: [Service]
+  # 消费者
+  consumers: [Consumer]
+  #  GraphQL 架构图
+  schema(id: ID!): GraphQLSchema
 }
 
 extend type Mutation {
-    """
-    新增实体
-    """
-    createModel(input: ModelCreateInput!): Model
-    """
-    修改实体
-    """
-    updateModel(id: ID!, input: ModelCreateInput!): Model
-    """
-    删除实体
-    """
-    deleteModel(id: [ID]!): Int
+  """
+  新增实体
+  """
+  createModel(input: ModelCreateInput!): Model
+  """
+  修改实体
+  """
+  updateModel(id: ID!, input: ModelCreateInput!): Model
+  """
+  删除实体
+  """
+  deleteModel(id: [ID]!): Int
 }

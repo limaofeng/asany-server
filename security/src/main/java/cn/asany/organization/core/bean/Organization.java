@@ -3,13 +3,12 @@ package cn.asany.organization.core.bean;
 import cn.asany.base.common.Ownership;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import java.util.List;
+import javax.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
-
-import javax.persistence.*;
-import java.util.List;
 
 /**
  * 组织机构

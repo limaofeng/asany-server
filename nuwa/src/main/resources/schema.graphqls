@@ -1,332 +1,341 @@
 enum ApplicationIdType {
-    CLIENT_ID, ID
+  CLIENT_ID
+  ID
 }
 
 input ApplicationFilter {
-    id_in: [String]
-    # 分类
-    enabled: Boolean
+  id_in: [String]
+  # 分类
+  enabled: Boolean
 }
 
 input RouteFilter {
-    id_in: [String]
-    # 是否启用
-    enabled: Boolean
-    # 应用ID
-    application: ID
-    # 类型
-    type: RouteType
+  id_in: [String]
+  # 是否启用
+  enabled: Boolean
+  # 应用ID
+  application: ID
+  # 类型
+  type: RouteType
 }
 
 input RouteCreateInput {
-    # 名称
-    name: String!
-    # 路径
-    path: String!
-    # 必须登录
-    authorized: Boolean
-    # 路由类型
-    type: RouteType
-    # 需要提供的权限
-    access: String
-    # 在面包屑中隐藏菜单
-    hideInBreadcrumb: Boolean
-    # 重定向的路径
-    redirect: String
-    # 组件
-    component: NuwaComponentInput
-    # 对应的图标
-    icon: String
-    # 父路由
-    parentRoute: ID
-    # 默认位置
-    index: Int
+  # 名称
+  name: String!
+  # 路径
+  path: String!
+  # 必须登录
+  authorized: Boolean
+  # 路由类型
+  type: RouteType
+  # 需要提供的权限
+  access: String
+  # 在面包屑中隐藏菜单
+  hideInBreadcrumb: Boolean
+  # 重定向的路径
+  redirect: String
+  # 组件
+  component: NuwaComponentInput
+  # 对应的图标
+  icon: String
+  # 父路由
+  parentRoute: ID
+  # 默认位置
+  index: Int
 }
 
 input RouteUpdateInput {
-    # 名称
-    name: String
-    # 是否启用
-    enabled: Boolean
-    # 路由类型
-    type: RouteType
-    # 路径
-    path: String
-    # 必须登录
-    authorized: Boolean
-    # 访问权限
-    access: String
-    # 在面包屑中隐藏菜单
-    hideInBreadcrumb: Boolean
-    # 重定向的路径
-    redirect: String
-    # 组件
-    component: NuwaComponentInput
-    # 对应的图标
-    icon: String
-    # 父路由
-    parentRoute: ID
+  # 名称
+  name: String
+  # 是否启用
+  enabled: Boolean
+  # 路由类型
+  type: RouteType
+  # 路径
+  path: String
+  # 必须登录
+  authorized: Boolean
+  # 访问权限
+  access: String
+  # 在面包屑中隐藏菜单
+  hideInBreadcrumb: Boolean
+  # 重定向的路径
+  redirect: String
+  # 组件
+  component: NuwaComponentInput
+  # 对应的图标
+  icon: String
+  # 父路由
+  parentRoute: ID
 }
 
 input NuwaComponentInput {
-    # 渲染组件
-    template: String
+  # 渲染组件
+  template: String
 }
 
 input MenuCreateInput {
-    # 名称
-    name: String!
-    # 对应的图标
-    icon: String
-    # 菜单类型
-    type: MenuType
-    # 路径
-    path: String
-    # 必须登录
-    authorized: Boolean
-    # 需要提供的权限
-    authority: [String]
-    # 父路由
-    parentMenu: ID
-    # 默认位置
-    index: Int
-    # 应用
-    application: ID
+  # 名称
+  name: String!
+  # 对应的图标
+  icon: String
+  # 菜单类型
+  type: MenuType
+  # 路径
+  path: String
+  # 必须登录
+  authorized: Boolean
+  # 需要提供的权限
+  authority: [String]
+  # 父路由
+  parentMenu: ID
+  # 默认位置
+  index: Int
+  # 应用
+  application: ID
 }
 
 input MenuUpdateInput {
-    # 名称
-    name: String!
-    # 对应的图标
-    icon: String
-    # 菜单类型
-    type: MenuType
-    # 路径
-    path: String
-    # 必须登录
-    authorized: Boolean
-    # 需要提供的权限
-    authority: [String]
-    # 父路由
-    parentMenu: ID
-    # 默认位置
-    index: Int
+  # 名称
+  name: String!
+  # 对应的图标
+  icon: String
+  # 菜单类型
+  type: MenuType
+  # 路径
+  path: String
+  # 必须登录
+  authorized: Boolean
+  # 需要提供的权限
+  authority: [String]
+  # 父路由
+  parentMenu: ID
+  # 默认位置
+  index: Int
 }
 
 type NuwaComponent {
-    # 渲染组件
-    id: ID
-    # 模版
-    template: String
-    # 组件配置数据
-    blocks: JSON
+  # 渲染组件
+  id: ID
+  # 模版
+  template: String
+  # 组件配置数据
+  blocks: JSON
 }
 
 type RouteComponentWrapper {
-    # 渲染组件
-    id: ID
-    # 模版
-    template: String
-    # 组件配置数据
-    #    props: JSON
+  # 渲染组件
+  id: ID
+  # 模版
+  template: String
+  # 组件配置数据
+  #    props: JSON
 }
 
 input ApplicationCreateInput {
-    # 名称
-    name: String!
-    # 简介
-    description: String
-    # 路由空间
-    routespaces: [String] = ["web"]
+  # 名称
+  name: String!
+  # 简介
+  description: String
+  # 路由空间
+  routespaces: [String] = ["web"]
 }
 
 input ApplicationUpdateInput {
-    # 名称
-    name: String
-    # 简介
-    description: String
-    # 应用 LOGO
-    logo: String
-    # 组织
-    organization: String
-    # 应用根路径
-    path: String
-    # 是否启用
-    enabled: Boolean
+  # 名称
+  name: String
+  # 简介
+  description: String
+  # 应用 LOGO
+  logo: String
+  # 组织
+  organization: String
+  # 应用根路径
+  path: String
+  # 是否启用
+  enabled: Boolean
 }
 
 type Routespace {
-    id: ID
-    name: String
+  id: ID
+  name: String
 }
 
 type ClientSecret {
-    id: ID
-    secret: String
+  id: ID
+  secret: String
 }
 
 type Menu {
-    id: ID
-    # 菜单名称
-    name: String
-    # 路由类型
-    type: MenuType
-    # 对应的图标
-    icon: String
-    # 树路径
-    path: String
-    # 必须登录
-    authorized: Boolean
-    # 在面包屑中隐藏菜单
-    hideInBreadcrumb: Boolean
-    # 需要提供的权限
-    authority: [String]
-    # 序号
-    index: Int
-    # 子菜单
-    children: [Menu]
-    # 父菜单
-    parent: Menu
-    # 菜单层级
-    level: Int
-    # 是否启用
-    enabled: Boolean
-    # 路由对应的应用
-    application: Application
-    # 组件
-    component: NuwaComponent
+  id: ID
+  # 菜单名称
+  name: String
+  # 路由类型
+  type: MenuType
+  # 对应的图标
+  icon: String
+  # 树路径
+  path: String
+  # 必须登录
+  authorized: Boolean
+  # 在面包屑中隐藏菜单
+  hideInBreadcrumb: Boolean
+  # 需要提供的权限
+  authority: [String]
+  # 序号
+  index: Int
+  # 子菜单
+  children: [Menu]
+  # 父菜单
+  parent: Menu
+  # 菜单层级
+  level: Int
+  # 是否启用
+  enabled: Boolean
+  # 路由对应的应用
+  application: Application
+  # 组件
+  component: NuwaComponent
 }
 
 type Application {
-    id: ID
-    # 名称
-    name: String
-    # 简介
-    description: String
-    # 应用 LOGO
-    logo: String
-    # 应用访问地址
-    url: String
-    # 是否启用
-    enabled: Boolean
-    # 路由
-    routes(space: ID = "web"): [Route]
-    # 菜单
-    menus: [Menu]
-    # 路由命名空间
-    routespaces: [Routespace]
-    # 登录路由
-    loginRoute(space: ID = "web"): Route
-    # 布局路由
-    layoutRoute(space: ID = "web"): Route
-    # 集成钉钉
-    dingtalkIntegration: Boolean
-    # 客户端 ID
-    clientId: String
-    # 客户端密钥
-    clientSecrets: [ClientSecret]
+  id: ID
+  # 名称
+  name: String
+  # 简介
+  description: String
+  # 应用 LOGO
+  logo: String
+  # 应用访问地址
+  url: String
+  # 是否启用
+  enabled: Boolean
+  # 路由
+  routes(space: ID = "web"): [Route]
+  # 菜单
+  menus: [Menu]
+  # 路由命名空间
+  routespaces: [Routespace]
+  # 登录路由
+  loginRoute(space: ID = "web"): Route
+  # 布局路由
+  layoutRoute(space: ID = "web"): Route
+  # 集成钉钉
+  dingtalkIntegration: Boolean
+  # 客户端 ID
+  clientId: String
+  # 客户端密钥
+  clientSecrets: [ClientSecret]
 }
 
 type ApplicationVariable {
-    key: String
-    value: String
+  key: String
+  value: String
 }
 
 enum RouteType {
-    # 菜单
-    MENU
-    # 标题
-    HEADER
-    # 分割符
-    DIVIDER
-    # 路由
-    ROUTE
+  # 菜单
+  MENU
+  # 标题
+  HEADER
+  # 分割符
+  DIVIDER
+  # 路由
+  ROUTE
 }
 
 enum MenuType {
-    # 章节
-    SECTION
-    # 链接地址
-    URL,
-    # 菜单
-    MENU,
-    # 脚本
-    SCRIPT
+  # 章节
+  SECTION
+  # 链接地址
+  URL
+  # 菜单
+  MENU
+  # 脚本
+  SCRIPT
 }
 
 # 布局设置
 type LayoutSettings {
-    pure: Boolean
+  pure: Boolean
 }
 
 type Route {
-    id: ID
-    # 菜单名称
-    name: String
-    # 是否启用
-    enabled: Boolean
-    # 路由类型
-    type: RouteType
-    # 树路径
-    path: String
-    # 必须登录
-    authorized: Boolean
-    # 访问权限
-    access: String
-    # 布局设置
-    layout: LayoutSettings
-    # 在面包屑中隐藏菜单
-    hideInBreadcrumb: Boolean
-    # 重定向
-    redirect: String
-    # 组件
-    component: NuwaComponent
-    # 对应的图标
-    icon: String
-    # 序号
-    index: Int
-    # 子路由
-    routes: [Route]
-    # 父路由
-    parent: Route
-    # 路由层级
-    level: Int
-    # 路由对应的应用
-    application: Application
+  id: ID
+  # 菜单名称
+  name: String
+  # 是否启用
+  enabled: Boolean
+  # 路由类型
+  type: RouteType
+  # 树路径
+  path: String
+  # 必须登录
+  authorized: Boolean
+  # 访问权限
+  access: String
+  # 布局设置
+  layout: LayoutSettings
+  # 在面包屑中隐藏菜单
+  hideInBreadcrumb: Boolean
+  # 重定向
+  redirect: String
+  # 组件
+  component: NuwaComponent
+  # 对应的图标
+  icon: String
+  # 序号
+  index: Int
+  # 子路由
+  routes: [Route]
+  # 父路由
+  parent: Route
+  # 路由层级
+  level: Int
+  # 路由对应的应用
+  application: Application
 }
 
 union StarValue = Application
 
 extend type Query {
-    # 所有的应用
-    applications(filter: ApplicationFilter = {}): [Application]
-    # 查询单个应用的信息
-    application(id: ID!, idType: ApplicationIdType, space: ID = "web"): Application
-    # 查询路由
-    route(id: ID!): Route
+  # 所有的应用
+  applications(filter: ApplicationFilter = {}): [Application]
+  # 查询单个应用的信息
+  application(
+    id: ID!
+    idType: ApplicationIdType
+    space: ID = "web"
+  ): Application
+  # 查询路由
+  route(id: ID!): Route
 }
 
 extend type Mutation {
-    # 创建一个应用
-    createApplication(input: ApplicationCreateInput!): Application
-    # 更新应用信息
-    updateApplication(id: ID!, input: ApplicationUpdateInput!, merge: Boolean = true): Application
-    # 删除应用
-    deleteApplication(id: ID!): Boolean
-    # 创建路由
-    createRoute(input: RouteCreateInput!): Route
-    # 更新路由信息
-    updateRoute(id: ID!, input: RouteUpdateInput!, merge: Boolean = true): Route
-    # 删除路由
-    deleteRoute(id: ID!): Boolean
-    # 移动路由
-    moveRoute(id: ID!, parentRoute: ID, location: Int!): Route
-    # 创建菜单
-    createMenu(input: MenuCreateInput!): Menu
-    # 更新菜单
-    updateMenu(id: ID!, input: MenuUpdateInput!, merge: Boolean = true): Menu
-    # 删除菜单
-    deleteMenu(id: ID!): Boolean
-    # 移动菜单
-    moveMenu(id: ID!, parentMenu: ID, location: Int!): Menu
+  # 创建一个应用
+  createApplication(input: ApplicationCreateInput!): Application
+  # 更新应用信息
+  updateApplication(
+    id: ID!
+    input: ApplicationUpdateInput!
+    merge: Boolean = true
+  ): Application
+  # 删除应用
+  deleteApplication(id: ID!): Boolean
+  # 创建路由
+  createRoute(input: RouteCreateInput!): Route
+  # 更新路由信息
+  updateRoute(id: ID!, input: RouteUpdateInput!, merge: Boolean = true): Route
+  # 删除路由
+  deleteRoute(id: ID!): Boolean
+  # 移动路由
+  moveRoute(id: ID!, parentRoute: ID, location: Int!): Route
+  # 创建菜单
+  createMenu(input: MenuCreateInput!): Menu
+  # 更新菜单
+  updateMenu(id: ID!, input: MenuUpdateInput!, merge: Boolean = true): Menu
+  # 删除菜单
+  deleteMenu(id: ID!): Boolean
+  # 移动菜单
+  moveMenu(id: ID!, parentMenu: ID, location: Int!): Menu
 }
