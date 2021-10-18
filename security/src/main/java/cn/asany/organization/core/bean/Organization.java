@@ -1,6 +1,7 @@
 package cn.asany.organization.core.bean;
 
 import cn.asany.base.common.Ownership;
+import cn.asany.security.core.bean.User;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.util.List;
@@ -52,11 +53,9 @@ public class Organization extends BaseBusEntity implements Ownership {
   /** 备注 */
   @Column(name = "remark", length = 300)
   private String remark;
-
   /** 所有者 - 用户ID */
   @JoinColumn(name = "OWNERSHIP_ID", insertable = false, updatable = false)
-  private Long ownership;
-
+  private User ownership;
   /** 部门类型 */
   @JsonManagedReference
   @OneToMany(mappedBy = "organization", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
@@ -64,14 +63,6 @@ public class Organization extends BaseBusEntity implements Ownership {
   /** 用户组范围 */
   @OneToMany(mappedBy = "organization", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
   private List<EmployeeGroupScope> employeeGroupScopes;
-
-  /** 是否支持多部门 */
-  @Column(name = "MULTI_SECTORAL")
-  private Boolean multiSectoral;
-
-  /** 一个人最多可以加入到几个部门中 */
-  @Column(name = "MULTI_SECTORAL_NUMBER")
-  private Long multiSectoralNumber;
 
   @Override
   @Transient

@@ -6,7 +6,11 @@ import javax.persistence.*;
 import lombok.*;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
-/** 用戶組分类 */
+/**
+ * 用戶組分类
+ *
+ * @author limaofeng
+ */
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Builder
@@ -26,7 +30,7 @@ public class EmployeeGroupScope extends BaseBusEntity {
 
   /** 用户组范围 */
   @OneToMany(mappedBy = "scope", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-  private List<EmployeeGroup> employeeGroups;
+  private List<EmployeeGroup> groups;
 
   /** 所属组织 */
   @ManyToOne(fetch = FetchType.LAZY)

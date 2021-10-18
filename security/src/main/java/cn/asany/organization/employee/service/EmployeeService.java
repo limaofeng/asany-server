@@ -1101,4 +1101,8 @@ public class EmployeeService {
     }
     employeeLinkDao.delete(optional.get());
   }
+
+  public Optional<Employee> findOneByUser(Long uid) {
+    return this.employeeDao.findOneBy("user.id", uid);
+  }
 }

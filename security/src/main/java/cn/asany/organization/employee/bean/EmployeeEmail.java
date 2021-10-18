@@ -1,10 +1,12 @@
 package cn.asany.organization.employee.bean;
 
-import cn.asany.base.common.bean.enums.EmailStatus;
+import cn.asany.base.common.bean.Email;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import javax.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
+
+import javax.persistence.*;
 
 /**
  * @author limaofeng
@@ -22,13 +24,8 @@ import org.jfantasy.framework.dao.BaseBusEntity;
 public class EmployeeEmail extends BaseBusEntity {
   @Id
   @Column(name = "ID", precision = 22)
-  @GeneratedValue(generator = "org_employee_email_gen")
-  @TableGenerator(
-      name = "org_employee_email_gen",
-      table = "sys_sequence",
-      pkColumnName = "gen_name",
-      pkColumnValue = "org_employee_email:id",
-      valueColumnName = "gen_value")
+  @GeneratedValue(generator = "fantasy-sequence")
+  @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
 
   @Column(name = "IS_PRIMARY", nullable = false)
@@ -37,13 +34,7 @@ public class EmployeeEmail extends BaseBusEntity {
   @Column(name = "LABEL", length = 30)
   private String label;
 
-  /** 状态 */
-  @Enumerated(EnumType.STRING)
-  @Column(name = "STATUS", nullable = false, length = 20)
-  private EmailStatus status;
-  /** 邮箱 */
-  @Column(name = "EMAIL", nullable = false, length = 25)
-  private String email;
+  @Embedded private Email email;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(

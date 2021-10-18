@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import javax.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
 /**
@@ -35,13 +36,8 @@ public class DepartmentAttribute extends BaseBusEntity {
 
   @Id
   @Column(name = "ID", precision = 22)
-  @GeneratedValue(generator = "org_department_attribute_gen")
-  @TableGenerator(
-      name = "org_department_attribute_gen",
-      table = "sys_sequence",
-      pkColumnName = "gen_name",
-      pkColumnValue = "org_department_attribute:id",
-      valueColumnName = "gen_value")
+  @GeneratedValue(generator = "fantasy-sequence")
+  @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
   /** 部门 */
   @JsonSerialize(using = DepartmentSerializer.class)

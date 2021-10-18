@@ -7,7 +7,7 @@ package cn.asany.organization.employee.bean.enums;
  */
 public enum PhoneStatus {
   /** 未验证 */
-  Unverified,
+  UNVERIFIED,
   /** 验证 */
-  Verified
+  VERIFIED
 }

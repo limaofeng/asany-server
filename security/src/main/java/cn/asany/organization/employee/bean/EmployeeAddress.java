@@ -1,9 +1,12 @@
 package cn.asany.organization.employee.bean;
 
+import cn.asany.base.common.bean.Address;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import java.io.Serializable;
-import javax.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
+
+import javax.persistence.*;
+import java.io.Serializable;
 
 /**
  * 员工地址信息
@@ -23,13 +26,8 @@ import lombok.*;
 public class EmployeeAddress implements Serializable {
   @Id
   @Column(name = "ID", precision = 22)
-  @GeneratedValue(generator = "org_employee_address_gen")
-  @TableGenerator(
-      name = "org_employee_address_gen",
-      table = "sys_sequence",
-      pkColumnName = "gen_name",
-      pkColumnValue = "org_employee_address:id",
-      valueColumnName = "gen_value")
+  @GeneratedValue(generator = "fantasy-sequence")
+  @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
 
   @Column(name = "IS_PRIMARY", nullable = false)
@@ -38,24 +36,7 @@ public class EmployeeAddress implements Serializable {
   @Column(name = "LABEL", length = 30)
   private String label;
 
-  /** 国家 */
-  @Column(name = "COUNTRY", length = 30)
-  private String country;
-  /** 省 */
-  @Column(name = "PROVINCE", length = 30)
-  private String province;
-  /** 城市 */
-  @Column(name = "CITY", length = 30)
-  private String city;
-  /** 区 */
-  @Column(name = "DISTRICT", length = 30)
-  private String district;
-  /** 街道 */
-  @Column(name = "STREET", length = 30)
-  private String street;
-  /** 邮编 */
-  @Column(name = "POSTAL_CODE", length = 10)
-  private String postalCode;
+  @Embedded private Address address;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(

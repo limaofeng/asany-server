@@ -4,6 +4,7 @@ import cn.asany.organization.core.bean.enums.LinkType;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import javax.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
 /**
@@ -22,13 +23,8 @@ import org.jfantasy.framework.dao.BaseBusEntity;
 public class EmployeeLink extends BaseBusEntity {
   @Id
   @Column(name = "ID", precision = 22)
-  @GeneratedValue(generator = "org_employee_link_gen")
-  @TableGenerator(
-      name = "org_employee_link_gen",
-      table = "sys_sequence",
-      pkColumnName = "gen_name",
-      pkColumnValue = "org_employee_link:id",
-      valueColumnName = "gen_value")
+  @GeneratedValue(generator = "fantasy-sequence")
+  @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
 
   @ManyToOne(fetch = FetchType.LAZY)

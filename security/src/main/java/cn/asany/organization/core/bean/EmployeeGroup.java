@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.List;
 import javax.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
 /** 用户组 */
@@ -22,13 +23,8 @@ public class EmployeeGroup extends BaseBusEntity {
 
   @Id
   @Column(name = "ID", nullable = false, precision = 22)
-  @GeneratedValue(generator = "org_employee_group_gen")
-  @TableGenerator(
-      name = "org_employee_group_gen",
-      table = "sys_sequence",
-      pkColumnName = "gen_name",
-      pkColumnValue = "org_employee_group:id",
-      valueColumnName = "gen_value")
+  @GeneratedValue(generator = "fantasy-sequence")
+  @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
   /** 用户组名称 */
   @Column(name = "NAME", length = 50)

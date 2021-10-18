@@ -5,16 +5,14 @@ import cn.asany.organization.core.bean.Organization;
 import cn.asany.organization.core.bean.databind.DepartmentDeserializer;
 import cn.asany.organization.core.bean.databind.DepartmentSerializer;
 import cn.asany.organization.employee.bean.Employee;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import java.util.HashSet;
-import java.util.Set;
-import javax.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
+
+import javax.persistence.*;
 
 /**
  * 员工职位
@@ -70,19 +68,4 @@ public class EmployeePosition extends BaseBusEntity {
       updatable = false,
       nullable = false)
   private Organization organization;
-
-  @JsonIgnore
-  public Set<String> getAuthoritys() {
-    Set<String> authoritys = new HashSet<>();
-    authoritys.addAll(this.getDepartment().getAuthoritys());
-    //        authoritys.add(SecurityScope.newInstance(SecurityType.organization,
-    // this.organization.getId()).toString());
-    //        if (this.position != null) {
-    //            authoritys.add(SecurityScope.newInstance(SecurityType.position,
-    // this.position.getId().toString()).toString());
-    //            authoritys.add(SecurityScope.newInstance(SecurityType.job,
-    // this.position.getJob().getId().toString()).toString());
-    //        }
-    return authoritys;
-  }
 }

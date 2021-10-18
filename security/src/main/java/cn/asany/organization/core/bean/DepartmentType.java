@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import javax.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
 
 /**
  * 部门类型
@@ -24,13 +25,8 @@ import lombok.*;
 public class DepartmentType implements Serializable {
   @Id
   @Column(name = "ID", precision = 22)
-  @GeneratedValue(generator = "org_department_type_gen")
-  @TableGenerator(
-      name = "org_department_type_gen",
-      table = "sys_sequence",
-      pkColumnName = "gen_name",
-      pkColumnValue = "org_department_type:id",
-      valueColumnName = "gen_value")
+  @GeneratedValue(generator = "fantasy-sequence")
+  @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
   /** 名称 */
   @Column(name = "NAME", length = 50)

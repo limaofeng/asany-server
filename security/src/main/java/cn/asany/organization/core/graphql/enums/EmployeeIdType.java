@@ -6,5 +6,8 @@ package cn.asany.organization.core.graphql.enums;
  * @author limaofeng
  */
 public enum EmployeeIdType {
-  id
+  /** 主键 */
+  ID,
+  /** 工号 */
+  JOB_NUMBER
 }

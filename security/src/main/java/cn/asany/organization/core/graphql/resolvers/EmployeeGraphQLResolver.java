@@ -1,10 +1,10 @@
 package cn.asany.organization.core.graphql.resolvers;
 
-import static java.util.stream.Collectors.collectingAndThen;
-import static java.util.stream.Collectors.toCollection;
-
+import cn.asany.base.common.bean.Address;
+import cn.asany.base.common.bean.Email;
 import cn.asany.base.common.bean.Phone;
 import cn.asany.organization.core.bean.Department;
+import cn.asany.organization.core.bean.EmployeeStatus;
 import cn.asany.organization.core.graphql.enums.EmployeeIdType;
 import cn.asany.organization.employee.bean.Employee;
 import cn.asany.organization.employee.bean.EmployeeAddress;
@@ -13,11 +13,15 @@ import cn.asany.organization.employee.bean.EmployeePhoneNumber;
 import cn.asany.organization.relationship.bean.EmployeePosition;
 import cn.asany.organization.relationship.bean.Position;
 import graphql.kickstart.tools.GraphQLResolver;
+import org.jfantasy.framework.util.common.StringUtil;
+import org.springframework.stereotype.Component;
+
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import org.jfantasy.framework.util.common.StringUtil;
-import org.springframework.stereotype.Component;
+
+import static java.util.stream.Collectors.collectingAndThen;
+import static java.util.stream.Collectors.toCollection;
 
 /**
  * 员工 Resolver
@@ -31,11 +35,11 @@ public class EmployeeGraphQLResolver implements GraphQLResolver<Employee> {
     return String.valueOf(employee.getId());
   }
 
-  public String status(Employee employee) {
-    return "";
+  public EmployeeStatus status(Employee employee) {
+    return null;
   }
 
-  public String email(Employee employee, String label) {
+  public Email email(Employee employee, String label) {
     Optional<EmployeeEmail> optional =
         employee.getEmails().stream()
             .filter(
@@ -65,7 +69,7 @@ public class EmployeeGraphQLResolver implements GraphQLResolver<Employee> {
     return optional.isPresent() ? optional.get().getPhone() : null;
   }
 
-  public EmployeeAddress address(Employee employee, String label) {
+  public Address address(Employee employee, String label) {
     Optional<EmployeeAddress> optional =
         employee.getAddresses().stream()
             .filter(
@@ -77,21 +81,21 @@ public class EmployeeGraphQLResolver implements GraphQLResolver<Employee> {
                   }
                 })
             .findFirst();
-    return optional.isPresent() ? optional.get() : null;
+    return optional.isPresent() ? optional.get().getAddress() : null;
   }
 
-  public Position primaryPosition(Employee employee, String organization) {
+  public Position primaryPosition(Employee employee) {
     Optional<EmployeePosition> primary =
         employee.getEmployeePositions().stream()
-            .filter(ep -> ep.getPrimary() && organization.equals(ep.getOrganization().getId()))
+            .filter(ep -> ep.getPrimary() && "".equals(ep.getOrganization().getId()))
             .findAny();
     return primary.isPresent() ? primary.get().getPosition() : null;
   }
 
-  public Department primaryDepartment(Employee employee, String organization) {
+  public Department primaryDepartment(Employee employee) {
     Optional<EmployeePosition> primary =
         employee.getEmployeePositions().stream()
-            .filter(ep -> ep.getPrimary() && organization.equals(ep.getOrganization().getId()))
+            .filter(ep -> ep.getPrimary() && "".equals(ep.getOrganization().getId()))
             .findAny();
     return primary.isPresent() ? primary.get().getDepartment() : null;
   }

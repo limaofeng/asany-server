@@ -126,6 +126,10 @@ public class UserService implements UserDetailsService {
     return this.userDao.save(user);
   }
 
+  public Optional<User> findOneByUsername(String username) {
+    return this.userDao.findOne(Example.of(User.builder().username(username).build()));
+  }
+
   public User findUniqueByUsername(String username) {
     Optional<User> optional =
         this.userDao.findOne(Example.of(User.builder().username(username).build()));

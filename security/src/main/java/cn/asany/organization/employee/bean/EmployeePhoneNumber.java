@@ -2,9 +2,11 @@ package cn.asany.organization.employee.bean;
 
 import cn.asany.base.common.bean.Phone;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import javax.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
+
+import javax.persistence.*;
 
 /**
  * 员工手机
@@ -25,13 +27,8 @@ public class EmployeePhoneNumber extends BaseBusEntity {
 
   @Id
   @Column(name = "ID", precision = 22)
-  @GeneratedValue(generator = "org_employee_phone_gen")
-  @TableGenerator(
-      name = "org_employee_phone_gen",
-      table = "sys_sequence",
-      pkColumnName = "gen_name",
-      pkColumnValue = "org_employee_phone:id",
-      valueColumnName = "gen_value")
+  @GeneratedValue(generator = "fantasy-sequence")
+  @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
   /** 主号码 */
   @Column(name = "IS_PRIMARY", nullable = false)

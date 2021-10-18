@@ -11,12 +11,14 @@ import cn.asany.storage.api.FileObject;
 import cn.asany.storage.api.converter.FileObjectConverter;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import java.util.Date;
-import java.util.List;
-import javax.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.framework.dao.hibernate.converter.StringArrayConverter;
+
+import javax.persistence.*;
+import java.util.Date;
+import java.util.List;
 
 /**
  * 员工
@@ -39,13 +41,8 @@ public class Employee extends BaseBusEntity implements Ownership {
 
   @Id
   @Column(name = "ID", precision = 22)
-  @GeneratedValue(generator = "org_employee_gen")
-  @TableGenerator(
-      name = "org_employee_gen",
-      table = "sys_sequence",
-      pkColumnName = "gen_name",
-      pkColumnValue = "org_employee:id",
-      valueColumnName = "gen_value")
+  @GeneratedValue(generator = "fantasy-sequence")
+  @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
   /** 头像 */
   @Convert(converter = FileObjectConverter.class)

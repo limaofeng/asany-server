@@ -5,19 +5,17 @@ import cn.asany.organization.core.bean.databind.DepartmentSerializer;
 import cn.asany.organization.core.bean.databind.OrganizationSerializer;
 import cn.asany.organization.relationship.bean.EmployeePosition;
 import cn.asany.organization.relationship.bean.Position;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.security.Permission;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import javax.persistence.*;
 import lombok.*;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
 /**
@@ -48,13 +46,8 @@ public class Department extends BaseBusEntity {
 
   @Id
   @Column(name = "ID", precision = 22)
-  @GeneratedValue(generator = "org_department_gen")
-  @TableGenerator(
-      name = "org_department_gen",
-      table = "sys_sequence",
-      pkColumnName = "gen_name",
-      pkColumnValue = "org_department:id",
-      valueColumnName = "gen_value")
+  @GeneratedValue(generator = "fantasy-sequence")
+  @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
   /** 简写 */
   @Column(name = "sn", length = 10)
@@ -182,14 +175,5 @@ public class Department extends BaseBusEntity {
         .append(getParentId())
         .append(getOrganizationId())
         .toHashCode();
-  }
-
-  @JsonIgnore
-  public Set<String> getAuthoritys() {
-    Set<String> authoritys = new HashSet<>();
-    //        for (String id : StringUtil.tokenizeToStringArray(this.getPath(), "/")) {
-    //            authoritys.add(SecurityScope.newInstance(SecurityType.department, id).toString());
-    //        }
-    return authoritys;
   }
 }
