@@ -9,9 +9,9 @@ input DepartmentTypeCreateInput {
     # 编码
     code: String
     # 是否支持多部门 默认false
-    multiSectoral: Boolean = false
+#    multiSectoral: Boolean = false
     # 最大兼岗人数
-    andPost: Int
+#    andPost: Int
 }
 
 enum DepartmentIdType {
@@ -357,9 +357,9 @@ input OrganizationCreateInput {
     # 上级组织
     parent: ID
     # 是否支持多部门
-    multiSectoral: Boolean
+#    multiSectoral: Boolean
     # 支持最多部门数
-    multiSectoralNumber: Int
+#    multiSectoralNumber: Int
     # 备注
     remark: String
 }
@@ -372,9 +372,9 @@ input OrganizationUpdateInput {
     # 上级组织
     parent: ID
     # 是否支持多部门
-    multiSectoral: Boolean
+#    multiSectoral: Boolean
     # 支持最多部门数
-    multiSectoralNumber: Int
+#    multiSectoralNumber: Int
     # 备注
     remark: String
 }
@@ -431,9 +431,9 @@ type Organization {
     # 部门类型
     departmentTypes: [DepartmentType]
     # 是否支持多部门
-    multiSectoral: Boolean
+#    multiSectoral: Boolean
     # 支持最多部门数
-    multiSectoralNumber: Int
+#    multiSectoralNumber: Int
     # 机构描述信息
     description: String
     # 备注
@@ -719,7 +719,7 @@ type DepartmentType {
     # 部门组织
     organization: Organization
     # 是否支持多部门
-    multiSectoral: Boolean
+#    multiSectoral: Boolean
     # 最大兼岗人数
     andPost: Int
 }
