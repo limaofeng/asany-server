@@ -3,12 +3,15 @@ package cn.asany.organization.core.bean;
 import cn.asany.organization.employee.bean.Employee;
 import cn.asany.organization.relationship.bean.Position;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import javax.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
+import javax.persistence.*;
+
 /**
+ * 员工角色
+ *
  * @author limaofeng
  * @version V1.0
  * @date 2019/11/13 11:35 上午
@@ -19,9 +22,15 @@ import org.jfantasy.framework.dao.BaseBusEntity;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "ORG_ORGANIZATION_DIMENSION_MEMBER")
+@Table(
+    name = "ORG_EMPLOYEE_IDENTITY",
+    uniqueConstraints = {
+      @UniqueConstraint(
+          columnNames = {"ORGANIZATION_ID", "DIMENSION_ID", "EMPLOYEE_ID"},
+          name = "UK_EMPLOYEE_IDENTITY_UNIQUE")
+    })
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class OrganizationDimensionEmployee extends BaseBusEntity {
+public class EmployeeIdentity extends BaseBusEntity {
   /** ID */
   @Id
   @Column(name = "ID", length = 20)
@@ -59,18 +68,16 @@ public class OrganizationDimensionEmployee extends BaseBusEntity {
       foreignKey = @ForeignKey(name = "FK_ORGANIZATION_DIMENSION_MEMBER_STATUS"),
       nullable = false)
   private EmployeeStatus status;
-  /** 主部门 */
+  /** 部门 / 群组 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(
       name = "DEPARTMENT_ID",
-      foreignKey = @ForeignKey(name = "FK_ORGANIZATION_DIMENSION_MEMBER_DEPARTMENT"),
-      nullable = false)
+      foreignKey = @ForeignKey(name = "FK_ORGANIZATION_DIMENSION_MEMBER_DEPARTMENT"))
   private Department department;
   /** 职务 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(
       name = "POSITION_ID",
-      foreignKey = @ForeignKey(name = "FK_ORGANIZATION_DIMENSION_MEMBER_POSITION"),
-      nullable = false)
+      foreignKey = @ForeignKey(name = "FK_ORGANIZATION_DIMENSION_MEMBER_POSITION"))
   private Position position;
 }

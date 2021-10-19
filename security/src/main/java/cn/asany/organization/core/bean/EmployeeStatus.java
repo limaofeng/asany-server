@@ -19,7 +19,12 @@ import org.jfantasy.framework.dao.BaseBusEntity;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "ORG_EMPLOYEE_STATUS")
+@Table(
+    name = "ORG_EMPLOYEE_STATUS",
+    uniqueConstraints =
+        @UniqueConstraint(
+            columnNames = {"ORGANIZATION_ID", "DIMENSION_ID", "CODE"},
+            name = "UK_EMPLOYEE_STATUS_CODE"))
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class EmployeeStatus extends BaseBusEntity {
   /** ID */
@@ -29,10 +34,10 @@ public class EmployeeStatus extends BaseBusEntity {
   @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
   /** 编码 */
-  @Column(name = "CODE", length = 255)
+  @Column(name = "CODE", length = 50, nullable = false)
   private String code;
   /** 名称 */
-  @Column(name = "NAME", length = 255)
+  @Column(name = "NAME", length = 100)
   private String name;
   /** 所属组织 */
   @ManyToOne(fetch = FetchType.LAZY)

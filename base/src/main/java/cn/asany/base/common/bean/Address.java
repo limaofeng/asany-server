@@ -2,7 +2,10 @@ package cn.asany.base.common.bean;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * 地址
@@ -11,7 +14,10 @@ import lombok.Data;
  * @version V1.0
  */
 @Data
+@Builder
 @Embeddable
+@NoArgsConstructor
+@AllArgsConstructor
 public class Address {
 
   /** 国家 */

@@ -5,6 +5,10 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * 邮箱
@@ -12,6 +16,10 @@ import javax.persistence.Enumerated;
  * @author limaofeng
  */
 @Embeddable
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Email {
   @Enumerated(EnumType.STRING)
   @Column(name = "STATUS", nullable = false, length = 20)
@@ -19,20 +27,4 @@ public class Email {
   /** 邮箱 */
   @Column(name = "ADDRESS", nullable = false, length = 25)
   private String address;
-
-  public EmailStatus getStatus() {
-    return status;
-  }
-
-  public void setStatus(EmailStatus status) {
-    this.status = status;
-  }
-
-  public String getAddress() {
-    return address;
-  }
-
-  public void setAddress(String address) {
-    this.address = address;
-  }
 }

@@ -124,9 +124,6 @@ public class LoginGraphQLMutationResolver implements GraphQLMutationResolver {
                     .connected(options.getConnected())
                     .build());
         break;
-      case tourist:
-        authentication = new AnonymousAuthenticationToken();
-        break;
       default:
         throw new IllegalStateException("Unexpected AuthenticationToken By: " + loginType);
     }

@@ -2,10 +2,12 @@ package cn.asany.organization.core.service;
 
 import cn.asany.TestApplication;
 import cn.asany.organization.core.bean.Organization;
+import cn.asany.organization.core.bean.enums.MemberRole;
 import cn.asany.organization.employee.bean.Employee;
 import cn.asany.organization.employee.service.EmployeeService;
 import cn.asany.security.core.bean.User;
 import cn.asany.security.core.service.UserService;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,8 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-
-import java.util.Optional;
 
 @Slf4j
 @ExtendWith(SpringExtension.class)
@@ -30,7 +30,7 @@ class OrganizationServiceTest {
 
   @Test
   void save() {
-    Organization organization = Organization.builder().code("asany").name("管理端").build();
+    Organization organization = Organization.builder().code("hotsoon").name("管理端").build();
 
     Optional<User> optionalUser = this.userService.findOneByUsername("limaofeng");
 
@@ -41,11 +41,20 @@ class OrganizationServiceTest {
     Optional<Organization> optional = organizationService.findOneByCode(organization.getCode());
     if (!optional.isPresent()) {
       organizationService.save(organization);
+      optional = Optional.of(organization);
     }
 
     Optional<Employee> optionalEmployee = employeeService.findOneByUser(optionalUser.get().getId());
 
-    if (!optionalEmployee.isPresent()) {}
+    if (!optionalEmployee.isPresent()) {
+      Employee employee =
+          Employee.builder(optionalUser.get())
+              .addEmail("默认", "limaofeng@msn.com")
+              .addPhone("默认", "15921884771")
+              .build();
+
+      employeeService.save(optional.get().getId(), MemberRole.ADMIN, employee);
+    }
 
     log.debug("新增成功:" + organization.getCode());
   }

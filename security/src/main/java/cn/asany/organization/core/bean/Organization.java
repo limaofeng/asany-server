@@ -31,6 +31,7 @@ import org.jfantasy.framework.dao.BaseBusEntity;
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Organization extends BaseBusEntity implements Ownership {
 
+  public static final String DEFAULT_DIMENSION = "members";
   public static final String OWNERSHIP_KEY = "ORGANIZATION";
 
   @Id
@@ -60,9 +61,9 @@ public class Organization extends BaseBusEntity implements Ownership {
   @JsonManagedReference
   @OneToMany(mappedBy = "organization", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
   private List<DepartmentType> departmentTypes;
-  /** 用户组范围 */
+  /** 组织纬度 */
   @OneToMany(mappedBy = "organization", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-  private List<EmployeeGroupScope> employeeGroupScopes;
+  private List<OrganizationDimension> dimensions;
 
   @Override
   @Transient

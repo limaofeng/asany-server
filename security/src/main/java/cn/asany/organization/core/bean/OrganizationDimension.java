@@ -1,9 +1,8 @@
 package cn.asany.organization.core.bean;
 
+import java.util.List;
 import javax.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
@@ -12,14 +11,18 @@ import org.jfantasy.framework.dao.BaseBusEntity;
  *
  * @author limaofeng
  */
+@Data
 @Builder
+@EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(
     name = "ORG_ORGANIZATION_DIMENSION",
     uniqueConstraints =
-        @UniqueConstraint(columnNames = "CODE", name = "UK_ORGANIZATION_DIMENSION_CODE"))
+        @UniqueConstraint(
+            columnNames = {"ORGANIZATION_ID", "CODE"},
+            name = "UK_ORGANIZATION_DIMENSION_CODE"))
 public class OrganizationDimension extends BaseBusEntity {
 
   @Id
@@ -36,7 +39,7 @@ public class OrganizationDimension extends BaseBusEntity {
       nullable = false)
   private Organization organization;
   /** 编码 */
-  @Column(name = "CODE", length = 200)
+  @Column(name = "CODE", length = 200, nullable = false)
   private String code;
   /** 纬度名称 */
   @Column(name = "NAME", length = 50)
@@ -47,4 +50,7 @@ public class OrganizationDimension extends BaseBusEntity {
   /** 描述信息 */
   @Column(name = "DESCRIPTION", length = 150)
   private String description;
+  /** 状态 */
+  @OneToMany(mappedBy = "dimension", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+  private List<EmployeeStatus> statuses;
 }

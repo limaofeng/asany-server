@@ -1,18 +1,20 @@
 package cn.asany.organization.employee.service;
 
-import cn.asany.organization.core.bean.Department;
-import cn.asany.organization.core.bean.Organization;
+import cn.asany.base.common.bean.enums.EmailStatus;
+import cn.asany.base.common.bean.enums.PhoneNumberStatus;
+import cn.asany.organization.core.bean.*;
 import cn.asany.organization.core.bean.enums.LinkType;
+import cn.asany.organization.core.bean.enums.MemberRole;
 import cn.asany.organization.core.bean.enums.SocialProvider;
 import cn.asany.organization.core.dao.DepartmentDao;
+import cn.asany.organization.core.dao.EmployeeIdentityDao;
 import cn.asany.organization.core.service.OrganizationService;
-import cn.asany.organization.employee.bean.Employee;
-import cn.asany.organization.employee.bean.EmployeeLink;
-import cn.asany.organization.employee.bean.EmployeePhoneNumber;
+import cn.asany.organization.employee.bean.*;
+import cn.asany.organization.employee.bean.enums.InviteStatus;
 import cn.asany.organization.employee.dao.*;
 import cn.asany.organization.relationship.bean.EmployeePosition;
 import cn.asany.organization.relationship.bean.Position;
-import cn.asany.organization.relationship.dao.OrganizationEmployeeStatusDao;
+import cn.asany.organization.relationship.dao.EmployeeStatusDao;
 import cn.asany.organization.relationship.dao.PositionDao;
 import cn.asany.organization.relationship.service.PositionService;
 import java.util.ArrayList;
@@ -27,6 +29,7 @@ import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
 import org.jfantasy.framework.error.ValidationException;
 import org.jfantasy.framework.security.crypto.password.PasswordEncoder;
+import org.jfantasy.framework.util.common.ObjectUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.jpa.domain.Specification;
@@ -51,7 +54,7 @@ public class EmployeeService {
   @Autowired private EmployeePositionDao employeePositionDao;
   @Autowired private PositionDao positionDao;
   @Autowired private EmployeeLinkDao employeeLinkDao;
-  @Autowired private OrganizationEmployeeStatusDao organizationEmployeeStatusDao;
+  @Autowired private EmployeeStatusDao organizationEmployeeStatusDao;
   //    @Autowired
   //    private AddressDao addressDao;
   @Autowired private EmployeeAddressDao employeeAddressDao;
@@ -69,84 +72,72 @@ public class EmployeeService {
   @Autowired private PasswordEncoder passwordEncoder;
   @Autowired private PositionService positionService;
   @Autowired private OrganizationService organizationService;
+  @Autowired private EmployeeIdentityDao employeeIdentityDao;
+  @Autowired private EmployeeStatusDao employeeStatusDao;
 
   public Pager<Employee> findPager(Pager<Employee> pager, List<PropertyFilter> filters) {
     return employeeDao.findPager(pager, filters);
   }
 
-  public Employee save(
-      Employee employee,
-      //      List<OrganizationEmployee> organizationEmployees,
-      //                         List<EmployeeEmail> employeeEmails,
-      List<EmployeePhoneNumber> phoneList) {
-    // 添加该用户是否可以在多部门中
-    Boolean supportMultiSectoral = supportMultiSectoral();
-    if (supportMultiSectoral) {
-      employee = this.employeeDao.save(employee);
-      //            if (StringUtil.isNotBlank(user.getPassword())) {
-      //                employeeUser(employee, user,
-      // organizationEmployees.get(0).getOrganization().getId(), true);
-      //            }
-      //            if (StringUtil.isNotBlank(employee.getMobile())) {
-      //                EmployeePhone mobile =
-      // EmployeePhone.builder().primary(true).employee(employee).phone(Phone.builder().phone(employee.getMobile()).
-      //                    status(PhoneStatus.Unverified).build()).label(FIELD_MOBILE).build();
-      //                employeePhoneDao.save(mobile);
-      //            }
-      //            for (EmployeeEmail employeeEmail : employeeEmails) {
-      //                employeeEmail.setEmployee(employee);
-      //            }
-      //            employee.setEmails(employeeEmails);
-      //            employeeEmailDao.saveAll(employeeEmails);
+  public Employee save(Long orgId, MemberRole role, Employee employee) {
+    Organization organization = organizationService.getById(orgId);
 
-      for (EmployeePhoneNumber employeePhoneNumber : phoneList) {
-        employeePhoneNumber.setEmployee(employee);
-      }
-      employee.setPhones(phoneList);
-      //            employeePhoneDao.saveAll(phoneList);
-
-      //            if (CollectionUtils.isNotEmpty(organizationEmployees)) {
-      //                saveOrganzationEmployees(employee, organizationEmployees);
-      //            }
-      //      employee.getOrganizationEmployees().forEach(item -> item.setPositions(null));
-      return employee;
+    if (employee.getInviteStatus() == null) {
+      employee.setInviteStatus(InviteStatus.INACTIVE);
     }
-    return null;
+
+    employee.setOrganization(organization);
+
+    employeeDao.save(employee);
+
+    if (employee.getEmails() != null) {
+      for (EmployeeEmail email : employee.getEmails()) {
+        if (email.getEmail().getStatus() == null) {
+          email.getEmail().setStatus(EmailStatus.UNVERIFIED);
+        }
+        email.setEmployee(employee);
+        this.employeeEmailDao.save(email);
+      }
+    }
+
+    if (employee.getPhones() != null) {
+      for (EmployeePhoneNumber phoneNumber : employee.getPhones()) {
+        if (phoneNumber.getPhone().getStatus() == null) {
+          phoneNumber.getPhone().setStatus(PhoneNumberStatus.UNVERIFIED);
+        }
+        phoneNumber.setEmployee(employee);
+        this.employeePhoneDao.save(phoneNumber);
+      }
+    }
+
+    if (employee.getAddresses() != null) {
+      for (EmployeeAddress address : employee.getAddresses()) {
+        address.setEmployee(employee);
+        this.employeeAddressDao.save(address);
+      }
+    }
+
+    OrganizationDimension dimension =
+        ObjectUtil.find(organization.getDimensions(), "code", Organization.DEFAULT_DIMENSION);
+
+    Optional<EmployeeStatus> employeeStatus = getStatus(dimension, role.getValue());
+
+    EmployeeIdentity identity = EmployeeIdentity.builder().build();
+    identity.setEmployee(employee);
+    identity.setOrganization(organization);
+    identity.setDimension(dimension);
+    identity.setStatus(employeeStatus.get());
+
+    employeeIdentityDao.save(identity);
+    return employee;
   }
 
-  /**
-   * 添加员工是否可以在多部门中
-   *
-   * @param organizationEmployees 员工所在组织集合
-   * @return
-   */
-  public Boolean supportMultiSectoral() {
-    //        if (organizationEmployees.size() <= 0) {
-    //            return false;
-    //        }
-    //        for (OrganizationEmployee organizationEmployee : organizationEmployees) {
-    //            Boolean departmentTypeMultiSectoral =
-    // supportDepartmentTypeMultiSectoral(organizationEmployee.getPositions());
-    //            // 获取组织支持多部门
-    //            if (organizationEmployee.getOrganization().getMultiSectoral().equals(true)) {
-    //                // 获取允许多部门的数量
-    //                Long multiSectoralNumber =
-    // organizationEmployee.getOrganization().getMultiSectoralNumber();
-    //                // 获取该员工添加的职位数量
-    //                int size = organizationEmployee.getPositions().size();
-    //                if (size <= multiSectoralNumber && departmentTypeMultiSectoral) {
-    //                    return true;
-    //                }
-    //                continue;
-    //            } else {
-    //                int size = organizationEmployee.getPositions().size();
-    //                if (size <= 1 && departmentTypeMultiSectoral) {
-    //                    return true;
-    //                }
-    //                continue;
-    //            }
-    //        }
-    return false;
+  private Optional<EmployeeStatus> getStatus(OrganizationDimension dimension, String code) {
+    return this.employeeStatusDao.findOne(
+        PropertyFilter.builder()
+            .equal("dimension.id", dimension.getId())
+            .equal("code", code)
+            .build());
   }
 
   //    /**
@@ -1044,7 +1035,7 @@ public class EmployeeService {
    * @return
    */
   public List<Long> getBirthEmpIds(String birth) {
-    return employeeDao.findBirthEmployeeIds(birth);
+    return new ArrayList<>(); // employeeDao.findBirthEmployeeIds(birth);
   }
 
   public Optional<Employee> findOneByMobile(String mobile) {

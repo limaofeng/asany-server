@@ -1,6 +1,8 @@
 package cn.asany.organization.employee.bean;
 
 import cn.asany.base.common.Ownership;
+import cn.asany.base.common.bean.Email;
+import cn.asany.base.common.bean.Phone;
 import cn.asany.organization.core.bean.EmployeeGroup;
 import cn.asany.organization.core.bean.Organization;
 import cn.asany.organization.employee.bean.enums.InviteStatus;
@@ -11,14 +13,14 @@ import cn.asany.storage.api.FileObject;
 import cn.asany.storage.api.converter.FileObjectConverter;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import javax.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.framework.dao.hibernate.converter.StringArrayConverter;
-
-import javax.persistence.*;
-import java.util.Date;
-import java.util.List;
 
 /**
  * 员工
@@ -33,7 +35,13 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "ORG_EMPLOYEE")
+@Table(
+    name = "ORG_EMPLOYEE",
+    uniqueConstraints = {
+      @UniqueConstraint(
+          columnNames = {"ORGANIZATION_ID", "JOB_NUMBER"},
+          name = "UK_EMPLOYEE_JOB_NUMBER")
+    })
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "employeePositions", "links", "user"})
 public class Employee extends BaseBusEntity implements Ownership {
 
@@ -49,7 +57,7 @@ public class Employee extends BaseBusEntity implements Ownership {
   @Column(name = "avatar", precision = 500)
   private FileObject avatar;
   /** 工号 */
-  @Column(name = "SN", nullable = false, precision = 20)
+  @Column(name = "JOB_NUMBER", precision = 20)
   private String jobNumber;
   /** 名称 */
   @Column(name = "NAME", length = 30)
@@ -127,8 +135,49 @@ public class Employee extends BaseBusEntity implements Ownership {
   @JoinColumn(name = "USER_ID", foreignKey = @ForeignKey(name = "FK_ORG_EMPLOYEE_USER"))
   private User user;
 
+  public static EmployeeBuilder builder() {
+    return new EmployeeBuilder();
+  }
+
+  public static EmployeeBuilder builder(User user) {
+    EmployeeBuilder builder = Employee.builder();
+    builder.avatar(user.getAvatar());
+    builder.name(user.getName());
+    builder.user(user);
+    return builder;
+  }
+
   @Override
   public String getOwnerType() {
     return OWNERSHIP_KEY;
+  }
+
+  public static class EmployeeBuilder {
+
+    public EmployeeBuilder addEmail(String label, String emailAddress) {
+      if (this.emails == null) {
+        this.emails = new ArrayList<>();
+      }
+      this.emails.add(
+          EmployeeEmail.builder()
+              .label(label)
+              .email(Email.builder().address(emailAddress).build())
+              .primary(this.emails.isEmpty())
+              .build());
+      return this;
+    }
+
+    public EmployeeBuilder addPhone(String label, String phoneNumber) {
+      if (this.phones == null) {
+        this.phones = new ArrayList<>();
+      }
+      this.phones.add(
+          EmployeePhoneNumber.builder()
+              .label(label)
+              .phone(Phone.builder().number(phoneNumber).build())
+              .primary(this.phones.isEmpty())
+              .build());
+      return this;
+    }
   }
 }

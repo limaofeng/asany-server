@@ -38,6 +38,6 @@ public class OrganizationGraphQLQueryResolver implements GraphQLQueryResolver {
   }
 
   public Optional<Organization> organization(Long id) {
-    return organizationService.get(id);
+    return organizationService.findById(id);
   }
 }
