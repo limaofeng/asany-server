@@ -66,6 +66,9 @@ routes:
         component: cn.asany.ui.admin.cms.ArticleNew
         layout: false
       - path: /cms/articles/:id
-        component: cn.asany.ui.admin.cms.ArticleDetails
+        component: cn.asany.ui.admin.cms.ArticleView
+      - path: /cms/articles/:id/edit
+        component: cn.asany.ui.admin.cms.ArticleEdit
+        layout: false
       - path: /
         component: cn.asany.ui.admin.Home
