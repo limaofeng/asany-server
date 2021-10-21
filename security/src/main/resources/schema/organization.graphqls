@@ -631,7 +631,7 @@ type ExcelEmployee {
 
 # 组织•员工
 type Employee {
-    id(type: EmployeeIdType = id): ID
+    id(type: EmployeeIdType = ID): ID
     # 状态
     status: OrganizationEmployeeStatus
     # 工号
