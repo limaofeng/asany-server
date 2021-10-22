@@ -3,8 +3,5 @@ scalar OrderBy
 scalar FileObject
 scalar JSON
 
-#type Query {
-#}
-#
-#type Mutation {
-#}
+type Mutation {
+}

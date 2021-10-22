@@ -3,11 +3,10 @@ package cn.asany.organization.core.bean;
 import cn.asany.organization.employee.bean.Employee;
 import cn.asany.organization.relationship.bean.Position;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import javax.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
-
-import javax.persistence.*;
 
 /**
  * 员工角色

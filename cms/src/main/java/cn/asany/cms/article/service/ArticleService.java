@@ -7,8 +7,7 @@ import cn.asany.cms.article.bean.enums.ArticleStatus;
 import cn.asany.cms.article.dao.ArticleDao;
 import cn.asany.cms.article.event.ArticleUpdateEvent;
 import cn.asany.cms.article.graphql.input.PermissionInput;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Hibernate;
 import org.htmlcleaner.TagNode;
@@ -217,9 +216,18 @@ public class ArticleService {
    *
    * @param ids 文章 ids
    */
-  public void deleteArticle(Long... ids) {
+  public long deleteArticle(Long... ids) {
+    Set<Article> articles = new HashSet<>();
     for (Long id : ids) {
-      this.articleDao.deleteById(id);
+      Optional<Article> optional = this.articleDao.findById(id);
+      if (!optional.isPresent()) {
+        continue;
+      }
+      articles.add(optional.get());
     }
+    if (!articles.isEmpty()) {
+      this.articleDao.deleteAllById(ObjectUtil.toFieldList(articles, "id", new ArrayList<>()));
+    }
+    return articles.size();
   }
 }

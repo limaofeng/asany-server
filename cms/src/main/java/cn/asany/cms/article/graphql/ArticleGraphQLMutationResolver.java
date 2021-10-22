@@ -59,15 +59,13 @@ public class ArticleGraphQLMutationResolver implements GraphQLMutationResolver {
    * @param id
    * @return
    */
-  public Boolean removeArticle(Long id) {
-    articleService.deleteArticle(id);
-    return true;
+  public Boolean deleteArticle(Long id) {
+    return articleService.deleteArticle(id) == 1;
   }
 
-  public Boolean batchRemoveArticle(List<Long> ids) {
+  public Long deleteManyArticles(List<Long> ids) {
     Long[] longs = new Long[ids.size()];
-    articleService.deleteArticle(ids.toArray(longs));
-    return true;
+    return articleService.deleteArticle(ids.toArray(longs));
   }
   /**
    * 发布文章

@@ -2,11 +2,10 @@ package cn.asany.organization.employee.bean;
 
 import cn.asany.base.common.bean.Address;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.io.Serializable;
+import javax.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
-
-import javax.persistence.*;
-import java.io.Serializable;
 
 /**
  * 员工地址信息

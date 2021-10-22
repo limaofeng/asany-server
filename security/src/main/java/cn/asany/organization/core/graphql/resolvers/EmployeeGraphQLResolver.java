@@ -1,5 +1,8 @@
 package cn.asany.organization.core.graphql.resolvers;
 
+import static java.util.stream.Collectors.collectingAndThen;
+import static java.util.stream.Collectors.toCollection;
+
 import cn.asany.base.common.bean.Address;
 import cn.asany.base.common.bean.Email;
 import cn.asany.base.common.bean.Phone;
@@ -13,15 +16,11 @@ import cn.asany.organization.employee.bean.EmployeePhoneNumber;
 import cn.asany.organization.relationship.bean.EmployeePosition;
 import cn.asany.organization.relationship.bean.Position;
 import graphql.kickstart.tools.GraphQLResolver;
-import org.jfantasy.framework.util.common.StringUtil;
-import org.springframework.stereotype.Component;
-
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import static java.util.stream.Collectors.collectingAndThen;
-import static java.util.stream.Collectors.toCollection;
+import org.jfantasy.framework.util.common.StringUtil;
+import org.springframework.stereotype.Component;
 
 /**
  * 员工 Resolver

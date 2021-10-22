@@ -2,11 +2,10 @@ package cn.asany.organization.employee.bean;
 
 import cn.asany.base.common.bean.Email;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import javax.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
-
-import javax.persistence.*;
 
 /**
  * @author limaofeng
