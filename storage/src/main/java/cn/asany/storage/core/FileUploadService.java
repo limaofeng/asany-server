@@ -65,7 +65,7 @@ public class FileUploadService implements UploadService {
       // 将要上传的位置
       Space space = this.fileService.getSpace(options.getSpace());
       // 存储器
-      Storage storage = this.storageResolver.resolve(space.getId());
+      Storage storage = this.storageResolver.resolve(space.getStorage().getId());
       // 插件
       Set<String> plugins =
           new HashSet<>(ObjectUtil.defaultValue(space.getPlugins(), HashSet::new));
@@ -75,7 +75,7 @@ public class FileUploadService implements UploadService {
       // 构建上传上下文对象
       UploadContext context =
           UploadContext.builder()
-              //              .uploadService(this)
+              .uploadService(this)
               .object(file)
               .file(temp)
               .location(space.getPath())

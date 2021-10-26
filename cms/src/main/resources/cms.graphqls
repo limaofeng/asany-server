@@ -8,660 +8,662 @@
 #}
 
 input ArticleChannelCreateInput {
-    # 栏目名称
-    name: String!
-    # 地址
-    slug: String
-    # 栏目封面图
-    cover: FileObject
-    # 描述
-    description: String
-    # 上级栏目
-    parent: ID
-    # 排序
-    index: Int
-    # 组织
-    organization: ID!
-    # 授予权限
-    #    permissions: [PermissionInput]
-    # 元数据
-    meta: MetaData
+  # 栏目名称
+  name: String!
+  # 地址
+  slug: String
+  # 栏目封面图
+  cover: FileObject
+  # 描述
+  description: String
+  # 上级栏目
+  parent: ID
+  # 排序
+  index: Int
+  # 组织
+  organization: ID!
+  # 授予权限
+  #    permissions: [PermissionInput]
+  # 元数据
+  meta: MetaData
 }
 
 input FieldValueInput {
-    name: String
-    code: String
-    value: String
+  name: String
+  code: String
+  value: String
 }
 
 input ArticleChannelUpdateInput {
-    # 栏目名称
-    name: String
-    # 地址
-    slug: String
-    # 栏目封面图
-    cover: FileObject
-    # 描述
-    description: String
-    # 排序
-    index: Int
-    # 上级栏目
-    parent: ID
-    # 组织
-    organization: ID!
-    # 授予权限
-    #    permissions: [PermissionInput]
-    # 元数据
-    meta: MetaData
+  # 栏目名称
+  name: String
+  # 地址
+  slug: String
+  # 栏目封面图
+  cover: FileObject
+  # 描述
+  description: String
+  # 排序
+  index: Int
+  # 上级栏目
+  parent: ID
+  # 组织
+  organization: ID!
+  # 授予权限
+  #    permissions: [PermissionInput]
+  # 元数据
+  meta: MetaData
 }
 
 input ArticleFilter {
-    # 频道
-    channel: ID
-    # 关键字
-    Keyword: String
-    # 标签
-    tags: [ID]
-    # 栏目为空 (没有栏目的文章)
-    channels_isEmpty: Boolean
-    # 多个栏目
-    channel_in: [ID]
-    # 复杂查询支持
-    and: [ArticleFilter]
-    # 复杂查询支持
-    or: [ArticleFilter]
-    #发布状态
-    status: ArticleStatus
-    # 发布时间
-    publishedAt: String
-    # 发布人
-    createdBy: String
-    # 文章类型
-    category: ArticleCategory
-    # 用户id
-    viewer: ID
-    # 用户创建id
-    founder: ID
-    # 有效期限 true 过滤以过有效期限的文章
-    validity: Boolean
+  # 频道
+  channel: ID
+  # 关键字
+  Keyword: String
+  # 标签
+  tags: [ID]
+  # 栏目为空 (没有栏目的文章)
+  channels_isEmpty: Boolean
+  # 多个栏目
+  channel_in: [ID]
+  # 复杂查询支持
+  and: [ArticleFilter]
+  # 复杂查询支持
+  or: [ArticleFilter]
+  #发布状态
+  status: ArticleStatus
+  # 发布时间
+  publishedAt: String
+  # 发布人
+  createdBy: String
+  # 文章类型
+  category: ArticleCategory
+  # 用户id
+  viewer: ID
+  # 用户创建id
+  founder: ID
+  # 有效期限 true 过滤以过有效期限的文章
+  validity: Boolean
 }
 
 input BannerFilter {
-    # ID 查询
-    id_in: [ID]
-    # 是否启用
-    enabled: Boolean
+  # ID 查询
+  id_in: [ID]
+  # 是否启用
+  enabled: Boolean
 }
 
 type ArticleConnection {
-    # 总数据条数
-    totalCount: Int
-    # 每页显示条数
-    pageSize: Int
-    # 总页数
-    totalPage: Int
-    # 当前页
-    currentPage: Int
-    edges: [ArticleEdge]
-    pageInfo: PageInfo
+  # 总数据条数
+  totalCount: Int
+  # 每页显示条数
+  pageSize: Int
+  # 总页数
+  totalPage: Int
+  # 当前页
+  currentPage: Int
+  edges: [ArticleEdge]
+  pageInfo: PageInfo
 }
 
 type ArticleEdge {
-    cursor: String
-    node: Article
+  cursor: String
+  node: Article
 }
 
 enum ContentFormat {
-    html
+  html
 }
 
 enum ArticleStatus {
-    # 草稿
-    DRAFT
-    # 已发布
-    PUBLISHED
-    # 计划
-    SCHEDULED
+  # 草稿
+  DRAFT
+  # 已发布
+  PUBLISHED
+  # 计划
+  SCHEDULED
 }
 
 type Meta {
-    file: FileObject
-    url: String
-    title: String
-    description: String
+  file: FileObject
+  url: String
+  title: String
+  description: String
 }
 
 type ArticleChannel {
-    id: ID!
-    # 编码
-    slug: String
-    # 名称
-    name: String
-    # 描述
-    description: String
-    # 对应的图标
-    icon: String
-    # 栏目封面图
-    cover: FileObject
-    # 全路径
-    path: String
-    # 排序
-    index: Int
-    # 层级
-    level: Int
-    # 上级栏目
-    parent: ArticleChannel
-    # 元数据
-    meta: Meta
-    # 栏目 / 频道 关注
-    #    starrable: Starrable
-    # 展示模版
-    #    displayTemplate: [FieldValue]
-    # 权限设置
-    #    permissions: Permission
-    createdAt: Date
-    updatedAt: Date
-    children: [ArticleChannel]
+  id: ID!
+  # 编码
+  slug: String
+  # 名称
+  name: String
+  # 全称
+  fullName: String
+  # 描述
+  description: String
+  # 对应的图标
+  icon: String
+  # 栏目封面图
+  cover: FileObject
+  # 全路径
+  path: String
+  # 排序
+  index: Int
+  # 层级
+  level: Int
+  # 上级栏目
+  parent: ArticleChannel
+  # 元数据
+  meta: Meta
+  # 栏目 / 频道 关注
+  #    starrable: Starrable
+  # 展示模版
+  #    displayTemplate: [FieldValue]
+  # 权限设置
+  #    permissions: Permission
+  createdAt: Date
+  updatedAt: Date
+  children: [ArticleChannel]
 }
 
 # 支持层级，亦可栏目使用
 type ArticleTag {
-    id: ID!
-    # 短标识
-    slug: String
-    # 名称
-    name: String
-    # 描述
-    description: String
-    # 全路径
-    path: String
-    # 排序
-    index: Int
-    meta: Meta
-    createdAt: Date
-    updatedAt: Date
+  id: ID!
+  # 短标识
+  slug: String
+  # 名称
+  name: String
+  # 描述
+  description: String
+  # 全路径
+  path: String
+  # 排序
+  index: Int
+  meta: Meta
+  createdAt: Date
+  updatedAt: Date
 }
 
 # 文章类别
 enum ArticleCategory {
-    # 新闻
-    news
-    # 圈子
-    circle
-    # 博客
-    blog
+  # 新闻
+  news
+  # 圈子
+  circle
+  # 博客
+  blog
 }
 
 type ArticleAuthor {
-    id: ID
-    # 名称
-    name: String
-    # 员工
-    employee: Employee
+  id: ID
+  # 名称
+  name: String
+  # 员工
+  employee: Employee
 }
 
 # 文章
 type Article {
-    # 文章ID
-    id: ID!
-    # 链接
-    slug: String
-    # 图片
-    cover: FileObject
-    # 标题
-    title: String
-    # 状态
-    status: ArticleStatus
-    # 摘要
-    summary: String
-    # 分类
-    category: ArticleCategory
-    # 作者
-    authors: [ArticleAuthor]
-    # 发布时间
-    publishedAt: Date
-    # 内容
-    content(format: ContentFormat): Content
-    #查询评论
-    #    comments(filter: CommentFilter, page: Int = 1, pageSize: Int = 15, orderBy: OrderBy): CommentConnection
-    # 频道
-    channels: [ArticleChannel]
-    # 标签
-    tags: [ArticleTag]
-    # 推荐位
-    features: [ArticleFeature]
-    # 有效期限 true 永久 false 短期
-    validity: Boolean
-    # 有效期限 开始时间
-    validityStartDate: Date
-    # 有效期限 结束时间
-    validityEndDate: Date
-    # 元数据
-    meta: Meta
-    # 附件
-    attachments: [FileObject]
-    # 统计计数
-    #    starrable(starType: ArticleStarType!): Starrable!
-    # 权限设置
-    permissions: Permission
-    createdBy: Int
-    updatedBy: Int
-    createdAt: Date
-    updatedAt: Date
-    # 文章类型
-    type: ArticleType
+  # 文章ID
+  id: ID!
+  # 链接
+  slug: String
+  # 图片
+  cover: FileObject
+  # 标题
+  title: String
+  # 状态
+  status: ArticleStatus
+  # 摘要
+  summary: String
+  # 分类
+  category: ArticleCategory
+  # 作者
+  authors: [ArticleAuthor]
+  # 发布时间
+  publishedAt: Date
+  # 内容
+  content(format: ContentFormat): Content
+  #查询评论
+  #    comments(filter: CommentFilter, page: Int = 1, pageSize: Int = 15, orderBy: OrderBy): CommentConnection
+  # 频道
+  channels: [ArticleChannel]
+  # 标签
+  tags: [ArticleTag]
+  # 推荐位
+  features: [ArticleFeature]
+  # 有效期限 true 永久 false 短期
+  validity: Boolean
+  # 有效期限 开始时间
+  validityStartDate: Date
+  # 有效期限 结束时间
+  validityEndDate: Date
+  # 元数据
+  meta: Meta
+  # 附件
+  attachments: [FileObject]
+  # 统计计数
+  #    starrable(starType: ArticleStarType!): Starrable!
+  # 权限设置
+  permissions: Permission
+  createdBy: Int
+  updatedBy: Int
+  createdAt: Date
+  updatedAt: Date
+  # 文章类型
+  type: ArticleType
 }
 
 # 文章内容
 interface Content {
-    id: ID
+  id: ID
 }
 
 enum ContentType {
-    HTML
-    MARKDOWN
+  HTML
+  MARKDOWN
 }
 
 # html格式内容
 type HtmlContent implements Content {
-    id: ID
-    text: String
+  id: ID
+  text: String
 }
 
 enum ArticleType {
-    # 普通文章
-    text
-    # 链接文章
-    link
-    # 文件文章
-    file
-    # 图片
-    picture
-    # 视频
-    video
+  # 普通文章
+  text
+  # 链接文章
+  link
+  # 文件文章
+  file
+  # 图片
+  picture
+  # 视频
+  video
 }
 
 type Permission {
-    resourceType: String
-    id: String
+  resourceType: String
+  id: String
 }
 
 enum ArticleChannelStarType {
-    # 关注
-    follow
+  # 关注
+  follow
 }
 
 enum ArticleStarType {
-    # 收藏
-    favorites
-    # 点击数
-    clicks
-    # 阅读数
-    reads
-    # 点赞数
-    likes
+  # 收藏
+  favorites
+  # 点击数
+  clicks
+  # 阅读数
+  reads
+  # 点赞数
+  likes
 }
 
 input ArticleCreateInput {
-    slug: String
-    # 文章标题
-    title: String
-    # 文章正文
-    content: ContentInput
-    # 摘要
-    summary: String
-    # 文章封面
-    cover: FileObject
-    # 文章标签
-    tags: [ID]
-    # 推荐位id
-    features: [String]
-    # 文章栏目
-    channels: [ID]
-    # 状态
-    status: ArticleStatus
-    # 发布日期
-    publishedAt: String
-    # 文章类别
-    category: ArticleCategory!
-    # 授予权限
-    access: [String]
-    # 附件
-    attachments: [FileObject]
-    # 文章类型
-    type: ArticleType
-    # 有效期限 true 永久 false 短期
-    validity: Boolean
-    # 有效期限 开始时间
-    validityStartDate: Date
-    # 有效期限 结束时间
-    validityEndDate: Date
-    # 元数据
-    meta: MetaData
-    # 作者
-    authors: [ID]
+  slug: String
+  # 文章标题
+  title: String
+  # 文章正文
+  content: ContentInput
+  # 摘要
+  summary: String
+  # 文章封面
+  cover: FileObject
+  # 文章标签
+  tags: [ID]
+  # 推荐位id
+  features: [String]
+  # 文章栏目
+  channels: [ID]
+  # 状态
+  status: ArticleStatus
+  # 发布日期
+  publishedAt: String
+  # 文章类别
+  category: ArticleCategory!
+  # 授予权限
+  access: [String]
+  # 附件
+  attachments: [FileObject]
+  # 文章类型
+  type: ArticleType
+  # 有效期限 true 永久 false 短期
+  validity: Boolean
+  # 有效期限 开始时间
+  validityStartDate: Date
+  # 有效期限 结束时间
+  validityEndDate: Date
+  # 元数据
+  meta: MetaData
+  # 作者
+  authors: [ID]
 }
 
 input MetaData {
-    file: FileObject
-    url: String
-    title: String
-    description: String
+  file: FileObject
+  url: String
+  title: String
+  description: String
 }
 
 input ContentInput {
-    # 正文类型
-    type: ContentType
-    # 文本
-    text: String
+  # 正文类型
+  type: ContentType
+  # 文本
+  text: String
 }
 
 input ContentPictureInput {
-    # 图片
-    picture: FileObject
-    # 图片摘要
-    digest: String
+  # 图片
+  picture: FileObject
+  # 图片摘要
+  digest: String
 }
 
 input ArticleUpdateInput {
-    # 文章标题
-    title: String
-    # 文章URL 必须唯一
-    slug: String
-    # 文章发布状态
-    status: ArticleStatus
-    # 文章正文
-    content: ContentInput
-    # 摘要
-    summary: String
-    # 文章封面
-    cover: FileObject
-    # 文章标签
-    tags: [ID]
-    # 推荐位id
-    features: [String]
-    # 文章栏目
-    channels: [ID]
-    # 发布日期
-    publishedAt: String
-    # 组织
-    organization: ID
-    # 授予权限
-    permissions: [PermissionInput]
-    # 附件
-    attachments: [FileObject]
-    # 作者
-    authors: [ID]
-    # 文章类型
-    type: ArticleType
-    # 有效期限 true 永久 false 短期
-    validity: Boolean
-    # 有效期限 开始时间
-    validityStartDate: Date
-    # 有效期限 结束时间
-    validityEndDate: Date
-    # 元数据
-    meta: MetaData
+  # 文章标题
+  title: String
+  # 文章URL 必须唯一
+  slug: String
+  # 文章发布状态
+  status: ArticleStatus
+  # 文章正文
+  content: ContentInput
+  # 摘要
+  summary: String
+  # 文章封面
+  cover: FileObject
+  # 文章标签
+  tags: [ID]
+  # 推荐位id
+  features: [String]
+  # 文章栏目
+  channels: [ID]
+  # 发布日期
+  publishedAt: String
+  # 组织
+  organization: ID
+  # 授予权限
+  permissions: [PermissionInput]
+  # 附件
+  attachments: [FileObject]
+  # 作者
+  authors: [ID]
+  # 文章类型
+  type: ArticleType
+  # 有效期限 true 永久 false 短期
+  validity: Boolean
+  # 有效期限 开始时间
+  validityStartDate: Date
+  # 有效期限 结束时间
+  validityEndDate: Date
+  # 元数据
+  meta: MetaData
 }
 input ArticleTagUpdateInput {
-    # 标签名称
-    name: String!
-    # 标签code
-    slug: String
-    # 标签图
-    cover: FileObject
-    # 组织
-    organization: ID!
-    # 描述
-    description: String
-    # 排序
-    index: Int
+  # 标签名称
+  name: String!
+  # 标签code
+  slug: String
+  # 标签图
+  cover: FileObject
+  # 组织
+  organization: ID!
+  # 描述
+  description: String
+  # 排序
+  index: Int
 }
 
 input ArticleTagCreateInput {
-    # 标签名称
-    name: String!
-    # 标签code
-    slug: String
-    # 标签图
-    cover: FileObject
-    # 描述
-    description: String
-    # 组织
-    organization: ID!
-    # 排序
-    index: Int
+  # 标签名称
+  name: String!
+  # 标签code
+  slug: String
+  # 标签图
+  cover: FileObject
+  # 描述
+  description: String
+  # 组织
+  organization: ID!
+  # 排序
+  index: Int
 }
 
 input ArticleChannelFilter {
-    #名称
-    name: String
-    path_startsWith: String
-    # 父级
-    parent: ID
-    # 用户id
-    viewer: ID
-    # 用户创建id
-    founder: ID
+  #名称
+  name: String
+  path_startsWith: String
+  # 父级
+  parent: ID
+  # 用户id
+  viewer: ID
+  # 用户创建id
+  founder: ID
 }
 
 input PermissionInput {
-    permission: String
-    grants: [String]
+  permission: String
+  grants: [String]
 }
 
 input ArticleFeatureFilter {
-    # 名称
-    name: String
+  # 名称
+  name: String
 }
 input ArticleFeatureCreateInput {
-    # 编码
-    code: String
-    # 名称
-    name: String!
-    # 描述
-    description: String
+  # 编码
+  code: String
+  # 名称
+  name: String!
+  # 描述
+  description: String
 }
 
 input ArticleFeatureUpdateInput {
-    # 编码
-    code: String
-    # 名称
-    name: String!
-    # 描述
-    description: String
+  # 编码
+  code: String
+  # 名称
+  name: String!
+  # 描述
+  description: String
 }
 
 type ArticleFeature {
-    id: ID
-    # 编码
-    code: String
-    # 名称
-    name: String
-    # 是否启用流程
-    needReview: Boolean
-    # 描述
-    description: String
+  id: ID
+  # 编码
+  code: String
+  # 名称
+  name: String
+  # 是否启用流程
+  needReview: Boolean
+  # 描述
+  description: String
 }
 
 enum BannerBackgroundType {
-    # 图片
-    IMAGE
-    # 视频
-    VIDEO
+  # 图片
+  IMAGE
+  # 视频
+  VIDEO
 }
 
 type Banner {
-    id: ID
-    # 名称
-    name: String
-    # 标题
-    title: String
-    # 副标题
-    subtitle: String
-    # 描述
-    description: String
-    # 媒体类型
-    backgroundType: BannerBackgroundType
-    # 媒介
-    background: FileObject @fileObjectFormat
-    # 跳转地址
-    url: String
-    # 跳转按钮文本
-    buttonText: String
-    # 是否启用
-    enabled: Boolean
+  id: ID
+  # 名称
+  name: String
+  # 标题
+  title: String
+  # 副标题
+  subtitle: String
+  # 描述
+  description: String
+  # 媒体类型
+  backgroundType: BannerBackgroundType
+  # 媒介
+  background: FileObject @fileObjectFormat
+  # 跳转地址
+  url: String
+  # 跳转按钮文本
+  buttonText: String
+  # 是否启用
+  enabled: Boolean
 }
 
 input BannerCreateInput {
-    # 名称
-    name: String
-    # 标题
-    title: String
-    # 副标题
-    subtitle: String
-    # 描述
-    description: String
-    # 媒体类型
-    backgroundType: BannerBackgroundType
-    # 媒介
-    background: FileObject
-    # 跳转地址
-    url: String
-    # 跳转按钮文本
-    buttonText: String
-    # 是否启用
-    enabled: Boolean
+  # 名称
+  name: String
+  # 标题
+  title: String
+  # 副标题
+  subtitle: String
+  # 描述
+  description: String
+  # 媒体类型
+  backgroundType: BannerBackgroundType
+  # 媒介
+  background: FileObject
+  # 跳转地址
+  url: String
+  # 跳转按钮文本
+  buttonText: String
+  # 是否启用
+  enabled: Boolean
 }
 
 input BannerUpdateInput {
-    # 名称
-    name: String
-    # 标题
-    title: String
-    # 副标题
-    subtitle: String
-    # 描述
-    description: String
-    # 媒体类型
-    backgroundType: BannerBackgroundType
-    # 媒介
-    background: FileObject
-    # 跳转地址
-    url: String
-    # 跳转按钮文本
-    buttonText: String
-    # 是否启用
-    enabled: Boolean
+  # 名称
+  name: String
+  # 标题
+  title: String
+  # 副标题
+  subtitle: String
+  # 描述
+  description: String
+  # 媒体类型
+  backgroundType: BannerBackgroundType
+  # 媒介
+  background: FileObject
+  # 跳转地址
+  url: String
+  # 跳转按钮文本
+  buttonText: String
+  # 是否启用
+  enabled: Boolean
 }
 
 extend type Query {
-    # 单个文章
-    article(id: ID!): Article
-    # 全部文章
-    articles(
-        filter: ArticleFilter
-        first: Int = 0
-        page: Int = 1
-        pageSize: Int = 15
-        orderBy: OrderBy
-    ): ArticleConnection
-    # 文章栏目
-    articleChannels(
-        filter: ArticleChannelFilter
-        orderBy: OrderBy
-    ): [ArticleChannel]
-    # 文章标签
-    articleTags(
-        organization: ID!
-        filter: ArticleChannelFilter
-        orderBy: OrderBy
-    ): [ArticleTag]
-    # 文章权限
-    # articlePermissions(category: ArticleCategory!): [Permission]
-    # 根据ID获取文章栏目
-    articleChannel(id: ID!): ArticleChannel
-    # 已加星标的文章频道
-    starredArticleChannels(
-        uid: ID!
-        starType: ArticleChannelStarType!
-    ): [ArticleChannel]
-    # 已加星标的文章
-    starredArticles(
-        uid: ID!
-        starType: ArticleStarType!
-        filter: ArticleFilter = {}
-        page: Int = 1
-        pageSize: Int = 15
-        orderBy: OrderBy
-    ): ArticleConnection
-    # 查询所有推荐位
-    articleFeatures(
-        organization: ID!
-        filter: ArticleFeatureFilter
-        orderBy: OrderBy
-    ): [ArticleFeature]
-    # 根据id查询推荐位
-    articleFeature(id: ID!): ArticleFeature
-    # 横幅广告
-    banner(id: ID!): Banner
-    # 横幅广告
-    banners(filter: BannerFilter, orderBy: OrderBy): [Banner]
+  # 单个文章
+  article(id: ID!): Article
+  # 全部文章
+  articles(
+    filter: ArticleFilter
+    first: Int = 0
+    page: Int = 1
+    pageSize: Int = 15
+    orderBy: OrderBy
+  ): ArticleConnection
+  # 文章栏目
+  articleChannels(
+    filter: ArticleChannelFilter
+    orderBy: OrderBy
+  ): [ArticleChannel]
+  # 文章标签
+  articleTags(
+    organization: ID!
+    filter: ArticleChannelFilter
+    orderBy: OrderBy
+  ): [ArticleTag]
+  # 文章权限
+  # articlePermissions(category: ArticleCategory!): [Permission]
+  # 根据ID获取文章栏目
+  articleChannel(id: ID!): ArticleChannel
+  # 已加星标的文章频道
+  starredArticleChannels(
+    uid: ID!
+    starType: ArticleChannelStarType!
+  ): [ArticleChannel]
+  # 已加星标的文章
+  starredArticles(
+    uid: ID!
+    starType: ArticleStarType!
+    filter: ArticleFilter = {}
+    page: Int = 1
+    pageSize: Int = 15
+    orderBy: OrderBy
+  ): ArticleConnection
+  # 查询所有推荐位
+  articleFeatures(
+    organization: ID!
+    filter: ArticleFeatureFilter
+    orderBy: OrderBy
+  ): [ArticleFeature]
+  # 根据id查询推荐位
+  articleFeature(id: ID!): ArticleFeature
+  # 横幅广告
+  banner(id: ID!): Banner
+  # 横幅广告
+  banners(filter: BannerFilter, orderBy: OrderBy): [Banner]
 }
 
-extend type Mutation {
-    # 新增文章
-    createArticle(input: ArticleCreateInput!): Article
-    # 修改文章
-    updateArticle(
-        id: ID!
-        merge: Boolean = true
-        input: ArticleUpdateInput!
-    ): Article
-    # 发布文章
-    publishArticle(id: ID): Boolean
-    # 删除文章
-    deleteArticle(id: ID!): Boolean
-    # 批量删除
-    deleteManyArticles(ids: [ID]!): Int
-    # 添加栏目
-    createChannel(input: ArticleChannelCreateInput!): ArticleChannel
-    # 编辑栏目
-    updateChannel(
-        id: ID!
-        merge: Boolean = true
-        input: ArticleChannelUpdateInput!
-    ): ArticleChannel
-    # 删除栏目
-    removeChannel(id: ID!): Boolean
-    # 添加标签
-    createArticleTag(input: ArticleTagCreateInput): ArticleTag
-    # 更新标签
-    updateArticleTag(
-        id: ID!
-        merge: Boolean = true
-        input: ArticleTagUpdateInput
-    ): ArticleTag
-    # 删除标签
-    removeArticleTag(id: ID!): Boolean
-    # 新增推荐位
-    createArticleFeature(input: ArticleFeatureCreateInput): ArticleFeature
-    # 更新推荐位
-    updateArticleFeature(
-        id: ID!
-        merge: Boolean = true
-        input: ArticleFeatureUpdateInput
-    ): ArticleFeature
-    # 删除推荐位
-    deleteArticleFeature(id: ID!): Boolean
-    # 创建 Banner
-    createBanner(input: BannerCreateInput!): Banner
-    # 更新 Banner
-    updateBanner(
-        id: ID!
-        input: BannerUpdateInput!
-        merge: Boolean = true
-    ): Banner
-    # 删除 Banner
-    deleteBanner(id: ID!): Boolean
+type Mutation {
+  # 新增文章
+  createArticle(input: ArticleCreateInput!): Article
+  # 修改文章
+  updateArticle(
+    id: ID!
+    merge: Boolean = true
+    input: ArticleUpdateInput!
+  ): Article
+  # 发布文章
+  publishArticle(id: ID): Boolean
+  # 删除文章
+  deleteArticle(id: ID!): Boolean
+  # 批量删除
+  deleteManyArticles(ids: [ID]!): Int
+  # 添加栏目
+  createChannel(input: ArticleChannelCreateInput!): ArticleChannel
+  # 编辑栏目
+  updateChannel(
+    id: ID!
+    merge: Boolean = true
+    input: ArticleChannelUpdateInput!
+  ): ArticleChannel
+  # 删除栏目
+  removeChannel(id: ID!): Boolean
+  # 添加标签
+  createArticleTag(input: ArticleTagCreateInput): ArticleTag
+  # 更新标签
+  updateArticleTag(
+    id: ID!
+    merge: Boolean = true
+    input: ArticleTagUpdateInput
+  ): ArticleTag
+  # 删除标签
+  removeArticleTag(id: ID!): Boolean
+  # 新增推荐位
+  createArticleFeature(input: ArticleFeatureCreateInput): ArticleFeature
+  # 更新推荐位
+  updateArticleFeature(
+    id: ID!
+    merge: Boolean = true
+    input: ArticleFeatureUpdateInput
+  ): ArticleFeature
+  # 删除推荐位
+  deleteArticleFeature(id: ID!): Boolean
+  # 创建 Banner
+  createBanner(input: BannerCreateInput!): Banner
+  # 更新 Banner
+  updateBanner(
+    id: ID!
+    input: BannerUpdateInput!
+    merge: Boolean = true
+  ): Banner
+  # 删除 Banner
+  deleteBanner(id: ID!): Boolean
 }

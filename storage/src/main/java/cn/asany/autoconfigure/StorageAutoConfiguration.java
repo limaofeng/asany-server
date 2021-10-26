@@ -7,12 +7,15 @@ import cn.asany.storage.core.StorageResolver;
 import cn.asany.storage.core.engine.minio.MinIOStorageConfig;
 import cn.asany.storage.data.graphql.directive.FileObjectFormatDirective;
 import cn.asany.storage.data.graphql.scalar.FileObjectCoercing;
+import cn.asany.storage.data.web.FileFilter;
 import graphql.kickstart.servlet.apollo.ApolloScalars;
 import graphql.kickstart.tools.boot.SchemaDirective;
 import graphql.schema.GraphQLScalarType;
 import java.util.List;
+import javax.servlet.DispatcherType;
 import org.jfantasy.graphql.SchemaParserDictionaryBuilder;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -20,7 +23,15 @@ import org.springframework.context.annotation.Configuration;
 /** @author limaofeng */
 @Configuration
 @EntityScan("cn.asany.storage.data.bean")
-@ComponentScan("cn.asany.storage.core")
+@ComponentScan({
+  "cn.asany.storage.core",
+  "cn.asany.storage.*.dao",
+  "cn.asany.storage.*.service",
+  "cn.asany.storage.*.runner",
+  "cn.asany.storage.*.converter",
+  "cn.asany.storage.*.graphql",
+  "cn.asany.storage.*.rest"
+})
 public class StorageAutoConfiguration {
 
   @Bean
@@ -58,5 +69,22 @@ public class StorageAutoConfiguration {
   @Bean
   public SchemaDirective fileObjectFormatDirective() {
     return new SchemaDirective("fileObjectFormat", new FileObjectFormatDirective());
+  }
+
+  @Bean
+  public FileFilter fileFilter() {
+    return new FileFilter();
+  }
+
+  @Bean
+  public FilterRegistrationBean fileFilterRegistrationBean() {
+    FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean();
+    filterRegistrationBean.setFilter(fileFilter());
+    filterRegistrationBean.setEnabled(true);
+    filterRegistrationBean.setOrder(300);
+    filterRegistrationBean.addInitParameter("targetFilterLifecycle", "true");
+    filterRegistrationBean.setDispatcherTypes(DispatcherType.REQUEST);
+    filterRegistrationBean.addUrlPatterns("/*");
+    return filterRegistrationBean;
   }
 }

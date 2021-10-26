@@ -3,10 +3,7 @@ package cn.asany.storage.core.engine.oss;
 import cn.asany.storage.api.*;
 import cn.asany.storage.core.AbstractFileObject;
 import com.aliyun.oss.OSSClient;
-import com.aliyun.oss.model.ListObjectsRequest;
-import com.aliyun.oss.model.OSSObjectSummary;
-import com.aliyun.oss.model.ObjectListing;
-import com.aliyun.oss.model.ObjectMetadata;
+import com.aliyun.oss.model.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,20 +12,25 @@ import java.util.List;
 import org.jfantasy.framework.error.IgnoreException;
 import org.jfantasy.framework.util.common.StreamUtil;
 import org.jfantasy.framework.util.common.StringUtil;
+import org.jfantasy.framework.util.common.file.FileUtil;
 import org.jfantasy.framework.util.regexp.RegexpUtil;
 
 public class OSSStorage implements Storage {
 
-  private AccessKey accessKey;
+  private final String accessKeyId;
+  private final String accessKeySecret;
   private String bucketName;
   private String endpoint;
   private OSSClient client;
 
-  public OSSStorage(String endpoint, AccessKey accessKey, String bucketName) {
-    this.accessKey = accessKey;
+  public OSSStorage(
+      String endpoint, String accessKeyId, String accessKeySecret, String bucketName) {
+    this.endpoint = endpoint;
+    this.accessKeyId = accessKeyId;
+    this.accessKeySecret = accessKeySecret;
     this.bucketName = bucketName;
     this.endpoint = endpoint;
-    this.client = new OSSClient(this.endpoint, this.accessKey.getId(), this.accessKey.getSecret());
+    this.client = new OSSClient(this.endpoint, this.accessKeyId, this.accessKeySecret);
   }
 
   @Override
@@ -37,7 +39,10 @@ public class OSSStorage implements Storage {
         remotePath.endsWith("/")
             ? remotePath
             : RegexpUtil.replace(remotePath, "[^/]+[/]{0,1}$", ""));
-    client.putObject(this.bucketName, RegexpUtil.replace(remotePath, "^/", ""), file);
+    String path = RegexpUtil.replace(remotePath, "^/", "");
+    ObjectMetadata metadata = new ObjectMetadata();
+    metadata.setContentType(FileUtil.getMimeType(file));
+    client.putObject(new PutObjectRequest(bucketName, path, file).withMetadata(metadata));
   }
 
   @Override
@@ -285,24 +290,6 @@ public class OSSStorage implements Storage {
         throw new IgnoreException("当前对象为一个目录,不能获取 InputStream ");
       }
       return client.getObject(bucketName, ossAbsolutePath).getObjectContent();
-    }
-  }
-
-  public static class AccessKey {
-    private String id;
-    private String secret;
-
-    public AccessKey(String id, String secret) {
-      this.id = id;
-      this.secret = secret;
-    }
-
-    public String getId() {
-      return id;
-    }
-
-    public String getSecret() {
-      return secret;
     }
   }
 }

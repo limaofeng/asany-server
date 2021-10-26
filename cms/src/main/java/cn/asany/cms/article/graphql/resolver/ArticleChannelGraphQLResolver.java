@@ -5,7 +5,11 @@ import cn.asany.cms.article.graphql.type.Starrable;
 import cn.asany.cms.article.service.ArticleChannelService;
 import cn.asany.cms.permission.bean.Permission;
 import graphql.kickstart.tools.GraphQLResolver;
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.*;
+import java.util.stream.Collectors;
+import org.jfantasy.framework.dao.jpa.PropertyFilter;
+import org.jfantasy.framework.util.common.ObjectUtil;
+import org.jfantasy.framework.util.common.StringUtil;
 import org.springframework.stereotype.Component;
 
 /**
@@ -17,7 +21,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class ArticleChannelGraphQLResolver implements GraphQLResolver<ArticleChannel> {
 
-  @Autowired private ArticleChannelService articleChannelService;
+  private final ArticleChannelService articleChannelService;
+
+  public ArticleChannelGraphQLResolver(ArticleChannelService articleChannelService) {
+    this.articleChannelService = articleChannelService;
+  }
 
   public Starrable starrable(ArticleChannel channel) {
     //        .id(channel.getId().toString() + "/" + startType)
@@ -34,6 +42,33 @@ public class ArticleChannelGraphQLResolver implements GraphQLResolver<ArticleCha
     //                })
     String startType = "article_channel_follow";
     return Starrable.builder().build();
+  }
+
+  public String fullName(ArticleChannel channel) {
+    List<ArticleChannel> parents = this.parents(channel);
+    if (parents.isEmpty()) {
+      return channel.getName();
+    }
+    return parents.stream().map(ArticleChannel::getName).collect(Collectors.joining("."))
+        + "."
+        + channel.getName();
+  }
+
+  public List<ArticleChannel> parents(ArticleChannel channel) {
+    List<Long> ids =
+        Arrays.stream(StringUtil.tokenizeToStringArray(channel.getPath(), ArticleChannel.SEPARATOR))
+            .map(Long::valueOf)
+            .filter(item -> !item.equals(channel.getId()))
+            .collect(Collectors.toList());
+
+    if (ids.isEmpty()) {
+      return Collections.emptyList();
+    }
+
+    List<ArticleChannel> parents =
+        this.articleChannelService.findAll(PropertyFilter.builder().in("id", ids).build());
+
+    return ids.stream().map(id -> ObjectUtil.find(parents, "id", id)).collect(Collectors.toList());
   }
 
   public Permission permissions(ArticleChannel channel) {

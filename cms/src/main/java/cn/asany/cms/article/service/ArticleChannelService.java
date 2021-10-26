@@ -4,9 +4,8 @@ import cn.asany.cms.article.bean.ArticleChannel;
 import cn.asany.cms.article.dao.ArticleChannelDao;
 import java.util.List;
 import java.util.Optional;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.util.common.ObjectUtil;
@@ -17,12 +16,11 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 @Transactional
 public class ArticleChannelService {
 
-  private static final Log Log = LogFactory.getLog(ArticleChannelService.class);
-  private static final String PATH_SEPARATOR = "/";
   private final ArticleChannelDao channelDao;
 
   @Autowired
@@ -76,19 +74,29 @@ public class ArticleChannelService {
             (item, context) -> {
               int index = context.getIndex();
               int level = context.getLevel();
+
+              Optional<ArticleChannel> optional = this.channelDao.findOneBy("slug", item.getSlug());
+
+              if (optional.isPresent()) {
+                item.setId(optional.get().getId());
+              } else {
+                this.channelDao.save(item);
+              }
+
               ArticleChannel parent = context.getParent();
               if (parent == null) {
-                item.setPath(item.getId() + "/");
+                item.setPath(item.getId() + ArticleChannel.SEPARATOR);
               } else {
-                item.setPath(parent.getPath() + item.getId() + "/");
+                item.setPath(parent.getPath() + item.getId() + ArticleChannel.SEPARATOR);
               }
               item.setParent(parent);
               item.setIndex(index);
               item.setLevel(level);
+
               return item;
             });
     channels = ObjectUtil.flat(channels, "children");
-    this.channelDao.saveAllInBatch(channels);
+    this.channelDao.updateAllInBatch(channels);
     return channels;
   }
 
@@ -98,8 +106,8 @@ public class ArticleChannelService {
     channel = this.channelDao.save(channel);
     channel.setPath(
         channel.getParent() == null
-            ? channel.getId() + PATH_SEPARATOR
-            : channel.getParent().getPath() + channel.getId() + PATH_SEPARATOR);
+            ? channel.getId() + ArticleChannel.SEPARATOR
+            : channel.getParent().getPath() + channel.getId() + ArticleChannel.SEPARATOR);
     return channel;
   }
 
@@ -118,8 +126,8 @@ public class ArticleChannelService {
     channel = channelDao.save(channel);
     channel.setPath(
         channel.getParent() == null
-            ? channel.getId() + PATH_SEPARATOR
-            : channel.getParent().getPath() + channel.getId() + PATH_SEPARATOR);
+            ? channel.getId() + ArticleChannel.SEPARATOR
+            : channel.getParent().getPath() + channel.getId() + ArticleChannel.SEPARATOR);
     return channel;
   }
 
@@ -134,8 +142,8 @@ public class ArticleChannelService {
     channel = channelDao.update(channel, merge);
     channel.setPath(
         channel.getParent() == null
-            ? channel.getId() + PATH_SEPARATOR
-            : channel.getParent().getPath() + channel.getId() + PATH_SEPARATOR);
+            ? channel.getId() + ArticleChannel.SEPARATOR
+            : channel.getParent().getPath() + channel.getId() + ArticleChannel.SEPARATOR);
     return channel;
   }
 

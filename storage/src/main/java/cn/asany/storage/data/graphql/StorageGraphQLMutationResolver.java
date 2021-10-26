@@ -12,7 +12,11 @@ import javax.servlet.http.Part;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-/** @author limaofeng */
+/**
+ * 文件上传
+ *
+ * @author limaofeng
+ */
 @Component
 public class StorageGraphQLMutationResolver implements GraphQLMutationResolver {
 

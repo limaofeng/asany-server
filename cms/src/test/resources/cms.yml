@@ -1,25 +1,25 @@
 channels:
   - name: 服务
-    code: services
+    slug: services
     icon: Duotune/lay004
     children:
-      - code: solution
+      - slug: solution
         name: 解决方案
-      - code: cases
+      - slug: cases
         name: 客户案例
   - name: 新闻动态
-    code: news
+    slug: news
     icon: Duotune/lay004
     children:
-      - code: self
+      - slug: self
         name: 互升新闻
-      - code: industry
+      - slug: industry
         name: 行业新闻
   - name: 关于
-    code: about
+    slug: about
     icon: Duotune/abs049
     children:
-      - code: introduce
+      - slug: introduce
         name: 互升新闻
-      - code: testimonials
+      - slug: testimonials
         name: 行业新闻

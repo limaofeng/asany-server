@@ -4,6 +4,7 @@ import cn.asany.storage.api.FileItemFilter;
 import cn.asany.storage.api.FileItemSelector;
 import cn.asany.storage.api.FileObject;
 import cn.asany.storage.api.FileObjectMetadata;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
@@ -21,8 +22,23 @@ import org.jfantasy.framework.dao.BaseBusEntity;
  */
 @Data
 @Entity
-@Table(name = "STORAGE_FILEOBJECT")
+@Table(
+    name = "STORAGE_FILEOBJECT",
+    uniqueConstraints =
+        @UniqueConstraint(
+            name = "UK_STORAGE_FILEOBJECT",
+            columnNames = {"STORAGE_ID", "PATH"}))
 @EqualsAndHashCode(callSuper = false)
+@JsonIgnoreProperties(
+    value = {
+      "hibernateLazyInitializer",
+      "handler",
+      "storage",
+      "folder",
+      "parentFile",
+      "metadata",
+      "inputStream"
+    })
 public class FileDetail extends BaseBusEntity implements Cloneable, FileObject {
 
   @Id

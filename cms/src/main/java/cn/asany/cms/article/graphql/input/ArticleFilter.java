@@ -38,7 +38,7 @@ public class ArticleFilter extends QueryFilter<ArticleFilter, Article> {
   }
 
   public void setChannel(Long channel) {
-    builder.in("channels.id", channel);
+    builder.equal("channels.id", channel);
   }
 
   public void setChannelCode(String channelCode) {
@@ -94,7 +94,7 @@ public class ArticleFilter extends QueryFilter<ArticleFilter, Article> {
 
   @JsonProperty("validity")
   public void setValidity(Boolean validity) {
-    if (validity == true) {
+    if (validity) {
       this.builder.equal("validity", validity);
       PropertyFilterBuilder filter = PropertyFilter.builder();
       filter.greaterThan("validityStartDate", new Date());

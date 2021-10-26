@@ -11,6 +11,10 @@ menus:
     icon: Duotune/fin006
     path: /cms
     component: cn.asany.ui.admin.cms.ArticleSidebar
+  - name: 自定义建模
+    icon: Duotune/abs026
+    path: /shanhai
+    component: cn.asany.ui.admin.shanhai.MenuSidebar
   - name: 系统管理
     icon: Duotune/gen032
     children:
@@ -55,6 +59,12 @@ routes:
     authorized: true
     component: cn.asany.ui.theme.metronic.Layout
     routes:
+      - path: /cms/my/drafts
+        component: cn.asany.ui.admin.cms.MyDrafts
+      - path: /cms/my/published
+        component: cn.asany.ui.admin.cms.MyPublished
+      - path: /cms/authors
+        component: cn.asany.ui.admin.cms.Authors
       - path: /cms/channels/:id
         component: cn.asany.ui.admin.cms.ArticleChannel
         routes:

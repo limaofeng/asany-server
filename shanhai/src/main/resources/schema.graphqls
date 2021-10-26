@@ -215,6 +215,12 @@ extend type Query {
   # 用户列表
   models(
     filter: ModelFilter
+    first: Int = 1
+    offset: Int = 15
+    orderBy: OrderBy
+  ): [Model]
+  modelsConnection(
+    filter: ModelFilter
     page: Int = 1
     pageSize: Int = 15
     orderBy: OrderBy

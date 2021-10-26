@@ -19,8 +19,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
+ * 文章
+ *
  * @author limaofeng
- * @version V1.0 @Description: TODO
  * @date 2019-06-26 17:26
  */
 @Component

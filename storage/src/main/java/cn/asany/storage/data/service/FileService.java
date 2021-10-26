@@ -16,19 +16,29 @@ import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.regexp.RegexpUtil;
 import org.jfantasy.framework.util.web.WebUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * 文件服务
+ *
+ * @author limaofeng
+ */
 @Service
 @Transactional
 public class FileService {
 
-  @Autowired private FolderDao folderDao;
-  @Autowired private FileDetailDao fileDetailDao;
-  @Autowired private SpaceDao spaceDao;
+  private final FolderDao folderDao;
+  private final FileDetailDao fileDetailDao;
+  private final SpaceDao spaceDao;
+
+  public FileService(FolderDao folderDao, FileDetailDao fileDetailDao, SpaceDao spaceDao) {
+    this.folderDao = folderDao;
+    this.fileDetailDao = fileDetailDao;
+    this.spaceDao = spaceDao;
+  }
 
   public FileDetail saveFileDetail(
       String path,
@@ -52,7 +62,7 @@ public class FileService {
   }
 
   public FileDetail update(FileDetail detail) {
-    FileDetail fileDetail = this.findByPath(detail.getPath());
+    FileDetail fileDetail = this.getOneByPath(detail.getPath());
     fileDetail.setName(detail.getName());
     fileDetail.setDescription(detail.getDescription());
     this.fileDetailDao.save(fileDetail);
@@ -100,14 +110,20 @@ public class FileService {
     return null;
   }
 
+  public FileDetail getOneByPath(String path) {
+    Optional<FileDetail> file = findByPath(path);
+    if (!file.isPresent()) {
+      throw new RuntimeException(path + " does not exist ");
+    }
+    return file.get();
+  }
+
   public Optional<FileDetail> findById(Long id) {
     return this.fileDetailDao.findById(id);
   }
 
-  public FileDetail findByPath(String path) {
-    return this.fileDetailDao
-        .findOne(PropertyFilter.builder().equal("path", path).build())
-        .orElse(null);
+  public Optional<FileDetail> findByPath(String path) {
+    return this.fileDetailDao.findOne(PropertyFilter.builder().equal("path", path).build());
   }
 
   private Folder createRootFolder(String absolutePath, String managerId) {

@@ -37,6 +37,8 @@ import org.jfantasy.framework.lucene.annotations.IndexEmbedBy;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class ArticleChannel extends BaseBusEntity {
 
+  public static final String SEPARATOR = "/";
+
   @Id
   @Column(name = "ID")
   @GeneratedValue(generator = "fantasy-sequence")

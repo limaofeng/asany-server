@@ -3,8 +3,7 @@ package cn.asany.storage.data.bean;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.Set;
 import javax.persistence.*;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.framework.dao.hibernate.converter.StringSetConverter;
 
@@ -19,6 +18,9 @@ import org.jfantasy.framework.dao.hibernate.converter.StringSetConverter;
  */
 @Data
 @Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "STORAGE_SPACE")
 @EqualsAndHashCode(callSuper = false)
 @JsonIgnoreProperties({"hibernate_lazy_initializer", "handler"})

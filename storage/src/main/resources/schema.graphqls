@@ -22,6 +22,11 @@ type Storage {
 type FileDetails {
   id: ID
   name: String
+  path: String
+  directory: Boolean
+  size: Int
+  mimeType: String
+  createdAt: Date
 }
 
 input UploadOptions {
@@ -51,7 +56,7 @@ extend type Query {
 extend type Mutation {
   upload(
     file: Upload!
-    options: UploadOptions = { space: "default" }
+    options: UploadOptions = { space: "Default" }
   ): FileDetails
 }
 

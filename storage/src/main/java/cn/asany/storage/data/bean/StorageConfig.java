@@ -3,6 +3,7 @@ package cn.asany.storage.data.bean;
 import cn.asany.storage.api.IStorageConfig;
 import cn.asany.storage.core.FileStoreException;
 import cn.asany.storage.core.engine.minio.MinIOStorageConfig;
+import cn.asany.storage.core.engine.oss.OSSStorageConfig;
 import cn.asany.storage.data.bean.enums.StorageType;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.List;
@@ -29,8 +30,6 @@ import org.jfantasy.framework.jackson.JSON;
 @JsonIgnoreProperties({"hibernate_lazy_initializer", "handler", "folders", "fileDetails"})
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class StorageConfig extends BaseBusEntity {
-
-  private static final long serialVersionUID = -4833473939396674528L;
 
   public StorageConfig(String id) {
     this.id = id;
@@ -65,12 +64,26 @@ public class StorageConfig extends BaseBusEntity {
   public IStorageConfig getProperties() {
     switch (this.getType()) {
       case MINIO:
-        MinIOStorageConfig storageConfig =
+        MinIOStorageConfig minIOStorageConfig =
             JSON.deserialize(this.getDetails(), MinIOStorageConfig.class);
-        storageConfig.setId(this.getId());
-        return storageConfig;
+        minIOStorageConfig.setId(this.getId());
+        return minIOStorageConfig;
+      case OSS:
+        OSSStorageConfig ossStorageConfig =
+            JSON.deserialize(this.getDetails(), OSSStorageConfig.class);
+        ossStorageConfig.setId(this.getId());
+        return ossStorageConfig;
       default:
         throw new FileStoreException("不支持的类型");
+    }
+  }
+
+  public static class StorageConfigBuilder {
+
+    public StorageConfigBuilder type(StorageType type, IStorageConfig config) {
+      this.type = type;
+      this.details = JSON.serialize(config);
+      return this;
     }
   }
 }

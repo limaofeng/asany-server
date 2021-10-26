@@ -84,7 +84,7 @@ public class FragmentStoragePlugin implements StoragePlugin {
           options.getIndex());
     }
     FilePart filePart = new FilePart();
-    FileDetail fileDetail = fileService.findByPath(filePart.getPath());
+    FileDetail fileDetail = fileService.getOneByPath(filePart.getPath());
     // 查询上传的片段
     List<FilePart> fileParts = filePartService.find(options.getEntireFileHash());
     FilePart part = ObjectUtil.remove(fileParts, "index", 0);
@@ -93,7 +93,7 @@ public class FragmentStoragePlugin implements StoragePlugin {
     if (entireFileDetail != null) {
       fileDetail = entireFileDetail;
     }
-    return null;
+    return fileDetail;
   }
 
   private FileDetail uploadPart(

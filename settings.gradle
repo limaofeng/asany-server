@@ -15,6 +15,7 @@ rootProject.name = 'shanhai'
 include ":asany-shanhai",
         ":asany-base",
         ":asany-security",
+        ":asany-workflow",
         ":asany-storage-api",
         ":asany-storage",
         ":asany-nuwa",
@@ -28,6 +29,8 @@ project(':asany-base').projectDir = "$rootDir/base" as File
 project(':asany-shanhai').projectDir = "$rootDir/shanhai" as File
 // 组织 / 员工 / 安全 / 登录 / 授权
 project(':asany-security').projectDir = "$rootDir/security" as File
+// 工作流
+project(':asany-workflow').projectDir = "$rootDir/workflow" as File
 // 存储服务接口
 project(':asany-storage-api').projectDir = "$rootDir/storage-api" as File
 // 存储服务

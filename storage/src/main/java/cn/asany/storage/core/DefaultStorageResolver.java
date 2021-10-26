@@ -10,6 +10,7 @@ import java.util.Map;
 import org.apache.commons.collections.map.HashedMap;
 import org.jfantasy.framework.jackson.JSON;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 默认存储器解析器
@@ -20,7 +21,7 @@ public class DefaultStorageResolver implements StorageResolver {
 
   @Autowired private StorageService storageService;
 
-  private Map<IStorageConfig, Storage> storages = new HashedMap();
+  private Map<String, Storage> storages = new HashedMap();
   private List<StorageBuilder> builders;
 
   public DefaultStorageResolver(List<StorageBuilder> builders) {
@@ -28,21 +29,22 @@ public class DefaultStorageResolver implements StorageResolver {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public Storage resolve(String id) {
+    if (storages.containsKey(id)) {
+      return storages.get(id);
+    }
     StorageConfig config = storageService.get(id);
     return resolve(config.getProperties());
   }
 
   @Override
   public Storage resolve(IStorageConfig config) {
-    if (storages.containsKey(config)) {
-      return storages.get(config);
-    }
     for (StorageBuilder builder : builders) {
       if (builder.supports(config.getClass())) {
         Storage storage = builder.build(config);
         if (storage != null) {
-          storages.put(config, storage);
+          storages.put(config.getId(), storage);
           return storage;
         }
       }

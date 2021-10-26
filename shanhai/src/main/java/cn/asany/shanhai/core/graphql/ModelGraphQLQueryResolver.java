@@ -8,21 +8,37 @@ import cn.asany.shanhai.core.graphql.inputs.ModelFilter;
 import cn.asany.shanhai.core.graphql.types.ModelConnection;
 import cn.asany.shanhai.core.service.ModelService;
 import graphql.kickstart.tools.GraphQLQueryResolver;
+import java.util.List;
 import java.util.Optional;
 import org.jfantasy.framework.dao.OrderBy;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.graphql.util.Kit;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-/** @author limaofeng */
+/**
+ * 模型
+ *
+ * @author limaofeng
+ */
 @Component
 public class ModelGraphQLQueryResolver implements GraphQLQueryResolver {
 
-  @Autowired private ModelService modelService;
+  private final ModelService modelService;
 
-  public ModelConnection models(ModelFilter filter, int page, int pageSize, OrderBy orderBy) {
+  public ModelGraphQLQueryResolver(ModelService modelService) {
+    this.modelService = modelService;
+  }
+
+  public List<Model> models(ModelFilter filter, int first, int offset, OrderBy orderBy) {
+    Pager.PagerBuilder<Model> pagerBuilder = Pager.builder();
+    Pager<Model> pager = pagerBuilder.first(first).pageSize(offset).orderBy(orderBy).build();
+    filter = ObjectUtil.defaultValue(filter, new ModelFilter());
+    return modelService.findPager(pager, filter.build()).getPageItems();
+  }
+
+  public ModelConnection modelsConnection(
+      ModelFilter filter, int page, int pageSize, OrderBy orderBy) {
     Pager<Model> pager = new Pager<>(page, pageSize, orderBy);
     filter = ObjectUtil.defaultValue(filter, new ModelFilter());
     return Kit.connection(modelService.findPager(pager, filter.build()), ModelConnection.class);

@@ -19,7 +19,7 @@ public class UploadOptions {
   /** 用户定义的文件名称（非上传文件的名称） */
   private String name;
   /** 上传空间 */
-  private String space;
+  @Builder.Default private String space = "Default";
   /** 插件 */
   private String plugin;
   /** 文件名策略 */
