@@ -13,20 +13,64 @@ type MinIOProperties implements StorageProperties {
   useSSL: Boolean
 }
 
-type Storage {
+type OSSProperties implements StorageProperties {
   id: ID
-  name: String
-  properties: StorageProperties
+  endpoint: String
+  accessKeyId: String
+  accessKeySecret: String
+  bucketName: String
 }
 
-type FileDetails {
+enum StorageType {
+  # 阿里开放存储服务
+  OSS
+  # FTP文件系统
+  FTP
+  # 上传文件存储
+  MINIO
+}
+
+type Storage implements BaseEntity {
+  id: ID
+  # 名称
+  name: String
+  # 类型
+  type: StorageType
+  # 描述
+  description: String
+  # 文件总数
+  totalFiles: Int
+  # 存储用量 (单位 KB)
+  usage: Number @fileSize(unit: "KB")
+  # 限额 (单位 MB)
+  quota: Number @fileSize(unit: "MB")
+  # 配置属性
+  properties: StorageProperties
+  # 创建时间
+  createdAt: Date @dateFormat
+  # 创建人
+  createdBy: ID
+  # 更新时间
+  updatedAt: Date @dateFormat
+  # 更新人
+  updatedBy: ID
+}
+
+type FileDetails implements BaseEntity {
   id: ID
   name: String
   path: String
   directory: Boolean
   size: Int
   mimeType: String
-  createdAt: Date
+  # 创建时间
+  createdAt: Date @dateFormat
+  # 创建人
+  createdBy: ID
+  # 更新时间
+  updatedAt: Date @dateFormat
+  # 更新人
+  updatedBy: ID
 }
 
 input UploadOptions {
@@ -49,6 +93,8 @@ input UploadOptions {
 extend type Query {
   # 存储器
   storages: [Storage]
+  # 存储器
+  storage(id: ID!): Storage
   # 文件详情
   file(id: ID): FileDetails
 }

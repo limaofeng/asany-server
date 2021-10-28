@@ -84,7 +84,7 @@ public class ArticleGraphQLMutationResolver implements GraphQLMutationResolver {
    * @param input
    * @return
    */
-  public ArticleChannel createChannel(ArticleChannelInput input) {
+  public ArticleChannel createArticleChannel(ArticleChannelInput input) {
     ArticleChannel channel = articleChannelConverter.toChannel(input);
     Long parent = input.getParent();
     if (parent != null) {
@@ -109,16 +109,9 @@ public class ArticleGraphQLMutationResolver implements GraphQLMutationResolver {
    * @param input
    * @return
    */
-  public ArticleChannel updateChannel(Long id, Boolean merge, ArticleChannelInput input) {
+  public ArticleChannel updateArticleChannel(Long id, Boolean merge, ArticleChannelInput input) {
     ArticleChannel channel = articleChannelConverter.toChannel(input);
-    channel = articleChannelService.update(id, merge, channel);
-    // 保存权限
-    //    if (input.getPermissions() != null) {
-    //      channel1.setPermissions(
-    //          securityGrpcInvoke.updateGrantPermissions(
-    //              "ArticleChannel", channel1.getId(), input.getPermissions()));
-    //    }
-    return channel;
+    return articleChannelService.update(id, merge, channel);
   }
 
   /**
@@ -127,7 +120,7 @@ public class ArticleGraphQLMutationResolver implements GraphQLMutationResolver {
    * @param id
    * @return
    */
-  public Boolean removeChannel(Long id) {
+  public Boolean deleteArticleChannel(Long id) {
     return articleTagService.delete(id);
   }
 

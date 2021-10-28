@@ -250,4 +250,8 @@ public class FileService {
     }
     return absolutePath;
   }
+
+  public long count(List<PropertyFilter> filters) {
+    return this.fileDetailDao.count(filters);
+  }
 }

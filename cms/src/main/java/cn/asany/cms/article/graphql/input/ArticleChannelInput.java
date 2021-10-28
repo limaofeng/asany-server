@@ -18,10 +18,9 @@ public class ArticleChannelInput {
   private String name;
   private String description;
   private String slug;
-  private Integer sort;
+  private Integer index;
   private List<PermissionInput> permissions;
   private Long parent;
-  private String organization;
   private FileObject cover;
   private PromptType promptType;
   private Boolean isCommentApprove;

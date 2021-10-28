@@ -49,6 +49,9 @@ public class StorageConfig extends BaseBusEntity {
   /** 描述 */
   @Column(name = "DESCRIPTION", length = 250)
   private String description;
+  /** 单位 MB */
+  @Column(name = "QUOTA")
+  private Long quota;
   /** 存放配置参数 */
   @Column(name = "CONFIG_STORE", columnDefinition = "JSON")
   private String details;

@@ -1,7 +1,6 @@
 package cn.asany.storage.data.graphql.directive;
 
 import cn.asany.storage.api.FileObject;
-import graphql.Scalars;
 import graphql.schema.*;
 import graphql.schema.idl.SchemaDirectiveWiring;
 import graphql.schema.idl.SchemaDirectiveWiringEnvironment;
@@ -49,7 +48,6 @@ public class FileObjectFormatDirective implements SchemaDirectiveWiring {
     GraphQLArgument.Builder formatArgument =
         GraphQLArgument.newArgument()
             .name(FORMAT_NAME)
-            .type(Scalars.GraphQLString)
             .type(
                 GraphQLEnumType.newEnum()
                     .name(DIRECTIVE_NAME)

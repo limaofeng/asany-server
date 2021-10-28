@@ -80,5 +80,7 @@ routes:
       - path: /cms/articles/:id/edit
         component: cn.asany.ui.admin.cms.ArticleEdit
         layout: false
+      - path: /storages/:id
+        component: cn.asany.ui.admin.storage.FileManager
       - path: /
         component: cn.asany.ui.admin.Home

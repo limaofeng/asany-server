@@ -4,10 +4,13 @@ import cn.asany.cms.article.bean.ArticleChannel;
 import cn.asany.cms.article.dao.ArticleChannelDao;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
+import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
+import org.jfantasy.framework.util.PinyinUtils;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.common.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +19,11 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * 文章栏目服务
+ *
+ * @author limaofeng
+ */
 @Slf4j
 @Service
 @Transactional
@@ -90,7 +98,7 @@ public class ArticleChannelService {
                 item.setPath(parent.getPath() + item.getId() + ArticleChannel.SEPARATOR);
               }
               item.setParent(parent);
-              item.setIndex(index);
+              item.setIndex(index + 1);
               item.setLevel(level);
 
               return item;
@@ -118,52 +126,148 @@ public class ArticleChannelService {
    * @return
    */
   public ArticleChannel save(ArticleChannel channel) {
-    channel.setSlug(
-        generateCode(
-            channel.getId(),
-            StringUtil.defaultValue(channel.getSlug(), pinyin(channel.getName())),
-            channel.getName()));
+    Integer index = channel.getIndex();
     channel = channelDao.save(channel);
-    channel.setPath(
-        channel.getParent() == null
-            ? channel.getId() + ArticleChannel.SEPARATOR
-            : channel.getParent().getPath() + channel.getId() + ArticleChannel.SEPARATOR);
-    return channel;
+
+    boolean isRoot = channel.getParent() == null;
+
+    List<ArticleChannel> _siblings = siblings(channel.getParent(), channel);
+    if (_siblings.isEmpty()) {
+      channel.setIndex(1);
+    } else if (index == null) {
+      channel.setIndex(_siblings.get(_siblings.size() - 1).getIndex() + 1);
+    } else {
+      int maxIndex = _siblings.get(_siblings.size() - 1).getIndex() + 1;
+      index = Math.min(maxIndex, index);
+      channel.setIndex(index);
+      rearrange(_siblings, index, Integer.MAX_VALUE, true);
+    }
+
+    if (isRoot) {
+      channel.setPath(channel.getId() + ArticleChannel.SEPARATOR);
+    } else {
+      channel.setPath(channel.getParent().getPath() + channel.getId() + ArticleChannel.SEPARATOR);
+    }
+
+    return this.channelDao.update(channel);
   }
 
-  // 修改栏目
-  public ArticleChannel update(Long channelId, boolean merge, ArticleChannel channel) {
-    channel.setId(channelId);
-    channel.setSlug(
-        generateCode(
-            channel.getId(),
-            StringUtil.defaultValue(channel.getSlug(), pinyin(channel.getName())),
-            channel.getName()));
+  /**
+   * 修改栏目
+   *
+   * @param id
+   * @param merge
+   * @param channel
+   * @return
+   */
+  public ArticleChannel update(Long id, boolean merge, ArticleChannel channel) {
+    channel.setId(id);
+    ArticleChannel prev = this.channelDao.getById(id);
+
+    int sourceIndex = prev.getIndex();
+    Integer index = channel.getIndex();
+
+    ArticleChannel sourceParent = prev.getParent();
+    ArticleChannel parent = channel.getParent();
+
+    boolean notRoot = parent != null && !parent.getId().equals(0L);
+    if (notRoot) {
+      parent = channelDao.getById(parent.getId());
+    }
+
+    boolean _isChangeParent = isChangeParent(parent, sourceParent);
+
+    channel.setParent(sourceParent);
+    channel.setIndex(sourceIndex);
+
     channel = channelDao.update(channel, merge);
-    channel.setPath(
-        channel.getParent() == null
-            ? channel.getId() + ArticleChannel.SEPARATOR
-            : channel.getParent().getPath() + channel.getId() + ArticleChannel.SEPARATOR);
-    return channel;
+
+    if (_isChangeParent) {
+      boolean isRoot = parent.getId().equals(0L);
+
+      rearrange(siblings(sourceParent, channel), sourceIndex, Integer.MAX_VALUE, false);
+
+      List<ArticleChannel> _siblings = siblings(parent, channel);
+      int maxIndex = _siblings.get(_siblings.size() - 1).getIndex() + 1;
+      channel.setParent(isRoot ? null : parent);
+      channel.setLevel(isRoot ? 1 : parent.getLevel() + 1);
+      if (isRoot) {
+        channel.setPath(channel.getId() + ArticleChannel.SEPARATOR);
+      } else {
+        channel.setPath(parent.getPath() + channel.getId() + ArticleChannel.SEPARATOR);
+      }
+
+      if (_siblings.isEmpty()) {
+        channel.setIndex(1);
+      } else if (index == null) {
+        channel.setIndex(maxIndex);
+      } else {
+        index = Math.min(maxIndex, index);
+        channel.setIndex(index);
+        rearrange(_siblings, index, Integer.MAX_VALUE, true);
+      }
+    } else if (index != null && sourceIndex != index) {
+      List<ArticleChannel> _siblings = siblings(sourceParent, channel);
+      int maxIndex = _siblings.get(_siblings.size() - 1).getIndex() + 1;
+      index = Math.min(maxIndex, index);
+
+      int startIndex = Math.min(sourceIndex, index);
+      int endIndex = Math.max(sourceIndex, index);
+
+      channel.setIndex(index);
+      rearrange(_siblings, startIndex, endIndex, sourceIndex > index);
+    }
+    return this.channelDao.update(channel);
+  }
+
+  private boolean isChangeParent(ArticleChannel currentParent, ArticleChannel sourceParent) {
+    if (currentParent == null) {
+      return false;
+    }
+    currentParent = currentParent.getId().equals(0L) ? null : currentParent;
+    return currentParent != sourceParent;
+  }
+
+  private List<ArticleChannel> siblings(ArticleChannel parent, ArticleChannel current) {
+    PropertyFilterBuilder builder = PropertyFilter.builder().notEqual("id", current.getId());
+    if (parent == null || parent.getId().equals(0L)) {
+      builder.isNull("parent");
+    } else {
+      builder.equal("parent.id", parent.getId());
+    }
+    return ObjectUtil.sort(channelDao.findAll(builder.build()), "index", "asc");
+  }
+
+  /**
+   * 重新排序
+   *
+   * @param channels 兄弟节点（不包含当前节点）
+   * @param startIndex 开始位置
+   * @param endIndex 结束位置
+   * @param back true ? index + 1 : index -1;
+   */
+  public void rearrange(List<ArticleChannel> channels, int startIndex, int endIndex, boolean back) {
+    List<ArticleChannel> neighbors =
+        channels.stream()
+            .filter(item -> item.getIndex() >= startIndex && item.getIndex() <= endIndex)
+            .collect(Collectors.toList());
+    for (ArticleChannel item : neighbors) {
+      item.setIndex(item.getIndex() + (back ? 1 : -1));
+    }
+    this.channelDao.updateAllInBatch(neighbors);
   }
 
   private String pinyin(String name) {
-    //        try {
-    //            return PinyinUtils.getAll(name, "-");
-    //        } catch (PinyinException e) {
-    //            Log.error(e.getMessage(), e);
-    //            return null;
-    //        }
-    return null;
+    return PinyinUtils.getAll(name, "-");
   }
 
   private String generateCode(Long channelId, String code, String name) {
-    Optional<ArticleChannel> prevchannel =
-        channelDao.findOne(Example.of(ArticleChannel.builder().slug(code).build()));
-    if (!prevchannel.isPresent() || prevchannel.get().getId().equals(channelId)) {
+    String slug = StringUtil.defaultValue(code, pinyin(name));
+    Optional<ArticleChannel> prev = channelDao.findOneBy("slug", slug);
+    if (!prev.isPresent() || prev.get().getId().equals(channelId)) {
       return code;
     }
-    return generateCode(channelId, code + "-0", name);
+    return generateCode(channelId, slug + "-0", name);
   }
 
   /**

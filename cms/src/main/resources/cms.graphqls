@@ -20,10 +20,6 @@ input ArticleChannelCreateInput {
   parent: ID
   # 排序
   index: Int
-  # 组织
-  organization: ID!
-  # 授予权限
-  #    permissions: [PermissionInput]
   # 元数据
   meta: MetaData
 }
@@ -47,8 +43,6 @@ input ArticleChannelUpdateInput {
   index: Int
   # 上级栏目
   parent: ID
-  # 组织
-  organization: ID!
   # 授予权限
   #    permissions: [PermissionInput]
   # 元数据
@@ -386,8 +380,6 @@ input ArticleUpdateInput {
   channels: [ID]
   # 发布日期
   publishedAt: String
-  # 组织
-  organization: ID
   # 授予权限
   permissions: [PermissionInput]
   # 附件
@@ -408,12 +400,10 @@ input ArticleUpdateInput {
 input ArticleTagUpdateInput {
   # 标签名称
   name: String!
-  # 标签code
+  # 唯一编码
   slug: String
   # 标签图
   cover: FileObject
-  # 组织
-  organization: ID!
   # 描述
   description: String
   # 排序
@@ -423,14 +413,12 @@ input ArticleTagUpdateInput {
 input ArticleTagCreateInput {
   # 标签名称
   name: String!
-  # 标签code
+  # 唯一编码
   slug: String
   # 标签图
   cover: FileObject
   # 描述
   description: String
-  # 组织
-  organization: ID!
   # 排序
   index: Int
 }
@@ -627,15 +615,15 @@ type Mutation {
   # 批量删除
   deleteManyArticles(ids: [ID]!): Int
   # 添加栏目
-  createChannel(input: ArticleChannelCreateInput!): ArticleChannel
+  createArticleChannel(input: ArticleChannelCreateInput!): ArticleChannel
   # 编辑栏目
-  updateChannel(
+  updateArticleChannel(
     id: ID!
     merge: Boolean = true
     input: ArticleChannelUpdateInput!
   ): ArticleChannel
   # 删除栏目
-  removeChannel(id: ID!): Boolean
+  deleteArticleChannel(id: ID!): Boolean
   # 添加标签
   createArticleTag(input: ArticleTagCreateInput): ArticleTag
   # 更新标签

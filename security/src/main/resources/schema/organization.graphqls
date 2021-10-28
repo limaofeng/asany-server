@@ -789,18 +789,6 @@ type Address {
   postalCode: String
 }
 
-# 页信息
-type PageInfo {
-  # 是否存在下一页
-  hasNextPage: Boolean
-  # 是否存在上一页
-  hasPreviousPage: Boolean
-  # 数据页第一个游标
-  startCursor: String
-  # 数据页最后一个游标
-  endCursor: String
-}
-
 extend type Query {
   # 组织•组织列表
   organizations(filter: OrganizationFilter): [Organization]

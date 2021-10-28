@@ -5,6 +5,7 @@ import cn.asany.storage.api.StorageBuilder;
 import cn.asany.storage.core.DefaultStorageResolver;
 import cn.asany.storage.core.StorageResolver;
 import cn.asany.storage.core.engine.minio.MinIOStorageConfig;
+import cn.asany.storage.core.engine.oss.OSSStorageConfig;
 import cn.asany.storage.data.graphql.directive.FileObjectFormatDirective;
 import cn.asany.storage.data.graphql.scalar.FileObjectCoercing;
 import cn.asany.storage.data.web.FileFilter;
@@ -63,6 +64,7 @@ public class StorageAutoConfiguration {
     return dictionary -> {
       dictionary.add("StorageProperties", IStorageConfig.class);
       dictionary.add("MinIOProperties", MinIOStorageConfig.class);
+      dictionary.add("OSSProperties", OSSStorageConfig.class);
     };
   }
 

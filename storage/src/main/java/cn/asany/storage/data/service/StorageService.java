@@ -2,28 +2,37 @@ package cn.asany.storage.data.service;
 
 import cn.asany.storage.data.bean.StorageConfig;
 import cn.asany.storage.data.bean.enums.StorageType;
+import cn.asany.storage.data.dao.FileDetailDao;
 import cn.asany.storage.data.dao.StorageConfigDao;
 import java.util.List;
 import java.util.Map;
-import org.jfantasy.framework.spring.SpringBeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
+import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/** @author limaofeng */
+/**
+ * 存储服务
+ *
+ * @author limaofeng
+ */
 @Service
 @Transactional
 public class StorageService {
 
-  @Autowired private StorageConfigDao storageConfigDao;
+  private final StorageConfigDao storageConfigDao;
+  private final FileDetailDao fileDetailDao;
+
+  public StorageService(StorageConfigDao storageConfigDao, FileDetailDao fileDetailDao) {
+    this.storageConfigDao = storageConfigDao;
+    this.fileDetailDao = fileDetailDao;
+  }
 
   public List<StorageConfig> findAll() {
     return storageConfigDao.findAll();
   }
 
   public StorageConfig get(String id) {
-    return this.storageConfigDao.getOne(id);
+    return this.storageConfigDao.getById(id);
   }
 
   public StorageConfig save(StorageConfig storage) {
@@ -53,11 +62,15 @@ public class StorageService {
     }
   }
 
-  public List<StorageConfig> listFileManager() {
-    return this.storageConfigDao.findAll(Sort.by("id").ascending());
+  public Optional<StorageConfig> findById(String id) {
+    return this.storageConfigDao.findById(id);
   }
 
-  public static List<StorageConfig> getFileManagers() {
-    return SpringBeanUtils.getBeanByType(StorageService.class).listFileManager();
+  public long totalFiles(String id) {
+    return this.storageConfigDao.totalFiles(id);
+  }
+
+  public long usage(String id) {
+    return this.storageConfigDao.usage(id);
   }
 }
