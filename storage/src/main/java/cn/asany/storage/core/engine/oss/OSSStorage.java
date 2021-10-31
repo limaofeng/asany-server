@@ -15,22 +15,34 @@ import org.jfantasy.framework.util.common.StringUtil;
 import org.jfantasy.framework.util.common.file.FileUtil;
 import org.jfantasy.framework.util.regexp.RegexpUtil;
 
+/**
+ * OSS 存储器
+ *
+ * @author limaofeng
+ */
 public class OSSStorage implements Storage {
 
   private final String accessKeyId;
   private final String accessKeySecret;
+  private final String id;
   private String bucketName;
   private String endpoint;
   private OSSClient client;
 
   public OSSStorage(
-      String endpoint, String accessKeyId, String accessKeySecret, String bucketName) {
+      String id, String endpoint, String accessKeyId, String accessKeySecret, String bucketName) {
+    this.id = id;
     this.endpoint = endpoint;
     this.accessKeyId = accessKeyId;
     this.accessKeySecret = accessKeySecret;
     this.bucketName = bucketName;
     this.endpoint = endpoint;
     this.client = new OSSClient(this.endpoint, this.accessKeyId, this.accessKeySecret);
+  }
+
+  @Override
+  public String getId() {
+    return this.id;
   }
 
   @Override
@@ -98,7 +110,7 @@ public class OSSStorage implements Storage {
 
   @Override
   public List<FileObject> listFiles() {
-    return this.listFiles("/");
+    return this.listFiles(FileObject.ROOT_PATH);
   }
 
   @Override
@@ -109,7 +121,7 @@ public class OSSStorage implements Storage {
 
   @Override
   public List<FileObject> listFiles(FileItemSelector selector) {
-    return this.listFiles("/", selector);
+    return this.listFiles(FileObject.ROOT_PATH, selector);
   }
 
   @Override
@@ -122,7 +134,7 @@ public class OSSStorage implements Storage {
 
   @Override
   public List<FileObject> listFiles(FileItemFilter filter) {
-    return this.listFiles("/", filter);
+    return this.listFiles(FileObject.ROOT_PATH, filter);
   }
 
   @Override
@@ -137,8 +149,8 @@ public class OSSStorage implements Storage {
   }
 
   private FileObject retrieveFileItem(OSSObjectSummary objectSummary) {
-    String absolutePath = "/" + objectSummary.getKey();
-    if (absolutePath.endsWith("/")) {
+    String absolutePath = FileObject.ROOT_PATH + objectSummary.getKey();
+    if (absolutePath.endsWith(FileObject.SEPARATOR)) {
       return new OSSFileObject(
           this, absolutePath, client.getObjectMetadata(bucketName, objectSummary.getKey()));
     } else {
@@ -200,20 +212,20 @@ public class OSSStorage implements Storage {
 
   public class OSSFileObject extends AbstractFileObject {
     private String ossAbsolutePath;
-    private OSSStorage fileManager;
+    private OSSStorage storage;
 
     protected OSSFileObject(
-        OSSStorage fileManager, String absolutePath, ObjectMetadata objectMetadata) {
+        OSSStorage storage, String absolutePath, ObjectMetadata objectMetadata) {
       super(
           absolutePath,
           new FileObjectMetadata(
               objectMetadata.getRawMetadata(), objectMetadata.getUserMetadata()));
       this.ossAbsolutePath = RegexpUtil.replace(absolutePath, "^/", "");
-      this.fileManager = fileManager;
+      this.storage = storage;
     }
 
     protected OSSFileObject(
-        OSSStorage fileManager,
+        OSSStorage storage,
         String absolutePath,
         long size,
         Date lastModified,
@@ -225,12 +237,15 @@ public class OSSStorage implements Storage {
           new FileObjectMetadata(
               objectMetadata.getRawMetadata(), objectMetadata.getUserMetadata()));
       this.ossAbsolutePath = RegexpUtil.replace(absolutePath, "^/", "");
-      this.fileManager = fileManager;
+      this.storage = storage;
     }
 
     @Override
     public FileObject getParentFile() {
-      return this.fileManager.retrieveFileItem(
+      if (FileObject.ROOT_PATH.equals(this.getPath())) {
+        return null;
+      }
+      return this.storage.retrieveFileItem(
           RegexpUtil.replace(this.getPath(), "[^/]+[/]{0,1}$", ""));
     }
 
@@ -251,13 +266,13 @@ public class OSSStorage implements Storage {
         if (commonPrefix.equals(ossAbsolutePath)) {
           continue;
         }
-        fileObjects.add(this.fileManager.retrieveFileItem("/" + commonPrefix));
+        fileObjects.add(this.storage.retrieveFileItem(FileObject.ROOT_PATH + commonPrefix));
       }
       for (OSSObjectSummary objectSummary : listing.getObjectSummaries()) {
         if (objectSummary.getKey().equals(ossAbsolutePath)) {
           continue;
         }
-        fileObjects.add(this.fileManager.retrieveFileItem(objectSummary));
+        fileObjects.add(this.storage.retrieveFileItem(objectSummary));
       }
       return fileObjects;
     }
@@ -282,6 +297,11 @@ public class OSSStorage implements Storage {
         return Collections.emptyList();
       }
       return FileObject.Util.flat(this.listFiles(), selector);
+    }
+
+    @Override
+    public Storage getStorage() {
+      return this.storage;
     }
 
     @Override

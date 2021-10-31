@@ -3,9 +3,9 @@ directive @dateFormat on FIELD_DEFINITION
 
 scalar JSON
 scalar Date
+scalar File
 scalar Number
 scalar OrderBy
-scalar FileObject
 
 enum FileSizeUnit {
   bytes

@@ -7,6 +7,11 @@ import java.util.Date;
 import org.jfantasy.framework.util.common.StringUtil;
 import org.jfantasy.framework.util.regexp.RegexpUtil;
 
+/**
+ * 抽象文件对象
+ *
+ * @author limaofeng
+ */
 public abstract class AbstractFileObject implements FileObject {
   private String absolutePath;
   private String name;

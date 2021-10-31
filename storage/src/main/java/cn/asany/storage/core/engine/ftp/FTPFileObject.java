@@ -1,9 +1,6 @@
 package cn.asany.storage.core.engine.ftp;
 
-import cn.asany.storage.api.FileItemFilter;
-import cn.asany.storage.api.FileItemSelector;
-import cn.asany.storage.api.FileObject;
-import cn.asany.storage.api.FileObjectMetadata;
+import cn.asany.storage.api.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,15 +20,15 @@ import org.jfantasy.framework.util.regexp.RegexpUtil;
  */
 @Slf4j
 public class FTPFileObject implements FileObject {
-  private final FTPStorage fileManager;
+  private final FTPStorage storage;
   private final String parentPath;
   private final String absolutePath;
   private FTPFile ftpFile;
 
-  public FTPFileObject(final FTPFile ftpFile, String parentPath, FTPStorage fileManager) {
+  public FTPFileObject(final FTPFile ftpFile, String parentPath, FTPStorage storage) {
     this.ftpFile = ftpFile;
     this.parentPath = parentPath;
-    this.fileManager = fileManager;
+    this.storage = storage;
     this.absolutePath =
         (parentPath.endsWith("/") ? parentPath : (parentPath + "/"))
             + (".".equals(ftpFile.getName()) ? "" : ftpFile.getName());
@@ -39,7 +36,7 @@ public class FTPFileObject implements FileObject {
 
   public FTPFileObject(String absolutePath, FTPStorage fileManager) {
     this.absolutePath = absolutePath;
-    this.fileManager = fileManager;
+    this.storage = fileManager;
     this.parentPath = RegexpUtil.replace(absolutePath, "[^/]+[/][^/]*$", "");
   }
 
@@ -54,6 +51,11 @@ public class FTPFileObject implements FileObject {
   @Override
   public FileObjectMetadata getMetadata() {
     return null;
+  }
+
+  @Override
+  public Storage getStorage() {
+    return this.storage;
   }
 
   @Override
@@ -77,11 +79,11 @@ public class FTPFileObject implements FileObject {
       if (!this.isDirectory()) {
         return fileObjects;
       }
-      for (FTPFile ftpFile : fileManager.ftpService.listFiles(this.getPath() + "/")) {
+      for (FTPFile ftpFile : storage.ftpService.listFiles(this.getPath() + "/")) {
         if (RegexpUtil.find(ftpFile.getName(), "^[.]{1,}$")) {
           continue;
         }
-        fileObjects.add(fileManager.retrieveFileItem(ftpFile, this.getPath()));
+        fileObjects.add(storage.retrieveFileItem(ftpFile, this.getPath()));
       }
       return fileObjects;
     } catch (IOException e) {
@@ -106,7 +108,9 @@ public class FTPFileObject implements FileObject {
 
   @Override
   public FileObject getParentFile() {
-    return "/".equals(this.getPath()) ? null : new FTPFileObject(this.parentPath, fileManager);
+    return FileObject.ROOT_PATH.equals(this.getPath())
+        ? null
+        : new FTPFileObject(this.parentPath, storage);
   }
 
   @Override
@@ -134,15 +138,14 @@ public class FTPFileObject implements FileObject {
     if (this.isDirectory()) {
       throw new IgnoreException("当前对象为一个目录,不能获取 InputStream ");
     }
-    return fileManager.ftpService.getInputStream(getPath());
+    return storage.ftpService.getInputStream(getPath());
   }
 
   @JsonIgnore
   public FTPFile getFtpFile() {
     if (ftpFile == null) {
       try {
-        ftpFile =
-            fileManager.ftpService.listFiles(RegexpUtil.replace(this.absolutePath, "/$", ""))[0];
+        ftpFile = storage.ftpService.listFiles(RegexpUtil.replace(this.absolutePath, "/$", ""))[0];
       } catch (IOException e) {
         throw new IgnoreException(e.getMessage(), e);
       }

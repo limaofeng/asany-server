@@ -50,7 +50,7 @@ public class FileService {
       String description) {
     FileDetail fileDetail = new FileDetail();
     fileDetail.setPath(path);
-    fileDetail.setStorage(StorageConfig.builder().id(storage).build());
+    fileDetail.setStorageConfig(StorageConfig.builder().id(storage).build());
     fileDetail.setName(fileName);
     fileDetail.setMimeType(contentType);
     fileDetail.setLength(length);
@@ -73,7 +73,7 @@ public class FileService {
     return this.folderDao.findOne(
         PropertyFilter.builder()
             .equal("path", absolutePath)
-            .equal("storage.id", storageId)
+            .equal("storageConfig.id", storageId)
             .build());
   }
 
@@ -90,7 +90,10 @@ public class FileService {
   public Folder createFolder(String path, String storage) {
     Optional<Folder> optional =
         this.folderDao.findOne(
-            PropertyFilter.builder().equal("path", path).equal("storage.id", storage).build());
+            PropertyFilter.builder()
+                .equal("path", path)
+                .equal("storageConfig.id", storage)
+                .build());
     if (optional.isPresent()) {
       return optional.get();
     }
@@ -129,7 +132,7 @@ public class FileService {
   private Folder createRootFolder(String absolutePath, String managerId) {
     Folder folder = new Folder();
     folder.setPath(absolutePath);
-    folder.setStorage(managerId);
+    folder.setStorageConfig(StorageConfig.builder().id(managerId).build());
     folder.setName(RegexpUtil.parseGroup(absolutePath, "([^/]+)\\/$", 1));
     this.folderDao.save(folder);
     return folder;
@@ -146,7 +149,7 @@ public class FileService {
   private Folder createFolder(String absolutePath, Folder parent, String managerId) {
     Folder folder = new Folder();
     folder.setPath(absolutePath);
-    folder.setStorage(managerId);
+    folder.setStorageConfig(StorageConfig.builder().id(managerId).build());
     folder.setName(RegexpUtil.parseGroup(absolutePath, "([^/]+)\\/$", 1));
     if (ObjectUtil.isNotNull(parent)) {
       folder.setParentFolder(parent);
@@ -163,7 +166,7 @@ public class FileService {
     return this.folderDao.findAll(
         PropertyFilter.builder()
             .equal("parentFolder.path", path)
-            .equal("storage.id", storage)
+            .equal("storageConfig.id", storage)
             .build(),
         Sort.by(orderBy));
   }
@@ -171,7 +174,10 @@ public class FileService {
   @Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
   public List<FileDetail> listFileDetail(String path, String storageId, String orderBy) {
     return this.fileDetailDao.findAll(
-        PropertyFilter.builder().equal("folder.path", path).equal("storage", storageId).build(),
+        PropertyFilter.builder()
+            .equal("folder.path", path)
+            .equal("storageConfig.id", storageId)
+            .build(),
         Sort.by(orderBy));
   }
 
@@ -179,7 +185,10 @@ public class FileService {
   public FileDetail getFileDetailByMd5(String md5, String storageId) {
     List<FileDetail> fileDetails =
         this.fileDetailDao.findAll(
-            PropertyFilter.builder().equal("md5", md5).equal("storage", storageId).build());
+            PropertyFilter.builder()
+                .equal("md5", md5)
+                .equal("storageConfig.id", storageId)
+                .build());
     if (fileDetails.isEmpty()) {
       return null;
     }

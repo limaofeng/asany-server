@@ -1,9 +1,6 @@
 package cn.asany.storage.core.engine.minio;
 
-import cn.asany.storage.api.FileItemFilter;
-import cn.asany.storage.api.FileItemSelector;
-import cn.asany.storage.api.FileObject;
-import cn.asany.storage.api.FileObjectMetadata;
+import cn.asany.storage.api.*;
 import io.minio.ListObjectsArgs;
 import io.minio.Result;
 import io.minio.messages.Item;
@@ -98,6 +95,11 @@ public class MinIOFileObject implements FileObject {
   @Override
   public FileObjectMetadata getMetadata() {
     return this.metadata;
+  }
+
+  @Override
+  public Storage getStorage() {
+    return this.storage;
   }
 
   @Override

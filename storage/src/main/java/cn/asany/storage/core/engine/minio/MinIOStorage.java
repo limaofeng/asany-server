@@ -27,14 +27,17 @@ public class MinIOStorage implements Storage {
   private final String accessKeySecret;
   protected final String bucketName;
   private final boolean useSSL;
+  private final String id;
   protected MinioClient client;
 
   public MinIOStorage(
+      String id,
       String endpoint,
       String accessKeyId,
       String accessKeySecret,
       String bucketName,
       boolean useSSL) {
+    this.id = id;
     this.accessKeyId = accessKeyId;
     this.accessKeySecret = accessKeySecret;
     this.bucketName = bucketName;
@@ -203,5 +206,10 @@ public class MinIOStorage implements Storage {
 
   private String path(String remotePath) {
     return RegexpUtil.replace(remotePath, "^/", "");
+  }
+
+  @Override
+  public String getId() {
+    return id;
   }
 }

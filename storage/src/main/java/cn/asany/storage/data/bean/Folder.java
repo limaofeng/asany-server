@@ -59,7 +59,7 @@ public class Folder extends BaseBusEntity {
       updatable = false,
       foreignKey = @ForeignKey(name = "FK_STORAGE_FOLDER_STORAGE"))
   @ManyToOne(fetch = FetchType.LAZY)
-  private StorageConfig storage;
+  private StorageConfig storageConfig;
   /** 获取子目录列表 */
   @OneToMany(mappedBy = "parentFolder", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
   @OrderBy("createdAt ASC")
@@ -67,12 +67,4 @@ public class Folder extends BaseBusEntity {
   /** 附件对应的集合 */
   @OneToMany(mappedBy = "folder", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
   private List<FileDetail> fileObjects;
-
-  public void setStorage(String storageId) {
-    this.setStorage(StorageConfig.builder().id(storageId).build());
-  }
-
-  public void setStorage(StorageConfig storage) {
-    this.storage = storage;
-  }
 }

@@ -8,7 +8,11 @@ import java.util.Date;
 import java.util.List;
 import lombok.Getter;
 
-/** @author limaofeng */
+/**
+ * 文件对象
+ *
+ * @author limaofeng
+ */
 public class UploadFileObject implements FileObject {
   @Getter private File file;
   @Getter private String name;
@@ -73,5 +77,10 @@ public class UploadFileObject implements FileObject {
   @Override
   public List<FileObject> listFiles(FileItemSelector selector) {
     throw new RuntimeException("UploadFileObject 不允许访问该方法");
+  }
+
+  @Override
+  public Storage getStorage() {
+    return null;
   }
 }

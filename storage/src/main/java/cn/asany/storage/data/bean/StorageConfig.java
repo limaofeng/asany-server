@@ -56,11 +56,11 @@ public class StorageConfig extends BaseBusEntity {
   @Column(name = "CONFIG_STORE", columnDefinition = "JSON")
   private String details;
   /** 文件管理器对应的目录 */
-  @OneToMany(mappedBy = "storage", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+  @OneToMany(mappedBy = "storageConfig", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
   private List<Folder> folders;
 
   /** 文件管理器对应的文件 */
-  @OneToMany(mappedBy = "storage", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+  @OneToMany(mappedBy = "storageConfig", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
   private List<FileDetail> fileDetails;
 
   @Transient

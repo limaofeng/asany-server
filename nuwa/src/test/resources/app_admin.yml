@@ -82,5 +82,10 @@ routes:
         layout: false
       - path: /storages/:id
         component: cn.asany.ui.admin.storage.FileManager
+        routes:
+          - path: /storages/:id
+            component: cn.asany.ui.admin.storage.ListFiles
+          - path: /storages/:id/*
+            component: cn.asany.ui.admin.storage.ListFiles
       - path: /
         component: cn.asany.ui.admin.Home

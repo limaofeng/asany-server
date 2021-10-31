@@ -6,8 +6,8 @@ import cn.asany.storage.core.DefaultStorageResolver;
 import cn.asany.storage.core.StorageResolver;
 import cn.asany.storage.core.engine.minio.MinIOStorageConfig;
 import cn.asany.storage.core.engine.oss.OSSStorageConfig;
-import cn.asany.storage.data.graphql.directive.FileObjectFormatDirective;
-import cn.asany.storage.data.graphql.scalar.FileObjectCoercing;
+import cn.asany.storage.data.graphql.directive.FileFormatDirective;
+import cn.asany.storage.data.graphql.scalar.FileCoercing;
 import cn.asany.storage.data.web.FileFilter;
 import graphql.kickstart.servlet.apollo.ApolloScalars;
 import graphql.kickstart.tools.boot.SchemaDirective;
@@ -41,16 +41,16 @@ public class StorageAutoConfiguration {
   }
 
   @Bean
-  public FileObjectCoercing fileObjectCoercing() {
-    return new FileObjectCoercing();
+  public FileCoercing fileCoercing() {
+    return new FileCoercing();
   }
 
   @Bean
   public GraphQLScalarType fileByScalar() {
     return GraphQLScalarType.newScalar()
-        .name("FileObject")
-        .description("文件对象")
-        .coercing(fileObjectCoercing())
+        .name("File")
+        .description("文件")
+        .coercing(fileCoercing())
         .build();
   }
 
@@ -69,8 +69,8 @@ public class StorageAutoConfiguration {
   }
 
   @Bean
-  public SchemaDirective fileObjectFormatDirective() {
-    return new SchemaDirective("fileObjectFormat", new FileObjectFormatDirective());
+  public SchemaDirective fileFormatDirective() {
+    return new SchemaDirective("fileFormat", new FileFormatDirective());
   }
 
   @Bean

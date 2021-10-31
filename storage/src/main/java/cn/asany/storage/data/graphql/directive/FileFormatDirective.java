@@ -21,8 +21,8 @@ import org.jfantasy.framework.util.ognl.OgnlUtil;
  * @date 2019/5/7 20:45
  */
 @Slf4j
-public class FileObjectFormatDirective implements SchemaDirectiveWiring {
-  private static final String DIRECTIVE_NAME = "FileObjectFormat";
+public class FileFormatDirective implements SchemaDirectiveWiring {
+  private static final String DIRECTIVE_NAME = "FileFormat";
   private static final String FORMAT_NAME = "format";
   private static final String FORMAT_BASE64 = "base64";
   private static final String FORMAT_URL = "url";

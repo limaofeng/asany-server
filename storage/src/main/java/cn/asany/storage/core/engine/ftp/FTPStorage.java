@@ -17,12 +17,12 @@ public class FTPStorage implements Storage {
 
   private static final Log LOGGER = LogFactory.getLog(FTPStorage.class);
 
+  private String id;
   protected FTPService ftpService;
 
-  public FTPStorage() {}
-
-  public FTPStorage(FTPService ftpService) {
+  public FTPStorage(String id, FTPService ftpService) {
     super();
+    this.id = id;
     this.ftpService = ftpService;
   }
 
@@ -38,6 +38,11 @@ public class FTPStorage implements Storage {
   @Override
   public void readFile(String remotePath, OutputStream out) throws IOException {
     this.ftpService.download(remotePath, out);
+  }
+
+  @Override
+  public String getId() {
+    return this.id;
   }
 
   @Override

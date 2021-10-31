@@ -57,7 +57,7 @@
     <logger name="org.hibernate.engine.QueryParameters" level="DEBUG"/>
     <logger name="org.hibernate.engine.query.HQLQueryPlan" level="DEBUG"/>
     <logger name="org.jfantasy.framework.util" level="ERROR"/>
-    <logger name="cn.asany.ui" level="DEBUG"/>
+    <logger name="cn.asany.storage" level="DEBUG"/>
 
     <root level="INFO">
         <appender-ref ref="CONSOLE"/>

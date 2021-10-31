@@ -14,7 +14,12 @@ import java.util.List;
  * @since 2012-9-28 下午12:09:54
  */
 public interface Storage {
-
+  /**
+   * ID
+   *
+   * @return 存储器 ID
+   */
+  String getId();
   /**
    * 将一个 File 对象写入地址对应的文件中
    *

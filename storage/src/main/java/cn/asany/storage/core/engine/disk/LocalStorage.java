@@ -12,14 +12,12 @@ import org.jfantasy.framework.util.common.file.FileUtil;
 
 public class LocalStorage implements Storage {
 
+  private final String id;
   protected String defaultDir;
 
-  public LocalStorage() {
+  public LocalStorage(String id, String defaultDir) {
     super();
-  }
-
-  public LocalStorage(String defaultDir) {
-    super();
+    this.id = id;
     this.defaultDir = defaultDir;
   }
 
@@ -31,6 +29,11 @@ public class LocalStorage implements Storage {
   @Override
   public void readFile(String remotePath, OutputStream out) throws IOException {
     StreamUtil.copyThenClose(getInputStream(remotePath), out);
+  }
+
+  @Override
+  public String getId() {
+    return this.id;
   }
 
   @Override

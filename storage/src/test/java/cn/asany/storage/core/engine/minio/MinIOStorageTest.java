@@ -13,6 +13,7 @@ class MinIOStorageTest {
   void setUp() {
     storage =
         new MinIOStorage(
+            "test",
             "aliyun-oss.minio.thuni-h.com",
             "LTAI4FbseyNZGo6xPn5GWojd",
             "kOEOk421FxzjoGt8y5ysK8zMoGrX6c",

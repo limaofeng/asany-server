@@ -18,6 +18,6 @@ public class LocalStorageBuilder implements StorageBuilder<LocalStorage, LocalSt
     if (defaultDir == null) {
       throw new FileStoreException(" LocalFileManager 未配置 defaultDir 项");
     }
-    return new LocalStorage(defaultDir);
+    return new LocalStorage(config.getId(), defaultDir);
   }
 }

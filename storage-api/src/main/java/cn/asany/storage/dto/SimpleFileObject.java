@@ -1,9 +1,6 @@
 package cn.asany.storage.dto;
 
-import cn.asany.storage.api.FileItemFilter;
-import cn.asany.storage.api.FileItemSelector;
-import cn.asany.storage.api.FileObject;
-import cn.asany.storage.api.FileObjectMetadata;
+import cn.asany.storage.api.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.IOException;
 import java.io.InputStream;
@@ -89,6 +86,11 @@ public class SimpleFileObject implements FileObject {
   @Override
   @JsonIgnore
   public FileObjectMetadata getMetadata() {
+    return null;
+  }
+
+  @Override
+  public Storage getStorage() {
     return null;
   }
 

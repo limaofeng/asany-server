@@ -18,6 +18,6 @@ public class OSSStorageBuilder implements StorageBuilder<OSSStorage, OSSStorageC
     String accessKeySecret = config.getAccessKeySecret();
     String endpoint = config.getEndpoint();
     String bucketName = config.getBucketName();
-    return new OSSStorage(endpoint, accessKeyId, accessKeySecret, bucketName);
+    return new OSSStorage(config.getId(), endpoint, accessKeyId, accessKeySecret, bucketName);
   }
 }

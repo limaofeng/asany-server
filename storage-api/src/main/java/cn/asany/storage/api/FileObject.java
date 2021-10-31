@@ -24,6 +24,10 @@ import java.util.List;
 @JsonDeserialize(using = DefaultFileObjectSerializer.class)
 public interface FileObject {
 
+  String ROOT_PATH = "/";
+
+  String SEPARATOR = "/";
+
   /**
    * 获取文件名
    *
@@ -106,6 +110,13 @@ public interface FileObject {
    * @return List<FileItem>
    */
   FileObjectMetadata getMetadata();
+
+  /**
+   * 获取存储器
+   *
+   * @return Storage
+   */
+  Storage getStorage();
 
   /**
    * 获取文件输入流

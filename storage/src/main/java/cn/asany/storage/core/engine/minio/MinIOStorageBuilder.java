@@ -13,6 +13,7 @@ public class MinIOStorageBuilder implements StorageBuilder<MinIOStorage, MinIOSt
   @Override
   public MinIOStorage build(MinIOStorageConfig config) {
     return new MinIOStorage(
+        config.getId(),
         config.getEndpoint(),
         config.getAccessKeyId(),
         config.getAccessKeySecret(),

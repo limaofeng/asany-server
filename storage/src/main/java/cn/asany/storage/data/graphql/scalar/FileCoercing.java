@@ -21,7 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @date 2020/3/7 7:44 下午
  */
 @Slf4j
-public class FileObjectCoercing implements Coercing<FileObject, Object> {
+public class FileCoercing implements Coercing<FileObject, Object> {
 
   @Autowired private FileService fileService;
 

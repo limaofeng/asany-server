@@ -20,7 +20,7 @@ public class Image extends FileDetail implements Comparable<Image> {
     this.setMimeType(fileDetail.getMimeType());
     this.setDescription(fileDetail.getDescription());
     this.setName(fileDetail.getName());
-    this.setStorage(fileDetail.getStorage());
+    this.setStorageConfig(fileDetail.getStorageConfig());
     this.setMd5(fileDetail.getMd5());
   }
 

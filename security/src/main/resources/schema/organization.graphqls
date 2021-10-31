@@ -201,7 +201,7 @@ input EmployeeUpdateInput {
   # 密码
   password: String
   # 头像
-  avatar: FileObject
+  avatar: File
   # 员工类型
   employeetype: String
   # 是否双培养
@@ -637,7 +637,7 @@ type Employee {
   # 工号
   jobNumber: String
   # 头像
-  avatar: FileObject
+  avatar: File
   # 名称
   name: String
   # 生日
@@ -704,7 +704,7 @@ type AutographPng {
   #是否启用 0禁用 1 启用
   enabled: Boolean
   #签名附件
-  autographFile: FileObject
+  autographFile: File
   #签名类型
   type: AutographEnum
 }

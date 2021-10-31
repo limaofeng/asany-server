@@ -1,9 +1,6 @@
 package cn.asany.storage.data.bean;
 
-import cn.asany.storage.api.FileItemFilter;
-import cn.asany.storage.api.FileItemSelector;
-import cn.asany.storage.api.FileObject;
-import cn.asany.storage.api.FileObjectMetadata;
+import cn.asany.storage.api.*;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.IOException;
 import java.io.InputStream;
@@ -34,6 +31,7 @@ import org.jfantasy.framework.dao.BaseBusEntity;
       "hibernateLazyInitializer",
       "handler",
       "storage",
+      "storageConfig",
       "folder",
       "parentFile",
       "metadata",
@@ -77,7 +75,7 @@ public class FileDetail extends BaseBusEntity implements Cloneable, FileObject {
       updatable = false,
       foreignKey = @ForeignKey(name = "FK_STORAGE_FILEOBJECT_STORAGE"))
   @ManyToOne(fetch = FetchType.LAZY)
-  private StorageConfig storage;
+  private StorageConfig storageConfig;
 
   public FileDetail() {}
 
@@ -132,6 +130,12 @@ public class FileDetail extends BaseBusEntity implements Cloneable, FileObject {
   @Override
   public FileObjectMetadata getMetadata() {
     throw new RuntimeException("FileDetails 不提供该方法");
+  }
+
+  @Override
+  @Transient
+  public Storage getStorage() {
+    return null;
   }
 
   @Override

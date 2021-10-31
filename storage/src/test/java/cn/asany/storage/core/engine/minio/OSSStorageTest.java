@@ -3,9 +3,13 @@ package cn.asany.storage.core.engine.minio;
 import cn.asany.storage.api.FileObject;
 import cn.asany.storage.api.Storage;
 import cn.asany.storage.core.engine.oss.OSSStorage;
+import java.util.ArrayList;
+import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+@Slf4j
 class OSSStorageTest {
 
   private Storage storage;
@@ -14,6 +18,7 @@ class OSSStorageTest {
   void setUp() {
     storage =
         new OSSStorage(
+            "test",
             "oss-cn-hangzhou.aliyuncs.com",
             "LTAI0Vj7YKUQILET",
             "GLWV14v8ndv5UbudpglGFl16K8QWBX",
@@ -41,7 +46,9 @@ class OSSStorageTest {
   @Test
   void listFiles() {
     FileObject object = storage.getFileItem("/");
-    object.listFiles();
+    for (FileObject file : object.listFiles()) {
+      log.debug("path: " + file.getPath());
+    }
   }
 
   @Test
@@ -61,8 +68,15 @@ class OSSStorageTest {
 
   @Test
   void getFileItem() {
-    FileObject root = storage.getFileItem("/");
-    System.out.println(root.lastModified());
+    FileObject fileObject = storage.getFileItem("/2015-04-05/");
+    List<FileObject> parentFiles = new ArrayList<>();
+    FileObject parentFile = fileObject.getParentFile();
+    while (parentFile != null) {
+      parentFiles.add(parentFile);
+      log.debug("file: " + parentFile.getPath());
+      parentFile = parentFile.getParentFile();
+    }
+    log.debug("files size: " + parentFiles.size());
   }
 
   @Test
