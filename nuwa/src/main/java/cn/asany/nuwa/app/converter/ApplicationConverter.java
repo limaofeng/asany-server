@@ -62,7 +62,7 @@ public interface ApplicationConverter {
    * @param route NuwaRoute 路由
    * @return ApplicationRoute
    */
-  @Mappings({})
+  @Mappings({@Mapping(target = "layout", source = "settings")})
   ApplicationRoute toRouteFromNuwa(NuwaRoute route);
 
   /**

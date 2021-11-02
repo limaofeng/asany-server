@@ -7,6 +7,7 @@ menus:
     icon: Duotune/gen025
   - name: 应用管理
     icon: Duotune/abs027
+    path: /apps
   - name: 内容管理
     icon: Duotune/fin006
     path: /cms
@@ -59,6 +60,19 @@ routes:
     authorized: true
     component: cn.asany.ui.theme.metronic.Layout
     routes:
+      - path: /apps
+        component: cn.asany.ui.admin.app.AppList
+        hideMenu: true
+      - path: /apps/:id
+        component: cn.asany.ui.admin.app.AppView
+        hideMenu: true
+        routes:
+          - path: /apps/:id/dashboard
+            component: cn.asany.ui.admin.app.Dashboard
+          - path: /apps/:id/menus
+            component: cn.asany.ui.admin.app.MenuTree
+          - path: /apps/:id/routes
+            component: cn.asany.ui.admin.app.RouteTree
       - path: /cms/my/drafts
         component: cn.asany.ui.admin.cms.MyDrafts
       - path: /cms/my/published

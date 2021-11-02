@@ -257,7 +257,10 @@ enum MenuType {
 
 # 布局设置
 type LayoutSettings {
+  # 全屏幕模式，不展示布局框架
   pure: Boolean
+  # 隐藏菜单栏
+  hideMenu: Boolean
 }
 
 type Route {

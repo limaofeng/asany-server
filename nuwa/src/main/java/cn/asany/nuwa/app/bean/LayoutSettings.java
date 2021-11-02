@@ -2,8 +2,10 @@ package cn.asany.nuwa.app.bean;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 /**
@@ -12,19 +14,17 @@ import lombok.experimental.SuperBuilder;
  * @author limaofeng
  */
 @Data
-@SuperBuilder
 @Embeddable
+@SuperBuilder
+@NoArgsConstructor
+@AllArgsConstructor
 public class LayoutSettings {
   /** 不使用默认布局 */
   @Builder.Default
-  @Column(name = "PURE", length = 20)
+  @Column(name = "PURE", length = 1)
   private Boolean pure = false;
-
-  public LayoutSettings() {
-    this.pure = true;
-  }
-
-  public LayoutSettings(String pure) {
-    this.pure = !Boolean.parseBoolean(pure);
-  }
+  /** 隐藏菜单栏 */
+  @Builder.Default
+  @Column(name = "HIDE_MENU", length = 1)
+  private Boolean hideMenu = false;
 }

@@ -290,6 +290,9 @@ public class ApplicationService implements ClientDetailsService {
               route.setType(RouteType.ROUTE);
               route.setEnabled(ObjectUtil.defaultValue(route.getEnabled(), true));
               route.setAuthorized(ObjectUtil.defaultValue(route.getAuthorized(), false));
+              route.setLayout(
+                  ObjectUtil.defaultValue(
+                      route.getLayout(), () -> LayoutSettings.builder().build()));
               route.setHideInBreadcrumb(
                   ObjectUtil.defaultValue(route.getHideInBreadcrumb(), false));
               Component component = route.getComponent();

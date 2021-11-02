@@ -18,7 +18,21 @@ public class NuwaRoute {
   private String access;
   private Boolean authorized;
   private String redirect;
-  private LayoutSettings layout;
+  private LayoutSettings settings;
   private NuwaComponent component;
   private List<NuwaRoute> routes;
+
+  public void setLayout(Boolean path) {
+    if (this.settings == null) {
+      this.settings = new LayoutSettings();
+    }
+    this.settings.setPure(path);
+  }
+
+  public void setHideMenu(Boolean hideMenu) {
+    if (this.settings == null) {
+      this.settings = new LayoutSettings();
+    }
+    this.settings.setHideMenu(hideMenu);
+  }
 }
