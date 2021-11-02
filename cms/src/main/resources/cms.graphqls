@@ -89,20 +89,20 @@ input BannerFilter {
 
 type ArticleConnection {
   # 总数据条数
-  totalCount: Int
+  totalCount: Int!
   # 每页显示条数
-  pageSize: Int
+  pageSize: Int!
   # 总页数
-  totalPage: Int
+  totalPage: Int!
   # 当前页
-  currentPage: Int
-  edges: [ArticleEdge]
-  pageInfo: PageInfo
+  currentPage: Int!
+  edges: [ArticleEdge!]!
+  pageInfo: PageInfo!
 }
 
 type ArticleEdge {
   cursor: String
-  node: Article
+  node: Article!
 }
 
 enum ContentFormat {

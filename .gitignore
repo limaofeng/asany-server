@@ -4,6 +4,7 @@
 .classpath
 .project
 .factorypath
+.jpb
 out
 bin
 
