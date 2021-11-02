@@ -1,11 +1,10 @@
 package cn.asany.storage.data.service;
 
+import cn.asany.storage.api.FileObject;
 import cn.asany.storage.data.bean.FileDetail;
-import cn.asany.storage.data.bean.Folder;
 import cn.asany.storage.data.bean.Space;
 import cn.asany.storage.data.bean.StorageConfig;
 import cn.asany.storage.data.dao.FileDetailDao;
-import cn.asany.storage.data.dao.FolderDao;
 import cn.asany.storage.data.dao.SpaceDao;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -30,12 +29,10 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class FileService {
 
-  private final FolderDao folderDao;
   private final FileDetailDao fileDetailDao;
   private final SpaceDao spaceDao;
 
-  public FileService(FolderDao folderDao, FileDetailDao fileDetailDao, SpaceDao spaceDao) {
-    this.folderDao = folderDao;
+  public FileService(FileDetailDao fileDetailDao, SpaceDao spaceDao) {
     this.fileDetailDao = fileDetailDao;
     this.spaceDao = spaceDao;
   }
@@ -55,7 +52,7 @@ public class FileService {
     fileDetail.setMimeType(contentType);
     fileDetail.setLength(length);
     fileDetail.setMd5(md5);
-    fileDetail.setFolder(createFolder(path.replaceFirst("[^\\/]+$", ""), storage));
+    fileDetail.setParentFile(createFolder(path.replaceFirst("[^\\/]+$", ""), storage));
     fileDetail.setDescription(description);
     this.fileDetailDao.save(fileDetail);
     return fileDetail;
@@ -69,10 +66,11 @@ public class FileService {
     return fileDetail;
   }
 
-  public Optional<Folder> getFolderByPath(String absolutePath, String storageId) {
-    return this.folderDao.findOne(
+  public Optional<FileDetail> getFolderByPath(String absolutePath, String storageId) {
+    return this.fileDetailDao.findOne(
         PropertyFilter.builder()
             .equal("path", absolutePath)
+            .equal("isDirectory", true)
             .equal("storageConfig.id", storageId)
             .build());
   }
@@ -87,17 +85,18 @@ public class FileService {
    * @param path 路径
    * @return {Folder}
    */
-  public Folder createFolder(String path, String storage) {
-    Optional<Folder> optional =
-        this.folderDao.findOne(
+  public FileDetail createFolder(String path, String storage) {
+    Optional<FileDetail> optional =
+        this.fileDetailDao.findOne(
             PropertyFilter.builder()
                 .equal("path", path)
+                .equal("isDirectory", true)
                 .equal("storageConfig.id", storage)
                 .build());
     if (optional.isPresent()) {
       return optional.get();
     }
-    if ("/".equals(path)) {
+    if (FileObject.ROOT_PATH.equals(path)) {
       return createRootFolder(path, storage);
     } else {
       return createFolder(
@@ -129,12 +128,12 @@ public class FileService {
     return this.fileDetailDao.findOne(PropertyFilter.builder().equal("path", path).build());
   }
 
-  private Folder createRootFolder(String absolutePath, String managerId) {
-    Folder folder = new Folder();
+  private FileDetail createRootFolder(String absolutePath, String managerId) {
+    FileDetail folder = new FileDetail();
     folder.setPath(absolutePath);
     folder.setStorageConfig(StorageConfig.builder().id(managerId).build());
     folder.setName(RegexpUtil.parseGroup(absolutePath, "([^/]+)\\/$", 1));
-    this.folderDao.save(folder);
+    this.fileDetailDao.save(folder);
     return folder;
   }
 
@@ -146,15 +145,15 @@ public class FileService {
    * @param managerId 文件管理器
    * @return {Folder}
    */
-  private Folder createFolder(String absolutePath, Folder parent, String managerId) {
-    Folder folder = new Folder();
+  private FileDetail createFolder(String absolutePath, FileDetail parent, String managerId) {
+    FileDetail folder = new FileDetail();
     folder.setPath(absolutePath);
     folder.setStorageConfig(StorageConfig.builder().id(managerId).build());
     folder.setName(RegexpUtil.parseGroup(absolutePath, "([^/]+)\\/$", 1));
     if (ObjectUtil.isNotNull(parent)) {
-      folder.setParentFolder(parent);
+      folder.setParentFile(parent);
     }
-    this.folderDao.save(folder);
+    this.fileDetailDao.save(folder);
     return folder;
   }
 
@@ -162,10 +161,11 @@ public class FileService {
     return this.fileDetailDao.findPager(pager, filters);
   }
 
-  public List<Folder> listFolder(String path, String storage, String orderBy) {
-    return this.folderDao.findAll(
+  public List<FileDetail> listFolder(String path, String storage, String orderBy) {
+    return this.fileDetailDao.findAll(
         PropertyFilter.builder()
             .equal("parentFolder.path", path)
+            .equal("isDirectory", true)
             .equal("storageConfig.id", storage)
             .build(),
         Sort.by(orderBy));

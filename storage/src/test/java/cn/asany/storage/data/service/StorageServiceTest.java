@@ -41,4 +41,9 @@ class StorageServiceTest {
             .build();
     this.storageService.save(config);
   }
+
+  @Test
+  void reindex() {
+    storageService.reindex("Global");
+  }
 }

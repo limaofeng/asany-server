@@ -1,112 +1,115 @@
 directive @fileFormat on FIELD_DEFINITION
 
 interface StorageProperties {
-    id: ID
+  id: ID
 }
 
 type MinIOProperties implements StorageProperties {
-    id: ID
-    endpoint: String
-    accessKeyId: String
-    accessKeySecret: String
-    bucketName: String
-    useSSL: Boolean
+  id: ID
+  endpoint: String
+  accessKeyId: String
+  accessKeySecret: String
+  bucketName: String
+  useSSL: Boolean
 }
 
 type OSSProperties implements StorageProperties {
-    id: ID
-    endpoint: String
-    accessKeyId: String
-    accessKeySecret: String
-    bucketName: String
+  id: ID
+  endpoint: String
+  accessKeyId: String
+  accessKeySecret: String
+  bucketName: String
 }
 
 enum StorageType {
-    # 阿里开放存储服务
-    OSS
-    # FTP文件系统
-    FTP
-    # 上传文件存储
-    MINIO
+  # 阿里开放存储服务
+  OSS
+  # FTP文件系统
+  FTP
+  # 上传文件存储
+  MINIO
 }
 
 type Storage implements BaseEntity {
-    id: ID!
-    # 名称
-    name: String
-    # 类型
-    type: StorageType!
-    # 描述
-    description: String
-    # 文件总数
-    totalFiles: Int
-    # 存储用量 (单位 KB)
-    usage: Number @fileSize(unit: "KB")
-    # 限额 (单位 MB)
-    quota: Number @fileSize(unit: "MB")
-    # 配置属性
-    properties: StorageProperties
-    # 创建时间
-    createdAt: Date @dateFormat
-    # 创建人
-    createdBy: ID
-    # 更新时间
-    updatedAt: Date @dateFormat
-    # 更新人
-    updatedBy: ID
+  id: ID!
+  # 名称
+  name: String
+  # 类型
+  type: StorageType!
+  # 描述
+  description: String
+  # 文件总数
+  totalFiles: Int
+  # 存储用量 (单位 KB)
+  usage: Number @fileSize(unit: "KB")
+  # 限额 (单位 MB)
+  quota: Number @fileSize(unit: "MB")
+  # 配置属性
+  properties: StorageProperties
+  # 创建时间
+  createdAt: Date @dateFormat
+  # 创建人
+  createdBy: ID
+  # 更新时间
+  updatedAt: Date @dateFormat
+  # 更新人
+  updatedBy: ID
 }
 
 type FileObject {
-    id: ID!
-    # 文件名
-    name: String!
-    # 路径
-    path: String!
-    # 是否是文件夹
-    isDirectory: Boolean!
-    # 文件大小 单位：bytes
-    size: Number @fileSize(unit: "bytes")
-    # 文件 MIME 类型
-    mimeType: String
-    # 更新时间
-    lastModified: Date @dateFormat
-    # 所有父级
-    parents: [FileObject!]
+  id: ID!
+  # 文件名
+  name: String!
+  # 路径
+  path: String!
+  # 是否是文件夹
+  isDirectory: Boolean!
+  # 文件大小 单位：bytes
+  size: Number @fileSize(unit: "bytes")
+  # 文件 MIME 类型
+  mimeType: String
+  # 更新时间
+  lastModified: Date @dateFormat
+  # 所有父级
+  parents: [FileObject!]
 }
 
 input UploadOptions {
-    name: String
-    url: String
-    # 上传空间
-    space: String
-    # 插件 支持 fragment
-    plugin: String
-    # 文件名策略
-    nameStrategy: String
-    # 分段上传时的完整 文件名
-    entireFileName: String
-    # 分段上传时的 唯一标识
-    entireFileHash: String
-    # 分段上传时的 片段标识
-    partFileHash: String
+  name: String
+  url: String
+  # 上传空间
+  space: String
+  # 插件 支持 fragment
+  plugin: String
+  # 文件名策略
+  nameStrategy: String
+  # 分段上传时的完整 文件名
+  entireFileName: String
+  # 分段上传时的 唯一标识
+  entireFileHash: String
+  # 分段上传时的 片段标识
+  partFileHash: String
 }
 
 extend type Query {
-    # 存储器
-    storages: [Storage]
-    # 存储器
-    storage(id: ID!): Storage
-    # 文件列表
-    listFiles(storage: ID!, path: String = "/"): [FileObject!]!
-    # 文件详情
-    file(storage: ID!, path: String = "/"): FileObject
+  # 存储器
+  storages: [Storage]
+  # 存储器
+  storage(id: ID!): Storage
+  # 文件列表
+  listFiles(storage: ID!, path: String = "/"): [FileObject!]!
+  # 文件详情
+  file(storage: ID!, path: String = "/"): FileObject
 }
 
 extend type Mutation {
-    upload(
-        file: Upload!
-        options: UploadOptions = { space: "Default" }
-    ): FileObject
+  # 重建索引
+  storageReindex(id: ID!): Boolean
+  # 上传附件
+  upload(
+    file: Upload!
+    options: UploadOptions = { space: "Default" }
+  ): FileObject
 }
 
 scalar Upload

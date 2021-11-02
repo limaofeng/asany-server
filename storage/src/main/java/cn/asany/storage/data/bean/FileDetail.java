@@ -7,8 +7,7 @@ import java.io.InputStream;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.*;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
@@ -25,7 +24,10 @@ import org.jfantasy.framework.dao.BaseBusEntity;
         @UniqueConstraint(
             name = "UK_STORAGE_FILEOBJECT",
             columnNames = {"STORAGE_ID", "PATH"}))
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = false, of = "path")
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @JsonIgnoreProperties(
     value = {
       "hibernateLazyInitializer",
@@ -53,8 +55,11 @@ public class FileDetail extends BaseBusEntity implements Cloneable, FileObject {
   /** 文件名称 */
   @Column(name = "NAME", length = 50, nullable = false)
   private String name;
+  /** 是否为文件夹 */
+  @Column(name = "IS_DIRECTORY", nullable = false)
+  private Boolean isDirectory;
   /** 描述 */
-  @Column(name = "DESCRIPTION", length = 150, nullable = false)
+  @Column(name = "DESCRIPTION", length = 150)
   private String description;
   /** 文件长度 */
   @Column(name = "LENGTH")
@@ -62,22 +67,31 @@ public class FileDetail extends BaseBusEntity implements Cloneable, FileObject {
   /** 文件MD5码 */
   @Column(name = "MD5", length = 50, nullable = false)
   private String md5;
+  /** 文件修改时间 */
+  @Temporal(TemporalType.TIMESTAMP)
+  @Column(name = "LAST_MODIFIED")
+  private Date lastModified;
   /** 文件夹 */
   @JoinColumn(
-      name = "FOLDER_ID",
+      name = "PARENT_ID",
       updatable = false,
-      foreignKey = @ForeignKey(name = "FK_STORAGE_FILEOBJECT_FID"))
+      foreignKey = @ForeignKey(name = "FK_STORAGE_FILEOBJECT_PARENT"))
   @ManyToOne(fetch = FetchType.LAZY)
-  private Folder folder;
+  private FileDetail parentFile;
+  /** 获取子目录列表 */
+  @OneToMany(mappedBy = "parentFile", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+  @OrderBy("createdAt ASC")
+  private List<FileDetail> children;
   /** 文件命名空间 */
   @JoinColumn(
       name = "STORAGE_ID",
+      nullable = false,
       updatable = false,
       foreignKey = @ForeignKey(name = "FK_STORAGE_FILEOBJECT_STORAGE"))
   @ManyToOne(fetch = FetchType.LAZY)
   private StorageConfig storageConfig;
 
-  public FileDetail() {}
+  @Embedded private FileMetadata metadata;
 
   public FileDetail(Long id) {
     this.id = id;
@@ -89,7 +103,7 @@ public class FileDetail extends BaseBusEntity implements Cloneable, FileObject {
 
   @Override
   public boolean isDirectory() {
-    return false;
+    return this.isDirectory;
   }
 
   @Override
@@ -98,8 +112,8 @@ public class FileDetail extends BaseBusEntity implements Cloneable, FileObject {
   }
 
   @Override
-  public FileObject getParentFile() {
-    throw new RuntimeException("FileDetails 不提供该方法");
+  public FileDetail getParentFile() {
+    return this.parentFile;
   }
 
   @Override
@@ -114,7 +128,7 @@ public class FileDetail extends BaseBusEntity implements Cloneable, FileObject {
 
   @Override
   public Date lastModified() {
-    return this.getUpdatedAt();
+    return this.lastModified;
   }
 
   @Override
