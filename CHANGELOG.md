@@ -2,6 +2,33 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.17](https://github.com/limaofeng/asany-server/compare/v0.0.16...v0.0.17) (2021-11-02)
+
+
+### Features
+
+* 优化文章保存 ([81bed06](https://github.com/limaofeng/asany-server/commit/81bed062afbdcf4a6c6fea2f7e9b80db41474e79))
+* 合并 org 模块到 security ([268a787](https://github.com/limaofeng/asany-server/commit/268a78724bc9a71190ab07f3328462c957da6ce9))
+* 文件查看逻辑 ([6f7e305](https://github.com/limaofeng/asany-server/commit/6f7e305450bdeac34612651f88ea83ac3cb08bec))
+* 文件管理接口优化 ([f1478e4](https://github.com/limaofeng/asany-server/commit/f1478e4326fde1e80ce65f9bef510beda04f9dff))
+* 文件管理相关接口 ([d3b9d6a](https://github.com/limaofeng/asany-server/commit/d3b9d6ac1a25aa2a7f7df18ca96f098dc42e061a))
+* 文件重建索引 ([67becde](https://github.com/limaofeng/asany-server/commit/67becdedf14a6c92e2cacff42bc5dfb3074f185a))
+* 文章 code 更新 ([17230af](https://github.com/limaofeng/asany-server/commit/17230af6ec252dd512e398e3ce94be9cd8178938))
+* 文章内容保存 ([3b8c3f2](https://github.com/limaofeng/asany-server/commit/3b8c3f2071a3cd9b5751b929bff4eb053c9c6645))
+* 文章批量删除 ([c89217e](https://github.com/limaofeng/asany-server/commit/c89217ed186e1503693af458c76563abdc140657))
+* 添加应用订阅逻辑 ([037b50c](https://github.com/limaofeng/asany-server/commit/037b50c0d5a5a2aef3763b984dc7df3f82f5ed6c))
+* 用户角色优化 ([0f99a63](https://github.com/limaofeng/asany-server/commit/0f99a638747d9e0afa2e6e3139809812591987c7))
+* 调整文章特征逻辑 ([473ed58](https://github.com/limaofeng/asany-server/commit/473ed583da7813be6ce53180a586cf8696e1fa3c))
+* 路由支持 layout 设置 ([7062043](https://github.com/limaofeng/asany-server/commit/706204383c0ed9b180657c8a27894b6ea9d4cf22))
+
+
+### Bug Fixes
+
+* 解决 ApplicationRoute 转换 BUG ([d760aa5](https://github.com/limaofeng/asany-server/commit/d760aa5f2aa8d08a3bf15c2937f5f03120fc36eb))
+* 解决 EmployeeIdType 导致启动 BUG ([36aae8e](https://github.com/limaofeng/asany-server/commit/36aae8eea9b58a81bafefb00f003fb2cc4c87d6e))
+* 解决 GraphQL FileObject 转换 BUG ([21d47df](https://github.com/limaofeng/asany-server/commit/21d47dfd44258d2f21bd7336c5ef8423538ebebd))
+* 解决 GraphQL FileObject 转换 BUG ([dfc64eb](https://github.com/limaofeng/asany-server/commit/dfc64eb0fcb0eeca562ac9b6a1df6ce6f3eedfc7))
+
 ### [0.0.16](https://github.com/limaofeng/asany-server/compare/v0.0.15...v0.0.16) (2021-09-18)
 
 
