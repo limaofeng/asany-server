@@ -167,11 +167,11 @@ type ClientSecret {
 }
 
 type Menu {
-  id: ID
+  id: ID!
   # 菜单名称
   name: String
   # 路由类型
-  type: MenuType
+  type: MenuType!
   # 对应的图标
   icon: String
   # 树路径
@@ -183,25 +183,25 @@ type Menu {
   # 需要提供的权限
   authority: [String]
   # 序号
-  index: Int
+  index: Int!
   # 子菜单
-  children: [Menu]
+  children: [Menu!]!
   # 父菜单
   parent: Menu
   # 菜单层级
-  level: Int
+  level: Int!
   # 是否启用
-  enabled: Boolean
+  enabled: Boolean!
   # 路由对应的应用
-  application: Application
+  application: Application!
   # 组件
   component: NuwaComponent
 }
 
 type Application {
-  id: ID
+  id: ID!
   # 名称
-  name: String
+  name: String!
   # 简介
   description: String
   # 应用 LOGO
@@ -211,9 +211,9 @@ type Application {
   # 是否启用
   enabled: Boolean
   # 路由
-  routes(space: ID = "web"): [Route]
+  routes(space: ID = "web"): [Route!]!
   # 菜单
-  menus: [Menu]
+  menus: [Menu!]!
   # 路由命名空间
   routespaces: [Routespace]
   # 登录路由
@@ -223,9 +223,9 @@ type Application {
   # 集成钉钉
   dingtalkIntegration: Boolean
   # 客户端 ID
-  clientId: String
+  clientId: String!
   # 客户端密钥
-  clientSecrets: [ClientSecret]
+  clientSecrets: [ClientSecret!]!
 }
 
 type ApplicationVariable {
@@ -264,15 +264,15 @@ type LayoutSettings {
 }
 
 type Route {
-  id: ID
+  id: ID!
   # 菜单名称
   name: String
   # 是否启用
-  enabled: Boolean
+  enabled: Boolean!
   # 路由类型
-  type: RouteType
+  type: RouteType!
   # 树路径
-  path: String
+  path: String!
   # 必须登录
   authorized: Boolean
   # 访问权限
@@ -288,22 +288,22 @@ type Route {
   # 对应的图标
   icon: String
   # 序号
-  index: Int
+  index: Int!
   # 子路由
   routes: [Route]
   # 父路由
   parent: Route
   # 路由层级
-  level: Int
+  level: Int!
   # 路由对应的应用
-  application: Application
+  application: Application!
 }
 
 union StarValue = Application
 
 extend type Query {
   # 所有的应用
-  applications(filter: ApplicationFilter = {}): [Application]
+  applications(filter: ApplicationFilter = {}): [Application!]!
   # 查询单个应用的信息
   application(
     id: ID!

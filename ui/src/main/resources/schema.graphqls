@@ -20,26 +20,26 @@ interface Library {
 }
 
 type Icon {
-  id: ID
+  id: ID!
   name: String
   description: String
-  tags: [String]
+  tags: [String!]!
   unicode: String
   content: String
   # 库 ID
-  libraryId: ID
+  libraryId: ID!
 }
 
 type IconLibrary implements Library {
-  id: ID
+  id: ID!
   # 名称
   name: String
   # 描述
   description: String
   # 图标
-  icons: [Icon]
+  icons: [Icon!]!
   # 数量
-  total: Int
+  total: Int!
 }
 
 input OwnershipInput {
@@ -140,29 +140,29 @@ extend type Query {
   libraries(
     type: LibraryType!
     ownership: OwnershipInput = { type: "PERSONAL", id: "me" }
-  ): [Library]
+  ): [Library!]!
   # 图标库
   iconLibraries(
     filter: IconLibraryFilter
     ownership: OwnershipInput = { type: "PERSONAL", id: "me" }
-  ): [IconLibrary]
+  ): [IconLibrary!]!
   # 图标库
   iconLibrary(id: ID!): IconLibrary
   # 查询图标
-  icons(filter: IconFilter): [Icon]
+  icons(filter: IconFilter): [Icon!]!
   # 查询日志
-  oplogs(filter: OplogFilter): [Oplog]
+  oplogs(filter: OplogFilter): [Oplog!]!
 }
 
 extend type Mutation {
   # 导入图标
-  importIcons(library: ID!, icons: [IconInput]!): [Icon]
+  importIcons(library: ID!, icons: [IconInput]!): [Icon!]!
   # 添加图标
   createIcon(input: IconCreateInput!): Icon
   # 更新图标
   updateIcon(id: ID!, input: IconUpdateInput!): Icon
   # 删除图标
-  deleteLibrary(id: ID!): Boolean
+  deleteIcon(id: ID!): Boolean
   # 添加库
   createLibrary(input: LibraryCreateInput!): Library
   # 更新库

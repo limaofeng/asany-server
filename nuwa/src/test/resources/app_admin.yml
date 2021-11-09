@@ -1,5 +1,6 @@
 name: admin
 title: 管理端
+description: 网站管理后台
 clientId: 6068485332c5fc853a65
 clientSecret: 3c833cf785c71234d5024aca9668dd466f050453
 menus:
@@ -9,33 +10,15 @@ menus:
     icon: Duotune/abs027
     path: /apps
   - name: 内容管理
-    icon: Duotune/fin006
+    icon: Duotune/txt009
     path: /cms
     component: cn.asany.ui.admin.cms.ArticleSidebar
   - name: 自定义建模
     icon: Duotune/abs026
     path: /shanhai
     component: cn.asany.ui.admin.shanhai.MenuSidebar
-  - name: 系统管理
-    icon: Duotune/gen032
-    children:
-      - name: 组织管理
-        icon: Duotune/gen032
-        children:
-          - name: 员工管理
-            path: /projects
-          - name: 部门管理
-            path: /projects
-            children:
-              - name: 群组管理
-                path: /projects
-              - name: 职务管理
-                path: /projects
-      - name: 用户管理
-        icon: Duotune/gen032
-        path: /projects
-  - name: 工单
-    icon: Duotune/gen032
+  - name: 项目管理
+    icon: Duotune/abs045
     children:
       - name: 我的任务
         type: SECTION
@@ -53,6 +36,34 @@ menus:
       - name: x2
         icon: Duotune/gen032
         path: /projects
+  - name: 系统管理
+    icon: Duotune/cod001
+    children:
+      - name: 组织管理
+        icon: Duotune/gen032
+        type: SECTION
+      - name: 员工管理
+        path: /projects
+      - name: 部门管理
+        path: /projects
+        children:
+          - name: 群组管理
+            path: /projects
+          - name: 职务管理
+            path: /projects
+      - name: 用户管理
+        icon: Duotune/gen032
+        path: /projects
+
+      - name: 前端
+        icon: Duotune/gen032
+        type: SECTION
+      - name: 文件管理
+        icon: Duotune/fil025
+        path: /storages
+      - name: 图标库管理
+        icon: Duotune/gen006
+        path: /icon-libraries
 routes:
   - path: /login
     component: cn.asany.ui.theme.metronic.authentication.SignIn
@@ -67,12 +78,21 @@ routes:
         component: cn.asany.ui.admin.app.AppView
         hideMenu: true
         routes:
-          - path: /apps/:id/dashboard
-            component: cn.asany.ui.admin.app.Dashboard
+          - path: /apps/:id/overview
+            component: cn.asany.ui.admin.app.Overview
+            hideMenu: true
           - path: /apps/:id/menus
             component: cn.asany.ui.admin.app.MenuTree
+            hideMenu: true
           - path: /apps/:id/routes
             component: cn.asany.ui.admin.app.RouteTree
+            hideMenu: true
+          - path: /apps/:id/settings
+            component: cn.asany.ui.admin.app.Settings
+            hideMenu: true
+          - path: /apps/:id
+            component: cn.asany.ui.admin.app.Overview
+            hideMenu: true
       - path: /cms/my/drafts
         component: cn.asany.ui.admin.cms.MyDrafts
       - path: /cms/my/published
@@ -101,5 +121,10 @@ routes:
             component: cn.asany.ui.admin.storage.ListFiles
           - path: /storages/:id/*
             component: cn.asany.ui.admin.storage.ListFiles
+      - path: /icon-libraries
+        component: cn.asany.ui.admin.icon.Libraries
+      - path: /icon-libraries/:id
+        component: cn.asany.ui.admin.icon.LibraryDetails
+        hideMenu: true
       - path: /
         component: cn.asany.ui.admin.Home
