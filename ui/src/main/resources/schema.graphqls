@@ -135,6 +135,82 @@ input LibraryUpdateInput {
   description: String
 }
 
+enum ComponentType {
+  ROUTE
+  GLOBAL
+}
+
+input ComponentCreateInput {
+  code: String!
+  name: String!
+  type: ComponentType!
+  template: String!
+  blocks: [ComponentDataInput]!
+}
+
+input ComponentDataInput {
+  key: String
+  props: JSON
+}
+
+input ComponentUpdateInput {
+  name: String
+  template: String
+  blocks: [ComponentDataInput]
+}
+
+enum ComponentScope {
+  # 菜单
+  MENU
+  # 路由
+  ROUTE
+  # 通用
+  GLOBAL
+}
+
+type Component {
+  id: ID!
+  # 使用范围
+  scope: ComponentScope
+  # 组件类型
+  type: ComponentType
+  # 名称
+  code: String
+  # 名称
+  name: String
+  # 组件模版
+  template: String!
+  # 组件数据
+  blocks: [ComponentData]!
+}
+
+input ComponentFilter {
+  code: String
+  name: String
+}
+
+type ComponentConnection {
+  # 总数据条数
+  totalCount: Int
+  # 每页显示条数
+  pageSize: Int
+  # 总页数
+  totalPage: Int
+  # 当前页
+  currentPage: Int
+  edges: [ComponentEdge]
+}
+
+type ComponentEdge {
+  cursor: String
+  node: Component
+}
+
+type ComponentData {
+  key: String!
+  props: JSON!
+}
+
 extend type Query {
   # 库
   libraries(
@@ -152,6 +228,22 @@ extend type Query {
   icons(filter: IconFilter): [Icon!]!
   # 查询日志
   oplogs(filter: OplogFilter): [Oplog!]!
+  # 查询组件 单个
+  component(id: ID!): Component
+  # 查询组件 列表
+  components(
+    filter: ComponentFilter
+    page: Int = 1
+    pageSize: Int = 15
+    orderBy: OrderBy
+  ): [Component]
+  # 查询组件 分页
+  componentsConnection(
+    filter: ComponentFilter
+    page: Int = 1
+    pageSize: Int = 15
+    orderBy: OrderBy
+  ): ComponentConnection
 }
 
 extend type Mutation {
@@ -169,4 +261,14 @@ extend type Mutation {
   updateLibrary(id: ID!, input: LibraryUpdateInput!): Library
   # 删除库
   deleteLibrary(id: ID!): Boolean
+  # 创建组件
+  createComponent(input: ComponentCreateInput!): Component
+  # 更新组件信息
+  updateComponent(
+    id: ID!
+    input: ComponentUpdateInput!
+    merge: Boolean = true
+  ): Component
+  # 删除组件
+  deleteComponent(id: ID!): Boolean
 }

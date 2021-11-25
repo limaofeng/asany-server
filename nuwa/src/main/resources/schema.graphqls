@@ -114,15 +114,6 @@ input MenuUpdateInput {
   index: Int
 }
 
-type NuwaComponent {
-  # 渲染组件
-  id: ID
-  # 模版
-  template: String
-  # 组件配置数据
-  blocks: JSON
-}
-
 type RouteComponentWrapper {
   # 渲染组件
   id: ID
@@ -195,7 +186,7 @@ type Menu {
   # 路由对应的应用
   application: Application!
   # 组件
-  component: NuwaComponent
+  component: Component
 }
 
 type Application {
@@ -284,7 +275,7 @@ type Route {
   # 重定向
   redirect: String
   # 组件
-  component: NuwaComponent
+  component: Component
   # 对应的图标
   icon: String
   # 序号

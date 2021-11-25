@@ -1,5 +1,6 @@
 name: website
 title: 网站
+description: 企业网站
 clientId: 270a4b1d81998819b04a
 clientSecret: cefc464c3f57a41696bc58e4991e9c9913ff1394
 menus:
@@ -28,12 +29,6 @@ menus:
   - name: 联系我们
     path: /contact
 routes:
-  - path: /admin/login
-    component: cn.asany.ui.theme.metronic.authentication.SignIn
-  - path: /admin
-    authorized: true
-    redirect: /admin/login
-    component: cn.asany.ui.theme.metronic.Layout
   - path: /
     component: cn.asany.ui.theme.startp.BasicLayout
     routes:
