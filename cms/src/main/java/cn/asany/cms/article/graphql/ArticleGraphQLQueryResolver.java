@@ -69,12 +69,10 @@ public class ArticleGraphQLQueryResolver implements GraphQLQueryResolver {
    * @return
    */
   public List<ArticleChannel> articleChannels(ArticleChannelFilter filter, OrderBy orderBy) {
-    PropertyFilterBuilder builder =
-        ObjectUtil.defaultValue(filter, new ArticleChannelFilter()).getBuilder();
     if (orderBy != null) {
-      return channelService.findAllArticle(builder.build(), orderBy.toSort());
+      return channelService.findAllArticle(filter.build(), orderBy.toSort());
     } else {
-      return channelService.findAll(builder.build());
+      return channelService.findAll(filter.build());
     }
   }
 

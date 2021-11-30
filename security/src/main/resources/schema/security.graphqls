@@ -1,7 +1,46 @@
 directive @auth(requires: String) on OBJECT | FIELD_DEFINITION
 
+input UserFilter {
+  # 昵称模糊查询
+  nickname_like: String
+}
+
+type UserConnection {
+  # 总数据条数
+  totalCount: Int
+  # 每页显示条数
+  pageSize: Int
+  # 总页数
+  totalPage: Int
+  # 当前页
+  currentPage: Int
+  edges: [UserEdge]
+  pageInfo: PageInfo
+}
+
+type UserEdge {
+  cursor: String
+  node: User
+}
+
+type User {
+  id: ID
+  # 称号
+  title: String
+  #管理员姓名
+  nickName: String
+  #登录名
+  username: String
+  #登录密码
+  password: String
+  #是否启用
+  enabled: Boolean
+  # 电话
+  tel: String
+}
+
 enum LoginType {
-  #密码登录
+  # 密码登录
   password
 }
 
@@ -60,10 +99,6 @@ type LoginUser {
   #    currentDepartment(organization: ID!): Department
   #当前职务
   #    currentPosition(organization: ID!): Position
-}
-
-type User {
-  id: ID
 }
 
 type CurrentUser {
@@ -128,6 +163,22 @@ extend type Query {
   sessions: [Session]
   # 查询个人 Token
   personalAccessTokens: [PersonalAccessToken]
+  # 查询用户
+  users(
+    filter: UserFilter
+    # 跳过
+    skip: Int = 0
+    # 游标定位 之后
+    after: ID
+    # 游标定位 之前
+    before: ID
+    # 开始几条
+    first: Int = 15
+    # 之前几条
+    last: Int
+    # 排序
+    orderBy: OrderBy
+  ): [User]
 }
 
 extend type Mutation {

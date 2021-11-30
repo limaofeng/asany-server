@@ -3,17 +3,20 @@ package cn.asany.security.core.graphql;
 import cn.asany.base.common.SecurityType;
 import cn.asany.security.core.bean.*;
 import cn.asany.security.core.graphql.inputs.GrantPermissionByUserInput;
-import cn.asany.security.core.graphql.models.PermissionTypeInput;
-import cn.asany.security.core.graphql.models.PermissionUpdateInput;
-import cn.asany.security.core.graphql.models.RoleInput;
-import cn.asany.security.core.graphql.models.UserInput;
+import cn.asany.security.core.graphql.models.*;
 import cn.asany.security.core.service.*;
 import cn.asany.security.core.util.GrantPermissionUtils;
 import com.github.stuxuhai.jpinyin.PinyinException;
 import graphql.kickstart.tools.GraphQLMutationResolver;
+import graphql.kickstart.tools.GraphQLQueryResolver;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.jfantasy.framework.dao.OrderBy;
+import org.jfantasy.framework.dao.Pager;
+import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
+import org.jfantasy.framework.util.common.ObjectUtil;
+import org.jfantasy.graphql.util.Kit;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -25,13 +28,33 @@ import org.springframework.util.StringUtils;
  * @date 2019-04-01 15:17
  */
 @Component
-public class SecurityGraphQLMutationResolver implements GraphQLMutationResolver {
+public class SecurityGraphQLMutationResolver
+    implements GraphQLMutationResolver, GraphQLQueryResolver {
 
   @Autowired private RoleService roleService;
   @Autowired private UserService userService;
   @Autowired private RoleScopeService roleScopeService;
   @Autowired private PermissionService permissionService;
   @Autowired private GrantPermissionService grantPermissionService;
+
+  /** 查询所有用户 - 分页 */
+  public UserConnection usersConnection(
+      UserFilter filter, int page, int pageSize, OrderBy orderBy) {
+    Pager<User> pager = new Pager<>(page, pageSize, orderBy);
+    PropertyFilterBuilder builder = ObjectUtil.defaultValue(filter, new UserFilter()).getBuilder();
+    return Kit.connection(userService.findPager(pager, builder.build()), UserConnection.class);
+  }
+
+  /** 查询所有用户 - 列表 */
+  public List<User> users(
+      UserFilter filter, int skip, int after, int before, int first, int last, OrderBy orderBy) {
+    Pager<User> pager = new Pager<>();
+    pager.setOrderBy(orderBy);
+    pager.setFirst(skip);
+    pager.setPageSize(first);
+    PropertyFilterBuilder builder = ObjectUtil.defaultValue(filter, new UserFilter()).getBuilder();
+    return userService.findPager(pager, builder.build()).getPageItems();
+  }
 
   /**
    * 新增角色

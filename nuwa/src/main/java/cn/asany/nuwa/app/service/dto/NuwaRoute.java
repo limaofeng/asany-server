@@ -26,7 +26,7 @@ public class NuwaRoute {
     if (this.settings == null) {
       this.settings = new LayoutSettings();
     }
-    this.settings.setPure(path);
+    this.settings.setPure(!path);
   }
 
   public void setHideMenu(Boolean hideMenu) {

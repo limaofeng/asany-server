@@ -6,7 +6,8 @@ clientSecret: cefc464c3f57a41696bc58e4991e9c9913ff1394
 menus:
   - name: 首页
     path: /
-  - name: 产品与服务
+  - name: IT外包
+    component: cn.asany.ui.theme.canvas.component.MegaMenu
     children:
       - name: 产品与服务
         path: /services/product
@@ -14,7 +15,29 @@ menus:
         path: /services/solution
       - name: 客户案例
         path: /services/cases
-  - name: 新闻动态
+  - name: 网络安全
+    component: cn.asany.ui.theme.canvas.component.MegaMenu
+    children:
+      - name: 互升新闻
+        path: /news/self
+      - name: 行业新闻
+        path: /news/industry
+  - name: 弱电工程
+    component: cn.asany.ui.theme.canvas.component.MegaMenu
+    children:
+      - name: 互升新闻
+        path: /news/self
+      - name: 行业新闻
+        path: /news/industry
+  - name: 系统集成
+    component: cn.asany.ui.theme.canvas.component.MegaMenu
+    children:
+      - name: 互升新闻
+        path: /news/self
+      - name: 行业新闻
+        path: /news/industry
+  - name: 云服务
+    component: cn.asany.ui.theme.canvas.component.MegaMenu
     children:
       - name: 互升新闻
         path: /news/self
@@ -30,7 +53,10 @@ menus:
     path: /contact
 routes:
   - path: /
-    component: cn.asany.ui.theme.startp.BasicLayout
+    component:
+      template: cn.asany.ui.theme.canvas.BasicLayout
+      blocks: |
+        [{"key": "page/hero", "props": {"component": "cn.asany.ui.theme.canvas.Carousel"}}, {"key": "page/content", "props": {"items": [{"id": "21813cf1-35d8-4b6a-a51d-531a0ada9b07", "pos": [0], "name": "样式一", "type": "component", "index": 0, "component": "cn.asany.ui.theme.canvas.PromoBox1", "_registered": "1ce7a397-d3e1-410f-b82c-b810e696811d"}, {"id": "b5f5ada6-4c0e-47e2-98e9-a2fda2005153", "pos": [1], "name": "样式十二", "type": "component", "index": 1, "component": "cn.asany.ui.theme.canvas.FeaturedBox12", "_registered": "1ce7a397-d3e1-410f-b82c-b810e696811d"}, {"id": "afec00ee-dd1d-4999-be0f-144377e3d20e", "pos": [2], "name": "样式十一", "type": "component", "index": 2, "component": "cn.asany.ui.theme.canvas.FeaturedBox11", "_registered": "1ce7a397-d3e1-410f-b82c-b810e696811d"}, {"id": "2152ea5f-bc03-432e-ba4e-8583470ebf49", "pos": [3], "name": "样式三", "type": "component", "index": 3, "component": "cn.asany.ui.theme.canvas.FeaturedBox3", "_registered": "c19add3c-d799-4cc9-a5fa-f245fed61637"}, {"id": "7b068bca-5d00-42b8-a80a-c5a07cc53de8", "pos": [4], "name": "样式三", "type": "component", "index": 4, "component": "cn.asany.ui.theme.canvas.FeaturedBox13", "_registered": "802edab0-0f59-4a82-af52-dfcef446b3b9"}, {"id": "551f94c9-a06f-411c-8c7a-d925060ba7b4", "name": "样式十一", "type": "component", "component": "cn.asany.ui.theme.canvas.FeaturedBox11", "_registered": "2ac01132-05e4-4313-9787-2a5109936827"}]}}, {"key": "page", "props": {"hero": "cn.asany.ui.theme.canvas.Carousel"}}, {"key": "page/content/21813cf1-35d8-4b6a-a51d-531a0ada9b07", "props": {"url": "", "title": " 11 Try Pre啊实打实的萨达mium Free for <span>30 Days</span> and you'll never regret it!", "urlText": "Start asTrial爱上", "subtitle": "Start阿斯顿s at just <em>$0/month</em> afterwards. No Ads, No Gimmicks and No SPAM. Just Real Content."}}]
     routes:
       - path: /services/product
         component: cn.asany.ui.website.page.Services

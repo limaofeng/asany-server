@@ -11,7 +11,12 @@ import cn.asany.nuwa.app.service.dto.NuwaRoute;
 import cn.asany.nuwa.app.service.dto.OAuthApplication;
 import cn.asany.nuwa.template.bean.ApplicationTemplateMenu;
 import cn.asany.nuwa.template.bean.ApplicationTemplateRoute;
+import cn.asany.ui.resources.bean.toy.ComponentData;
+import com.fasterxml.jackson.core.type.TypeReference;
+import java.util.ArrayList;
 import java.util.List;
+import org.jfantasy.framework.jackson.JSON;
+import org.jfantasy.framework.util.common.StringUtil;
 import org.mapstruct.*;
 
 /**
@@ -62,8 +67,22 @@ public interface ApplicationConverter {
    * @param route NuwaRoute 路由
    * @return ApplicationRoute
    */
-  @Mappings({@Mapping(target = "layout", source = "settings")})
+  @Mappings({
+    @Mapping(target = "layout", source = "settings"),
+    @Mapping(
+        target = "component.blocks",
+        source = "component.blocks",
+        qualifiedByName = "componentDataBlocks")
+  })
   ApplicationRoute toRouteFromNuwa(NuwaRoute route);
+
+  @Named("componentDataBlocks")
+  default List<ComponentData> componentDataBlocks(String blocks) {
+    if (StringUtil.isBlank(blocks)) {
+      return new ArrayList<>();
+    }
+    return JSON.deserialize(blocks, new TypeReference<List<ComponentData>>() {});
+  }
 
   /**
    * 路由
@@ -105,6 +124,10 @@ public interface ApplicationConverter {
    */
   @Mappings({
     @Mapping(target = "children", ignore = true),
+    @Mapping(
+        target = "component.blocks",
+        source = "component.blocks",
+        qualifiedByName = "componentDataBlocks")
   })
   ApplicationMenu toMenuFromNuwa(NuwaMenu nuwaMenu);
 

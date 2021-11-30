@@ -286,7 +286,7 @@ public class ArticleChannelService {
     return true;
   }
 
-  public ArticleChannel findOne(Long parent) {
-    return channelDao.findById(parent).orElse(null);
+  public ArticleChannel findOne(Long id) {
+    return channelDao.findById(id).orElse(null);
   }
 }

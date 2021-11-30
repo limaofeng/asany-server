@@ -1,53 +1,43 @@
 package cn.asany.cms.article.graphql.input;
 
-import cn.asany.cms.article.service.ArticleService;
+import cn.asany.cms.article.bean.ArticleChannel;
+import cn.asany.cms.article.service.ArticleChannelService;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
-import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
 import org.jfantasy.framework.spring.SpringBeanUtils;
+import org.jfantasy.framework.util.common.ObjectUtil;
+import org.jfantasy.graphql.inputs.QueryFilter;
 
+/**
+ * 文章栏目筛选
+ *
+ * @author limaofeng
+ */
 @Data
-public class ArticleChannelFilter {
-  //  private ArticleTag articleTag = ArticleTag.builder().build();
+@EqualsAndHashCode(callSuper = true)
+public class ArticleChannelFilter extends QueryFilter<ArticleChannelFilter, ArticleChannel> {
 
-  protected PropertyFilterBuilder builder = new PropertyFilterBuilder();
-
-  @JsonProperty("name")
-  public void setName(String name) {
-    this.builder.equal("name", name);
-  }
-
-  @JsonProperty("path_startsWith")
-  public void setPathStartsWith(String path) {
-    this.builder.contains("path", path + "%");
-  }
+  private Boolean descendant = false;
 
   @JsonProperty("parent")
   public void setParent(Long parent) {
-    if (Long.valueOf(0).equals(parent)) {
-      this.builder.isNull("parent.id");
-    } else {
-      this.builder.equal("parent.id", parent);
-    }
+    this.builder.equal("parent.id", parent);
   }
 
-  @JsonProperty("viewer")
-  public void setViewer(String viewer) {
-    ArticleService articleService = SpringBeanUtils.getBeanByType(ArticleService.class);
-    //        Map<String, String> viewerValue = articleService.getViewerValue(viewer);
-    //        builder.and(new PermissionSpecification("ARTICLE_VIEWER", viewerValue));
-  }
-
-  @JsonProperty("founder")
-  public void setFounder(String founder) {
-    ArticleService articleService = SpringBeanUtils.getBeanByType(ArticleService.class);
-    //        Map<String, String> viewerValue = articleService.getViewerValue(founder);
-    //        builder.and(new PermissionSpecification("ARTICLE_CREATOR", viewerValue));
-  }
-
+  @Override
   public List<PropertyFilter> build() {
+    ArticleChannelService service = SpringBeanUtils.getBean(ArticleChannelService.class);
+    List<PropertyFilter> filters = builder.build();
+    PropertyFilter filter = ObjectUtil.find(filters, "propertyName", "parent.id");
+    if (this.descendant && filter != null) {
+      filters.remove(filter);
+      ArticleChannel channel = service.findOne(filter.getPropertyValue());
+      builder.startsWith("path", channel.getPath());
+      builder.notEqual("id", channel.getId());
+    }
     return builder.build();
   }
 }

@@ -429,10 +429,8 @@ input ArticleChannelFilter {
   path_startsWith: String
   # 父级
   parent: ID
-  # 用户id
-  viewer: ID
-  # 用户创建id
-  founder: ID
+  # 包含所有后代, 该设置只在 parent 不为 Null 时有效
+  descendant: Boolean = false
 }
 
 input PermissionInput {
@@ -558,7 +556,7 @@ extend type Query {
   ): ArticleConnection
   # 文章栏目
   articleChannels(
-    filter: ArticleChannelFilter
+    filter: ArticleChannelFilter = {}
     orderBy: OrderBy
   ): [ArticleChannel]
   # 文章标签

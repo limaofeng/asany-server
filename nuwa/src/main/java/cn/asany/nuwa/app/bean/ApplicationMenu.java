@@ -4,9 +4,11 @@ import cn.asany.nuwa.app.bean.enums.MenuType;
 import cn.asany.ui.resources.bean.Component;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import javax.persistence.*;
 import lombok.*;
+import org.hibernate.Hibernate;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.framework.dao.hibernate.converter.StringSetConverter;
@@ -16,13 +18,12 @@ import org.jfantasy.framework.dao.hibernate.converter.StringSetConverter;
  *
  * @author limaofeng
  */
-@Data
+@Getter
+@Setter
+@ToString
+@RequiredArgsConstructor
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(
-    callSuper = false,
-    of = {"id", "name", "type", "path", "level", "index"})
 @Entity
 @Table(name = "NUWA_APPLICATION_MENU")
 public class ApplicationMenu extends BaseBusEntity {
@@ -63,6 +64,7 @@ public class ApplicationMenu extends BaseBusEntity {
   /** 父菜单 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "PID", foreignKey = @ForeignKey(name = "FK_APPLICATION_MENU_PID"))
+  @ToString.Exclude
   private ApplicationMenu parent;
   /** 子路由 */
   @JsonInclude(content = JsonInclude.Include.NON_NULL)
@@ -71,6 +73,7 @@ public class ApplicationMenu extends BaseBusEntity {
       fetch = FetchType.LAZY,
       cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
   @OrderBy("index ASC")
+  @ToString.Exclude
   private List<ApplicationMenu> children;
   /**
    * 组件<br>
@@ -80,6 +83,7 @@ public class ApplicationMenu extends BaseBusEntity {
   @JoinColumn(
       name = "COMPONENT_ID",
       foreignKey = @ForeignKey(name = "FK_APPLICATION_MENU_COMPONENT"))
+  @ToString.Exclude
   private Component component;
   /** 授权后可见 */
   @Convert(converter = StringSetConverter.class)
@@ -101,5 +105,23 @@ public class ApplicationMenu extends BaseBusEntity {
       foreignKey = @ForeignKey(name = "FK_APPLICATION_MENU_APPID"),
       updatable = false,
       nullable = false)
+  @ToString.Exclude
   private Application application;
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) {
+      return false;
+    }
+    ApplicationMenu that = (ApplicationMenu) o;
+    return id != null && Objects.equals(id, that.id);
+  }
+
+  @Override
+  public int hashCode() {
+    return getClass().hashCode();
+  }
 }
