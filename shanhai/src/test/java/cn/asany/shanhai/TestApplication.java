@@ -11,11 +11,13 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
 import org.springframework.boot.autoconfigure.quartz.QuartzAutoConfiguration;
 import org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.web.client.RestTemplate;
 
 /**
  * 测试程序入口
@@ -49,4 +51,10 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
       GraphQLWebAutoConfiguration.class,
       GraphQLJavaToolsAutoConfiguration.class
     })
-public class TestApplication {}
+public class TestApplication {
+
+  @Bean
+  public RestTemplate restTemplate() {
+    return new RestTemplate();
+  }
+}

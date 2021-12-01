@@ -1,9 +1,12 @@
 package cn.asany.shanhai.data.engine.local;
 
+import cn.asany.shanhai.data.bean.DataSetConfig;
+import cn.asany.shanhai.data.engine.DataSet;
 import cn.asany.shanhai.data.engine.IDataSource;
 import cn.asany.shanhai.data.engine.IDataSourceOptions;
 import cn.asany.shanhai.data.engine.ISchema;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 默认 DataSource 为系统实体
@@ -43,6 +46,11 @@ public class SystemDataSource implements IDataSource {
 
   @Override
   public ISchema getSchema(String id) {
+    return null;
+  }
+
+  @Override
+  public <T> DataSet<T> dataset(DataSetConfig config, Map<String, String> variables) {
     return null;
   }
 }

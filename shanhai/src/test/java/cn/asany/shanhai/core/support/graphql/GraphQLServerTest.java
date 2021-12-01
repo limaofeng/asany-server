@@ -1,7 +1,7 @@
 package cn.asany.shanhai.core.support.graphql;
 
 import cn.asany.shanhai.TestApplication;
-import cn.asany.shanhai.autoconfigure.ModelAutoConfiguration;
+import cn.asany.shanhai.autoconfigure.ShanhaiAutoConfiguration;
 import cn.asany.shanhai.core.bean.Model;
 import cn.asany.shanhai.core.bean.enums.ModelType;
 import cn.asany.shanhai.core.service.ModelService;
@@ -29,7 +29,7 @@ class GraphQLServerTest {
   @Autowired private ModelService modelService;
   @Autowired private ModelSessionFactory modelSessionFactory;
   @Autowired private GraphQLServer graphQLServer;
-  @Autowired private ModelAutoConfiguration configuration;
+  @Autowired private ShanhaiAutoConfiguration configuration;
 
   @Test
   @Transactional

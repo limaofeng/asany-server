@@ -19,7 +19,7 @@ public class SystemDataSourceBuilder implements IDataSourceBuilder {
   }
 
   @Override
-  public IDataSource build(IDataSourceOptions options) {
+  public IDataSource build(String id, String name, String description, IDataSourceOptions options) {
     return null;
   }
 }

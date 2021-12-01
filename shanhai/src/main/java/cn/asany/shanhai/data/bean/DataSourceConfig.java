@@ -1,6 +1,5 @@
 package cn.asany.shanhai.data.bean;
 
-import cn.asany.shanhai.data.bean.enums.DataSourceType;
 import cn.asany.shanhai.data.engine.IDataSourceOptions;
 import java.util.Objects;
 import javax.persistence.*;
@@ -34,10 +33,12 @@ public class DataSourceConfig extends BaseBusEntity {
   /** 名称 */
   @Column(name = "NAME")
   private String name;
+  /** 描述 */
+  @Column(name = "DESCRIPTION", length = 50)
+  private String description;
   /** 类型 */
-  @Enumerated(EnumType.STRING)
   @Column(name = "TYPE", length = 20)
-  private DataSourceType type;
+  private String type;
   /** 配置详情 */
   @Column(name = "CONFIG_STORE", columnDefinition = "JSON")
   private String details;
@@ -62,5 +63,12 @@ public class DataSourceConfig extends BaseBusEntity {
   @Override
   public int hashCode() {
     return getClass().hashCode();
+  }
+
+  public static class DataSourceConfigBuilder {
+    public DataSourceConfigBuilder options(IDataSourceOptions options) {
+      this.details = JSON.serialize(options);
+      return this;
+    }
   }
 }

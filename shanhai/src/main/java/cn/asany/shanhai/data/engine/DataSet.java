@@ -1,7 +1,7 @@
 package cn.asany.shanhai.data.engine;
 
-import java.util.List;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,8 +11,9 @@ import lombok.NoArgsConstructor;
  * @author limaofeng
  */
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class DataSet<T> {
-  List<T> result;
+  T[] result;
 }

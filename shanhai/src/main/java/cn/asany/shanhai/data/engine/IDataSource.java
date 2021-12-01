@@ -1,6 +1,8 @@
 package cn.asany.shanhai.data.engine;
 
+import cn.asany.shanhai.data.bean.DataSetConfig;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 数据源接口
@@ -57,4 +59,13 @@ public interface IDataSource {
    * @return
    */
   ISchema getSchema(String id);
+
+  /**
+   * 加载数据集
+   *
+   * @param config 配置
+   * @param <T>
+   * @return DataSet<T>
+   */
+  <T> DataSet<T> dataset(DataSetConfig config, Map<String, String> variables);
 }

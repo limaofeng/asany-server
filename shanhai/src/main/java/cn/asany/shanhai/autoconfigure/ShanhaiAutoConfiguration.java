@@ -8,12 +8,16 @@ import cn.asany.shanhai.core.support.model.FieldTypeRegistry;
 import cn.asany.shanhai.core.support.model.IModelFeature;
 import cn.asany.shanhai.core.support.model.ModelFeatureRegistry;
 import cn.asany.shanhai.core.utils.HibernateMappingHelper;
+import cn.asany.shanhai.data.engine.DefaultDataSourceLoader;
+import cn.asany.shanhai.data.engine.IDataSourceBuilder;
+import cn.asany.shanhai.data.engine.IDataSourceLoader;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
+/** @author limaofeng */
 @Configuration
 @ComponentScan({
   "cn.asany.shanhai.core.support.model.types",
@@ -22,10 +26,11 @@ import org.springframework.context.annotation.Configuration;
   "cn.asany.shanhai.core.service",
   "cn.asany.shanhai.core.utils",
   "cn.asany.shanhai.core.rest",
-  "cn.asany.shanhai.core.dao"
+  "cn.asany.shanhai.core.dao",
+  "cn.asany.shanhai.data.engine"
 })
 @Slf4j
-public class ModelAutoConfiguration {
+public class ShanhaiAutoConfiguration {
 
   private HibernateMappingHelper hibernateMappingHelper;
 
@@ -61,6 +66,13 @@ public class ModelAutoConfiguration {
     ModelFeatureRegistry registry = new ModelFeatureRegistry();
     features.stream().forEach(item -> registry.add(item));
     return registry;
+  }
+
+  @Bean
+  public IDataSourceLoader dataSourceFactory(List<IDataSourceBuilder> builders) {
+    IDataSourceLoader factory = new DefaultDataSourceLoader();
+    builders.forEach(value -> factory.addBuilder(value.type(), value));
+    return factory;
   }
 
   public String fromNow(long time) {

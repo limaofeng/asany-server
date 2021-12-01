@@ -1,6 +1,5 @@
 package cn.asany.shanhai.data.engine;
 
-import cn.asany.shanhai.data.bean.DataSourceConfig;
 import java.util.List;
 
 /**
@@ -27,8 +26,8 @@ public interface IDataSourceLoader {
   /**
    * 通过配置加载 DataSource 实例
    *
-   * @param config
-   * @return
+   * @param id ID
+   * @return IDataSource
    */
-  IDataSource load(DataSourceConfig config);
+  IDataSource load(Long id);
 }
