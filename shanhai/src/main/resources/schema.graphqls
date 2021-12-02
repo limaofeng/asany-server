@@ -211,6 +211,29 @@ enum EndpointIdType {
   code
 }
 
+type DataSetField {
+  name: String
+}
+
+type DataSetFilter {
+  name: String
+}
+
+type DataSet {
+  """
+  数据集字段
+  """
+  fields: [DataSetField]
+  """
+  数据集筛选
+  """
+  filters: [DataSetFilter]
+  """
+  数据结果
+  """
+  result: [JSON]
+}
+
 extend type Query {
   # 用户列表
   models(
@@ -237,6 +260,8 @@ extend type Query {
   consumers: [Consumer]
   #  GraphQL 架构图
   schema(id: ID!): GraphQLSchema
+  # 查询数据集
+  dataset(id: ID!, params: JSON): DataSet
 }
 
 extend type Mutation {

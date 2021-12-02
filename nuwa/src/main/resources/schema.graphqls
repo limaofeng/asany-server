@@ -160,7 +160,7 @@ type ClientSecret {
 type Menu {
   id: ID!
   # 菜单名称
-  name: String
+  name: String!
   # 路由类型
   type: MenuType!
   # 对应的图标

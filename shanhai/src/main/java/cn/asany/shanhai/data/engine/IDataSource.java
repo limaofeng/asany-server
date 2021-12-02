@@ -48,15 +48,15 @@ public interface IDataSource {
   /**
    * 数据结构 (表 / 实体)
    *
-   * @return
+   * @return List<ISchema>
    */
   List<ISchema> getSchemas();
 
   /**
    * 获取结构
    *
-   * @param id
-   * @return
+   * @param id ID
+   * @return ISchema
    */
   ISchema getSchema(String id);
 
@@ -64,6 +64,7 @@ public interface IDataSource {
    * 加载数据集
    *
    * @param config 配置
+   * @param variables
    * @param <T>
    * @return DataSet<T>
    */
