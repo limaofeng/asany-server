@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.18](https://github.com/limaofeng/asany-server/compare/v0.0.17...v0.0.18) (2021-12-04)
+
+
+### Features
+
+* schema 修改 ([e8846b5](https://github.com/limaofeng/asany-server/commit/e8846b58b9cde2e7c0339db67042eb65e46a7c66))
+* 完善菜单新增与删除接口 ([25ea276](https://github.com/limaofeng/asany-server/commit/25ea27611426edc1fdb6dd63c32c2d6e3f35b2e2))
+* 数据集逻辑完善 ([584e40a](https://github.com/limaofeng/asany-server/commit/584e40a2ee836cf1c5b609624a2e8738bb47dfb4))
+* 添加 Query.dataset 接口 ([f11b4f9](https://github.com/limaofeng/asany-server/commit/f11b4f90fe405923e44cad1d940ec23e21b7142c))
+* 添加数据源逻辑 ([b2ac38e](https://github.com/limaofeng/asany-server/commit/b2ac38e281186f2505db49e08731cbf1f1bc1f0c))
+* 组件更新接口 ([2a1f328](https://github.com/limaofeng/asany-server/commit/2a1f328a06c564ff2692171c5494eb5f6b4b4bfb))
+* 路由布局设置中可以设置隐藏菜单栏 ([cbf18ad](https://github.com/limaofeng/asany-server/commit/cbf18ad3e6d33f12e7df3ff0d55a423c6fde24bc))
+
 ### [0.0.17](https://github.com/limaofeng/asany-server/compare/v0.0.16...v0.0.17) (2021-11-02)
 
 
