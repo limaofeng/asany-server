@@ -80,11 +80,9 @@ input MenuCreateInput {
   # 对应的图标
   icon: String
   # 菜单类型
-  type: MenuType
+  type: MenuType!
   # 路径
   path: String
-  # 必须登录
-  authorized: Boolean
   # 需要提供的权限
   authority: [String]
   # 父路由
@@ -92,7 +90,7 @@ input MenuCreateInput {
   # 默认位置
   index: Int
   # 应用
-  application: ID
+  application: ID!
 }
 
 input MenuUpdateInput {
@@ -104,8 +102,6 @@ input MenuUpdateInput {
   type: MenuType
   # 路径
   path: String
-  # 必须登录
-  authorized: Boolean
   # 需要提供的权限
   authority: [String]
   # 父路由
@@ -167,10 +163,8 @@ type Menu {
   icon: String
   # 树路径
   path: String
-  # 必须登录
-  authorized: Boolean
-  # 在面包屑中隐藏菜单
-  hideInBreadcrumb: Boolean
+  # 徽章 / 印记
+  badge: String
   # 需要提供的权限
   authority: [String]
   # 序号
@@ -181,8 +175,6 @@ type Menu {
   parent: Menu
   # 菜单层级
   level: Int!
-  # 是否启用
-  enabled: Boolean!
   # 路由对应的应用
   application: Application!
   # 组件
@@ -330,6 +322,8 @@ extend type Mutation {
   updateMenu(id: ID!, input: MenuUpdateInput!, merge: Boolean = true): Menu
   # 删除菜单
   deleteMenu(id: ID!): Boolean
+  # 批量删除菜单
+  deleteManyMenus(id: [ID]!): Int
   # 移动菜单
   moveMenu(id: ID!, parentMenu: ID, location: Int!): Menu
 }

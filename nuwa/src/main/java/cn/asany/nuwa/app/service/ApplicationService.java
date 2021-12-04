@@ -239,10 +239,6 @@ public class ApplicationService implements ClientDetailsService {
               menu.setIndex(context.getIndex());
               menu.setLevel(context.getLevel());
 
-              menu.setEnabled(ObjectUtil.defaultValue(menu.getEnabled(), true));
-              menu.setAuthorized(ObjectUtil.defaultValue(menu.getAuthorized(), false));
-              menu.setHideInBreadcrumb(ObjectUtil.defaultValue(menu.getHideInBreadcrumb(), false));
-
               if (menu.getType() == null) {
                 // 这里使用的是 item， 因为子项在之后才会执行
                 if (item.getChildren() != null && !item.getChildren().isEmpty()) {

@@ -44,10 +44,10 @@ public class ApplicationMenu extends BaseBusEntity {
   @Column(name = "TYPE")
   private MenuType type;
   /** 序号 */
-  @Column(name = "SORT")
+  @Column(name = "SORT", nullable = false)
   private Integer index;
   /** 层级 */
-  @Column(name = "LEVEL")
+  @Column(name = "LEVEL", nullable = false)
   private Integer level;
   /**
    * menuType = url 时, 格式为： 打开方式： 地址 <br>
@@ -89,15 +89,6 @@ public class ApplicationMenu extends BaseBusEntity {
   @Convert(converter = StringSetConverter.class)
   @Column(name = "AUTHORITY")
   private Set<String> authority;
-  /** 登录后可见 */
-  @Column(name = "AUTHORIZED")
-  private Boolean authorized;
-  /** 是否启用 */
-  @Column(name = "ENABLED")
-  private Boolean enabled;
-  /** 在面包屑中隐藏 */
-  @Column(name = "HIDE_IN_BREADCRUMB")
-  private Boolean hideInBreadcrumb;
   /** 应用 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(
