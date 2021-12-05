@@ -298,6 +298,8 @@ extend type Query {
 }
 
 extend type Mutation {
+  # 通过 yml 导入一个应用
+  importApplication(file: Upload!): Application
   # 创建一个应用
   createApplication(input: ApplicationCreateInput!): Application
   # 更新应用信息

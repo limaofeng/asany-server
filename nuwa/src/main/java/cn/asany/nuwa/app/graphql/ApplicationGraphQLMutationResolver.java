@@ -9,13 +9,18 @@ import cn.asany.nuwa.app.graphql.input.RouteUpdateInput;
 import cn.asany.nuwa.app.service.ApplicationService;
 import cn.asany.nuwa.app.service.dto.NativeApplication;
 import graphql.kickstart.tools.GraphQLMutationResolver;
+import java.io.IOException;
+import javax.servlet.http.Part;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.yaml.snakeyaml.Yaml;
 
 /**
  * 应用 Mutation
  *
  * @author limaofeng
  */
+@Slf4j
 @Component
 public class ApplicationGraphQLMutationResolver implements GraphQLMutationResolver {
 
@@ -26,6 +31,16 @@ public class ApplicationGraphQLMutationResolver implements GraphQLMutationResolv
       ApplicationService applicationService, ApplicationConverter applicationConverter) {
     this.applicationService = applicationService;
     this.applicationConverter = applicationConverter;
+  }
+
+  public Application importApplication(Part part) throws IOException {
+    Yaml yaml = new Yaml();
+    NativeApplication app = yaml.loadAs(part.getInputStream(), NativeApplication.class);
+    if (this.applicationService.existsByClientId(app.getClientId())) {
+      log.warn("实际使用过程中，应该提示 ClientId 冲突，由用户选择是否删除原来的应用");
+      applicationService.deleteApplication(app.getName());
+    }
+    return applicationService.createApplication(app);
   }
 
   public Application createApplication(ApplicationCreateInput input) {

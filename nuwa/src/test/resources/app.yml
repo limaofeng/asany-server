@@ -9,48 +9,200 @@ menus:
   - name: IT外包
     component: cn.asany.ui.theme.canvas.component.MegaMenu
     children:
-      - name: 产品与服务
-        path: /services/product
-      - name: 解决方案
-        path: /services/solution
-      - name: 客户案例
-        path: /services/cases
+      - name: 运维服务
+        children:
+          - name: 驻场服务
+          - name: 应急服务
+          - name: 3A级远程服务
+          - name: 网络和服务器服务
+      - name: 软件开发
+        children:
+          - name: 网站建设
+          - name: APP开发
+          - name: 小程序开发
+      - name: 专项服务
+        children:
+          - name: 网站设计开发
+          - name: 打印机复印机租赁
+          - name: 企业邮箱
+          - name: 超级Excel 开发
+      - name: 咨询服务
+        children:
+          - name: 信息安全评估
+          - name: IT流程梳理
+          - name: IT战略规划
+          - name: IT资产管理
   - name: 网络安全
     component: cn.asany.ui.theme.canvas.component.MegaMenu
     children:
-      - name: 互升新闻
-        path: /news/self
-      - name: 行业新闻
-        path: /news/industry
+      - name: 访问安全
+        children:
+          - name: 上网行为管理AC
+          - name: SSL VPN
+          - name: 硬件VPN
+      - name: 云安全
+        children:
+          - name: 信服云盾
+          - name: 信服云眼
+          - name: 重构入云业务安全边界
+      - name: 边界安全
+        children:
+          - name: 下一代防火墙AF
+          - name: WAF
+      - name: 终端安全
+        children:
+          - name: 终端检测响应平台EDR
+          - name: 企业移动管理EMM
+      - name: 身份安全
+        children:
+          - name: EasyConnect
+          - name: 行为感知系统BA
+      - name: 威胁检测
+        children:
+          - name: 安全感知平台SIP
+      - name: 病毒防护
+        children:
+          - name: 网络防病毒
+      - name: 等级保护
+        children:
+          - name: 等保2.0
+      - name: 安全审计与运营
+        children:
+          - name: 数据库安全审计DAS
+  - name: 微软云
+    component:
+      template: cn.asany.ui.theme.canvas.component.MegaMenu
+      blocks: |
+        [{"key": "MegaMenu", "props": {"style": "one-layer"}}]
+    children:
+      - name: Office365方案咨询
+      - name: Office365实施部署
+      - name: Office365培训
+      - name: Office365微信应用
+      - name: Office365邮箱迁移
+      - name: Exchange online混合布署
+      - name: Azure
+      - name: Skype for bisiness
+      - name: 微软批量授权
+      - name: 免费体验Azure账户
+      - name: 免费体验office365账户
+      - name: 免费体验IT外包服务
+  - name: IT采购
+    component:
+      template: cn.asany.ui.theme.canvas.component.MegaMenu
+      blocks: |
+        [{"key": "MegaMenu", "props": {"style": "one-layer"}}]
+    children:
+      - name: 服务流程
+      - name: 产品选型
+      - name: 互升优势
+      - name: 品牌合作
   - name: 弱电工程
-    component: cn.asany.ui.theme.canvas.component.MegaMenu
+    component:
+      template: cn.asany.ui.theme.canvas.component.MegaMenu
+      blocks: |
+        [{"key": "MegaMenu", "props": {"style": "one-layer"}}]
     children:
-      - name: 互升新闻
-        path: /news/self
-      - name: 行业新闻
-        path: /news/industry
+      - name: 综合布线
+      - name: 机房建设
+      - name: 门禁考勤
+      - name: 视频监控
+      - name: 电话交换机
+      - name: 视频会议
+      - name: 多媒体会议室
+      - name: 拼接屏
+      - name: 一卡通
+      - name: 电话会议
+      - name: 防盗报警系统
   - name: 系统集成
-    component: cn.asany.ui.theme.canvas.component.MegaMenu
+    component:
+      template: cn.asany.ui.theme.canvas.component.MegaMenu
+      blocks: |
+        [{"key": "MegaMenu", "props": {"style": "one-layer"}}]
     children:
-      - name: 互升新闻
-        path: /news/self
-      - name: 行业新闻
-        path: /news/industry
+      - name: 网络改造
+      - name: 无线覆盖
+      - name: 病毒防护
+      - name: 访问控制
+      - name: 上网行为管理
+      - name: 服务器虚拟化
+      - name: 桌面虚拟化
+      - name: 服务器负载均衡
+      - name: 服务器托管
+      - name: VPN专用网
+      - name: 数据备份
+      - name: 数据文件共享
+      - name: 数据加密
+      - name: 邮件服务器
+      - name: 反垃圾邮件
+      - name: SQL高可用
+      - name: 服务器异地容灾
+      - name: 服务器状态监控
+      - name: 应用虚拟化
   - name: 云服务
     component: cn.asany.ui.theme.canvas.component.MegaMenu
     children:
-      - name: 互升新闻
-        path: /news/self
-      - name: 行业新闻
-        path: /news/industry
-  - name: 关于互升
+      - name: 云服务
+        children:
+          - name: 私有云
+          - name: 公有云
+          - name: 云杀毒
+          - name: 云监控
+          - name: 混合云
+          - name: 云搬迁
+      - name: 微软云
+        children:
+          - name: 微软云介绍
+          - name: 微软云优势
+          - name: 微软云解决方案
+          - name: 微软云案例
+      - name: 阿里云
+        children:
+          - name: 阿里云介绍
+          - name: 阿里云产品
+          - name: 阿里云解决方案
+          - name: 阿里云案例
+      - name: 钉钉
+        children:
+          - name: 钉钉简介
+          - name: 钉钉定制开发
+  - name: 客户故事
+    component:
+      template: cn.asany.ui.theme.canvas.component.MegaMenu
+      blocks: |
+        [{"key": "MegaMenu", "props": {"style": "one-layer"}}]
+    children:
+      - name: 金融
+      - name: 能源化工
+      - name: 服装纺织
+      - name: 高科技
+      - name: 房地产
+      - name: 创意设计
+      - name: 智能制造业
+      - name: 国际教育
+      - name: 服务业
+      - name: 传媒业
+      - name: 零售业
+      - name: 贸易
+      - name: 互联网金融
+      - name: 游戏
+      - name: 通信
+      - name: 咨询业
+      - name: 物联网
+      - name: 生物医疗
+      - name: 清洁能源
+      - name: 水资源
+      - name: 展台制作
+      - name: 工程类
+  - name: 走进互升
     children:
       - name: 公司介绍
-        path: /about
-      - name: 客户服务评价
-        path: /testimonials
-  - name: 联系我们
-    path: /contact
+      - name: 关于互升
+      - name: 互升实验室
+      - name: 加入互升
+      - name: 联系我们
+      - name: 互升动态
+      - name: 技术百科
 routes:
   - path: /
     component:

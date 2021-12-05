@@ -19,7 +19,6 @@ import cn.asany.ui.resources.bean.enums.ComponentScope;
 import cn.asany.ui.resources.dao.ComponentDao;
 import java.util.*;
 import java.util.stream.Collectors;
-import javax.transaction.Transactional;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.error.ValidationException;
 import org.jfantasy.framework.security.oauth2.core.ClientDetails;
@@ -28,6 +27,8 @@ import org.jfantasy.framework.security.oauth2.core.ClientRegistrationException;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.common.StringUtil;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 应用服务
@@ -83,6 +84,11 @@ public class ApplicationService implements ClientDetailsService {
   }
 
   @Transactional
+  public boolean existsByClientId(String clientId) {
+    return this.applicationDao.exists(PropertyFilter.builder().equal("clientId", clientId).build());
+  }
+
+  @Transactional
   public Optional<Application> findDetailsByClientId(String id) {
     return this.applicationDao.findDetailsByClientId(id);
   }
@@ -98,7 +104,7 @@ public class ApplicationService implements ClientDetailsService {
     return this.applicationRouteDao.findAllByApplicationAndSpaceWithComponent(applicationId, space);
   }
 
-  @Transactional(rollbackOn = RuntimeException.class)
+  @Transactional(rollbackFor = RuntimeException.class)
   public Application createApplication(OAuthApplication app) {
     Application application = this.applicationConverter.oauthAppToApp(app);
     String clientId = StringUtil.generateNonceString(NONCE_CHARS, 20);
@@ -187,7 +193,7 @@ public class ApplicationService implements ClientDetailsService {
     return application;
   }
 
-  @Transactional(rollbackOn = Exception.class)
+  @Transactional(propagation = Propagation.REQUIRES_NEW)
   public void deleteApplication(String name) {
     Optional<Application> application =
         this.applicationDao.findOne(PropertyFilter.builder().equal("name", name).build());
@@ -197,7 +203,7 @@ public class ApplicationService implements ClientDetailsService {
     deleteApplication(application.get().getId());
   }
 
-  @Transactional(rollbackOn = Exception.class)
+  @Transactional(rollbackFor = Exception.class)
   public void deleteApplication(Long id) {
     // 路由组件
     List<ApplicationRoute> routes =
