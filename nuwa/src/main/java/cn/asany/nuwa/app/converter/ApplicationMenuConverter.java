@@ -23,7 +23,10 @@ public interface ApplicationMenuConverter {
    * @param input 输入
    * @return 菜单
    */
-  @Mappings(@Mapping(target = "application.id", source = "application"))
+  @Mappings({
+    @Mapping(target = "application.id", source = "application"),
+    @Mapping(target = "parent.id", source = "parentMenu")
+  })
   ApplicationMenu toMenu(ApplicationMenuCreateInput input);
 
   /**
@@ -32,6 +35,9 @@ public interface ApplicationMenuConverter {
    * @param input 输入
    * @return 菜单
    */
-  @Mappings(@Mapping(target = "application.id", source = "application"))
+  @Mappings({
+    @Mapping(target = "application.id", source = "application"),
+    @Mapping(target = "parent.id", source = "parentMenu")
+  })
   ApplicationMenu toMenu(ApplicationMenuUpdateInput input);
 }
