@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.20](https://github.com/limaofeng/asany-server/compare/v0.0.19...v0.0.20) (2021-12-05)
+
+
+### Features
+
+* 添加应用导入接口 ([dae8424](https://github.com/limaofeng/asany-server/commit/dae8424484d06b7f6114347ca94310a276f840db))
+
 ### [0.0.19](https://github.com/limaofeng/asany-server/compare/v0.0.18...v0.0.19) (2021-12-05)
 
 
