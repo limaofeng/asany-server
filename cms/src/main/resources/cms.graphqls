@@ -64,8 +64,10 @@ input ArticleFilter {
   and: [ArticleFilter]
   # 复杂查询支持
   or: [ArticleFilter]
-  #发布状态
+  # 发布状态
   status: ArticleStatus
+  # 发布状态
+  status_in: [ArticleStatus]
   # 发布时间
   publishedAt: String
   # 发布人
@@ -74,8 +76,8 @@ input ArticleFilter {
   category: ArticleCategory
   # 用户id
   viewer: ID
-  # 用户创建id
-  founder: ID
+  # 创建人 ID
+  createdBy: ID
   # 有效期限 true 过滤以过有效期限的文章
   validity: Boolean
 }

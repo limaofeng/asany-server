@@ -1,7 +1,6 @@
 package cn.asany.cms.article.graphql.input;
 
 import cn.asany.cms.article.bean.Article;
-import cn.asany.cms.article.bean.enums.ArticleStatus;
 import cn.asany.cms.article.service.ArticleService;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.text.ParseException;
@@ -25,8 +24,6 @@ import org.jfantasy.graphql.inputs.QueryFilter;
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class ArticleFilter extends QueryFilter<ArticleFilter, Article> {
-
-  private PropertyFilterBuilder builder = new PropertyFilterBuilder();
 
   @JsonProperty("Keyword")
   public void setKeyword(String keyword) {
@@ -57,18 +54,6 @@ public class ArticleFilter extends QueryFilter<ArticleFilter, Article> {
     }
   }
 
-  @JsonProperty("status")
-  public void setStatus(ArticleStatus status) {
-    builder.equal("status", status);
-  }
-
-  private String creator;
-
-  @JsonProperty("creator")
-  public void setCreator(String creator) {
-    this.creator = creator;
-  }
-
   @JsonProperty("publishedAt")
   public void setPublishedAt(String publishedAt) throws ParseException {
     SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
@@ -83,13 +68,6 @@ public class ArticleFilter extends QueryFilter<ArticleFilter, Article> {
     ArticleService articleService = SpringBeanUtils.getBeanByType(ArticleService.class);
     //        Map<String, String> viewerValue = articleService.getViewerValue(viewer);
     //        builder.and(new PermissionSpecification("ARTICLE_VIEWER", viewerValue));
-  }
-
-  @JsonProperty("founder")
-  public void setFounder(String founder) {
-    ArticleService articleService = SpringBeanUtils.getBeanByType(ArticleService.class);
-    //        Map<String, String> viewerValue = articleService.getViewerValue(founder);
-    //        builder.and(new PermissionSpecification("ARTICLE_CREATOR", viewerValue));
   }
 
   @JsonProperty("validity")
