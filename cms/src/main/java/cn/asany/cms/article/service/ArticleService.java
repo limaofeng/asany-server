@@ -39,7 +39,7 @@ public class ArticleService {
   private final ArticleFeatureService featureService;
   private final ArticleTagService tagService;
   private final ArticleDao articleDao;
-  @Autowired private ContentService contentService;
+  private final ContentService contentService;
 
   @Autowired
   public ArticleService(
@@ -129,7 +129,15 @@ public class ArticleService {
 
     saveContentAndSummary(article);
 
+    boolean needCleanUp = article.getChannels() != null && article.getChannels().isEmpty();
+
     this.articleDao.update(article, merge);
+
+    article = this.articleDao.getById(article.getId());
+
+    if (needCleanUp && !article.getChannels().isEmpty()) {
+      article.getChannels().clear();
+    }
 
     applicationContext.publishEvent(ArticleUpdateEvent.newInstance(article));
     return article;

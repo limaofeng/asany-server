@@ -13,7 +13,6 @@ import cn.asany.cms.article.service.ArticleService;
 import cn.asany.cms.article.service.ArticleTagService;
 import graphql.kickstart.tools.GraphQLMutationResolver;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
@@ -25,12 +24,28 @@ import org.springframework.stereotype.Component;
 @Component
 public class ArticleGraphQLMutationResolver implements GraphQLMutationResolver {
 
-  @Autowired private ArticleChannelConverter articleChannelConverter;
-  @Autowired private ArticleConverter articleConverter;
-  @Autowired private ArticleService articleService;
-  @Autowired private ArticleTagService articleTagService;
-  @Autowired private ArticleChannelService articleChannelService;
-  @Autowired protected Environment environment;
+  private final ArticleChannelConverter articleChannelConverter;
+  private final ArticleConverter articleConverter;
+  private final ArticleService articleService;
+  private final ArticleTagService articleTagService;
+  private final ArticleChannelService articleChannelService;
+  protected final Environment environment;
+
+  public ArticleGraphQLMutationResolver(
+      ArticleChannelConverter articleChannelConverter,
+      ArticleConverter articleConverter,
+      ArticleService articleService,
+      ArticleTagService articleTagService,
+      ArticleChannelService articleChannelService,
+      Environment environment) {
+    this.articleChannelConverter = articleChannelConverter;
+    this.articleConverter = articleConverter;
+    this.articleService = articleService;
+    this.articleTagService = articleTagService;
+    this.articleChannelService = articleChannelService;
+    this.environment = environment;
+  }
+
   /**
    * 保存文章
    *

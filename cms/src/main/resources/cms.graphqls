@@ -50,16 +50,18 @@ input ArticleChannelUpdateInput {
 }
 
 input ArticleFilter {
-  # 频道
-  channel: ID
   # 关键字
   Keyword: String
   # 标签
   tags: [ID]
   # 栏目为空 (没有栏目的文章)
   channels_isEmpty: Boolean
+  # 频道
+  channel: ID
   # 多个栏目
   channel_in: [ID]
+  # 包含所有的后代文章
+  channel_startsWith: ID
   # 复杂查询支持
   and: [ArticleFilter]
   # 复杂查询支持
@@ -203,16 +205,18 @@ type Article {
   slug: String
   # 图片
   cover: File
+  # 文章类型
+  type: ArticleType
   # 标题
   title: String
   # 状态
-  status: ArticleStatus
+  status: ArticleStatus!
   # 摘要
   summary: String
   # 分类
   category: ArticleCategory
   # 作者
-  authors: [ArticleAuthor]
+  authors: [ArticleAuthor!]!
   # 发布时间
   publishedAt: Date
   # 内容
@@ -220,11 +224,11 @@ type Article {
   #查询评论
   #    comments(filter: CommentFilter, page: Int = 1, pageSize: Int = 15, orderBy: OrderBy): CommentConnection
   # 频道
-  channels: [ArticleChannel]
+  channels: [ArticleChannel!]!
   # 标签
-  tags: [ArticleTag]
+  tags: [ArticleTag!]!
   # 推荐位
-  features: [ArticleFeature]
+  features: [ArticleFeature!]!
   # 有效期限 true 永久 false 短期
   validity: Boolean
   # 有效期限 开始时间
@@ -234,7 +238,7 @@ type Article {
   # 元数据
   meta: Meta
   # 附件
-  attachments: [File]
+  attachments: [File!]!
   # 统计计数
   #    starrable(starType: ArticleStarType!): Starrable!
   # 权限设置
@@ -243,8 +247,6 @@ type Article {
   updatedBy: Int
   createdAt: Date
   updatedAt: Date
-  # 文章类型
-  type: ArticleType
 }
 
 # 文章内容

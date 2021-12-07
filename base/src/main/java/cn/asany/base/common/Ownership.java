@@ -9,9 +9,24 @@ import java.io.Serializable;
  */
 public interface Ownership extends Serializable {
 
+  /**
+   * ID
+   *
+   * @return Long
+   */
   Long getId();
 
+  /**
+   * 名称
+   *
+   * @return String
+   */
   String getName();
 
+  /**
+   * Owner Type
+   *
+   * @return String
+   */
   String getOwnerType();
 }

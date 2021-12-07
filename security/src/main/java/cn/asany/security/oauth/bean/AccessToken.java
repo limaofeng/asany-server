@@ -2,9 +2,11 @@ package cn.asany.security.oauth.bean;
 
 import cn.asany.security.core.bean.User;
 import java.util.Date;
+import java.util.Objects;
 import java.util.Set;
 import javax.persistence.*;
 import lombok.*;
+import org.hibernate.Hibernate;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.framework.dao.hibernate.converter.StringSetConverter;
@@ -76,20 +78,20 @@ public class AccessToken extends BaseBusEntity {
       updatable = false)
   private User user;
 
-  //  @Override
-  //  public boolean equals(Object o) {
-  //    if (this == o) {
-  //      return true;
-  //    }
-  //    if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) {
-  //      return false;
-  //    }
-  //    AccessToken that = (AccessToken) o;
-  //    return id != null && Objects.equals(id, that.id);
-  //  }
-  //
-  //  @Override
-  //  public int hashCode() {
-  //    return getClass().hashCode();
-  //  }
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) {
+      return false;
+    }
+    AccessToken that = (AccessToken) o;
+    return id != null && Objects.equals(id, that.id);
+  }
+
+  @Override
+  public int hashCode() {
+    return getClass().hashCode();
+  }
 }

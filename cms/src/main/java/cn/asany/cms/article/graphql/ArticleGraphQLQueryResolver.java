@@ -22,7 +22,6 @@ import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.graphql.util.Kit;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -33,10 +32,21 @@ import org.springframework.stereotype.Component;
 @Component
 public class ArticleGraphQLQueryResolver implements GraphQLQueryResolver {
 
-  @Autowired private ArticleService articleService;
-  @Autowired private ArticleTagService articleTagService;
-  @Autowired private ArticleChannelService channelService;
-  @Autowired private ArticleChannelConverter articleChannelConverter;
+  private final ArticleService articleService;
+  private final ArticleTagService articleTagService;
+  private final ArticleChannelService channelService;
+  private final ArticleChannelConverter articleChannelConverter;
+
+  public ArticleGraphQLQueryResolver(
+      ArticleService articleService,
+      ArticleTagService articleTagService,
+      ArticleChannelService channelService,
+      ArticleChannelConverter articleChannelConverter) {
+    this.articleService = articleService;
+    this.articleTagService = articleTagService;
+    this.channelService = channelService;
+    this.articleChannelConverter = articleChannelConverter;
+  }
 
   public Article article(Long id) {
     return articleService.get(id);

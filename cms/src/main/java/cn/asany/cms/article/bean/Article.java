@@ -13,6 +13,7 @@ import cn.asany.storage.api.converter.FileObjectsConverter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import javax.persistence.*;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -21,6 +22,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.Null;
 import lombok.*;
 import net.bytebuddy.description.modifier.Ownership;
+import org.hibernate.Hibernate;
 import org.hibernate.annotations.*;
 import org.hibernate.annotations.Cache;
 import org.jfantasy.framework.dao.BaseBusEntity;
@@ -35,11 +37,11 @@ import org.jfantasy.framework.spring.validation.Operation;
  * @version 1.0
  * @since 2012-11-4 下午05:47:20
  */
-@Data
+@Setter
+@Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = true)
 @Indexed
 @Entity
 @Table(
@@ -138,7 +140,6 @@ public class Article extends BaseBusEntity {
   @Enumerated(EnumType.STRING)
   @Column(name = "CATEGORY", nullable = false, length = 25)
   private ArticleCategory category;
-
   /** 文章正文 */
   @Any(
       metaColumn = @Column(name = "CONTENT_TYPE", length = 25, updatable = false),
@@ -152,7 +153,6 @@ public class Article extends BaseBusEntity {
       })
   @JoinColumn(name = "CONTENT_ID", updatable = false)
   private Content content;
-
   /** 所有者 */
   @Any(
       metaColumn = @Column(name = "OWNERSHIP_TYPE", length = 10, updatable = false),
@@ -166,7 +166,6 @@ public class Article extends BaseBusEntity {
       })
   @JoinColumn(name = "OWNERSHIP_ID", updatable = false)
   private Ownership ownership;
-
   /** 最后评论时间 */
   @Temporal(TemporalType.TIMESTAMP)
   @Column(name = "LAST_COMMENT_TIME")
@@ -183,4 +182,21 @@ public class Article extends BaseBusEntity {
   private Date validityEndDate;
 
   @Transient private List<Permission> permissions;
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) {
+      return false;
+    }
+    Article article = (Article) o;
+    return id != null && Objects.equals(id, article.id);
+  }
+
+  @Override
+  public int hashCode() {
+    return getClass().hashCode();
+  }
 }

@@ -50,8 +50,10 @@ public class Licence extends BaseBusEntity {
   private Application application;
   /** 持有人 */
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "OWNER_ID", foreignKey = @ForeignKey(name = "FK_APPLICATION_LICENCE_OWNER"))
-  private Organization owner;
+  @JoinColumn(
+      name = "OWNERSHIP",
+      foreignKey = @ForeignKey(name = "FK_APPLICATION_LICENCE_OWNERSHIP"))
+  private Organization ownership;
 
   @Override
   public boolean equals(Object o) {

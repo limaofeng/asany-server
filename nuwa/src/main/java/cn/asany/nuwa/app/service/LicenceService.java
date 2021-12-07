@@ -27,7 +27,7 @@ public class LicenceService {
     return this.licenceDao.findOne(
         PropertyFilter.builder()
             .equal("application.id", app)
-            .equal("owner.id", org)
+            .equal("ownership.id", org)
             .equal("status", LicenceStatus.ACTIVE)
             .build());
   }

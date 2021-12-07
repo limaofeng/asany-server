@@ -1,18 +1,13 @@
 package cn.asany.nuwa.app.bean;
 
-import cn.asany.base.common.Ownership;
 import cn.asany.nuwa.app.bean.enums.ApplicationType;
 import cn.asany.organization.core.bean.Organization;
-import cn.asany.security.core.bean.User;
 import java.util.*;
 import java.util.stream.Collectors;
 import javax.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
-import org.hibernate.annotations.Any;
-import org.hibernate.annotations.AnyMetaDef;
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.MetaValue;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.framework.security.core.GrantedAuthority;
 import org.jfantasy.framework.security.oauth2.core.ClientDetails;
@@ -129,19 +124,9 @@ public class Application extends BaseBusEntity implements ClientDetails {
   @ToString.Exclude
   private List<Licence> licences;
   /** 所有者 */
-  @Any(
-      metaColumn =
-          @Column(name = "OWNERSHIP_TYPE", length = 10, insertable = false, updatable = false),
-      fetch = FetchType.LAZY)
-  @AnyMetaDef(
-      idType = "long",
-      metaType = "string",
-      metaValues = {
-        @MetaValue(targetEntity = User.class, value = User.OWNERSHIP_KEY),
-        @MetaValue(targetEntity = Organization.class, value = Organization.OWNERSHIP_KEY)
-      })
-  @JoinColumn(name = "OWNERSHIP_ID", insertable = false, updatable = false)
-  private Ownership ownership;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "OWNERSHIP", foreignKey = @ForeignKey(name = "FK_APPLICATION_OWNERSHIP"))
+  private Organization ownership;
 
   @Override
   public Map<String, Object> getAdditionalInformation() {

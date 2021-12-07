@@ -197,7 +197,7 @@ type Licence {
   # 许可证类型
   type: LicenceType
   # 许可证所有证
-  owner: Organization
+  ownership: Organization
 }
 
 type Application {
