@@ -2,8 +2,10 @@ package cn.asany.nuwa.app.bean;
 
 import cn.asany.nuwa.template.bean.ApplicationTemplate;
 import java.util.List;
+import java.util.Objects;
 import javax.persistence.*;
 import lombok.*;
+import org.hibernate.Hibernate;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 import org.hibernate.annotations.LazyToOne;
@@ -15,12 +17,11 @@ import org.jfantasy.framework.dao.BaseBusEntity;
  *
  * @author limaofeng
  */
-@Data
+@Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = false, of = "id")
-@ToString(exclude = {"applications", "applicationTemplate"})
 @Entity
 @Table(name = "NUWA_ROUTESPACE")
 @NamedEntityGraph(
@@ -64,6 +65,7 @@ public class Routespace extends BaseBusEntity {
   @JoinColumn(
       name = "APP_TEMPLATE_ID",
       foreignKey = @ForeignKey(name = "FK_ROUTESPACE_APP_TEMP_ID"))
+  @ToString.Exclude
   private ApplicationTemplate applicationTemplate;
 
   @ManyToMany(fetch = FetchType.LAZY)
@@ -73,7 +75,12 @@ public class Routespace extends BaseBusEntity {
       joinColumns = @JoinColumn(name = "ROUTESPACE_ID"),
       inverseJoinColumns = @JoinColumn(name = "APPLICATION_ID"),
       foreignKey = @ForeignKey(name = "FK_APPLICATION_ROUTESPACE_SPACEID"))
+  @ToString.Exclude
   private List<Application> applications;
+
+  public Routespace getDEFAULT_ROUTESPACE_WEB() {
+    return DEFAULT_ROUTESPACE_WEB;
+  }
 
   public static class RoutespaceBuilder {
 
@@ -81,5 +88,22 @@ public class Routespace extends BaseBusEntity {
       this.applicationTemplate = ApplicationTemplate.builder().id(id).build();
       return this;
     }
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) {
+      return false;
+    }
+    Routespace that = (Routespace) o;
+    return id != null && Objects.equals(id, that.id);
+  }
+
+  @Override
+  public int hashCode() {
+    return getClass().hashCode();
   }
 }

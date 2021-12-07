@@ -3,23 +3,30 @@ package cn.asany.nuwa.app.graphql.resolver;
 import cn.asany.nuwa.app.bean.Application;
 import cn.asany.nuwa.app.bean.ApplicationRoute;
 import cn.asany.nuwa.app.bean.ClientSecret;
+import cn.asany.nuwa.app.bean.Licence;
 import cn.asany.nuwa.app.service.ApplicationService;
+import cn.asany.nuwa.app.service.LicenceService;
 import graphql.execution.ExecutionStepInfo;
 import graphql.kickstart.tools.GraphQLResolver;
 import graphql.schema.DataFetchingEnvironment;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.jfantasy.framework.security.LoginUser;
+import org.jfantasy.framework.security.SpringSecurityUtils;
 import org.springframework.stereotype.Component;
 
 /** @author limaofeng */
 @Component
 public class ApplicationGraphQLResolver implements GraphQLResolver<Application> {
 
+  private final LicenceService licenceService;
   private final ApplicationService applicationService;
 
-  public ApplicationGraphQLResolver(ApplicationService applicationService) {
+  public ApplicationGraphQLResolver(
+      ApplicationService applicationService, LicenceService licenceService) {
     this.applicationService = applicationService;
+    this.licenceService = licenceService;
   }
 
   public Optional<ApplicationRoute> layoutRoute(
@@ -54,9 +61,21 @@ public class ApplicationGraphQLResolver implements GraphQLResolver<Application> 
     return Boolean.FALSE;
   }
 
-  //    public Organization organization(Application application) {
-  //        return null;
-  //    }
+  public Optional<Licence> licence(Application application) {
+    LoginUser user = SpringSecurityUtils.getCurrentUser();
+    if (user == null) {
+      return Optional.empty();
+    }
+    Long orgId = user.getAttribute("organization");
+    if (orgId == null) {
+      return Optional.empty();
+    }
+    return this.licenceService.findOneByActive(application.getId(), orgId);
+  }
+
+  public List<Licence> licences(Application application) {
+    return application.getLicences();
+  }
 
   public List<ClientSecret> clientSecrets(Application application) {
     return application.getClientSecretsAlias();

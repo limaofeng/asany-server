@@ -1,11 +1,18 @@
 package cn.asany.nuwa.app.bean;
 
+import cn.asany.base.common.Ownership;
 import cn.asany.nuwa.app.bean.enums.ApplicationType;
+import cn.asany.organization.core.bean.Organization;
+import cn.asany.security.core.bean.User;
 import java.util.*;
 import java.util.stream.Collectors;
 import javax.persistence.*;
 import lombok.*;
+import org.hibernate.Hibernate;
+import org.hibernate.annotations.Any;
+import org.hibernate.annotations.AnyMetaDef;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.MetaValue;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.framework.security.core.GrantedAuthority;
 import org.jfantasy.framework.security.oauth2.core.ClientDetails;
@@ -15,12 +22,11 @@ import org.jfantasy.framework.security.oauth2.core.ClientDetails;
  *
  * @author limaofeng
  */
-@Data
+@Setter
+@Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = false, of = "id")
-@ToString(exclude = {"routespaces", "routes", "clientSecretsAlias"})
 @NamedEntityGraph(
     name = "Graph.Application.FetchDetails",
     attributeNodes = {
@@ -86,18 +92,21 @@ public class Application extends BaseBusEntity implements ClientDetails {
       joinColumns = @JoinColumn(name = "APPLICATION_ID"),
       inverseJoinColumns = @JoinColumn(name = "ROUTESPACE_ID"),
       foreignKey = @ForeignKey(name = "FK_APPLICATION_ROUTESPACE_APPID"))
+  @ToString.Exclude
   private List<Routespace> routespaces;
   /** 路由 */
   @OneToMany(
       mappedBy = "application",
       cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
       fetch = FetchType.LAZY)
+  @ToString.Exclude
   private Set<ApplicationRoute> routes;
   /** 菜单 */
   @OneToMany(
       mappedBy = "application",
       cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
       fetch = FetchType.LAZY)
+  @ToString.Exclude
   private Set<ApplicationMenu> menus;
   /** 授权回调 URL */
   @Column(name = "CALLBACK_URL", length = 100)
@@ -106,10 +115,33 @@ public class Application extends BaseBusEntity implements ClientDetails {
   @Column(name = "CLIENT_ID", length = 20, updatable = false, nullable = false)
   private String clientId;
   /** 客服端密钥 */
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
   @OrderBy(" createdAt desc ")
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
   @JoinColumn(name = "CLIENT_ID", referencedColumnName = "CLIENT_ID", updatable = false)
+  @ToString.Exclude
   private List<ClientSecret> clientSecretsAlias;
+  /** 许可证 */
+  @OrderBy(" createdAt desc ")
+  @OneToMany(
+      mappedBy = "application",
+      cascade = {CascadeType.REMOVE},
+      fetch = FetchType.LAZY)
+  @ToString.Exclude
+  private List<Licence> licences;
+  /** 所有者 */
+  @Any(
+      metaColumn =
+          @Column(name = "OWNERSHIP_TYPE", length = 10, insertable = false, updatable = false),
+      fetch = FetchType.LAZY)
+  @AnyMetaDef(
+      idType = "long",
+      metaType = "string",
+      metaValues = {
+        @MetaValue(targetEntity = User.class, value = User.OWNERSHIP_KEY),
+        @MetaValue(targetEntity = Organization.class, value = Organization.OWNERSHIP_KEY)
+      })
+  @JoinColumn(name = "OWNERSHIP_ID", insertable = false, updatable = false)
+  private Ownership ownership;
 
   @Override
   public Map<String, Object> getAdditionalInformation() {
@@ -155,5 +187,22 @@ public class Application extends BaseBusEntity implements ClientDetails {
   @Override
   public int getTokenExpires() {
     return 30;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) {
+      return false;
+    }
+    Application that = (Application) o;
+    return id != null && Objects.equals(id, that.id);
+  }
+
+  @Override
+  public int hashCode() {
+    return getClass().hashCode();
   }
 }

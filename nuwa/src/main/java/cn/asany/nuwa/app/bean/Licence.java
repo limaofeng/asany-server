@@ -1,7 +1,7 @@
 package cn.asany.nuwa.app.bean;
 
-import cn.asany.nuwa.app.bean.enums.SubscriptionStatus;
-import cn.asany.nuwa.app.bean.enums.SubscriptionType;
+import cn.asany.nuwa.app.bean.enums.LicenceStatus;
+import cn.asany.nuwa.app.bean.enums.LicenceType;
 import cn.asany.organization.core.bean.Organization;
 import java.util.Objects;
 import javax.persistence.*;
@@ -11,7 +11,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
 /**
- * 应用会员
+ * 应用许可
  *
  * @author limaofeng
  */
@@ -22,38 +22,36 @@ import org.jfantasy.framework.dao.BaseBusEntity;
 @AllArgsConstructor
 @Entity
 @Table(
-    name = "NUWA_APPLICATION_SUBSCRIPTION",
-    uniqueConstraints = {
-      @UniqueConstraint(
-          name = "UK_APPLICATION_SUBSCRIPTION_ORG",
-          columnNames = {"APPLICATION_ID", "ORGANIZATION_ID"}),
-    })
-public class ApplicationSubscription extends BaseBusEntity {
-  /** ID */
+    name = "NUWA_APPLICATION_LICENCE",
+    uniqueConstraints = {@UniqueConstraint(name = "UK_LICENCE_KEY", columnNames = "LICENCE_KEY")})
+public class Licence extends BaseBusEntity {
   @Id
   @Column(name = "ID")
   @GeneratedValue(generator = "fantasy-sequence")
   @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
-
-  private SubscriptionType type;
-
+  /** 许可证 Key */
+  @Column(name = "LICENCE_KEY", length = 1024)
+  private String key;
+  /** 许可证类型 */
+  @Enumerated(EnumType.STRING)
+  @Column(name = "TYPE", length = 50)
+  private LicenceType type;
+  /** 许可证状态 */
+  @Enumerated(EnumType.STRING)
+  @Column(name = "STATUS", length = 50)
+  private LicenceStatus status;
+  /** 应用 */
+  @ToString.Exclude
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(
       name = "APPLICATION_ID",
-      foreignKey = @ForeignKey(name = "FK_APPLICATION_SUBSCRIPTION_APP"))
+      foreignKey = @ForeignKey(name = "FK_APPLICATION_LICENCE_APP"))
   private Application application;
-
-  @Enumerated(EnumType.STRING)
-  @Column(name = "STATUS", length = 50)
-  private SubscriptionStatus status;
-
-  /** 所有者 */
+  /** 持有人 */
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(
-      name = "ORGANIZATION_ID",
-      foreignKey = @ForeignKey(name = "FK_APPLICATION_SUBSCRIPTION_ORG"))
-  private Organization membership;
+  @JoinColumn(name = "OWNER_ID", foreignKey = @ForeignKey(name = "FK_APPLICATION_LICENCE_OWNER"))
+  private Organization owner;
 
   @Override
   public boolean equals(Object o) {
@@ -63,8 +61,8 @@ public class ApplicationSubscription extends BaseBusEntity {
     if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) {
       return false;
     }
-    ApplicationSubscription that = (ApplicationSubscription) o;
-    return id != null && Objects.equals(id, that.id);
+    Licence licence = (Licence) o;
+    return id != null && Objects.equals(id, licence.id);
   }
 
   @Override

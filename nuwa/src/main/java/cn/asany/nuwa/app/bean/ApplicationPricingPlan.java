@@ -3,8 +3,10 @@ package cn.asany.nuwa.app.bean;
 import cn.asany.nuwa.app.bean.enums.PaymentCycle;
 import cn.asany.nuwa.app.bean.enums.PlanStatus;
 import java.math.BigDecimal;
+import java.util.Objects;
 import javax.persistence.*;
 import lombok.*;
+import org.hibernate.Hibernate;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
@@ -13,11 +15,11 @@ import org.jfantasy.framework.dao.BaseBusEntity;
  *
  * @author limaofeng
  */
-@Data
+@Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = false, of = "id")
 @Entity
 @Table(name = "NUWA_APPLICATION_PRICING_PLAN")
 public class ApplicationPricingPlan extends BaseBusEntity {
@@ -49,4 +51,21 @@ public class ApplicationPricingPlan extends BaseBusEntity {
       name = "APPLICATION_ID",
       foreignKey = @ForeignKey(name = "FK_APPLICATION_PRICING_PLAN_APP"))
   private Application application;
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) {
+      return false;
+    }
+    ApplicationPricingPlan that = (ApplicationPricingPlan) o;
+    return id != null && Objects.equals(id, that.id);
+  }
+
+  @Override
+  public int hashCode() {
+    return getClass().hashCode();
+  }
 }

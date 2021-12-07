@@ -161,10 +161,12 @@ public class ApplicationService implements ClientDetailsService {
             ClientSecret.builder().client(clientId).secret(clientSecretStr).build());
     clientSecrets.add(clientSecret);
 
+    ;
+
     // 创建应用
     Application application =
         Application.builder()
-            .type(ApplicationType.NATIVE)
+            .type(ObjectUtil.defaultValue(nativeApplication.getType(), ApplicationType.Native))
             .name(nativeApplication.getName())
             .description(nativeApplication.getDescription())
             .clientId(clientId)

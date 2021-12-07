@@ -15,5 +15,5 @@ spring:
       maxWait: 60000
       minIdle: 10
   redis:
-    host: dev.local
-    password: sOmE_sEcUrE_pAsS
+    host: 139.196.223.217
+    port: 31134

@@ -1,5 +1,6 @@
 package cn.asany.cms.article.bean;
 
+import cn.asany.base.common.Ownership;
 import cn.asany.cms.article.bean.converter.MetaDataConverter;
 import cn.asany.organization.core.bean.Organization;
 import cn.asany.security.core.bean.User;
@@ -14,7 +15,6 @@ import javax.persistence.ForeignKey;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import lombok.*;
-import net.bytebuddy.description.modifier.Ownership;
 import org.hibernate.annotations.*;
 import org.hibernate.annotations.Cache;
 import org.jfantasy.framework.dao.BaseBusEntity;

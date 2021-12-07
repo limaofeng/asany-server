@@ -1,5 +1,6 @@
 package cn.asany.nuwa.app.service.dto;
 
+import cn.asany.nuwa.app.bean.enums.ApplicationType;
 import java.util.List;
 import java.util.Set;
 import lombok.AllArgsConstructor;
@@ -18,6 +19,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class NativeApplication {
   private String name;
+  @Builder.Default private ApplicationType type = ApplicationType.Native;
   private String title;
   private String url;
   private String description;

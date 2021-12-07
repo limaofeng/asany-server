@@ -2,8 +2,10 @@ package cn.asany.nuwa.app.bean;
 
 import cn.asany.security.oauth.bean.AccessToken;
 import java.util.List;
+import java.util.Objects;
 import javax.persistence.*;
 import lombok.*;
+import org.hibernate.Hibernate;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
@@ -12,12 +14,11 @@ import org.jfantasy.framework.dao.BaseBusEntity;
  *
  * @author limaofeng
  */
-@Data
+@Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = false)
-@ToString(exclude = {"accessTokens"})
 @Entity
 @Table(
     name = "AUTH_CLIENT_SECRET",
@@ -39,5 +40,23 @@ public class ClientSecret extends BaseBusEntity {
   @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
   @OrderBy(" createdAt desc ")
   @JoinColumn(name = "CLIENT_ID", referencedColumnName = "CLIENT_ID", updatable = false)
+  @ToString.Exclude
   private List<AccessToken> accessTokens;
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) {
+      return false;
+    }
+    ClientSecret that = (ClientSecret) o;
+    return id != null && Objects.equals(id, that.id);
+  }
+
+  @Override
+  public int hashCode() {
+    return getClass().hashCode();
+  }
 }

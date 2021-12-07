@@ -31,7 +31,7 @@ public class DataBaseTokenStore extends AbstractTokenStore {
     this.accessTokenDao = accessTokenDao;
   }
 
-  private Optional<AccessToken> getAccessToken(String token) {
+  protected Optional<AccessToken> getAccessToken(String token) {
     return this.accessTokenDao.findOne(PropertyFilter.builder().equal("token", token).build());
   }
 

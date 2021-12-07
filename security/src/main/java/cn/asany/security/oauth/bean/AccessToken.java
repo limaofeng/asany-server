@@ -15,11 +15,11 @@ import org.jfantasy.framework.security.oauth2.core.TokenType;
  *
  * @author limaofeng
  */
-@Data
+@Setter
+@Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = false)
 @Entity
 @Table(
     name = "AUTH_ACCESS_TOKEN",
@@ -75,4 +75,21 @@ public class AccessToken extends BaseBusEntity {
       foreignKey = @ForeignKey(name = "FK_ACCESS_TOKEN_USER"),
       updatable = false)
   private User user;
+
+  //  @Override
+  //  public boolean equals(Object o) {
+  //    if (this == o) {
+  //      return true;
+  //    }
+  //    if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) {
+  //      return false;
+  //    }
+  //    AccessToken that = (AccessToken) o;
+  //    return id != null && Objects.equals(id, that.id);
+  //  }
+  //
+  //  @Override
+  //  public int hashCode() {
+  //    return getClass().hashCode();
+  //  }
 }

@@ -1,11 +1,11 @@
 package cn.asany.nuwa.app.bean.enums;
 
 /**
- * 订阅状态
+ * 许可证类型
  *
  * @author limaofeng
  */
-public enum SubscriptionStatus {
+public enum LicenceStatus {
   /** 过期 */
   EXPIRED,
   /** 活动的 */

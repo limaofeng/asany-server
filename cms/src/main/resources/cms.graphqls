@@ -132,9 +132,9 @@ type ArticleChannel {
   # 编码
   slug: String
   # 名称
-  name: String
+  name: String!
   # 全称
-  fullName: String
+  fullName: String!
   # 描述
   description: String
   # 对应的图标
@@ -144,22 +144,19 @@ type ArticleChannel {
   # 全路径
   path: String
   # 排序
-  index: Int
+  index: Int!
   # 层级
-  level: Int
+  level: Int!
   # 上级栏目
   parent: ArticleChannel
   # 元数据
   meta: Meta
-  # 栏目 / 频道 关注
-  #    starrable: Starrable
-  # 展示模版
-  #    displayTemplate: [FieldValue]
-  # 权限设置
-  #    permissions: Permission
-  createdAt: Date
-  updatedAt: Date
-  children: [ArticleChannel]
+  # 创建时间
+  createdAt: Date!
+  # 修改时间
+  updatedAt: Date!
+  # 子栏目
+  children: [ArticleChannel!]!
 }
 
 # 支持层级，亦可栏目使用
@@ -560,7 +557,7 @@ extend type Query {
   articleChannels(
     filter: ArticleChannelFilter = {}
     orderBy: OrderBy
-  ): [ArticleChannel]
+  ): [ArticleChannel!]!
   # 文章标签
   articleTags(
     organization: ID!

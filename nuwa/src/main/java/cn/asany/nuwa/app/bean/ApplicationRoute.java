@@ -4,8 +4,10 @@ import cn.asany.nuwa.app.bean.enums.RouteType;
 import cn.asany.ui.resources.bean.Component;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import java.util.List;
+import java.util.Objects;
 import javax.persistence.*;
 import lombok.*;
+import org.hibernate.Hibernate;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
@@ -14,14 +16,11 @@ import org.jfantasy.framework.dao.BaseBusEntity;
  *
  * @author limaofeng
  */
-@Data
+@Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(
-    callSuper = false,
-    of = {"id", "path", "level", "index"})
-@ToString(exclude = {"parent", "application", "space", "routes"})
 @Entity
 @Table(name = "NUWA_APPLICATION_ROUTE")
 @NamedEntityGraph(
@@ -44,6 +43,7 @@ public class ApplicationRoute extends BaseBusEntity {
       foreignKey = @ForeignKey(name = "FK_APPLICATION_ROUTE_SPACE"),
       updatable = false,
       nullable = false)
+  @ToString.Exclude
   private Routespace space;
   /** 路由类型 */
   @Enumerated(EnumType.STRING)
@@ -63,6 +63,7 @@ public class ApplicationRoute extends BaseBusEntity {
   @JoinColumn(
       name = "COMPONENT_ID",
       foreignKey = @ForeignKey(name = "FK_APPLICATION_ROUTE_COMPONENT"))
+  @ToString.Exclude
   private Component component;
   /** 对应的图标 */
   @Column(name = "ICON")
@@ -70,6 +71,7 @@ public class ApplicationRoute extends BaseBusEntity {
   /** 父路由 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "PID", foreignKey = @ForeignKey(name = "FK_APPLICATION_ROUTE_PID"))
+  @ToString.Exclude
   private ApplicationRoute parent;
   /** 子路由 */
   @JsonInclude(content = JsonInclude.Include.NON_NULL)
@@ -78,6 +80,7 @@ public class ApplicationRoute extends BaseBusEntity {
       fetch = FetchType.LAZY,
       cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
   @OrderBy("index ASC")
+  @ToString.Exclude
   private List<ApplicationRoute> routes;
   /** 访问权限 */
   @Column(name = "access")
@@ -104,8 +107,26 @@ public class ApplicationRoute extends BaseBusEntity {
       foreignKey = @ForeignKey(name = "FK_APPLICATION_ROUTE_APPID"),
       updatable = false,
       nullable = false)
+  @ToString.Exclude
   private Application application;
   /** 序号 */
   @Column(name = "SORT")
   private Integer index;
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) {
+      return false;
+    }
+    ApplicationRoute that = (ApplicationRoute) o;
+    return id != null && Objects.equals(id, that.id);
+  }
+
+  @Override
+  public int hashCode() {
+    return getClass().hashCode();
+  }
 }

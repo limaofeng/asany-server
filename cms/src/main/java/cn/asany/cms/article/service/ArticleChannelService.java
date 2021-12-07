@@ -127,9 +127,22 @@ public class ArticleChannelService {
    */
   public ArticleChannel save(ArticleChannel channel) {
     Integer index = channel.getIndex();
-    channel = channelDao.save(channel);
 
     boolean isRoot = channel.getParent() == null;
+
+    ArticleChannel parent = isRoot ? this.channelDao.getById(channel.getParent().getId()) : null;
+
+    if (StringUtil.isBlank(channel.getSlug())) {
+      channel.setSlug(pinyin(channel.getName()));
+    }
+
+    if (isRoot) {
+      channel.setLevel(1);
+    } else {
+      channel.setLevel(parent.getLevel() + 1);
+    }
+
+    channel = channelDao.save(channel);
 
     List<ArticleChannel> _siblings = siblings(channel.getParent(), channel);
     if (_siblings.isEmpty()) {
@@ -146,9 +159,9 @@ public class ArticleChannelService {
     if (isRoot) {
       channel.setPath(channel.getId() + ArticleChannel.SEPARATOR);
     } else {
-      channel.setPath(channel.getParent().getPath() + channel.getId() + ArticleChannel.SEPARATOR);
+      channel.setPath(parent.getPath() + channel.getId() + ArticleChannel.SEPARATOR);
     }
-
+    //    channel.setOwnership();
     return this.channelDao.update(channel);
   }
 

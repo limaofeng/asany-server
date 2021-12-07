@@ -181,6 +181,25 @@ type Menu {
   component: Component
 }
 
+enum LicenceType {
+  # 试用
+  TRIAL
+  # 订阅
+  SUBSCRIPTION
+  # 终身
+  LIFETIME
+}
+
+type Licence {
+  id: ID
+  # 许可证 Key
+  key: String
+  # 许可证类型
+  type: LicenceType
+  # 许可证所有证
+  owner: Organization
+}
+
 type Application {
   id: ID!
   # 名称
@@ -209,6 +228,10 @@ type Application {
   clientId: String!
   # 客户端密钥
   clientSecrets: [ClientSecret!]!
+  # 获取组织可用的许可证
+  licence: Licence
+  # 许可证
+  licences: [Licence!]!
 }
 
 type ApplicationVariable {
