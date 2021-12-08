@@ -1,5 +1,6 @@
 package cn.asany.nuwa.app.graphql;
 
+import cn.asany.nuwa.YamlUtils;
 import cn.asany.nuwa.app.bean.Application;
 import cn.asany.nuwa.app.bean.ApplicationRoute;
 import cn.asany.nuwa.app.converter.ApplicationConverter;
@@ -13,7 +14,6 @@ import java.io.IOException;
 import javax.servlet.http.Part;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import org.yaml.snakeyaml.Yaml;
 
 /**
  * 应用 Mutation
@@ -34,8 +34,7 @@ public class ApplicationGraphQLMutationResolver implements GraphQLMutationResolv
   }
 
   public Application importApplication(Part part) throws IOException {
-    Yaml yaml = new Yaml();
-    NativeApplication app = yaml.loadAs(part.getInputStream(), NativeApplication.class);
+    NativeApplication app = YamlUtils.load(part.getInputStream());
     if (this.applicationService.existsByClientId(app.getClientId())) {
       log.warn("实际使用过程中，应该提示 ClientId 冲突，由用户选择是否删除原来的应用");
       applicationService.deleteApplication(app.getName());
