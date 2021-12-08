@@ -33,7 +33,6 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Slf4j
 @Service
-@Transactional(rollbackFor = RuntimeException.class)
 public class ArticleService {
   private final ApplicationContext applicationContext;
   private final ArticleFeatureService featureService;
@@ -83,6 +82,7 @@ public class ArticleService {
    * @param article 文章对象
    * @return Article
    */
+  @Transactional(rollbackFor = RuntimeException.class)
   public Article save(Article article, List<PermissionInput> permissions) {
     if (StringUtil.isBlank(article.getSlug())) {
       article.setSlug(null);
@@ -102,7 +102,7 @@ public class ArticleService {
       publish(article, permissions);
     }
 
-    return save;
+    return article;
   }
 
   /**
@@ -121,7 +121,8 @@ public class ArticleService {
    * @param id ID
    * @return 文章内容
    */
-  public Article update(Article article, boolean merge, Long id) {
+  @Transactional(rollbackFor = RuntimeException.class)
+  public Article update(Long id, Article article, boolean merge) {
     article.setId(id);
     if (StringUtil.isBlank(article.getSlug())) {
       article.setSlug(null);
@@ -132,8 +133,6 @@ public class ArticleService {
     boolean needCleanUp = article.getChannels() != null && article.getChannels().isEmpty();
 
     this.articleDao.update(article, merge);
-
-    article = this.articleDao.getById(article.getId());
 
     if (needCleanUp && !article.getChannels().isEmpty()) {
       article.getChannels().clear();
@@ -165,13 +164,21 @@ public class ArticleService {
         if (null != article.getId()) {
           // 编辑
           Article oldArticle = this.articleDao.getById(article.getId());
-          ((HtmlContent) oldArticle.getContent()).setText(((HtmlContent) content).getText());
-          content = oldArticle.getContent();
-          this.contentService.update(content);
-          article.setContent(content);
+          Content oldContent = oldArticle.getContent();
+          boolean exist = oldArticle.getContent() != null;
+          if (exist) {
+            ((HtmlContent) oldContent).setText(((HtmlContent) content).getText());
+            this.contentService.update(oldContent);
+          } else {
+            this.contentService.save(content);
+            article.setContentType(content.getType());
+            article.setContentId(content.getId());
+          }
         } else {
           // 保存
           this.contentService.save(content);
+          article.setContentType(content.getType());
+          article.setContentId(content.getId());
         }
       }
     }

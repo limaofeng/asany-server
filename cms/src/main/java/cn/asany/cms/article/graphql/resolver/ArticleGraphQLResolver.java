@@ -1,6 +1,7 @@
 package cn.asany.cms.article.graphql.resolver;
 
 import cn.asany.cms.article.bean.Article;
+import cn.asany.cms.article.bean.ArticleChannel;
 import cn.asany.cms.article.bean.Content;
 import cn.asany.cms.article.bean.enums.ArticleCategory;
 import cn.asany.cms.article.bean.enums.CommentTargetType;
@@ -13,6 +14,7 @@ import cn.asany.cms.article.graphql.type.CommentConnection;
 import cn.asany.cms.article.graphql.type.Starrable;
 import cn.asany.cms.permission.bean.Permission;
 import graphql.kickstart.tools.GraphQLResolver;
+import java.util.ArrayList;
 import java.util.List;
 import org.jfantasy.framework.dao.OrderBy;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,13 @@ import org.springframework.stereotype.Component;
 public class ArticleGraphQLResolver implements GraphQLResolver<Article> {
   @Autowired private CommentGraphQLQueryResolver resolver;
   @Autowired private ArticleChannelConverter articleChannelConverter;
+
+  public List<ArticleChannel> channels(Article article) {
+    if (article.getChannels() == null) {
+      return new ArrayList<>();
+    }
+    return article.getChannels();
+  }
 
   public Content content(Article article, ContentFormat format) {
     //    if (article.getContent() == null

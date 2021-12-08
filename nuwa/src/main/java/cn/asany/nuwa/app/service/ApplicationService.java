@@ -1,5 +1,7 @@
 package cn.asany.nuwa.app.service;
 
+import cn.asany.base.IModuleLoader;
+import cn.asany.base.IModuleProperties;
 import cn.asany.nuwa.app.bean.*;
 import cn.asany.nuwa.app.bean.enums.ApplicationType;
 import cn.asany.nuwa.app.bean.enums.MenuType;
@@ -48,6 +50,7 @@ public class ApplicationService implements ClientDetailsService {
   private final ComponentDao componentDao;
   private final RoutespaceDao routespaceDao;
   private final ApplicationConverter applicationConverter;
+  private final IModuleLoader moduleLoader;
 
   public ApplicationService(
       ApplicationDao applicationDao,
@@ -57,7 +60,8 @@ public class ApplicationService implements ClientDetailsService {
       ApplicationConverter applicationConverter,
       ApplicationRouteDao applicationRouteDao,
       ApplicationMenuDao applicationMenuDao,
-      ApplicationTemplateDao applicationTemplateDao) {
+      ApplicationTemplateDao applicationTemplateDao,
+      IModuleLoader moduleLoader) {
     this.applicationDao = applicationDao;
     this.clientSecretDao = clientSecretDao;
     this.componentDao = componentDao;
@@ -66,6 +70,7 @@ public class ApplicationService implements ClientDetailsService {
     this.applicationRouteDao = applicationRouteDao;
     this.applicationMenuDao = applicationMenuDao;
     this.applicationTemplateDao = applicationTemplateDao;
+    this.moduleLoader = moduleLoader;
   }
 
   public List<Application> findAll(List<PropertyFilter> filter) {
@@ -161,8 +166,6 @@ public class ApplicationService implements ClientDetailsService {
             ClientSecret.builder().client(clientId).secret(clientSecretStr).build());
     clientSecrets.add(clientSecret);
 
-    ;
-
     // 创建应用
     Application application =
         Application.builder()
@@ -192,6 +195,13 @@ public class ApplicationService implements ClientDetailsService {
 
     // 保存应用
     this.applicationDao.save(application);
+
+    List<IModuleProperties> modules = nativeApplication.getModules();
+    for (IModuleProperties module : modules) {
+      this.moduleLoader.load(module.getType(), module);
+    }
+    //      this.moduleLoader
+
     return application;
   }
 

@@ -2,6 +2,7 @@ package cn.asany.cms.article.service;
 
 import cn.asany.cms.article.bean.ArticleChannel;
 import cn.asany.cms.article.dao.ArticleChannelDao;
+import cn.asany.cms.article.dao.ArticleDao;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -29,11 +30,13 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class ArticleChannelService {
 
+  private final ArticleDao articleDao;
   private final ArticleChannelDao channelDao;
 
   @Autowired
-  public ArticleChannelService(ArticleChannelDao channelDao) {
+  public ArticleChannelService(ArticleChannelDao channelDao, ArticleDao articleDao) {
     this.channelDao = channelDao;
+    this.articleDao = articleDao;
   }
 
   public Pager<ArticleChannel> findPager(
@@ -98,7 +101,7 @@ public class ArticleChannelService {
                 item.setPath(parent.getPath() + item.getId() + ArticleChannel.SEPARATOR);
               }
               item.setParent(parent);
-              item.setIndex(index + 1);
+              item.setIndex(index);
               item.setLevel(level);
 
               return item;
@@ -146,7 +149,7 @@ public class ArticleChannelService {
 
     List<ArticleChannel> _siblings = siblings(channel.getParent(), channel);
     if (_siblings.isEmpty()) {
-      channel.setIndex(1);
+      channel.setIndex(0);
     } else if (index == null) {
       channel.setIndex(_siblings.get(_siblings.size() - 1).getIndex() + 1);
     } else {
@@ -155,13 +158,11 @@ public class ArticleChannelService {
       channel.setIndex(index);
       rearrange(_siblings, index, Integer.MAX_VALUE, true);
     }
-
     if (isRoot) {
       channel.setPath(channel.getId() + ArticleChannel.SEPARATOR);
     } else {
       channel.setPath(parent.getPath() + channel.getId() + ArticleChannel.SEPARATOR);
     }
-    //    channel.setOwnership();
     return this.channelDao.update(channel);
   }
 
@@ -203,7 +204,7 @@ public class ArticleChannelService {
       List<ArticleChannel> _siblings = siblings(parent, channel);
       int maxIndex = _siblings.get(_siblings.size() - 1).getIndex() + 1;
       channel.setParent(isRoot ? null : parent);
-      channel.setLevel(isRoot ? 1 : parent.getLevel() + 1);
+      channel.setLevel(isRoot ? 0 : parent.getLevel() + 1);
       if (isRoot) {
         channel.setPath(channel.getId() + ArticleChannel.SEPARATOR);
       } else {
@@ -211,7 +212,7 @@ public class ArticleChannelService {
       }
 
       if (_siblings.isEmpty()) {
-        channel.setIndex(1);
+        channel.setIndex(0);
       } else if (index == null) {
         channel.setIndex(maxIndex);
       } else {
@@ -297,6 +298,11 @@ public class ArticleChannelService {
     }
     this.channelDao.deleteById(id);
     return true;
+  }
+
+  public void deleteAll() {
+    this.articleDao.deleteAll();
+    this.channelDao.deleteAll();
   }
 
   public ArticleChannel findOne(Long id) {

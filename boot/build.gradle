@@ -13,11 +13,11 @@ jar {
     }
 }
 
-tasks.publish.enabled = false
-
-tasks.withType(Test) { enabled = false }
-
-tasks.withType(PublishToMavenRepository).configureEach { it.enabled = false }
+//tasks.publish.enabled = false
+//
+//tasks.withType(Test) { enabled = false }
+//
+//tasks.withType(PublishToMavenRepository).configureEach { it.enabled = false }
 
 bootRun {
     systemProperty "spring.profiles.active", "dev"
@@ -32,4 +32,9 @@ dependencies {
     implementation project(":asany-storage")
     implementation project(":asany-security")
     implementation project(":asany-storage-api")
+    compileOnly "org.projectlombok:lombok:${LIB_LOMBOK_VER}"
+    annotationProcessor "org.projectlombok:lombok:$LIB_LOMBOK_VER"
+    testCompileOnly "org.projectlombok:lombok:${LIB_LOMBOK_VER}"
+    testAnnotationProcessor "org.projectlombok:lombok:$LIB_LOMBOK_VER"
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }

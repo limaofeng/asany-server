@@ -1,6 +1,7 @@
 package cn.asany.autoconfigure;
 
 import cn.asany.cms.article.bean.HtmlContent;
+import cn.asany.cms.module.CmsModule;
 import org.jfantasy.graphql.SchemaParserDictionaryBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -17,10 +18,16 @@ import org.springframework.context.annotation.Configuration;
   "cn.asany.cms.*.dao",
 })
 public class CmsAutoConfiguration {
+
   @Bean("CMS.SchemaParserDictionaryBuilder")
   public SchemaParserDictionaryBuilder schemaDictionary() {
     return dictionary -> {
       dictionary.add("HtmlContent", HtmlContent.class);
     };
+  }
+
+  @Bean
+  public CmsModule cmsModule() {
+    return new CmsModule();
   }
 }

@@ -2,6 +2,7 @@ package cn.asany.cms.article.bean;
 
 import cn.asany.cms.article.bean.converter.MetaDataConverter;
 import cn.asany.cms.article.bean.enums.ArticleCategory;
+import cn.asany.cms.article.bean.enums.ArticleContentType;
 import cn.asany.cms.article.bean.enums.ArticleStatus;
 import cn.asany.cms.article.bean.enums.ArticleType;
 import cn.asany.cms.permission.bean.Permission;
@@ -140,9 +141,17 @@ public class Article extends BaseBusEntity {
   @Enumerated(EnumType.STRING)
   @Column(name = "CATEGORY", nullable = false, length = 25)
   private ArticleCategory category;
+  /** 正文类型 */
+  @Enumerated(EnumType.STRING)
+  @Column(name = "CONTENT_TYPE", length = 25)
+  private ArticleContentType contentType;
+  /** 正文 ID */
+  @Column(name = "CONTENT_ID")
+  private Long contentId;
   /** 文章正文 */
   @Any(
-      metaColumn = @Column(name = "CONTENT_TYPE", length = 25, updatable = false),
+      metaColumn =
+          @Column(name = "CONTENT_TYPE", length = 25, insertable = false, updatable = false),
       fetch = FetchType.LAZY)
   @AnyMetaDef(
       idType = "long",
@@ -151,7 +160,7 @@ public class Article extends BaseBusEntity {
         @MetaValue(targetEntity = HtmlContent.class, value = HtmlContent.TYPE_KEY),
         @MetaValue(targetEntity = MarkdownContent.class, value = MarkdownContent.TYPE_KEY)
       })
-  @JoinColumn(name = "CONTENT_ID", updatable = false)
+  @JoinColumn(name = "CONTENT_ID", insertable = false, updatable = false)
   private Content content;
   /** 所有者 */
   @Any(

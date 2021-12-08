@@ -65,7 +65,8 @@ public class ArticleGraphQLMutationResolver implements GraphQLMutationResolver {
    * @return
    */
   public Article updateArticle(Long id, Boolean merge, ArticleInput input) {
-    return articleService.update(articleConverter.toArticle(input), merge, id);
+    Article article = articleService.update(id, articleConverter.toArticle(input), merge);
+    return articleService.get(article.getId());
   }
 
   /**

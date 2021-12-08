@@ -15,8 +15,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 /**
+ * 应用程序入口
+ *
  * @author limaofeng
- * @version V1.0 @Description: 应用程序入口
+ * @version V1.0
  * @date 2019/2/13 4:04 PM
  */
 @Configuration

@@ -15,6 +15,11 @@ import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
 import org.springframework.stereotype.Service;
 
+/**
+ * 库 服务
+ *
+ * @author limaofeng
+ */
 @Service
 public class LibraryService {
 

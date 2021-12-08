@@ -1,5 +1,6 @@
 package cn.asany.nuwa.app.service.dto;
 
+import cn.asany.base.IModuleProperties;
 import cn.asany.nuwa.app.bean.enums.ApplicationType;
 import java.util.List;
 import java.util.Set;
@@ -34,4 +35,6 @@ public class NativeApplication {
   private Set<String> authorities;
   private List<NuwaRoute> routes;
   private List<NuwaMenu> menus;
+
+  private List<IModuleProperties> modules;
 }

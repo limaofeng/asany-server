@@ -105,7 +105,6 @@ subprojects {
         annotationProcessor "org.mapstruct:mapstruct-processor:$LIB_MAPSTRUCT_VER"
         annotationProcessor "org.projectlombok:lombok-mapstruct-binding:${LIB_LOMBOK_MAPSTRUCT_BINDING_VER}"
         annotationProcessor "org.springframework.boot:spring-boot-configuration-processor:$LIB_SPRING_BOOT_VER"
-        testCompileOnly 'org.yaml:snakeyaml:1.25'
         testCompileOnly "org.projectlombok:lombok:$LIB_LOMBOK_VER"
         testAnnotationProcessor "org.projectlombok:lombok:$LIB_LOMBOK_VER"
         testAnnotationProcessor "org.mapstruct:mapstruct-processor:$LIB_MAPSTRUCT_VER"
