@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.23](https://github.com/limaofeng/asany-server/compare/v0.0.22...v0.0.23) (2021-12-08)
+
+
+### Features
+
+* 通过 yml 导入应用时，支持模块定义 ([2c1478f](https://github.com/limaofeng/asany-server/commit/2c1478f2e1d6eb50f39358d166cb6ff676548f77))
+
 ### [0.0.22](https://github.com/limaofeng/asany-server/compare/v0.0.21...v0.0.22) (2021-12-07)
 
 
