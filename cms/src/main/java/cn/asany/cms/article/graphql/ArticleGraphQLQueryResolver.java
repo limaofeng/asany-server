@@ -21,6 +21,8 @@ import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
 import org.jfantasy.framework.util.common.ObjectUtil;
+import org.jfantasy.framework.util.regexp.RegexpConstant;
+import org.jfantasy.framework.util.regexp.RegexpUtil;
 import org.jfantasy.graphql.util.Kit;
 import org.springframework.stereotype.Component;
 
@@ -96,8 +98,11 @@ public class ArticleGraphQLQueryResolver implements GraphQLQueryResolver {
    * @param id
    * @return
    */
-  public Optional<ArticleChannel> articleChannel(Long id) {
-    return channelService.get(id);
+  public Optional<ArticleChannel> articleChannel(String id) {
+    if (RegexpUtil.isMatch(id, RegexpConstant.VALIDATOR_INTEGE)) {
+      return channelService.get(id);
+    }
+    return channelService.findOneBySlug(id);
   }
 
   public List<ArticleTag> articleTags(

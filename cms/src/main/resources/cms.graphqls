@@ -159,6 +159,25 @@ type ArticleChannel {
   updatedAt: Date!
   # 子栏目
   children: [ArticleChannel!]!
+  # 栏目文章
+  articles(
+    # 包含所有后代
+    descendant: Boolean = false
+    # 筛选
+    filter: ArticleFilter
+    # 跳过
+    skip: Int = 0
+    # 游标定位 之后
+    after: ID
+    # 游标定位 之前
+    before: ID
+    # 开始几条
+    first: Int = 15
+    # 之前几条
+    last: Int
+    # 排序
+    orderBy: OrderBy
+  ): [Article!]!
 }
 
 # 支持层级，亦可栏目使用

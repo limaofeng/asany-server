@@ -308,4 +308,8 @@ public class ArticleChannelService {
   public ArticleChannel findOne(Long id) {
     return channelDao.findById(id).orElse(null);
   }
+
+  public Optional<ArticleChannel> findOneBySlug(String slug) {
+    return this.channelDao.findOneBy("slug", slug);
+  }
 }
