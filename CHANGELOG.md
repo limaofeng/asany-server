@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.25](https://github.com/limaofeng/asany-server/compare/v0.0.24...v0.0.25) (2021-12-17)
+
+
+### Bug Fixes
+
+* 导入应用时, modules 可以不存在 ([662946d](https://github.com/limaofeng/asany-server/commit/662946d7feb0ff746a6df18b443c93a74bb783b9))
+* 文章栏目接口可以返回该栏目文章 ([a54fc3d](https://github.com/limaofeng/asany-server/commit/a54fc3d9e06c1dd863387e65dbd4f3fa3ca83a6f))
+
 ### [0.0.24](https://github.com/limaofeng/asany-server/compare/v0.0.23...v0.0.24) (2021-12-08)
 
 
