@@ -128,3 +128,76 @@ routes:
         hideMenu: true
       - path: /
         component: cn.asany.ui.admin.Home
+#modules:
+#  - type: cms
+#    channels:
+#      - name: IT外包
+#        slug: it-outsourcing
+#        icon: Duotune/com014
+#        children:
+#          - slug: maintenance-service
+#            name: 运维服务
+#          - slug: software-development
+#            name: 软件开发
+#          - slug: special-service
+#            name: 专项服务
+#          - slug: consultation-service
+#            name: 咨询服务
+#      - name: 网络安全
+#        slug: cyber-security
+#        icon: Duotune/gen048
+#        children:
+#          - slug: access-security
+#            name: 访问安全
+#          - slug: cloud-security
+#            name: 云安全
+#          - slug: border-security
+#            name: 边界安全
+#          - slug: terminal-security
+#            name: 终端安全
+#          - slug: identity-security
+#            name: 身份安全
+#          - slug: threat-detection
+#            name: 威胁检测
+#          - slug: virus-protection
+#            name: 病毒防护
+#          - slug: grade-protection
+#            name: 等级保护
+#          - slug: security-audit
+#            name: 安全审计与运营
+#      - name: 微软云
+#        slug: microsoft
+#        icon: Duotune/fil020
+#      - name: IT采购
+#        slug: it-procurement
+#        icon: Duotune/ecm001
+#      - name: 弱电工程
+#        slug: weak-current-engineering
+#        icon: Duotune/elc008
+#      - name: 系统集成
+#        slug: system-integration
+#        icon: Duotune/teh005
+#      - name: 云服务
+#        slug: clouds
+#        icon: Duotune/fil020
+#        children:
+#          - name: 云服务
+#            slug: cloud-service
+#          - name: 微软云
+#            slug: microsoft-azure
+#          - name: 阿里云
+#            slug: alibaba-cloud
+#          - name: 钉钉
+#            slug: dingtalk
+#      - name: 客户故事
+#        slug: customer-story
+#        icon: Duotune/com013
+#      - name: 走进互升
+#        slug: welcome
+#        icon: Duotune/elc003
+#      - name: 最新动态
+#        slug: news
+#        icon: Duotune/com013
+#      - name: 技术百科
+#        slug: technology-wiki
+#        icon: Duotune/elc003

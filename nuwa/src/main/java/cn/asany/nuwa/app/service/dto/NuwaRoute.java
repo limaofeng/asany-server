@@ -15,6 +15,7 @@ import lombok.NoArgsConstructor;
 public class NuwaRoute {
   private Long id;
   private String path;
+  private String name;
   private String access;
   private Boolean authorized;
   private String redirect;

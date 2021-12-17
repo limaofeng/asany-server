@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.yaml.snakeyaml.Yaml;
 
 @Slf4j
 @ExtendWith(SpringExtension.class)
@@ -32,10 +31,9 @@ class ApplicationServiceTest {
   void createApplicationFromYaml() {
     InputStream inputStream = ClassLoader.getSystemResourceAsStream("app.yml");
     // 调基础工具类的方法
-    Yaml yaml = new Yaml();
-
-    NativeApplication app = yaml.loadAs(inputStream, NativeApplication.class);
+    NativeApplication app = YamlUtils.load(inputStream);
     assert app.getName().equals("website");
+    //    channelService.deleteAll();
     applicationService.deleteApplication(app.getName());
     Application application = applicationService.createApplication(app);
     log.debug(

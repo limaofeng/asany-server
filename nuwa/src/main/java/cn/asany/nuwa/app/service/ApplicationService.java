@@ -196,7 +196,8 @@ public class ApplicationService implements ClientDetailsService {
     // 保存应用
     this.applicationDao.save(application);
 
-    List<IModuleProperties> modules = nativeApplication.getModules();
+    List<IModuleProperties> modules =
+        ObjectUtil.defaultValue(nativeApplication.getModules(), Collections.emptyList());
     for (IModuleProperties module : modules) {
       this.moduleLoader.load(module.getType(), module);
     }
