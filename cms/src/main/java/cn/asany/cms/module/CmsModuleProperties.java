@@ -1,7 +1,7 @@
 package cn.asany.cms.module;
 
 import cn.asany.base.IModuleProperties;
-import cn.asany.cms.article.bean.ArticleChannel;
+import cn.asany.cms.module.dto.ArticleChannelImpObj;
 import java.util.List;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CmsModuleProperties implements IModuleProperties {
   private String type;
-  private List<ArticleChannel> channels;
+  private List<ArticleChannelImpObj> channels;
 
   public void setType(String type) {
     this.type = type;

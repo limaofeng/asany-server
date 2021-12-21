@@ -16,6 +16,8 @@ import lombok.EqualsAndHashCode;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
 import org.jfantasy.framework.spring.SpringBeanUtils;
+import org.jfantasy.framework.util.regexp.RegexpConstant;
+import org.jfantasy.framework.util.regexp.RegexpUtil;
 import org.jfantasy.graphql.inputs.QueryFilter;
 
 /**
@@ -37,9 +39,14 @@ public class ArticleFilter extends QueryFilter<ArticleFilter, Article> {
   }
 
   @JsonProperty("channel_startsWith")
-  public void setChannelStartsWith(Long channel) {
+  public void setChannelStartsWith(String channel) {
     ArticleChannelService channelService = SpringBeanUtils.getBean(ArticleChannelService.class);
-    Optional<ArticleChannel> channelOptional = channelService.get(channel);
+    Optional<ArticleChannel> channelOptional;
+    if (RegexpUtil.isMatch(channel, RegexpConstant.VALIDATOR_INTEGE)) {
+      channelOptional = channelService.get(Long.valueOf(channel));
+    } else {
+      channelOptional = channelService.findOneBySlug(channel);
+    }
     if (!channelOptional.isPresent()) {
       return;
     }

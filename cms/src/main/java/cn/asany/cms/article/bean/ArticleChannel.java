@@ -104,4 +104,7 @@ public class ArticleChannel extends BaseBusEntity {
       })
   @JoinColumn(name = "OWNERSHIP_ID", insertable = false, updatable = false)
   private Ownership ownership;
+
+  @ManyToMany(targetEntity = Article.class, mappedBy = "channels", fetch = FetchType.LAZY)
+  private List<Article> articles;
 }

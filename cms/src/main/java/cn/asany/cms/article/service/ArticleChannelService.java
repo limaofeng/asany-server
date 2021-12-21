@@ -1,8 +1,13 @@
 package cn.asany.cms.article.service;
 
+import cn.asany.cms.article.bean.Article;
 import cn.asany.cms.article.bean.ArticleChannel;
+import cn.asany.cms.article.bean.enums.ArticleCategory;
+import cn.asany.cms.article.bean.enums.ArticleStatus;
+import cn.asany.cms.article.bean.enums.ArticleType;
 import cn.asany.cms.article.dao.ArticleChannelDao;
 import cn.asany.cms.article.dao.ArticleDao;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -79,6 +84,7 @@ public class ArticleChannelService {
    * @return List<ArticleChannel>
    */
   public List<ArticleChannel> saveAll(List<ArticleChannel> channels) {
+    List<Article> articles = new ArrayList<>();
     channels =
         ObjectUtil.recursive(
             channels,
@@ -86,10 +92,27 @@ public class ArticleChannelService {
               int index = context.getIndex();
               int level = context.getLevel();
 
+              // 暂存文章
+              if (item.getArticles() != null) {
+                articles.addAll(
+                    item.getArticles().stream()
+                        .map(
+                            article -> {
+                              article.setChannels(new ArrayList<>());
+                              article.getChannels().add(item);
+                              article.setType(ArticleType.text);
+                              article.setCategory(ArticleCategory.news);
+                              article.setStatus(ArticleStatus.PUBLISHED);
+                              return article;
+                            })
+                        .collect(Collectors.toList()));
+              }
+
               Optional<ArticleChannel> optional = this.channelDao.findOneBy("slug", item.getSlug());
 
               if (optional.isPresent()) {
                 item.setId(optional.get().getId());
+                item.setArticles(optional.get().getArticles());
               } else {
                 this.channelDao.save(item);
               }
@@ -108,6 +131,8 @@ public class ArticleChannelService {
             });
     channels = ObjectUtil.flat(channels, "children");
     this.channelDao.updateAllInBatch(channels);
+
+    this.articleDao.saveAll(articles);
     return channels;
   }
 

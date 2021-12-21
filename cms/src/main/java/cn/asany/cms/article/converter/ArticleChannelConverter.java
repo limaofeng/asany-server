@@ -1,9 +1,15 @@
 package cn.asany.cms.article.converter;
 
+import cn.asany.cms.article.bean.Article;
 import cn.asany.cms.article.bean.ArticleChannel;
 import cn.asany.cms.article.bean.ArticleTag;
 import cn.asany.cms.article.graphql.input.ArticleChannelInput;
 import cn.asany.cms.article.graphql.input.ArticleTagInput;
+import cn.asany.cms.module.dto.ArticleChannelImpObj;
+import cn.asany.cms.module.dto.ArticleImpObj;
+import cn.asany.storage.api.FileObject;
+import cn.asany.storage.dto.SimpleFileObject;
+import java.util.List;
 import org.mapstruct.*;
 
 /**
@@ -19,6 +25,26 @@ import org.mapstruct.*;
     unmappedTargetPolicy = ReportingPolicy.IGNORE,
     nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
 public interface ArticleChannelConverter {
+
+  @IterableMapping(elementTargetType = ArticleChannel.class)
+  List<ArticleChannel> toChannels(List<ArticleChannelImpObj> channels);
+
+  @Mappings({
+    @Mapping(source = "posts", target = "articles"),
+  })
+  ArticleChannel toChannel(ArticleChannelImpObj channel);
+
+  @Mappings({
+    @Mapping(source = "cover", target = "cover", qualifiedByName = "toCoverFromString"),
+  })
+  Article toArticle(ArticleImpObj articleImpObj);
+
+  @Named("toCoverFromString")
+  default FileObject toCoverFromString(String cover) {
+    SimpleFileObject simpleFileObject = new SimpleFileObject();
+    simpleFileObject.setUrl(cover);
+    return simpleFileObject;
+  }
 
   @Mappings({
     @Mapping(source = "slug", target = "slug"),

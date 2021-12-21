@@ -128,76 +128,46 @@ routes:
         hideMenu: true
       - path: /
         component: cn.asany.ui.admin.Home
-#modules:
-#  - type: cms
-#    channels:
-#      - name: IT外包
-#        slug: it-outsourcing
-#        icon: Duotune/com014
-#        children:
-#          - slug: maintenance-service
-#            name: 运维服务
-#          - slug: software-development
-#            name: 软件开发
-#          - slug: special-service
-#            name: 专项服务
-#          - slug: consultation-service
-#            name: 咨询服务
-#      - name: 网络安全
-#        slug: cyber-security
-#        icon: Duotune/gen048
-#        children:
-#          - slug: access-security
-#            name: 访问安全
-#          - slug: cloud-security
-#            name: 云安全
-#          - slug: border-security
-#            name: 边界安全
-#          - slug: terminal-security
-#            name: 终端安全
-#          - slug: identity-security
-#            name: 身份安全
-#          - slug: threat-detection
-#            name: 威胁检测
-#          - slug: virus-protection
-#            name: 病毒防护
-#          - slug: grade-protection
-#            name: 等级保护
-#          - slug: security-audit
-#            name: 安全审计与运营
-#      - name: 微软云
-#        slug: microsoft
-#        icon: Duotune/fil020
-#      - name: IT采购
-#        slug: it-procurement
-#        icon: Duotune/ecm001
-#      - name: 弱电工程
-#        slug: weak-current-engineering
-#        icon: Duotune/elc008
-#      - name: 系统集成
-#        slug: system-integration
-#        icon: Duotune/teh005
-#      - name: 云服务
-#        slug: clouds
-#        icon: Duotune/fil020
-#        children:
-#          - name: 云服务
-#            slug: cloud-service
-#          - name: 微软云
-#            slug: microsoft-azure
-#          - name: 阿里云
-#            slug: alibaba-cloud
-#          - name: 钉钉
-#            slug: dingtalk
-#      - name: 客户故事
-#        slug: customer-story
-#        icon: Duotune/com013
-#      - name: 走进互升
-#        slug: welcome
-#        icon: Duotune/elc003
-#      - name: 最新动态
-#        slug: news
-#        icon: Duotune/com013
-#      - name: 技术百科
-#        slug: technology-wiki
-#        icon: Duotune/elc003
+modules:
+  - type: cms
+    channels:
+      - name: IT外包
+        slug: it-outsourcing
+        icon: Duotune/com014
+        children:
+          - slug: maintenance-service
+            name: 运维服务
+          - slug: software-development
+            name: 软件开发
+          - slug: special-service
+            name: 专项服务
+          - slug: consultation-service
+            name: 咨询服务
+      - name: IT采购
+        slug: it-procurement
+        icon: Duotune/ecm001
+      - name: 弱电工程
+        slug: weak-current-engineering
+        icon: Duotune/elc008
+      - name: 系统集成
+        slug: system-integration
+        icon: Duotune/teh005
+      - name: 走进互升
+        slug: welcome
+        icon: Duotune/elc003
+      - name: 成功案例
+        slug: cases
+        icon: Duotune/elc003
+        posts:
+          - title: 某广告设计企业-弱电集成项目
+            cover: https://www.linemore.com/files/images/201907/1002282246590.jpg
+            summary: 互升团队为客户提供高效稳定安全的办公网络系统，满足客户日常使用及后续稳定可靠的7X24小时监控中心及门禁系统打造个性化，具有专业形象和文化的会议室使用体验
+          - title: 某纳斯达克上市医药公司-弱电集成项目
+            cover: https://www.linemore.com/files/images/201907/0305230583910.jpg
+            summary: 互升为用户提高网络质量优化，满足客户日常使用，用户体验升级，所有办公区域无线全覆盖稳定可靠，7X24小时监控中心优化容错，单节点网络出故障不影响总体网络
+          - title: 知名早教集团-弱电集成项目
+            cover: https://www.linemore.com/files/images/201907/0305135932000.jpg
+            summary: 互升团队为客户提高无线访问速率及访问安全性，整体监控门禁安防系统整合优化， 优化容错，单节点网络出故障不影响总体网络，IT可随时远程监测及调控操作的机房环境
+          - title: 某上市生命科技股份公司-弱电集成项目
+            cover: https://www.linemore.com/files/images/201907/0302252065150.png
+            summary: 互升帮助用户实现无尘车间无线有线网络覆盖，保障无尘车间电话及网络通讯环境单节点网络出故障不影响总体网络，用户体验升级。一卡通式多门门禁全效管理，同时联动消防以及考勤等功能安全可靠，7X24小时监控中心

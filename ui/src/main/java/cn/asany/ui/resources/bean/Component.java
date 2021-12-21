@@ -5,8 +5,10 @@ import cn.asany.ui.resources.bean.enums.ComponentScope;
 import cn.asany.ui.resources.bean.enums.ComponentType;
 import cn.asany.ui.resources.bean.toy.ComponentData;
 import java.util.List;
+import java.util.Objects;
 import javax.persistence.*;
 import lombok.*;
+import org.hibernate.Hibernate;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
@@ -15,11 +17,12 @@ import org.jfantasy.framework.dao.BaseBusEntity;
  *
  * @author limaofeng
  */
-@Data
+@Getter
+@Setter
+@ToString
+@RequiredArgsConstructor
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = false)
 @Entity
 @Table(name = "NUWA_COMPONENT")
 public class Component extends BaseBusEntity {
@@ -52,4 +55,21 @@ public class Component extends BaseBusEntity {
   @Convert(converter = ComponentDataConverter.class)
   @Column(name = "BLOCKS", columnDefinition = "JSON")
   private List<ComponentData> blocks;
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) {
+      return false;
+    }
+    Component component = (Component) o;
+    return id != null && Objects.equals(id, component.id);
+  }
+
+  @Override
+  public int hashCode() {
+    return getClass().hashCode();
+  }
 }

@@ -1,6 +1,7 @@
 package cn.asany.cms.module;
 
 import cn.asany.base.IModule;
+import cn.asany.cms.article.converter.ArticleChannelConverter;
 import cn.asany.cms.article.service.ArticleChannelService;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class CmsModule implements IModule<CmsModuleProperties> {
 
+  @Autowired private ArticleChannelConverter channelConverter;
   @Autowired private ArticleChannelService articleChannelService;
 
   @Override
@@ -20,6 +22,6 @@ public class CmsModule implements IModule<CmsModuleProperties> {
 
   @Override
   public void load(CmsModuleProperties properties) {
-    this.articleChannelService.saveAll(properties.getChannels());
+    this.articleChannelService.saveAll(channelConverter.toChannels(properties.getChannels()));
   }
 }
