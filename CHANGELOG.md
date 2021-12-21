@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.26](https://github.com/limaofeng/asany-server/compare/v0.0.25...v0.0.26) (2021-12-21)
+
+
+### Features
+
+* 导入 CMS 模块时，可以一同导入文章 ([b320343](https://github.com/limaofeng/asany-server/commit/b320343b1943d857417914ef333e5d3aaa6475e4))
+
 ### [0.0.25](https://github.com/limaofeng/asany-server/compare/v0.0.24...v0.0.25) (2021-12-17)
 
 
