@@ -1,841 +1,841 @@
 type EmployeeLink {
-    employee: Employee
-    linkId: String
+  employee: Employee
+  linkId: String
 }
 
 input DepartmentTypeCreateInput {
-    # 名称
-    name: String!
-    # 编码
-    code: String
-    # 是否支持多部门 默认false
-    #    multiSectoral: Boolean = false
-    # 最大兼岗人数
-    #    andPost: Int
+  # 名称
+  name: String!
+  # 编码
+  code: String
+  # 是否支持多部门 默认false
+  #    multiSectoral: Boolean = false
+  # 最大兼岗人数
+  #    andPost: Int
 }
 
 enum DepartmentIdType {
-    ID
+  ID
 }
 
 enum EmployeeIdType {
-    # 员工 ID
-    ID
-    # 员工工号
-    JOB_NUMBER
+  # 员工 ID
+  ID
+  # 员工工号
+  JOB_NUMBER
 }
 
 input EmployeePositionUpdateInput {
-    # 员工ID
-    employeeId: ID
-    # 员工所在组织
-    organizationId: String
-    # 员工所在原部门id
-    originalDeparmentId: ID
-    # 员工更换后部门id
-    newDeparmentId: ID
-    # 员工更换部门后对应的职位id
-    newPositionId: ID
+  # 员工ID
+  employeeId: ID
+  # 员工所在组织
+  organizationId: String
+  # 员工所在原部门id
+  originalDeparmentId: ID
+  # 员工更换后部门id
+  newDeparmentId: ID
+  # 员工更换部门后对应的职位id
+  newPositionId: ID
 }
 
 input OrganizationEmployeeInput {
-    # 组织 ID
-    organization: ID!
-    # 状态
-    status: String
-    # 职位
-    positions: [EmployeePositionInput]
+  # 组织 ID
+  organization: ID!
+  # 状态
+  status: String
+  # 职位
+  positions: [EmployeePositionInput]
 }
 
 input OrganizationFilter {
-    id_in: [String]
+  id_in: [String]
 }
 
 input DepartmentFilter {
-    type: ID
-    # parent为null时，查询所有部门，为0时查询所有一级部门，其他值时查询该部门下所有一级子集部门
-    parent: ID
-    # 根据ID查询，查询该部门下所有子集
-    id_startsWith: ID
-    # 查询 ID 不包含
-    id_ne: ID
-    # 类型支持in
-    type_in: [ID]
-    # 根据path查询该部门下所有子集
-    path_startsWith: String
-    #根据部门名称模糊查询
-    name_like: String
+  type: ID
+  # parent为null时，查询所有部门，为0时查询所有一级部门，其他值时查询该部门下所有一级子集部门
+  parent: ID
+  # 根据ID查询，查询该部门下所有子集
+  id_startsWith: ID
+  # 查询 ID 不包含
+  id_ne: ID
+  # 类型支持in
+  type_in: [ID]
+  # 根据path查询该部门下所有子集
+  path_startsWith: String
+  #根据部门名称模糊查询
+  name_like: String
 }
 
 input EmployeeGroupCreateInput {
-    # 用户组名称
-    name: String
-    # 是否启用
-    enabled: Boolean
-    # 描述
-    description: String
+  # 用户组名称
+  name: String
+  # 是否启用
+  enabled: Boolean
+  # 描述
+  description: String
 }
 
 input EmployeeGroupUpdateInput {
-    # 用户组名称
-    name: String
-    # 是否启用
-    enabled: Boolean
-    # 描述
-    description: String
+  # 用户组名称
+  name: String
+  # 是否启用
+  enabled: Boolean
+  # 描述
+  description: String
 }
 
 input JobCreateInput {
-    # 名称
-    name: String
-    # 职务描述信息
-    description: String
+  # 名称
+  name: String
+  # 职务描述信息
+  description: String
 }
 
 input JobUpdateInput {
-    # 名称
-    name: String
-    # 职务描述信息
-    description: String
+  # 名称
+  name: String
+  # 职务描述信息
+  description: String
 }
 
 type EmployeeGroup {
-    id: ID
-    # 群组名称
-    name: String
-    # 是否启用
-    enabled: Boolean
-    # 描述
-    description: String
-    # 群组下的人员数
-    #    employeeCount: Int
-    #用户组范围
-    scope: EmployeeGroupScope
+  id: ID
+  # 群组名称
+  name: String
+  # 是否启用
+  enabled: Boolean
+  # 描述
+  description: String
+  # 群组下的人员数
+  #    employeeCount: Int
+  #用户组范围
+  scope: EmployeeGroupScope
 }
 
 type OrganizationEmployeeStatus {
-    #ID
-    id: ID
-    #状态编码
-    code: String
-    #状态
-    name: String
-    #是否是默认值
-    isDefault: Boolean
-    #所属组织
-    organization: Organization
+  #ID
+  id: ID
+  #状态编码
+  code: String
+  #状态
+  name: String
+  #是否是默认值
+  isDefault: Boolean
+  #所属组织
+  organization: Organization
 }
 
 type OrganiztionEmployee {
-    #ID
-    id: ID
-    #状态
-    status: OrganizationEmployeeStatus
-    #所属组织
-    organization: Organization
-    #所属员工
-    employee: Employee
+  #ID
+  id: ID
+  #状态
+  status: OrganizationEmployeeStatus
+  #所属组织
+  organization: Organization
+  #所属员工
+  employee: Employee
 }
 
 type EmployeeGroupScope {
-    #范围ID
-    id: String
-    #范围名称
-    name: String
-    #所属组织
-    organization: Organization
-    #用户所属用户组
-    groups: [EmployeeGroup]
+  #范围ID
+  id: String
+  #范围名称
+  name: String
+  #所属组织
+  organization: Organization
+  #用户所属用户组
+  groups: [EmployeeGroup]
 }
 
 input EmployeeCreateInput {
-    # 编号
-    jobNumber: String
-    # 标签，用于筛选
-    tags: [String]
-    # 名称
-    name: String
-    # 生日
-    birthday: String
-    # 性别
-    sex: Sex
-    # E-mail
-    emails: [EmployeeEmailInput]
-    #员工电话
-    phones: [EmployeePhoneInput]
-    # 组织
-    organizations: [OrganizationEmployeeInput]!
-    # 密码
-    password: String
-    # 员工类型
-    employeetype: String
-    # 是否双培养
-    foster: String
-    # 加入日期
-    joinday: String
-    # 党员来源
-    partymembersorigin: String
+  # 编号
+  jobNumber: String
+  # 标签，用于筛选
+  tags: [String]
+  # 名称
+  name: String
+  # 生日
+  birthday: String
+  # 性别
+  sex: Sex
+  # E-mail
+  emails: [EmployeeEmailInput]
+  #员工电话
+  phones: [EmployeePhoneInput]
+  # 组织
+  organizations: [OrganizationEmployeeInput]!
+  # 密码
+  password: String
+  # 员工类型
+  employeetype: String
+  # 是否双培养
+  foster: String
+  # 加入日期
+  joinday: String
+  # 党员来源
+  partymembersorigin: String
 }
 
 input EmployeeUpdateInput {
-    # 状态
-    #    status: EmployeeStatus
-    # 编号
-    jobNumber: String
-    # 标签，用于筛选
-    tags: [String]
-    # 名称
-    name: String
-    # 生日
-    birthday: String
-    # 性别
-    sex: Sex
-    # E-mail
-    emails: [EmployeeEmailInput]
-    # 组织
-    organizations: [OrganizationEmployeeInput]!
-    #员工地址
-    addresses: [EmployeeAddressInput]
-    #员工电话
-    phones: [EmployeePhoneInput]
-    # 密码
-    password: String
-    # 头像
-    avatar: File
-    # 员工类型
-    employeetype: String
-    # 是否双培养
-    foster: String
-    # 加入日期
-    joinday: String
-    # 党员来源
-    partymembersorigin: String
+  # 状态
+  #    status: EmployeeStatus
+  # 编号
+  jobNumber: String
+  # 标签，用于筛选
+  tags: [String]
+  # 名称
+  name: String
+  # 生日
+  birthday: String
+  # 性别
+  sex: Sex
+  # E-mail
+  emails: [EmployeeEmailInput]
+  # 组织
+  organizations: [OrganizationEmployeeInput]!
+  #员工地址
+  addresses: [EmployeeAddressInput]
+  #员工电话
+  phones: [EmployeePhoneInput]
+  # 密码
+  password: String
+  # 头像
+  avatar: File
+  # 员工类型
+  employeetype: String
+  # 是否双培养
+  foster: String
+  # 加入日期
+  joinday: String
+  # 党员来源
+  partymembersorigin: String
 }
 
 input EmployeeEmailInput {
-    #标签 查询时用
-    label: String
-    #是否为主邮箱
-    primary: Boolean
-    #邮箱状态
-    status: EmailStatus
-    #邮箱
-    email: String
+  #标签 查询时用
+  label: String
+  #是否为主邮箱
+  primary: Boolean
+  #邮箱状态
+  status: EmailStatus
+  #邮箱
+  email: String
 }
 
 input EmployeeAddressInput {
-    #标签 查询时用
-    label: String
-    #是否为主地址
-    primary: Boolean
-    #国家
-    country: String
-    #省
-    province: String
-    #城市
-    city: String
-    #区
-    district: String
-    #街道
-    street: String
-    #邮编
-    postalCode: String
+  #标签 查询时用
+  label: String
+  #是否为主地址
+  primary: Boolean
+  #国家
+  country: String
+  #省
+  province: String
+  #城市
+  city: String
+  #区
+  district: String
+  #街道
+  street: String
+  #邮编
+  postalCode: String
 }
 
 input EmployeePhoneInput {
-    #标签 查询时用
-    label: String
-    #电话
-    phone: String
-    #是否为主电话
-    primary: Boolean
-    #电话状态
-    status: PhoneStatus
+  #标签 查询时用
+  label: String
+  #电话
+  phone: String
+  #是否为主电话
+  primary: Boolean
+  #电话状态
+  status: PhoneStatus
 }
 
 input EmployeePositionInput {
-    # 是否为主要职位
-    primary: Boolean
-    # 职位ID
-    position: ID
+  # 是否为主要职位
+  primary: Boolean
+  # 职位ID
+  position: ID
 }
 
 input DepartmentCreateInput {
-    # 编码
-    sn: String
-    # 名称
-    name: String
-    # 描述
-    description: String
-    # 职务
-    jobs: [JobInput]
-    #    # 授予权限
-    #    permissions: [PermissionInput]
-    # 父对象ID
-    parent: ID
-    # 排序
-    sort: Int
-    #部门类型
-    type: ID
+  # 编码
+  sn: String
+  # 名称
+  name: String
+  # 描述
+  description: String
+  # 职务
+  jobs: [JobInput]
+  #    # 授予权限
+  #    permissions: [PermissionInput]
+  # 父对象ID
+  parent: ID
+  # 排序
+  sort: Int
+  #部门类型
+  type: ID
 }
 
 input JobInput {
-    id: ID
-    name: String
+  id: ID
+  name: String
 }
 
 input DepartmentUpdateInput {
-    # 编码
-    sn: String
-    # 名称
-    name: String
-    # 描述
-    description: String
-    #    # 授予权限
-    #    permissions: [PermissionInput]
-    # 父对象ID
-    parent: ID
-    # 排序
-    sort: Int
-    # 职务
-    jobs: [JobInput]
-    #部门类型
-    type: ID
+  # 编码
+  sn: String
+  # 名称
+  name: String
+  # 描述
+  description: String
+  #    # 授予权限
+  #    permissions: [PermissionInput]
+  # 父对象ID
+  parent: ID
+  # 排序
+  sort: Int
+  # 职务
+  jobs: [JobInput]
+  #部门类型
+  type: ID
 }
 
 enum SecurityExpressType {
-    # 组织
-    organization
-    # 部门
-    department
-    # 岗位
-    job
-    # 职务
-    position
-    # 员工
-    employee
-    # 群组
-    employeeGroup
-    # 角色
-    role
-    # 登录用户
-    user
+  # 组织
+  organization
+  # 部门
+  department
+  # 岗位
+  job
+  # 职务
+  position
+  # 员工
+  employee
+  # 群组
+  employeeGroup
+  # 角色
+  role
+  # 登录用户
+  user
 }
 
 enum SecurityType {
-    # 组织
-    organization
-    # 部门
-    department
-    # 岗位
-    job
-    # 职务
-    position
-    # 员工
-    employee
-    # 群组
-    employeeGroup
-    # 角色
-    role
-    # 登录用户
-    user
+  # 组织
+  organization
+  # 部门
+  department
+  # 岗位
+  job
+  # 职务
+  position
+  # 员工
+  employee
+  # 群组
+  employeeGroup
+  # 角色
+  role
+  # 登录用户
+  user
 }
 
 input GrantPermissionInput {
-    securityType: SecurityType
-    permission: String
-    value: String
+  securityType: SecurityType
+  permission: String
+  value: String
 }
 
 input OrganizationCreateInput {
-    # 组织标识 - 后期不可修改，而且全局唯一
-    id: ID
-    # 名称
-    name: String!
-    # 描述
-    description: String
-    # 上级组织
-    parent: ID
-    # 是否支持多部门
-    #    multiSectoral: Boolean
-    # 支持最多部门数
-    #    multiSectoralNumber: Int
-    # 备注
-    remark: String
+  # 组织标识 - 后期不可修改，而且全局唯一
+  id: ID
+  # 名称
+  name: String!
+  # 描述
+  description: String
+  # 上级组织
+  parent: ID
+  # 是否支持多部门
+  #    multiSectoral: Boolean
+  # 支持最多部门数
+  #    multiSectoralNumber: Int
+  # 备注
+  remark: String
 }
 
 input OrganizationUpdateInput {
-    # 名称
-    name: String
-    # 描述
-    description: String
-    # 上级组织
-    parent: ID
-    # 是否支持多部门
-    #    multiSectoral: Boolean
-    # 支持最多部门数
-    #    multiSectoralNumber: Int
-    # 备注
-    remark: String
+  # 名称
+  name: String
+  # 描述
+  description: String
+  # 上级组织
+  parent: ID
+  # 是否支持多部门
+  #    multiSectoral: Boolean
+  # 支持最多部门数
+  #    multiSectoralNumber: Int
+  # 备注
+  remark: String
 }
 
 input OrganizationEmployeeStatusFilter {
-    # Id
-    id: ID
-    # 人员状态
-    name: String
-    # 适用组织
-    organizationId: String
+  # Id
+  id: ID
+  # 人员状态
+  name: String
+  # 适用组织
+  organizationId: String
 }
 input PositionFilter {
-    # Id
-    id: ID
-    # 职位名称
-    name: String
-    # 部门名称
-    department: String
+  # Id
+  id: ID
+  # 职位名称
+  name: String
+  # 部门名称
+  department: String
 }
 # 状态
 enum EmployeeStatus {
-    leave
-    work
+  leave
+  work
 }
 
 # 性别
 enum Sex {
-    male
-    female
-    unknown
+  male
+  female
+  unknown
 }
 
 # 组织
 type Organization {
-    id: ID
-    name: String
-    # 组织部门
-    #    departments(filter: DepartmentFilter): [Department]
-    # 组织员工
-    #    employees(filter: EmployeeFilter, page: Int = 1, pageSize: Int = 15, orderBy: OrderBy): EmployeeConnection
-    #    # 组织下的角色
-    #    roles(enabled: Boolean = true,scope:String = "GLOBAL"): [Role]
-    # 组织职位
-    jobs(orderBy: OrderBy): [Job]
-    # 创建人
-    createdBy: String
-    # 修改人
-    updatedBy: String
-    # 创建时间
-    createdAt: Date
-    # 修改时间
-    updatedAt: Date
-    # 部门类型
-    departmentTypes: [DepartmentType]
-    # 是否支持多部门
-    #    multiSectoral: Boolean
-    # 支持最多部门数
-    #    multiSectoralNumber: Int
-    # 机构描述信息
-    description: String
-    # 备注
-    remark: String
+  id: ID
+  name: String
+  # 组织部门
+  #    departments(filter: DepartmentFilter): [Department]
+  # 组织员工
+  #    employees(filter: EmployeeFilter, page: Int = 1, pageSize: Int = 15, orderBy: OrderBy): EmployeeConnection
+  #    # 组织下的角色
+  #    roles(enabled: Boolean = true,scope:String = "GLOBAL"): [Role]
+  # 组织职位
+  jobs(orderBy: OrderBy): [Job]
+  # 创建人
+  createdBy: String
+  # 修改人
+  updatedBy: String
+  # 创建时间
+  createdAt: Date
+  # 修改时间
+  updatedAt: Date
+  # 部门类型
+  departmentTypes: [DepartmentType]
+  # 是否支持多部门
+  #    multiSectoral: Boolean
+  # 支持最多部门数
+  #    multiSectoralNumber: Int
+  # 机构描述信息
+  description: String
+  # 备注
+  remark: String
 }
 
 type Department {
-    id(type: DepartmentIdType = ID): ID
-    # 部门编码
-    sn: String
-    # 部门名称
-    name: String
-    # 部门全称 格式如: 销售管理中心.售前支持
-    fullName: String
-    # 部门描述信息
-    description: String
-    # 部门包含的职务
-    jobs: [Job]
-    # 包含所有父级节点的ID
-    path: String
-    #    # 被授予的权限
-    #    permissions(key: String): [Permission]
-    # 获取权限对应的用户
-    #    permissionToUser(key: String): User
-    # 部门包含的职位
-    positions: [Position]
-    # 排序字段
-    sort: Int
-    # 上级机构
-    parent: Department
-    # 下属部门
-    children: [Department]
-    # 组织机构
-    organization: Organization
-    # 所有父级部门的集合
-    parents: [Department]
-    # 人员电子签名
-    # autographs: [AutographPng]
-    # 部门类型
-    type: DepartmentType
-    # 部门人数（过滤可获得包括子部门的总数）
-    # employeeCount(recursive: Boolean!, filter: EmployeeFilter): Int
-    # 下属部门数（过滤可获得包括子部门的总数）
-    # childrenCount(recursive: Boolean!, filter: DepartmentFilter): Int
+  id(type: DepartmentIdType = ID): ID
+  # 部门编码
+  sn: String
+  # 部门名称
+  name: String
+  # 部门全称 格式如: 销售管理中心.售前支持
+  fullName: String
+  # 部门描述信息
+  description: String
+  # 部门包含的职务
+  jobs: [Job]
+  # 包含所有父级节点的ID
+  path: String
+  #    # 被授予的权限
+  #    permissions(key: String): [Permission]
+  # 获取权限对应的用户
+  #    permissionToUser(key: String): User
+  # 部门包含的职位
+  positions: [Position]
+  # 排序字段
+  sort: Int
+  # 上级机构
+  parent: Department
+  # 下属部门
+  children: [Department]
+  # 组织机构
+  organization: Organization
+  # 所有父级部门的集合
+  parents: [Department]
+  # 人员电子签名
+  # autographs: [AutographPng]
+  # 部门类型
+  type: DepartmentType
+  # 部门人数（过滤可获得包括子部门的总数）
+  # employeeCount(recursive: Boolean!, filter: EmployeeFilter): Int
+  # 下属部门数（过滤可获得包括子部门的总数）
+  # childrenCount(recursive: Boolean!, filter: DepartmentFilter): Int
 }
 
 input EmployeeFilter {
-    id_in: [ID]
-    # 职务
-    job: ID
-    # 职位
-    position: ID
-    # 用户拼音
-    sn_contains: String
-    # 名称包含
-    name_contains: String
-    # 通过群组ID查询
-    group: ID
-    # 部门匹配 - 值为部门 ID
-    department: ID
-    # 部门匹配 - 会返回子部门的数据
-    department_startsWith: ID
-    #手机号
-    mobile: String
-    #状态
-    status: String
-    # 不是该状态
-    status_ne: String
-    #性别
-    sex: Sex
-    #工号
-    jobNumber: String
-    # 登录用户名
-    userName: String
-    # 角色
-    role: ID
-    AND: [EmployeeFilter]
-    OR: [EmployeeFilter]
-    NOT: [EmployeeFilter]
-    and: [EmployeeFilter]
-    or: [EmployeeFilter]
+  id_in: [ID]
+  # 职务
+  job: ID
+  # 职位
+  position: ID
+  # 用户拼音
+  sn_contains: String
+  # 名称包含
+  name_contains: String
+  # 通过群组ID查询
+  group: ID
+  # 部门匹配 - 值为部门 ID
+  department: ID
+  # 部门匹配 - 会返回子部门的数据
+  department_startsWith: ID
+  #手机号
+  mobile: String
+  #状态
+  status: String
+  # 不是该状态
+  status_ne: String
+  #性别
+  sex: Sex
+  #工号
+  jobNumber: String
+  # 登录用户名
+  userName: String
+  # 角色
+  role: ID
+  AND: [EmployeeFilter]
+  OR: [EmployeeFilter]
+  NOT: [EmployeeFilter]
+  and: [EmployeeFilter]
+  or: [EmployeeFilter]
 }
 
 input ExtensionField {
-    # 字段
-    name: String
-    # 值
-    value: String
+  # 字段
+  name: String
+  # 值
+  value: String
 }
 
 input OrganizationEmployeeFilter {
-    id_in: [ID]
-    # 职务
-    job: ID
-    # 职位
-    position: ID
-    sn_contains: String
-    # 名称包含
-    name_contains: String
-    # 通过群组ID查询
-    group: ID
-    # 部门匹配 - 值为部门 ID
-    department: ID
-    # 部门匹配 - 会返回子部门的数据
-    department_startsWith: ID
-    #手机号
-    mobile: String
-    #状态
-    status: String
-    #性别
-    sex: Sex
-    #工号
-    jobNumber: String
+  id_in: [ID]
+  # 职务
+  job: ID
+  # 职位
+  position: ID
+  sn_contains: String
+  # 名称包含
+  name_contains: String
+  # 通过群组ID查询
+  group: ID
+  # 部门匹配 - 值为部门 ID
+  department: ID
+  # 部门匹配 - 会返回子部门的数据
+  department_startsWith: ID
+  #手机号
+  mobile: String
+  #状态
+  status: String
+  #性别
+  sex: Sex
+  #工号
+  jobNumber: String
 }
 
 input OrganizationEmployeeStatusCreateInput {
-    # 状态名称
-    name: String
-    # 状态编码
-    code: String
-    # 是否是默认值
-    isDefault: Boolean
+  # 状态名称
+  name: String
+  # 状态编码
+  code: String
+  # 是否是默认值
+  isDefault: Boolean
 }
 
 input OrganizationEmployeeStatusUpdateInput {
-    # 状态名称
-    name: String
-    # 状态编码
-    code: String
-    # 是否是默认值
-    isDefault: Boolean
+  # 状态名称
+  name: String
+  # 状态编码
+  code: String
+  # 是否是默认值
+  isDefault: Boolean
 }
 input EmployeeGroupScopeCreateInput {
-    # 主键
-    id: String
-    # 分类名称
-    name: String
+  # 主键
+  id: String
+  # 分类名称
+  name: String
 }
 
 input EmployeeGroupScopeUpdateInput {
-    # 主键
-    id: String
-    # 分类名称
-    name: String
+  # 主键
+  id: String
+  # 分类名称
+  name: String
 }
 
 type EmployeeConnection {
-    # 总数据条数
-    totalCount: Int
-    # 每页显示条数
-    pageSize: Int
-    # 总页数
-    totalPage: Int
-    # 当前页
-    currentPage: Int
-    edges: [EmployeeEdge]
-    pageInfo: PageInfo
+  # 总数据条数
+  totalCount: Int
+  # 每页显示条数
+  pageSize: Int
+  # 总页数
+  totalPage: Int
+  # 当前页
+  currentPage: Int
+  edges: [EmployeeEdge]
+  pageInfo: PageInfo
 }
 
 type ExcelEmployeeConnection {
-    # 总数据条数
-    totalCount: Int
-    # 每页显示条数
-    pageSize: Int
-    # 总页数
-    totalPage: Int
-    # 当前页
-    currentPage: Int
-    edges: [ExcelEmployeeEdge]
-    pageInfo: PageInfo
+  # 总数据条数
+  totalCount: Int
+  # 每页显示条数
+  pageSize: Int
+  # 总页数
+  totalPage: Int
+  # 当前页
+  currentPage: Int
+  edges: [ExcelEmployeeEdge]
+  pageInfo: PageInfo
 }
 
 type ExcelEmployeeEdge {
-    cursor: String!
-    node: ExcelEmployee
+  cursor: String!
+  node: ExcelEmployee
 }
 
 type EmployeeEdge {
-    cursor: String!
-    node: Employee
+  cursor: String!
+  node: Employee
 }
 
 # excl操作表
 type ExcelEmployee {
-    id: ID
-    # 路径
-    excelUrl: String
-    # 是否更新
-    isUpdate: Boolean
-    # 创建者
-    employee: Employee
-    # 创建时间
-    createTime: Date
+  id: ID
+  # 路径
+  excelUrl: String
+  # 是否更新
+  isUpdate: Boolean
+  # 创建者
+  employee: Employee
+  # 创建时间
+  createTime: Date
 }
 
 # 组织•员工
 type Employee {
-    id(type: EmployeeIdType = ID): ID
-    # 状态
-    status: OrganizationEmployeeStatus
-    # 工号
-    jobNumber: String
-    # 头像
-    avatar: File
-    # 名称
-    name: String
-    # 生日
-    birthday: String
-    # 性别
-    sex: Sex
-    # 通过 Label 获取手机
-    email(label: String): Email
-    # 全部邮箱
-    emails: [EmployeeEmail]
-    # 通过 Label 获取手机
-    phone(label: String): Phone
-    # 全部电话
-    phones: [EmployeePhone]
-    # 通过 Label 获取地址
-    address(label: String): Address
-    # 全部地址
-    addresses: [EmployeeAddress]
-    # 员工的职位
-    positions(organization: ID, departmentId: ID): [Position]
-    # 所属部门
-    departments(organization: ID): [Department]
-    # 主职位
-    primaryPosition: Position
-    # 主部门
-    primaryDepartment: Department
-    #登录信息
-    user: User
-    links: [EmployeeLink]
-    #用户所属用户组
-    groups: [EmployeeGroup]
+  id(type: EmployeeIdType = ID): ID
+  # 状态
+  status: OrganizationEmployeeStatus
+  # 工号
+  jobNumber: String
+  # 头像
+  avatar: File
+  # 名称
+  name: String
+  # 生日
+  birthday: String
+  # 性别
+  sex: Sex
+  # 通过 Label 获取手机
+  email(label: String): Email
+  # 全部邮箱
+  emails: [EmployeeEmail]
+  # 通过 Label 获取手机
+  phone(label: String): Phone
+  # 全部电话
+  phones: [EmployeePhone]
+  # 通过 Label 获取地址
+  address(label: String): Address
+  # 全部地址
+  addresses: [EmployeeAddress]
+  # 员工的职位
+  positions(organization: ID, departmentId: ID): [Position]
+  # 所属部门
+  departments(organization: ID): [Department]
+  # 主职位
+  primaryPosition: Position
+  # 主部门
+  primaryDepartment: Department
+  #登录信息
+  user: User
+  links: [EmployeeLink]
+  #用户所属用户组
+  groups: [EmployeeGroup]
 }
 
 # 职位
 type Position {
-    # 职位
-    id: ID
-    # 职位名称
-    name: String
-    # 职位描述信息
-    description: String
-    #    # 职位拥有的角色
-    #    roles: [Role]
-    # 所属部门
-    department: Department
+  # 职位
+  id: ID
+  # 职位名称
+  name: String
+  # 职位描述信息
+  description: String
+  #    # 职位拥有的角色
+  #    roles: [Role]
+  # 所属部门
+  department: Department
 }
 
 # 职务
 type Job {
-    # 职务
-    id: ID
-    # 职务名称
-    name: String
-    # 职务描述信息
-    description: String
+  # 职务
+  id: ID
+  # 职务名称
+  name: String
+  # 职务描述信息
+  description: String
 }
 
 #用户签名照片部门公章
 type AutographPng {
-    #Id
-    id: ID
-    #描述信息
-    description: String
-    #是否启用 0禁用 1 启用
-    enabled: Boolean
-    #签名附件
-    autographFile: File
-    #签名类型
-    type: AutographEnum
+  #Id
+  id: ID
+  #描述信息
+  description: String
+  #是否启用 0禁用 1 启用
+  enabled: Boolean
+  #签名附件
+  autographFile: File
+  #签名类型
+  type: AutographEnum
 }
 # 部门类型
 type DepartmentType {
-    # 部门类型ID
-    id: ID
-    # 部门类型名称
-    name: String
-    # 编码
-    code: String
-    # 部门组织
-    organization: Organization
-    # 是否支持多部门
-    #    multiSectoral: Boolean
-    # 最大兼岗人数
-    andPost: Int
+  # 部门类型ID
+  id: ID
+  # 部门类型名称
+  name: String
+  # 编码
+  code: String
+  # 部门组织
+  organization: Organization
+  # 是否支持多部门
+  #    multiSectoral: Boolean
+  # 最大兼岗人数
+  andPost: Int
 }
 
 enum AutographEnum {
-    #人员签名
-    employee
-    #部门公章
-    department
+  #人员签名
+  employee
+  #部门公章
+  department
 }
 
 type EmployeeAddress {
-    id: ID
-    primary: Boolean
-    label: String
-    address: Address
+  id: ID
+  primary: Boolean
+  label: String
+  address: Address
 }
 
 type EmployeeEmail {
-    id: ID
-    primary: Boolean
-    label: String
-    email: Email
+  id: ID
+  primary: Boolean
+  label: String
+  email: Email
 }
 
 type EmployeePhone {
-    id: ID
-    primary: Boolean
-    label: String
-    phone: Phone
+  id: ID
+  primary: Boolean
+  label: String
+  phone: Phone
 }
 
 enum EmailStatus {
-    UNVERIFIED
-    VERIFIED
+  UNVERIFIED
+  VERIFIED
 }
 
 type Email {
-    status: EmailStatus
-    address: String
+  status: EmailStatus
+  address: String
 }
 
 enum PhoneStatus {
-    UNVERIFIED
-    VERIFIED
+  UNVERIFIED
+  VERIFIED
 }
 
 type Phone {
-    #电话
-    number: String
-    #状态
-    status: PhoneStatus
+  #电话
+  number: String
+  #状态
+  status: PhoneStatus
 }
 
 type Address {
-    #国家
-    country: String
-    #省
-    province: String
-    #城市
-    city: String
-    #区
-    district: String
-    #街道
-    street: String
-    #邮编
-    postalCode: String
+  #国家
+  country: String
+  #省
+  province: String
+  #城市
+  city: String
+  #区
+  district: String
+  #街道
+  street: String
+  #邮编
+  postalCode: String
 }
 
 type TeamMember {
-    id: ID!
-    name: String
-    title: String
-    avatar: File
-    introduction: String
+  id: ID!
+  name: String
+  title: String
+  avatar: File
+  introduction: String
 }
 
 extend type Query {
-    # 组织•组织列表
-    organizations(filter: OrganizationFilter): [Organization]
-    # 团队成员
-    teamMembers: [TeamMember!]!
-    #    # 组织•单个组织
-    #    organization(id: ID!): Organization
-    #    # 全部部门
-    #    departments(organization: ID!, filter: DepartmentFilter) : [Department]
-    #    # 单个部门
-    #    department(id: ID!): Department
-    #    # 员工分页查询
-    #    employees(organization: ID!, filter: EmployeeFilter = {}, page: Int = 1, pageSize: Int = 15, orderBy: OrderBy): EmployeeConnection
-    #    # 单个员工
-    #    employee(id: ID!, idType: EmployeeIdType = id): Employee
-    #    # 查询全部群组
-    #    employeeGroups(organization: ID, scope: String,name: String): [EmployeeGroup]
-    #    # 查询单个群组
-    #    employeeGroup(id: ID!): EmployeeGroup
-    #    # 全部职务
-    #    jobs(organization: ID!,orderBy: OrderBy): [Job]
-    #    #根据组织获取人员分组使用范围
-    #    employeeGroupScopes(organization: ID!):[EmployeeGroupScope]
-    #    # 查询所有部门类型
-    #    departmentTypes(organization: ID!): [DepartmentType]
-    #    # 查询多个部门里的人
-    #    employeesByDepIds(ids: [ID]!): [Employee]
-    #    # 全部部门人员状态查询
-    #    organizationEmployeeStatuss(filter: OrganizationEmployeeStatusFilter = {},organization: ID): [OrganizationEmployeeStatus]
-    #    # 单个部门人员状态查询
-    #    organizationEmployeeStatus(id: ID!): OrganizationEmployeeStatus
-    #    # 查询所有的职位
-    #    positions(organization: ID!,filter: PositionFilter): [Position]
-    #    # 查询单个职位
-    #    position(id: ID!): Position
-    #    # 查询全部群组分类
-    #    groupTypes(organization: ID!,name: String): [EmployeeGroupScope]
-    #    # 查询单个群组分类
-    #    groupType(id: ID!): EmployeeGroupScope
+  # 组织•组织列表
+  organizations(filter: OrganizationFilter): [Organization]
+  # 团队成员
+  teamMembers: [TeamMember!]!
+  #    # 组织•单个组织
+  #    organization(id: ID!): Organization
+  #    # 全部部门
+  #    departments(organization: ID!, filter: DepartmentFilter) : [Department]
+  #    # 单个部门
+  #    department(id: ID!): Department
+  #    # 员工分页查询
+  #    employees(organization: ID!, filter: EmployeeFilter = {}, page: Int = 1, pageSize: Int = 15, orderBy: OrderBy): EmployeeConnection
+  #    # 单个员工
+  #    employee(id: ID!, idType: EmployeeIdType = id): Employee
+  #    # 查询全部群组
+  #    employeeGroups(organization: ID, scope: String,name: String): [EmployeeGroup]
+  #    # 查询单个群组
+  #    employeeGroup(id: ID!): EmployeeGroup
+  #    # 全部职务
+  #    jobs(organization: ID!,orderBy: OrderBy): [Job]
+  #    #根据组织获取人员分组使用范围
+  #    employeeGroupScopes(organization: ID!):[EmployeeGroupScope]
+  #    # 查询所有部门类型
+  #    departmentTypes(organization: ID!): [DepartmentType]
+  #    # 查询多个部门里的人
+  #    employeesByDepIds(ids: [ID]!): [Employee]
+  #    # 全部部门人员状态查询
+  #    organizationEmployeeStatuss(filter: OrganizationEmployeeStatusFilter = {},organization: ID): [OrganizationEmployeeStatus]
+  #    # 单个部门人员状态查询
+  #    organizationEmployeeStatus(id: ID!): OrganizationEmployeeStatus
+  #    # 查询所有的职位
+  #    positions(organization: ID!,filter: PositionFilter): [Position]
+  #    # 查询单个职位
+  #    position(id: ID!): Position
+  #    # 查询全部群组分类
+  #    groupTypes(organization: ID!,name: String): [EmployeeGroupScope]
+  #    # 查询单个群组分类
+  #    groupType(id: ID!): EmployeeGroupScope
 }
 
 #type Mutation {
