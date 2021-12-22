@@ -17,6 +17,7 @@ include ":asany-shanhai",
         ":asany-security",
         ":asany-storage-api",
         ":asany-storage",
+        ":asany-website",
         ":asany-nuwa",
         ":asany-ui",
         ":asany-cms",
@@ -24,6 +25,8 @@ include ":asany-shanhai",
 
 // 基础
 project(':asany-base').projectDir = "$rootDir/base" as File
+// 网站
+project(':asany-website').projectDir = "$rootDir/website" as File
 // 建模
 project(':asany-shanhai').projectDir = "$rootDir/shanhai" as File
 // 组织 / 员工 / 安全 / 登录 / 授权
