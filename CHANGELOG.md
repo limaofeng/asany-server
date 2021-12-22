@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.27](https://github.com/limaofeng/asany-server/compare/v0.0.26...v0.0.27) (2021-12-22)
+
+
+### Features
+
+* 添加 TeamMember ([7aa1a7e](https://github.com/limaofeng/asany-server/commit/7aa1a7e973b0d8deb4ea4c58022e6132e3e6f5a5))
+
 ### [0.0.26](https://github.com/limaofeng/asany-server/compare/v0.0.25...v0.0.26) (2021-12-21)
 
 
