@@ -1,0 +1,13 @@
+{
+  "properties": [
+    {
+      "name": "smtp.server.port",
+      "type": "java.lang.String",
+      "description": "邮件服务器 端口"
+    },
+    {
+      "name": "smtp.server.timeout",
+      "type": "java.lang.String",
+      "description": "邮件服务器 连接超时时间"
+    }
+  ] }

@@ -1,0 +1,31 @@
+description = "邮件"
+
+dependencies {
+    implementation project(":asany-base")
+    implementation project(":asany-security")
+    implementation project(":asany-storage-api")
+    implementation 'org.apache.james:metrics-logger:3.4.0'
+    implementation 'org.apache.james.protocols:protocols-api:3.4.0'
+    implementation 'org.apache.james.protocols:protocols-smtp:3.4.0'
+    implementation 'org.apache.james:james-server-core:3.4.0'
+    implementation 'org.apache.james:apache-james-mailbox-memory:3.4.0'
+    implementation 'org.apache.james:james-server-data-library:3.4.0'
+    implementation 'org.apache.james:james-server-data-memory:3.4.0'
+    implementation 'org.apache.james:james-server-protocols-imap4:3.4.0'
+    implementation 'org.apache.james:james-server-protocols-smtp:3.4.0'
+    implementation 'org.apache.james:james-server-dnsservice-dnsjava:3.4.0'
+    implementation 'org.apache.james:james-server-queue-memory:3.4.0'
+    implementation 'org.apache.james:james-server-mailrepository-api:3.4.0'
+    implementation 'org.apache.james:james-server-mailrepository-memory:3.4.0'
+    implementation 'org.apache.james.protocols:protocols-smtp:3.4.0'
+    implementation 'org.apache.james:event-sourcing-event-store-memory:3.4.0'
+    implementation('org.apache.james:james-server-spring:3.4.0') {
+        exclude group: 'org.apache.activemq'
+    }
+    implementation 'org.apache.camel:camel-spring:2.24.1'
+//    implementation 'org.apache.camel.springboot:camel-spring-boot-starter:3.0.1'
+    implementation 'org.apache.james:apache-mailet-api:3.4.0'
+    implementation 'org.apache.james:apache-mailet-base:3.4.0'
+    implementation 'org.apache.james:james-server-guice-common:3.4.0'
+    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor:$LIB_SPRING_BOOT_VER"
+}

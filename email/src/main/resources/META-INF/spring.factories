@@ -1,0 +1,3 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+cn.asany.autoconfigure.EmailAutoConfiguration,\
+cn.asany.autoconfigure.SmtpServerAutoConfiguration
