@@ -26,6 +26,7 @@ bootRun {
 dependencies {
     implementation project(":asany-ui")
     implementation project(":asany-base")
+    implementation project(":asany-email")
     implementation project(":asany-nuwa")
     implementation project(":asany-cms")
     implementation project(":asany-shanhai")

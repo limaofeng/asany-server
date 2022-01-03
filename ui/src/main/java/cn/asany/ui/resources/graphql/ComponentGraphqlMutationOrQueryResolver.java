@@ -53,8 +53,7 @@ public class ComponentGraphqlMutationOrQueryResolver
 
   public List<Component> components(
       ComponentFilter filter, int first, int offset, OrderBy orderBy) {
-    Pager.PagerBuilder<Component> pagerBuilder = Pager.builder();
-    Pager<Component> pager = pagerBuilder.first(first).pageSize(offset).orderBy(orderBy).build();
+    Pager<Component> pager = Pager.newPager(offset, orderBy, first);
     filter = ObjectUtil.defaultValue(filter, new ComponentFilter());
     return componentService.findPager(pager, filter.build()).getPageItems();
   }

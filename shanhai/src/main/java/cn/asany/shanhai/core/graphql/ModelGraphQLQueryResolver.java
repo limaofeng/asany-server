@@ -31,8 +31,7 @@ public class ModelGraphQLQueryResolver implements GraphQLQueryResolver {
   }
 
   public List<Model> models(ModelFilter filter, int first, int offset, OrderBy orderBy) {
-    Pager.PagerBuilder<Model> pagerBuilder = Pager.builder();
-    Pager<Model> pager = pagerBuilder.first(first).pageSize(offset).orderBy(orderBy).build();
+    Pager<Model> pager = Pager.newPager(offset, orderBy, first);
     filter = ObjectUtil.defaultValue(filter, new ModelFilter());
     return modelService.findPager(pager, filter.build()).getPageItems();
   }

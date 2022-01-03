@@ -33,7 +33,6 @@ class ApplicationServiceTest {
     // 调基础工具类的方法
     NativeApplication app = YamlUtils.load(inputStream);
     assert app.getName().equals("website");
-    //    channelService.deleteAll();
     applicationService.deleteApplication(app.getName());
     Application application = applicationService.createApplication(app);
     log.debug(
@@ -49,7 +48,7 @@ class ApplicationServiceTest {
     YamlUtils.addModuleClass("cms", CmsModuleProperties.class);
     NativeApplication app = YamlUtils.load(inputStream);
     assert app.getName().equals("admin");
-    channelService.deleteAll();
+    //    channelService.deleteAll();
     applicationService.deleteApplication(app.getName());
     Application application = applicationService.createApplication(app);
     log.debug(

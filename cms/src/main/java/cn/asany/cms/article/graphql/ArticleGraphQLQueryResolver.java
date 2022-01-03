@@ -57,19 +57,18 @@ public class ArticleGraphQLQueryResolver implements GraphQLQueryResolver {
   /**
    * 查询所有文章
    *
-   * @param filter
-   * @param page
-   * @param pageSize
-   * @param orderBy
-   * @return
+   * @param filter 过滤
+   * @param page 页码
+   * @param pageSize 每页显示数据条数
+   * @param orderBy 排序
+   * @return ArticleConnection
    */
   public ArticleConnection articles(
       ArticleFilter filter, int first, int page, int pageSize, OrderBy orderBy) {
     PropertyFilterBuilder builder =
         ObjectUtil.defaultValue(filter, new ArticleFilter()).getBuilder();
-    Pager<Article> pager = Pager.<Article>builder().pageSize(pageSize).pageSize(pageSize).build();
 
-    pager.setOrderBy(ObjectUtil.defaultValue(orderBy, OrderBy.desc("createdAt")));
+    Pager<Article> pager = Pager.newPager(pageSize, OrderBy.desc("createdAt"));
 
     return Kit.connection(
         articleService.findPager(pager, builder.build()), ArticleConnection.class);

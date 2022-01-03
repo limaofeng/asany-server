@@ -11,59 +11,81 @@ menus:
     path: /apps
   - name: 内容管理
     icon: Duotune/txt009
-    path: /cms
+    path: /cms/my/drafts
     component: cn.asany.ui.admin.cms.ArticleSidebar
+  - name: 通讯录
+    icon: Duotune/com005
+    path: /contacts
+  - name: 日历
+    icon: Duotune/gen014
+    path: /calendar
+    component: cn.asany.ui.admin.calendar.Sidebar
+  - name: 云盘
+    icon: Duotune/fil020
+    path: /storage
+    component: cn.asany.ui.admin.storage.Sidebar
   - name: 自定义建模
     icon: Duotune/abs026
     path: /shanhai
     component: cn.asany.ui.admin.shanhai.MenuSidebar
-  - name: 项目管理
-    icon: Duotune/abs045
-    children:
-      - name: 我的任务
-        type: SECTION
-      - name: x1
-        icon: Duotune/gen032
-        path: /projects
-      - name: x2
-        icon: Duotune/gen032
-        path: /projects
-      - name: 项目
-        type: SECTION
-      - name: x1
-        icon: Duotune/gen032
-        path: /projects
-      - name: x2
-        icon: Duotune/gen032
-        path: /projects
+  #  - name: 项目管理
+  #    icon: Duotune/abs045
+  #    children:
+  #      - name: 我的任务
+  #        type: SECTION
+  #      - name: x1
+  #        icon: Duotune/gen032
+  #        path: /projects
+  #      - name: x2
+  #        icon: Duotune/gen032
+  #        path: /projects
+  #      - name: 项目
+  #        type: SECTION
+  #      - name: x1
+  #        icon: Duotune/gen032
+  #        path: /projects
+  #      - name: x2
+  #        icon: Duotune/gen032
+  #        path: /projects
   - name: 系统管理
     icon: Duotune/cod001
     children:
-      - name: 组织管理
-        icon: Duotune/gen032
+      - name: 安全设置
         type: SECTION
-      - name: 员工管理
-        path: /projects
-      - name: 部门管理
-        path: /projects
+      - name: 权限管理
+        icon: Duotune/gen049
         children:
-          - name: 群组管理
-            path: /projects
-          - name: 职务管理
-            path: /projects
-      - name: 用户管理
-        icon: Duotune/gen032
-        path: /projects
-
-      - name: 前端
-        icon: Duotune/gen032
+          - name: 角色管理
+            path: /security/roles
+          - name: 权限管理
+            path: /security/permissions
+          - name: 角色管理
+            path: /security/roles
+      - name: 用户会话
+        icon: Duotune/abs046
+        children:
+          - name: 在线用户
+            path: /security/roles
+          - name: 异常用户
+            path: /security/roles
+          - name: 被锁定的用户
+            path: /security/roles
+      - name: 个性化
         type: SECTION
-      - name: 文件管理
-        icon: Duotune/fil025
-        path: /storages
       - name: 图标库管理
-        icon: Duotune/gen006
+        icon: Duotune/soc005
         path: /icon-libraries
+      - name: 系统集成
+        type: SECTION
+      - name: 移动办公平
+        icon: Duotune/elc002
+        children:
+          - name: 钉钉集成
+          - name: 企业微信
+      - name: 企业邮箱
+        icon: Duotune/com002
+      - name: 第三方存储
+        icon: Duotune/fil023
 routes:
   - path: /login
     component: cn.asany.ui.theme.metronic.authentication.SignIn
@@ -114,6 +136,13 @@ routes:
       - path: /cms/articles/:id/edit
         component: cn.asany.ui.admin.cms.ArticleEdit
         layout: false
+      - path: /contacts
+        component: cn.asany.ui.admin.contacts.MainContacts
+#        hideMenu: true
+      - path: /calendar
+        component: cn.asany.ui.admin.calendar.MainCalendar
+      - path: /storage
+        component: cn.asany.ui.admin.storage.CloudStorage
       - path: /storages/:id
         component: cn.asany.ui.admin.storage.FileManager
         routes:
@@ -128,46 +157,46 @@ routes:
         hideMenu: true
       - path: /
         component: cn.asany.ui.admin.Home
-modules:
-  - type: cms
-    channels:
-      - name: IT外包
-        slug: it-outsourcing
-        icon: Duotune/com014
-        children:
-          - slug: maintenance-service
-            name: 运维服务
-          - slug: software-development
-            name: 软件开发
-          - slug: special-service
-            name: 专项服务
-          - slug: consultation-service
-            name: 咨询服务
-      - name: IT采购
-        slug: it-procurement
-        icon: Duotune/ecm001
-      - name: 弱电工程
-        slug: weak-current-engineering
-        icon: Duotune/elc008
-      - name: 系统集成
-        slug: system-integration
-        icon: Duotune/teh005
-      - name: 走进互升
-        slug: welcome
-        icon: Duotune/elc003
-      - name: 成功案例
-        slug: cases
-        icon: Duotune/elc003
-        posts:
-          - title: 某广告设计企业-弱电集成项目
-            cover: https://www.linemore.com/files/images/201907/1002282246590.jpg
-            summary: 互升团队为客户提供高效稳定安全的办公网络系统，满足客户日常使用及后续稳定可靠的7X24小时监控中心及门禁系统打造个性化，具有专业形象和文化的会议室使用体验
-          - title: 某纳斯达克上市医药公司-弱电集成项目
-            cover: https://www.linemore.com/files/images/201907/0305230583910.jpg
-            summary: 互升为用户提高网络质量优化，满足客户日常使用，用户体验升级，所有办公区域无线全覆盖稳定可靠，7X24小时监控中心优化容错，单节点网络出故障不影响总体网络
-          - title: 知名早教集团-弱电集成项目
-            cover: https://www.linemore.com/files/images/201907/0305135932000.jpg
-            summary: 互升团队为客户提高无线访问速率及访问安全性，整体监控门禁安防系统整合优化， 优化容错，单节点网络出故障不影响总体网络，IT可随时远程监测及调控操作的机房环境
-          - title: 某上市生命科技股份公司-弱电集成项目
-            cover: https://www.linemore.com/files/images/201907/0302252065150.png
-            summary: 互升帮助用户实现无尘车间无线有线网络覆盖，保障无尘车间电话及网络通讯环境单节点网络出故障不影响总体网络，用户体验升级。一卡通式多门门禁全效管理，同时联动消防以及考勤等功能安全可靠，7X24小时监控中心
+#modules:
+#  - type: cms
+#    channels:
+#      - name: IT外包
+#        slug: it-outsourcing
+#        icon: Duotune/com014
+#        children:
+#          - slug: maintenance-service
+#            name: 运维服务
+#          - slug: software-development
+#            name: 软件开发
+#          - slug: special-service
+#            name: 专项服务
+#          - slug: consultation-service
+#            name: 咨询服务
+#      - name: IT采购
+#        slug: it-procurement
+#        icon: Duotune/ecm001
+#      - name: 弱电工程
+#        slug: weak-current-engineering
+#        icon: Duotune/elc008
+#      - name: 系统集成
+#        slug: system-integration
+#        icon: Duotune/teh005
+#      - name: 走进互升
+#        slug: welcome
+#        icon: Duotune/elc003
+#      - name: 成功案例
+#        slug: cases
+#        icon: Duotune/elc003
+#        posts:
+#          - title: 某广告设计企业-弱电集成项目
+#            cover: https://www.linemore.com/files/images/201907/1002282246590.jpg
+#            summary: 互升团队为客户提供高效稳定安全的办公网络系统，满足客户日常使用及后续稳定可靠的7X24小时监控中心及门禁系统打造个性化，具有专业形象和文化的会议室使用体验
+#          - title: 某纳斯达克上市医药公司-弱电集成项目
+#            cover: https://www.linemore.com/files/images/201907/0305230583910.jpg
+#            summary: 互升为用户提高网络质量优化，满足客户日常使用，用户体验升级，所有办公区域无线全覆盖稳定可靠，7X24小时监控中心优化容错，单节点网络出故障不影响总体网络
+#          - title: 知名早教集团-弱电集成项目
+#            cover: https://www.linemore.com/files/images/201907/0305135932000.jpg
+#            summary: 互升团队为客户提高无线访问速率及访问安全性，整体监控门禁安防系统整合优化， 优化容错，单节点网络出故障不影响总体网络，IT可随时远程监测及调控操作的机房环境
+#          - title: 某上市生命科技股份公司-弱电集成项目
+#            cover: https://www.linemore.com/files/images/201907/0302252065150.png
+#            summary: 互升帮助用户实现无尘车间无线有线网络覆盖，保障无尘车间电话及网络通讯环境单节点网络出故障不影响总体网络，用户体验升级。一卡通式多门门禁全效管理，同时联动消防以及考勤等功能安全可靠，7X24小时监控中心

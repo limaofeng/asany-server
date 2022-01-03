@@ -14,6 +14,9 @@ pluginManagement {
 rootProject.name = 'shanhai'
 include ":asany-shanhai",
         ":asany-base",
+        ":asany-contacts",
+        ":asany-calendar",
+        ":asany-email",
         ":asany-security",
         ":asany-storage-api",
         ":asany-storage",
@@ -39,9 +42,15 @@ project(':asany-storage-api').projectDir = "$rootDir/storage-api" as File
 project(':asany-storage').projectDir = "$rootDir/storage" as File
 // 应用及路由管理
 project(':asany-nuwa').projectDir = "$rootDir/nuwa" as File
-
+// 前端组件
 project(':asany-ui').projectDir = "$rootDir/ui" as File
 // 内容管理
 project(':asany-cms').projectDir = "$rootDir/cms" as File
+// 通讯录
+project(':asany-contacts').projectDir = "$rootDir/contacts" as File
+// 日历
+project(':asany-calendar').projectDir = "$rootDir/calendar" as File
+// 日历
+project(':asany-email').projectDir = "$rootDir/email" as File
 // 启动
 project(':asany-boot').projectDir = "$rootDir/boot" as File
