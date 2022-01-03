@@ -1,41 +1,80 @@
 package cn.asany.email.mailbox.bean;
 
+import java.util.Objects;
 import javax.persistence.*;
-import lombok.Data;
+import lombok.*;
 import org.apache.james.mailbox.store.mail.model.Property;
 import org.apache.openjpa.persistence.jdbc.Index;
+import org.hibernate.Hibernate;
+import org.hibernate.annotations.GenericGenerator;
 
-@Data
+/**
+ * 属性
+ *
+ * @author limaofeng
+ */
+@Getter
+@Setter
+@RequiredArgsConstructor
 @Entity(name = "Property")
-@Table(name = "JAMES_MAIL_PROPERTY")
+@Table(
+    name = "JAMES_MAIL_PROPERTY",
+    uniqueConstraints =
+        @UniqueConstraint(
+            name = "UK_LOCAL_NAME",
+            columnNames = {"MAILBOX_ID", "MAIL_UID", "LOCAL_NAME"}))
 public class JamesProperty implements Property {
 
   /** The system unique key */
   @Id
-  @GeneratedValue
-  @Column(name = "PROPERTY_ID", nullable = true)
-  private long id;
+  @Column(name = "ID", nullable = false, updatable = false, precision = 22)
+  @GeneratedValue(generator = "fantasy-sequence")
+  @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+  private Long id;
+
+  @Column(name = "MAILBOX_ID")
+  private long mailboxId;
+
+  @Column(name = "MAIL_UID")
+  private long uid;
 
   /** Order within the list of properties */
   @Basic(optional = false)
-  @Column(name = "PROPERTY_LINE_NUMBER", nullable = false)
+  @Column(name = "LINE_NUMBER", nullable = false)
   @Index(name = "INDEX_PROPERTY_LINE_NUMBER")
   private int line;
 
   /** Local part of the name of this property */
   @Basic(optional = false)
-  @Column(name = "PROPERTY_LOCAL_NAME", nullable = false, length = 500)
+  @Column(name = "LOCAL_NAME", nullable = false, length = 500)
   private String localName;
 
   /** Namespace part of the name of this property */
   @Basic(optional = false)
-  @Column(name = "PROPERTY_NAME_SPACE", nullable = false, length = 500)
+  @Column(name = "NAME_SPACE", nullable = false, length = 500)
   private String namespace;
 
   /** Value of this property */
   @Basic(optional = false)
-  @Column(name = "PROPERTY_VALUE", nullable = false, length = 1024)
+  @Column(name = "VALUE", nullable = false, length = 1024)
   private String value;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumns(
+      value = {
+        @JoinColumn(
+            name = "MAILBOX_ID",
+            referencedColumnName = "MAILBOX_ID",
+            insertable = false,
+            updatable = false),
+        @JoinColumn(
+            name = "MAIL_UID",
+            referencedColumnName = "MAIL_UID",
+            insertable = false,
+            updatable = false),
+      },
+      foreignKey = @ForeignKey(name = "FK_JAMES_MAIL_PROPERTIES"))
+  private JamesMailboxMessage mailboxMessage;
 
   public JamesProperty(JamesProperty property) {
     this(
@@ -56,5 +95,22 @@ public class JamesProperty implements Property {
 
   public int getOrder() {
     return line;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) {
+      return false;
+    }
+    JamesProperty that = (JamesProperty) o;
+    return id != null && Objects.equals(id, that.id);
+  }
+
+  @Override
+  public int hashCode() {
+    return getClass().hashCode();
   }
 }

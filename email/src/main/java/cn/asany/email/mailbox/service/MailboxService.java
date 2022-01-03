@@ -6,14 +6,20 @@ import cn.asany.email.mailbox.dao.MailboxMessageDao;
 import java.util.List;
 import java.util.Optional;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional(rollbackFor = RuntimeException.class)
 public class MailboxService {
 
-  @Autowired private MailboxDao mailboxDao;
-  @Autowired private MailboxMessageDao mailboxMessageDao;
+  private final MailboxDao mailboxDao;
+  private final MailboxMessageDao mailboxMessageDao;
+
+  public MailboxService(MailboxDao mailboxDao, MailboxMessageDao mailboxMessageDao) {
+    this.mailboxDao = mailboxDao;
+    this.mailboxMessageDao = mailboxMessageDao;
+  }
 
   public JamesMailbox save(JamesMailbox mailbox) {
     return this.mailboxDao.save(mailbox);

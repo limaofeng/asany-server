@@ -8,6 +8,7 @@ import javax.mail.Flags;
 import javax.mail.internet.SharedInputStream;
 import javax.persistence.*;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.apache.commons.io.IOUtils;
 import org.apache.james.mailbox.MessageUid;
@@ -17,6 +18,7 @@ import org.apache.james.mailbox.store.mail.model.impl.PropertyBuilder;
 
 @Setter
 @Getter
+@RequiredArgsConstructor
 @Entity(name = "MailboxMessage")
 @Table(name = "JAMES_MAIL")
 public class JamesMailboxMessage extends AbstractJPAMailboxMessage {

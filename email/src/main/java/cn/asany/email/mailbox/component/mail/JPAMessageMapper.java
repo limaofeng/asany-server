@@ -31,8 +31,8 @@ public class JPAMessageMapper extends JPATransactionalMapper implements MessageM
   private static final int UNLIMITED = -1;
 
   private final MessageUtils messageMetadataMapper;
-  private MailboxService mailboxService;
-  private MailboxMessageService mailboxMessageService;
+  private final MailboxService mailboxService;
+  private final MailboxMessageService mailboxMessageService;
 
   public JPAMessageMapper(
       MailboxSession mailboxSession,
@@ -134,13 +134,12 @@ public class JPAMessageMapper extends JPATransactionalMapper implements MessageM
       Mailbox mailbox, MailboxMessage message) {
     JPAId mailboxId = (JPAId) mailbox.getMailboxId();
     AbstractJPAMailboxMessage.MailboxIdUidKey key = new AbstractJPAMailboxMessage.MailboxIdUidKey();
-    key.mailbox = mailboxId.getRawId();
-    key.uid = message.getUid().asLong();
+    key.setMailbox(mailboxId.getRawId());
+    key.setId(message.getUid().asLong());
     return key;
   }
 
   @Override
-  @SuppressWarnings("unchecked")
   public MessageUid findFirstUnseenMessageUid(Mailbox mailbox) throws MailboxException {
     try {
       JPAId mailboxId = (JPAId) mailbox.getMailboxId();

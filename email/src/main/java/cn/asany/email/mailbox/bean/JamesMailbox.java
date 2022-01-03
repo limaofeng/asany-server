@@ -7,7 +7,13 @@ import lombok.*;
 import org.apache.james.mailbox.model.Mailbox;
 import org.apache.james.mailbox.model.MailboxPath;
 import org.hibernate.Hibernate;
+import org.hibernate.annotations.GenericGenerator;
 
+/**
+ * James Mailbox
+ *
+ * @author limaofeng
+ */
 @Getter
 @Setter
 @RequiredArgsConstructor
@@ -23,18 +29,19 @@ public class JamesMailbox {
 
   /** The value for the mailboxId field */
   @Id
-  @GeneratedValue
-  @Column(name = "MAILBOX_ID")
-  private Long mailboxId;
+  @Column(name = "ID", nullable = false, updatable = false, precision = 22)
+  @GeneratedValue(generator = "fantasy-sequence")
+  @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+  private Long id;
 
   /** The value for the name field */
   @Basic(optional = false)
-  @Column(name = "MAILBOX_NAME", nullable = false, length = 200)
+  @Column(name = "NAME", nullable = false, length = 200)
   private String name;
 
   /** The value for the uidValidity field */
   @Basic(optional = false)
-  @Column(name = "MAILBOX_UID_VALIDITY", nullable = false)
+  @Column(name = "UID_VALIDITY", nullable = false)
   private long uidValidity;
 
   @Basic(optional = true)
@@ -42,15 +49,15 @@ public class JamesMailbox {
   private String user;
 
   @Basic(optional = false)
-  @Column(name = "MAILBOX_NAMESPACE", nullable = false, length = 200)
+  @Column(name = "NAMESPACE", nullable = false, length = 200)
   private String namespace;
 
   @Basic(optional = false)
-  @Column(name = "MAILBOX_LAST_UID", nullable = true)
+  @Column(name = "LAST_UID", nullable = true)
   private long lastUid;
 
   @Basic(optional = false)
-  @Column(name = "MAILBOX_HIGHEST_MODSEQ", nullable = true)
+  @Column(name = "HIGHEST_MODSEQ", nullable = true)
   private long highestModSeq;
 
   public JamesMailbox(Mailbox mailbox) {
@@ -69,18 +76,18 @@ public class JamesMailbox {
   }
 
   public Mailbox toMailbox() {
-    return new Mailbox(generateAssociatedPath(), uidValidity, new JPAId(mailboxId));
+    return new Mailbox(generateAssociatedPath(), uidValidity, new JPAId(id));
   }
 
   public JPAId getMailboxId() {
-    return JPAId.of(mailboxId);
+    return JPAId.of(id);
   }
 
   @Override
   public String toString() {
     return "Mailbox ( "
-        + "mailboxId = "
-        + this.mailboxId
+        + "id = "
+        + this.id
         + TAB
         + "name = "
         + this.name
@@ -100,7 +107,7 @@ public class JamesMailbox {
       return false;
     }
     JamesMailbox that = (JamesMailbox) o;
-    return mailboxId != null && Objects.equals(mailboxId, that.mailboxId);
+    return id != null && Objects.equals(id, that.id);
   }
 
   @Override

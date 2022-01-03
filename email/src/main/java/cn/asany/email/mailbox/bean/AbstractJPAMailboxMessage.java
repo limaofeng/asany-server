@@ -24,8 +24,6 @@ import org.apache.james.mailbox.store.mail.model.impl.MessageParser;
 import org.apache.james.mailbox.store.mail.model.impl.PropertyBuilder;
 import org.apache.james.mailbox.store.search.comparator.UidComparator;
 import org.apache.james.mime4j.MimeException;
-import org.apache.openjpa.persistence.jdbc.ElementJoinColumn;
-import org.apache.openjpa.persistence.jdbc.ElementJoinColumns;
 import org.apache.openjpa.persistence.jdbc.Index;
 
 @Getter
@@ -47,7 +45,7 @@ public abstract class AbstractJPAMailboxMessage implements MailboxMessage {
   /** The value for the uid field */
   @Id
   @Column(name = "MAIL_UID")
-  private long uid;
+  private long id;
 
   /** The value for the modSeq field */
   @org.apache.openjpa.persistence.jdbc.Index
@@ -118,20 +116,16 @@ public abstract class AbstractJPAMailboxMessage implements MailboxMessage {
   private Long textualLineCount;
 
   /** Meta data for this message */
-  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+  @OneToMany(mappedBy = "mailboxMessage", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   @OrderBy("line")
-  @ElementJoinColumns({
-    @ElementJoinColumn(name = "MAILBOX_ID", referencedColumnName = "MAILBOX_ID"),
-    @ElementJoinColumn(name = "MAIL_UID", referencedColumnName = "MAIL_UID")
-  })
   private Set<JamesProperty> properties;
 
-  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+  @OneToMany(
+      mappedBy = "mailboxMessage",
+      cascade = CascadeType.ALL,
+      fetch = FetchType.EAGER,
+      orphanRemoval = true)
   @OrderBy("id")
-  @ElementJoinColumns({
-    @ElementJoinColumn(name = "MAILBOX_ID", referencedColumnName = "MAILBOX_ID"),
-    @ElementJoinColumn(name = "MAIL_UID", referencedColumnName = "MAIL_UID")
-  })
   private Set<JamesUserFlag> userFlags;
 
   public AbstractJPAMailboxMessage() {}
@@ -141,7 +135,7 @@ public abstract class AbstractJPAMailboxMessage implements MailboxMessage {
       throws MailboxException {
     super();
     this.mailbox = mailbox;
-    this.uid = uid.asLong();
+    this.id = uid.asLong();
     this.modSeq = modSeq;
     this.userFlags = new HashSet<>();
     setFlags(original.createFlags());
@@ -199,17 +193,33 @@ public abstract class AbstractJPAMailboxMessage implements MailboxMessage {
     public MailboxIdUidKey() {}
 
     /** The value for the mailbox field */
-    public long mailbox;
+    private long mailbox;
 
     /** The value for the uid field */
-    public long uid;
+    private long id;
+
+    public long getMailbox() {
+      return mailbox;
+    }
+
+    public void setMailbox(long mailbox) {
+      this.mailbox = mailbox;
+    }
+
+    public long getId() {
+      return id;
+    }
+
+    public void setId(long id) {
+      this.id = id;
+    }
 
     @Override
     public int hashCode() {
       final int PRIME = 31;
       int result = 1;
       result = PRIME * result + (int) (mailbox ^ (mailbox >>> 32));
-      result = PRIME * result + (int) (uid ^ (uid >>> 32));
+      result = PRIME * result + (int) (id ^ (id >>> 32));
       return result;
     }
 
@@ -228,7 +238,7 @@ public abstract class AbstractJPAMailboxMessage implements MailboxMessage {
       if (mailbox != other.mailbox) {
         return false;
       }
-      return uid == other.uid;
+      return id == other.id;
     }
   }
 
@@ -238,7 +248,7 @@ public abstract class AbstractJPAMailboxMessage implements MailboxMessage {
         .modSeq(modSeq)
         .flags(createFlags())
         .composedMessageId(
-            new ComposedMessageId(mailbox.getMailboxId(), getMessageId(), MessageUid.of(uid)))
+            new ComposedMessageId(mailbox.getMailboxId(), getMessageId(), MessageUid.of(id)))
         .build();
   }
 
@@ -299,8 +309,9 @@ public abstract class AbstractJPAMailboxMessage implements MailboxMessage {
   }
 
   @Override
+  @Transient
   public MessageUid getUid() {
-    return MessageUid.of(uid);
+    return MessageUid.of(id);
   }
 
   @Override
@@ -334,8 +345,9 @@ public abstract class AbstractJPAMailboxMessage implements MailboxMessage {
   }
 
   @Override
+  @Transient
   public void setUid(MessageUid uid) {
-    this.uid = uid.asLong();
+    this.id = uid.asLong();
   }
 
   @Override

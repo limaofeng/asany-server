@@ -10,25 +10,25 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface MailboxMessageDao extends JpaRepository<JamesMailboxMessage, MailboxIdUidKey> {
 
-  @Query("DELETE FROM MailboxMessage message WHERE message.mailbox.mailboxId = :mailboxId")
+  @Query("DELETE FROM MailboxMessage message WHERE message.mailbox.id = :mailboxId")
   int deleteMessages(@Param("mailboxId") Long mailboxId);
 
   @Query(
-      "DELETE FROM MailboxMessage message WHERE message.mailbox.mailboxId = :mailboxId AND message.deleted=TRUE")
+      "DELETE FROM MailboxMessage message WHERE message.mailbox.id = :mailboxId AND message.deleted=TRUE")
   int deleteDeletedMessagesInMailbox(@Param("mailboxId") Long mailbox);
 
   @Query(
-      "DELETE FROM MailboxMessage message WHERE message.mailbox.mailboxId = :mailboxId AND message.uid>=:uid AND message.deleted=TRUE")
+      "DELETE FROM MailboxMessage message WHERE message.mailbox.id = :mailboxId AND message.id>=:uid AND message.deleted=TRUE")
   int deleteDeletedMessagesInMailboxAfterUID(
       @Param("mailboxId") long mailbox, @Param("uid") long uid);
 
   @Query(
-      "DELETE FROM MailboxMessage message WHERE message.mailbox.mailboxId = :mailboxId AND message.uid=:uid AND message.deleted=TRUE")
+      "DELETE FROM MailboxMessage message WHERE message.mailbox.id = :mailboxId AND message.id=:uid AND message.deleted=TRUE")
   int deleteDeletedMessagesInMailboxWithUID(
       @Param("mailboxId") long mailboxId, @Param("uid") long uid);
 
   @Query(
-      "DELETE FROM MailboxMessage message WHERE message.mailbox.mailboxId = :mailboxId AND message.uid BETWEEN :from AND :to AND message.deleted=TRUE")
+      "DELETE FROM MailboxMessage message WHERE message.mailbox.id = :mailboxId AND message.id BETWEEN :from AND :to AND message.deleted=TRUE")
   int deleteDeletedMessagesInMailboxBetweenUIDs(
       @Param("mailboxId") long mailboxId, @Param("from") long from, @Param("to") long to);
 }
