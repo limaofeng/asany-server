@@ -1,6 +1,8 @@
 package cn.asany.organization.core.graphql;
 
+import cn.asany.organization.core.bean.Department;
 import cn.asany.organization.core.bean.Organization;
+import cn.asany.organization.core.graphql.inputs.DepartmentFilter;
 import cn.asany.organization.core.graphql.inputs.OrganizationFilter;
 import cn.asany.organization.core.graphql.resolvers.OrganizationGraphQLResolver;
 import cn.asany.organization.core.service.DepartmentService;
@@ -39,5 +41,26 @@ public class OrganizationGraphQLQueryResolver implements GraphQLQueryResolver {
 
   public Optional<Organization> organization(Long id) {
     return organizationService.findById(id);
+  }
+
+  /**
+   * 全部部门
+   *
+   * @param organization 组织
+   * @param filter 过滤器
+   * @return List<Department> 部门集合
+   */
+  public List<Department> departments(String organization, DepartmentFilter filter) {
+    return null;
+  }
+
+  /**
+   * 单个部门
+   *
+   * @param id ID or Code
+   * @return Department 部门
+   */
+  public Optional<Department> department(String id) {
+    return null;
   }
 }

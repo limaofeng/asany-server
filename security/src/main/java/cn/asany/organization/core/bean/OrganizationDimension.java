@@ -1,8 +1,10 @@
 package cn.asany.organization.core.bean;
 
 import java.util.List;
+import java.util.Objects;
 import javax.persistence.*;
 import lombok.*;
+import org.hibernate.Hibernate;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
@@ -11,9 +13,9 @@ import org.jfantasy.framework.dao.BaseBusEntity;
  *
  * @author limaofeng
  */
-@Data
+@Setter
+@Getter
 @Builder
-@EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -53,4 +55,24 @@ public class OrganizationDimension extends BaseBusEntity {
   /** 状态 */
   @OneToMany(mappedBy = "dimension", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
   private List<EmployeeStatus> statuses;
+  /** 部门 */
+  @OneToMany(mappedBy = "dimension", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+  private List<Department> departments;
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) {
+      return false;
+    }
+    OrganizationDimension dimension = (OrganizationDimension) o;
+    return id != null && Objects.equals(id, dimension.id);
+  }
+
+  @Override
+  public int hashCode() {
+    return getClass().hashCode();
+  }
 }

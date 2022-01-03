@@ -2,6 +2,7 @@ package cn.asany.organization.relationship.bean;
 
 import cn.asany.organization.core.bean.Department;
 import cn.asany.organization.core.bean.Organization;
+import cn.asany.organization.core.bean.OrganizationDimension;
 import cn.asany.organization.core.bean.databind.DepartmentDeserializer;
 import cn.asany.organization.core.bean.databind.DepartmentSerializer;
 import cn.asany.organization.employee.bean.Employee;
@@ -59,6 +60,14 @@ public class EmployeePosition extends BaseBusEntity {
       foreignKey = @ForeignKey(name = "ORG_EMPLOYEE_POSITION_DID"),
       nullable = false)
   private Department department;
+  /** 纬度 */
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(
+      name = "DIMENSION_ID",
+      foreignKey = @ForeignKey(name = "FK_EMPLOYEE_POSITION_DIMENSION"),
+      updatable = false,
+      nullable = false)
+  private OrganizationDimension dimension;
   /** 所属组织 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(

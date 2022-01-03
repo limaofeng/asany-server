@@ -1,4 +1,4 @@
-package cn.asany.organization.relationship.dao;
+package cn.asany.organization.employee.dao;
 
 import cn.asany.organization.core.bean.EmployeeStatus;
 import cn.asany.organization.core.bean.Organization;

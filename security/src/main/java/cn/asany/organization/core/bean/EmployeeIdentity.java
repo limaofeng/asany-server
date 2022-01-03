@@ -67,6 +67,7 @@ public class EmployeeIdentity extends BaseBusEntity {
       foreignKey = @ForeignKey(name = "FK_ORGANIZATION_DIMENSION_MEMBER_STATUS"),
       nullable = false)
   private EmployeeStatus status;
+
   /** 部门 / 群组 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(

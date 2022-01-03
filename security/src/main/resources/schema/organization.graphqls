@@ -443,7 +443,7 @@ type Organization {
 type Department {
   id(type: DepartmentIdType = ID): ID
   # 部门编码
-  sn: String
+  code: String
   # 部门名称
   name: String
   # 部门全称 格式如: 销售管理中心.售前支持
@@ -461,7 +461,7 @@ type Department {
   # 部门包含的职位
   positions: [Position]
   # 排序字段
-  sort: Int
+  index: Int
   # 上级机构
   parent: Department
   # 下属部门
@@ -799,15 +799,15 @@ type TeamMember {
 
 extend type Query {
   # 组织•组织列表
-  organizations(filter: OrganizationFilter): [Organization]
+  organizations(filter: OrganizationFilter): [Organization!]!
   # 团队成员
   teamMembers: [TeamMember!]!
-  #    # 组织•单个组织
-  #    organization(id: ID!): Organization
-  #    # 全部部门
-  #    departments(organization: ID!, filter: DepartmentFilter) : [Department]
-  #    # 单个部门
-  #    department(id: ID!): Department
+  # 组织•单个组织
+  organization(id: ID!): Organization
+  # 全部部门
+  departments(organization: ID!, filter: DepartmentFilter): [Department!]!
+  # 单个部门
+  department(id: ID!): Department
   #    # 员工分页查询
   #    employees(organization: ID!, filter: EmployeeFilter = {}, page: Int = 1, pageSize: Int = 15, orderBy: OrderBy): EmployeeConnection
   #    # 单个员工

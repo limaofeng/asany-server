@@ -31,7 +31,12 @@ import org.jfantasy.framework.dao.BaseBusEntity;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "ORG_DEPARTMENT")
+@Table(
+    name = "ORG_DEPARTMENT",
+    uniqueConstraints =
+        @UniqueConstraint(
+            name = "UK_DEPARTMENT_CODE",
+            columnNames = {"ORGANIZATION_ID", "DIMENSION_ID", "CODE"}))
 @JsonIgnoreProperties({
   "hibernateLazyInitializer",
   "handler",
@@ -44,14 +49,16 @@ import org.jfantasy.framework.dao.BaseBusEntity;
 })
 public class Department extends BaseBusEntity {
 
+  public static final String PATH_SEPARATOR = "/";
+
   @Id
   @Column(name = "ID", precision = 22)
   @GeneratedValue(generator = "fantasy-sequence")
   @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
   /** 简写 */
-  @Column(name = "sn", length = 10)
-  private String sn;
+  @Column(name = "CODE", length = 10)
+  private String code;
   /** 名称 */
   @Column(name = "NAME", length = 50)
   private String name;
@@ -60,7 +67,10 @@ public class Department extends BaseBusEntity {
   private String path;
   /** 排序字段 */
   @Column(name = "SORT")
-  private Integer sort;
+  private Integer index;
+  /** 层级 */
+  @Column(name = "LEVEL")
+  private Integer level;
   /** 描述信息 */
   @Column(name = "DESCRIPTION", length = 150)
   private String description;
@@ -154,9 +164,9 @@ public class Department extends BaseBusEntity {
     return new EqualsBuilder()
         .appendSuper(super.equals(o))
         .append(id, that.id)
-        .append(sn, that.sn)
+        .append(code, that.code)
         .append(name, that.name)
-        .append(sort, that.sort)
+        .append(index, that.index)
         .append(description, that.description)
         .append(getParentId(), that.getParentId())
         .append(getOrganizationId(), that.getOrganizationId())
@@ -168,9 +178,9 @@ public class Department extends BaseBusEntity {
     return new HashCodeBuilder(17, 37)
         .appendSuper(super.hashCode())
         .append(id)
-        .append(sn)
+        .append(code)
         .append(name)
-        .append(sort)
+        .append(index)
         .append(description)
         .append(getParentId())
         .append(getOrganizationId())

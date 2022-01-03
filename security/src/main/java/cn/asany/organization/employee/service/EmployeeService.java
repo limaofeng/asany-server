@@ -12,9 +12,10 @@ import cn.asany.organization.core.service.OrganizationService;
 import cn.asany.organization.employee.bean.*;
 import cn.asany.organization.employee.bean.enums.InviteStatus;
 import cn.asany.organization.employee.dao.*;
+import cn.asany.organization.employee.dao.EmployeeStatusDao;
 import cn.asany.organization.relationship.bean.EmployeePosition;
 import cn.asany.organization.relationship.bean.Position;
-import cn.asany.organization.relationship.dao.EmployeeStatusDao;
+import cn.asany.organization.relationship.dao.EmployeePositionDao;
 import cn.asany.organization.relationship.dao.PositionDao;
 import cn.asany.organization.relationship.service.PositionService;
 import java.util.ArrayList;
@@ -61,7 +62,7 @@ public class EmployeeService {
   //    @Autowired
   //    private EmployeeConverter employeeConverter;
   @Autowired private EmployeePhoneDao employeePhoneDao;
-  @Autowired private EmployeeMailDao employeeEmailDao;
+  @Autowired private EmployeeEmailDao employeeEmailDao;
   //    @Autowired
   //    private EmailDao emailDao;
   //    @Autowired

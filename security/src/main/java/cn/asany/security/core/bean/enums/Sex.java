@@ -19,7 +19,17 @@ public enum Sex {
     this.value = value;
   }
 
-  public String getValue() {
+  public String value() {
     return this.value;
+  }
+
+  public static Sex of(String value) {
+    if (Sex.male.value().equals(value)) {
+      return Sex.male;
+    }
+    if (Sex.female.value().equals(value)) {
+      return Sex.female;
+    }
+    return Sex.unknown;
   }
 }

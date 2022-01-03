@@ -22,4 +22,13 @@ public interface PositionDao extends JpaRepository<Position, Long> {
   void deleteByJob(@Param("jobId") Long jobId);
 
   List<Position> findByJob(Job job);
+
+  /**
+   * 删除职位 - 根据组织 ID
+   *
+   * @param orgId 组织 ID
+   */
+  @Modifying
+  @Query(nativeQuery = true, value = "DELETE FROM org_position e WHERE e.organization_id = :orgId")
+  void deleteByOrgId(@org.springframework.data.repository.query.Param("orgId") Long orgId);
 }

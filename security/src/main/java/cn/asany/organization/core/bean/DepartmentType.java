@@ -2,10 +2,10 @@ package cn.asany.organization.core.bean;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import java.io.Serializable;
 import javax.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
+import org.jfantasy.framework.dao.BaseBusEntity;
 
 /**
  * 部门类型
@@ -22,15 +22,26 @@ import org.hibernate.annotations.GenericGenerator;
 @Entity
 @Table(name = "ORG_DEPARTMENT_TYPE")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class DepartmentType implements Serializable {
+public class DepartmentType extends BaseBusEntity {
   @Id
   @Column(name = "ID", precision = 22)
   @GeneratedValue(generator = "fantasy-sequence")
   @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
+  /** 编码 */
+  @Column(name = "CODE", length = 20)
+  private String code;
   /** 名称 */
   @Column(name = "NAME", length = 50)
   private String name;
+  /** 组织纬度 */
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(
+      name = "DIMENSION_ID",
+      foreignKey = @ForeignKey(name = "FK_DEPARTMENT_TYPE_ORGANIZATION_DIMENSION"),
+      updatable = false,
+      nullable = false)
+  private OrganizationDimension dimension;
   /** 组织 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JsonBackReference
@@ -38,9 +49,6 @@ public class DepartmentType implements Serializable {
       name = "ORGANIZATION_ID",
       foreignKey = @ForeignKey(name = "FK_ORG_DEPARTMENT_TYPE_OID"))
   private Organization organization;
-  /** 编码 */
-  @Column(name = "CODE", length = 20)
-  private String code;
 
   /** 是否支持多部门 */
   @Column(name = "MULTI_SECTORAL")

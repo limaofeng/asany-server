@@ -1,7 +1,7 @@
-package cn.asany.organization.relationship.service;
+package cn.asany.organization.core.service;
 
 import cn.asany.organization.core.bean.EmployeeStatus;
-import cn.asany.organization.relationship.dao.EmployeeStatusDao;
+import cn.asany.organization.employee.dao.EmployeeStatusDao;
 import java.util.List;
 import org.jfantasy.framework.dao.OrderBy;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 /** @Annotation @Author ChenWenJie @Data 2020/7/1 5:49 下午 @Version 1.0 */
 @Service
 @Transactional
-public class OrganizationEmployeeStatusService {
+public class EmployeeStatusService {
   @Autowired private EmployeeStatusDao employeeStatusDao;
 
   public EmployeeStatus get(Long id) {

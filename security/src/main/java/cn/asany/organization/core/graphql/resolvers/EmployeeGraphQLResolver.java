@@ -85,7 +85,7 @@ public class EmployeeGraphQLResolver implements GraphQLResolver<Employee> {
 
   public Position primaryPosition(Employee employee) {
     Optional<EmployeePosition> primary =
-        employee.getEmployeePositions().stream()
+        employee.getPositions().stream()
             .filter(ep -> ep.getPrimary() && "".equals(ep.getOrganization().getId()))
             .findAny();
     return primary.isPresent() ? primary.get().getPosition() : null;
@@ -93,14 +93,14 @@ public class EmployeeGraphQLResolver implements GraphQLResolver<Employee> {
 
   public Department primaryDepartment(Employee employee) {
     Optional<EmployeePosition> primary =
-        employee.getEmployeePositions().stream()
+        employee.getPositions().stream()
             .filter(ep -> ep.getPrimary() && "".equals(ep.getOrganization().getId()))
             .findAny();
     return primary.isPresent() ? primary.get().getDepartment() : null;
   }
 
   public List<Department> departments(Employee employee, String organization) {
-    Stream<EmployeePosition> stream = employee.getEmployeePositions().stream();
+    Stream<EmployeePosition> stream = employee.getPositions().stream();
 
     if (StringUtil.isNotBlank(organization)) {
       stream =
@@ -116,7 +116,7 @@ public class EmployeeGraphQLResolver implements GraphQLResolver<Employee> {
   }
 
   public List<Position> positions(Employee employee, String organization, Long departmentId) {
-    Stream<EmployeePosition> stream = employee.getEmployeePositions().stream();
+    Stream<EmployeePosition> stream = employee.getPositions().stream();
     if (StringUtil.isNotBlank(organization)) {
       stream =
           stream.filter(

@@ -1,0 +1,119 @@
+code: hotsoon
+name: 互升
+dimensions:
+  - code: default
+    name: 默认
+    statuses:
+      - code: work
+        name: 在职
+      - code: leave
+        name: 离职
+    departmentTypes:
+      - code: development
+        name: 研发
+      - code: sales
+        name: 销售
+      - code: operations
+        name: 运营
+    departments:
+      - name: 销售中心
+        code: 001
+        type: 销售
+        positions:
+          - 销售
+        children:
+          - name: 售前支持部
+            code: 001001
+          - name: 华东区
+            code: 001002
+          - name: 华中区
+            code: 001003
+          - name: 西北区
+            code: 001004
+      - name: 客服中心
+        code: 002
+        type: 运营
+        positions:
+          - 客服
+          - 研发工程师
+        children:
+          - name: 客服研发
+            code: 002001
+          - name: 技术客服
+            code: 002002
+          - name: 商务客服
+            code: 002003
+      - name: 研发中心
+        code: 003
+        type: 研发
+        positions:
+          - 测试工程师
+          - 研发工程师
+          - 运维工程师
+        children:
+          - name: 产品研发一部
+            code: 003001
+          - name: 产品研发二部
+            code: 003002
+          - name: 产品研发三部
+            code: 003003
+          - name: 技术支持部
+            code: 003004
+          - name: 测试部
+            code: 003005
+      - name: 产品中心
+        code: 004
+        type: 研发
+        positions:
+          - 设计师
+          - 产品经理
+          - 运维工程师
+        children:
+          - name: 产品设计部
+            code: 004001
+          - name: 交付部
+            code: 004002
+      - name: 财务部
+        code: 005
+        type: 运营
+        positions:
+          - 财务总监
+      - name: 总经办
+        code: 006
+        type: 运营
+        positions:
+          - 总经理
+employees:
+  - jobNumber: 0000001
+    name: 风清扬
+    birthday: 1560-12-01
+    sex: 男
+    phones:
+      - 18612346789
+    identities:
+      - status: 在职
+        dimension: 默认
+        department: 研发中心/产品研发一部
+        position: 研发工程师
+  - jobNumber: 0000002
+    name: 西门庆
+    birthday: 1460-12-01
+    sex: 男
+    phones:
+      - 18612349876
+    identities:
+      - status: 在职
+        dimension: 默认
+        department: 产品中心/产品设计部
+        position: 产品经理
+  - jobNumber: 0000003
+    name: 杨康
+    birthday: 1566-12-01
+    sex: 男
+    phones:
+      - 18622346789
+    identities:
+      - status: 在职
+        dimension: 默认
+        department: 研发中心/产品研发一部
+        position: 研发工程师

@@ -4,11 +4,12 @@ import cn.asany.base.common.Ownership;
 import cn.asany.base.common.bean.Email;
 import cn.asany.base.common.bean.Phone;
 import cn.asany.organization.core.bean.EmployeeGroup;
+import cn.asany.organization.core.bean.EmployeeIdentity;
 import cn.asany.organization.core.bean.Organization;
 import cn.asany.organization.employee.bean.enums.InviteStatus;
-import cn.asany.organization.employee.bean.enums.Sex;
 import cn.asany.organization.relationship.bean.EmployeePosition;
 import cn.asany.security.core.bean.User;
+import cn.asany.security.core.bean.enums.Sex;
 import cn.asany.storage.api.FileObject;
 import cn.asany.storage.api.converter.FileObjectConverter;
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -82,11 +83,12 @@ public class Employee extends BaseBusEntity implements Ownership {
       updatable = false,
       nullable = false)
   private Organization organization;
-
+  /** 组织内的身份 */
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "employee", cascade = CascadeType.REMOVE)
+  private List<EmployeeIdentity> identities;
   /** 地址列表 */
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "employee", cascade = CascadeType.REMOVE)
   private List<EmployeeAddress> addresses;
-
   /** 邮箱列表 */
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "employee", cascade = CascadeType.REMOVE)
   private List<EmployeeEmail> emails;
@@ -97,7 +99,7 @@ public class Employee extends BaseBusEntity implements Ownership {
 
   /** 部门与岗位 */
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "employee", cascade = CascadeType.REMOVE)
-  private List<EmployeePosition> employeePositions;
+  private List<EmployeePosition> positions;
 
   /** 链接到的账户 */
   @OneToMany(

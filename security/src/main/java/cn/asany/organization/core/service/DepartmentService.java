@@ -56,7 +56,7 @@ public class DepartmentService {
   }
 
   public Department importsave(Department department) {
-    Department dep = this.findOneByCode(department.getSn());
+    Department dep = this.findOneByCode(department.getCode());
     if (dep == null) {
       Department parent;
       if (department.getParentId() != null) {
@@ -69,7 +69,7 @@ public class DepartmentService {
           Department save =
               this.importsave(
                   Department.builder()
-                      .sn(department.getParentId().toString())
+                      .code(department.getParentId().toString())
                       .organization(department.getOrganization())
                       .build());
         }
@@ -128,7 +128,7 @@ public class DepartmentService {
 
   public Department findOneByCode(String code) {
     Optional<Department> optional =
-        this.departmentDao.findOne(Example.of(Department.builder().sn(code).build()));
+        this.departmentDao.findOne(Example.of(Department.builder().code(code).build()));
     return optional.orElse(null);
   }
 

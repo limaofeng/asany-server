@@ -4,8 +4,10 @@ import cn.asany.organization.core.bean.Department;
 import cn.asany.organization.core.bean.Job;
 import cn.asany.organization.core.bean.Organization;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.util.Objects;
 import javax.persistence.*;
 import lombok.*;
+import org.hibernate.Hibernate;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
@@ -18,11 +20,17 @@ import org.jfantasy.framework.dao.BaseBusEntity;
  */
 @Getter
 @Setter
+@ToString
+@RequiredArgsConstructor
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
 @Entity
-@Table(name = "ORG_POSITION")
+@Table(
+    name = "ORG_POSITION",
+    uniqueConstraints =
+        @UniqueConstraint(
+            name = "UK_ORG_POSITION_NAME",
+            columnNames = {"DEPARTMENT_ID", "NAME"}))
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Position extends BaseBusEntity {
 
@@ -42,6 +50,7 @@ public class Position extends BaseBusEntity {
   /** 对应的职务 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "JOB_ID", foreignKey = @ForeignKey(name = "FK_POSITION_JID"))
+  @ToString.Exclude
   private Job job;
   /** 职位拥有的角色 */
   //    @JsonIgnore
@@ -53,6 +62,7 @@ public class Position extends BaseBusEntity {
   /** 所属部门 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "DEPARTMENT_ID", foreignKey = @ForeignKey(name = "FK_POSITION_PID"))
+  @ToString.Exclude
   private Department department;
   /** 所属组织 */
   @ManyToOne(fetch = FetchType.LAZY)
@@ -61,5 +71,23 @@ public class Position extends BaseBusEntity {
       foreignKey = @ForeignKey(name = "FK_ORG_POSITION_OID"),
       updatable = false,
       nullable = false)
+  @ToString.Exclude
   private Organization organization;
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) {
+      return false;
+    }
+    Position position = (Position) o;
+    return id != null && Objects.equals(id, position.id);
+  }
+
+  @Override
+  public int hashCode() {
+    return getClass().hashCode();
+  }
 }

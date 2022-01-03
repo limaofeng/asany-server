@@ -1,64 +1,67 @@
 package cn.asany.organization.core.bean;
 
-import cn.asany.storage.api.FileObject;
-import cn.asany.storage.api.converter.FileObjectConverter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.util.List;
+import java.util.Objects;
 import javax.persistence.*;
 import lombok.*;
+import org.hibernate.Hibernate;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
-/**
- * 团队成员
- *
- * @author limaofeng
- */
-@Setter
 @Getter
+@Setter
+@RequiredArgsConstructor
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
 @Entity
-@Table(name = "ORG_TEAM_MEMBER")
+@Table(name = "ORG_TEAM")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class TeamMember extends BaseBusEntity {
+public class Team extends BaseBusEntity {
   @Id
   @Column(name = "ID")
   @GeneratedValue(generator = "fantasy-sequence")
   @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
+  /** 编码 */
+  @Column(name = "CODE", length = 50)
+  private String code;
   /** 名称 */
   @Column(name = "NAME", length = 50)
   private String name;
-  /** 职位名称 */
-  @Column(name = "TITLE", length = 50)
-  private String title;
-  /** 头像 */
-  @Convert(converter = FileObjectConverter.class)
-  @Column(name = "avatar", precision = 500)
-  private FileObject avatar;
-  /** 简介 */
-  @Column(name = "INTRODUCTION", length = 500)
-  private String introduction;
-  /** 排序字段 */
-  @Column(name = "SORT")
-  private Integer sort;
-  /** 所属团队 */
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(
-      name = "TEAM_ID",
-      foreignKey = @ForeignKey(name = "FK_TEAM_MEMBER_TEAM"),
-      updatable = false,
-      nullable = false)
-  private Team team;
   /** 所属组织 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(
       name = "ORGANIZATION_ID",
-      foreignKey = @ForeignKey(name = "FK_TEAM_MEMBER_ORG"),
+      foreignKey = @ForeignKey(name = "FK_TEAM_ORG"),
       updatable = false,
       nullable = false)
+  @ToString.Exclude
   private Organization organization;
+  /** 团队成员 */
+  @OneToMany(
+      mappedBy = "team",
+      fetch = FetchType.LAZY,
+      cascade = {CascadeType.REMOVE})
+  @ToString.Exclude
+  private List<TeamMember> members;
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) {
+      return false;
+    }
+    Team team = (Team) o;
+    return id != null && Objects.equals(id, team.id);
+  }
+
+  @Override
+  public int hashCode() {
+    return getClass().hashCode();
+  }
 }
