@@ -2,9 +2,11 @@ package cn.asany.autoconfigure;
 
 import cn.asany.email.mailbox.component.JPAMailboxManager;
 import cn.asany.email.mailbox.component.JPAMailboxSessionMapperFactory;
+import cn.asany.email.mailbox.component.JPASubscriptionManager;
 import cn.asany.email.mailbox.component.mail.JPAModSeqProvider;
 import cn.asany.email.mailbox.component.mail.JPAUidProvider;
 import cn.asany.email.quota.component.JpaCurrentQuotaManager;
+import cn.asany.email.rrt.component.JPARecipientRewriteTable;
 import cn.asany.email.utils.ConfigLoader;
 import com.codahale.metrics.MetricRegistry;
 import java.io.IOException;
@@ -56,7 +58,6 @@ import org.apache.james.metrics.dropwizard.DropWizardMetricFactory;
 import org.apache.james.protocols.lib.handler.ProtocolHandlerLoader;
 import org.apache.james.queue.api.MailQueueFactory;
 import org.apache.james.rrt.api.RecipientRewriteTable;
-import org.apache.james.rrt.memory.MemoryRecipientRewriteTable;
 import org.apache.james.server.core.filesystem.FileSystemImpl;
 import org.apache.james.sieverepository.api.SieveRepository;
 import org.apache.james.sieverepository.file.SieveFileRepository;
@@ -66,9 +67,7 @@ import org.apache.james.user.api.UsersRepository;
 import org.apache.james.util.ClassLoaderUtils;
 import org.jboss.netty.util.HashedWheelTimer;
 import org.jfantasy.framework.spring.SpringBeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 /**
@@ -77,28 +76,14 @@ import org.springframework.context.annotation.Configuration;
  * @author limaofeng
  */
 @Configuration
-@ComponentScan("cn.asany.email.stmp")
 public class SmtpServerAutoConfiguration {
 
-  //  private final DNSService dnsService;
-  //  private final Collection<ProtocolHandler> handlers;
-  //  private final ProtocolHandlerLoader protocolHandlerLoader;
-
-  //  public SMTPServerAutoConfiguration(
-  //      Collection<ProtocolHandler> handlers,
-  //      ProtocolHandlerLoader protocolHandlerLoader,
-  //      DNSService dnsService) {
-  //    this.handlers = handlers;
-  //    this.protocolHandlerLoader = protocolHandlerLoader;
-  //    this.dnsService = dnsService;
-  //  }
-
-  @Autowired private UsersRepository usersRepository;
+  //  @Autowired private UsersRepository usersRepository;
 
   @Bean
-  public RecipientRewriteTable memoryRecipientRewriteTable(DomainList domainList)
+  public RecipientRewriteTable recipientRewriteTable(DomainList domainList)
       throws ConfigurationException {
-    MemoryRecipientRewriteTable rrt = new MemoryRecipientRewriteTable();
+    JPARecipientRewriteTable rrt = new JPARecipientRewriteTable();
     rrt.configure(new BaseHierarchicalConfiguration());
     rrt.setDomainList(domainList);
     return rrt;
@@ -161,6 +146,7 @@ public class SmtpServerAutoConfiguration {
   //    return null;
   //  }
 
+  @Bean
   public HashedWheelTimer hashedWheelTimer() {
     return new HashedWheelTimer();
   }
@@ -235,18 +221,18 @@ public class SmtpServerAutoConfiguration {
   }
 
   @Bean
-  public UserRepositoryAuthenticator authenticator() {
+  public UserRepositoryAuthenticator authenticator(UsersRepository usersRepository) {
     return new UserRepositoryAuthenticator(usersRepository);
   }
 
   @Bean
-  public UserRepositoryAuthorizator authorizator() {
+  public UserRepositoryAuthorizator authorizator(UsersRepository usersRepository) {
     return new UserRepositoryAuthorizator(usersRepository);
   }
 
   @Bean
-  public SessionProvider sessionProvider() {
-    return new SessionProvider(authenticator(), authorizator());
+  public SessionProvider sessionProvider(UsersRepository usersRepository) {
+    return new SessionProvider(authenticator(usersRepository), authorizator(usersRepository));
   }
 
   @Bean
@@ -306,13 +292,13 @@ public class SmtpServerAutoConfiguration {
   }
 
   @Bean
-  public QuotaRootResolver quotaRootResolver() {
-    return new DefaultUserQuotaRootResolver(sessionProvider(), mailboxSessionMapperFactory());
+  public QuotaRootResolver quotaRootResolver(SessionProvider sessionProvider) {
+    return new DefaultUserQuotaRootResolver(sessionProvider, mailboxSessionMapperFactory());
   }
 
   @Bean
-  public CurrentQuotaCalculator currentQuotaCalculator() {
-    return new CurrentQuotaCalculator(mailboxSessionMapperFactory(), quotaRootResolver());
+  public CurrentQuotaCalculator currentQuotaCalculator(QuotaRootResolver quotaRootResolver) {
+    return new CurrentQuotaCalculator(mailboxSessionMapperFactory(), quotaRootResolver);
   }
 
   @Bean
@@ -326,15 +312,15 @@ public class SmtpServerAutoConfiguration {
   }
 
   @Bean
-  public QuotaUpdater quotaUpdater() {
+  public QuotaUpdater quotaUpdater(QuotaRootResolver quotaRootResolver) {
     return new ListeningCurrentQuotaUpdater(
-        storeCurrentQuotaManager(), quotaRootResolver(), eventBus(), quotaManager());
+        storeCurrentQuotaManager(), quotaRootResolver, eventBus(), quotaManager());
   }
 
   @Bean
-  public QuotaComponents quotaComponents() {
+  public QuotaComponents quotaComponents(QuotaRootResolver quotaRootResolver) {
     return new QuotaComponents(
-        maxQuotaManager(), quotaManager(), quotaRootResolver(), quotaUpdater());
+        maxQuotaManager(), quotaManager(), quotaRootResolver, quotaUpdater(quotaRootResolver));
   }
 
   @Bean
@@ -343,24 +329,28 @@ public class SmtpServerAutoConfiguration {
   }
 
   @Bean("mailboxmanager")
-  public MailboxManager mailboxManager(Set<PreDeletionHook> hooks) {
+  public MailboxManager mailboxManager(
+      SessionProvider sessionProvider, QuotaComponents quotaComponents) {
     SimpleMessageSearchIndex searchIndex =
         new SimpleMessageSearchIndex(
             mailboxSessionMapperFactory(),
             mailboxSessionMapperFactory(),
             new DefaultTextExtractor());
-    JPAMailboxManager mailboxManager =
-        new JPAMailboxManager(
-            mailboxSessionMapperFactory(),
-            sessionProvider(),
-            messageParser(),
-            messageIdFactory(),
-            eventBus(),
-            storeMailboxAnnotationManager(),
-            storeRightManager(),
-            quotaComponents(),
-            searchIndex);
-    return mailboxManager;
+    return new JPAMailboxManager(
+        mailboxSessionMapperFactory(),
+        sessionProvider,
+        messageParser(),
+        messageIdFactory(),
+        eventBus(),
+        storeMailboxAnnotationManager(),
+        storeRightManager(),
+        quotaComponents,
+        searchIndex);
+  }
+
+  @Bean
+  public StoreSubscriptionManager subscriptionManager() {
+    return new JPASubscriptionManager(mailboxSessionMapperFactory());
   }
 
   @Bean
@@ -370,10 +360,8 @@ public class SmtpServerAutoConfiguration {
 
   @Bean
   public XMLConfiguration mailetContainerConfiguration() throws ConfigurationException {
-    XMLConfiguration configuration =
-        ConfigLoader.getConfig(
-            ClassLoaderUtils.getSystemResourceAsSharedStream("mailetcontainer.xml"));
-    return configuration;
+    return ConfigLoader.getConfig(
+        ClassLoaderUtils.getSystemResourceAsSharedStream("mailetcontainer.xml"));
   }
 
   @Bean

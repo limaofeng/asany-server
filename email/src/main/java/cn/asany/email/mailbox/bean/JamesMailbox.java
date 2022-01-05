@@ -16,9 +16,16 @@ import org.hibernate.annotations.GenericGenerator;
  */
 @Getter
 @Setter
+@Builder
 @RequiredArgsConstructor
+@AllArgsConstructor
 @Entity(name = "Mailbox")
-@Table(name = "JAMES_MAILBOX")
+@Table(
+    name = "JAMES_MAILBOX",
+    uniqueConstraints =
+        @UniqueConstraint(
+            name = "UK_MAILBOX_NAME",
+            columnNames = {"NAMESPACE", "NAME", "USER_NAME"}))
 public class JamesMailbox {
 
   private static final String TAB = " ";

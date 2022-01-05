@@ -12,6 +12,7 @@ import javax.mail.Store;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeUtility;
+import org.apache.james.mailbox.model.MailboxConstants;
 
 public class HelloJMail {
 
@@ -20,9 +21,9 @@ public class HelloJMail {
     // String host = "192.168.1.98"; // 指定的smtp服务器，本机的局域网IP
     String host = "smtp.asany.cn"; // 本机smtp服务器
     // String host = "smtp.163.com"; // 163的smtp服务器
-    String from = "limaofeng@asany.cn"; // 邮件发送人的邮件地址
-    String to = "253161354@asany.cn"; // 邮件接收人的邮件地址
-    final String username = "limaofeng@asany.cn"; // 发件人的邮件帐户
+    String from = "253161354@asany.cn"; // 邮件发送人的邮件地址
+    String to = "limaofeng@asany.cn"; // 邮件接收人的邮件地址
+    final String username = "253161354@asany.cn"; // 发件人的邮件帐户
     final String password = "123456"; // 发件人的邮件密码
 
     // 创建Properties 对象
@@ -66,32 +67,39 @@ public class HelloJMail {
 
   // 接受邮件
   public static void getMail() {
-    String host = "smtp.sunmao.cn";
-    final String username = "zph";
-    final String password = "zph";
+    String host = "imap.asany.cn";
+    final String username = "limaofeng@asany.cn";
+    final String password = "rzqabjaiomeuicgd";
 
     // 创建Properties 对象
     Properties props = new Properties();
 
+    props.put("mail.imap.port", 143);
+    //    props.put("mail.imap.starttls.enable", "false");
+
+    Authenticator authenticator =
+        new Authenticator() {
+          @Override
+          public PasswordAuthentication getPasswordAuthentication() {
+            return new PasswordAuthentication(username, password);
+          }
+        };
     // 创建邮件会话
-    Session session =
-        Session.getDefaultInstance(
-            props,
-            new Authenticator() {
-              @Override
-              public PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(username, password);
-              }
-            });
+    Session session = Session.getDefaultInstance(props, authenticator);
+    session.setDebug(true);
 
     try {
       // 获取邮箱的pop3存储
-      Store store = session.getStore("pop3");
+      Store store = session.getStore("imap");
       store.connect(host, username, password);
 
       // 获取inbox文件
-      Folder folder = store.getFolder("INBOX");
+      Folder folder = store.getFolder(MailboxConstants.INBOX);
       folder.open(Folder.READ_ONLY); // 打开，打开后才能读取邮件信息
+
+      System.out.println("UnreadMessageCount:" + folder.getUnreadMessageCount());
+
+      System.out.println("MessageCount:" + folder.getMessageCount());
 
       // 获取邮件消息
       Message message[] = folder.getMessages();
@@ -127,7 +135,7 @@ public class HelloJMail {
   }
 
   public static void main(String[] args) {
-    HelloJMail.sendMail();
-    //    HelloJMail.getMail();
+    //    HelloJMail.sendMail();
+    HelloJMail.getMail();
   }
 }

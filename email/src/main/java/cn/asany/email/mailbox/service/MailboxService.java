@@ -9,6 +9,11 @@ import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * 邮箱服务
+ *
+ * @author limaofeng
+ */
 @Service
 @Transactional(rollbackFor = RuntimeException.class)
 public class MailboxService {
@@ -41,6 +46,11 @@ public class MailboxService {
             .isNull("user")
             .equal("namespace", namespace)
             .build());
+  }
+
+  public List<JamesMailbox> findMailboxesWithUser(String user, String namespace) {
+    return this.mailboxDao.findAll(
+        PropertyFilter.builder().equal("user", user).equal("namespace", namespace).build());
   }
 
   public List<JamesMailbox> findMailboxWithNameLikeWithUser(

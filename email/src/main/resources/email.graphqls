@@ -1,0 +1,16 @@
+type Mailbox {
+  id: ID
+  name: String
+}
+
+type MailboxMessage {
+  id: ID
+  mailbox: Mailbox
+}
+
+extend type Query {
+  # 查询邮箱文件夹
+  mailboxes: [Mailbox]
+  # 查询文件夹下的邮件
+  mailboxMessages(mailbox: ID, size: Int): [MailboxMessage]
+}

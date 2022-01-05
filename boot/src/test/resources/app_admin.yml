@@ -28,6 +28,10 @@ menus:
     icon: Duotune/abs026
     path: /shanhai
     component: cn.asany.ui.admin.shanhai.MenuSidebar
+  - name: 邮箱
+    icon: Duotune/com011
+    path: /email
+    component: cn.asany.ui.admin.email.Sidebar
   #  - name: 项目管理
   #    icon: Duotune/abs045
   #    children:
@@ -138,9 +142,15 @@ routes:
         layout: false
       - path: /contacts
         component: cn.asany.ui.admin.contacts.MainContacts
-#        hideMenu: true
       - path: /calendar
         component: cn.asany.ui.admin.calendar.MainCalendar
+      - path: /email
+        redirect: /email/inbox
+      - path: /email/:folder
+        component: cn.asany.ui.admin.email.Mailbox
+        routes:
+          - path: /email/:folder/:id
+            component: cn.asany.ui.admin.email.MailMessageDetails
       - path: /storage
         component: cn.asany.ui.admin.storage.CloudStorage
       - path: /storages/:id

@@ -24,7 +24,6 @@ import org.apache.james.mailbox.store.mail.ModSeqProvider;
 import org.apache.james.mailbox.store.mail.UidProvider;
 import org.apache.james.mailbox.store.mail.model.MailboxMessage;
 import org.apache.james.mailbox.store.mail.utils.ApplicableFlagCalculator;
-import org.apache.openjpa.persistence.ArgumentException;
 
 public class JPAMessageMapper extends JPATransactionalMapper implements MessageMapper {
   private static final int UNLIMIT_MAX_SIZE = -1;
@@ -334,7 +333,7 @@ public class JPAMessageMapper extends JPATransactionalMapper implements MessageM
         return persistData.metaData();
       }
 
-    } catch (PersistenceException | ArgumentException e) {
+    } catch (PersistenceException e) {
       throw new MailboxException("Save of message " + message + " failed in mailbox " + mailbox, e);
     }
   }

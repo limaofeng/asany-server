@@ -1,0 +1,35 @@
+enum CalendarType {
+  SUNRISE
+  SUBSCRIPTION
+}
+
+enum CalendarRefresh {
+  # 从不
+  NEVER
+  # 每5分钟
+  EVERY_5_MINUTES
+  # 每15分钟
+  EVERY_15_MINUTES
+  # 每小时
+  EVERY_HOVER
+  # 每天
+  EVERY_DAY
+  # 每周
+  EVERY_WEEK
+}
+
+type Calendar {
+  id: ID!
+  type: CalendarType!
+  name: String!
+  description: String
+  color: String
+  url: String
+  refresh: CalendarRefresh
+}
+
+type CalendarSet {
+  id: ID
+  name: String
+  calendars: [Calendar]
+}

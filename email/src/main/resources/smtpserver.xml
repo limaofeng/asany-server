@@ -94,7 +94,7 @@
                information has been provided
           -->
         <!-- -->
-        <authRequired>true</authRequired>
+        <authRequired>announce</authRequired>
 
         <!-- CHECKME! -->
         <!--  Uncomment this if you want to authorize specific addresses/networks.
