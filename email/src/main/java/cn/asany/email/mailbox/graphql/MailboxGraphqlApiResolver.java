@@ -19,7 +19,6 @@ import org.jfantasy.framework.security.LoginUser;
 import org.jfantasy.framework.security.SpringSecurityUtils;
 import org.jfantasy.framework.util.regexp.RegexpConstant;
 import org.jfantasy.framework.util.regexp.RegexpUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -32,7 +31,7 @@ public class MailboxGraphqlApiResolver implements GraphQLQueryResolver, GraphQLM
 
   private final DomainService domainService;
   private final MailboxService mailboxService;
-  @Autowired private MailboxMessageService mailboxMessageService;
+  private final MailboxMessageService mailboxMessageService;
 
   private static final Map<String, String> DEFAULT_MAILBOXES = new HashMap<>();
 
@@ -46,9 +45,13 @@ public class MailboxGraphqlApiResolver implements GraphQLQueryResolver, GraphQLM
     DEFAULT_MAILBOXES.put(DefaultMailboxes.TRASH.toLowerCase(), DefaultMailboxes.TRASH);
   }
 
-  public MailboxGraphqlApiResolver(DomainService domainService, MailboxService mailboxService) {
+  public MailboxGraphqlApiResolver(
+      DomainService domainService,
+      MailboxService mailboxService,
+      MailboxMessageService mailboxMessageService) {
     this.domainService = domainService;
     this.mailboxService = mailboxService;
+    this.mailboxMessageService = mailboxMessageService;
   }
 
   public List<JamesMailbox> mailboxes() {
@@ -58,7 +61,7 @@ public class MailboxGraphqlApiResolver implements GraphQLQueryResolver, GraphQLM
     return this.mailboxService.findMailboxesWithUser(mailUserId, MailboxConstants.USER_NAMESPACE);
   }
 
-  public List<JamesMailboxMessage> mailboxMessages(String mailbox) {
+  public List<JamesMailboxMessage> mailboxMessages(String mailbox, Integer size) {
     JamesDomain domain = domainService.getDefaultDomain();
     LoginUser user = SpringSecurityUtils.getCurrentUser();
     String mailUserId = user.getUsername() + '@' + domain.getName();

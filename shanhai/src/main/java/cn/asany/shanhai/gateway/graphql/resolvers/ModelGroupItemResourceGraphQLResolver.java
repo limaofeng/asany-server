@@ -7,20 +7,25 @@ import org.jfantasy.framework.util.common.StringUtil;
 import org.jfantasy.framework.util.ognl.OgnlUtil;
 import org.springframework.stereotype.Component;
 
-/** @author limaofeng */
+/**
+ * ModelGroupItemResource GraphQLResolver
+ *
+ * @author limaofeng
+ */
 @Component
 public class ModelGroupItemResourceGraphQLResolver implements GraphQLResolver<ModelGroupItem> {
 
-  private static OgnlUtil ognlUtil = OgnlUtil.getInstance();
+  private static final OgnlUtil OGNL_UTIL = OgnlUtil.getInstance();
 
   public String name(ModelGroupItem resource) {
     return StringUtil.defaultValue(
-        ognlUtil.getValue("resource.name", resource), ognlUtil.getValue("resource.code", resource));
+        (Object) OGNL_UTIL.getValue("resource.name", resource),
+        (String) OGNL_UTIL.getValue("resource.code", resource));
   }
 
   public ModelGroupItemResourceType type(ModelGroupItem resource) {
     if ("ENDPOINT".equals(resource.getResourceType())) {
-      String type = ognlUtil.getValue("resource.model.code", resource);
+      String type = OGNL_UTIL.getValue("resource.model.code", resource);
       return ModelGroupItemResourceType.valueOf(type);
     }
     return ModelGroupItemResourceType.Model;

@@ -22,8 +22,13 @@ class CalendarServiceTest {
 
   @Autowired private CalendarService calendarService;
 
+  //  String url =
+  // "https://raw.githubusercontent.com/infinet/lunar-calendar/master/chinese_lunar_prev_year_next_year.ics";
+
   String url =
-      "https://raw.githubusercontent.com/infinet/lunar-calendar/master/chinese_lunar_prev_year_next_year.ics";
+      "https://p30-calendars.icloud.com/published/2/yw_yM8prSymJqsGv4gmJP30ymsCx4FFL76qZBfZay2kyAG7KwlC869qtn3wfw2-b1-hfX89ecx6-tgLXf6SiHeE3cmY8hvHaWqgqmcHsXI4";
+
+  //  String url = "https://calendars.icloud.com/holidays/cn_zh.ics";
 
   @Test
   void subscribe() {

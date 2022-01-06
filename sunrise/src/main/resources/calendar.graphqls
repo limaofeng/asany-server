@@ -18,18 +18,63 @@ enum CalendarRefresh {
   EVERY_WEEK
 }
 
+# 日历事件时间
+type CalendarEventDatetime {
+  # 是否为全天
+  allDay: Boolean!
+  # 开始时间
+  starts: Date! @dateFormat
+  # 结束时间
+  ends: Date! @dateFormat
+}
+
+# 日历事件
+type CalendarEvent {
+  id: ID!
+  # 标题
+  title: String
+  # 时间
+  datetime: CalendarEventDatetime!
+  # 说明
+  notes: String
+  # 颜色
+  color: String
+}
+
 type Calendar {
   id: ID!
+  # 日历类型
   type: CalendarType!
+  # 名称
   name: String!
+  # 描述
   description: String
+  # 颜色
   color: String
+  # 链接
   url: String
+  # 刷新设置
   refresh: CalendarRefresh
+  # 事件
+  events: [CalendarEvent!]!
 }
 
 type CalendarSet {
-  id: ID
-  name: String
-  calendars: [Calendar]
+  id: ID!
+  name: String!
+  calendars: [Calendar!]!
+}
+
+extend type Query {
+  # 日历
+  calendars: [Calendar!]!
+  # 日历集
+  calendarSets: [CalendarSet!]!
+  # 日历事件
+  calendarEvents(
+    # 开始时间
+    starts: Date!
+    # 结束时间
+    ends: Date!
+  ): [CalendarEvent!]!
 }

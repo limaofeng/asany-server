@@ -29,6 +29,7 @@ dependencies {
     implementation project(":asany-email")
     implementation project(":asany-nuwa")
     implementation project(":asany-cms")
+    implementation project(":asany-sunrise")
     implementation project(":asany-shanhai")
     implementation project(":asany-storage")
     implementation project(":asany-security")

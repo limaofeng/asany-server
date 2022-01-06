@@ -49,8 +49,9 @@ public class Calendar extends BaseBusEntity {
   @Column(name = "REFRESH", length = 10)
   private Refresh refresh;
   /** 版本 */
+  @Version
   @Column(name = "VERSION")
-  private String version;
+  private Long version;
   /** 事件 */
   @OneToMany(
       mappedBy = "calendar",

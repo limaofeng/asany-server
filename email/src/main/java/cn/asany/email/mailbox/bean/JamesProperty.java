@@ -22,7 +22,7 @@ import org.hibernate.annotations.GenericGenerator;
     uniqueConstraints =
         @UniqueConstraint(
             name = "UK_LOCAL_NAME",
-            columnNames = {"MAILBOX_ID", "MAIL_UID", "LOCAL_NAME"}))
+            columnNames = {"MAILBOX_ID", "LOCAL_NAME"}))
 public class JamesProperty implements Property {
 
   /** The system unique key */
