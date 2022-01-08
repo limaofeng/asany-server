@@ -124,4 +124,8 @@ public class CalendarService {
     calendar.setEvents(events);
     return calendar;
   }
+
+  public void delete(Long id) {
+    this.calendarDao.deleteById(id);
+  }
 }
