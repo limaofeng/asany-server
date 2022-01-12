@@ -5,6 +5,7 @@ import cn.asany.sunrise.calendar.bean.CalendarEvent;
 import cn.asany.sunrise.calendar.bean.CalendarSet;
 import cn.asany.sunrise.calendar.bean.enums.CalendarType;
 import cn.asany.sunrise.calendar.bean.enums.Refresh;
+import cn.asany.sunrise.calendar.bean.toys.CalendarEventDateStat;
 import cn.asany.sunrise.calendar.dao.CalendarDao;
 import cn.asany.sunrise.calendar.dao.CalendarEventDao;
 import cn.asany.sunrise.calendar.dao.CalendarSetDao;
@@ -14,6 +15,7 @@ import java.util.List;
 import java.util.Optional;
 import lombok.SneakyThrows;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
+import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
 import org.jfantasy.framework.error.ValidationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +27,8 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 public class CalendarService {
+
+  private static final String DEFAULT_CALENDAR_SET_NAME = "未命名日历集";
 
   private final CalendarDao calendarDao;
   private final CalendarSetDao calendarSetDao;
@@ -45,21 +49,77 @@ public class CalendarService {
     return this.calendarDao.findAll();
   }
 
-  public List<CalendarSet> calendarSets() {
-    return this.calendarSetDao.findAll();
+  public List<CalendarSet> calendarSets(Long uid) {
+    return this.calendarSetDao.findAll(PropertyFilter.builder().equal("owner.id", uid).build());
   }
 
   public Optional<Calendar> findById(Long id) {
     return this.calendarDao.findById(id);
   }
 
-  public List<CalendarEvent> calendarEvents(Date starts, Date ends) {
-    return this.calendarEventDao.findAll(
-        PropertyFilter.builder()
-            .or(
-                PropertyFilter.builder().between("datetime.starts", starts, ends),
-                PropertyFilter.builder().between("datetime.ends", starts, ends))
-            .build());
+  /**
+   * 日历事件
+   *
+   * @param starts 开始时间
+   * @param ends 结束时间
+   * @param calendar 日历
+   * @param calendarSet 日历集
+   * @return List<CalendarEvent>
+   */
+  public List<CalendarEvent> calendarEvents(
+      Date starts, Date ends, Long calendar, Long calendarSet) {
+    PropertyFilterBuilder builder =
+        PropertyFilter.builder().between("datetime.dates.date", starts, ends);
+    if (calendarSet == null && calendar == null) {
+      // TODO: 获取可以访问(可见)的日历
+      //  builder.in("calendar.id");
+    } else {
+      if (calendarSet != null) {
+        builder.equal("calendar.calendarSets.id", calendarSet);
+      }
+      if (calendar != null) {
+        builder.equal("calendar.id", calendar);
+      }
+    }
+    return this.calendarEventDao.findAll(builder.build());
+  }
+
+  /**
+   * 日历集统计
+   *
+   * @param calendarSet 日历集
+   * @param starts 开始时间
+   * @param ends 结束时间
+   * @return List<CalendarEventDateStat>
+   */
+  public List<CalendarEventDateStat> calendarEventDatesByCalendarSet(
+      Long calendarSet, Date starts, Date ends) {
+    return this.calendarEventDao.calendarEventDatesByCalendarSet(calendarSet, starts, ends);
+  }
+
+  /**
+   * 日历集统计
+   *
+   * @param calendar 日历
+   * @param starts 开始时间
+   * @param ends 结束时间
+   * @return List<CalendarEventDateStat>
+   */
+  public List<CalendarEventDateStat> calendarEventDatesByCalendar(
+      Long calendar, Date starts, Date ends) {
+    return this.calendarEventDao.calendarEventDatesByCalendar(calendar, starts, ends);
+  }
+
+  /**
+   * 日历集统计 (全部)
+   *
+   * @param uid 用户
+   * @param starts 开始时间
+   * @param ends 结束时间
+   * @return List<CalendarEventDateStat>
+   */
+  public List<CalendarEventDateStat> calendarEventDates(Long uid, Date starts, Date ends) {
+    return this.calendarEventDao.calendarEventDates(uid, starts, ends);
   }
 
   /**
@@ -128,4 +188,12 @@ public class CalendarService {
   public void delete(Long id) {
     this.calendarDao.deleteById(id);
   }
+
+  public void createCalendarSet() {
+    CalendarSet calendarSet = CalendarSet.builder().build();
+    calendarSet.setName("未命名日历集");
+    this.calendarSetDao.save(calendarSet);
+  }
+
+  public void updateCalendarSet() {}
 }

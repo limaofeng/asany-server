@@ -34,7 +34,7 @@ public class ArticleChannelFilter extends QueryFilter<ArticleChannelFilter, Arti
     PropertyFilter filter = ObjectUtil.find(filters, "propertyName", "parent.id");
     if (this.descendant && filter != null) {
       filters.remove(filter);
-      ArticleChannel channel = service.findOne(filter.getPropertyValue());
+      ArticleChannel channel = service.findOne(filter.getPropertyValue(Long.class));
       builder.startsWith("path", channel.getPath());
       builder.notEqual("id", channel.getId());
     }

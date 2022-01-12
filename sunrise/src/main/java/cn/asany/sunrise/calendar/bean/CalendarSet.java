@@ -1,5 +1,6 @@
 package cn.asany.sunrise.calendar.bean;
 
+import cn.asany.security.core.bean.User;
 import java.util.List;
 import javax.persistence.*;
 import lombok.*;
@@ -43,4 +44,9 @@ public class CalendarSet extends BaseBusEntity {
               name = "CALENDAR_ID",
               foreignKey = @ForeignKey(name = "FK_SUNRISE_CALENDAR_SET_CID")))
   private List<Calendar> calendars;
+  /** 所有者 */
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "OWNER_ID", foreignKey = @ForeignKey(name = "FK_CALENDAR_SET_OWNER_ID"))
+  @ToString.Exclude
+  private User owner;
 }

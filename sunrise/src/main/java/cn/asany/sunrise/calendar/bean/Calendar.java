@@ -59,6 +59,10 @@ public class Calendar extends BaseBusEntity {
       cascade = {CascadeType.REMOVE})
   @ToString.Exclude
   private List<CalendarEvent> events;
+  /** 关联的日历集 */
+  @ToString.Exclude
+  @ManyToMany(targetEntity = CalendarSet.class, mappedBy = "calendars", fetch = FetchType.LAZY)
+  private List<CalendarSet> calendarSets;
 
   @Override
   public boolean equals(Object o) {

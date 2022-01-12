@@ -3,11 +3,14 @@ package cn.asany.sunrise.calendar.graphql;
 import cn.asany.sunrise.calendar.bean.Calendar;
 import cn.asany.sunrise.calendar.bean.CalendarEvent;
 import cn.asany.sunrise.calendar.bean.CalendarSet;
+import cn.asany.sunrise.calendar.bean.toys.CalendarEventDateStat;
 import cn.asany.sunrise.calendar.service.CalendarService;
 import graphql.kickstart.tools.GraphQLMutationResolver;
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import java.util.Date;
 import java.util.List;
+import org.jfantasy.framework.security.LoginUser;
+import org.jfantasy.framework.security.SpringSecurityUtils;
 import org.springframework.stereotype.Component;
 
 /**
@@ -24,12 +27,26 @@ public class CalendarGraphqlApiResolver implements GraphQLQueryResolver, GraphQL
     this.calendarService = calendarService;
   }
 
-  public List<CalendarEvent> calendarEvents(Date starts, Date ends) {
-    return this.calendarService.calendarEvents(starts, ends);
+  public List<CalendarEvent> calendarEvents(
+      Date starts, Date ends, Long calendar, Long calendarSet) {
+    return this.calendarService.calendarEvents(starts, ends, calendar, calendarSet);
   }
 
   public List<CalendarSet> calendarSets() {
-    return this.calendarService.calendarSets();
+    LoginUser user = SpringSecurityUtils.getCurrentUser();
+    return this.calendarService.calendarSets(user.getUid());
+  }
+
+  public List<CalendarEventDateStat> calendarEventDates(
+      Date starts, Date ends, Long calendar, Long calendarSet) {
+    if (calendarSet != null) {
+      return this.calendarService.calendarEventDatesByCalendarSet(calendarSet, starts, ends);
+    }
+    if (calendar != null) {
+      return this.calendarService.calendarEventDatesByCalendar(calendar, starts, ends);
+    }
+    LoginUser user = SpringSecurityUtils.getCurrentUser();
+    return this.calendarService.calendarEventDates(user.getUid(), starts, ends);
   }
 
   public List<Calendar> calendars() {

@@ -53,6 +53,19 @@ public class CalendarEvent extends BaseBusEntity {
   @ToString.Exclude
   private Calendar calendar;
 
+  public static CalendarEventBuilder builder() {
+    return new CalendarEventBuilder() {
+      @Override
+      public CalendarEvent build() {
+        CalendarEvent event = super.build();
+        for (CalendarEventDate date : event.getDatetime().getDates()) {
+          date.setEvent(event);
+        }
+        return event;
+      }
+    };
+  }
+
   public static class CalendarEventBuilder {
 
     /**

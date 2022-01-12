@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @ExtendWith(SpringExtension.class)
@@ -28,13 +27,27 @@ class CalendarServiceTest {
   //  String url = "https://calendars.icloud.com/holidays/cn_zh.ics";
 
   @Test
+  void calendarSets() {
+    calendarService.calendarSets(1L);
+  }
+
+  @Test
+  void createCalendarSet() {
+    calendarService.createCalendarSet();
+  }
+
+  @Test
+  void updateCalendarSet() {
+    calendarService.updateCalendarSet();
+  }
+
+  @Test
   void subscribe() {
     Calendar calendar = calendarService.subscribe(url);
     log.debug(String.format("events %d", calendar.getEvents().size()));
   }
 
   @Test
-  @Transactional
   void refresh() {
     Optional<Calendar> optional = calendarService.findByUrl(url);
     assert optional.isPresent();

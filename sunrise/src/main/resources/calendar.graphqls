@@ -65,6 +65,11 @@ type CalendarSet {
   calendars: [Calendar!]!
 }
 
+type CalendarEventDateStat {
+  date: Date!
+  number: Int!
+}
+
 extend type Query {
   # 日历
   calendars: [Calendar!]!
@@ -76,5 +81,20 @@ extend type Query {
     starts: Date!
     # 结束时间
     ends: Date!
+    # 日历
+    calendar: ID
+    # 日历集
+    calendarSet: ID
   ): [CalendarEvent!]!
+  # 日历时间统计
+  calendarEventDates(
+    # 开始时间
+    starts: Date!
+    # 结束时间
+    ends: Date!
+    # 日历
+    calendar: ID
+    # 日历集
+    calendarSet: ID
+  ): [CalendarEventDateStat!]!
 }
