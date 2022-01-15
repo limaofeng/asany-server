@@ -32,6 +32,11 @@ public class CalendarGraphqlApiResolver implements GraphQLQueryResolver, GraphQL
     return this.calendarService.calendarEvents(starts, ends, calendar, calendarSet);
   }
 
+  public List<CalendarEvent> calendarEventsWithDays(
+      Date date, Long days, Long calendar, Long calendarSet) {
+    return this.calendarService.calendarEventsWithDays(date, days, calendar, calendarSet);
+  }
+
   public List<CalendarSet> calendarSets() {
     LoginUser user = SpringSecurityUtils.getCurrentUser();
     return this.calendarService.calendarSets(user.getUid());

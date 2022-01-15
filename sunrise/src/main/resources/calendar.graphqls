@@ -35,6 +35,8 @@ type CalendarEvent {
   title: String
   # 时间
   datetime: CalendarEventDatetime!
+  # 包含日期
+  dates: [Date!]!
   # 说明
   notes: String
   # 颜色
@@ -81,6 +83,17 @@ extend type Query {
     starts: Date!
     # 结束时间
     ends: Date!
+    # 日历
+    calendar: ID
+    # 日历集
+    calendarSet: ID
+  ): [CalendarEvent!]!
+  # 日历事件
+  calendarEventsWithDays(
+    # 指定日期
+    date: Date!
+    # 天数
+    days: Int!
     # 日历
     calendar: ID
     # 日历集

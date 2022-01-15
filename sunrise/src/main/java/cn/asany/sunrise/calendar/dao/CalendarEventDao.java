@@ -2,6 +2,7 @@ package cn.asany.sunrise.calendar.dao;
 
 import cn.asany.sunrise.calendar.bean.CalendarEvent;
 import cn.asany.sunrise.calendar.bean.toys.CalendarEventDateStat;
+import cn.asany.sunrise.calendar.bean.toys.DateRange;
 import java.util.Date;
 import java.util.List;
 import org.jfantasy.framework.dao.jpa.JpaRepository;
@@ -52,4 +53,13 @@ public interface CalendarEventDao extends JpaRepository<CalendarEvent, Long> {
    * @return List<CalendarEventDateStat>
    */
   List<CalendarEventDateStat> calendarEventDates(Long uid, Date starts, Date ends);
+
+  /**
+   * 获取指定日期的前N及后N天的 开始及结束日期
+   *
+   * @param calendarSet 日历集
+   * @param date 指定日期
+   * @param day 天数
+   */
+  DateRange calendarEventDateStartAndEndByCalendarSet(Long calendarSet, Date date, int day);
 }

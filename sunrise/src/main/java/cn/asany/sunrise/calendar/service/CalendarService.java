@@ -6,10 +6,12 @@ import cn.asany.sunrise.calendar.bean.CalendarSet;
 import cn.asany.sunrise.calendar.bean.enums.CalendarType;
 import cn.asany.sunrise.calendar.bean.enums.Refresh;
 import cn.asany.sunrise.calendar.bean.toys.CalendarEventDateStat;
+import cn.asany.sunrise.calendar.bean.toys.DateRange;
 import cn.asany.sunrise.calendar.dao.CalendarDao;
 import cn.asany.sunrise.calendar.dao.CalendarEventDao;
 import cn.asany.sunrise.calendar.dao.CalendarSetDao;
 import cn.asany.sunrise.calendar.util.CalendarUtils;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -17,6 +19,7 @@ import lombok.SneakyThrows;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
 import org.jfantasy.framework.error.ValidationException;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -81,7 +84,29 @@ public class CalendarService {
         builder.equal("calendar.id", calendar);
       }
     }
-    return this.calendarEventDao.findAll(builder.build());
+    return this.calendarEventDao.findAll(builder.build(), Sort.by("datetime.starts").ascending());
+  }
+
+  public List<CalendarEvent> calendarEventsWithDays(
+      Date date, Long days, Long calendar, Long calendarSet) {
+    if (calendarSet != null) {
+      return calendarEventsByByCalendarSet(calendarSet, date, days.intValue() / 2);
+    }
+    return new ArrayList<>();
+  }
+
+  /**
+   * 查询日历事件
+   *
+   * @param calendarSet 日历集
+   * @param date 日期
+   * @param day 前后天数
+   * @return List<CalendarEvent>
+   */
+  public List<CalendarEvent> calendarEventsByByCalendarSet(Long calendarSet, Date date, int day) {
+    DateRange range =
+        this.calendarEventDao.calendarEventDateStartAndEndByCalendarSet(calendarSet, date, day);
+    return this.calendarEvents(range.getStart(), range.getEnd(), null, calendarSet);
   }
 
   /**

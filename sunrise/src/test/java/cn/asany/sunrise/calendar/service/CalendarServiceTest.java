@@ -2,6 +2,9 @@ package cn.asany.sunrise.calendar.service;
 
 import cn.asany.sunrise.TestApplication;
 import cn.asany.sunrise.calendar.bean.Calendar;
+import cn.asany.sunrise.calendar.bean.CalendarEvent;
+import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -60,5 +63,12 @@ class CalendarServiceTest {
     Optional<Calendar> optional = calendarService.findByUrl(url);
     assert optional.isPresent();
     calendarService.delete(optional.get().getId());
+  }
+
+  @Test
+  void calendarEventsByByCalendarSet() {
+    List<CalendarEvent> events =
+        this.calendarService.calendarEventsByByCalendarSet(1L, new Date(), 30);
+    log.debug("events size = " + events.size());
   }
 }

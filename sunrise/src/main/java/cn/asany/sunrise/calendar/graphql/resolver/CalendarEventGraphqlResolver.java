@@ -1,7 +1,11 @@
 package cn.asany.sunrise.calendar.graphql.resolver;
 
 import cn.asany.sunrise.calendar.bean.CalendarEvent;
+import cn.asany.sunrise.calendar.bean.CalendarEventDate;
 import graphql.kickstart.tools.GraphQLResolver;
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 
 /**
@@ -14,5 +18,11 @@ public class CalendarEventGraphqlResolver implements GraphQLResolver<CalendarEve
 
   public String color(CalendarEvent event) {
     return event.getCalendar().getColor();
+  }
+
+  public List<Date> dates(CalendarEvent event) {
+    return event.getDatetime().getDates().stream()
+        .map(CalendarEventDate::getDate)
+        .collect(Collectors.toList());
   }
 }
