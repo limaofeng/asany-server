@@ -28,4 +28,24 @@ public class ApplicationDaoImpl extends ComplexJpaRepository<Application, Long>
   public Optional<Application> findDetailsById(Long id) {
     return this.findOne(PropertyFilter.builder().equal("id", id).build());
   }
+
+  @Override
+  public Optional<Application> findOneWithRoutesByClientId(String clientId) {
+    return this.findOne(PropertyFilter.builder().equal("clientId", clientId).build());
+  }
+
+  @Override
+  public Optional<Application> findOneWithMenusByClientId(String clientId) {
+    return this.findOne(PropertyFilter.builder().equal("clientId", clientId).build());
+  }
+
+  @Override
+  public Optional<Application> findOneWithRoutesById(Long id) {
+    return this.findOne(PropertyFilter.builder().equal("id", id).build());
+  }
+
+  @Override
+  public Optional<Application> findOneWithMenusById(Long id) {
+    return this.findOne(PropertyFilter.builder().equal("id", id).build());
+  }
 }

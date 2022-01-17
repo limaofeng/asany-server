@@ -30,4 +30,40 @@ public interface ApplicationDao extends JpaRepository<Application, Long> {
    */
   @EntityGraph(value = "Graph.Application.FetchDetails", type = EntityGraph.EntityGraphType.FETCH)
   Optional<Application> findDetailsById(Long id);
+
+  /**
+   * 获取应用详情
+   *
+   * @param clientId 应用ID
+   * @return 应用详情
+   */
+  @EntityGraph(value = "Graph.Application.FetchRoutes", type = EntityGraph.EntityGraphType.FETCH)
+  Optional<Application> findOneWithRoutesByClientId(String clientId);
+
+  /**
+   * 获取应用详情
+   *
+   * @param clientId 应用ID
+   * @return 应用详情
+   */
+  @EntityGraph(value = "Graph.Application.FetchMenus", type = EntityGraph.EntityGraphType.FETCH)
+  Optional<Application> findOneWithMenusByClientId(String clientId);
+
+  /**
+   * 获取应用详情
+   *
+   * @param id ID
+   * @return 应用详情
+   */
+  @EntityGraph(value = "Graph.Application.FetchRoutes", type = EntityGraph.EntityGraphType.FETCH)
+  Optional<Application> findOneWithRoutesById(Long id);
+
+  /**
+   * 获取应用详情
+   *
+   * @param id ID
+   * @return 应用详情
+   */
+  @EntityGraph(value = "Graph.Application.FetchMenus", type = EntityGraph.EntityGraphType.FETCH)
+  Optional<Application> findOneWithMenusById(Long id);
 }

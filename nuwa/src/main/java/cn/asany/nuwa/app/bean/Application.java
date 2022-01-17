@@ -43,6 +43,33 @@ import org.jfantasy.framework.security.oauth2.core.ClientDetails;
             @NamedAttributeNode(value = "component")
           })
     })
+@NamedEntityGraph(
+    name = "Graph.Application.FetchRoutes",
+    attributeNodes = {
+      @NamedAttributeNode(value = "routes", subgraph = "SubGraph.ApplicationRoute.FetchComponent")
+    },
+    subgraphs = {
+      @NamedSubgraph(
+          name = "SubGraph.ApplicationRoute.FetchComponent",
+          attributeNodes = {
+            @NamedAttributeNode(value = "space"),
+            @NamedAttributeNode(value = "parent"),
+            @NamedAttributeNode(value = "component")
+          })
+    })
+@NamedEntityGraph(
+    name = "Graph.Application.FetchMenus",
+    attributeNodes = {
+      @NamedAttributeNode(value = "menus", subgraph = "SubGraph.ApplicationMenu.FetchComponent"),
+    },
+    subgraphs = {
+      @NamedSubgraph(
+          name = "SubGraph.ApplicationMenu.FetchComponent",
+          attributeNodes = {
+            @NamedAttributeNode(value = "parent"),
+            @NamedAttributeNode(value = "component")
+          }),
+    })
 @Entity
 @Table(
     name = "NUWA_APPLICATION",

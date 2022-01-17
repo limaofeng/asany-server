@@ -88,19 +88,39 @@ public class ApplicationService implements ClientDetailsService {
     return optional.get();
   }
 
-  @Transactional
+  @Transactional(rollbackFor = RuntimeException.class)
   public boolean existsByClientId(String clientId) {
     return this.applicationDao.exists(PropertyFilter.builder().equal("clientId", clientId).build());
   }
 
-  @Transactional
-  public Optional<Application> findDetailsByClientId(String id) {
-    return this.applicationDao.findDetailsByClientId(id);
+  @Transactional(rollbackFor = RuntimeException.class)
+  public Optional<Application> findDetailsByClientId(
+      String id, boolean hasFetchRoutes, boolean hasFetchMenus) {
+    if (hasFetchRoutes && hasFetchMenus) {
+      return this.applicationDao.findDetailsByClientId(id);
+    }
+    if (hasFetchRoutes) {
+      return this.applicationDao.findOneWithRoutesByClientId(id);
+    }
+    if (hasFetchMenus) {
+      return this.applicationDao.findOneWithMenusByClientId(id);
+    }
+    return this.applicationDao.findOneBy("clientId", id);
   }
 
-  @Transactional
-  public Optional<Application> findDetailsById(Long id) {
-    return this.applicationDao.findDetailsById(id);
+  @Transactional(rollbackFor = RuntimeException.class)
+  public Optional<Application> findDetailsById(
+      Long id, boolean hasFetchRoutes, boolean hasFetchMenus) {
+    if (hasFetchRoutes && hasFetchMenus) {
+      return this.applicationDao.findDetailsById(id);
+    }
+    if (hasFetchRoutes) {
+      return this.applicationDao.findOneWithRoutesById(id);
+    }
+    if (hasFetchMenus) {
+      return this.applicationDao.findOneWithMenusById(id);
+    }
+    return this.applicationDao.findById(id);
   }
 
   @Transactional
