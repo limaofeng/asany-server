@@ -64,11 +64,11 @@ import org.apache.james.sieverepository.file.SieveFileRepository;
 import org.apache.james.smtpserver.netty.OioSMTPServerFactory;
 import org.apache.james.smtpserver.netty.SMTPServerFactory;
 import org.apache.james.user.api.UsersRepository;
-import org.apache.james.util.ClassLoaderUtils;
 import org.jboss.netty.util.HashedWheelTimer;
 import org.jfantasy.framework.spring.SpringBeanUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ResourceLoader;
 
 /**
  * SMTP 服务配置
@@ -78,7 +78,51 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class SmtpServerAutoConfiguration {
 
-  //  @Autowired private UsersRepository usersRepository;
+  private final ResourceLoader resourceLoader;
+
+  public SmtpServerAutoConfiguration(final ResourceLoader resourceLoader) {
+    this.resourceLoader = resourceLoader;
+  }
+
+  @Bean
+  public XMLConfiguration mailetContainerConfiguration() throws ConfigurationException {
+    try {
+      return ConfigLoader.getConfig(
+          resourceLoader.getResource("classpath:mailetcontainer.xml").getInputStream());
+    } catch (IOException e) {
+      throw new ConfigurationException(e.getMessage());
+    }
+  }
+
+  @Bean
+  public XMLConfiguration dnsServiceConfiguration() throws ConfigurationException {
+    try {
+      return ConfigLoader.getConfig(
+          resourceLoader.getResource("classpath:dnsservice.xml").getInputStream());
+    } catch (IOException e) {
+      throw new ConfigurationException(e.getMessage());
+    }
+  }
+
+  @Bean
+  public XMLConfiguration mailRepositoryStoreConfiguration() throws ConfigurationException {
+    try {
+      return ConfigLoader.getConfig(
+          resourceLoader.getResource("classpath:mailrepositorystore.xml").getInputStream());
+    } catch (IOException e) {
+      throw new ConfigurationException(e.getMessage());
+    }
+  }
+
+  @Bean
+  public XMLConfiguration smtpServerConfiguration() throws ConfigurationException {
+    try {
+      return ConfigLoader.getConfig(
+          resourceLoader.getResource("classpath:smtpserver.xml").getInputStream());
+    } catch (IOException e) {
+      throw new ConfigurationException(e.getMessage());
+    }
+  }
 
   @Bean
   public RecipientRewriteTable recipientRewriteTable(DomainList domainList)
@@ -92,8 +136,7 @@ public class SmtpServerAutoConfiguration {
   @Bean(initMethod = "init")
   public DNSJavaService dnsService() throws ConfigurationException {
     DNSJavaService dnsService = new DNSJavaService(metricFactory());
-    XMLConfiguration configuration =
-        ConfigLoader.getConfig(ClassLoaderUtils.getSystemResourceAsSharedStream("dnsservice.xml"));
+    XMLConfiguration configuration = dnsServiceConfiguration();
     dnsService.configure(configuration);
     return dnsService;
   }
@@ -123,29 +166,6 @@ public class SmtpServerAutoConfiguration {
     return new FileSystemImpl(configuration.directories());
   }
 
-  //  protected SMTPServer createSmtpServer(SmtpMetricsImpl smtpMetrics) throws Exception {
-  //    SMTPServer smtpServer = new SMTPServer(smtpMetrics);
-  //
-  //    //    SMTPProtocolHandlerChain chain = new SMTPProtocolHandlerChain(new
-  // DefaultMetricFactory());
-  //    //    chain.addAll(0, handlers);
-  //    //    chain.wireExtensibleHandlers();
-  //
-  //    //    XMLConfiguration configuration =
-  //    //
-  //    //
-  // ConfigLoader.getConfig(ClassLoaderUtils.getSystemResourceAsSharedStream("smtpserver.xml"));
-  //    //    smtpServer.configure(configuration.configurationAt("smtpserver"));
-  //    //
-  //    //    smtpServer.setProtocolHandlerLoader(protocolHandlerLoader);
-  //    //    smtpServer.setDnsService(this.dnsService);
-  //    //    smtpServer.setHashWheelTimer(new HashedWheelTimer());
-  //
-  //    //    smtpServer.init();
-  //    //    return smtpServer;
-  //    return null;
-  //  }
-
   @Bean
   public HashedWheelTimer hashedWheelTimer() {
     return new HashedWheelTimer();
@@ -160,8 +180,7 @@ public class SmtpServerAutoConfiguration {
             fileSystem(),
             metricFactory(),
             hashedWheelTimer());
-    XMLConfiguration configuration =
-        ConfigLoader.getConfig(ClassLoaderUtils.getSystemResourceAsSharedStream("smtpserver.xml"));
+    XMLConfiguration configuration = smtpServerConfiguration();
     smtpServerFactory.configure(configuration);
     return smtpServerFactory;
   }
@@ -169,9 +188,7 @@ public class SmtpServerAutoConfiguration {
   @Bean
   public MailRepositoryStoreBeanFactory mailRepositoryStore() throws ConfigurationException {
     MailRepositoryStoreBeanFactory beanFactory = new MailRepositoryStoreBeanFactory();
-    XMLConfiguration configuration =
-        ConfigLoader.getConfig(
-            ClassLoaderUtils.getSystemResourceAsSharedStream("mailrepositorystore.xml"));
+    XMLConfiguration configuration = mailRepositoryStoreConfiguration();
     beanFactory.configure(configuration);
     return beanFactory;
   }
@@ -190,13 +207,6 @@ public class SmtpServerAutoConfiguration {
   public MatcherLoader matcherLoader() {
     return new MatcherLoaderBeanFactory();
   }
-
-  //  @Bean
-  //  public CamelMailetContainerModule mailetContainer() {
-  //    CamelMailetContainerModule mailetContainer = new CamelMailetContainerModule();
-  //      mailetContainer.con
-  //    return mailetContainer;
-  //  }
 
   @Bean("jpa-uidProvider")
   public UidProvider uidProvider() {
@@ -356,12 +366,6 @@ public class SmtpServerAutoConfiguration {
   @Bean
   public SieveRepository sieveRepository() throws IOException {
     return new SieveFileRepository(fileSystem());
-  }
-
-  @Bean
-  public XMLConfiguration mailetContainerConfiguration() throws ConfigurationException {
-    return ConfigLoader.getConfig(
-        ClassLoaderUtils.getSystemResourceAsSharedStream("mailetcontainer.xml"));
   }
 
   @Bean
