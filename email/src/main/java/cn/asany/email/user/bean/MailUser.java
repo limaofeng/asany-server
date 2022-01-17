@@ -47,7 +47,7 @@ public class MailUser extends BaseBusEntity implements User {
   private String alg;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "DOMAIN_ID", foreignKey = @ForeignKey(name = "FK_JAMES_USER_EMPLOYEE"))
+  @JoinColumn(name = "DOMAIN_ID", foreignKey = @ForeignKey(name = "FK_JAMES_USER_DOMAIN"))
   @ToString.Exclude
   private JamesDomain domain;
 
