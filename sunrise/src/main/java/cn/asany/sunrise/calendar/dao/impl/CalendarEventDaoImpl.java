@@ -116,7 +116,8 @@ public class CalendarEventDaoImpl extends ComplexJpaRepository<CalendarEvent, Lo
     query.setParameter("calendarSet", calendarSet);
     long maxCount = Long.parseLong(query.getSingleResult().toString());
 
-    query = this.em.createNativeQuery(sql + "LIMIT " + Math.min(day, maxCount - 1) + ",1");
+    query =
+        this.em.createNativeQuery(sql + "LIMIT " + Math.min(day, Math.max(maxCount - 1, 0)) + ",1");
     query.setParameter("date", date);
     query.setParameter("calendarSet", calendarSet);
     query

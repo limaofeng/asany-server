@@ -72,6 +72,10 @@ type CalendarEventDateStat {
   number: Int!
 }
 
+extend type Mutation {
+  newCalendarSubscription(url: String): Calendar
+}
+
 extend type Query {
   # 日历
   calendars: [Calendar!]!

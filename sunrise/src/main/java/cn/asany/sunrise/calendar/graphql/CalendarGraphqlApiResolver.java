@@ -27,6 +27,10 @@ public class CalendarGraphqlApiResolver implements GraphQLQueryResolver, GraphQL
     this.calendarService = calendarService;
   }
 
+  public Calendar newCalendarSubscription(String url) {
+    return this.calendarService.subscribe(url);
+  }
+
   public List<CalendarEvent> calendarEvents(
       Date starts, Date ends, Long calendar, Long calendarSet) {
     return this.calendarService.calendarEvents(starts, ends, calendar, calendarSet);
