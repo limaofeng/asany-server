@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.1](https://github.com/limaofeng/asany-server/compare/v0.1.0...v0.1.1) (2022-01-17)
+
+
+### Features
+
+* 保存发件箱 ([339fa72](https://github.com/limaofeng/asany-server/commit/339fa72a0885b6f537233d87ee96c543cb1150e5))
+* 升级依赖 ([ac4d053](https://github.com/limaofeng/asany-server/commit/ac4d053c1134d1b3b3cfdc32ffa7e4217f71b8a6))
+* 日历 - 添加删除日历方法 ([c09713c](https://github.com/limaofeng/asany-server/commit/c09713c30ac5b0aa12e25b7c3db0d26fc53a9a34))
+* 添加日历事件查询接口 ([0a3cc67](https://github.com/limaofeng/asany-server/commit/0a3cc6744677813356a086c9220dcf43114725b5))
+* 添加日历模块，优化邮件逻辑 ([cdbe749](https://github.com/limaofeng/asany-server/commit/cdbe749d8e916e7bc613e0f6f1cc83b38de9b51d))
+* 组织 yml 导入 ([f2970ad](https://github.com/limaofeng/asany-server/commit/f2970adf90ab97ab4e6fe064cabdf351b791ee9e))
+* 邮件模块 ([9d448d9](https://github.com/limaofeng/asany-server/commit/9d448d92bea3b234c40ade298b3aceb3f2e733b0))
+
+
+### Bug Fixes
+
+* 优化应用查询，提告一些场景下的速度 ([c327337](https://github.com/limaofeng/asany-server/commit/c327337d02f134490a3f694b7cba11ddd95161ac))
+* 优化日历查询 ([14a34fd](https://github.com/limaofeng/asany-server/commit/14a34fd7aabdb6630138ea2e37ea5125b8d7e32f))
+* 日历查询优化 ([5990e4e](https://github.com/limaofeng/asany-server/commit/5990e4e3d77ac2811d84d0b53ca85441ef2838ed))
+
 ## [0.1.0](https://github.com/limaofeng/asany-server/compare/v0.0.27...v0.1.0) (2021-12-22)
 
 
