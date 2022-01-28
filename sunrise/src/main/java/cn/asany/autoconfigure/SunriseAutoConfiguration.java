@@ -14,6 +14,7 @@ import org.springframework.context.annotation.Configuration;
 @ComponentScan({
   "cn.asany.sunrise.*.dao",
   "cn.asany.sunrise.*.service",
-  "cn.asany.sunrise.*.graphql"
+  "cn.asany.sunrise.*.graphql",
+  "cn.asany.sunrise.*.convert"
 })
 public class SunriseAutoConfiguration {}

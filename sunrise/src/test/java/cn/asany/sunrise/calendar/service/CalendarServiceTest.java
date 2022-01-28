@@ -3,6 +3,7 @@ package cn.asany.sunrise.calendar.service;
 import cn.asany.sunrise.TestApplication;
 import cn.asany.sunrise.calendar.bean.Calendar;
 import cn.asany.sunrise.calendar.bean.CalendarEvent;
+import cn.asany.sunrise.calendar.bean.CalendarSet;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -36,12 +37,13 @@ class CalendarServiceTest {
 
   @Test
   void createCalendarSet() {
-    calendarService.createCalendarSet();
+    CalendarSet calendarSet = calendarService.createCalendarSet(1L);
+    log.debug(String.format("calendarSet %d", calendarSet.getId()));
   }
 
   @Test
   void updateCalendarSet() {
-    calendarService.updateCalendarSet();
+    calendarService.updateCalendarSet(1L, new CalendarSet(), false);
   }
 
   @Test

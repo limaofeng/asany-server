@@ -31,6 +31,7 @@ public class Calendar extends BaseBusEntity {
   @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
   /** 日历类型 */
+  @Enumerated(EnumType.STRING)
   @Column(name = "TYPE", length = 20, nullable = false)
   private CalendarType type;
   /** 名称 */
@@ -45,7 +46,11 @@ public class Calendar extends BaseBusEntity {
   /** 订阅地址 */
   @Column(name = "URL", length = 200)
   private String url;
+  /** 排序字段 */
+  @Column(name = "SORT")
+  private Integer index;
   /** 刷新设置 */
+  @Enumerated(EnumType.STRING)
   @Column(name = "REFRESH", length = 10)
   private Refresh refresh;
   /** 版本 */
@@ -63,6 +68,13 @@ public class Calendar extends BaseBusEntity {
   @ToString.Exclude
   @ManyToMany(targetEntity = CalendarSet.class, mappedBy = "calendars", fetch = FetchType.LAZY)
   private List<CalendarSet> calendarSets;
+  /** 日历账号 */
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(
+      name = "CALENDAR_ACCOUNT",
+      foreignKey = @ForeignKey(name = "FK_CALENDAR_CALENDAR_ACCOUNT_ID"))
+  @ToString.Exclude
+  private CalendarAccount account;
 
   @Override
   public boolean equals(Object o) {

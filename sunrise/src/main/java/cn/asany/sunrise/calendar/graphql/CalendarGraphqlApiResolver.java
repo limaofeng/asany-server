@@ -1,9 +1,13 @@
 package cn.asany.sunrise.calendar.graphql;
 
 import cn.asany.sunrise.calendar.bean.Calendar;
+import cn.asany.sunrise.calendar.bean.CalendarAccount;
 import cn.asany.sunrise.calendar.bean.CalendarEvent;
 import cn.asany.sunrise.calendar.bean.CalendarSet;
 import cn.asany.sunrise.calendar.bean.toys.CalendarEventDateStat;
+import cn.asany.sunrise.calendar.convert.CalendarSetConverter;
+import cn.asany.sunrise.calendar.graphql.input.CalendarSetCreateInput;
+import cn.asany.sunrise.calendar.graphql.input.CalendarSetUpdateInput;
 import cn.asany.sunrise.calendar.service.CalendarService;
 import graphql.kickstart.tools.GraphQLMutationResolver;
 import graphql.kickstart.tools.GraphQLQueryResolver;
@@ -11,6 +15,7 @@ import java.util.Date;
 import java.util.List;
 import org.jfantasy.framework.security.LoginUser;
 import org.jfantasy.framework.security.SpringSecurityUtils;
+import org.jfantasy.framework.util.common.ObjectUtil;
 import org.springframework.stereotype.Component;
 
 /**
@@ -22,9 +27,12 @@ import org.springframework.stereotype.Component;
 public class CalendarGraphqlApiResolver implements GraphQLQueryResolver, GraphQLMutationResolver {
 
   private final CalendarService calendarService;
+  private final CalendarSetConverter calendarSetConverter;
 
-  public CalendarGraphqlApiResolver(CalendarService calendarService) {
+  public CalendarGraphqlApiResolver(
+      CalendarService calendarService, CalendarSetConverter calendarSetConverter) {
     this.calendarService = calendarService;
+    this.calendarSetConverter = calendarSetConverter;
   }
 
   public Calendar newCalendarSubscription(String url) {
@@ -59,6 +67,29 @@ public class CalendarGraphqlApiResolver implements GraphQLQueryResolver, GraphQL
   }
 
   public List<Calendar> calendars() {
-    return this.calendarService.findAll();
+    LoginUser user = SpringSecurityUtils.getCurrentUser();
+    return this.calendarService.calendars(user.getUid());
+  }
+
+  public List<CalendarAccount> calendarAccounts() {
+    LoginUser user = SpringSecurityUtils.getCurrentUser();
+    return this.calendarService.calendarAccounts(user.getUid());
+  }
+
+  public CalendarSet createCalendarSet(CalendarSetCreateInput input) {
+    LoginUser user = SpringSecurityUtils.getCurrentUser();
+    CalendarSet calendarSet =
+        ObjectUtil.defaultValue(calendarSetConverter.toCalendarSet(input), CalendarSet::new);
+    return this.calendarService.createCalendarSet(
+        user.getUid(), calendarSet.getName(), calendarSet.getIndex());
+  }
+
+  public CalendarSet updateCalendarSet(Long id, CalendarSetUpdateInput input, Boolean merge) {
+    CalendarSet calendarSet = calendarSetConverter.toCalendarSet(input);
+    return this.calendarService.updateCalendarSet(id, calendarSet, merge);
+  }
+
+  public Boolean deleteCalendarSet(Long id) {
+    return this.calendarService.deleteCalendarSet(id);
   }
 }

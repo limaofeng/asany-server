@@ -123,7 +123,8 @@ public class CalendarEventDaoImpl extends ComplexJpaRepository<CalendarEvent, Lo
     query
         .unwrap(NativeQueryImpl.class)
         .setResultTransformer(new AliasToBeanResultTransformer(CalendarEventDateStat.class));
-    CalendarEventDateStat end = (CalendarEventDateStat) query.getSingleResult();
+    List<CalendarEventDateStat> list = query.getResultList();
+    Date end = list.isEmpty() ? date : list.get(0).getDate();
 
     // 查询开始时间
     sql = String.format(QUERY_EVENT_DATE_LIMIT_SQL, "<", "desc");
@@ -133,13 +134,15 @@ public class CalendarEventDaoImpl extends ComplexJpaRepository<CalendarEvent, Lo
     query.setParameter("calendarSet", calendarSet);
     maxCount = Long.parseLong(query.getSingleResult().toString());
 
-    query = this.em.createNativeQuery(sql + "LIMIT " + Math.min(day, maxCount - 1) + ",1");
+    query =
+        this.em.createNativeQuery(sql + "LIMIT " + Math.min(day, Math.max(maxCount - 1, 0)) + ",1");
     query.setParameter("date", date);
     query.setParameter("calendarSet", calendarSet);
     query
         .unwrap(NativeQueryImpl.class)
         .setResultTransformer(new AliasToBeanResultTransformer(CalendarEventDateStat.class));
-    CalendarEventDateStat start = (CalendarEventDateStat) query.getSingleResult();
-    return DateRange.builder().start(start.getDate()).end(end.getDate()).build();
+    list = query.getResultList();
+    Date start = list.isEmpty() ? date : list.get(0).getDate();
+    return DateRange.builder().start(start).end(end).build();
   }
 }

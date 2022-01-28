@@ -37,7 +37,7 @@ public class Icon extends BaseBusEntity implements UIResource {
   @Column(name = "TYPE", length = 20, nullable = false)
   private IconType type;
   /** 编码 */
-  @Column(name = "UNICODE", length = 10)
+  @Column(name = "UNICODE", length = 50)
   private String unicode;
   /** 名称 */
   @Column(name = "NAME", length = 60)

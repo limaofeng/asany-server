@@ -1,5 +1,9 @@
 enum CalendarType {
+  # 内置(内部)
   SUNRISE
+  # 集成 - 第三方或者功能集成
+  INTEGRATION
+  # 订阅
   SUBSCRIPTION
 }
 
@@ -59,11 +63,23 @@ type Calendar {
   refresh: CalendarRefresh
   # 事件
   events: [CalendarEvent!]!
+  # 账户
+  account: CalendarAccount!
 }
 
 type CalendarSet {
   id: ID!
+  """
+  名称
+  """
   name: String!
+  """
+  排序码
+  """
+  index: Int!
+  """
+  日历集合
+  """
   calendars: [Calendar!]!
 }
 
@@ -72,8 +88,51 @@ type CalendarEventDateStat {
   number: Int!
 }
 
+enum CalendarAccountType {
+  LOCAL
+  THIRD_PARTY
+  APP
+}
+
+type CalendarAccount {
+  id: ID!
+  type: CalendarAccountType!
+  name: String
+  description: String
+  index: Int
+}
+
+input CalendarSetCreateInput {
+  name: String
+  index: Int
+}
+
+input CalendarSetUpdateInput {
+  name: String
+  index: Int
+}
+
 extend type Mutation {
+  """
+  添加订阅日历
+  """
   newCalendarSubscription(url: String): Calendar
+  """
+  创建日历集
+  """
+  createCalendarSet(input: CalendarSetCreateInput): CalendarSet
+  """
+  修改日历集
+  """
+  updateCalendarSet(
+    id: ID!
+    input: CalendarSetUpdateInput!
+    merge: Boolean = true
+  ): CalendarSet
+  """
+  删除日历集
+  """
+  deleteCalendarSet(id: ID!): Boolean!
 }
 
 extend type Query {
@@ -114,4 +173,6 @@ extend type Query {
     # 日历集
     calendarSet: ID
   ): [CalendarEventDateStat!]!
+  # 日历账户
+  calendarAccounts: [CalendarAccount!]!
 }

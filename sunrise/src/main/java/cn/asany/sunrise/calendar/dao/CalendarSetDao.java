@@ -2,6 +2,8 @@ package cn.asany.sunrise.calendar.dao;
 
 import cn.asany.sunrise.calendar.bean.CalendarSet;
 import org.jfantasy.framework.dao.jpa.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -10,4 +12,7 @@ import org.springframework.stereotype.Repository;
  * @author limaofeng
  */
 @Repository
-public interface CalendarSetDao extends JpaRepository<CalendarSet, Long> {}
+public interface CalendarSetDao extends JpaRepository<CalendarSet, Long> {
+  @Query(value = "SELECT max(index) FROM CalendarSet where owner.id = :uid")
+  Integer getMaxIndex(@Param("uid") Long uid);
+}
