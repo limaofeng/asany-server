@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CalendarSetCreateInput {
+public class CalendarCreateInput {
   private String name;
+  private Long account;
 }

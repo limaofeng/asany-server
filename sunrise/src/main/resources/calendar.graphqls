@@ -1,69 +1,127 @@
 enum CalendarType {
-  # 内置(内部)
+  """
+  内置(内部)
+  """
   SUNRISE
-  # 集成 - 第三方或者功能集成
+  """
+  集成 - 第三方或者功能集成
+  """
   INTEGRATION
-  # 订阅
+  """
+  订阅
+  """
   SUBSCRIPTION
 }
 
-enum CalendarRefresh {
-  # 从不
+enum CalendarSubscriptionRefresh {
+  """
+  从不
+  """
   NEVER
-  # 每5分钟
+  """
+  每5分钟
+  """
   EVERY_5_MINUTES
-  # 每15分钟
+  """
+  每15分钟
+  """
   EVERY_15_MINUTES
-  # 每小时
+  """
+  每小时
+  """
   EVERY_HOVER
-  # 每天
+  """
+  每天
+  """
   EVERY_DAY
-  # 每周
+  """
+  每周
+  """
   EVERY_WEEK
 }
 
-# 日历事件时间
+"""
+日历事件时间
+"""
 type CalendarEventDatetime {
-  # 是否为全天
+  """
+  是否为全天
+  """
   allDay: Boolean!
-  # 开始时间
+  """
+  开始时间
+  """
   starts: Date! @dateFormat
-  # 结束时间
+  """
+  结束时间
+  """
   ends: Date! @dateFormat
 }
 
-# 日历事件
+"""
+日历事件
+"""
 type CalendarEvent {
   id: ID!
-  # 标题
+  """
+  标题
+  """
   title: String
-  # 时间
+  """
+  时间
+  """
   datetime: CalendarEventDatetime!
-  # 包含日期
+  """
+  包含日期
+  """
   dates: [Date!]!
-  # 说明
+  """
+  说明
+  """
   notes: String
-  # 颜色
+  """
+  颜色
+  """
   color: String
 }
 
 type Calendar {
   id: ID!
-  # 日历类型
+  """
+  日历类型
+  """
   type: CalendarType!
-  # 名称
+  """
+  名称
+  """
   name: String!
-  # 描述
+  """
+  描述
+  """
   description: String
-  # 颜色
+  """
+  排序码
+  """
+  index: Int
+  """
+  颜色
+  """
   color: String
-  # 链接
+  """
+  链接
+  """
   url: String
-  # 刷新设置
-  refresh: CalendarRefresh
-  # 事件
+  """
+  刷新设置
+  """
+  refresh: CalendarSubscriptionRefresh
+  """
+  事件
+  """
   events: [CalendarEvent!]!
-  # 账户
+  """
+  账户
+  """
   account: CalendarAccount!
 }
 
@@ -77,6 +135,10 @@ type CalendarSet {
   排序码
   """
   index: Int!
+  """
+  默认日历
+  """
+  defaultCalendar: Calendar
   """
   日历集合
   """
@@ -97,30 +159,184 @@ enum CalendarAccountType {
 type CalendarAccount {
   id: ID!
   type: CalendarAccountType!
-  name: String
+  name: String!
   description: String
   index: Int
 }
 
 input CalendarSetCreateInput {
   name: String
-  index: Int
 }
 
 input CalendarSetUpdateInput {
   name: String
   index: Int
+  defaultCalendar: Int
+}
+
+input CalendarCreateInput {
+  account: ID!
+  name: String
+}
+
+input CalendarUpdateInput {
+  """
+  名称
+  """
+  name: String
+  """
+  排序
+  """
+  index: Int
+  """
+  订阅地址
+  """
+  url: String
+  """
+  颜色
+  """
+  color: String
+  """
+  订阅刷新设置
+  """
+  refresh: CalendarSubscriptionRefresh
+}
+
+enum CalendarEventAlert {
+  """
+  无
+  """
+  NONE
+  """
+  与时间时间一致
+  """
+  AT_TIME_OF_EVEN
+  """
+  前X分钟
+  """
+  MINUTES_BEFORE
+  """
+  前X小时
+  """
+  HOURS_BEFORE
+  """
+  前X天
+  """
+  DAYS_BEFORE
+  """
+  后X分钟
+  """
+  MINUTES_AFTER
+  """
+  后X小时
+  """
+  HOURS_AFTER
+  """
+  后X天
+  """
+  DAYS_AFTER
+  """
+  指定时间
+  """
+  ON_DATA
+}
+
+input CalendarEventRemind {
+  alert: CalendarEventAlert
+  times: Int
+  onDate: Date
+}
+
+input CalendarEventCreateInput {
+  """
+  标题
+  """
+  title: String
+  """
+  是否为全天
+  """
+  allDay: Boolean!
+  """
+  开始时间
+  """
+  starts: Date!
+  """
+  结束时间
+  """
+  ends: Date!
+  """
+  "
+  提醒设置
+  """
+  remind: CalendarEventRemind
+  """
+  说明
+  """
+  notes: String
+  """
+  链接
+  """
+  url: String
 }
 
 extend type Mutation {
   """
+  创建日程
+  """
+  addCalendarEvent(
+    calendar: ID!
+    input: CalendarEventCreateInput!
+  ): CalendarEvent!
+  """
+  创建日历
+  """
+  createCalendar(input: CalendarCreateInput!): Calendar!
+  """
   添加订阅日历
   """
-  newCalendarSubscription(url: String): Calendar
+  newCalendarSubscription(url: String!): Calendar!
+  """
+  更新日历
+  """
+  updateCalendar(
+    id: ID!
+    input: CalendarUpdateInput!
+    merge: Boolean = true
+  ): Calendar!
+  """
+  删除日历集
+  """
+  deleteCalendar(id: ID!): Boolean!
   """
   创建日历集
   """
-  createCalendarSet(input: CalendarSetCreateInput): CalendarSet
+  createCalendarSet(input: CalendarSetCreateInput): CalendarSet!
+  """
+  添加日历到日历集
+  """
+  addCalendarToSet(
+    """
+    日历ID
+    """
+    id: ID!
+    """
+    日历集ID
+    """
+    set: ID!
+  ): CalendarSet!
+  """
+  从日历集中移除日历
+  """
+  removeCalendarFromSet(
+    """
+    日历ID
+    """
+    id: ID!
+    """
+    日历集ID
+    """
+    set: ID!
+  ): CalendarSet!
   """
   修改日历集
   """
@@ -136,43 +352,79 @@ extend type Mutation {
 }
 
 extend type Query {
-  # 日历
+  """
+  日历
+  """
   calendars: [Calendar!]!
-  # 日历集
+  """
+  日历集
+  """
   calendarSets: [CalendarSet!]!
-  # 日历事件
+  """
+  日历事件
+  """
   calendarEvents(
-    # 开始时间
+    """
+    开始时间
+    """
     starts: Date!
-    # 结束时间
+    """
+    结束时间
+    """
     ends: Date!
-    # 日历
+    """
+    日历
+    """
     calendar: ID
-    # 日历集
+    """
+    日历集
+    """
     calendarSet: ID
   ): [CalendarEvent!]!
-  # 日历事件
+  """
+  日历事件
+  """
   calendarEventsWithDays(
-    # 指定日期
+    """
+    指定日期
+    """
     date: Date!
-    # 天数
+    """
+    天数
+    """
     days: Int!
-    # 日历
+    """
+    日历
+    """
     calendar: ID
-    # 日历集
+    """
+    日历集
+    """
     calendarSet: ID
   ): [CalendarEvent!]!
-  # 日历时间统计
+  """
+  日历时间统计
+  """
   calendarEventDates(
-    # 开始时间
+    """
+    开始时间
+    """
     starts: Date!
-    # 结束时间
+    """
+    结束时间
+    """
     ends: Date!
-    # 日历
+    """
+    日历
+    """
     calendar: ID
-    # 日历集
+    """
+    日历集
+    """
     calendarSet: ID
   ): [CalendarEventDateStat!]!
-  # 日历账户
+  """
+  日历账户
+  """
   calendarAccounts: [CalendarAccount!]!
 }

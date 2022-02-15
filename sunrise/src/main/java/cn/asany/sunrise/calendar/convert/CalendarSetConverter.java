@@ -15,6 +15,8 @@ public interface CalendarSetConverter {
   @Mappings({})
   CalendarSet toCalendarSet(CalendarSetCreateInput input);
 
-  @Mappings({})
+  @Mappings({
+    @Mapping(target = "defaultCalendar.id", source = "defaultCalendar"),
+  })
   CalendarSet toCalendarSet(CalendarSetUpdateInput input);
 }

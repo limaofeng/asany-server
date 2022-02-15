@@ -10,4 +10,5 @@ import lombok.NoArgsConstructor;
 public class CalendarSetUpdateInput {
   private String name;
   private Integer index;
+  private Long defaultCalendar;
 }

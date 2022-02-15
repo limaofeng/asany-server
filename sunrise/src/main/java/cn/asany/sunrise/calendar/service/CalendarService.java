@@ -14,15 +14,14 @@ import cn.asany.sunrise.calendar.dao.CalendarDao;
 import cn.asany.sunrise.calendar.dao.CalendarEventDao;
 import cn.asany.sunrise.calendar.dao.CalendarSetDao;
 import cn.asany.sunrise.calendar.util.CalendarUtils;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import lombok.SneakyThrows;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
 import org.jfantasy.framework.error.ValidationException;
+import org.jfantasy.framework.security.LoginUser;
+import org.jfantasy.framework.util.common.DateUtil;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.common.StringUtil;
 import org.springframework.data.domain.Sort;
@@ -38,6 +37,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class CalendarService {
 
   private static final String CALENDAR_SET_DEFAULT_NAME = "未命名日历集";
+  private static final String CALENDAR_DEFAULT_NAME = "未命名";
 
   private final CalendarDao calendarDao;
   private final CalendarAccountDao calendarAccountDao;
@@ -64,17 +64,12 @@ public class CalendarService {
   }
 
   public List<Calendar> calendars(Long uid) {
-    return this.calendarDao.findAll(
-        PropertyFilter.builder().equal("account.owner.id", uid).build());
+    return this.calendarDao.findAllWithAccountByUid(uid);
   }
 
   public List<CalendarSet> calendarSets(Long uid) {
     return this.calendarSetDao.findAll(
         PropertyFilter.builder().equal("owner.id", uid).build(), Sort.by("index").ascending());
-  }
-
-  private List<Long> getAccountIds(Long uid) {
-    return new ArrayList<>();
   }
 
   public Optional<Calendar> findById(Long id) {
@@ -108,11 +103,14 @@ public class CalendarService {
     return this.calendarEventDao.findAll(builder.build(), Sort.by("datetime.starts").ascending());
   }
 
-  public List<CalendarEvent> calendarEventsWithDays(
-      Date date, Long days, Long calendar, Long calendarSet) {
-    if (calendarSet != null) {
-      return calendarEventsByByCalendarSet(calendarSet, date, days.intValue() / 2);
-    }
+  public List<CalendarEvent> calendarEventsWithDaysByCalendarSet(
+      Long calendarSet, Date date, Long days) {
+    return calendarEventsByByCalendarSet(calendarSet, date, days.intValue() / 2);
+  }
+
+  public List<CalendarEvent> calendarEventsWithDaysByCalendar(Long calendar, Date date, Long days) {
+    // return calendarEventsByByCalendar(calendar, date, days.intValue() / 2);
+    System.out.println(calendar + "\t" + DateUtil.format(date) + "\t" + days);
     return new ArrayList<>();
   }
 
@@ -201,6 +199,75 @@ public class CalendarService {
     return calendar;
   }
 
+  public Calendar createCalendar(Long account, String name) {
+    Calendar.CalendarBuilder builder = Calendar.builder();
+    if (StringUtil.isBlank(name)) {
+      int i = 0;
+      boolean isExist;
+      do {
+        name = CALENDAR_DEFAULT_NAME + (i != 0 ? " (" + i + ")" : "");
+        isExist =
+            this.calendarDao.exists(
+                PropertyFilter.builder().equal("account.id", account).equal("name", name).build());
+        i++;
+      } while (isExist);
+      builder.name(name);
+    }
+    builder
+        .type(CalendarType.SUNRISE)
+        .index(this.calendarDao.getMaxIndex(account) + 1)
+        .color(CalendarUtils.randomColor())
+        .account(CalendarAccount.builder().id(account).build());
+    return this.calendarDao.save(builder.build());
+  }
+
+  @Transactional
+  public Calendar updateCalendar(Long id, Calendar calendar, Boolean merge) {
+    calendar.setId(id);
+    Integer index = calendar.getIndex();
+
+    if (index != null) {
+      Calendar source = this.calendarDao.getById(id);
+      Integer sourceIndex = source.getIndex();
+      List<Calendar> calendars =
+          this.calendarDao.findAll(
+              PropertyFilter.builder().equal("account.id", source.getAccount().getId()).build(),
+              Sort.by("index").ascending());
+      if (calendars.isEmpty()) {
+        calendar.setIndex(1);
+      } else {
+        int maxIndex = calendars.get(calendars.size() - 1).getIndex();
+        index = Math.max(Math.min(maxIndex, index), 0);
+        int startIndex = Math.min(sourceIndex, index);
+        int endIndex = Math.max(sourceIndex, index);
+        List<Calendar> siblings =
+            calendars.subList(startIndex - 1, endIndex).stream()
+                .filter(item -> !item.getId().equals(id))
+                .collect(Collectors.toList());
+        rearrangeCalendars(siblings, startIndex, endIndex, sourceIndex > index);
+        calendar.setIndex(index);
+      }
+    }
+
+    return this.calendarDao.update(calendar, merge);
+  }
+
+  public Boolean deleteCalendar(Long id) {
+    Calendar source = this.calendarDao.getById(id);
+    Integer sourceIndex = source.getIndex();
+
+    List<Calendar> calendars =
+        this.calendarDao.findAll(
+            PropertyFilter.builder().equal("account.id", source.getAccount().getId()).build(),
+            Sort.by("index").ascending());
+
+    rearrangeCalendars(calendars, sourceIndex, calendars.size(), false);
+
+    this.calendarDao.delete(source);
+
+    return true;
+  }
+
   /**
    * 刷新日历
    *
@@ -236,11 +303,12 @@ public class CalendarService {
   }
 
   public CalendarSet createCalendarSet(Long uid) {
-    return this.createCalendarSet(uid, null, null);
+    return this.createCalendarSet(uid, null);
   }
 
-  public CalendarSet createCalendarSet(Long uid, String name, Integer index) {
+  public CalendarSet createCalendarSet(Long uid, String name) {
     CalendarSet.CalendarSetBuilder builder = CalendarSet.builder();
+
     if (StringUtil.isBlank(name)) {
       int i = 0;
       boolean isExist;
@@ -253,10 +321,18 @@ public class CalendarService {
       } while (isExist);
       builder.name(name);
     }
+
+    Calendar defaultCalendar = this.defaultCalendar(uid);
+
     builder
+        .defaultCalendar(defaultCalendar)
         .index(ObjectUtil.defaultValue(this.calendarSetDao.getMaxIndex(uid), () -> 0) + 1)
         .owner(User.builder().id(uid).build());
     return this.calendarSetDao.save(builder.build());
+  }
+
+  private Calendar defaultCalendar(Long uid) {
+    return this.calendarDao.defaultCalendar(uid);
   }
 
   public CalendarSet updateCalendarSet(Long id, CalendarSet calendarSet, Boolean merge) {
@@ -323,5 +399,52 @@ public class CalendarService {
       item.setIndex(item.getIndex() + (back ? 1 : -1));
     }
     this.calendarSetDao.updateAllInBatch(neighbors);
+  }
+
+  /**
+   * 重新排序
+   *
+   * @param calendars 兄弟节点（不包含当前节点）
+   * @param startIndex 开始位置
+   * @param endIndex 结束位置
+   * @param back true ? index + 1 : index -1;
+   */
+  public void rearrangeCalendars(
+      List<Calendar> calendars, int startIndex, int endIndex, boolean back) {
+    List<Calendar> neighbors =
+        calendars.stream()
+            .filter(item -> item.getIndex() >= startIndex && item.getIndex() <= endIndex)
+            .collect(Collectors.toList());
+    for (Calendar item : neighbors) {
+      item.setIndex(item.getIndex() + (back ? 1 : -1));
+    }
+    this.calendarDao.updateAllInBatch(neighbors);
+  }
+
+  public boolean verifyAccount(Long account, LoginUser user) {
+    return this.calendarAccountDao.exists(
+        PropertyFilter.builder().equal("id", account).equal("owner.id", user.getUid()).build());
+  }
+
+  public CalendarSet addCalendarToSet(Long id, Long set) {
+    CalendarSet calendarSet = this.calendarSetDao.getById(set);
+    Calendar calendar = this.calendarDao.getById(id);
+    if (!ObjectUtil.exists(calendarSet.getCalendars(), "id", id)) {
+      calendarSet.getCalendars().add(calendar);
+    }
+    return this.calendarSetDao.update(calendarSet);
+  }
+
+  public CalendarSet removeCalendarFromSet(Long id, Long set) {
+    CalendarSet calendarSet = this.calendarSetDao.getById(set);
+    if (!ObjectUtil.exists(calendarSet.getCalendars(), "id", id)) {
+      return calendarSet;
+    }
+    ObjectUtil.remove(calendarSet.getCalendars(), "id", id);
+    return this.calendarSetDao.update(calendarSet);
+  }
+
+  public CalendarEvent addCalendarEvent(Long calendar, CalendarEvent event) {
+    return null;
   }
 }

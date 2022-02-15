@@ -21,6 +21,19 @@ import org.jfantasy.framework.dao.BaseBusEntity;
 @Builder
 @AllArgsConstructor
 @RequiredArgsConstructor
+@NamedEntityGraph(
+    name = "Graph.Calendar.FetchAccount",
+    attributeNodes = {
+      @NamedAttributeNode(value = "account", subgraph = "SubGraph.CalendarAccount"),
+    },
+    subgraphs = {
+      @NamedSubgraph(
+          name = "SubGraph.CalendarAccount",
+          attributeNodes = {
+            @NamedAttributeNode(value = "name"),
+            @NamedAttributeNode(value = "index")
+          }),
+    })
 @Entity
 @Table(name = "SUNRISE_CALENDAR")
 public class Calendar extends BaseBusEntity {

@@ -73,4 +73,11 @@ class CalendarServiceTest {
         this.calendarService.calendarEventsByByCalendarSet(1L, new Date(), 30);
     log.debug("events size = " + events.size());
   }
+
+  @Test
+  void updateCalendar() {
+    Calendar calendar = Calendar.builder().name("未命名 23").build();
+    calendar = this.calendarService.updateCalendar(606L, calendar, true);
+    log.debug("calendar new name = " + calendar.getName());
+  }
 }

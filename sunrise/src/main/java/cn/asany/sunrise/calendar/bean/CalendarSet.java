@@ -33,6 +33,13 @@ public class CalendarSet extends BaseBusEntity {
   /** 排序字段 */
   @Column(name = "SORT")
   private Integer index;
+  /** 默认日历 */
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(
+      name = "DEFAULT_CALENDAR",
+      foreignKey = @ForeignKey(name = "FK_CALENDAR_SET_DEFAULT_CALENDAR"))
+  @ToString.Exclude
+  private Calendar defaultCalendar;
   /** 日历 */
   @ToString.Exclude
   @ManyToMany(targetEntity = Calendar.class, fetch = FetchType.LAZY)
