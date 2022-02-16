@@ -6,6 +6,9 @@ import cn.asany.sunrise.calendar.bean.toys.DateRange;
 import java.util.Date;
 import java.util.List;
 import org.jfantasy.framework.dao.jpa.JpaRepository;
+import org.jfantasy.framework.dao.jpa.PropertyFilter;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Repository;
 
@@ -57,9 +60,21 @@ public interface CalendarEventDao extends JpaRepository<CalendarEvent, Long> {
   /**
    * 获取指定日期的前N及后N天的 开始及结束日期
    *
+   * @param uid 用户ID
+   * @param date 指定日期
+   * @param day 天数
+   */
+  DateRange calendarEventDateStartAndEndByUid(Long uid, Date date, int day);
+
+  /**
+   * 获取指定日期的前N及后N天的 开始及结束日期
+   *
    * @param calendarSet 日历集
    * @param date 指定日期
    * @param day 天数
    */
   DateRange calendarEventDateStartAndEndByCalendarSet(Long calendarSet, Date date, int day);
+
+  @EntityGraph(value = "Graph.CalendarEvent.FetchDates", type = EntityGraph.EntityGraphType.FETCH)
+  List<CalendarEvent> findAllWithDates(List<PropertyFilter> filters, Sort sort);
 }

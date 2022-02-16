@@ -208,9 +208,13 @@ enum CalendarEventAlert {
   """
   NONE
   """
-  与时间时间一致
+  当天
   """
-  AT_TIME_OF_EVEN
+  ON_TIME_OF_EVENT
+  """
+  日程发生时
+  """
+  AT_TIME_OF_EVENT
   """
   前X分钟
   """
@@ -242,7 +246,7 @@ enum CalendarEventAlert {
 }
 
 input CalendarEventRemind {
-  alert: CalendarEventAlert
+  alert: CalendarEventAlert!
   times: Int
   onDate: Date
 }
@@ -251,7 +255,7 @@ input CalendarEventCreateInput {
   """
   标题
   """
-  title: String
+  title: String!
   """
   是否为全天
   """
@@ -265,10 +269,9 @@ input CalendarEventCreateInput {
   """
   ends: Date!
   """
-  "
   提醒设置
   """
-  remind: CalendarEventRemind
+  remind: CalendarEventRemind!
   """
   说明
   """

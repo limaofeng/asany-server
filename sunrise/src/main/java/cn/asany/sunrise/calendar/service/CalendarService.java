@@ -5,10 +5,14 @@ import cn.asany.sunrise.calendar.bean.Calendar;
 import cn.asany.sunrise.calendar.bean.CalendarAccount;
 import cn.asany.sunrise.calendar.bean.CalendarEvent;
 import cn.asany.sunrise.calendar.bean.CalendarSet;
+import cn.asany.sunrise.calendar.bean.enums.Alert;
 import cn.asany.sunrise.calendar.bean.enums.CalendarType;
 import cn.asany.sunrise.calendar.bean.enums.Refresh;
+import cn.asany.sunrise.calendar.bean.enums.RepeatType;
 import cn.asany.sunrise.calendar.bean.toys.CalendarEventDateStat;
 import cn.asany.sunrise.calendar.bean.toys.DateRange;
+import cn.asany.sunrise.calendar.bean.toys.Remind;
+import cn.asany.sunrise.calendar.bean.toys.Repeat;
 import cn.asany.sunrise.calendar.dao.CalendarAccountDao;
 import cn.asany.sunrise.calendar.dao.CalendarDao;
 import cn.asany.sunrise.calendar.dao.CalendarEventDao;
@@ -76,36 +80,27 @@ public class CalendarService {
     return this.calendarDao.findById(id);
   }
 
+  public List<CalendarEvent> calendarEventsWithDaysByCalendarSet(
+      Long calendarSet, Date date, Long days) {
+    DateRange range =
+        this.calendarEventDao.calendarEventDateStartAndEndByCalendarSet(
+            calendarSet, date, days.intValue() / 2);
+    return calendarEventsByCalendarSet(calendarSet, range.getStart(), range.getEnd());
+  }
+
   /**
    * 日历事件
    *
+   * @param calendarSet 日历集
    * @param starts 开始时间
    * @param ends 结束时间
-   * @param calendar 日历
-   * @param calendarSet 日历集
    * @return List<CalendarEvent>
    */
-  public List<CalendarEvent> calendarEvents(
-      Date starts, Date ends, Long calendar, Long calendarSet) {
-    PropertyFilterBuilder builder =
-        PropertyFilter.builder().between("datetime.dates.date", starts, ends);
-    if (calendarSet == null && calendar == null) {
-      // TODO: 获取可以访问(可见)的日历
-      //  builder.in("calendar.id");
-    } else {
-      if (calendarSet != null) {
-        builder.equal("calendar.calendarSets.id", calendarSet);
-      }
-      if (calendar != null) {
-        builder.equal("calendar.id", calendar);
-      }
-    }
-    return this.calendarEventDao.findAll(builder.build(), Sort.by("datetime.starts").ascending());
-  }
-
-  public List<CalendarEvent> calendarEventsWithDaysByCalendarSet(
-      Long calendarSet, Date date, Long days) {
-    return calendarEventsByByCalendarSet(calendarSet, date, days.intValue() / 2);
+  public List<CalendarEvent> calendarEventsByCalendarSet(Long calendarSet, Date starts, Date ends) {
+    PropertyFilterBuilder builder = PropertyFilter.builder().between("dates.date", starts, ends);
+    builder.equal("calendar.calendarSets.id", calendarSet);
+    return this.calendarEventDao.findAllWithDates(
+        builder.build(), Sort.by("datetime.starts").ascending());
   }
 
   public List<CalendarEvent> calendarEventsWithDaysByCalendar(Long calendar, Date date, Long days) {
@@ -114,18 +109,29 @@ public class CalendarService {
     return new ArrayList<>();
   }
 
+  public List<CalendarEvent> calendarEventsByCalendar(Long calendar, Date starts, Date ends) {
+    return new ArrayList<>();
+  }
+
   /**
    * 查询日历事件
    *
-   * @param calendarSet 日历集
+   * @param uid 用户ID
    * @param date 日期
-   * @param day 前后天数
+   * @param days 前后天数
    * @return List<CalendarEvent>
    */
-  public List<CalendarEvent> calendarEventsByByCalendarSet(Long calendarSet, Date date, int day) {
+  public List<CalendarEvent> calendarEventsWithDaysByUid(Long uid, Date date, Long days) {
     DateRange range =
-        this.calendarEventDao.calendarEventDateStartAndEndByCalendarSet(calendarSet, date, day);
-    return this.calendarEvents(range.getStart(), range.getEnd(), null, calendarSet);
+        this.calendarEventDao.calendarEventDateStartAndEndByUid(uid, date, days.intValue() / 2);
+    return calendarEventsByUid(uid, range.getStart(), range.getEnd());
+  }
+
+  public List<CalendarEvent> calendarEventsByUid(Long uid, Date starts, Date ends) {
+    PropertyFilterBuilder builder = PropertyFilter.builder().between("dates.date", starts, ends);
+    builder.equal("calendar.account.owner.id", uid);
+    return this.calendarEventDao.findAllWithDates(
+        builder.build(), Sort.by("datetime.starts").ascending());
   }
 
   /**
@@ -445,6 +451,13 @@ public class CalendarService {
   }
 
   public CalendarEvent addCalendarEvent(Long calendar, CalendarEvent event) {
-    return null;
+    event.setCalendar(this.calendarDao.getById(calendar));
+    if (event.getRemind() == null) {
+      event.setRemind(Remind.builder().alert(Alert.NONE).build());
+    }
+    if (event.getRepeat() == null) {
+      event.setRepeat(Repeat.builder().repeat(RepeatType.NONE).build());
+    }
+    return this.calendarEventDao.save(event);
   }
 }

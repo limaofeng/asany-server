@@ -4,10 +4,13 @@ import cn.asany.sunrise.calendar.bean.toys.EventTime;
 import cn.asany.sunrise.calendar.bean.toys.Remind;
 import cn.asany.sunrise.calendar.bean.toys.Repeat;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 import javax.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
+import org.jfantasy.framework.util.common.DateUtil;
 
 /**
  * 日历事件
@@ -20,6 +23,18 @@ import org.jfantasy.framework.dao.BaseBusEntity;
 @RequiredArgsConstructor
 @Builder
 @AllArgsConstructor
+@NamedEntityGraph(
+    name = "Graph.CalendarEvent.FetchDates",
+    attributeNodes = {
+      @NamedAttributeNode(value = "dates", subgraph = "SubGraph.CalendarEventDates"),
+    },
+    subgraphs = {
+      @NamedSubgraph(
+          name = "SubGraph.CalendarEventDates",
+          attributeNodes = {
+            @NamedAttributeNode(value = "date"),
+          }),
+    })
 @Entity
 @Table(name = "SUNRISE_CALENDAR_EVENT")
 public class CalendarEvent extends BaseBusEntity {
@@ -49,24 +64,50 @@ public class CalendarEvent extends BaseBusEntity {
   private String url;
   /** 日历 */
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "CALENDAR_ID")
+  @JoinColumn(
+      name = "CALENDAR_ID",
+      foreignKey = @ForeignKey(name = "FK_CALENDAR_EVENT_CALENDAR_ID"),
+      nullable = false)
   @ToString.Exclude
   private Calendar calendar;
+
+  /** 时间覆盖到的所有天 */
+  @OneToMany(
+      mappedBy = "event",
+      fetch = FetchType.LAZY,
+      cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+  @ToString.Exclude
+  private List<CalendarEventDate> dates;
 
   public static CalendarEventBuilder builder() {
     return new CalendarEventBuilder() {
       @Override
       public CalendarEvent build() {
         CalendarEvent event = super.build();
-        for (CalendarEventDate date : event.getDatetime().getDates()) {
-          date.setEvent(event);
-        }
+        EventTime time = event.getDatetime();
+        List<Date> dates =
+            DateUtil.betweenDates(time.getStarts(), time.getEnds(), java.util.Calendar.DATE);
+        event.setDates(
+            dates.stream()
+                .map(item -> CalendarEventDate.builder().date(item).event(event).build())
+                .collect(Collectors.toList()));
         return event;
       }
     };
   }
 
   public static class CalendarEventBuilder {
+
+    /**
+     * 时间设置
+     *
+     * @param datetime 事件时间
+     * @return CalendarEventBuilder
+     */
+    public CalendarEventBuilder datetime(EventTime datetime) {
+      this.datetime = datetime;
+      return this;
+    }
 
     /**
      * 时间设置
