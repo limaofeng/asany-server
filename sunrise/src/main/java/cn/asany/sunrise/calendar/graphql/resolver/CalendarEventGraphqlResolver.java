@@ -21,8 +21,6 @@ public class CalendarEventGraphqlResolver implements GraphQLResolver<CalendarEve
   }
 
   public List<Date> dates(CalendarEvent event) {
-    return event.getDatetime().getDates().stream()
-        .map(CalendarEventDate::getDate)
-        .collect(Collectors.toList());
+    return event.getDates().stream().map(CalendarEventDate::getDate).collect(Collectors.toList());
   }
 }

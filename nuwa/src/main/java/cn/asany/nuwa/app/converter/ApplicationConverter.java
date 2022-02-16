@@ -26,7 +26,7 @@ import org.mapstruct.*;
  */
 @Mapper(
     componentModel = "spring",
-    builder = @Builder,
+    builder = @Builder(disableBuilder = true),
     unmappedTargetPolicy = ReportingPolicy.IGNORE,
     nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
 public interface ApplicationConverter {

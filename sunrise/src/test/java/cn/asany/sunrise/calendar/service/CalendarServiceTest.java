@@ -70,7 +70,7 @@ class CalendarServiceTest {
   @Test
   void calendarEventsByByCalendarSet() {
     List<CalendarEvent> events =
-        this.calendarService.calendarEventsByByCalendarSet(1L, new Date(), 30);
+        this.calendarService.calendarEventsWithDaysByCalendarSet(1L, new Date(), 30L);
     log.debug("events size = " + events.size());
   }
 

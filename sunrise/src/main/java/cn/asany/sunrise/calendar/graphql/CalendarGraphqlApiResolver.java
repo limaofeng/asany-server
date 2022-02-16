@@ -11,7 +11,6 @@ import cn.asany.sunrise.calendar.graphql.input.*;
 import cn.asany.sunrise.calendar.service.CalendarService;
 import graphql.kickstart.tools.GraphQLMutationResolver;
 import graphql.kickstart.tools.GraphQLQueryResolver;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import org.jfantasy.framework.error.ValidationException;
@@ -47,7 +46,14 @@ public class CalendarGraphqlApiResolver implements GraphQLQueryResolver, GraphQL
 
   public List<CalendarEvent> calendarEvents(
       Date starts, Date ends, Long calendar, Long calendarSet) {
-    return this.calendarService.calendarEvents(starts, ends, calendar, calendarSet);
+    if (calendarSet != null) {
+      return this.calendarService.calendarEventsByCalendarSet(calendarSet, starts, ends);
+    }
+    if (calendar != null) {
+      return this.calendarService.calendarEventsByCalendar(calendar, starts, ends);
+    }
+    LoginUser user = SpringSecurityUtils.getCurrentUser();
+    return this.calendarService.calendarEventsByUid(user.getUid(), starts, ends);
   }
 
   public List<CalendarEvent> calendarEventsWithDays(
@@ -58,7 +64,8 @@ public class CalendarGraphqlApiResolver implements GraphQLQueryResolver, GraphQL
     if (calendar != null) {
       return this.calendarService.calendarEventsWithDaysByCalendar(calendar, date, days);
     }
-    return new ArrayList<>();
+    LoginUser user = SpringSecurityUtils.getCurrentUser();
+    return this.calendarService.calendarEventsWithDaysByUid(user.getUid(), date, days);
   }
 
   public List<CalendarSet> calendarSets() {

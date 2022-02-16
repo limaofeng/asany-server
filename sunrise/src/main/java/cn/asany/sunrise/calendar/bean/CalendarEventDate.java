@@ -32,7 +32,10 @@ public class CalendarEventDate extends BaseBusEntity {
   private Date date;
   /** 事件 */
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "EVENT_ID")
+  @JoinColumn(
+      name = "EVENT_ID",
+      nullable = false,
+      foreignKey = @ForeignKey(name = "FK_CALENDAR_EVENT_DATE_EVENT_ID"))
   @ToString.Exclude
   private CalendarEvent event;
 }

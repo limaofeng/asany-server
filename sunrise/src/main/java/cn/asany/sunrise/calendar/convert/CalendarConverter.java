@@ -16,6 +16,10 @@ public interface CalendarConverter {
   @Mappings({})
   Calendar toCalendar(CalendarUpdateInput input);
 
-  @Mappings({})
+  @Mappings({
+    @Mapping(target = "datetime.allDay", source = "allDay"),
+    @Mapping(target = "datetime.starts", source = "starts"),
+    @Mapping(target = "datetime.ends", source = "ends")
+  })
   CalendarEvent toCalendarEvent(CalendarEventCreateInput input);
 }

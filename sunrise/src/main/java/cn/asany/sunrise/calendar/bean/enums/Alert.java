@@ -8,8 +8,10 @@ package cn.asany.sunrise.calendar.bean.enums;
 public enum Alert {
   /** 无 */
   NONE,
-  /** 与时间时间一致 */
-  AT_TIME_OF_EVEN,
+  /** 当天 */
+  ON_TIME_OF_EVENT,
+  /** 日程发生时 */
+  AT_TIME_OF_EVENT,
   /** 前X分钟 */
   MINUTES_BEFORE,
   /** 前X小时 */
@@ -23,5 +25,5 @@ public enum Alert {
   /** 后X天 */
   DAYS_AFTER,
   /** 指定时间 */
-  ON_DATA;
+  ON_DATA
 }
