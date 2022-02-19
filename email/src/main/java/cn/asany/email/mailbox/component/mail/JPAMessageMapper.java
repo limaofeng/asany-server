@@ -3,6 +3,7 @@ package cn.asany.email.mailbox.component.mail;
 import cn.asany.email.mailbox.bean.AbstractJPAMailboxMessage;
 import cn.asany.email.mailbox.bean.JamesMailbox;
 import cn.asany.email.mailbox.bean.JamesMailboxMessage;
+import cn.asany.email.mailbox.bean.toys.MailboxIdUidKey;
 import cn.asany.email.mailbox.component.JPAId;
 import cn.asany.email.mailbox.component.JPATransactionalMapper;
 import cn.asany.email.mailbox.service.MailboxMessageService;
@@ -129,10 +130,9 @@ public class JPAMessageMapper extends JPATransactionalMapper implements MessageM
     }
   }
 
-  private AbstractJPAMailboxMessage.MailboxIdUidKey buildKey(
-      Mailbox mailbox, MailboxMessage message) {
+  private MailboxIdUidKey buildKey(Mailbox mailbox, MailboxMessage message) {
     JPAId mailboxId = (JPAId) mailbox.getMailboxId();
-    AbstractJPAMailboxMessage.MailboxIdUidKey key = new AbstractJPAMailboxMessage.MailboxIdUidKey();
+    MailboxIdUidKey key = new MailboxIdUidKey();
     key.setMailbox(mailboxId.getRawId());
     key.setId(message.getUid().asLong());
     return key;

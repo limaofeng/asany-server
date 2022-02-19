@@ -1,16 +1,123 @@
+"""
+邮箱
+"""
 type Mailbox {
-  id: ID
+  id: ID!
+  """
+  名称
+  """
   name: String
+  """
+  命名空间
+  """
+  namespace: String
+}
+
+"""
+邮箱地址
+"""
+type MailboxAddress {
+  """
+  显示名称
+  """
+  name: String
+  """
+  名称
+  """
+  localPart: String!
+  """
+  域名
+  """
+  domain: String!
+  """
+  邮箱地址
+  """
+  address: String!
 }
 
 type MailboxMessage {
-  id: ID
-  mailbox: Mailbox
+  id: ID!
+  """
+  主题
+  """
+  subject: String!
+  """
+  日期
+  """
+  date: Date!
+  """
+  发送方
+  """
+  sender: MailboxAddress
+  """
+  来自
+  """
+  from: [MailboxAddress!]!
+  """
+  至
+  """
+  to: [MailboxAddress!]!
+  """
+  抄送
+  """
+  cc: [MailboxAddress!]!
+  """
+  密送
+  """
+  bcc: [MailboxAddress!]!
+  """
+  回邮地址
+  """
+  replyTo: [MailboxAddress!]!
+  """
+  文档类型
+  """
+  mimeType: String!
+  """
+  内容
+  """
+  body: String!
+  """
+  邮箱
+  """
+  mailbox: Mailbox!
+  """
+  回复
+  """
+  answered: Boolean
+  """
+  已删除（回收站）
+  """
+  deleted: Boolean
+  """
+  草稿
+  """
+  draft: Boolean
+  """
+  标记
+  """
+  flagged: Boolean
+  """
+  最近
+  """
+  recent: Boolean
+  """
+  已读
+  """
+  seen: Boolean
 }
 
 extend type Query {
-  # 查询邮箱文件夹
-  mailboxes: [Mailbox]
-  # 查询文件夹下的邮件
-  mailboxMessages(mailbox: ID, size: Int): [MailboxMessage]
+  """
+  查询邮箱文件夹
+  """
+  mailboxes: [Mailbox!]!
+  """
+  查询文件夹下的邮件
+  """
+  mailboxMessages(mailbox: ID!, size: Int, account: ID): [MailboxMessage!]!
+  """
+  邮件详情
+  """
+  mailboxMessage(id: ID!): MailboxMessage
 }

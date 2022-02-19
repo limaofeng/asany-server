@@ -12,11 +12,13 @@ import javax.mail.Store;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeUtility;
-import org.apache.james.mailbox.model.MailboxConstants;
+import lombok.SneakyThrows;
+import org.apache.james.mailbox.DefaultMailboxes;
 
 public class HelloJMail {
 
   // 发送邮件
+  @SneakyThrows
   public static void sendMail() {
     // String host = "192.168.1.98"; // 指定的smtp服务器，本机的局域网IP
     String host = "smtp.asany.cn"; // 本机smtp服务器
@@ -49,9 +51,9 @@ public class HelloJMail {
     try {
       // 定义邮件信息
       MimeMessage message = new MimeMessage(session);
-      message.setFrom(new InternetAddress(from));
+      message.setFrom(new InternetAddress(from, MimeUtility.encodeText("天上天下", "gb2312", "b")));
       message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
-      // message.setSubject(transferChinese("我有自己的邮件服务器了"));
+      //      message.setSubject(transferChinese("我有自己的邮件服务器了"));
       message.setSubject("I hava my own mail server");
       message.setText("From now, you have your own mail server, congratulation!");
 
@@ -66,6 +68,7 @@ public class HelloJMail {
   }
 
   // 接受邮件
+  @SneakyThrows
   public static void getMail() {
     String host = "imap.asany.cn";
     final String username = "limaofeng@asany.cn";
@@ -94,7 +97,7 @@ public class HelloJMail {
       store.connect(host, username, password);
 
       // 获取inbox文件
-      Folder folder = store.getFolder(MailboxConstants.INBOX);
+      Folder folder = store.getFolder(DefaultMailboxes.INBOX);
       folder.open(Folder.READ_ONLY); // 打开，打开后才能读取邮件信息
 
       System.out.println("UnreadMessageCount:" + folder.getUnreadMessageCount());
@@ -135,7 +138,7 @@ public class HelloJMail {
   }
 
   public static void main(String[] args) {
-    //    HelloJMail.sendMail();
+    //        HelloJMail.sendMail();
     HelloJMail.getMail();
   }
 }

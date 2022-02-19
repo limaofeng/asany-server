@@ -1,10 +1,10 @@
 package cn.asany.email.mailbox.bean;
 
+import cn.asany.email.mailbox.bean.toys.MailboxIdUidKey;
 import cn.asany.email.mailbox.component.JPAId;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.SequenceInputStream;
-import java.io.Serializable;
 import java.util.*;
 import javax.mail.Flags;
 import javax.persistence.*;
@@ -28,7 +28,7 @@ import org.apache.openjpa.persistence.jdbc.Index;
 
 @Getter
 @Setter
-@IdClass(AbstractJPAMailboxMessage.MailboxIdUidKey.class)
+@IdClass(MailboxIdUidKey.class)
 @MappedSuperclass
 public abstract class AbstractJPAMailboxMessage implements MailboxMessage {
 
@@ -185,63 +185,6 @@ public abstract class AbstractJPAMailboxMessage implements MailboxMessage {
     }
   }
 
-  @Embeddable
-  public static class MailboxIdUidKey implements Serializable {
-
-    private static final long serialVersionUID = 7847632032426660997L;
-
-    public MailboxIdUidKey() {}
-
-    /** The value for the mailbox field */
-    private long mailbox;
-
-    /** The value for the uid field */
-    private long id;
-
-    public long getMailbox() {
-      return mailbox;
-    }
-
-    public void setMailbox(long mailbox) {
-      this.mailbox = mailbox;
-    }
-
-    public long getId() {
-      return id;
-    }
-
-    public void setId(long id) {
-      this.id = id;
-    }
-
-    @Override
-    public int hashCode() {
-      final int PRIME = 31;
-      int result = 1;
-      result = PRIME * result + (int) (mailbox ^ (mailbox >>> 32));
-      result = PRIME * result + (int) (id ^ (id >>> 32));
-      return result;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-      if (this == obj) {
-        return true;
-      }
-      if (obj == null) {
-        return false;
-      }
-      if (getClass() != obj.getClass()) {
-        return false;
-      }
-      final MailboxIdUidKey other = (MailboxIdUidKey) obj;
-      if (mailbox != other.mailbox) {
-        return false;
-      }
-      return id == other.id;
-    }
-  }
-
   @Override
   public ComposedMessageIdWithMetaData getComposedMessageIdWithMetaData() {
     return ComposedMessageIdWithMetaData.builder()
@@ -393,6 +336,11 @@ public abstract class AbstractJPAMailboxMessage implements MailboxMessage {
   @Override
   public MessageId getMessageId() {
     return new DefaultMessageId();
+  }
+
+  @Transient
+  public MailboxIdUidKey getKey() {
+    return new MailboxIdUidKey(mailbox.getId(), id);
   }
 
   @Override

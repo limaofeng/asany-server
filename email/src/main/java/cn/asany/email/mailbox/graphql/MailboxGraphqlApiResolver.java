@@ -4,19 +4,22 @@ import cn.asany.email.domainlist.bean.JamesDomain;
 import cn.asany.email.domainlist.service.DomainService;
 import cn.asany.email.mailbox.bean.JamesMailbox;
 import cn.asany.email.mailbox.bean.JamesMailboxMessage;
+import cn.asany.email.mailbox.bean.toys.MailboxIdUidKey;
+import cn.asany.email.mailbox.graphql.type.MailboxMessageResult;
 import cn.asany.email.mailbox.service.MailboxMessageService;
 import cn.asany.email.mailbox.service.MailboxService;
 import graphql.kickstart.tools.GraphQLMutationResolver;
 import graphql.kickstart.tools.GraphQLQueryResolver;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+import lombok.SneakyThrows;
 import org.apache.james.mailbox.DefaultMailboxes;
 import org.apache.james.mailbox.model.MailboxConstants;
+import org.apache.james.mime4j.dom.MessageBuilder;
 import org.jfantasy.framework.error.ValidationException;
 import org.jfantasy.framework.security.LoginUser;
 import org.jfantasy.framework.security.SpringSecurityUtils;
+import org.jfantasy.framework.spring.mvc.error.NotFoundException;
+import org.jfantasy.framework.util.common.StringUtil;
 import org.jfantasy.framework.util.regexp.RegexpConstant;
 import org.jfantasy.framework.util.regexp.RegexpUtil;
 import org.springframework.stereotype.Component;
@@ -32,6 +35,7 @@ public class MailboxGraphqlApiResolver implements GraphQLQueryResolver, GraphQLM
   private final DomainService domainService;
   private final MailboxService mailboxService;
   private final MailboxMessageService mailboxMessageService;
+  private final MessageBuilder messageBuilder;
 
   private static final Map<String, String> DEFAULT_MAILBOXES = new HashMap<>();
 
@@ -48,10 +52,12 @@ public class MailboxGraphqlApiResolver implements GraphQLQueryResolver, GraphQLM
   public MailboxGraphqlApiResolver(
       DomainService domainService,
       MailboxService mailboxService,
-      MailboxMessageService mailboxMessageService) {
+      MailboxMessageService mailboxMessageService,
+      MessageBuilder messageBuilder) {
     this.domainService = domainService;
     this.mailboxService = mailboxService;
     this.mailboxMessageService = mailboxMessageService;
+    this.messageBuilder = messageBuilder;
   }
 
   public List<JamesMailbox> mailboxes() {
@@ -61,10 +67,27 @@ public class MailboxGraphqlApiResolver implements GraphQLQueryResolver, GraphQLM
     return this.mailboxService.findMailboxesWithUser(mailUserId, MailboxConstants.USER_NAMESPACE);
   }
 
-  public List<JamesMailboxMessage> mailboxMessages(String mailbox, Integer size) {
+  public MailboxMessageResult mailboxMessage(String id) {
+    Optional<JamesMailboxMessage> mailboxMessageOptional =
+        this.mailboxService.findMailboxMessageById(new MailboxIdUidKey(id));
+    if (!mailboxMessageOptional.isPresent()) {
+      throw new NotFoundException("查询的邮件不存在");
+    }
+    return wrap(mailboxMessageOptional.get());
+  }
+
+  public List<MailboxMessageResult> mailboxMessages(String mailbox, Integer size, String account) {
     JamesDomain domain = domainService.getDefaultDomain();
     LoginUser user = SpringSecurityUtils.getCurrentUser();
-    String mailUserId = user.getUsername() + '@' + domain.getName();
+
+    String mailUserId;
+    if (StringUtil.isBlank(account)) {
+      mailUserId = user.getUsername() + '@' + domain.getName();
+    } else {
+      mailUserId = account;
+    }
+
+    // TODO: 判断当前用户是否有权限访问该邮件账户
 
     Long mailboxId;
     if (!RegexpUtil.isMatch(mailbox, RegexpConstant.VALIDATOR_INTEGE)) {
@@ -78,6 +101,22 @@ public class MailboxGraphqlApiResolver implements GraphQLQueryResolver, GraphQLM
     } else {
       mailboxId = Long.valueOf(mailbox);
     }
-    return this.mailboxMessageService.findMessagesInMailbox(mailboxId, 100);
+    return wrap(this.mailboxMessageService.findMessagesInMailbox(mailboxId, 100));
+  }
+
+  @SneakyThrows
+  private MailboxMessageResult wrap(JamesMailboxMessage message) {
+    return MailboxMessageResult.builder()
+        .mailboxMessage(message)
+        .message(messageBuilder.parseMessage(message.getFullContent()))
+        .build();
+  }
+
+  private List<MailboxMessageResult> wrap(List<JamesMailboxMessage> messages) {
+    List<MailboxMessageResult> results = new ArrayList<>();
+    for (JamesMailboxMessage message : messages) {
+      results.add(wrap(message));
+    }
+    return results;
   }
 }

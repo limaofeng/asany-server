@@ -1,10 +1,10 @@
 package cn.asany.email.mailbox.service;
 
 import cn.asany.email.mailbox.bean.AbstractJPAMailboxMessage;
-import cn.asany.email.mailbox.bean.AbstractJPAMailboxMessage.MailboxIdUidKey;
 import cn.asany.email.mailbox.bean.JamesMailboxMessage;
 import cn.asany.email.mailbox.bean.JamesProperty;
 import cn.asany.email.mailbox.bean.JamesUserFlag;
+import cn.asany.email.mailbox.bean.toys.MailboxIdUidKey;
 import cn.asany.email.mailbox.dao.MailboxMessageDao;
 import java.util.Arrays;
 import java.util.List;
@@ -32,12 +32,19 @@ public class MailboxMessageService {
 
   public long countMessagesInMailbox(long mailbox) {
     return this.mailboxMessageDao.count(
-        PropertyFilter.builder().equal("mailbox.id", mailbox).build());
+        PropertyFilter.builder()
+            .equal("deleted", Boolean.FALSE)
+            .equal("mailbox.id", mailbox)
+            .build());
   }
 
   public long countUnseenMessagesInMailbox(long mailbox) {
     return this.mailboxMessageDao.count(
-        PropertyFilter.builder().equal("mailbox.id", mailbox).equal("seen", Boolean.FALSE).build());
+        PropertyFilter.builder()
+            .equal("mailbox.id", mailbox)
+            .equal("deleted", Boolean.FALSE)
+            .equal("seen", Boolean.FALSE)
+            .build());
   }
 
   public List<JamesMailboxMessage> findUnseenMessagesInMailboxOrderByUid(long mailbox, int size) {
@@ -46,6 +53,7 @@ public class MailboxMessageService {
             new Pager<>(1, size, OrderBy.asc("id")),
             PropertyFilter.builder()
                 .equal("mailbox.id", mailbox)
+                .equal("deleted", Boolean.FALSE)
                 .equal("seen", Boolean.FALSE)
                 .build())
         .getPageItems();
@@ -56,9 +64,10 @@ public class MailboxMessageService {
         .findAll(
             PropertyFilter.builder()
                 .equal("mailbox.id", mailbox)
+                .equal("deleted", Boolean.FALSE)
                 .equal("recent", Boolean.TRUE)
                 .build(),
-            Sort.by("id").ascending())
+            Sort.by("id").descending())
         .stream()
         .map(AbstractJPAMailboxMessage::getUid)
         .collect(Collectors.toList());
@@ -79,8 +88,12 @@ public class MailboxMessageService {
 
   public List<JamesMailboxMessage> findMessagesInMailboxAfterUID(long mailbox, long uid, int size) {
     List<PropertyFilter> filters =
-        PropertyFilter.builder().equal("mailbox.id", mailbox).greaterThanOrEqual("id", uid).build();
-    return this.mailboxMessageDao.findAll(filters, size, Sort.by("id").ascending());
+        PropertyFilter.builder()
+            .equal("mailbox.id", mailbox)
+            .equal("deleted", Boolean.FALSE)
+            .greaterThanOrEqual("id", uid)
+            .build();
+    return this.mailboxMessageDao.findAll(filters, size, Sort.by("id").descending());
   }
 
   public List<JamesMailboxMessage> findMessagesInMailboxWithUID(long mailbox, long uid, int size) {
@@ -90,15 +103,22 @@ public class MailboxMessageService {
   public List<JamesMailboxMessage> findMessagesInMailboxBetweenUIDs(
       long mailbox, long from, long to, int size) {
     List<PropertyFilter> filters =
-        PropertyFilter.builder().equal("mailbox.id", mailbox).between("id", from, to).build();
-    return this.mailboxMessageDao.findAll(filters, size, Sort.by("id").ascending());
+        PropertyFilter.builder()
+            .equal("mailbox.id", mailbox)
+            .equal("deleted", Boolean.FALSE)
+            .between("id", from, to)
+            .build();
+    return this.mailboxMessageDao.findAll(filters, size, Sort.by("id").descending());
   }
 
   public List<JamesMailboxMessage> findMessagesInMailbox(long mailbox, int size) {
     return this.mailboxMessageDao.findAll(
-        PropertyFilter.builder().equal("mailbox.id", mailbox).build(),
+        PropertyFilter.builder()
+            .equal("mailbox.id", mailbox)
+            .equal("deleted", Boolean.FALSE)
+            .build(),
         size,
-        Sort.by("id").ascending());
+        Sort.by("id").descending());
   }
 
   public int deleteDeletedMessagesInMailbox(long mailbox) {
@@ -123,7 +143,7 @@ public class MailboxMessageService {
             .equal("mailbox.id", mailboxId)
             .equal("deleted", Boolean.TRUE)
             .build(),
-        Sort.by("id").ascending());
+        Sort.by("id").descending());
   }
 
   public List<JamesMailboxMessage> findDeletedMessagesInMailboxAfterUID(long mailboxId, long uid) {
@@ -133,7 +153,7 @@ public class MailboxMessageService {
             .equal("deleted", Boolean.TRUE)
             .greaterThanOrEqual("id", uid)
             .build(),
-        Sort.by("id").ascending());
+        Sort.by("id").descending());
   }
 
   public List<JamesMailboxMessage> findDeletedMessagesInMailboxWithUID(long mailboxId, long uid) {
@@ -144,7 +164,7 @@ public class MailboxMessageService {
             .equal("id", uid)
             .build(),
         1,
-        Sort.by("id").ascending());
+        Sort.by("id").descending());
   }
 
   public List<JamesMailboxMessage> findDeletedMessagesInMailboxBetweenUIDs(
@@ -155,6 +175,6 @@ public class MailboxMessageService {
             .equal("deleted", Boolean.TRUE)
             .between("id", from, to)
             .build(),
-        Sort.by("id").ascending());
+        Sort.by("id").descending());
   }
 }

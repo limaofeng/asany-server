@@ -1,6 +1,8 @@
 package cn.asany.email.mailbox.service;
 
 import cn.asany.email.mailbox.bean.JamesMailbox;
+import cn.asany.email.mailbox.bean.JamesMailboxMessage;
+import cn.asany.email.mailbox.bean.toys.MailboxIdUidKey;
 import cn.asany.email.mailbox.dao.MailboxDao;
 import cn.asany.email.mailbox.dao.MailboxMessageDao;
 import java.util.List;
@@ -116,5 +118,9 @@ public class MailboxService {
   public Optional<Long> findHighestModSeq(long mailbox) {
     Optional<JamesMailbox> optional = this.mailboxDao.findById(mailbox);
     return optional.map(JamesMailbox::getHighestModSeq);
+  }
+
+  public Optional<JamesMailboxMessage> findMailboxMessageById(MailboxIdUidKey id) {
+    return this.mailboxMessageDao.findById(id);
   }
 }

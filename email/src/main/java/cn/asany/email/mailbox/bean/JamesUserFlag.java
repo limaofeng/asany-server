@@ -2,13 +2,14 @@ package cn.asany.email.mailbox.bean;
 
 import java.util.Objects;
 import javax.persistence.*;
-import lombok.*;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.hibernate.Hibernate;
 
 /** @author limaofeng */
 @Getter
 @Setter
-@ToString
 @RequiredArgsConstructor
 @Entity(name = "UserFlag")
 @Table(name = "JAMES_MAIL_USERFLAG")

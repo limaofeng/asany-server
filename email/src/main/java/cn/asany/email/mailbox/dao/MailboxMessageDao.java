@@ -1,7 +1,7 @@
 package cn.asany.email.mailbox.dao;
 
-import cn.asany.email.mailbox.bean.AbstractJPAMailboxMessage.MailboxIdUidKey;
 import cn.asany.email.mailbox.bean.JamesMailboxMessage;
+import cn.asany.email.mailbox.bean.toys.MailboxIdUidKey;
 import org.jfantasy.framework.dao.jpa.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
