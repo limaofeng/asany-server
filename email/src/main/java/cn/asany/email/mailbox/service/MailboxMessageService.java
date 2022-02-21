@@ -8,6 +8,7 @@ import cn.asany.email.mailbox.bean.toys.MailboxIdUidKey;
 import cn.asany.email.mailbox.dao.MailboxMessageDao;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.apache.james.mailbox.MessageUid;
 import org.apache.james.mailbox.store.mail.model.Property;
@@ -96,8 +97,14 @@ public class MailboxMessageService {
     return this.mailboxMessageDao.findAll(filters, size, Sort.by("id").descending());
   }
 
-  public List<JamesMailboxMessage> findMessagesInMailboxWithUID(long mailbox, long uid, int size) {
-    return this.findMessagesInMailboxAfterUID(mailbox, uid, size);
+  public List<JamesMailboxMessage> findMessagesInMailboxWithUID(long mailbox, long uid) {
+    List<PropertyFilter> filters =
+        PropertyFilter.builder()
+            .equal("mailbox.id", mailbox)
+            .equal("deleted", Boolean.FALSE)
+            .equal("id", uid)
+            .build();
+    return this.mailboxMessageDao.findAll(filters, Sort.by("id").descending());
   }
 
   public List<JamesMailboxMessage> findMessagesInMailboxBetweenUIDs(
@@ -176,5 +183,21 @@ public class MailboxMessageService {
             .between("id", from, to)
             .build(),
         Sort.by("id").descending());
+  }
+
+  public Optional<JamesMailboxMessage> findMailboxMessageById(MailboxIdUidKey id) {
+    return this.mailboxMessageDao.findById(id);
+  }
+
+  /**
+   * 邮件分页查询
+   *
+   * @param pager 分页对象
+   * @param filters 筛选条件
+   * @return Pager<JamesMailboxMessage>
+   */
+  public Pager<JamesMailboxMessage> findPager(
+      Pager<JamesMailboxMessage> pager, List<PropertyFilter> filters) {
+    return this.mailboxMessageDao.findPager(pager, filters);
   }
 }

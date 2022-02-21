@@ -219,11 +219,6 @@ public class SmtpServerAutoConfiguration {
   }
 
   @Bean
-  public MailboxSessionMapperFactory sessionMapperFactory() {
-    return mailboxSessionMapperFactory();
-  }
-
-  @Bean
   public JPAMailboxSessionMapperFactory mailboxSessionMapperFactory() {
     EntityManagerFactory entityManagerFactory = SpringBeanUtils.getBean(EntityManagerFactory.class);
     return new JPAMailboxSessionMapperFactory(
@@ -288,12 +283,12 @@ public class SmtpServerAutoConfiguration {
   @Bean
   public StoreRightManager storeRightManager() {
     return new StoreRightManager(
-        sessionMapperFactory(), aclResolver(), groupMembershipResolver(), eventBus());
+        mailboxSessionMapperFactory(), aclResolver(), groupMembershipResolver(), eventBus());
   }
 
   @Bean
   public StoreMailboxAnnotationManager storeMailboxAnnotationManager() {
-    return new StoreMailboxAnnotationManager(sessionMapperFactory(), storeRightManager());
+    return new StoreMailboxAnnotationManager(mailboxSessionMapperFactory(), storeRightManager());
   }
 
   @Bean

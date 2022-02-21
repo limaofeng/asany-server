@@ -120,10 +120,6 @@ public class JPAMessageMapper extends JPATransactionalMapper implements MessageM
   public void delete(Mailbox mailbox, MailboxMessage message) throws MailboxException {
     try {
       this.mailboxMessageService.deleteMessages(buildKey(mailbox, message));
-      AbstractJPAMailboxMessage jpaMessage =
-          getEntityManager().find(AbstractJPAMailboxMessage.class, buildKey(mailbox, message));
-      getEntityManager().remove(jpaMessage);
-
     } catch (PersistenceException e) {
       throw new MailboxException(
           "Delete of message " + message + " failed in mailbox " + mailbox, e);
@@ -155,7 +151,6 @@ public class JPAMessageMapper extends JPATransactionalMapper implements MessageM
   }
 
   @Override
-  @SuppressWarnings("unchecked")
   public List<MessageUid> findRecentMessageUidsInMailbox(Mailbox mailbox) throws MailboxException {
     try {
       JPAId mailboxId = (JPAId) mailbox.getMailboxId();
@@ -319,6 +314,9 @@ public class JPAMessageMapper extends JPATransactionalMapper implements MessageM
     try {
       JPAId mailboxId = (JPAId) mailbox.getMailboxId();
       Optional<JamesMailbox> optional = this.mailboxService.findMailboxById(mailboxId.getRawId());
+      if (!optional.isPresent()) {
+        throw new MailboxException("不存在文件夹");
+      }
       JamesMailbox currentMailbox = optional.get();
       if (message instanceof AbstractJPAMailboxMessage) {
         ((AbstractJPAMailboxMessage) message).setMailbox(currentMailbox);
@@ -348,7 +346,7 @@ public class JPAMessageMapper extends JPATransactionalMapper implements MessageM
   private List<MailboxMessage> findMessagesInMailboxWithUID(JPAId mailboxId, MessageUid from) {
     return new ArrayList<>(
         this.mailboxMessageService.findMessagesInMailboxWithUID(
-            mailboxId.getRawId(), from.asLong(), 1));
+            mailboxId.getRawId(), from.asLong()));
   }
 
   private List<MailboxMessage> findMessagesInMailboxBetweenUIDs(
@@ -372,7 +370,7 @@ public class JPAMessageMapper extends JPATransactionalMapper implements MessageM
   }
 
   private List<MessageUid> getUidList(List<MailboxMessage> messages) {
-    return messages.stream().map(message -> message.getUid()).collect(Guavate.toImmutableList());
+    return messages.stream().map(MailboxMessage::getUid).collect(Guavate.toImmutableList());
   }
 
   private int deleteDeletedMessagesInMailbox(JPAId mailboxId) {

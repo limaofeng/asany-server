@@ -107,6 +107,72 @@ type MailboxMessage {
   seen: Boolean
 }
 
+input MailboxMessageFilter {
+  mailbox: ID
+}
+
+type MailboxMessageConnection {
+  """
+  总数据条数
+  """
+  totalCount: Int!
+  """
+  每页显示条数
+  """
+  pageSize: Int!
+  """
+  总页数
+  """
+  totalPage: Int!
+  """
+  当前页
+  """
+  currentPage: Int!
+  edges: [MailboxMessageEdge!]!
+  """
+  分页信息
+  """
+  pageInfo: PageInfo!
+}
+
+type MailboxMessageEdge {
+  cursor: String
+  node: MailboxMessage!
+}
+
+enum MailboxFlagsUpdateMode {
+  ADD
+  REMOVE
+  REPLACE
+}
+
+extend type Mutation {
+  """
+  更新邮件标记
+  """
+  updateMailboxMessageFlags(
+    id: ID!
+    """
+    系统默认标记包含: deleted, draft, flagged, recent, seen
+    """
+    flags: [String!]!
+    mode: MailboxFlagsUpdateMode = ADD
+  ): MailboxMessage!
+  """
+  将邮件移动到指定文件夹
+  """
+  moveMailboxMessageToFolder(
+    """
+    邮件ID
+    """
+    id: ID!
+    """
+    邮箱ID
+    """
+    mailbox: ID!
+  ): MailboxMessage!
+}
+
 extend type Query {
   """
   查询邮箱文件夹
@@ -115,7 +181,28 @@ extend type Query {
   """
   查询文件夹下的邮件
   """
-  mailboxMessages(mailbox: ID!, size: Int, account: ID): [MailboxMessage!]!
+  mailboxMessages(
+    """
+    邮箱账号
+    """
+    account: ID
+    """
+    筛选条件
+    """
+    filter: MailboxMessageFilter = {}
+    """
+    页码
+    """
+    page: Int = 1
+    """
+    每页返回数据条数
+    """
+    pageSize: Int = 15
+    """
+    排序
+    """
+    orderBy: OrderBy
+  ): MailboxMessageConnection
   """
   邮件详情
   """
