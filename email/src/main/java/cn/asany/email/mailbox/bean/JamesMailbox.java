@@ -8,6 +8,7 @@ import org.apache.james.mailbox.model.Mailbox;
 import org.apache.james.mailbox.model.MailboxPath;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.GenericGenerator;
+import org.jfantasy.framework.dao.BaseBusEntity;
 
 /**
  * James Mailbox
@@ -26,7 +27,7 @@ import org.hibernate.annotations.GenericGenerator;
         @UniqueConstraint(
             name = "UK_MAILBOX_NAME",
             columnNames = {"NAMESPACE", "NAME", "USER_NAME"}))
-public class JamesMailbox {
+public class JamesMailbox extends BaseBusEntity {
 
   private static final String TAB = " ";
 

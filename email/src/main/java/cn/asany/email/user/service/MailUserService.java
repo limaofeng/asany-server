@@ -4,13 +4,14 @@ import cn.asany.email.domainlist.bean.JamesDomain;
 import cn.asany.email.domainlist.service.DomainService;
 import cn.asany.email.mailbox.bean.JamesMailbox;
 import cn.asany.email.mailbox.dao.MailboxDao;
+import cn.asany.email.user.bean.MailSettings;
 import cn.asany.email.user.bean.MailUser;
+import cn.asany.email.user.bean.toys.UpdateMode;
+import cn.asany.email.user.dao.MailSettingsDao;
 import cn.asany.email.user.dao.MailUserDao;
 import cn.asany.security.core.bean.User;
 import cn.asany.security.core.dao.UserDao;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import org.apache.james.mailbox.DefaultMailboxes;
 import org.apache.james.mailbox.model.MailboxConstants;
@@ -30,16 +31,19 @@ public class MailUserService {
   private final MailUserDao mailUserDao;
   private final MailboxDao mailboxDao;
   private final DomainService domainService;
+  private final MailSettingsDao mailSettingsDao;
 
   public MailUserService(
       MailUserDao mailUserDao,
       MailboxDao mailboxDao,
       DomainService domainService,
-      UserDao userDao) {
+      UserDao userDao,
+      MailSettingsDao mailSettingsDao) {
     this.mailUserDao = mailUserDao;
     this.mailboxDao = mailboxDao;
     this.domainService = domainService;
     this.userDao = userDao;
+    this.mailSettingsDao = mailSettingsDao;
   }
 
   public boolean test(String name, String password) {
@@ -85,19 +89,17 @@ public class MailUserService {
     return mailUser;
   }
 
+  private Set<String> getDefaultMailboxes() {
+    Set<String> mailboxes = new HashSet<>(DefaultMailboxes.DEFAULT_MAILBOXES);
+    mailboxes.add(DefaultMailboxes.ARCHIVE);
+    return mailboxes;
+  }
+
   private void initMailboxes(MailUser mailUser, boolean added) {
-    String[] defaultMailboxes =
-        new String[] {
-          DefaultMailboxes.INBOX,
-          DefaultMailboxes.SENT,
-          DefaultMailboxes.SPAM,
-          DefaultMailboxes.OUTBOX,
-          DefaultMailboxes.TRASH,
-          DefaultMailboxes.ARCHIVE,
-          DefaultMailboxes.DRAFTS
-        };
-    List<JamesMailbox> mailboxes =
-        Arrays.stream(defaultMailboxes)
+    Set<String> mailboxes = getDefaultMailboxes();
+
+    List<JamesMailbox> _mailboxes =
+        mailboxes.stream()
             .map(
                 mailbox ->
                     JamesMailbox.builder()
@@ -110,10 +112,10 @@ public class MailUserService {
                         .build())
             .collect(Collectors.toList());
     if (added) {
-      this.mailboxDao.saveAllInBatch(mailboxes);
+      this.mailboxDao.saveAllInBatch(_mailboxes);
     } else {
       this.mailboxDao.saveAllInBatch(
-          mailboxes.stream()
+          _mailboxes.stream()
               .filter(
                   item ->
                       !this.mailboxDao.exists(
@@ -124,5 +126,38 @@ public class MailUserService {
                               .build()))
               .collect(Collectors.toList()));
     }
+  }
+
+  public Set<String> getFavoriteMailboxes(String user) {
+    Optional<MailSettings> settings = this.mailSettingsDao.findOneBy("user.id", user);
+    assert settings.isPresent();
+    return settings.get().getMailboxes();
+  }
+
+  public MailUser getMailUser(String account) {
+    return null;
+  }
+
+  public Set<String> updateMyFavoriteMailboxes(
+      String user, Set<String> mailboxes, UpdateMode mode) {
+    Optional<MailSettings> settingsOptional = this.mailSettingsDao.findOneBy("user.id", user);
+    MailSettings settings = settingsOptional.orElseGet(() -> initializeMailSettings(user));
+    if (mode == UpdateMode.ADD) {
+      settings.getMailboxes().addAll(mailboxes);
+    } else if (mode == UpdateMode.REMOVE) {
+      settings.getMailboxes().removeAll(mailboxes);
+    } else {
+      settings.setMailboxes(mailboxes);
+    }
+    return this.mailSettingsDao.update(settings).getMailboxes();
+  }
+
+  private MailSettings initializeMailSettings(String user) {
+    MailSettings settings =
+        MailSettings.builder()
+            .user(MailUser.builder().name(user).build())
+            .mailboxes(getDefaultMailboxes())
+            .build();
+    return this.mailSettingsDao.save(settings);
   }
 }

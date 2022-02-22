@@ -48,6 +48,10 @@ public class MailboxService {
             .build());
   }
 
+  public List<JamesMailbox> findMailboxesWithUser(String user) {
+    return this.mailboxDao.findAll(PropertyFilter.builder().equal("user", user).build());
+  }
+
   public List<JamesMailbox> findMailboxesWithUser(String user, String namespace) {
     return this.mailboxDao.findAll(
         PropertyFilter.builder().equal("user", user).equal("namespace", namespace).build());

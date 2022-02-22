@@ -5,6 +5,7 @@ import cn.asany.email.domainlist.service.DomainService;
 import cn.asany.email.mailbox.bean.JamesMailbox;
 import cn.asany.email.mailbox.bean.JamesMailboxMessage;
 import cn.asany.email.mailbox.bean.toys.MailboxIdUidKey;
+import cn.asany.email.mailbox.component.JPAId;
 import cn.asany.email.mailbox.graphql.input.MailboxMessageFilter;
 import cn.asany.email.mailbox.graphql.type.MailboxMessageConnection;
 import cn.asany.email.mailbox.graphql.type.MailboxMessageResult;
@@ -19,10 +20,12 @@ import java.util.Optional;
 import java.util.function.Function;
 import javax.mail.Flags;
 import lombok.SneakyThrows;
+import org.apache.james.mailbox.MailboxManager;
 import org.apache.james.mailbox.MailboxSession;
 import org.apache.james.mailbox.MessageManager;
 import org.apache.james.mailbox.model.Mailbox;
-import org.apache.james.mailbox.model.MailboxConstants;
+import org.apache.james.mailbox.model.MailboxId;
+import org.apache.james.mailbox.model.MailboxPath;
 import org.apache.james.mailbox.model.MessageRange;
 import org.apache.james.mailbox.store.FlagsUpdateCalculator;
 import org.apache.james.mailbox.store.mail.MailboxMapper;
@@ -51,23 +54,25 @@ public class MailboxGraphqlApiResolver implements GraphQLQueryResolver, GraphQLM
   private final MailboxService mailboxService;
   private final MailboxMessageService mailboxMessageService;
   private final MessageBuilder messageBuilder;
+  private final MailboxManager mailboxManager;
 
   public MailboxGraphqlApiResolver(
       DomainService domainService,
       MailboxService mailboxService,
       MailboxMessageService mailboxMessageService,
-      MessageBuilder messageBuilder) {
+      MessageBuilder messageBuilder,
+      MailboxManager mailboxManager) {
     this.domainService = domainService;
     this.mailboxService = mailboxService;
     this.mailboxMessageService = mailboxMessageService;
     this.messageBuilder = messageBuilder;
+    this.mailboxManager = mailboxManager;
   }
 
-  public List<JamesMailbox> mailboxes() {
-    JamesDomain domain = domainService.getDefaultDomain();
+  public List<JamesMailbox> mailboxes(String account) {
     LoginUser user = SpringSecurityUtils.getCurrentUser();
-    String mailUserId = user.getUsername() + '@' + domain.getName();
-    return this.mailboxService.findMailboxesWithUser(mailUserId, MailboxConstants.USER_NAMESPACE);
+    String mailUser = StringUtil.defaultValue(account, () -> JamesUtil.getUserName(user));
+    return this.mailboxService.findMailboxesWithUser(mailUser);
   }
 
   public MailboxMessageResult mailboxMessage(String id) {
@@ -155,6 +160,18 @@ public class MailboxGraphqlApiResolver implements GraphQLQueryResolver, GraphQLM
     messageMapper.move(mailbox, message);
 
     return wrap(message);
+  }
+
+  @SneakyThrows
+  public JamesMailbox createMailbox(String name, String namespace, String account) {
+    LoginUser loginUser = SpringSecurityUtils.getCurrentUser();
+    String user = JamesUtil.getUserName(loginUser);
+    MailboxSession session = JamesUtil.createSession(user);
+    Optional<MailboxId> mailboxIdOptional =
+        mailboxManager.createMailbox(new MailboxPath(namespace, user, name), session);
+    assert mailboxIdOptional.isPresent();
+    MailboxId mailboxId = mailboxIdOptional.get();
+    return this.mailboxService.findMailboxById(((JPAId) mailboxId).getRawId()).orElse(null);
   }
 
   private FlagsUpdateCalculator convert(List<String> flags, MessageManager.FlagsUpdateMode mode) {

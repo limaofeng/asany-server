@@ -148,6 +148,10 @@ enum MailboxFlagsUpdateMode {
 
 extend type Mutation {
   """
+  创建邮箱文件夹
+  """
+  createMailbox(namespace: String!, name: String!, account: String): Mailbox!
+  """
   更新邮件标记
   """
   updateMailboxMessageFlags(
@@ -177,7 +181,12 @@ extend type Query {
   """
   查询邮箱文件夹
   """
-  mailboxes: [Mailbox!]!
+  mailboxes(
+    """
+    邮箱账号
+    """
+    account: ID
+  ): [Mailbox!]!
   """
   查询文件夹下的邮件
   """

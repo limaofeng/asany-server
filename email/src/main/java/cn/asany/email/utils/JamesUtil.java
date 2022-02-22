@@ -55,6 +55,10 @@ public class JamesUtil {
     return getMailboxSessionMapperFactory().createMailboxMapper(session);
   }
 
+  public static MailboxSession createSession(String user) {
+    return getSessionProvider().createSystemSession(user);
+  }
+
   public static MailboxSession createSession(LoginUser user) {
     return getSessionProvider().createSystemSession(getUserName(user));
   }

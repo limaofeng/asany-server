@@ -97,7 +97,7 @@ public class HelloJMail {
       store.connect(host, username, password);
 
       // 获取inbox文件
-      Folder folder = store.getFolder(DefaultMailboxes.INBOX);
+      Folder folder = store.getFolder(DefaultMailboxes.OUTBOX); // "#private.Outbox"
       folder.open(Folder.READ_ONLY); // 打开，打开后才能读取邮件信息
 
       System.out.println("UnreadMessageCount:" + folder.getUnreadMessageCount());
