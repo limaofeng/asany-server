@@ -163,9 +163,9 @@ public class MailboxGraphqlApiResolver implements GraphQLQueryResolver, GraphQLM
   }
 
   @SneakyThrows
-  public JamesMailbox createMailbox(String name, String namespace, String account) {
+  public JamesMailbox createMailbox(String namespace, String name, String account) {
     LoginUser loginUser = SpringSecurityUtils.getCurrentUser();
-    String user = JamesUtil.getUserName(loginUser);
+    String user = StringUtil.defaultValue(account, () -> JamesUtil.getUserName(loginUser));
     MailboxSession session = JamesUtil.createSession(user);
     Optional<MailboxId> mailboxIdOptional =
         mailboxManager.createMailbox(new MailboxPath(namespace, user, name), session);

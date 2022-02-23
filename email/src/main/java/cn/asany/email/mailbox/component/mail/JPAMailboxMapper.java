@@ -107,16 +107,18 @@ public class JPAMailboxMapper extends JPATransactionalMapper implements MailboxM
             this.mailboxService.findMailboxByName(
                 mailboxPath.getName(), mailboxPath.getNamespace());
 
-        return optional.map(JamesMailbox::toMailbox).orElse(null);
+        return optional
+            .map(JamesMailbox::toMailbox)
+            .orElseThrow(() -> new MailboxNotFoundException(mailboxPath));
       } else {
 
         Optional<JamesMailbox> optional =
             this.mailboxService.findMailboxByNameWithUser(
                 mailboxPath.getName(), mailboxPath.getUser(), mailboxPath.getNamespace());
-        return optional.map(JamesMailbox::toMailbox).orElse(null);
+        return optional
+            .map(JamesMailbox::toMailbox)
+            .orElseThrow(() -> new MailboxNotFoundException(mailboxPath));
       }
-    } catch (NoResultException e) {
-      throw new MailboxNotFoundException(mailboxPath);
     } catch (PersistenceException e) {
       throw new MailboxException("Search of mailbox " + mailboxPath + " failed", e);
     }
