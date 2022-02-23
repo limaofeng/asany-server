@@ -11,9 +11,13 @@ import cn.asany.email.user.dao.MailSettingsDao;
 import cn.asany.email.user.dao.MailUserDao;
 import cn.asany.security.core.bean.User;
 import cn.asany.security.core.dao.UserDao;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import org.apache.james.mailbox.DefaultMailboxes;
+import org.apache.james.mailbox.exception.MailboxException;
 import org.apache.james.mailbox.model.MailboxConstants;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.springframework.stereotype.Service;
@@ -70,6 +74,7 @@ public class MailUserService {
       return createUser(user);
     }
     initMailboxes(mailUser.get(), false);
+    initializeMailSettings(username);
     return mailUser.get();
   }
 
@@ -86,6 +91,7 @@ public class MailUserService {
                 .alg(MailUser.ALGORITHM_NONE)
                 .build());
     initMailboxes(mailUser, true);
+    initializeMailSettings(username);
     return mailUser;
   }
 
@@ -134,13 +140,19 @@ public class MailUserService {
     return settings.get().getMailboxes();
   }
 
-  public MailUser getMailUser(String account) {
-    return null;
+  public MailUser getMailUser(String id) throws MailboxException {
+    Optional<MailUser> user = this.mailUserDao.findById(id);
+    return user.orElseThrow(() -> new MailboxException(String.format("邮箱账号%s不存在", id)));
+  }
+
+  public MailUser getMailUserByLoginUser(Long userId) {
+    Optional<MailUser> user = this.mailUserDao.findOneBy("user.id", userId);
+    return user.orElseGet(() -> this.repairUser(userId));
   }
 
   public Set<String> updateMyFavoriteMailboxes(
       String user, Set<String> mailboxes, UpdateMode mode) {
-    Optional<MailSettings> settingsOptional = this.mailSettingsDao.findOneBy("user.id", user);
+    Optional<MailSettings> settingsOptional = this.mailSettingsDao.findOneBy("id", user);
     MailSettings settings = settingsOptional.orElseGet(() -> initializeMailSettings(user));
     if (mode == UpdateMode.ADD) {
       settings.getMailboxes().addAll(mailboxes);
@@ -153,10 +165,18 @@ public class MailUserService {
   }
 
   private MailSettings initializeMailSettings(String user) {
+    MailUser mailUser = this.mailUserDao.getById(user);
     MailSettings settings =
         MailSettings.builder()
-            .user(MailUser.builder().name(user).build())
-            .mailboxes(getDefaultMailboxes())
+            .user(mailUser)
+            .mailboxes(
+                getDefaultMailboxes().stream()
+                    .map(
+                        b ->
+                            MailboxConstants.USER_NAMESPACE
+                                + MailboxConstants.DEFAULT_DELIMITER
+                                + b)
+                    .collect(Collectors.toSet()))
             .build();
     return this.mailSettingsDao.save(settings);
   }

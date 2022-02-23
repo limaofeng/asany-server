@@ -17,17 +17,15 @@ import org.jfantasy.framework.dao.BaseBusEntity;
 public class MailSettings extends BaseBusEntity {
 
   @Id
-  @Column(name = "ID", nullable = false, updatable = false, precision = 22)
-  @GeneratedValue(generator = "fantasy-sequence")
-  @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
-  private Long id;
+  @Column(name = "USER_ID", nullable = false, updatable = false, precision = 22)
+  @GenericGenerator(
+      name = "MailSettingsPkGenerator",
+      strategy = "foreign",
+      parameters = {@org.hibernate.annotations.Parameter(name = "property", value = "user")})
+  @GeneratedValue(generator = "MailSettingsPkGenerator")
+  private String id;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(
-      name = "USER_ID",
-      foreignKey = @ForeignKey(name = "FK_MAIL_SETTINGS_USER_ID"),
-      updatable = false,
-      nullable = false)
+  @OneToOne(fetch = FetchType.LAZY, targetEntity = MailUser.class, mappedBy = "settings")
   @ToString.Exclude
   private MailUser user;
 
@@ -35,7 +33,7 @@ public class MailSettings extends BaseBusEntity {
   @CollectionTable(
       name = "JAMES_MAIL_SETTINGS_MAILBOXES",
       foreignKey = @ForeignKey(name = "FK_MAIL_SETTINGS_MAILBOXES"),
-      joinColumns = @JoinColumn(name = "SETTINGS_ID"))
+      joinColumns = @JoinColumn(name = "USER_ID"))
   @Column(name = "MAILBOX")
   private Set<String> mailboxes;
 }

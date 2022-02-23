@@ -51,6 +51,12 @@ public class MailUser extends BaseBusEntity implements User {
   @ToString.Exclude
   private JamesDomain domain;
 
+  @OneToOne(
+      fetch = FetchType.LAZY,
+      cascade = {CascadeType.REMOVE})
+  @PrimaryKeyJoinColumn(name = "USER_NAME", referencedColumnName = "USER_ID")
+  private MailSettings settings;
+
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(
       name = "USER_ID",

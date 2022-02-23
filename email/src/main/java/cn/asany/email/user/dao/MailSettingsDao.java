@@ -5,4 +5,4 @@ import org.jfantasy.framework.dao.jpa.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface MailSettingsDao extends JpaRepository<MailSettings, Long> {}
+public interface MailSettingsDao extends JpaRepository<MailSettings, String> {}

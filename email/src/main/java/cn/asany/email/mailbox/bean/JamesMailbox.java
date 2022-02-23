@@ -60,6 +60,10 @@ public class JamesMailbox extends BaseBusEntity {
   @Column(name = "NAMESPACE", nullable = false, length = 200)
   private String namespace;
 
+  /** 排序字段 */
+  @Column(name = "SORT")
+  private Integer index;
+
   @Basic(optional = false)
   @Column(name = "LAST_UID", nullable = true)
   private long lastUid;

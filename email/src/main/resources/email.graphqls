@@ -1,3 +1,22 @@
+type MailDomain {
+  name: String
+}
+"""
+账户
+"""
+type MailUser {
+  id: String!
+  name: String!
+  alg: String
+  domain: MailDomain
+  settings: MailSettings
+}
+
+type MailSettings {
+  id: ID!
+  mailboxes: [String!]!
+}
+
 """
 邮箱
 """
@@ -146,11 +165,35 @@ enum MailboxFlagsUpdateMode {
   REPLACE
 }
 
+enum UpdateMode {
+  ADD
+  REMOVE
+  REPLACE
+}
+
 extend type Mutation {
+  """
+  更新我收藏的邮箱
+  """
+  updateMyFavoriteMailboxes(
+    """
+    邮箱账号
+    """
+    user: String
+    """
+    邮箱文件夹
+    """
+    mailboxes: [String!]!
+    """
+    更新模式
+    """
+    mode: UpdateMode = ADD
+  ): [String!]!
+
   """
   创建邮箱文件夹
   """
-  createMailbox(namespace: String!, name: String!, account: String): Mailbox!
+  createMailbox(namespace: String!, name: String!, user: String): Mailbox!
   """
   更新邮件标记
   """
@@ -177,7 +220,31 @@ extend type Mutation {
   ): MailboxMessage!
 }
 
+enum MailUserIdType {
+  """
+  邮箱名
+  """
+  MAIL_USERNAME
+  """
+  用户ID
+  """
+  LOGIN_USER_ID
+}
+
 extend type Query {
+  """
+  查询邮箱账户
+  """
+  mailUser(
+    """
+    ID
+    """
+    id: ID
+    """
+    ID 类型
+    """
+    type: MailUserIdType = MAIL_USERNAME
+  ): MailUser
   """
   查询邮箱文件夹
   """
@@ -185,7 +252,7 @@ extend type Query {
     """
     邮箱账号
     """
-    account: ID
+    user: ID
   ): [Mailbox!]!
   """
   查询文件夹下的邮件
@@ -194,7 +261,7 @@ extend type Query {
     """
     邮箱账号
     """
-    account: ID
+    user: ID
     """
     筛选条件
     """
