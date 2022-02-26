@@ -28,6 +28,7 @@ import org.jfantasy.framework.security.oauth2.core.ClientDetailsService;
 import org.jfantasy.framework.security.oauth2.core.ClientRegistrationException;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.common.StringUtil;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -78,9 +79,10 @@ public class ApplicationService implements ClientDetailsService {
   }
 
   @Override
+  @Cacheable(key = "targetClass + methodName + #p0", value = "NUWA")
   public ClientDetails loadClientByClientId(String clientId) throws ClientRegistrationException {
     Optional<Application> optional =
-        this.applicationDao.findOne(
+        this.applicationDao.findOneWithClientDetails(
             PropertyFilter.builder().equal("clientId", clientId).equal("enabled", true).build());
     if (!optional.isPresent()) {
       throw new ClientRegistrationException("[client_id=" + clientId + "]不存在");

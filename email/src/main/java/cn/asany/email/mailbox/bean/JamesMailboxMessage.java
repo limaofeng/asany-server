@@ -19,6 +19,40 @@ import org.apache.james.mailbox.store.mail.model.impl.PropertyBuilder;
 @Setter
 @Getter
 @RequiredArgsConstructor
+@NamedEntityGraph(
+    name = "Graph.MailboxMessage.FetchDetails",
+    attributeNodes = {
+      @NamedAttributeNode(
+          value = "mailbox",
+          subgraph = "SubGraph.MailboxMessageMailbox.FetchAttributes"),
+      @NamedAttributeNode(
+          value = "properties",
+          subgraph = "SubGraph.MailboxMessageProperty.FetchAttributes"),
+      @NamedAttributeNode(
+          value = "userFlags",
+          subgraph = "SubGraph.MailboxMessageUserFlag.FetchAttributes")
+    },
+    subgraphs = {
+      @NamedSubgraph(
+          name = "SubGraph.MailboxMessageMailbox.FetchAttributes",
+          attributeNodes = {
+            @NamedAttributeNode(value = "id"),
+            @NamedAttributeNode(value = "name"),
+            @NamedAttributeNode(value = "namespace")
+          }),
+      @NamedSubgraph(
+          name = "SubGraph.MailboxMessageProperty.FetchAttributes",
+          attributeNodes = {
+            @NamedAttributeNode(value = "localName"),
+            @NamedAttributeNode(value = "namespace"),
+            @NamedAttributeNode(value = "value")
+          }),
+      @NamedSubgraph(
+          name = "SubGraph.MailboxMessageUserFlag.FetchAttributes",
+          attributeNodes = {
+            @NamedAttributeNode(value = "name"),
+          })
+    })
 @Entity(name = "MailboxMessage")
 @Table(name = "JAMES_MAIL")
 public class JamesMailboxMessage extends AbstractJPAMailboxMessage {
@@ -71,7 +105,7 @@ public class JamesMailboxMessage extends AbstractJPAMailboxMessage {
   }
 
   @Override
-  public InputStream getBodyContent() throws IOException {
+  public InputStream getBodyContent() {
     if (body == null) {
       return new ByteArrayInputStream(EMPTY_BODY);
     }
@@ -79,7 +113,7 @@ public class JamesMailboxMessage extends AbstractJPAMailboxMessage {
   }
 
   @Override
-  public InputStream getHeaderContent() throws IOException {
+  public InputStream getHeaderContent() {
     return new ByteArrayInputStream(header);
   }
 }

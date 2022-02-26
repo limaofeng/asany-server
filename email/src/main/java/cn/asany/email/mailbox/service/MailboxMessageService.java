@@ -118,6 +118,15 @@ public class MailboxMessageService {
     return this.mailboxMessageDao.findAll(filters, size, Sort.by("id").descending());
   }
 
+  public long index(long id, long mailbox) {
+    return this.mailboxMessageDao.count(
+        PropertyFilter.builder()
+            .greaterThanOrEqual("id", id)
+            .equal("mailbox.id", mailbox)
+            .equal("deleted", Boolean.FALSE)
+            .build());
+  }
+
   public List<JamesMailboxMessage> findMessagesInMailbox(long mailbox, int size) {
     return this.mailboxMessageDao.findAll(
         PropertyFilter.builder()
@@ -198,6 +207,6 @@ public class MailboxMessageService {
    */
   public Pager<JamesMailboxMessage> findPager(
       Pager<JamesMailboxMessage> pager, List<PropertyFilter> filters) {
-    return this.mailboxMessageDao.findPager(pager, filters);
+    return this.mailboxMessageDao.findWithDetailsPager(pager, filters);
   }
 }

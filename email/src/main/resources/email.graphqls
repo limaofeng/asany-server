@@ -25,11 +25,26 @@ type Mailbox {
   """
   名称
   """
-  name: String
+  name: String!
   """
   命名空间
   """
-  namespace: String
+  namespace: String!
+  """
+  计数
+  """
+  count(type: MailboxCountType = ALL): Int!
+}
+
+enum MailboxCountType {
+  """
+  全部
+  """
+  ALL
+  """
+  未读
+  """
+  UNREAD
 }
 
 """
@@ -100,6 +115,10 @@ type MailboxMessage {
   邮箱
   """
   mailbox: Mailbox!
+  """
+  在邮箱中的位置
+  """
+  index: Int
   """
   回复
   """
@@ -248,6 +267,19 @@ extend type Query {
   """
   查询邮箱文件夹
   """
+  mailbox(
+    """
+    文件夹ID
+    """
+    id: ID!
+    """
+    邮箱账号
+    """
+    user: ID
+  ): Mailbox
+  """
+  查询邮箱文件夹
+  """
   mailboxes(
     """
     邮箱账号
@@ -266,6 +298,26 @@ extend type Query {
     筛选条件
     """
     filter: MailboxMessageFilter = {}
+    """
+    偏移量
+    """
+    offset: Int
+    """
+    返回数据条数
+    """
+    first: Int
+    """
+    返回数据条数
+    """
+    last: Int
+    """
+    游标之后
+    """
+    after: String
+    """
+    游标之前
+    """
+    before: String
     """
     页码
     """

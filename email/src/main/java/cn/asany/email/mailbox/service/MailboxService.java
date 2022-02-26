@@ -87,7 +87,7 @@ public class MailboxService {
   }
 
   public void delete(long id) {
-    this.mailboxMessageDao.deleteMessages(id);
+    int rows = this.mailboxMessageDao.deleteMessages(id);
     this.mailboxDao.deleteById(id);
   }
 

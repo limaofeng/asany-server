@@ -1,6 +1,7 @@
 package cn.asany.email.mailbox.graphql.resolver;
 
 import cn.asany.email.mailbox.graphql.type.MailboxMessageResult;
+import cn.asany.email.mailbox.service.MailboxMessageService;
 import graphql.kickstart.tools.GraphQLResolver;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -14,6 +15,12 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class MailboxMessageResolver implements GraphQLResolver<MailboxMessageResult> {
+
+  private final MailboxMessageService mailboxMessageService;
+
+  public MailboxMessageResolver(MailboxMessageService mailboxMessageService) {
+    this.mailboxMessageService = mailboxMessageService;
+  }
 
   public String id(MailboxMessageResult result) {
     return result.getMailboxMessage().getKey().toKey();
@@ -41,6 +48,11 @@ public class MailboxMessageResolver implements GraphQLResolver<MailboxMessageRes
 
   public String mimeType(MailboxMessageResult result) {
     return result.getMimeType();
+  }
+
+  public long index(MailboxMessageResult result) {
+    return this.mailboxMessageService.index(
+        result.getMailboxMessage().getId(), result.getMailboxMessage().getMailboxId().getRawId());
   }
 
   public String body(MailboxMessageResult mailboxMessageResult) throws IOException {

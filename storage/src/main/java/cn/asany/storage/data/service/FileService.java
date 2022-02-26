@@ -15,6 +15,7 @@ import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.regexp.RegexpUtil;
 import org.jfantasy.framework.util.web.WebUtil;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -124,6 +125,7 @@ public class FileService {
     return this.fileDetailDao.findById(id);
   }
 
+  @Cacheable(key = "targetClass + methodName + #p0", value = "STORAGE")
   public Optional<FileDetail> findByPath(String path) {
     return this.fileDetailDao.findOne(PropertyFilter.builder().equal("path", path).build());
   }

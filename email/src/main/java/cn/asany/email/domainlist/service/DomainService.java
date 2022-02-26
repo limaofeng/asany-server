@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 /**
@@ -40,6 +41,7 @@ public class DomainService {
     this.jamesDomainDao.deleteById(name);
   }
 
+  @Cacheable(key = "targetClass + methodName", value = "MAIL_DOMAIN")
   public JamesDomain getDefaultDomain() {
     return this.jamesDomainDao
         .findOne(PropertyFilter.builder().isNull("organization").build())

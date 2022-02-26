@@ -2,6 +2,7 @@ package cn.asany.nuwa.app.dao.impl;
 
 import cn.asany.nuwa.app.bean.Application;
 import cn.asany.nuwa.app.dao.ApplicationDao;
+import java.util.List;
 import java.util.Optional;
 import javax.persistence.EntityManager;
 import org.jfantasy.framework.dao.jpa.ComplexJpaRepository;
@@ -47,5 +48,10 @@ public class ApplicationDaoImpl extends ComplexJpaRepository<Application, Long>
   @Override
   public Optional<Application> findOneWithMenusById(Long id) {
     return this.findOne(PropertyFilter.builder().equal("id", id).build());
+  }
+
+  @Override
+  public Optional<Application> findOneWithClientDetails(List<PropertyFilter> filters) {
+    return this.findOne(filters);
   }
 }

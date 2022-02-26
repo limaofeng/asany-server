@@ -23,6 +23,21 @@ import org.jfantasy.framework.security.oauth2.core.ClientDetails;
 @NoArgsConstructor
 @AllArgsConstructor
 @NamedEntityGraph(
+    name = "Graph.Application.FetchClientDetails",
+    attributeNodes = {
+      @NamedAttributeNode(
+          value = "clientSecretsAlias",
+          subgraph = "SubGraph.ClientSecret.FetchAttributes"),
+    },
+    subgraphs = {
+      @NamedSubgraph(
+          name = "SubGraph.ClientSecret.FetchAttributes",
+          attributeNodes = {
+            @NamedAttributeNode(value = "secret"),
+            @NamedAttributeNode(value = "client")
+          }),
+    })
+@NamedEntityGraph(
     name = "Graph.Application.FetchDetails",
     attributeNodes = {
       @NamedAttributeNode(value = "menus", subgraph = "SubGraph.ApplicationMenu.FetchComponent"),

@@ -146,6 +146,8 @@ routes:
         component: cn.asany.ui.admin.calendar.MainCalendar
       - path: /email
         redirect: /email/inbox
+      - path: /email/compose
+        component: cn.asany.ui.admin.email.Compose
       - path: /email/:folder
         component: cn.asany.ui.admin.email.Mailbox
         routes:

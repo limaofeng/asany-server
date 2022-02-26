@@ -23,10 +23,7 @@ import lombok.SneakyThrows;
 import org.apache.james.mailbox.MailboxManager;
 import org.apache.james.mailbox.MailboxSession;
 import org.apache.james.mailbox.MessageManager;
-import org.apache.james.mailbox.model.Mailbox;
-import org.apache.james.mailbox.model.MailboxId;
-import org.apache.james.mailbox.model.MailboxPath;
-import org.apache.james.mailbox.model.MessageRange;
+import org.apache.james.mailbox.model.*;
 import org.apache.james.mailbox.store.FlagsUpdateCalculator;
 import org.apache.james.mailbox.store.mail.MailboxMapper;
 import org.apache.james.mailbox.store.mail.MessageMapper;
@@ -69,6 +66,17 @@ public class MailboxGraphqlApiResolver implements GraphQLQueryResolver, GraphQLM
     this.mailboxManager = mailboxManager;
   }
 
+  public Optional<JamesMailbox> mailbox(String id, String account) {
+    LoginUser user = SpringSecurityUtils.getCurrentUser();
+    String mailUser = StringUtil.defaultValue(account, () -> JamesUtil.getUserName(user));
+    if (JamesUtil.isName(id)) {
+      return this.mailboxService.findMailboxByNameWithUser(
+          JamesUtil.parseMailboxName(id), mailUser, MailboxConstants.USER_NAMESPACE);
+    } else {
+      return this.mailboxService.findMailboxById(Long.parseLong(id));
+    }
+  }
+
   public List<JamesMailbox> mailboxes(String account) {
     LoginUser user = SpringSecurityUtils.getCurrentUser();
     String mailUser = StringUtil.defaultValue(account, () -> JamesUtil.getUserName(user));
@@ -85,7 +93,16 @@ public class MailboxGraphqlApiResolver implements GraphQLQueryResolver, GraphQLM
   }
 
   public MailboxMessageConnection mailboxMessages(
-      String account, MailboxMessageFilter filter, int page, int pageSize, OrderBy orderBy) {
+      String account,
+      MailboxMessageFilter filter,
+      int offset,
+      int first,
+      int last,
+      String after,
+      String before,
+      int page,
+      int pageSize,
+      OrderBy orderBy) {
     JamesDomain domain = domainService.getDefaultDomain();
     LoginUser user = SpringSecurityUtils.getCurrentUser();
 
@@ -98,9 +115,15 @@ public class MailboxGraphqlApiResolver implements GraphQLQueryResolver, GraphQLM
 
     // TODO: 判断当前用户是否有权限访问该邮件账户
 
-    Pager<JamesMailboxMessage> pager =
-        this.mailboxMessageService.findPager(
-            Pager.newPager(page, pageSize, orderBy), filter.build(mailUserId));
+    Pager<JamesMailboxMessage> pager;
+
+    if (first > 0) {
+      pager = Pager.newPager(first, orderBy, offset);
+    } else {
+      pager = Pager.newPager(page, pageSize, orderBy);
+    }
+
+    pager = this.mailboxMessageService.findPager(pager, filter.build(mailUserId));
     return Kit.connection(
         pager,
         MailboxMessageConnection.class,
