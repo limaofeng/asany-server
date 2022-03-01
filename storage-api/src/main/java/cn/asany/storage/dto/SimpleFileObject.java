@@ -7,6 +7,8 @@ import java.io.InputStream;
 import java.net.URLConnection;
 import java.util.Date;
 import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -16,11 +18,15 @@ import lombok.NoArgsConstructor;
  * @author limaofeng
  */
 @Data
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
 public class SimpleFileObject implements FileObject {
   private Long id;
   /** 文件名称 */
   private String name;
+  /** 是否为目录 */
+  private boolean directory;
   /** 文件类型 */
   private String mimeType;
   /** 文件长度 */
@@ -29,6 +35,8 @@ public class SimpleFileObject implements FileObject {
   private String path;
   /** 完整地址 */
   private String url;
+
+  private FileObjectMetadata metadata;
 
   public SimpleFileObject(String path) {
     this.path = path;
@@ -52,7 +60,7 @@ public class SimpleFileObject implements FileObject {
   @Override
   @JsonIgnore
   public boolean isDirectory() {
-    return false;
+    return this.directory;
   }
 
   @Override
@@ -86,7 +94,7 @@ public class SimpleFileObject implements FileObject {
   @Override
   @JsonIgnore
   public FileObjectMetadata getMetadata() {
-    return null;
+    return this.metadata;
   }
 
   @Override
@@ -98,5 +106,18 @@ public class SimpleFileObject implements FileObject {
   @JsonIgnore
   public InputStream getInputStream() throws IOException {
     return null;
+  }
+
+  public static class SimpleFileObjectBuilder {
+    public SimpleFileObjectBuilder metadata(String md5) {
+      this.metadata =
+          FileObjectMetadata.builder()
+              .contentLength(this.size)
+              .dir(this.directory)
+              .contentType(this.mimeType)
+              .build();
+      this.metadata.setContentMD5(md5);
+      return this;
+    }
   }
 }

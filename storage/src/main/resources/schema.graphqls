@@ -72,6 +72,8 @@ type FileObject {
   lastModified: Date @dateFormat
   # 所有父级
   parents: [FileObject!]
+  # 文件 MD5
+  md5: String
 }
 
 input UploadOptions {

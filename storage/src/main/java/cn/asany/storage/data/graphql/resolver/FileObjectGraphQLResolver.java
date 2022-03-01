@@ -36,6 +36,10 @@ public class FileObjectGraphQLResolver implements GraphQLResolver<FileObject> {
     return fileObject.getName();
   }
 
+  public String md5(FileObject fileObject) {
+    return fileObject.getMetadata().getContentMD5();
+  }
+
   public List<FileObject> parents(FileObject fileObject) {
     List<FileObject> parentFiles = new ArrayList<>();
     FileObject parentFile = fileObject.getParentFile();

@@ -48,10 +48,7 @@ public class SecurityGraphQLMutationResolver
   /** 查询所有用户 - 列表 */
   public List<User> users(
       UserFilter filter, int skip, int after, int before, int first, int last, OrderBy orderBy) {
-    Pager<User> pager = new Pager<>();
-    pager.setOrderBy(orderBy);
-    pager.setFirst(skip);
-    pager.setPageSize(first);
+    Pager<User> pager = Pager.newPager(first, orderBy, skip);
     PropertyFilterBuilder builder = ObjectUtil.defaultValue(filter, new UserFilter()).getBuilder();
     return userService.findPager(pager, builder.build()).getPageItems();
   }

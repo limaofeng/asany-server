@@ -77,7 +77,7 @@ public class FragmentStoragePlugin implements StoragePlugin {
       FileDetail fileDetail = (FileDetail) context.upload(file, "fragment");
       filePartService.save(
           fileDetail.getPath(),
-          fileDetail.getStorage().getId(),
+          fileDetail.getStorageConfig().getId(),
           options.getEntireFileHash(),
           options.getPartFileHash(),
           options.getTotal(),
@@ -93,7 +93,7 @@ public class FragmentStoragePlugin implements StoragePlugin {
     if (entireFileDetail != null) {
       fileDetail = entireFileDetail;
     }
-    return fileDetail;
+    return fileDetail.toFileObject();
   }
 
   private FileDetail uploadPart(
@@ -142,7 +142,7 @@ public class FragmentStoragePlugin implements StoragePlugin {
         // 在File_PART 表冗余一条数据 片段为 0
         filePartService.save(
             fileDetail.getPath(),
-            fileDetail.getStorage().getId(),
+            fileDetail.getStorageConfig().getId(),
             uploadOptions.getEntireFileHash(),
             uploadOptions.getEntireFileHash(),
             uploadOptions.getTotal(),

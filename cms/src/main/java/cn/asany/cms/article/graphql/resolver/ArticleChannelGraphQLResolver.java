@@ -82,25 +82,25 @@ public class ArticleChannelGraphQLResolver implements GraphQLResolver<ArticleCha
 
   public List<Article> articles(
       ArticleChannel channel,
-      /** 包含所有后代 */
+      /* 包含所有后代 */
       Boolean descendant,
-      /** 筛选 */
+      /* 筛选 */
       ArticleFilter filter,
-      /** 跳过 */
+      /* 跳过 */
       int skip,
-      /** 游标定位 之后 */
+      /* 游标定位 之后 */
       Long after,
-      /** 游标定位 之前 */
+      /* 游标定位 之前 */
       Long before,
-      /** 开始几条 */
+      /* 开始几条 */
       int first,
-      /** 之前几条 */
+      /* 之前几条 */
       int last,
-      /** 排序 */
+      /* 排序 */
       OrderBy orderBy) {
     Pager<Article> pager = new Pager<>(first);
     pager.setOrderBy(orderBy);
-    pager.setFirst(skip);
+    pager.setOffset(skip);
 
     PropertyFilterBuilder builder = PropertyFilter.builder();
 

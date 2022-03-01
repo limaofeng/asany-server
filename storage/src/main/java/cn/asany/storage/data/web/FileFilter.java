@@ -58,9 +58,9 @@ public class FileFilter extends GenericFilterBean {
     Optional<FileDetail> optionalFile = fileService.findByPath(url);
     if (optionalFile.isPresent()) {
       FileDetail file = optionalFile.get();
-      String id = file.getStorage().getId();
+      String id = file.getStorageConfig().getId();
       Storage storage = storageResolver.resolve(id);
-      FileObject fileObject = with(storage.getFileItem(file.getPath()), file);
+      FileObject fileObject = with(storage.getFileItem(file.getPath()), file.toFileObject());
       writeFile(request, response, fileObject);
       return;
     }
@@ -73,9 +73,9 @@ public class FileFilter extends GenericFilterBean {
       }
       // 查找源文件
       FileDetail file = optionalFile.get();
-      String id = file.getStorage().getId();
+      String id = file.getStorageConfig().getId();
       Storage storage = storageResolver.resolve(id);
-      FileObject fileObject = with(storage.getFileItem(file.getPath()), file);
+      FileObject fileObject = with(storage.getFileItem(file.getPath()), file.toFileObject());
       if (fileObject == null) {
         chain.doFilter(request, response);
         return;
@@ -170,13 +170,13 @@ public class FileFilter extends GenericFilterBean {
       int start = 0;
       int end = 0;
       if (sf.length == 2) {
-        start = Integer.valueOf(sf[0]);
-        end = Integer.valueOf(sf[1]);
+        start = Integer.parseInt(sf[0]);
+        end = Integer.parseInt(sf[1]);
       } else if (bytes.startsWith("-")) {
         start = 0;
         end = (int) (fileLength - 1);
       } else if (bytes.endsWith("-")) {
-        start = Integer.valueOf(sf[0]);
+        start = Integer.parseInt(sf[0]);
         end = (int) (fileLength - 1);
       }
       int contentLength = end - start + 1;

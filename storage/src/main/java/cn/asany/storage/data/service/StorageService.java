@@ -9,6 +9,7 @@ import cn.asany.storage.data.bean.enums.StorageType;
 import cn.asany.storage.data.dao.FileDetailDao;
 import cn.asany.storage.data.dao.StorageConfigDao;
 import java.util.*;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -51,17 +52,14 @@ public class StorageService {
     return this.storageConfigDao.save(storage);
   }
 
-  public void save(
+  public StorageConfig save(
       StorageType type, String id, String name, String description, Map<String, String> params) {
-    StorageConfig fileManagerConfig = new StorageConfig();
-    fileManagerConfig.setId(id);
-    fileManagerConfig.setName(name);
-    fileManagerConfig.setDescription(description);
-    fileManagerConfig.setType(type);
-    for (Map.Entry<String, String> entry : params.entrySet()) {
-      //            fileManagerConfig.addConfigParam(entry.getKey(), entry.getValue());
-    }
-    this.save(fileManagerConfig);
+    StorageConfig storageConfig = new StorageConfig();
+    storageConfig.setId(id);
+    storageConfig.setName(name);
+    storageConfig.setDescription(description);
+    storageConfig.setType(type);
+    return this.save(storageConfig);
   }
 
   public List<StorageConfig> getAll() {
@@ -156,7 +154,9 @@ public class StorageService {
       }
 
       List<FileObject> alreadyExisted =
-          new ArrayList<>(this.fileDetailDao.findAll(filterBuilder.build()));
+          this.fileDetailDao.findAll(filterBuilder.build()).stream()
+              .map(FileDetail::toFileObject)
+              .collect(Collectors.toList());
 
       CompareResults<FileObject> results =
           ObjectUtil.compare(

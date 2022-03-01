@@ -29,14 +29,13 @@ public class FileObjectMetadata {
       FileObjectMetadata.builder().dir(true).contentLength(0).contentType("").build();
 
   /** 用户自定义的元数据，表示以x-oss-meta-为前缀的请求头。 */
-  private Map<String, String> userMetadata = new HashMap<>();
+  private final Map<String, String> userMetadata = new HashMap<>();
   /** 非用户自定义的元数据 */
-  private Map<String, Object> metadata = new HashMap<>();
+  private final Map<String, Object> metadata = new HashMap<>();
 
   public static final long DEFAULT_FILE_SIZE_LIMIT = 5 * 1024 * 1024 * 1024L;
 
   public FileObjectMetadata(Map<String, Object> metadata) {
-    this.metadata.clear();
     if (metadata != null && !metadata.isEmpty()) {
       this.metadata.putAll(metadata);
     }
@@ -268,7 +267,7 @@ public class FileObjectMetadata {
 
   public static class FileObjectMetadataBuilder {
 
-    private FileObjectMetadata metadata = new FileObjectMetadata();
+    private final FileObjectMetadata metadata = new FileObjectMetadata();
 
     public FileObjectMetadataBuilder etag(String etag) {
       this.metadata.setETag(etag);

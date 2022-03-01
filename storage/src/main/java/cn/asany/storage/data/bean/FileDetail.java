@@ -1,13 +1,14 @@
 package cn.asany.storage.data.bean;
 
-import cn.asany.storage.api.*;
+import cn.asany.storage.api.FileObject;
+import cn.asany.storage.dto.SimpleFileObject;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import javax.persistence.*;
 import lombok.*;
+import org.hibernate.Hibernate;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
@@ -16,7 +17,10 @@ import org.jfantasy.framework.dao.BaseBusEntity;
  *
  * @author 软件
  */
-@Data
+@Getter
+@Setter
+@ToString
+@RequiredArgsConstructor
 @Entity
 @Table(
     name = "STORAGE_FILEOBJECT",
@@ -24,8 +28,6 @@ import org.jfantasy.framework.dao.BaseBusEntity;
         @UniqueConstraint(
             name = "UK_STORAGE_FILEOBJECT",
             columnNames = {"STORAGE_ID", "PATH"}))
-@EqualsAndHashCode(callSuper = false, of = "path")
-@NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @JsonIgnoreProperties(
@@ -39,7 +41,7 @@ import org.jfantasy.framework.dao.BaseBusEntity;
       "metadata",
       "inputStream"
     })
-public class FileDetail extends BaseBusEntity implements Cloneable, FileObject {
+public class FileDetail extends BaseBusEntity implements Cloneable {
 
   @Id
   @Column(name = "ID", nullable = false, updatable = false, precision = 22)
@@ -77,10 +79,12 @@ public class FileDetail extends BaseBusEntity implements Cloneable, FileObject {
       updatable = false,
       foreignKey = @ForeignKey(name = "FK_STORAGE_FILEOBJECT_PARENT"))
   @ManyToOne(fetch = FetchType.LAZY)
+  @ToString.Exclude
   private FileDetail parentFile;
   /** 获取子目录列表 */
   @OneToMany(mappedBy = "parentFile", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
   @OrderBy("createdAt ASC")
+  @ToString.Exclude
   private List<FileDetail> children;
   /** 文件命名空间 */
   @JoinColumn(
@@ -89,6 +93,7 @@ public class FileDetail extends BaseBusEntity implements Cloneable, FileObject {
       updatable = false,
       foreignKey = @ForeignKey(name = "FK_STORAGE_FILEOBJECT_STORAGE"))
   @ManyToOne(fetch = FetchType.LAZY)
+  @ToString.Exclude
   private StorageConfig storageConfig;
 
   @Embedded private FileMetadata metadata;
@@ -101,59 +106,100 @@ public class FileDetail extends BaseBusEntity implements Cloneable, FileObject {
     this.path = path;
   }
 
+  //  @Override
+  //  public boolean isDirectory() {
+  //    return this.isDirectory;
+  //  }
+  //
+  //  @Override
+  //  public long getSize() {
+  //    return this.length;
+  //  }
+  //
+  //  @Override
+  //  public FileDetail getParentFile() {
+  //    return this.parentFile;
+  //  }
+  //
+  //  @Override
+  //  public List<FileObject> listFiles() {
+  //    throw new RuntimeException("FileDetails 不提供该方法");
+  //  }
+  //
+  //  @Override
+  //  public String getPath() {
+  //    return this.path;
+  //  }
+  //
+  //  @Override
+  //  public Date lastModified() {
+  //    return this.lastModified;
+  //  }
+  //
+  //  @Override
+  //  public List<FileObject> listFiles(FileItemFilter filter) {
+  //    throw new RuntimeException("FileDetails 不提供该方法");
+  //  }
+  //
+  //  @Override
+  //  public List<FileObject> listFiles(FileItemSelector selector) {
+  //    throw new RuntimeException("FileDetails 不提供该方法");
+  //  }
+  //
+  //  @Override
+  //  public FileObjectMetadata getMetadata() {
+  //    throw new RuntimeException("FileDetails 不提供该方法");
+  //  }
+  //
+  //  @Override
+  //  @Transient
+  //  public Storage getStorage() {
+  //    return null;
+  //  }
+  //
+  //  @Override
+  //  public InputStream getInputStream() throws IOException {
+  //    throw new RuntimeException("FileDetails 不提供该方法");
+  //  }
+
   @Override
-  public boolean isDirectory() {
-    return this.isDirectory;
+  public FileDetail clone() {
+    try {
+      FileDetail clone = (FileDetail) super.clone();
+      return FileDetail.builder()
+          .name(clone.getName())
+          .length(clone.getLength())
+          //          .isDirectory(clone.isDirectory())
+          .description(clone.getDescription())
+          .md5(clone.getMd5())
+          .mimeType(clone.getMimeType())
+          .build();
+    } catch (CloneNotSupportedException e) {
+      throw new AssertionError();
+    }
   }
 
   @Override
-  public long getSize() {
-    return this.length;
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+    FileDetail that = (FileDetail) o;
+    return id != null && Objects.equals(id, that.id);
   }
 
   @Override
-  public FileDetail getParentFile() {
-    return this.parentFile;
+  public int hashCode() {
+    return getClass().hashCode();
   }
 
-  @Override
-  public List<FileObject> listFiles() {
-    throw new RuntimeException("FileDetails 不提供该方法");
-  }
-
-  @Override
-  public String getPath() {
-    return this.path;
-  }
-
-  @Override
-  public Date lastModified() {
-    return this.lastModified;
-  }
-
-  @Override
-  public List<FileObject> listFiles(FileItemFilter filter) {
-    throw new RuntimeException("FileDetails 不提供该方法");
-  }
-
-  @Override
-  public List<FileObject> listFiles(FileItemSelector selector) {
-    throw new RuntimeException("FileDetails 不提供该方法");
-  }
-
-  @Override
-  public FileObjectMetadata getMetadata() {
-    throw new RuntimeException("FileDetails 不提供该方法");
-  }
-
-  @Override
-  @Transient
-  public Storage getStorage() {
-    return null;
-  }
-
-  @Override
-  public InputStream getInputStream() throws IOException {
-    throw new RuntimeException("FileDetails 不提供该方法");
+  public FileObject toFileObject() {
+    return SimpleFileObject.builder()
+        .id(this.id)
+        .path(this.path)
+        .name(this.name)
+        .size(this.length)
+        .mimeType(this.mimeType)
+        .metadata(this.md5)
+        .build();
   }
 }

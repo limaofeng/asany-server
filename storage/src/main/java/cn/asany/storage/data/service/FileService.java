@@ -7,14 +7,13 @@ import cn.asany.storage.data.bean.StorageConfig;
 import cn.asany.storage.data.dao.FileDetailDao;
 import cn.asany.storage.data.dao.SpaceDao;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.regexp.RegexpUtil;
-import org.jfantasy.framework.util.web.WebUtil;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -29,6 +28,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 public class FileService {
+
+  private static final String DIR_MD5 = "1B2M2Y8AsgTpgAmY7PhCfg==";
+  private static final String DIR_MIME_TYPE = "application/octet-stream";
 
   private final FileDetailDao fileDetailDao;
   private final SpaceDao spaceDao;
@@ -45,16 +47,21 @@ public class FileService {
       long length,
       String md5,
       String storage,
-      String description) {
-    FileDetail fileDetail = new FileDetail();
-    fileDetail.setPath(path);
-    fileDetail.setStorageConfig(StorageConfig.builder().id(storage).build());
-    fileDetail.setName(fileName);
-    fileDetail.setMimeType(contentType);
-    fileDetail.setLength(length);
-    fileDetail.setMd5(md5);
-    fileDetail.setParentFile(createFolder(path.replaceFirst("[^\\/]+$", ""), storage));
-    fileDetail.setDescription(description);
+      String description,
+      Date lastModified) {
+    FileDetail fileDetail =
+        FileDetail.builder()
+            .path(path)
+            .storageConfig(StorageConfig.builder().id(storage).build())
+            .name(fileName)
+            .mimeType(contentType)
+            .length(length)
+            .md5(md5)
+            .isDirectory(false)
+            .lastModified(lastModified)
+            .parentFile(createFolder(path.replaceFirst("[^/]+$", ""), storage))
+            .description(description)
+            .build();
     this.fileDetailDao.save(fileDetail);
     return fileDetail;
   }
@@ -100,18 +107,18 @@ public class FileService {
     if (FileObject.ROOT_PATH.equals(path)) {
       return createRootFolder(path, storage);
     } else {
-      return createFolder(
-          path, createFolder(path.replaceFirst("[^\\/]+\\/$", ""), storage), storage);
+      return createFolder(path, createFolder(path.replaceFirst("[^/]+/$", ""), storage), storage);
     }
   }
 
-  public FileDetail findUniqueByMd5(String md5, String managerId) {
-    //        List<FileDetail> fileDetails =
-    // this.fileDetailDao.findBy(Restrictions.eq("fileManagerId", managerId), Restrictions.eq("md5",
-    // md5));
-    //        return fileDetails.isEmpty() ? null : fileDetails.get(0);
-    return null;
-  }
+  //  public FileDetail findUniqueByMd5(String md5, String managerId) {
+  //    //        List<FileDetail> fileDetails =
+  //    // this.fileDetailDao.findBy(Restrictions.eq("fileManagerId", managerId),
+  // Restrictions.eq("md5",
+  //    // md5));
+  //    //        return fileDetails.isEmpty() ? null : fileDetails.get(0);
+  //    return null;
+  //  }
 
   public FileDetail getOneByPath(String path) {
     Optional<FileDetail> file = findByPath(path);
@@ -131,12 +138,16 @@ public class FileService {
   }
 
   private FileDetail createRootFolder(String absolutePath, String managerId) {
-    FileDetail folder = new FileDetail();
-    folder.setPath(absolutePath);
-    folder.setStorageConfig(StorageConfig.builder().id(managerId).build());
-    folder.setName(RegexpUtil.parseGroup(absolutePath, "([^/]+)\\/$", 1));
-    this.fileDetailDao.save(folder);
-    return folder;
+    return this.fileDetailDao.save(
+        FileDetail.builder()
+            .isDirectory(true)
+            .path(absolutePath)
+            .mimeType(DIR_MIME_TYPE)
+            .length(0L)
+            .name(RegexpUtil.parseGroup(absolutePath, "([^/]+)\\/$", 1))
+            .storageConfig(StorageConfig.builder().id(managerId).build())
+            .md5(DIR_MD5)
+            .build());
   }
 
   /**
@@ -148,15 +159,19 @@ public class FileService {
    * @return {Folder}
    */
   private FileDetail createFolder(String absolutePath, FileDetail parent, String managerId) {
-    FileDetail folder = new FileDetail();
-    folder.setPath(absolutePath);
-    folder.setStorageConfig(StorageConfig.builder().id(managerId).build());
-    folder.setName(RegexpUtil.parseGroup(absolutePath, "([^/]+)\\/$", 1));
+    FileDetail.FileDetailBuilder builder =
+        FileDetail.builder()
+            .path(absolutePath)
+            .isDirectory(true)
+            .mimeType(DIR_MIME_TYPE)
+            .length(0L)
+            .md5(DIR_MD5)
+            .storageConfig(StorageConfig.builder().id(managerId).build())
+            .name(RegexpUtil.parseGroup(absolutePath, "([^/]+)\\/$", 1));
     if (ObjectUtil.isNotNull(parent)) {
-      folder.setParentFile(parent);
+      builder.parentFile(parent);
     }
-    this.fileDetailDao.save(folder);
-    return folder;
+    return this.fileDetailDao.save(builder.build());
   }
 
   public Pager<FileDetail> findPager(Pager<FileDetail> pager, List<PropertyFilter> filters) {
@@ -210,13 +225,13 @@ public class FileService {
   }
 
   /**
-   * TODO width、heigth只适用于图片
+   * TODO width、height只适用于图片
    *
    * @param absolutePath 虚拟目录
    * @param width 宽
-   * @param heigth 高
+   * @param height 高
    */
-  public void localization(String absolutePath, int width, int heigth) {
+  public void localization(String absolutePath, int width, int height) {
     // 1.获取文件源信息
     // 2.获取本地化配置信息
     // 3.压缩图片
@@ -231,36 +246,37 @@ public class FileService {
     return space.get();
   }
 
-  /**
-   * 获取存放文件的绝对路径
-   *
-   * @param absolutePath 虚拟目录
-   * @param fileManagerId 文件管理器Id
-   * @return {String}
-   */
-  public String getAbsolutePath(String absolutePath, String fileManagerId) {
-    String ext = WebUtil.getExtension(absolutePath);
-    // absolutePath = RegexpUtil.replace(absolutePath, "[^/]+[.]{0}[^.]{0}$","");
-    // 去掉后缀名称
-    if (RegexpUtil.isMatch(absolutePath, "([/][^/]{1,})([.][^./]{1,})$")) {
-      absolutePath = RegexpUtil.replace(absolutePath, "([/][^/]{1,})([.][^./]{1,})$", "$1");
-    }
-    // 可能有效率问题
-    List<FileDetail> details = new ArrayList<>(); // this.fileDetailDao.find(new
-    // Criterion[]{Restrictions.like("absolutePath", absolutePath,
-    // MatchMode.START), Restrictions.eq("namespace", fileManagerId)},
-    // "absolutePath", "asc");
-    if (details.isEmpty()
-        || ObjectUtil.find(details, "absolutePath", absolutePath + "." + ext) == null) {
-      return absolutePath + "." + ext;
-    }
-    for (int i = 1; i <= details.size(); i++) {
-      if (ObjectUtil.find(details, "absolutePath", absolutePath + "(" + i + ")." + ext) == null) {
-        return absolutePath + "(" + i + ")." + ext;
-      }
-    }
-    return absolutePath;
-  }
+  //  /**
+  //   * 获取存放文件的绝对路径
+  //   *
+  //   * @param absolutePath 虚拟目录
+  //   * @param fileManagerId 文件管理器Id
+  //   * @return {String}
+  //   */
+  //  public String getAbsolutePath(String absolutePath, String fileManagerId) {
+  //    String ext = WebUtil.getExtension(absolutePath);
+  //    // absolutePath = RegexpUtil.replace(absolutePath, "[^/]+[.]{0}[^.]{0}$","");
+  //    // 去掉后缀名称
+  //    if (RegexpUtil.isMatch(absolutePath, "([/][^/]{1,})([.][^./]{1,})$")) {
+  //      absolutePath = RegexpUtil.replace(absolutePath, "([/][^/]{1,})([.][^./]{1,})$", "$1");
+  //    }
+  //    // 可能有效率问题
+  //    List<FileDetail> details = new ArrayList<>(); // this.fileDetailDao.find(new
+  //    // Criterion[]{Restrictions.like("absolutePath", absolutePath,
+  //    // MatchMode.START), Restrictions.eq("namespace", fileManagerId)},
+  //    // "absolutePath", "asc");
+  //    if (details.isEmpty()
+  //        || ObjectUtil.find(details, "absolutePath", absolutePath + "." + ext) == null) {
+  //      return absolutePath + "." + ext;
+  //    }
+  //    for (int i = 1; i <= details.size(); i++) {
+  //      if (ObjectUtil.find(details, "absolutePath", absolutePath + "(" + i + ")." + ext) == null)
+  // {
+  //        return absolutePath + "(" + i + ")." + ext;
+  //      }
+  //    }
+  //    return absolutePath;
+  //  }
 
   public long count(List<PropertyFilter> filters) {
     return this.fileDetailDao.count(filters);

@@ -1,6 +1,7 @@
 package cn.asany.storage.data.graphql.scalar;
 
 import cn.asany.storage.api.FileObject;
+import cn.asany.storage.data.bean.FileDetail;
 import cn.asany.storage.data.service.FileService;
 import cn.asany.storage.dto.SimpleFileObject;
 import graphql.language.IntValue;
@@ -51,7 +52,7 @@ public class FileCoercing implements Coercing<FileObject, Object> {
       return null;
     }
 
-    return fileService.findById(fileId).orElse(null);
+    return fileService.findById(fileId).map(FileDetail::toFileObject).orElse(null);
   }
 
   @Override
