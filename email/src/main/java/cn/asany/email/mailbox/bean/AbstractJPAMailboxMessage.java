@@ -25,15 +25,14 @@ import org.apache.james.mailbox.store.mail.model.impl.PropertyBuilder;
 import org.apache.james.mailbox.store.search.comparator.UidComparator;
 import org.apache.james.mime4j.MimeException;
 import org.apache.openjpa.persistence.jdbc.Index;
+import org.jetbrains.annotations.NotNull;
 import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.dao.LogicalDeletion;
 
 @Getter
 @Setter
 @IdClass(MailboxIdUidKey.class)
 @MappedSuperclass
-public abstract class AbstractJPAMailboxMessage extends BaseBusEntity
-    implements MailboxMessage, LogicalDeletion {
+public abstract class AbstractJPAMailboxMessage extends BaseBusEntity implements MailboxMessage {
 
   private static final Comparator<MailboxMessage> MESSAGE_UID_COMPARATOR = new UidComparator();
   private static final String TOSTRING_SEPARATOR = " ";
@@ -347,7 +346,7 @@ public abstract class AbstractJPAMailboxMessage extends BaseBusEntity
   }
 
   @Override
-  public int compareTo(MailboxMessage other) {
+  public int compareTo(@NotNull MailboxMessage other) {
     return MESSAGE_UID_COMPARATOR.compare(this, other);
   }
 

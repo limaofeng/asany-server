@@ -4,6 +4,7 @@ dependencies {
     implementation project(":asany-base")
     implementation project(":asany-security")
     implementation project(":asany-storage-api")
+    implementation 'com.squareup.okio:okio:1.13.0'
     implementation 'org.apache.james:metrics-logger:3.4.0'
     implementation 'org.apache.james:james-server-core:3.4.0'
     implementation 'org.apache.james:james-server-data-library:3.4.0'

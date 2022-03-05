@@ -112,7 +112,7 @@ public class JPAMessageMapper extends JPATransactionalMapper implements MessageM
       JPAId mailboxId = (JPAId) mailbox.getMailboxId();
       return this.mailboxMessageService.countUnseenMessagesInMailbox(mailboxId.getRawId());
     } catch (PersistenceException e) {
-      throw new MailboxException("Count of useen messages failed in mailbox " + mailbox, e);
+      throw new MailboxException("Count of unseen messages failed in mailbox " + mailbox, e);
     }
   }
 

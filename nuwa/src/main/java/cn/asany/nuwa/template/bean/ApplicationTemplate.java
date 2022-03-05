@@ -1,8 +1,10 @@
 package cn.asany.nuwa.template.bean;
 
 import java.util.List;
+import java.util.Objects;
 import javax.persistence.*;
 import lombok.*;
+import org.hibernate.Hibernate;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
@@ -11,11 +13,12 @@ import org.jfantasy.framework.dao.BaseBusEntity;
  *
  * @author limaofeng
  */
-@Data
+@Getter
+@Setter
+@ToString
+@RequiredArgsConstructor
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = false)
 @Entity
 @Table(name = "NUWA_APPLICATION_TEMPLATE")
 @NamedEntityGraph(
@@ -42,11 +45,30 @@ public class ApplicationTemplate extends BaseBusEntity {
       mappedBy = "application",
       cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
       fetch = FetchType.LAZY)
+  @ToString.Exclude
   private List<ApplicationTemplateRoute> routes;
   /** 菜单 */
   @OneToMany(
       mappedBy = "application",
       cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
       fetch = FetchType.LAZY)
+  @ToString.Exclude
   private List<ApplicationTemplateMenu> menus;
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) {
+      return false;
+    }
+    ApplicationTemplate that = (ApplicationTemplate) o;
+    return id != null && Objects.equals(id, that.id);
+  }
+
+  @Override
+  public int hashCode() {
+    return getClass().hashCode();
+  }
 }

@@ -4,9 +4,11 @@ import cn.asany.nuwa.app.bean.enums.RouteType;
 import cn.asany.ui.resources.bean.Component;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import javax.persistence.*;
 import lombok.*;
+import org.hibernate.Hibernate;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.framework.dao.hibernate.converter.StringSetConverter;
@@ -16,16 +18,14 @@ import org.jfantasy.framework.dao.hibernate.converter.StringSetConverter;
  *
  * @author limaofeng
  */
-@Data
+@Getter
+@Setter
+@RequiredArgsConstructor
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = false)
-@ToString(exclude = {"parent", "application"})
 @Entity
 @Table(name = "NUWA_APPLICATION_TEMPLATE_ROUTE")
 public class ApplicationTemplateRoute extends BaseBusEntity {
-
   @Id
   @Column(name = "ID")
   @GeneratedValue(generator = "fantasy-sequence")
@@ -52,19 +52,21 @@ public class ApplicationTemplateRoute extends BaseBusEntity {
   @JoinColumn(
       name = "COMPONENT_ID",
       foreignKey = @ForeignKey(name = "FK_APPLICATION_TEMPLATE_ROUTE_COMPONENT"))
+  @ToString.Exclude
   private Component component;
   /** 对应的图标 */
   @Column(name = "ICON")
   private String icon;
-
   /** 父路由 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "PID", foreignKey = @ForeignKey(name = "FK_APPLICATION_TEMPLATE_ROUTE_PID"))
+  @ToString.Exclude
   private ApplicationTemplateRoute parent;
   /** 子路由 */
   @JsonInclude(content = JsonInclude.Include.NON_NULL)
   @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
   @OrderBy("index ASC")
+  @ToString.Exclude
   private List<ApplicationTemplateRoute> routes;
   /** 可以访问的权限 */
   @Convert(converter = StringSetConverter.class)
@@ -92,8 +94,26 @@ public class ApplicationTemplateRoute extends BaseBusEntity {
       foreignKey = @ForeignKey(name = "FK_APPLICATION_TEMPLATE_ROUTE_APPID"),
       updatable = false,
       nullable = false)
+  @ToString.Exclude
   private ApplicationTemplate application;
   /** 序号 */
   @Column(name = "SORT")
   private Long index;
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) {
+      return false;
+    }
+    ApplicationTemplateRoute that = (ApplicationTemplateRoute) o;
+    return id != null && Objects.equals(id, that.id);
+  }
+
+  @Override
+  public int hashCode() {
+    return getClass().hashCode();
+  }
 }

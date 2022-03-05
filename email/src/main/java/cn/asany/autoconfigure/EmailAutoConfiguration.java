@@ -25,8 +25,9 @@ import org.springframework.context.annotation.Configuration;
 @EntityScan({"cn.asany.email.*.bean"})
 @ComponentScan({
   "cn.asany.email.*.dao",
-  "cn.asany.email.*.component",
+  "cn.asany.email.*.convert",
   "cn.asany.email.*.service",
+  "cn.asany.email.*.component",
 })
 public class EmailAutoConfiguration {
 

@@ -3,9 +3,11 @@ package cn.asany.nuwa.template.bean;
 import cn.asany.nuwa.app.bean.enums.MenuType;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import javax.persistence.*;
 import lombok.*;
+import org.hibernate.Hibernate;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.framework.dao.hibernate.converter.StringSetConverter;
@@ -15,11 +17,12 @@ import org.jfantasy.framework.dao.hibernate.converter.StringSetConverter;
  *
  * @author limaofeng
  */
-@Data
+@Getter
+@Setter
+@ToString
+@RequiredArgsConstructor
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = false)
 @Entity
 @Table(name = "NUWA_APPLICATION_TEMPLATE_MENU")
 public class ApplicationTemplateMenu extends BaseBusEntity {
@@ -60,6 +63,7 @@ public class ApplicationTemplateMenu extends BaseBusEntity {
   /** 父菜单 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "PID", foreignKey = @ForeignKey(name = "FK_APPLICATION_TEMPLATE_MENU_PID"))
+  @ToString.Exclude
   private ApplicationTemplateMenu parent;
   /** 子路由 */
   @JsonInclude(content = JsonInclude.Include.NON_NULL)
@@ -68,6 +72,7 @@ public class ApplicationTemplateMenu extends BaseBusEntity {
       fetch = FetchType.LAZY,
       cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
   @OrderBy("index ASC")
+  @ToString.Exclude
   private List<ApplicationTemplateMenu> menus;
   /** 授权后可见 */
   @Convert(converter = StringSetConverter.class)
@@ -86,5 +91,23 @@ public class ApplicationTemplateMenu extends BaseBusEntity {
       foreignKey = @ForeignKey(name = "FK_APPLICATION_TEMPLATE_MENU_APPID"),
       updatable = false,
       nullable = false)
+  @ToString.Exclude
   private ApplicationTemplate application;
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) {
+      return false;
+    }
+    ApplicationTemplateMenu that = (ApplicationTemplateMenu) o;
+    return id != null && Objects.equals(id, that.id);
+  }
+
+  @Override
+  public int hashCode() {
+    return getClass().hashCode();
+  }
 }

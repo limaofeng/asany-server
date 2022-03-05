@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
+import java.util.HashSet;
 import javax.mail.Flags;
 import javax.mail.internet.SharedInputStream;
 import javax.persistence.*;
@@ -68,6 +69,19 @@ public class JamesMailboxMessage extends AbstractJPAMailboxMessage {
   @Column(name = "HEADER_BYTES", length = 10485760, nullable = false)
   @Lob
   private byte[] header;
+
+  public JamesMailboxMessage(InputStream header, InputStream body) throws MailboxException {
+    try {
+      this.header = IOUtils.toByteArray(header);
+      this.body = IOUtils.toByteArray(body);
+      this.setProperties(new HashSet<>());
+      this.setUserFlags(new HashSet<>());
+      this.setFlags(this.createFlags());
+      this.setInternalDate(new Date());
+    } catch (IOException e) {
+      throw new MailboxException("Unable to parse message", e);
+    }
+  }
 
   public JamesMailboxMessage(
       JamesMailbox mailbox, MessageUid uid, long modSeq, MailboxMessage message)

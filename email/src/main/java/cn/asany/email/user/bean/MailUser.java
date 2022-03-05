@@ -43,6 +43,10 @@ public class MailUser extends BaseBusEntity implements User {
   private String password;
 
   @Basic
+  @Column(name = "FULL_NAME", length = 100)
+  private String fullName;
+
+  @Basic
   @Column(name = "PASSWORD_HASH_ALGORITHM", nullable = false, length = 100)
   private String alg;
 

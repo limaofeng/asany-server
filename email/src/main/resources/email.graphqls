@@ -74,35 +74,35 @@ type MailboxMessage {
   """
   主题
   """
-  subject: String!
+  subject: String
   """
   日期
   """
-  date: Date!
+  date: Date
   """
   发送方
   """
-  sender: MailboxAddress
+  sender: String
   """
   来自
   """
-  from: [MailboxAddress!]!
+  from: [String!]!
   """
   至
   """
-  to: [MailboxAddress!]!
+  to: [String!]!
   """
   抄送
   """
-  cc: [MailboxAddress!]!
+  cc: [String!]!
   """
   密送
   """
-  bcc: [MailboxAddress!]!
+  bcc: [String!]!
   """
   回邮地址
   """
-  replyTo: [MailboxAddress!]!
+  replyTo: [String!]!
   """
   文档类型
   """
@@ -110,11 +110,15 @@ type MailboxMessage {
   """
   内容
   """
-  body: String!
+  body: String
   """
   邮箱
   """
   mailbox: Mailbox!
+  """
+  邮箱名称
+  """
+  mailboxName: String!
   """
   在邮箱中的位置
   """
@@ -143,6 +147,11 @@ type MailboxMessage {
   已读
   """
   seen: Boolean
+  """
+  初始文件夹
+  可能的值: 收件箱(INBOX), 已发送(Sent), 草稿(Drafts), 发件箱(OUTBOX)
+  """
+  originalMailboxName: String!
 }
 
 input MailboxMessageFilter {
@@ -190,7 +199,60 @@ enum UpdateMode {
   REPLACE
 }
 
+input MailboxMessageCreateInput {
+  """
+  收件人
+  """
+  to: [String]
+  """
+  抄送
+  """
+  cc: [String]
+  """
+  密送
+  """
+  bcc: [String]
+  """
+  主题
+  """
+  subject: String
+  """
+  文档类型
+  """
+  mimeType: String
+  """
+  内容
+  """
+  body: String
+  """
+  附件
+  """
+  attachments: [File]
+}
+
+enum MailUserIdType {
+  """
+  邮箱名
+  """
+  MAIL_USERNAME
+  """
+  用户ID
+  """
+  LOGIN_USER_ID
+}
+
 extend type Mutation {
+  """
+  新增邮件(保存到草稿)
+  """
+  createMailboxMessage(
+    input: MailboxMessageCreateInput!
+    user: String
+  ): MailboxMessage!
+  """
+  删除邮件
+  """
+  deleteMailboxMessage(id: ID!): Boolean
   """
   更新我收藏的邮箱
   """
@@ -208,7 +270,6 @@ extend type Mutation {
     """
     mode: UpdateMode = ADD
   ): [String!]!
-
   """
   创建邮箱文件夹
   """
@@ -237,17 +298,6 @@ extend type Mutation {
     """
     mailbox: ID!
   ): MailboxMessage!
-}
-
-enum MailUserIdType {
-  """
-  邮箱名
-  """
-  MAIL_USERNAME
-  """
-  用户ID
-  """
-  LOGIN_USER_ID
 }
 
 extend type Query {

@@ -2,13 +2,7 @@ package cn.asany.email;
 
 import java.io.IOException;
 import java.util.Properties;
-import javax.mail.Authenticator;
-import javax.mail.Folder;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Store;
+import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeUtility;
@@ -105,7 +99,7 @@ public class HelloJMail {
       System.out.println("MessageCount:" + folder.getMessageCount());
 
       // 获取邮件消息
-      Message message[] = folder.getMessages();
+      Message[] message = folder.getMessages();
 
       for (int i = 0, n = message.length; i < n; i++) {
         System.out.println(i + ": " + message[i].getFrom()[0] + "\t" + message[i].getSubject());
@@ -130,7 +124,7 @@ public class HelloJMail {
   // 邮件主题中文字符转换
   public static String transferChinese(String strText) {
     try {
-      strText = MimeUtility.encodeText(new String(strText.getBytes(), "GB2312"), "GB2312", "B");
+      strText = MimeUtility.encodeText(strText);
     } catch (Exception ex) {
       ex.printStackTrace();
     }
@@ -138,7 +132,7 @@ public class HelloJMail {
   }
 
   public static void main(String[] args) {
-    //        HelloJMail.sendMail();
-    HelloJMail.getMail();
+    HelloJMail.sendMail();
+    //    HelloJMail.getMail();
   }
 }

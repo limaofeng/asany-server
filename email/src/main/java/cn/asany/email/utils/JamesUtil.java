@@ -9,6 +9,9 @@ import javax.mail.Flags;
 import lombok.SneakyThrows;
 import org.apache.james.mailbox.DefaultMailboxes;
 import org.apache.james.mailbox.MailboxSession;
+import org.apache.james.mailbox.exception.MailboxException;
+import org.apache.james.mailbox.model.Mailbox;
+import org.apache.james.mailbox.model.MailboxPath;
 import org.apache.james.mailbox.store.MailboxSessionMapperFactory;
 import org.apache.james.mailbox.store.SessionProvider;
 import org.apache.james.mailbox.store.mail.MailboxMapper;
@@ -99,5 +102,12 @@ public class JamesUtil {
       return JamesUtil.DEFAULT_MAILBOXES.get(mailboxId);
     }
     return mailboxId;
+  }
+
+  public static Mailbox findMailbox(MailboxSession session, String mailboxName)
+      throws MailboxException {
+    MailboxMapper mailboxMapper = JamesUtil.createMailboxMapper(session);
+    return mailboxMapper.findMailboxByPath(
+        MailboxPath.forUser(session.getUser().asString(), mailboxName));
   }
 }
