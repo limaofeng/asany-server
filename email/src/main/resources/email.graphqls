@@ -199,7 +199,44 @@ enum UpdateMode {
   REPLACE
 }
 
+"""
+邮箱信息新增对象
+"""
 input MailboxMessageCreateInput {
+  """
+  收件人
+  """
+  to: [String]
+  """
+  抄送
+  """
+  cc: [String]
+  """
+  密送
+  """
+  bcc: [String]
+  """
+  主题
+  """
+  subject: String
+  """
+  文档类型
+  """
+  mimeType: String
+  """
+  内容
+  """
+  body: String
+  """
+  附件
+  """
+  attachments: [File]
+}
+
+"""
+邮箱信息更新对象
+"""
+input MailboxMessageUpdateInput {
   """
   收件人
   """
@@ -248,6 +285,14 @@ extend type Mutation {
   createMailboxMessage(
     input: MailboxMessageCreateInput!
     user: String
+  ): MailboxMessage!
+  """
+  更新邮件(只限草稿)
+  """
+  updateMailboxMessage(
+    id: ID!
+    input: MailboxMessageUpdateInput!
+    merge: Boolean = true
   ): MailboxMessage!
   """
   删除邮件

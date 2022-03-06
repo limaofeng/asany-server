@@ -9,6 +9,7 @@ import cn.asany.email.mailbox.component.JPAId;
 import cn.asany.email.mailbox.convert.MailboxMessageConverter;
 import cn.asany.email.mailbox.graphql.input.MailboxMessageCreateInput;
 import cn.asany.email.mailbox.graphql.input.MailboxMessageFilter;
+import cn.asany.email.mailbox.graphql.input.MailboxMessageUpdateInput;
 import cn.asany.email.mailbox.graphql.type.MailboxMessageConnection;
 import cn.asany.email.mailbox.graphql.type.MailboxMessageResult;
 import cn.asany.email.mailbox.service.MailboxMessageService;
@@ -97,8 +98,6 @@ public class MailboxMessageGraphqlApiResolver
 
     String mailUserId = StringUtil.isBlank(account) ? JamesUtil.getUserName(user) : account;
 
-    // TODO: 判断当前用户是否有权限访问该邮件账户
-
     Pager<JamesMailboxMessage> pager;
 
     if (first > 0) {
@@ -142,6 +141,18 @@ public class MailboxMessageGraphqlApiResolver
             .orElseThrow(() -> new ValidDataException("新增失败")));
   }
 
+  public MailboxMessageResult updateMailboxMessage(
+      String id, MailboxMessageUpdateInput input, Boolean merge) {
+
+    Optional<JamesMailboxMessage> optionalMessage =
+        this.mailboxMessageService.findMailboxMessageById(new MailboxIdUidKey(id));
+    JamesMailboxMessage message = optionalMessage.orElseThrow(() -> new NotFoundException("邮件不存在"));
+
+    message = this.mailboxMessageConverter.toMailboxMessage(input, message);
+
+    return wrap(this.mailboxMessageService.update(id, message, merge));
+  }
+
   public Boolean deleteMailboxMessage(String id) throws MailboxException {
     MailboxSession session = JamesUtil.createSession(SpringSecurityUtils.getCurrentUser());
 
@@ -155,10 +166,6 @@ public class MailboxMessageGraphqlApiResolver
 
     messageMapper.delete(message.getMailbox().toMailbox(), message);
     return Boolean.TRUE;
-  }
-
-  public MailboxMessageResult updateMailboxMessage() {
-    return null;
   }
 
   @SneakyThrows

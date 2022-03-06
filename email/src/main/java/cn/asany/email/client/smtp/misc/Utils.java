@@ -9,6 +9,7 @@ import cn.asany.email.client.smtp.mail.Mail;
 import cn.asany.email.client.smtp.mail.SmtpDate;
 import java.io.*;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -22,8 +23,8 @@ import okio.Okio;
 
 public final class Utils {
 
-  public static final Charset ASCII = Charset.forName("ASCII");
-  public static final Charset UTF8 = Charset.forName("UTF-8");
+  public static final Charset ASCII = StandardCharsets.US_ASCII;
+  public static final Charset UTF8 = StandardCharsets.UTF_8;
   public static final int SP = 20;
   public static final int CR = 13;
   public static final int LF = 10;
@@ -46,13 +47,10 @@ public final class Utils {
   }
 
   public static ThreadFactory makeThreadFactory(final String name, final boolean daemon) {
-    return new ThreadFactory() {
-      @Override
-      public Thread newThread(Runnable r) {
-        Thread thread = new Thread(r, name);
-        thread.setDaemon(daemon);
-        return thread;
-      }
+    return r -> {
+      Thread thread = new Thread(r, name);
+      thread.setDaemon(daemon);
+      return thread;
     };
   }
 
@@ -96,7 +94,7 @@ public final class Utils {
     char ch;
     for (int i = 0; i < text.length(); i++) {
       ch = text.charAt(i);
-      if (ch >= 0 && ch <= 127) count++;
+      if (ch <= 127) count++;
     }
     return count;
   }
@@ -145,7 +143,7 @@ public final class Utils {
 
     if (mail.body() != null) {
       SmtpBody.writeBodies(body, mail.body(), spec);
-      body.writeUtf8(".\r\n");
+      // body.writeUtf8(".\r\n");
     }
 
     body.flush();

@@ -42,21 +42,33 @@ public class MailboxMessageResolver implements GraphQLResolver<MailboxMessageRes
   }
 
   public List<String> to(MailboxMessageResult result) {
+    if (result.getTo() == null) {
+      return new ArrayList<>();
+    }
     return new ArrayList<>(result.getTo().flatten())
         .stream().map(this::toMailString).collect(Collectors.toList());
   }
 
   public List<String> cc(MailboxMessageResult result) {
+    if (result.getCc() == null) {
+      return new ArrayList<>();
+    }
     return new ArrayList<>(result.getCc().flatten())
         .stream().map(this::toMailString).collect(Collectors.toList());
   }
 
   public List<String> bcc(MailboxMessageResult result) {
+    if (result.getBcc() == null) {
+      return new ArrayList<>();
+    }
     return new ArrayList<>(result.getBcc().flatten())
         .stream().map(this::toMailString).collect(Collectors.toList());
   }
 
   public List<String> replyTo(MailboxMessageResult result) {
+    if (result.getReplyTo() == null) {
+      return new ArrayList<>();
+    }
     return new ArrayList<>(result.getReplyTo().flatten())
         .stream().map(this::toMailString).collect(Collectors.toList());
   }

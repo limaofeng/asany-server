@@ -1,9 +1,6 @@
 package cn.asany.email.mailbox.service;
 
-import cn.asany.email.mailbox.bean.AbstractJPAMailboxMessage;
-import cn.asany.email.mailbox.bean.JamesMailboxMessage;
-import cn.asany.email.mailbox.bean.JamesProperty;
-import cn.asany.email.mailbox.bean.JamesUserFlag;
+import cn.asany.email.mailbox.bean.*;
 import cn.asany.email.mailbox.bean.toys.MailboxIdUidKey;
 import cn.asany.email.mailbox.dao.MailboxMessageDao;
 import java.util.Arrays;
@@ -180,6 +177,13 @@ public class MailboxMessageService {
   public Pager<JamesMailboxMessage> findPager(
       Pager<JamesMailboxMessage> pager, List<PropertyFilter> filters) {
     return this.mailboxMessageDao.findWithDetailsPager(pager, filters);
+  }
+
+  public JamesMailboxMessage update(String id, JamesMailboxMessage message, Boolean merge) {
+    MailboxIdUidKey key = new MailboxIdUidKey(id);
+    message.setMailbox(JamesMailbox.builder().id(key.getMailbox()).build());
+    message.setId(key.getId());
+    return this.mailboxMessageDao.update(message, merge);
   }
 
   public void update(JamesMailboxMessage message) {
