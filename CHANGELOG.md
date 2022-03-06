@@ -2,6 +2,30 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.4](https://github.com/limaofeng/asany-server/compare/v0.1.3...v0.1.4) (2022-03-06)
+
+
+### Features
+
+* 优化日程查询 ([af5106f](https://github.com/limaofeng/asany-server/commit/af5106f3fe536e75ca2cdc07411d60cc3ef6b7f8))
+* 优化日程查询 ([6d8d93c](https://github.com/limaofeng/asany-server/commit/6d8d93c5726c8baf4069a29bcede024cf765439a))
+* 优化邮件查询接口，添加更多的邮件详情字段 ([7eb2e77](https://github.com/limaofeng/asany-server/commit/7eb2e771925d41025ccf879cb45c2161b714ca04))
+* 启用缓存，邮箱返回统计计算字段 ([2fc1eb0](https://github.com/limaofeng/asany-server/commit/2fc1eb0d8e4e8bd670f90e5172e1007d441e38bd))
+* 完成标记邮件及移动邮件功能 ([f7f4e4d](https://github.com/limaofeng/asany-server/commit/f7f4e4d422e0d0ff4fd19e6ce8225070654acee0))
+* 日历新增修改逻辑 ([1377794](https://github.com/limaofeng/asany-server/commit/1377794b2d8c2fca871def3ba93cb11bc8584608))
+* 添加日历账户表，新增日历集更新/删除接口 ([6548185](https://github.com/limaofeng/asany-server/commit/65481851c36d1f6037a86b26ec6efd773523dd6f))
+* 邮件 Base64 显示错误 ([4170303](https://github.com/limaofeng/asany-server/commit/4170303ff6f4b212f9c690d0c76a391f5058129c))
+* 邮箱设置/文件夹 ([4ef36fe](https://github.com/limaofeng/asany-server/commit/4ef36fe7736a9a565f3c411ca0b05f64a8ecf3fb))
+* 邮箱设置/文件夹个人收藏 ([63a18d9](https://github.com/limaofeng/asany-server/commit/63a18d95ef1540402626914f8c2cdc90aa5ba32a))
+
+
+### Bug Fixes
+
+* 保存草稿及发送邮件功能 ([212ba4c](https://github.com/limaofeng/asany-server/commit/212ba4cc84573f4ddfebb649a73c74893191d663))
+* 修复文件上传接口中的BUG ([e49538e](https://github.com/limaofeng/asany-server/commit/e49538ef019aa48fad0a30a1c37f4a1ce6eb805b))
+* 解决日历事件查询时 limit -1,1 bug ([f7429a4](https://github.com/limaofeng/asany-server/commit/f7429a4cde88d2ec57892dd4d37e17352d202c20))
+* 解决邮箱自定义文件夹新增BUG ([e6c6e4a](https://github.com/limaofeng/asany-server/commit/e6c6e4aafab785b3cf751463164a9569749f053d))
+
 ### [0.1.3](https://github.com/limaofeng/asany-server/compare/v0.1.2...v0.1.3) (2022-01-17)
 
 
