@@ -11,9 +11,14 @@ import cn.asany.email.client.smtp.misc.Utils;
 import cn.asany.email.mailbox.bean.JamesMailboxMessage;
 import cn.asany.email.mailbox.graphql.input.MailboxMessageCreateInput;
 import cn.asany.email.mailbox.graphql.input.MailboxMessageUpdateInput;
+import cn.asany.email.mailbox.graphql.type.MailboxMessageResult;
+import cn.asany.email.utils.JamesUtil;
+import java.io.IOException;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import lombok.SneakyThrows;
+import org.apache.james.mailbox.exception.MailboxException;
+import org.apache.james.mailbox.store.mail.model.FlagsFactory;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.common.StringUtil;
 import org.mapstruct.Builder;
@@ -111,6 +116,70 @@ public interface MailboxMessageConverter {
       message.setSubType(mimeTypes[1]);
     }
     message.setFlags(preMessage.createFlags());
+    return message;
+  }
+
+  default JamesMailboxMessage copyMailboxMessage(JamesMailboxMessage preMessage)
+      throws IOException, MailboxException {
+    String mailUser = preMessage.getMailbox().getUser();
+
+    MailboxMessageResult result = JamesUtil.wrap(preMessage);
+
+    String mailUserName = JamesUtil.getUserFullName(mailUser);
+
+    Mail.Builder builder =
+        new Mail.Builder()
+            .from(Mailbox.parse(mailUserName + "<" + mailUser + ">"))
+            .recipients(
+                result.getTo().flatten().stream()
+                    .map(item -> Mailbox.parse(JamesUtil.toMailString(item)))
+                    .collect(Collectors.toList()));
+
+    if (ObjectUtil.isNotNull(result.getCc())) {
+      result
+          .getCc()
+          .flatten()
+          .forEach(item -> builder.addCc(Mailbox.parse(JamesUtil.toMailString(item))));
+    }
+
+    if (ObjectUtil.isNotNull(result.getBcc())) {
+      result
+          .getBcc()
+          .flatten()
+          .forEach(item -> builder.addCc(Mailbox.parse(JamesUtil.toMailString(item))));
+    }
+
+    if (StringUtil.isNotBlank(result.getSubject())) {
+      builder.subject(result.getSubject());
+    }
+
+    Encoding theEncoding = DEFAULT_TRANSFER_SPEC.encoding();
+
+    String mimeType = StringUtil.defaultValue(result.getMimeType(), "text/plain");
+    if (StringUtil.isNotBlank(result.getBody())) {
+      String body = JamesUtil.bodyTransfer(result);
+
+      builder.body("text/html".equals(mimeType) ? TextBody.html(body) : TextBody.plain(body));
+
+      if (theEncoding == AUTO_SELECT && StringUtil.isNotBlank(body)) {
+        theEncoding = builder.buildNoCheck().body().transferEncoding();
+      }
+    }
+
+    builder.addHeader("Content-Transfer-Encoding", theEncoding.encodingName());
+
+    Utils.MailContent content = Utils.toFullContent(builder.buildNoCheck(), DEFAULT_TRANSFER_SPEC);
+    JamesMailboxMessage message = new JamesMailboxMessage(content.getHeader(), content.getBody());
+    long headerLength = message.getHeader().length;
+    long bodyLength = message.getBody().length;
+    message.setBodyStartOctet((int) headerLength);
+    message.setTextualLineCount(headerLength + bodyLength);
+    if (StringUtil.isNotBlank(result.getMimeType())) {
+      String[] mimeTypes = result.getMimeType().split("/");
+      message.setMediaType(mimeTypes[0]);
+      message.setSubType(mimeTypes[1]);
+    }
+    message.setFlags(FlagsFactory.empty());
     return message;
   }
 }

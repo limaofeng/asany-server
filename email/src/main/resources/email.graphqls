@@ -299,6 +299,10 @@ extend type Mutation {
   """
   deleteMailboxMessage(id: ID!): Boolean
   """
+  发送邮件
+  """
+  sendMailboxMessage(id: ID!): Boolean
+  """
   更新我收藏的邮箱
   """
   updateMyFavoriteMailboxes(

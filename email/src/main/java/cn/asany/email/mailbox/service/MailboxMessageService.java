@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.apache.james.mailbox.DefaultMailboxes;
 import org.apache.james.mailbox.MessageUid;
 import org.apache.james.mailbox.store.mail.model.Property;
 import org.jfantasy.framework.dao.OrderBy;
@@ -64,6 +65,9 @@ public class MailboxMessageService {
   }
 
   public JamesMailboxMessage save(JamesMailboxMessage message) {
+    if (DefaultMailboxes.SENT.equals(message.getMailbox().getName())) {
+      message.setSeen(true);
+    }
     for (Property property : message.getProperties()) {
       JamesProperty jpaProperty = (JamesProperty) property;
       jpaProperty.setUid(message.getUid().asLong());

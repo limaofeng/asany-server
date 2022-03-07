@@ -19,25 +19,32 @@ import cn.asany.security.core.exception.ValidDataException;
 import graphql.kickstart.tools.GraphQLMutationResolver;
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import graphql.schema.DataFetchingEnvironment;
-import java.util.ArrayList;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
-import javax.mail.Flags;
+import java.util.stream.Collectors;
+import javax.mail.MessagingException;
 import lombok.SneakyThrows;
+import org.apache.james.core.MaybeSender;
 import org.apache.james.mailbox.DefaultMailboxes;
+import org.apache.james.mailbox.MailboxManager;
 import org.apache.james.mailbox.MailboxSession;
 import org.apache.james.mailbox.MessageManager;
 import org.apache.james.mailbox.exception.MailboxException;
 import org.apache.james.mailbox.model.Mailbox;
 import org.apache.james.mailbox.model.MessageMetaData;
 import org.apache.james.mailbox.model.MessageRange;
-import org.apache.james.mailbox.store.FlagsUpdateCalculator;
 import org.apache.james.mailbox.store.mail.MailboxMapper;
 import org.apache.james.mailbox.store.mail.MessageMapper;
-import org.apache.james.mime4j.dom.MessageBuilder;
+import org.apache.james.mailetcontainer.api.MailProcessor;
+import org.apache.james.server.core.MailImpl;
+import org.apache.james.server.core.MimeMessageCopyOnWriteProxy;
+import org.apache.james.server.core.MimeMessageInputStreamSource;
+import org.apache.mailet.Mail;
 import org.jfantasy.framework.dao.OrderBy;
 import org.jfantasy.framework.dao.Pager;
+import org.jfantasy.framework.error.ValidationException;
 import org.jfantasy.framework.security.LoginUser;
 import org.jfantasy.framework.security.SpringSecurityUtils;
 import org.jfantasy.framework.spring.mvc.error.NotFoundException;
@@ -51,21 +58,22 @@ import org.springframework.stereotype.Component;
 public class MailboxMessageGraphqlApiResolver
     implements GraphQLQueryResolver, GraphQLMutationResolver {
 
-  private final MessageBuilder messageBuilder;
   private final DomainService domainService;
   private final MailboxService mailboxService;
   private final MailboxMessageService mailboxMessageService;
   public final MailboxMessageConverter mailboxMessageConverter;
+  private final MailProcessor mailProcessor;
 
   public MailboxMessageGraphqlApiResolver(
-      MessageBuilder messageBuilder,
       DomainService domainService,
       MailboxService mailboxService,
+      MailboxManager mailboxManager,
+      MailProcessor mailProcessor,
       MailboxMessageService mailboxMessageService,
       MailboxMessageConverter mailboxMessageConverter) {
-    this.messageBuilder = messageBuilder;
     this.domainService = domainService;
     this.mailboxService = mailboxService;
+    this.mailProcessor = mailProcessor;
     this.mailboxMessageService = mailboxMessageService;
     this.mailboxMessageConverter = mailboxMessageConverter;
   }
@@ -76,7 +84,7 @@ public class MailboxMessageGraphqlApiResolver
     if (!messageOptional.isPresent()) {
       throw new NotFoundException("查询的邮件不存在");
     }
-    return wrap(messageOptional.get());
+    return JamesUtil.wrap(messageOptional.get());
   }
 
   public MailboxMessageConnection mailboxMessages(
@@ -111,7 +119,7 @@ public class MailboxMessageGraphqlApiResolver
         pager,
         MailboxMessageConnection.class,
         (Function<JamesMailboxMessage, Edge>)
-            message -> new MailboxMessageConnection.MailboxMessageEdge(wrap(message)));
+            message -> new MailboxMessageConnection.MailboxMessageEdge(JamesUtil.wrap(message)));
   }
 
   public MailboxMessageResult createMailboxMessage(MailboxMessageCreateInput input, String user)
@@ -134,7 +142,7 @@ public class MailboxMessageGraphqlApiResolver
     assert mailbox != null;
     JPAId mailboxId = (JPAId) mailbox.getMailboxId();
 
-    return wrap(
+    return JamesUtil.wrap(
         this.mailboxMessageService
             .findMailboxMessageById(
                 new MailboxIdUidKey(mailboxId.getRawId(), metaData.getUid().asLong()))
@@ -150,22 +158,69 @@ public class MailboxMessageGraphqlApiResolver
 
     message = this.mailboxMessageConverter.toMailboxMessage(input, message);
 
-    return wrap(this.mailboxMessageService.update(id, message, merge));
+    return JamesUtil.wrap(this.mailboxMessageService.update(id, message, merge));
   }
 
   public Boolean deleteMailboxMessage(String id) throws MailboxException {
-    MailboxSession session = JamesUtil.createSession(SpringSecurityUtils.getCurrentUser());
-
-    MessageMapper messageMapper = JamesUtil.createMessageMapper(session);
-    MailboxMapper mailboxMapper = JamesUtil.createMailboxMapper(session);
-
     Optional<JamesMailboxMessage> optional =
         this.mailboxMessageService.findMailboxMessageById(new MailboxIdUidKey(id));
 
     JamesMailboxMessage message = optional.orElseThrow(() -> new NotFoundException("邮件不存在"));
 
+    String mailUser = message.getMailbox().getUser();
+
+    MailboxSession session = JamesUtil.createSession(mailUser);
+
+    MessageMapper messageMapper = JamesUtil.createMessageMapper(session);
+    MailboxMapper mailboxMapper = JamesUtil.createMailboxMapper(session);
+
     messageMapper.delete(message.getMailbox().toMailbox(), message);
     return Boolean.TRUE;
+  }
+
+  public Boolean sendMailboxMessage(String id)
+      throws MailboxException, IOException, MessagingException {
+
+    Optional<JamesMailboxMessage> optional =
+        this.mailboxMessageService.findMailboxMessageById(new MailboxIdUidKey(id));
+
+    JamesMailboxMessage draft = optional.orElseThrow(() -> new NotFoundException("邮件不存在"));
+
+    if (!draft.isDraft()) {
+      throw new ValidationException("该邮件不是草稿");
+    }
+
+    JamesMailboxMessage message = this.mailboxMessageConverter.copyMailboxMessage(draft);
+
+    String mailUser = draft.getMailbox().getUser();
+
+    MailboxSession session = JamesUtil.createSession(mailUser);
+
+    MailboxMessageResult result = JamesUtil.wrap(message);
+
+    Mail mail =
+        MailImpl.builder()
+            .name(MailImpl.getId())
+            .sender(MaybeSender.getMailSender(mailUser))
+            .addRecipients(
+                result.getTo().flatten().stream()
+                    .map(item -> MaybeSender.getMailSender(item.getAddress()).get())
+                    .collect(Collectors.toList()))
+            .build();
+
+    mail.setState(Mail.DEFAULT);
+
+    MimeMessageInputStreamSource mmiss =
+        new MimeMessageInputStreamSource(mail.getName(), message.getFullContent());
+
+    MimeMessageCopyOnWriteProxy mimeMessageCopyOnWriteProxy =
+        new MimeMessageCopyOnWriteProxy(mmiss);
+
+    mail.setMessage(mimeMessageCopyOnWriteProxy);
+
+    mailProcessor.service(mail);
+
+    return this.deleteMailboxMessage(id);
   }
 
   @SneakyThrows
@@ -186,9 +241,9 @@ public class MailboxMessageGraphqlApiResolver
     Mailbox mailbox = mailboxMapper.findMailboxById(message.getMailboxId());
     MessageRange range = MessageRange.one(message.getUid());
 
-    messageMapper.updateFlags(mailbox, convert(flags, mode), range);
+    messageMapper.updateFlags(mailbox, JamesUtil.convert(flags, mode), range);
 
-    return wrap(message);
+    return JamesUtil.wrap(message);
   }
 
   @SneakyThrows
@@ -230,34 +285,6 @@ public class MailboxMessageGraphqlApiResolver
       this.mailboxMessageService.update(message);
     }
 
-    return wrap(message);
-  }
-
-  private FlagsUpdateCalculator convert(List<String> flags, MessageManager.FlagsUpdateMode mode) {
-    Flags _flags = new Flags();
-    for (String f : flags) {
-      if (JamesUtil.DEFAULT_MAIL_FLAGS.containsKey(f)) {
-        _flags.add(JamesUtil.DEFAULT_MAIL_FLAGS.get(f));
-      } else {
-        _flags.add(f);
-      }
-    }
-    return new FlagsUpdateCalculator(_flags, mode);
-  }
-
-  @SneakyThrows
-  private MailboxMessageResult wrap(JamesMailboxMessage message) {
-    return MailboxMessageResult.builder()
-        .mailboxMessage(message)
-        .message(messageBuilder.parseMessage(message.getFullContent()))
-        .build();
-  }
-
-  private List<MailboxMessageResult> wrap(List<JamesMailboxMessage> messages) {
-    List<MailboxMessageResult> results = new ArrayList<>();
-    for (JamesMailboxMessage message : messages) {
-      results.add(wrap(message));
-    }
-    return results;
+    return JamesUtil.wrap(message);
   }
 }

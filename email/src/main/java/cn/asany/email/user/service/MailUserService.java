@@ -140,6 +140,10 @@ public class MailUserService {
     return settings.get().getMailboxes();
   }
 
+  public Optional<MailUser> findMailUser(String id) {
+    return this.mailUserDao.findById(id);
+  }
+
   public MailUser getMailUser(String id) throws MailboxException {
     Optional<MailUser> user = this.mailUserDao.findById(id);
     return user.orElseThrow(() -> new MailboxException(String.format("邮箱账号%s不存在", id)));

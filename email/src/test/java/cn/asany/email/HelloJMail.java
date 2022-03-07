@@ -17,10 +17,10 @@ public class HelloJMail {
     // String host = "192.168.1.98"; // 指定的smtp服务器，本机的局域网IP
     String host = "smtp.asany.cn"; // 本机smtp服务器
     // String host = "smtp.163.com"; // 163的smtp服务器
-    String from = "253161354@asany.cn"; // 邮件发送人的邮件地址
-    String to = "limaofeng@asany.cn"; // 邮件接收人的邮件地址
-    final String username = "253161354@asany.cn"; // 发件人的邮件帐户
-    final String password = "123456"; // 发件人的邮件密码
+    String from = "limaofeng@asany.cn"; // 邮件发送人的邮件地址
+    String to = "253161354@asany.cn"; // 邮件接收人的邮件地址
+    final String username = "limaofeng@asany.cn"; // 发件人的邮件帐户
+    final String password = "rzqabjaiomeuicgd"; // 发件人的邮件密码
 
     // 创建Properties 对象
     Properties props = System.getProperties();
@@ -52,7 +52,8 @@ public class HelloJMail {
       message.setText("From now, you have your own mail server, congratulation!");
 
       // 发送消息
-      session.getTransport("smtp").send(message);
+      session.getTransport("smtp");
+      Transport.send(message);
       // Transport.send(message); //也可以这样创建Transport对象发送
       System.out.println("SendMail Process Over!");
 

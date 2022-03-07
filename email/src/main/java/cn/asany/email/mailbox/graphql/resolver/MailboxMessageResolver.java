@@ -2,19 +2,14 @@ package cn.asany.email.mailbox.graphql.resolver;
 
 import cn.asany.email.mailbox.graphql.type.MailboxMessageResult;
 import cn.asany.email.mailbox.service.MailboxMessageService;
+import cn.asany.email.utils.JamesUtil;
 import graphql.kickstart.tools.GraphQLResolver;
-import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.apache.james.mailbox.DefaultMailboxes;
-import org.apache.james.mime4j.dom.TextBody;
-import org.apache.james.mime4j.dom.address.Mailbox;
-import org.bouncycastle.util.encoders.Base64;
 import org.jfantasy.framework.util.common.ObjectUtil;
-import org.jfantasy.framework.util.common.StringUtil;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -30,15 +25,8 @@ public class MailboxMessageResolver implements GraphQLResolver<MailboxMessageRes
     return result.getMailboxMessage().getKey().toKey();
   }
 
-  public String toMailString(Mailbox mailbox) {
-    if (StringUtil.isBlank(mailbox.getName()) || mailbox.getLocalPart().equals(mailbox.getName())) {
-      return mailbox.getAddress();
-    }
-    return mailbox.getName() + "<" + mailbox.getAddress() + ">";
-  }
-
   public List<String> from(MailboxMessageResult result) {
-    return result.getFrom().stream().map(this::toMailString).collect(Collectors.toList());
+    return result.getFrom().stream().map(JamesUtil::toMailString).collect(Collectors.toList());
   }
 
   public List<String> to(MailboxMessageResult result) {
@@ -46,7 +34,7 @@ public class MailboxMessageResolver implements GraphQLResolver<MailboxMessageRes
       return new ArrayList<>();
     }
     return new ArrayList<>(result.getTo().flatten())
-        .stream().map(this::toMailString).collect(Collectors.toList());
+        .stream().map(JamesUtil::toMailString).collect(Collectors.toList());
   }
 
   public List<String> cc(MailboxMessageResult result) {
@@ -54,7 +42,7 @@ public class MailboxMessageResolver implements GraphQLResolver<MailboxMessageRes
       return new ArrayList<>();
     }
     return new ArrayList<>(result.getCc().flatten())
-        .stream().map(this::toMailString).collect(Collectors.toList());
+        .stream().map(JamesUtil::toMailString).collect(Collectors.toList());
   }
 
   public List<String> bcc(MailboxMessageResult result) {
@@ -62,7 +50,7 @@ public class MailboxMessageResolver implements GraphQLResolver<MailboxMessageRes
       return new ArrayList<>();
     }
     return new ArrayList<>(result.getBcc().flatten())
-        .stream().map(this::toMailString).collect(Collectors.toList());
+        .stream().map(JamesUtil::toMailString).collect(Collectors.toList());
   }
 
   public List<String> replyTo(MailboxMessageResult result) {
@@ -70,7 +58,7 @@ public class MailboxMessageResolver implements GraphQLResolver<MailboxMessageRes
       return new ArrayList<>();
     }
     return new ArrayList<>(result.getReplyTo().flatten())
-        .stream().map(this::toMailString).collect(Collectors.toList());
+        .stream().map(JamesUtil::toMailString).collect(Collectors.toList());
   }
 
   public String mimeType(MailboxMessageResult result) {
@@ -100,20 +88,6 @@ public class MailboxMessageResolver implements GraphQLResolver<MailboxMessageRes
   }
 
   public String body(MailboxMessageResult mailboxMessageResult) throws IOException {
-    if (mailboxMessageResult.getBody() instanceof TextBody) {
-      ByteArrayOutputStream result = new ByteArrayOutputStream();
-      TextBody body = (TextBody) mailboxMessageResult.getBody();
-      BufferedReader reader = new BufferedReader(body.getReader());
-      while (reader.ready()) {
-        String line = reader.readLine();
-        if (mailboxMessageResult.isBase64Encoding()) {
-          result.write(Base64.decode(line));
-        } else {
-          result.write(line.getBytes());
-        }
-      }
-      return result.toString();
-    }
-    return "";
+    return JamesUtil.bodyTransfer(mailboxMessageResult);
   }
 }
