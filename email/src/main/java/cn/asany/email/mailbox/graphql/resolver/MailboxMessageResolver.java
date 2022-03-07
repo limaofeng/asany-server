@@ -79,7 +79,8 @@ public class MailboxMessageResolver implements GraphQLResolver<MailboxMessageRes
 
   public long index(MailboxMessageResult result) {
     return this.mailboxMessageService.index(
-        result.getMailboxMessage().getId(), result.getMailboxMessage().getMailboxId().getRawId());
+        result.getMailboxMessage().getInternalDate(),
+        result.getMailboxMessage().getMailboxId().getRawId());
   }
 
   public String mailboxName(MailboxMessageResult result) {

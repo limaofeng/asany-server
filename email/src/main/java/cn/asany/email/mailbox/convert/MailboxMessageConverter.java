@@ -66,7 +66,7 @@ public interface MailboxMessageConverter {
     }
 
     Encoding theEncoding = DEFAULT_TRANSFER_SPEC.encoding();
-    if (theEncoding == AUTO_SELECT) {
+    if (theEncoding == AUTO_SELECT && StringUtil.isNotBlank(input.getBody())) {
       theEncoding = builder.buildNoCheck().body().transferEncoding();
     }
 

@@ -4,6 +4,7 @@ import cn.asany.email.mailbox.bean.*;
 import cn.asany.email.mailbox.bean.toys.MailboxIdUidKey;
 import cn.asany.email.mailbox.dao.MailboxMessageDao;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -94,9 +95,12 @@ public class MailboxMessageService {
     return this.mailboxMessageDao.findAll(filters, size, Sort.by("id").descending());
   }
 
-  public long index(long id, long mailbox) {
+  public long index(Date internalDate, long mailbox) {
     return this.mailboxMessageDao.count(
-        PropertyFilter.builder().greaterThanOrEqual("id", id).equal("mailbox.id", mailbox).build());
+        PropertyFilter.builder()
+            .greaterThanOrEqual("internalDate", internalDate)
+            .equal("mailbox.id", mailbox)
+            .build());
   }
 
   public List<JamesMailboxMessage> findMessagesInMailbox(long mailbox, int size) {

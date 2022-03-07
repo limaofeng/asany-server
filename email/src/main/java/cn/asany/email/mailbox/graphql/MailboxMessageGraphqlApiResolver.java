@@ -94,7 +94,7 @@ public class MailboxMessageGraphqlApiResolver
     JamesDomain domain = domainService.getDefaultDomain();
     LoginUser user = SpringSecurityUtils.getCurrentUser();
 
-    orderBy = ObjectUtil.defaultValue(orderBy, () -> OrderBy.desc("id"));
+    orderBy = ObjectUtil.defaultValue(orderBy, () -> OrderBy.desc("internalDate"));
 
     String mailUserId = StringUtil.isBlank(account) ? JamesUtil.getUserName(user) : account;
 
