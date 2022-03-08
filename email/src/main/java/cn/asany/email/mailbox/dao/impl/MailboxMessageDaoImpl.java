@@ -5,6 +5,7 @@ import cn.asany.email.mailbox.bean.toys.MailboxIdUidKey;
 import cn.asany.email.mailbox.dao.MailboxMessageDao;
 import java.util.List;
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.jpa.ComplexJpaRepository;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
@@ -24,7 +25,24 @@ public class MailboxMessageDaoImpl
 
   @Override
   public int deleteDeletedMessagesInMailbox(Long mailbox) {
-    throw new IgnoreException(" No SQL ");
+
+    Query query =
+        this.em.createQuery(
+            "DELETE FROM MailUserFlag WHERE mailboxId = :mailboxId and uid in (SELECT message.id FROM MailboxMessage message WHERE message.mailbox.id = :mailboxId AND message.deleted=TRUE) ");
+    query.setParameter("mailboxId", mailbox);
+    query.executeUpdate();
+
+    query =
+        this.em.createQuery(
+            "DELETE FROM MailProperty WHERE mailboxId = :mailboxId and uid in (SELECT message.id FROM MailboxMessage message WHERE message.mailbox.id = :mailboxId AND message.deleted=TRUE)");
+    query.setParameter("mailboxId", mailbox);
+    query.executeUpdate();
+
+    query =
+        this.em.createQuery(
+            "DELETE FROM MailboxMessage message WHERE message.mailbox.id = :mailboxId AND message.deleted=TRUE");
+    query.setParameter("mailboxId", mailbox);
+    return query.executeUpdate();
   }
 
   @Override

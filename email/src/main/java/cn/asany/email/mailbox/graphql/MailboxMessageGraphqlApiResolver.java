@@ -15,6 +15,7 @@ import cn.asany.email.mailbox.graphql.type.MailboxMessageResult;
 import cn.asany.email.mailbox.service.MailboxMessageService;
 import cn.asany.email.mailbox.service.MailboxService;
 import cn.asany.email.utils.JamesUtil;
+import cn.asany.email.utils.SentMailContext;
 import cn.asany.security.core.exception.ValidDataException;
 import graphql.kickstart.tools.GraphQLMutationResolver;
 import graphql.kickstart.tools.GraphQLQueryResolver;
@@ -178,7 +179,16 @@ public class MailboxMessageGraphqlApiResolver
     return Boolean.TRUE;
   }
 
-  public Boolean sendMailboxMessage(String id)
+  public int clearMailboxMessagesInTrashMailbox(String user) throws MailboxException {
+    MailboxSession session = JamesUtil.createSession(user, SpringSecurityUtils.getCurrentUser());
+
+    Mailbox mailbox = JamesUtil.findMailbox(session, DefaultMailboxes.TRASH);
+    JPAId mailboxId = (JPAId) mailbox.getMailboxId();
+
+    return this.mailboxMessageService.deleteDeletedMessagesInMailbox(mailboxId.getRawId());
+  }
+
+  public MailboxMessageResult sendMailboxMessage(String id)
       throws MailboxException, IOException, MessagingException {
 
     Optional<JamesMailboxMessage> optional =
@@ -220,7 +230,13 @@ public class MailboxMessageGraphqlApiResolver
 
     mailProcessor.service(mail);
 
-    return this.deleteMailboxMessage(id);
+    SentMailContext context = SentMailContext.get();
+
+    message = context.getMessage();
+
+    this.deleteMailboxMessage(id);
+
+    return JamesUtil.wrap(message);
   }
 
   @SneakyThrows

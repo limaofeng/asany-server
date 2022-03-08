@@ -16,7 +16,7 @@ import org.hibernate.annotations.GenericGenerator;
 @Getter
 @Setter
 @RequiredArgsConstructor
-@Entity(name = "Property")
+@Entity(name = "MailProperty")
 @Table(
     name = "JAMES_MAIL_PROPERTY",
     uniqueConstraints =

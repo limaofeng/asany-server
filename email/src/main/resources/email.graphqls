@@ -301,7 +301,11 @@ extend type Mutation {
   """
   发送邮件
   """
-  sendMailboxMessage(id: ID!): Boolean
+  sendMailboxMessage(id: ID!): MailboxMessage!
+  """
+  清空 回收站
+  """
+  clearMailboxMessagesInTrashMailbox(user: String): Int
   """
   更新我收藏的邮箱
   """

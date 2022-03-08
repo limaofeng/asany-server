@@ -20,9 +20,7 @@ public interface MailboxMessageDao extends JpaRepository<JamesMailboxMessage, Ma
   int deleteMessages(@Param("mailboxId") Long mailboxId);
 
   @Modifying
-  @Query(
-      "DELETE FROM MailboxMessage message WHERE message.mailbox.id = :mailboxId AND message.deleted=TRUE")
-  int deleteDeletedMessagesInMailbox(@Param("mailboxId") Long mailbox);
+  int deleteDeletedMessagesInMailbox(Long mailbox);
 
   @Modifying
   @Query(

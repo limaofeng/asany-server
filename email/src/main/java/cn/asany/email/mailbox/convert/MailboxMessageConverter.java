@@ -37,14 +37,15 @@ public interface MailboxMessageConverter {
       new TransferSpec.Builder().charset(Utils.UTF8).encoding(AUTO_SELECT).lengthLimit(76).build();
 
   static Mail.Builder toMailBuilder(MailboxMessageCreateInput input, String mailUser) {
-    Mail.Builder builder =
-        new Mail.Builder()
-            .from(Mailbox.parse(mailUser))
-            .recipients(
-                input.getTo().stream()
-                    .map(Mailbox::parse)
-                    .filter(Objects::nonNull)
-                    .collect(Collectors.toList()));
+    Mail.Builder builder = new Mail.Builder().from(Mailbox.parse(mailUser));
+
+    if (ObjectUtil.isNotNull(input.getTo())) {
+      builder.recipients(
+          input.getTo().stream()
+              .map(Mailbox::parse)
+              .filter(Objects::nonNull)
+              .collect(Collectors.toList()));
+    }
 
     if (ObjectUtil.isNotNull(input.getCc())) {
       for (String mailbox : input.getCc()) {
@@ -63,16 +64,18 @@ public interface MailboxMessageConverter {
     }
 
     String mimeType = StringUtil.defaultValue(input.getMimeType(), "text/plain");
+
+    Encoding theEncoding = DEFAULT_TRANSFER_SPEC.encoding();
+
     if (StringUtil.isNotBlank(input.getBody())) {
       builder.body(
           "text/html".equals(mimeType)
               ? TextBody.html(input.getBody())
               : TextBody.plain(input.getBody()));
-    }
 
-    Encoding theEncoding = DEFAULT_TRANSFER_SPEC.encoding();
-    if (theEncoding == AUTO_SELECT && StringUtil.isNotBlank(input.getBody())) {
-      theEncoding = builder.buildNoCheck().body().transferEncoding();
+      if (theEncoding == AUTO_SELECT && StringUtil.isNotBlank(input.getBody())) {
+        theEncoding = builder.buildNoCheck().body().transferEncoding();
+      }
     }
 
     builder.addHeader("Content-Transfer-Encoding", theEncoding.encodingName());
@@ -156,13 +159,14 @@ public interface MailboxMessageConverter {
     Encoding theEncoding = DEFAULT_TRANSFER_SPEC.encoding();
 
     String mimeType = StringUtil.defaultValue(result.getMimeType(), "text/plain");
-    if (StringUtil.isNotBlank(result.getBody())) {
+
+    if (result.getBody() != null) {
       String body = JamesUtil.bodyTransfer(result);
-
-      builder.body("text/html".equals(mimeType) ? TextBody.html(body) : TextBody.plain(body));
-
-      if (theEncoding == AUTO_SELECT && StringUtil.isNotBlank(body)) {
-        theEncoding = builder.buildNoCheck().body().transferEncoding();
+      if (StringUtil.isNotBlank(body)) {
+        builder.body("text/html".equals(mimeType) ? TextBody.html(body) : TextBody.plain(body));
+        if (theEncoding == AUTO_SELECT && StringUtil.isNotBlank(body)) {
+          theEncoding = builder.buildNoCheck().body().transferEncoding();
+        }
       }
     }
 
@@ -170,16 +174,21 @@ public interface MailboxMessageConverter {
 
     Utils.MailContent content = Utils.toFullContent(builder.buildNoCheck(), DEFAULT_TRANSFER_SPEC);
     JamesMailboxMessage message = new JamesMailboxMessage(content.getHeader(), content.getBody());
+
     long headerLength = message.getHeader().length;
     long bodyLength = message.getBody().length;
+
     message.setBodyStartOctet((int) headerLength);
     message.setTextualLineCount(headerLength + bodyLength);
+
     if (StringUtil.isNotBlank(result.getMimeType())) {
       String[] mimeTypes = result.getMimeType().split("/");
       message.setMediaType(mimeTypes[0]);
       message.setSubType(mimeTypes[1]);
     }
+
     message.setFlags(FlagsFactory.empty());
+
     return message;
   }
 }

@@ -11,7 +11,7 @@ import org.hibernate.Hibernate;
 @Getter
 @Setter
 @RequiredArgsConstructor
-@Entity(name = "UserFlag")
+@Entity(name = "MailUserFlag")
 @Table(name = "JAMES_MAIL_USERFLAG")
 public class JamesUserFlag {
 

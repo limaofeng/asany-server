@@ -3,6 +3,7 @@ package cn.asany.email.mailbox.service;
 import cn.asany.email.mailbox.bean.*;
 import cn.asany.email.mailbox.bean.toys.MailboxIdUidKey;
 import cn.asany.email.mailbox.dao.MailboxMessageDao;
+import cn.asany.email.utils.SentMailContext;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -67,6 +68,7 @@ public class MailboxMessageService {
   public JamesMailboxMessage save(JamesMailboxMessage message) {
     if (DefaultMailboxes.SENT.equals(message.getMailbox().getName())) {
       message.setSeen(true);
+      SentMailContext.create(message);
     }
     for (Property property : message.getProperties()) {
       JamesProperty jpaProperty = (JamesProperty) property;
