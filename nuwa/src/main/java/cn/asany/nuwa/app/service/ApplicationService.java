@@ -79,7 +79,7 @@ public class ApplicationService implements ClientDetailsService {
   }
 
   @Override
-  @Cacheable(key = "targetClass + methodName + #p0", value = "NUWA")
+  @Cacheable(key = "targetClass + '.' +  methodName + '#' + #p0", value = "NUWA")
   public ClientDetails loadClientByClientId(String clientId) throws ClientRegistrationException {
     Optional<Application> optional =
         this.applicationDao.findOneWithClientDetails(
@@ -96,6 +96,9 @@ public class ApplicationService implements ClientDetailsService {
   }
 
   @Transactional(rollbackFor = RuntimeException.class)
+  @Cacheable(
+      key = "targetClass  + '.' +  methodName + '#' + #p0 + ',' + #p1 + ',' + #p2",
+      value = "NUWA")
   public Optional<Application> findDetailsByClientId(
       String id, boolean hasFetchRoutes, boolean hasFetchMenus) {
     if (hasFetchRoutes && hasFetchMenus) {
@@ -111,6 +114,9 @@ public class ApplicationService implements ClientDetailsService {
   }
 
   @Transactional(rollbackFor = RuntimeException.class)
+  @Cacheable(
+      key = "targetClass + '.' + methodName + '#' + #p0 + ',' + #p1 + ',' + #p2",
+      value = "NUWA")
   public Optional<Application> findDetailsById(
       Long id, boolean hasFetchRoutes, boolean hasFetchMenus) {
     if (hasFetchRoutes && hasFetchMenus) {

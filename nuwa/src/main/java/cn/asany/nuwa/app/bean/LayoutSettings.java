@@ -1,5 +1,6 @@
 package cn.asany.nuwa.app.bean;
 
+import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import lombok.AllArgsConstructor;
@@ -18,7 +19,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class LayoutSettings {
+public class LayoutSettings implements Serializable {
   /** 不使用默认布局 */
   @Builder.Default
   @Column(name = "PURE", length = 1)

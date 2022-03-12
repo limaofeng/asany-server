@@ -1,8 +1,8 @@
 description = "日历"
 
 dependencies {
-    implementation project(":asany-base")
-    implementation project(":asany-security")
-    implementation project(":asany-storage-api")
+    implementation project(":base")
+    implementation project(":security")
+    implementation project(":storage-api")
     implementation 'org.mnode.ical4j:ical4j:3.1.1'
 }

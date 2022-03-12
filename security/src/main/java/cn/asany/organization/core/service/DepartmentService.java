@@ -143,6 +143,16 @@ public class DepartmentService {
     return optional.orElse(null);
   }
 
+  public List<Department> findAllByOrgAndDimension(Long orgId, String code) {
+    List<PropertyFilter> filters =
+        PropertyFilter.builder()
+            .equal("organization.id", orgId)
+            .equal("dimension.code", code)
+            .build();
+    Sort sort = Sort.by(Sort.Direction.DESC, "id");
+    return this.departmentDao.findAll(filters, sort);
+  }
+
   public List<Department> findAllByOrg(Long orgId) {
     Example example =
         Example.of(

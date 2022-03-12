@@ -371,7 +371,7 @@ public class OrganizationService {
         oldObj.setName(status.getName());
         this.employeeStatusDao.update(oldObj);
       }
-      statuses.set(i, status = optionalStatus.get());
+      statuses.set(i, optionalStatus.get());
     }
     return statuses;
   }
@@ -405,9 +405,7 @@ public class OrganizationService {
             .name("成员")
             .build());
 
-    for (EmployeeStatus status : statuses) {
-      this.employeeStatusDao.save(status);
-    }
+    this.employeeStatusDao.saveAll(statuses);
 
     dimension.setStatuses(statuses);
 

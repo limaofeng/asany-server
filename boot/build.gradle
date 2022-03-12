@@ -24,16 +24,17 @@ bootRun {
 }
 
 dependencies {
-    implementation project(":asany-ui")
-    implementation project(":asany-base")
-    implementation project(":asany-email")
-    implementation project(":asany-nuwa")
-    implementation project(":asany-cms")
-    implementation project(":asany-sunrise")
-    implementation project(":asany-shanhai")
-    implementation project(":asany-storage")
-    implementation project(":asany-security")
-    implementation project(":asany-storage-api")
+    implementation project(":ui")
+    implementation project(":base")
+    implementation project(":mail")
+    implementation project(":nuwa")
+    implementation project(":cms")
+    implementation project(":sunrise")
+    implementation project(":contacts")
+    implementation project(":shanhai")
+    implementation project(":storage")
+    implementation project(":security")
+    implementation project(":storage-api")
     compileOnly "org.projectlombok:lombok:${LIB_LOMBOK_VER}"
     annotationProcessor "org.projectlombok:lombok:$LIB_LOMBOK_VER"
     testCompileOnly "org.projectlombok:lombok:${LIB_LOMBOK_VER}"

@@ -16,6 +16,7 @@ menus:
   - name: 通讯录
     icon: Duotune/com005
     path: /contacts
+    component: cn.asany.ui.admin.contacts.Sidebar
   - name: 日历
     icon: Duotune/gen014
     path: /calendar
@@ -30,8 +31,8 @@ menus:
     component: cn.asany.ui.admin.shanhai.MenuSidebar
   - name: 邮箱
     icon: Duotune/com011
-    path: /email
-    component: cn.asany.ui.admin.email.Sidebar
+    path: /mail
+    component: cn.asany.ui.admin.mail.Sidebar
   #  - name: 项目管理
   #    icon: Duotune/abs045
   #    children:
@@ -142,19 +143,22 @@ routes:
         layout: false
       - path: /contacts
         component: cn.asany.ui.admin.contacts.MainContacts
+        routes:
+          - path: /contacts/:id
+            component: cn.asany.ui.admin.contacts.ViewContact
       - path: /calendar
         component: cn.asany.ui.admin.calendar.MainCalendar
-      - path: /email
-        redirect: /email/inbox
-      - path: /email/compose/:id
-        component: cn.asany.ui.admin.email.Compose
-      - path: /email/compose
-        component: cn.asany.ui.admin.email.Compose
-      - path: /email/:folder
-        component: cn.asany.ui.admin.email.Mailbox
+      - path: /mail
+        redirect: /mail/inbox
+      - path: /mail/compose/:id
+        component: cn.asany.ui.admin.mail.Compose
+      - path: /mail/compose
+        component: cn.asany.ui.admin.mail.Compose
+      - path: /mail/:folder
+        component: cn.asany.ui.admin.mail.Mailbox
         routes:
-          - path: /email/:folder/:id
-            component: cn.asany.ui.admin.email.MailMessageDetails
+          - path: /mail/:folder/:id
+            component: cn.asany.ui.admin.mail.MailMessageDetails
       - path: /storage
         component: cn.asany.ui.admin.storage.CloudStorage
       - path: /storages/:id

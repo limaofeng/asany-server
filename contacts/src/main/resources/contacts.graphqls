@@ -1,0 +1,205 @@
+enum ContactBookType {
+  """
+  普通通讯录
+  """
+  CARDHOP
+  """
+  企业通讯录
+  """
+  ENTERPRISE
+}
+
+type ContactGroupNamespace {
+  id: ID!
+  name: String!
+}
+
+"""
+通讯录
+"""
+type ContactBook {
+  id: ID!
+  """
+  名称
+  """
+  name: String!
+  """
+  类型
+  """
+  type: ContactBookType!
+  """
+  分组命名空间
+  """
+  namespaces: [ContactGroupNamespace!]!
+  """
+  分组
+  """
+  groups(namespace: String): [ContactGroup!]!
+}
+
+"""
+联系人分组
+"""
+type ContactGroup {
+  id: ID!
+  """
+  名称
+  """
+  name: String!
+  """
+  命名空间
+  """
+  namespace: String
+  """
+  路径
+  """
+  path: String
+  """
+  排序字段
+  """
+  index: Int
+  """
+  层级
+  """
+  level: Int
+  """
+  上级
+  """
+  parentId: ID
+}
+
+"""
+联系人
+"""
+type Contact {
+  id: ID!
+  """
+  联系人照片
+  """
+  avatar: String
+  """
+  姓名
+  """
+  name: String
+  """
+  性别
+  """
+  sex: Sex
+  """
+  公司
+  """
+  company: String
+  """
+  部门
+  """
+  department: String
+  """
+  职位
+  """
+  title: String
+  """
+  工号
+  """
+  jobNumber: String
+  """
+  移动电话
+  """
+  mobile: String
+  """
+  E-mail
+  """
+  email: String
+  """
+  网址
+  """
+  website: String
+  """
+  备注
+  """
+  description: String
+}
+
+type ContactConnection {
+  """
+  总数据条数
+  """
+  totalCount: Int!
+  """
+  每页显示条数
+  """
+  pageSize: Int!
+  """
+  总页数
+  """
+  totalPage: Int!
+  """
+  当前页
+  """
+  currentPage: Int!
+  edges: [ContactEdge!]!
+  """
+  分页信息
+  """
+  pageInfo: PageInfo!
+}
+
+type ContactEdge {
+  cursor: String
+  node: Contact!
+}
+
+input ContactFilter {
+  group: String
+}
+
+extend type Query {
+  """
+  通信录 - 全部
+  """
+  contactBooks: [ContactBook!]!
+  """
+  通信录 - 一个
+  """
+  contactBook(id: ID!): ContactBook
+  """
+  检索联系人
+  """
+  contacts(
+    """
+    筛选条件
+    """
+    filter: ContactFilter = {}
+    """
+    偏移量
+    """
+    offset: Int
+    """
+    返回数据条数
+    """
+    first: Int
+    """
+    返回数据条数
+    """
+    last: Int
+    """
+    游标之后
+    """
+    after: String
+    """
+    游标之前
+    """
+    before: String
+    """
+    页码
+    """
+    page: Int = 1
+    """
+    每页返回数据条数
+    """
+    pageSize: Int = 15
+    """
+    排序
+    """
+    orderBy: OrderBy
+  ): ContactConnection
+}

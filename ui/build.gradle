@@ -1,9 +1,9 @@
 apply plugin: 'jacoco'
 
 dependencies {
-    implementation project(":asany-base")
-    implementation project(":asany-security")
-    implementation project(":asany-storage-api")
+    implementation project(":base")
+    implementation project(":security")
+    implementation project(":storage-api")
     compileOnly "org.projectlombok:lombok:${LIB_LOMBOK_VER}"
     annotationProcessor "org.projectlombok:lombok:$LIB_LOMBOK_VER"
     testCompileOnly "org.projectlombok:lombok:${LIB_LOMBOK_VER}"

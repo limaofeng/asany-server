@@ -12,45 +12,45 @@ pluginManagement {
 }
 
 rootProject.name = 'shanhai'
-include ":asany-shanhai",
-        ":asany-base",
-        ":asany-cardhop",
-        ":asany-sunrise",
-        ":asany-email",
-        ":asany-security",
-        ":asany-storage-api",
-        ":asany-storage",
-        ":asany-website",
-        ":asany-nuwa",
-        ":asany-ui",
-        ":asany-cms",
-        ":asany-boot"
+include ":shanhai",
+        ":base",
+        ":contacts",
+        ":sunrise",
+        ":mail",
+        ":security",
+        ":storage-api",
+        ":storage",
+        ":website",
+        ":nuwa",
+        ":ui",
+        ":cms",
+        ":boot"
 
 // 基础
-project(':asany-base').projectDir = "$rootDir/base" as File
+project(':base').projectDir = "$rootDir/base" as File
 // 网站
-project(':asany-website').projectDir = "$rootDir/website" as File
+project(':website').projectDir = "$rootDir/website" as File
 // 建模
-project(':asany-shanhai').projectDir = "$rootDir/shanhai" as File
+project(':shanhai').projectDir = "$rootDir/shanhai" as File
 // 组织 / 员工 / 安全 / 登录 / 授权
-project(':asany-security').projectDir = "$rootDir/security" as File
+project(':security').projectDir = "$rootDir/security" as File
 // 工作流
-//project(':asany-workflow').projectDir = "$rootDir/workflow" as File
+//project(':workflow').projectDir = "$rootDir/workflow" as File
 // 存储服务接口
-project(':asany-storage-api').projectDir = "$rootDir/storage-api" as File
+project(':storage-api').projectDir = "$rootDir/storage-api" as File
 // 存储服务
-project(':asany-storage').projectDir = "$rootDir/storage" as File
+project(':storage').projectDir = "$rootDir/storage" as File
 // 应用及路由管理
-project(':asany-nuwa').projectDir = "$rootDir/nuwa" as File
+project(':nuwa').projectDir = "$rootDir/nuwa" as File
 // 前端组件
-project(':asany-ui').projectDir = "$rootDir/ui" as File
+project(':ui').projectDir = "$rootDir/ui" as File
 // 内容管理
-project(':asany-cms').projectDir = "$rootDir/cms" as File
+project(':cms').projectDir = "$rootDir/cms" as File
 // 通讯录
-project(':asany-cardhop').projectDir = "$rootDir/cardhop" as File
+project(':contacts').projectDir = "$rootDir/contacts" as File
 // 日历
-project(':asany-sunrise').projectDir = "$rootDir/sunrise" as File
+project(':sunrise').projectDir = "$rootDir/sunrise" as File
 // 日历
-project(':asany-email').projectDir = "$rootDir/email" as File
+project(':mail').projectDir = "$rootDir/mail" as File
 // 启动
-project(':asany-boot').projectDir = "$rootDir/boot" as File
+project(':boot').projectDir = "$rootDir/boot" as File

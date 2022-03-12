@@ -4,8 +4,8 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-redis") {
         exclude group: 'io.lettuce', module: 'lettuce-core'
     }
-    implementation project(":asany-base")
-    implementation project(":asany-storage-api")
+    implementation project(":base")
+    implementation project(":storage-api")
     compileOnly "org.projectlombok:lombok:${LIB_LOMBOK_VER}"
     annotationProcessor "org.projectlombok:lombok:$LIB_LOMBOK_VER"
     testCompileOnly "org.projectlombok:lombok:${LIB_LOMBOK_VER}"

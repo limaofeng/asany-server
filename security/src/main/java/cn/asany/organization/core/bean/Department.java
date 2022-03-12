@@ -49,6 +49,8 @@ import org.jfantasy.framework.dao.BaseBusEntity;
 })
 public class Department extends BaseBusEntity {
 
+  public static final String OWNERSHIP_KEY = "DEPARTMENT";
+
   public static final String PATH_SEPARATOR = "/";
 
   @Id
@@ -81,6 +83,9 @@ public class Department extends BaseBusEntity {
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "TYPE", foreignKey = @ForeignKey(name = "FK_ORG_DEPARTMENT_TID"))
   private DepartmentType type;
+  /** 分组人数统计 */
+  @Column(name = "COUNT")
+  private Long count;
   /** 上级部门 */
   @JsonSerialize(using = DepartmentSerializer.class)
   @JsonDeserialize(using = DepartmentDeserializer.class)

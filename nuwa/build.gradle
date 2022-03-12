@@ -11,9 +11,9 @@ hibernate {
 }
 
 dependencies {
-    implementation project(":asany-ui")
-    implementation project(":asany-base")
-    implementation project(":asany-security")
+    implementation project(":ui")
+    implementation project(":base")
+    implementation project(":security")
     implementation "io.reactivex.rxjava2:rxjava"
     implementation "io.projectreactor:reactor-core"
     compileOnly "org.projectlombok:lombok:${LIB_LOMBOK_VER}"

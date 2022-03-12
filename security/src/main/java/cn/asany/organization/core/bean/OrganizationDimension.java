@@ -27,6 +27,8 @@ import org.jfantasy.framework.dao.BaseBusEntity;
             name = "UK_ORGANIZATION_DIMENSION_CODE"))
 public class OrganizationDimension extends BaseBusEntity {
 
+  public static final String KEY_OF_DEFAULT = "default";
+
   @Id
   @Column(name = "ID")
   @GeneratedValue(generator = "fantasy-sequence")
@@ -58,6 +60,9 @@ public class OrganizationDimension extends BaseBusEntity {
   /** 部门 */
   @OneToMany(mappedBy = "dimension", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
   private List<Department> departments;
+  /** 人数统计 */
+  @Column(name = "COUNT")
+  private Long count;
 
   @Override
   public boolean equals(Object o) {
