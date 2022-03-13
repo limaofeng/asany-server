@@ -650,6 +650,10 @@ public class EmployeeService {
     return employeeDao.findAllById(ids);
   }
 
+  public Optional<Employee> findById(Long id) {
+    return this.employeeDao.findById(id);
+  }
+
   public List<Employee> findAllByDepartments(List<Long> ids) {
     List<Department> departments = departmentDao.findAllById(ids);
     List<Employee> employees = new ArrayList<>();

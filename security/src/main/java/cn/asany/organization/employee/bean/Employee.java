@@ -55,7 +55,7 @@ public class Employee extends BaseBusEntity implements Ownership {
   private Long id;
   /** 头像 */
   @Convert(converter = FileObjectConverter.class)
-  @Column(name = "avatar", precision = 500)
+  @Column(name = "avatar", length = 500)
   private FileObject avatar;
   /** 工号 */
   @Column(name = "JOB_NUMBER", precision = 20)

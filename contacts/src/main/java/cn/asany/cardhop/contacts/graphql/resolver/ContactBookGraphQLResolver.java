@@ -6,8 +6,10 @@ import cn.asany.cardhop.contacts.bean.ContactGroup;
 import cn.asany.cardhop.contacts.bean.enums.ContactBookType;
 import cn.asany.cardhop.contacts.graphql.type.ContactGroupNamespace;
 import cn.asany.cardhop.contacts.service.DefaultContactsServiceFactory;
+import cn.asany.cardhop.contacts.utils.IdUtils;
 import cn.asany.cardhop.integration.IContactsService;
 import graphql.kickstart.tools.GraphQLResolver;
+import graphql.schema.DataFetchingEnvironment;
 import java.util.List;
 import org.springframework.stereotype.Component;
 
@@ -15,6 +17,12 @@ import org.springframework.stereotype.Component;
 public class ContactBookGraphQLResolver implements GraphQLResolver<ContactBook> {
 
   private final DefaultContactsServiceFactory contactsServiceFactory;
+
+  public String id(ContactBook book, DataFetchingEnvironment environment) {
+    List<ContactGroupNamespace> namespaces = this.namespaces(book);
+    String defaultNamespace = namespaces.get(0).getId();
+    return IdUtils.toKey(book.getId(), defaultNamespace);
+  }
 
   public ContactBookGraphQLResolver(DefaultContactsServiceFactory contactsServiceFactory) {
     this.contactsServiceFactory = contactsServiceFactory;

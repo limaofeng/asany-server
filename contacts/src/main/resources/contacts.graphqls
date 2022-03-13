@@ -149,10 +149,14 @@ type ContactEdge {
 }
 
 input ContactFilter {
-  group: String
+  token: String
 }
 
 extend type Query {
+  """
+  联系人
+  """
+  contact(id: ID!): Contact!
   """
   通信录 - 全部
   """

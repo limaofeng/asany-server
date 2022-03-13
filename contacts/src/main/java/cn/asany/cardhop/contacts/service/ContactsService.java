@@ -64,7 +64,7 @@ public class ContactsService {
     return this.contactDao.getById(id);
   }
 
-  public Optional<ContactBook> findById(Long id) {
+  public Optional<ContactBook> findBookById(Long id) {
     return this.contactBookDao.findById(id);
   }
 
@@ -72,9 +72,12 @@ public class ContactsService {
     return this.contactBookDao.findAll();
   }
 
-  //    public static List<Group> getGroups() {
-  //        return ((AddressBook)
-  // SpringSecurityUtils.getCurrentUser(SimpleUser.class).data(AddressBookListener.CURRENT_USER_BOOK_KEY)).getGroups();
-  //    }
+  public Optional<Contact> findContactById(Long contactId) {
+    return this.contactDao.findById(contactId);
+  }
 
+  public List<ContactGroup> getGroups(Long book, String namespace) {
+    return this.contactGroupDao.findAll(
+        PropertyFilter.builder().equal("book.id", book).equal("namespace", namespace).build());
+  }
 }

@@ -1,11 +1,23 @@
 package cn.asany.cardhop.contacts.graphql;
 
+import cn.asany.cardhop.contacts.bean.Contact;
 import cn.asany.cardhop.contacts.bean.ContactBook;
+import cn.asany.cardhop.contacts.graphql.input.ContactFilter;
+import cn.asany.cardhop.contacts.graphql.type.ContactConnection;
 import cn.asany.cardhop.contacts.service.ContactsService;
+import cn.asany.cardhop.contacts.service.DefaultContactsServiceFactory;
+import cn.asany.cardhop.contacts.utils.IdUtils;
+import cn.asany.cardhop.integration.IContactsService;
 import graphql.kickstart.tools.GraphQLMutationResolver;
 import graphql.kickstart.tools.GraphQLQueryResolver;
+import graphql.schema.DataFetchingEnvironment;
 import java.util.List;
 import java.util.Optional;
+import org.jfantasy.framework.dao.OrderBy;
+import org.jfantasy.framework.dao.Pager;
+import org.jfantasy.framework.spring.mvc.error.NotFoundException;
+import org.jfantasy.graphql.context.AuthorizationGraphQLServletContext;
+import org.jfantasy.graphql.util.Kit;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -13,15 +25,80 @@ public class ContactsGraphqlApiResolver implements GraphQLQueryResolver, GraphQL
 
   private final ContactsService contactsService;
 
-  public ContactsGraphqlApiResolver(ContactsService contactsService) {
+  private final DefaultContactsServiceFactory contactsServiceFactory;
+
+  public ContactsGraphqlApiResolver(
+      ContactsService contactsService, DefaultContactsServiceFactory contactsServiceFactory) {
     this.contactsService = contactsService;
+    this.contactsServiceFactory = contactsServiceFactory;
   }
 
-  public Optional<ContactBook> contactBook(Long id) {
-    return contactsService.findById(id);
+  public Optional<ContactBook> contactBook(String key) {
+    IdUtils.IdKey idKey = IdUtils.parseKey(key);
+    return contactsService.findBookById(idKey.getBook());
   }
 
   public List<ContactBook> contactBooks() {
     return contactsService.findAll();
+  }
+
+  public Contact contact(String id, DataFetchingEnvironment environment) {
+    IdUtils.IdKey idKey = IdUtils.parseKey(id);
+
+    AuthorizationGraphQLServletContext context = environment.getContext();
+
+    context.setAttribute("query_contact_token", idKey);
+
+    Optional<ContactBook> optionalContactBook = contactsService.findBookById(idKey.getBook());
+
+    ContactBook contactBook =
+        optionalContactBook.orElseThrow(() -> new NotFoundException("通讯录不存在"));
+
+    IContactsService service = contactsServiceFactory.getService(contactBook.getType());
+
+    Optional<Contact> optional = service.findContactById(idKey.getContact());
+
+    return optional.orElseThrow(() -> new NotFoundException("联系人不存在"));
+  }
+
+  public ContactConnection contacts(
+      /* 筛选条件 */
+      ContactFilter filter,
+      /* 偏移量 */
+      int offset,
+      /* 返回数据条数 */
+      int first,
+      /* 返回数据条数 */
+      int last,
+      /* 游标之后 */
+      String after,
+      /* 游标之前 */
+      String before,
+      /* 页码 */
+      int page,
+      /* 每页返回数据条数 */
+      int pageSize,
+      /* 排序 */
+      OrderBy orderBy,
+      /* 环境 */
+      DataFetchingEnvironment environment) {
+    Pager<Contact> pager = Pager.newPager();
+
+    IdUtils.IdKey idKey = IdUtils.parseKey(filter.getToken());
+
+    AuthorizationGraphQLServletContext context = environment.getContext();
+
+    context.setAttribute("query_contact_token", idKey);
+
+    Optional<ContactBook> optionalContactBook = contactsService.findBookById(idKey.getBook());
+
+    ContactBook contactBook =
+        optionalContactBook.orElseThrow(() -> new NotFoundException("通讯录不存在"));
+
+    IContactsService service = contactsServiceFactory.getService(contactBook.getType());
+
+    return Kit.connection(
+        service.findPager(contactBook, idKey.getNamespace(), pager, filter.build()),
+        ContactConnection.class);
   }
 }

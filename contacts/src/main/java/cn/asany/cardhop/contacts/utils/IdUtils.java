@@ -13,8 +13,18 @@ public class IdUtils {
 
   private static final String PRIVATE_KEY = StringUtil.md5("asany.cn");
 
+  public static String toKey(Long book, String namespace) {
+    String key = book + "." + namespace;
+    return Base64.getEncoder().encodeToString(encode(PRIVATE_KEY, key)).replaceAll("/", "-");
+  }
+
   public static String toKey(Long book, String namespace, Long group) {
     String key = book + "." + namespace + "." + group;
+    return Base64.getEncoder().encodeToString(encode(PRIVATE_KEY, key)).replaceAll("/", "-");
+  }
+
+  public static String toKey(Long book, String namespace, Long group, Long contact) {
+    String key = book + "." + namespace + "." + group + "." + contact;
     return Base64.getEncoder().encodeToString(encode(PRIVATE_KEY, key)).replaceAll("/", "-");
   }
 
@@ -27,13 +37,12 @@ public class IdUtils {
                     .decode(key.replaceAll("-", "/").getBytes(StandardCharsets.UTF_8))),
             StandardCharsets.UTF_8);
     String[] ids = StringUtil.tokenizeToStringArray(out, ".");
-    IdKey.IdKeyBuilder builder =
-        IdKey.builder()
-            .book(Long.parseLong(ids[0]))
-            .namespace(ids[1])
-            .group(Long.parseLong(ids[2]));
+    IdKey.IdKeyBuilder builder = IdKey.builder().book(Long.parseLong(ids[0])).namespace(ids[1]);
+    if (ids.length > 2) {
+      builder.group(Long.parseLong(ids[2]));
+    }
     if (ids.length > 3) {
-      builder.book(Long.parseLong(ids[4]));
+      builder.book(Long.parseLong(ids[3]));
     }
     return builder.build();
   }

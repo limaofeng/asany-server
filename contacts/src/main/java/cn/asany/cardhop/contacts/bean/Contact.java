@@ -1,6 +1,8 @@
 package cn.asany.cardhop.contacts.bean;
 
 import cn.asany.security.core.bean.enums.Sex;
+import cn.asany.storage.api.FileObject;
+import cn.asany.storage.api.converter.FileObjectConverter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.List;
 import javax.persistence.*;
@@ -35,8 +37,9 @@ public class Contact extends BaseBusEntity {
   @JoinColumn(name = "BOOK_ID")
   private ContactBook book;
   /** 联系人照片 */
-  @Column(name = "AVATAR", length = 200)
-  private String avatar;
+  @Convert(converter = FileObjectConverter.class)
+  @Column(name = "AVATAR", length = 500)
+  private FileObject avatar;
   /** 姓名 */
   @Column(name = "NAME", length = 20)
   private String name;
@@ -74,10 +77,8 @@ public class Contact extends BaseBusEntity {
    */
   @ManyToMany(targetEntity = ContactGroup.class, fetch = FetchType.LAZY)
   @JoinTable(
-      name = "CONTACTS_GROUP_LINKMAN",
-      joinColumns = @JoinColumn(name = "LINKMAN_ID"),
+      name = "CARDHOP_CONTACT_GROUP_CONTACT",
+      joinColumns = @JoinColumn(name = "CONTACT_ID"),
       inverseJoinColumns = @JoinColumn(name = "GROUP_ID"))
   private List<ContactGroup> groups;
-
-  @Transient private String groupNames;
 }
