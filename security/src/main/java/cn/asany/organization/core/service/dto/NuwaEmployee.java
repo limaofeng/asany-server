@@ -15,6 +15,7 @@ public class NuwaEmployee {
   private String name;
   private Date birthday;
   private String sex;
+  private String avatar;
   private List<String> phones;
   private List<String> emails;
   private List<NuwaEmployeeIdentity> identities;

@@ -30,6 +30,7 @@ import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
 import org.jfantasy.framework.error.ValidationException;
 import org.jfantasy.framework.security.crypto.password.PasswordEncoder;
+import org.jfantasy.framework.spring.mvc.error.NotFoundException;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -121,13 +122,15 @@ public class EmployeeService {
     OrganizationDimension dimension =
         ObjectUtil.find(organization.getDimensions(), "code", Organization.DEFAULT_DIMENSION);
 
-    Optional<EmployeeStatus> employeeStatus = getStatus(dimension, role.getValue());
+    Optional<EmployeeStatus> statusOptional = getStatus(dimension, role.getValue());
+
+    EmployeeStatus employeeStatus = statusOptional.orElseThrow(() -> new NotFoundException("状态为空"));
 
     EmployeeIdentity identity = EmployeeIdentity.builder().build();
     identity.setEmployee(employee);
     identity.setOrganization(organization);
     identity.setDimension(dimension);
-    identity.setStatus(employeeStatus.get());
+    identity.setStatus(employeeStatus);
 
     employeeIdentityDao.save(identity);
     return employee;
@@ -255,8 +258,7 @@ public class EmployeeService {
 
   @Transactional
   public Employee get(Long id) {
-    Employee employee = this.employeeDao.findById(id).orElse(null);
-    return employee;
+    return employeeDao.getById(id);
   }
 
   public Employee update(Long id, boolean merge, Employee employee) {
@@ -464,13 +466,11 @@ public class EmployeeService {
   }
 
   public List<Employee> findAllByOrg(String orgId) {
-    List<Employee> employees =
-        this.employeeDao.findAll(
-            (Specification<Employee>)
-                (root, query, builder) ->
-                    builder.equal(
-                        root.join("employeePositions").join("organization").get("id"), orgId));
-    return employees;
+    return this.employeeDao.findAll(
+        (Specification<Employee>)
+            (root, query, builder) ->
+                builder.equal(
+                    root.join("employeePositions").join("organization").get("id"), orgId));
   }
 
   public List<Employee> findAll(List<PropertyFilter> filters) {
@@ -632,18 +632,14 @@ public class EmployeeService {
   //        return EmployeeByDepAndYearReport.builder().size(size).result(all).build();
   //    }
 
-  public Employee findOneByPositionNameAndDep(String name, Department department) {
-    Optional<EmployeePosition> one =
-        employeePositionDao.findOne(
-            Example.of(
-                EmployeePosition.builder()
-                    .position(Position.builder().name(name).build())
-                    .department(department)
-                    .build()));
-    if (one.isPresent()) {
-      return one.get().getEmployee();
-    }
-    return null;
+  public Optional<EmployeePosition> findOneByPositionNameAndDep(
+      String name, Department department) {
+    return employeePositionDao.findOne(
+        Example.of(
+            EmployeePosition.builder()
+                .position(Position.builder().name(name).build())
+                .department(department)
+                .build()));
   }
 
   public List<Employee> findByIds(List<Long> ids) {

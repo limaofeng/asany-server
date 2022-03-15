@@ -35,7 +35,7 @@ public class FileUploadService implements UploadService {
   private final FileService fileService;
   private final StorageResolver storageResolver;
 
-  private Map<String, StoragePlugin> plugins = new HashedMap();
+  private final Map<String, StoragePlugin> plugins = new HashedMap();
 
   @Autowired
   public FileUploadService(FileService fileService, StorageResolver storageResolver) {

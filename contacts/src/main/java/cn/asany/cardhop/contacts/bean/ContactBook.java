@@ -20,7 +20,7 @@ import org.jfantasy.framework.dao.BaseBusEntity;
  *
  * @author 李茂峰
  * @version 1.0
- * @since 2013-3-15 上午11:53:44
+ * @since 2022-3-15 上午11:53:44
  */
 @Data
 @EqualsAndHashCode(callSuper = true)

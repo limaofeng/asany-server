@@ -17,7 +17,7 @@ import org.jfantasy.framework.dao.BaseBusEntity;
  * 联系人群组
  *
  * @author 李茂峰
- * @since 2013-3-15 上午11:29:20
+ * @since 2022-3-15 上午11:29:20
  * @version 1.0
  */
 @EqualsAndHashCode(callSuper = true)

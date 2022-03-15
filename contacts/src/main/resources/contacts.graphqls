@@ -68,6 +68,27 @@ type ContactGroup {
   parentId: ID
 }
 
+type ContactEmail {
+  id: ID
+  primary: Boolean
+  label: String
+  email: Email
+}
+
+type ContactPhone {
+  id: ID
+  primary: Boolean
+  label: String
+  phone: Phone
+}
+
+type ContactAddress {
+  id: ID
+  primary: Boolean
+  label: String
+  address: Address
+}
+
 """
 联系人
 """
@@ -102,13 +123,29 @@ type Contact {
   """
   jobNumber: String
   """
-  移动电话
+  电话
   """
-  mobile: String
+  phone(label: String): Phone
   """
-  E-mail
+  邮件
   """
-  email: String
+  email(label: String): Email
+  """
+  地址
+  """
+  address(label: String): Address
+  """
+  所有电话
+  """
+  phones: [ContactPhone]
+  """
+  所有E-mail
+  """
+  emails: [ContactEmail]
+  """
+  所有地址
+  """
+  addresses: [ContactAddress]
   """
   网址
   """

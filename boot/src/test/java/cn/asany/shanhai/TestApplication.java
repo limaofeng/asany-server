@@ -40,6 +40,7 @@ import org.springframework.web.client.RestTemplate;
           value = {JpaRepository.class})
     },
     basePackages = {
+      "cn.asany.*.dao",
       "cn.asany.*.*.dao",
     },
     repositoryBaseClass = ComplexJpaRepository.class)

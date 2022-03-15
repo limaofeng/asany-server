@@ -17,6 +17,7 @@ include ":shanhai",
         ":contacts",
         ":sunrise",
         ":mail",
+        ":drive",
         ":security",
         ":storage-api",
         ":storage",
@@ -52,5 +53,7 @@ project(':contacts').projectDir = "$rootDir/contacts" as File
 project(':sunrise').projectDir = "$rootDir/sunrise" as File
 // 日历
 project(':mail').projectDir = "$rootDir/mail" as File
+// 云盘
+project(':drive').projectDir = "$rootDir/drive" as File
 // 启动
 project(':boot').projectDir = "$rootDir/boot" as File

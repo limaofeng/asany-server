@@ -16,7 +16,7 @@ import org.jfantasy.framework.dao.BaseBusEntity;
  *
  * @author 李茂峰
  * @version 1.0
- * @since 2013-3-15 上午11:11:59
+ * @since 2022-3-15 上午11:11:59
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -59,12 +59,15 @@ public class Contact extends BaseBusEntity {
   /** 工号 */
   @Column(name = "JOB_NUMBER", length = 200)
   private String jobNumber;
-  /** 移动电话 */
-  @Column(name = "MOBILE", length = 20)
-  private String mobile;
-  /** E-mail */
-  @Column(name = "EMAIL", length = 50)
-  private String email;
+  /** 电话列表 */
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "contact", cascade = CascadeType.REMOVE)
+  private List<ContactPhoneNumber> phones;
+  /** 邮箱列表 */
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "contact", cascade = CascadeType.REMOVE)
+  private List<ContactEmail> emails;
+  /** 地址列表 */
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "contact", cascade = CascadeType.REMOVE)
+  private List<ContactAddress> addresses;
   /** 网址 */
   @Column(name = "WEBSITE", length = 50)
   private String website;

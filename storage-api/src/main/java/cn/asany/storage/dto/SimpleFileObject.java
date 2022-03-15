@@ -2,8 +2,10 @@ package cn.asany.storage.dto;
 
 import cn.asany.storage.api.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URLConnection;
 import java.util.Date;
 import java.util.List;
@@ -35,6 +37,8 @@ public class SimpleFileObject implements FileObject {
   private String path;
   /** 完整地址 */
   private String url;
+
+  private Storage storage;
 
   private FileObjectMetadata metadata;
 
@@ -99,7 +103,7 @@ public class SimpleFileObject implements FileObject {
 
   @Override
   public Storage getStorage() {
-    return null;
+    return this.storage;
   }
 
   @Override
@@ -119,5 +123,79 @@ public class SimpleFileObject implements FileObject {
       this.metadata.setContentMD5(md5);
       return this;
     }
+  }
+
+  public static class SimpleStorage implements Storage {
+
+    private final String id;
+
+    public SimpleStorage(String id) {
+      this.id = id;
+    }
+
+    @Override
+    public String getId() {
+      return this.id;
+    }
+
+    @Override
+    public void writeFile(String remotePath, File file) throws IOException {}
+
+    @Override
+    public void writeFile(String remotePath, InputStream in) throws IOException {}
+
+    @Override
+    public OutputStream writeFile(String remotePath) throws IOException {
+      return null;
+    }
+
+    @Override
+    public void readFile(String remotePath, String localPath) throws IOException {}
+
+    @Override
+    public void readFile(String remotePath, OutputStream out) throws IOException {}
+
+    @Override
+    public InputStream readFile(String remotePath) throws IOException {
+      return null;
+    }
+
+    @Override
+    public List<FileObject> listFiles() {
+      return null;
+    }
+
+    @Override
+    public List<FileObject> listFiles(String remotePath) {
+      return null;
+    }
+
+    @Override
+    public List<FileObject> listFiles(FileItemSelector selector) {
+      return null;
+    }
+
+    @Override
+    public List<FileObject> listFiles(String remotePath, FileItemSelector selector) {
+      return null;
+    }
+
+    @Override
+    public List<FileObject> listFiles(FileItemFilter filter) {
+      return null;
+    }
+
+    @Override
+    public List<FileObject> listFiles(String remotePath, FileItemFilter filter) {
+      return null;
+    }
+
+    @Override
+    public FileObject getFileItem(String remotePath) {
+      return null;
+    }
+
+    @Override
+    public void removeFile(String remotePath) {}
   }
 }

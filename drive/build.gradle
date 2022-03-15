@@ -1,0 +1,7 @@
+description = "云盘"
+
+dependencies {
+    implementation project(":base")
+    implementation project(":security")
+    implementation project(":storage")
+}

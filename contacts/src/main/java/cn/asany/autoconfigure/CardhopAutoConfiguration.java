@@ -16,7 +16,6 @@ import org.springframework.context.annotation.Configuration;
   "cn.asany.cardhop.*.dao",
   "cn.asany.cardhop.*.convert",
   "cn.asany.cardhop.*.service",
-  "cn.asany.cardhop.*.component",
   "cn.asany.cardhop.*.graphql",
 })
 public class CardhopAutoConfiguration {

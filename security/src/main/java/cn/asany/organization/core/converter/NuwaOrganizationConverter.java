@@ -12,9 +12,12 @@ import cn.asany.organization.employee.bean.EmployeePhoneNumber;
 import cn.asany.organization.relationship.bean.EmployeePosition;
 import cn.asany.organization.relationship.bean.Position;
 import cn.asany.security.core.bean.enums.Sex;
+import cn.asany.storage.api.FileObject;
+import cn.asany.storage.api.UploadService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.jfantasy.framework.spring.SpringBeanUtils;
 import org.mapstruct.*;
 
 /**
@@ -117,6 +120,7 @@ public interface NuwaOrganizationConverter {
     @Mapping(source = "identities", target = "identities"),
     @Mapping(source = "phones", target = "phones", qualifiedByName = "toPhonesFromString"),
     @Mapping(source = "emails", target = "emails", qualifiedByName = "toEmailsFromString"),
+    @Mapping(source = "avatar", target = "avatar", qualifiedByName = "toAvatarFromString"),
   })
   Employee toEmployee(NuwaEmployee employee);
 
@@ -143,6 +147,14 @@ public interface NuwaOrganizationConverter {
     @Mapping(source = "position", target = "position", qualifiedByName = "toPositionFromName"),
   })
   EmployeePosition toEmployeePosition(NuwaEmployeePosition position);
+
+  @Named("toAvatarFromString")
+  default FileObject toAvatarFromString(String avatar) {
+    UploadService uploadService = SpringBeanUtils.getBean(UploadService.class);
+    //      FileObject object = UploadUtils.partToObject(part);
+    //    uploadService.upload();
+    return null;
+  }
 
   /**
    * 转换 部门对象， 通过 名称

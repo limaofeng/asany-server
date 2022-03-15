@@ -3,6 +3,8 @@ package cn.asany.cardhop.contacts.bean;
 import cn.asany.base.common.bean.Address;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import javax.persistence.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
@@ -11,8 +13,10 @@ import org.jfantasy.framework.dao.BaseBusEntity;
  *
  * @author 李茂峰
  * @version 1.0
- * @since 2013-3-15 上午11:11:55
+ * @since 2022-3-15 上午11:11:55
  */
+@Data
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "CARDHOP_CONTACT_ADDRESS")
 @JsonIgnoreProperties({"hibernate_lazy_initializer", "handler"})

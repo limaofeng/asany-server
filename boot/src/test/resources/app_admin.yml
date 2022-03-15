@@ -23,8 +23,8 @@ menus:
     component: cn.asany.ui.admin.calendar.Sidebar
   - name: 云盘
     icon: Duotune/fil020
-    path: /storage
-    component: cn.asany.ui.admin.storage.Sidebar
+    path: /drive
+    component: cn.asany.ui.admin.drive.Sidebar
   - name: 自定义建模
     icon: Duotune/abs026
     path: /shanhai
@@ -159,6 +159,20 @@ routes:
         routes:
           - path: /mail/:folder/:id
             component: cn.asany.ui.admin.mail.MailMessageDetails
+      - path: /drive
+        redirect: /drive/my-drive
+      - path: /drive/folders
+        redirect: /drive/my-drive
+      - path: /drive/my-drive
+        component: cn.asany.ui.admin.drive.FileList
+      - path: /drive/folders/:id
+        component: cn.asany.ui.admin.drive.FileList
+      - path: /drive/mime-types/:id
+        component: cn.asany.ui.admin.drive.FileList
+      - path: /drive/recent
+        component: cn.asany.ui.admin.drive.DriveRecent
+      - path: /drive/trash
+        component: cn.asany.ui.admin.drive.DriveTrash
       - path: /storage
         component: cn.asany.ui.admin.storage.CloudStorage
       - path: /storages/:id

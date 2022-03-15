@@ -16,18 +16,16 @@ import javax.persistence.ForeignKey;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import lombok.*;
+import org.hibernate.Hibernate;
 import org.hibernate.annotations.*;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.framework.dao.hibernate.converter.StringArrayConverter;
 
-@Data
+@Getter
+@Setter
+@RequiredArgsConstructor
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(
-    callSuper = false,
-    of = {"id", "code"})
-@ToString(of = "id")
 @NamedEntityGraph(
     name = "Graph.Model.FetchMetadataAndFields",
     attributeNodes = {
@@ -83,6 +81,7 @@ public class Model extends BaseBusEntity implements ModelGroupResource {
               name = "INTERFACE_ID",
               foreignKey = @ForeignKey(name = "FK_MODEL_IMPLEMENT_IID")),
       foreignKey = @ForeignKey(name = "FK_MODEL_IMPLEMENT_MID"))
+  @ToString.Exclude
   private Set<Model> implementz;
   /** UNION 包含的类型 */
   @ManyToMany(fetch = FetchType.LAZY)
@@ -95,6 +94,7 @@ public class Model extends BaseBusEntity implements ModelGroupResource {
               name = "MEMBER_TYPE",
               foreignKey = @ForeignKey(name = "FK_MODEL_MEMBER_TYPE_TID")),
       foreignKey = @ForeignKey(name = "FK_MODEL_MEMBER_TYPE_MID"))
+  @ToString.Exclude
   private Set<Model> memberTypes;
 
   /** 关联引用 */
@@ -102,6 +102,7 @@ public class Model extends BaseBusEntity implements ModelGroupResource {
       mappedBy = "model",
       cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE},
       fetch = FetchType.LAZY)
+  @ToString.Exclude
   private Set<ModelRelation> relations;
   /** 标签 */
   @Convert(converter = StringArrayConverter.class)
@@ -114,6 +115,7 @@ public class Model extends BaseBusEntity implements ModelGroupResource {
       joinColumns = {@JoinColumn(name = "MODEL_ID")},
       inverseJoinColumns = {@JoinColumn(name = "FEATURE_ID")},
       foreignKey = @ForeignKey(name = "FK_MODEL_FEATURE_RELATION_MID"))
+  @ToString.Exclude
   private Set<ModelFeature> features;
 
   @OrderBy("sort asc ")
@@ -121,12 +123,14 @@ public class Model extends BaseBusEntity implements ModelGroupResource {
       mappedBy = "model",
       cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE},
       fetch = FetchType.LAZY)
+  @ToString.Exclude
   private Set<ModelField> fields;
 
   @OneToMany(
       mappedBy = "model",
       cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE},
       fetch = FetchType.LAZY)
+  @ToString.Exclude
   private Set<ModelEndpoint> endpoints;
   /** 元数据 */
   @OneToOne(
@@ -134,10 +138,12 @@ public class Model extends BaseBusEntity implements ModelGroupResource {
       cascade = {CascadeType.ALL})
   @LazyToOne(LazyToOneOption.NO_PROXY)
   @PrimaryKeyJoinColumn(name = "ID", referencedColumnName = "MODEL_ID")
+  @ToString.Exclude
   private ModelMetadata metadata;
   /** 服务 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "SERVICE_ID", foreignKey = @ForeignKey(name = "FK_MODEL_SID"))
+  @ToString.Exclude
   private Service service;
 
   @Transient
@@ -273,5 +279,18 @@ public class Model extends BaseBusEntity implements ModelGroupResource {
       this.fields.addAll(Arrays.asList(fields));
       return this;
     }
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+    Model model = (Model) o;
+    return id != null && Objects.equals(id, model.id);
+  }
+
+  @Override
+  public int hashCode() {
+    return getClass().hashCode();
   }
 }

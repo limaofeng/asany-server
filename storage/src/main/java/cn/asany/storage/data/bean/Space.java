@@ -25,7 +25,13 @@ import org.jfantasy.framework.dao.hibernate.converter.StringSetConverter;
 @Entity
 @Builder
 @AllArgsConstructor
-@Table(name = "STORAGE_SPACE")
+@Table(
+    name = "STORAGE_SPACE",
+    uniqueConstraints = {
+      @UniqueConstraint(
+          name = "UK_STORAGE_SPACE",
+          columnNames = {"STORAGE_ID", "PATH"})
+    })
 @JsonIgnoreProperties({"hibernate_lazy_initializer", "handler"})
 public class Space extends BaseBusEntity {
 

@@ -193,13 +193,18 @@ public class FileDetail extends BaseBusEntity implements Cloneable {
   }
 
   public FileObject toFileObject() {
-    return SimpleFileObject.builder()
-        .id(this.id)
-        .path(this.path)
-        .name(this.name)
-        .size(this.length)
-        .mimeType(this.mimeType)
-        .metadata(this.md5)
-        .build();
+    SimpleFileObject.SimpleFileObjectBuilder builder =
+        SimpleFileObject.builder()
+            .id(this.id)
+            .path(this.path)
+            .name(this.name)
+            .size(this.length)
+            .directory(this.isDirectory)
+            .mimeType(this.mimeType)
+            .metadata(this.md5);
+    if (this.getStorageConfig() != null) {
+      builder.storage(new SimpleFileObject.SimpleStorage(this.getStorageConfig().getId()));
+    }
+    return builder.build();
   }
 }

@@ -7,12 +7,14 @@ import cn.asany.storage.data.bean.StorageConfig;
 import cn.asany.storage.data.dao.FileDetailDao;
 import cn.asany.storage.data.dao.SpaceDao;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.util.common.ObjectUtil;
+import org.jfantasy.framework.util.common.StringUtil;
 import org.jfantasy.framework.util.regexp.RegexpUtil;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Sort;
@@ -74,6 +76,10 @@ public class FileService {
     return fileDetail;
   }
 
+  public FileDetail getFolderById(Long id) {
+    return this.fileDetailDao.getById(id);
+  }
+
   public Optional<FileDetail> getFolderByPath(String absolutePath, String storageId) {
     return this.fileDetailDao.findOne(
         PropertyFilter.builder()
@@ -105,7 +111,7 @@ public class FileService {
       return optional.get();
     }
     if (FileObject.ROOT_PATH.equals(path)) {
-      return createRootFolder(path, storage);
+      return null; // createRootFolder(path, storage);
     } else {
       return createFolder(path, createFolder(path.replaceFirst("[^/]+/$", ""), storage), storage);
     }
@@ -280,5 +286,44 @@ public class FileService {
 
   public long count(List<PropertyFilter> filters) {
     return this.fileDetailDao.count(filters);
+  }
+
+  public List<FileDetail> getFileParentsById(Long id) {
+    FileDetail fileDetail = this.fileDetailDao.getById(id);
+    String[] parents = StringUtil.tokenizeToStringArray(fileDetail.getPath(), "/");
+    List<String> newPaths = new ArrayList<>();
+    String basePath = "/";
+    for (String path : parents) {
+      basePath = basePath + path + "/";
+      if (basePath.equals(fileDetail.getPath())) {
+        continue;
+      }
+      newPaths.add(basePath);
+    }
+    return this.fileDetailDao.findAll(PropertyFilter.builder().in("path", newPaths).build());
+  }
+
+  public Space createStorageSpace(String name, String path, String storage) {
+    Space space =
+        Space.builder()
+            .id(StringUtil.uuid())
+            .path(path)
+            .storage(StorageConfig.builder().id(storage).build())
+            .name(name)
+            .build();
+    this.createFolder(path, storage);
+    return this.spaceDao.save(space);
+  }
+
+  public void deleteStorageSpace(String id) {
+    Space space = this.spaceDao.getById(id);
+    Optional<FileDetail> fileDetailOptional =
+        this.fileDetailDao.findOne(
+            PropertyFilter.builder()
+                .equal("storageConfig.id", space.getStorage().getId())
+                .equal("path", space.getPath())
+                .build());
+    this.spaceDao.deleteById(id);
+    fileDetailOptional.ifPresent(this.fileDetailDao::delete);
   }
 }

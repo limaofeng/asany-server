@@ -1,0 +1,57 @@
+enum CloudDriveType {
+  """
+  个人网盘
+  """
+  PERSONAL
+  """
+  企业员工网盘
+  """
+  ENTERPRISE
+}
+
+type CloudDriveQuota {
+  id: ID!
+  """
+  文件数量
+  """
+  count: Int!
+  """
+  已使用
+  """
+  usage: Int!
+  """
+  总大小
+  """
+  size: Int!
+}
+
+type CloudDrive {
+  id: ID!
+  """
+  名称
+  """
+  name: String!
+  """
+  类型
+  """
+  type: CloudDriveType!
+  """
+  存储空间
+  """
+  quota: CloudDriveQuota!
+  """
+  跟文件夹
+  """
+  rootFolder: String!
+}
+
+extend type Query {
+  """
+  云盘
+  """
+  cloudDrive(id: ID!): CloudDrive!
+  """
+  云盘 (列表)
+  """
+  cloudDrives: [CloudDrive!]!
+}

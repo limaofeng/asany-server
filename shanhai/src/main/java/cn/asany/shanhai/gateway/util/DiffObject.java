@@ -15,9 +15,9 @@ public class DiffObject {
 
   private List<DiffObject> diffObjects;
 
-  public static enum DiffStatus {
+  public enum DiffStatus {
     M,
     D,
-    A;
+    A
   }
 }

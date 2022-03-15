@@ -64,6 +64,8 @@ type FileObject {
   path: String!
   # 是否是文件夹
   isDirectory: Boolean!
+  # 是否为跟目录
+  isRootFolder: Boolean!
   # 文件大小 单位：bytes
   size: Number @fileSize(unit: "bytes")
   # 文件 MIME 类型
@@ -99,9 +101,9 @@ extend type Query {
   # 存储器
   storage(id: ID!): Storage
   # 文件列表
-  listFiles(storage: ID!, path: String = "/"): [FileObject!]!
+  listFiles(folder: ID!): [FileObject!]!
   # 文件详情
-  file(storage: ID!, path: String = "/"): FileObject
+  file(id: ID!): FileObject
 }
 
 extend type Mutation {
