@@ -77,7 +77,7 @@ public class ArticleGraphQLQueryResolver implements GraphQLQueryResolver {
   /**
    * 查询所有栏目
    *
-   * @return
+   * @return List<ArticleChannel>
    */
   public List<ArticleChannel> articleChannels(ArticleChannelFilter filter, OrderBy orderBy) {
     if (orderBy != null) {
@@ -94,8 +94,8 @@ public class ArticleGraphQLQueryResolver implements GraphQLQueryResolver {
   /**
    * 根据ID查询栏目
    *
-   * @param id
-   * @return
+   * @param id ID
+   * @return Optional<ArticleChannel>
    */
   public Optional<ArticleChannel> articleChannel(String id) {
     if (RegexpUtil.isMatch(id, RegexpConstant.VALIDATOR_INTEGE)) {

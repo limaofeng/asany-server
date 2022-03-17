@@ -95,13 +95,87 @@ input UploadOptions {
   partFileHash: String
 }
 
+input FileFilter {
+  """
+  媒体类型
+  """
+  mimeType: String
+  """
+  媒体类型 匹配开始
+  """
+  mimeType_startsWith: String
+  """
+  媒体类型 not like start
+  """
+  mimeType_notStartsWith: String
+  """
+  媒体类型 in
+  """
+  mimeType_in: [String]
+  """
+  媒体类型 notIn
+  """
+  mimeType_notIn: [String]
+  """
+  包含子目录
+  """
+  recursive: Boolean
+  """
+  NOT 子句
+  """
+  NOT: [FileFilter]
+  """
+  AND 子句
+  """
+  AND: [FileFilter]
+}
+
+type FileObjectConnection {
+  # 总数据条数
+  totalCount: Int!
+  # 每页显示条数
+  pageSize: Int!
+  # 总页数
+  totalPage: Int!
+  # 当前页
+  currentPage: Int!
+  edges: [FileObjectEdge!]!
+  pageInfo: PageInfo!
+}
+
+type FileObjectEdge {
+  cursor: String
+  node: FileObject!
+}
+
 extend type Query {
   # 存储器
   storages: [Storage]
   # 存储器
   storage(id: ID!): Storage
   # 文件列表
-  listFiles(folder: ID!): [FileObject!]!
+  listFiles(
+    """
+    文件夹
+    """
+    folder: ID!
+    """
+    过滤器
+    """
+    filter: FileFilter = {}
+    """
+    第几页
+    """
+    page: Int = 1
+    """
+    每页数据条数
+    """
+    pageSize: Int = 15
+    """
+    排序
+    """
+    orderBy: OrderBy
+  ): FileObjectConnection!
   # 文件详情
   file(id: ID!): FileObject
 }

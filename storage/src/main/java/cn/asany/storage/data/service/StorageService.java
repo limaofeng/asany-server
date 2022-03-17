@@ -14,6 +14,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.jpa.ComplexJpaRepository;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
@@ -114,14 +115,8 @@ public class StorageService {
     }
   }
 
-  public List<FileDetail> listFiles(String id, String path) {
-    PropertyFilterBuilder filterBuilder = PropertyFilter.builder().equal("storageConfig.id", id);
-    if (FileObject.ROOT_PATH.equals(path)) {
-      filterBuilder.isNull("parentFile");
-    } else {
-      filterBuilder.equal("parentFile.path", path);
-    }
-    return this.fileDetailDao.findAll(filterBuilder.build());
+  public Pager<FileDetail> findPager(Pager<FileDetail> pager, List<PropertyFilter> filters) {
+    return this.fileDetailDao.findPager(pager, filters);
   }
 
   public Optional<FileDetail> findOneByPath(String id, String path) {

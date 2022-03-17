@@ -18,11 +18,11 @@ type CloudDriveQuota {
   """
   已使用
   """
-  usage: Int!
+  usage: Number! @fileSize(unit: "MB")
   """
   总大小
   """
-  size: Int!
+  size: Number! @fileSize(unit: "MB")
 }
 
 type CloudDrive {

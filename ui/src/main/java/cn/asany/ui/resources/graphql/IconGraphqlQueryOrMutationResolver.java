@@ -33,6 +33,7 @@ public class IconGraphqlQueryOrMutationResolver
   public Set<Icon> icons(IconFilter filter) {
     filter = ObjectUtil.defaultValue(filter, IconFilter::new);
     PropertyFilterBuilder builder = filter.getBuilder();
+    // TODO: 需要替换新的写法
     //        if (filter.getLibrary_in() != null) {
     //            builder.and(new LibrarySpecification(filter.getLibrary_in()));
     //        } else if (filter.getLibrary() != null) {

@@ -1,5 +1,6 @@
 package cn.asany.drive.service;
 
+import cn.asany.base.utils.UUID;
 import cn.asany.drive.bean.CloudDrive;
 import cn.asany.drive.bean.CloudDriveQuota;
 import cn.asany.drive.bean.enums.CloudDriveType;
@@ -39,7 +40,7 @@ public class CloudDriveService {
    * @param quota 分配空间(单位MB)
    * @return CloudDrive
    */
-  public CloudDrive createPersonalCloudDrive(Long uid, int quota) {
+  public CloudDrive createPersonalCloudDrive(Long uid, long quota) {
     Optional<User> optionalUser = userDao.findById(uid);
     User user = optionalUser.orElseThrow(() -> new NotFoundException("用户不存在"));
     CloudDrive cloudDrive =
@@ -49,7 +50,7 @@ public class CloudDriveService {
             .ownerType(User.OWNERSHIP_KEY)
             .ownerId(uid)
             .build();
-    CloudDriveQuota quota1 = CloudDriveQuota.builder().count(0).size(quota).usage(0).build();
+    CloudDriveQuota quota1 = CloudDriveQuota.builder().count(0).size(quota).usage(0L).build();
     cloudDrive.setQuota(quota1);
     quota1.setCloudDrive(cloudDrive);
 
@@ -58,6 +59,7 @@ public class CloudDriveService {
 
     Space space =
         this.fileService.createStorageSpace(
+            UUID.getShortId(),
             user.getName() + "的" + PERSONAL_CLOUDDRIVE_DEFAULT_NAME,
             "/CloudDrive/" + user.getUsername() + "/",
             storage);

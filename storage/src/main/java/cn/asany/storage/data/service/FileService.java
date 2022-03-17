@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Optional;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
+import org.jfantasy.framework.util.common.DateUtil;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.common.StringUtil;
 import org.jfantasy.framework.util.regexp.RegexpUtil;
@@ -111,7 +112,7 @@ public class FileService {
       return optional.get();
     }
     if (FileObject.ROOT_PATH.equals(path)) {
-      return null; // createRootFolder(path, storage);
+      return createRootFolder(path, storage);
     } else {
       return createFolder(path, createFolder(path.replaceFirst("[^/]+/$", ""), storage), storage);
     }
@@ -150,7 +151,8 @@ public class FileService {
             .path(absolutePath)
             .mimeType(DIR_MIME_TYPE)
             .length(0L)
-            .name(RegexpUtil.parseGroup(absolutePath, "([^/]+)\\/$", 1))
+            .name("")
+            .lastModified(DateUtil.now())
             .storageConfig(StorageConfig.builder().id(managerId).build())
             .md5(DIR_MD5)
             .build());
@@ -172,6 +174,7 @@ public class FileService {
             .mimeType(DIR_MIME_TYPE)
             .length(0L)
             .md5(DIR_MD5)
+            .lastModified(DateUtil.now())
             .storageConfig(StorageConfig.builder().id(managerId).build())
             .name(RegexpUtil.parseGroup(absolutePath, "([^/]+)\\/$", 1));
     if (ObjectUtil.isNotNull(parent)) {
@@ -303,10 +306,10 @@ public class FileService {
     return this.fileDetailDao.findAll(PropertyFilter.builder().in("path", newPaths).build());
   }
 
-  public Space createStorageSpace(String name, String path, String storage) {
+  public Space createStorageSpace(String id, String name, String path, String storage) {
     Space space =
         Space.builder()
-            .id(StringUtil.uuid())
+            .id(id)
             .path(path)
             .storage(StorageConfig.builder().id(storage).build())
             .name(name)
@@ -317,13 +320,13 @@ public class FileService {
 
   public void deleteStorageSpace(String id) {
     Space space = this.spaceDao.getById(id);
-    Optional<FileDetail> fileDetailOptional =
+    Optional<FileDetail> rootFolderOptional =
         this.fileDetailDao.findOne(
             PropertyFilter.builder()
                 .equal("storageConfig.id", space.getStorage().getId())
                 .equal("path", space.getPath())
                 .build());
     this.spaceDao.deleteById(id);
-    fileDetailOptional.ifPresent(this.fileDetailDao::delete);
+    rootFolderOptional.ifPresent(this.fileDetailDao::delete);
   }
 }

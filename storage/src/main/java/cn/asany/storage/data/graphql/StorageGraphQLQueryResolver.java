@@ -3,6 +3,8 @@ package cn.asany.storage.data.graphql;
 import cn.asany.storage.api.FileObject;
 import cn.asany.storage.data.bean.FileDetail;
 import cn.asany.storage.data.bean.StorageConfig;
+import cn.asany.storage.data.graphql.input.FileFilter;
+import cn.asany.storage.data.graphql.type.FileObjectConnection;
 import cn.asany.storage.data.service.FileService;
 import cn.asany.storage.data.service.SpaceService;
 import cn.asany.storage.data.service.StorageService;
@@ -11,8 +13,12 @@ import graphql.kickstart.tools.GraphQLQueryResolver;
 import graphql.schema.DataFetchingEnvironment;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
+import org.jfantasy.framework.dao.OrderBy;
+import org.jfantasy.framework.dao.Pager;
+import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
+import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.graphql.context.AuthorizationGraphQLServletContext;
+import org.jfantasy.graphql.util.Kit;
 import org.springframework.stereotype.Component;
 
 /**
@@ -51,15 +57,45 @@ public class StorageGraphQLQueryResolver implements GraphQLQueryResolver {
     return optionalFileDetail.map(FileDetail::toFileObject).orElse(null);
   }
 
-  public List<FileObject> listFiles(String key, DataFetchingEnvironment environment) {
+  public FileObjectConnection listFiles(
+      String key,
+      FileFilter filter,
+      int page,
+      int pageSize,
+      OrderBy orderBy,
+      DataFetchingEnvironment environment) {
     IdUtils.FileKey fileKey = IdUtils.parseKey(key);
 
     AuthorizationGraphQLServletContext context = environment.getContext();
 
     context.setAttribute("QUERY_ROOT_FILE_KEY", fileKey);
 
-    return this.storageService.listFiles(fileKey.getStorage(), fileKey.getPath()).stream()
-        .map(FileDetail::toFileObject)
-        .collect(Collectors.toList());
+    PropertyFilterBuilder filterBuilder =
+        ObjectUtil.defaultValue(filter, FileFilter::new).getBuilder();
+
+    if (filter.isRecursive()) {
+      filterBuilder
+          .equal("isDirectory", false)
+          .startsWith("path", fileKey.getPath())
+          .notEqual("path", fileKey.getPath());
+    } else {
+      filterBuilder.equal("parentFile.path", fileKey.getPath());
+    }
+
+    filterBuilder.equal("storageConfig.id", fileKey.getStorage());
+
+    Pager<FileDetail> pager =
+        this.storageService.findPager(
+            Pager.newPager(
+                page,
+                pageSize,
+                ObjectUtil.defaultValue(
+                    orderBy, () -> OrderBy.by(OrderBy.desc("isDirectory"), OrderBy.asc("name")))),
+            filterBuilder.build());
+
+    return Kit.connection(
+        pager,
+        FileObjectConnection.class,
+        (item) -> FileObjectConnection.FileObjectEdge.builder().node(item.toFileObject()).build());
   }
 }

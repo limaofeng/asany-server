@@ -11,6 +11,8 @@ import lombok.*;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 /**
  * 文件信息表
@@ -70,8 +72,10 @@ public class FileDetail extends BaseBusEntity implements Cloneable {
   @Column(name = "MD5", length = 50, nullable = false)
   private String md5;
   /** 文件修改时间 */
+  @CreatedDate
+  @LastModifiedDate
   @Temporal(TemporalType.TIMESTAMP)
-  @Column(name = "LAST_MODIFIED")
+  @Column(name = "LAST_MODIFIED", nullable = false)
   private Date lastModified;
   /** 文件夹 */
   @JoinColumn(
@@ -106,62 +110,6 @@ public class FileDetail extends BaseBusEntity implements Cloneable {
     this.path = path;
   }
 
-  //  @Override
-  //  public boolean isDirectory() {
-  //    return this.isDirectory;
-  //  }
-  //
-  //  @Override
-  //  public long getSize() {
-  //    return this.length;
-  //  }
-  //
-  //  @Override
-  //  public FileDetail getParentFile() {
-  //    return this.parentFile;
-  //  }
-  //
-  //  @Override
-  //  public List<FileObject> listFiles() {
-  //    throw new RuntimeException("FileDetails 不提供该方法");
-  //  }
-  //
-  //  @Override
-  //  public String getPath() {
-  //    return this.path;
-  //  }
-  //
-  //  @Override
-  //  public Date lastModified() {
-  //    return this.lastModified;
-  //  }
-  //
-  //  @Override
-  //  public List<FileObject> listFiles(FileItemFilter filter) {
-  //    throw new RuntimeException("FileDetails 不提供该方法");
-  //  }
-  //
-  //  @Override
-  //  public List<FileObject> listFiles(FileItemSelector selector) {
-  //    throw new RuntimeException("FileDetails 不提供该方法");
-  //  }
-  //
-  //  @Override
-  //  public FileObjectMetadata getMetadata() {
-  //    throw new RuntimeException("FileDetails 不提供该方法");
-  //  }
-  //
-  //  @Override
-  //  @Transient
-  //  public Storage getStorage() {
-  //    return null;
-  //  }
-  //
-  //  @Override
-  //  public InputStream getInputStream() throws IOException {
-  //    throw new RuntimeException("FileDetails 不提供该方法");
-  //  }
-
   @Override
   public FileDetail clone() {
     try {
@@ -169,7 +117,7 @@ public class FileDetail extends BaseBusEntity implements Cloneable {
       return FileDetail.builder()
           .name(clone.getName())
           .length(clone.getLength())
-          //          .isDirectory(clone.isDirectory())
+          .isDirectory(clone.getIsDirectory())
           .description(clone.getDescription())
           .md5(clone.getMd5())
           .mimeType(clone.getMimeType())
@@ -199,9 +147,11 @@ public class FileDetail extends BaseBusEntity implements Cloneable {
             .path(this.path)
             .name(this.name)
             .size(this.length)
+            .lastModified(this.lastModified)
             .directory(this.isDirectory)
             .mimeType(this.mimeType)
-            .metadata(this.md5);
+            .metadata(this.md5)
+            .addUserMetadata("DESCRIPTION", this.description);
     if (this.getStorageConfig() != null) {
       builder.storage(new SimpleFileObject.SimpleStorage(this.getStorageConfig().getId()));
     }

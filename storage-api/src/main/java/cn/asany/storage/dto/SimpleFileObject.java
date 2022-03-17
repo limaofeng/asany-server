@@ -42,6 +42,8 @@ public class SimpleFileObject implements FileObject {
 
   private FileObjectMetadata metadata;
 
+  private Date lastModified;
+
   public SimpleFileObject(String path) {
     this.path = path;
     this.mimeType = URLConnection.guessContentTypeFromName(path);
@@ -82,7 +84,7 @@ public class SimpleFileObject implements FileObject {
   @Override
   @JsonIgnore
   public Date lastModified() {
-    return null;
+    return this.lastModified;
   }
 
   @Override
@@ -121,6 +123,11 @@ public class SimpleFileObject implements FileObject {
               .contentType(this.mimeType)
               .build();
       this.metadata.setContentMD5(md5);
+      return this;
+    }
+
+    public SimpleFileObjectBuilder addUserMetadata(String key, String value) {
+      this.metadata.addUserMetadata(key, value);
       return this;
     }
   }

@@ -294,6 +294,11 @@ public class FileObjectMetadata {
       return this;
     }
 
+    public FileObjectMetadataBuilder addUserMetadata(String key, String value) {
+      this.metadata.addUserMetadata(key, value);
+      return this;
+    }
+
     public FileObjectMetadata build() {
       return this.metadata;
     }

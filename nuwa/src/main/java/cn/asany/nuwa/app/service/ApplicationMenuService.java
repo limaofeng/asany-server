@@ -116,10 +116,7 @@ public class ApplicationMenuService {
     if (newParentId != null && oldParentId == null) {
       return true;
     }
-    if (!newParentId.equals(oldParentId)) {
-      return true;
-    }
-    return false;
+    return !Objects.equals(newParentId, oldParentId);
   }
 
   private boolean hasModifyIndex(ApplicationMenu menu, ApplicationMenu beforeMenu) {
@@ -131,11 +128,7 @@ public class ApplicationMenuService {
     int oldIndex = ognlUtil.getValue("index", beforeMenu);
     int newIndex = ognlUtil.getValue("index", menu);
 
-    if (oldIndex == newIndex) {
-      return false;
-    }
-
-    return true;
+    return oldIndex != newIndex;
   }
 
   private List<ApplicationMenu> siblings(ApplicationMenu menu) {

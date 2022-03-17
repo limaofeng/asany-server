@@ -28,10 +28,10 @@ public class CloudDriveQuota extends BaseBusEntity {
   private Integer count;
   /** 已使用 */
   @Column(name = "`USAGE`")
-  private Integer usage;
+  private Long usage;
   /** 总大小 */
   @Column(name = "SIZE")
-  private Integer size;
+  private Long size;
   /** 云盘 */
   @OneToOne(fetch = FetchType.LAZY, targetEntity = CloudDrive.class, mappedBy = "quota")
   @ToString.Exclude
