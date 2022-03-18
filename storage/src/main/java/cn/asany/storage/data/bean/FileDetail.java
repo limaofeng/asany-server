@@ -67,7 +67,7 @@ public class FileDetail extends BaseBusEntity implements Cloneable {
   private String description;
   /** 文件长度 */
   @Column(name = "LENGTH")
-  private Long length;
+  private Long size;
   /** 文件MD5码 */
   @Column(name = "MD5", length = 50, nullable = false)
   private String md5;
@@ -116,7 +116,7 @@ public class FileDetail extends BaseBusEntity implements Cloneable {
       FileDetail clone = (FileDetail) super.clone();
       return FileDetail.builder()
           .name(clone.getName())
-          .length(clone.getLength())
+          .size(clone.getSize())
           .isDirectory(clone.getIsDirectory())
           .description(clone.getDescription())
           .md5(clone.getMd5())
@@ -146,7 +146,7 @@ public class FileDetail extends BaseBusEntity implements Cloneable {
             .id(this.id)
             .path(this.path)
             .name(this.name)
-            .size(this.length)
+            .size(this.size)
             .lastModified(this.lastModified)
             .directory(this.isDirectory)
             .mimeType(this.mimeType)

@@ -164,7 +164,7 @@ public class StorageService {
                 .path(fileObject.getPath())
                 .name(fileObject.getName())
                 .isDirectory(fileObject.isDirectory())
-                .length(fileObject.getSize())
+                .size(fileObject.getSize())
                 .md5(fileObject.getMetadata().getContentMD5())
                 .parentFile(parentFile)
                 .storageConfig(StorageConfig.builder().id(storageId).build())
