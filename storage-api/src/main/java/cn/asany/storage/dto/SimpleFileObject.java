@@ -126,7 +126,7 @@ public class SimpleFileObject implements FileObject {
       return this;
     }
 
-    public SimpleFileObjectBuilder addUserMetadata(String key, String value) {
+    public SimpleFileObjectBuilder addUserMetadata(String key, Object value) {
       this.metadata.addUserMetadata(key, value);
       return this;
     }

@@ -6,6 +6,7 @@ import cn.asany.storage.data.service.FileService;
 import cn.asany.storage.data.util.IdUtils;
 import graphql.kickstart.tools.GraphQLResolver;
 import graphql.schema.DataFetchingEnvironment;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.jfantasy.framework.util.common.ObjectUtil;
@@ -51,6 +52,14 @@ public class FileObjectGraphQLResolver implements GraphQLResolver<FileObject> {
 
   public String md5(FileObject fileObject) {
     return fileObject.getMetadata().getContentMD5();
+  }
+
+  public Date createdAt(FileObject fileObject) {
+    return (Date) fileObject.getMetadata().getUserMetadata().get("CREATED_AT");
+  }
+
+  public String description(FileObject fileObject) {
+    return (String) fileObject.getMetadata().getUserMetadata().get("DESCRIPTION");
   }
 
   public Boolean isRootFolder(FileObject fileObject, DataFetchingEnvironment environment) {

@@ -151,7 +151,8 @@ public class FileDetail extends BaseBusEntity implements Cloneable {
             .directory(this.isDirectory)
             .mimeType(this.mimeType)
             .metadata(this.md5)
-            .addUserMetadata("DESCRIPTION", this.description);
+            .addUserMetadata("DESCRIPTION", this.description)
+            .addUserMetadata("CREATED_AT", this.getCreatedAt());
     if (this.getStorageConfig() != null) {
       builder.storage(new SimpleFileObject.SimpleStorage(this.getStorageConfig().getId()));
     }

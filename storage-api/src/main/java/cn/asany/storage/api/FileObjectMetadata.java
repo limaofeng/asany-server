@@ -29,7 +29,7 @@ public class FileObjectMetadata {
       FileObjectMetadata.builder().dir(true).contentLength(0).contentType("").build();
 
   /** 用户自定义的元数据，表示以x-oss-meta-为前缀的请求头。 */
-  private final Map<String, String> userMetadata = new HashMap<>();
+  private final Map<String, Object> userMetadata = new HashMap<>();
   /** 非用户自定义的元数据 */
   private final Map<String, Object> metadata = new HashMap<>();
 
@@ -60,7 +60,7 @@ public class FileObjectMetadata {
    *
    * @return 用户自定义的元数据。
    */
-  public Map<String, String> getUserMetadata() {
+  public Map<String, Object> getUserMetadata() {
     return userMetadata;
   }
 
@@ -92,7 +92,7 @@ public class FileObjectMetadata {
    * @param key 请求头的Key。 这个Key不需要包含OSS要求的前缀，即不需要加入“x-oss-meta-”。
    * @param value 请求头的Value。
    */
-  public void addUserMetadata(String key, String value) {
+  public void addUserMetadata(String key, Object value) {
     this.userMetadata.put(key, value);
   }
 

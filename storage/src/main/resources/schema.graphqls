@@ -72,6 +72,10 @@ type FileObject {
   mimeType: String
   # 更新时间
   lastModified: Date @dateFormat
+  # 创建时间
+  createdAt: Date @dateFormat
+  # 描述
+  description: String
   # 所有父级
   parents: [FileObject!]
   # 文件 MD5
