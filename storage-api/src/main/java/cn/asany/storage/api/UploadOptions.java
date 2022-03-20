@@ -23,7 +23,7 @@ public class UploadOptions {
   /** 插件 */
   private String plugin;
   /** 文件名策略 */
-  private String nameStrategy;
+  private UploadFileNameStrategy nameStrategy;
 
   private String entireFileName;
   private String entireFileDir;

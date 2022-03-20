@@ -7,8 +7,10 @@ import cn.asany.storage.core.engine.oss.OSSStorageConfig;
 import cn.asany.storage.data.bean.enums.StorageType;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.List;
+import java.util.Objects;
 import javax.persistence.*;
 import lombok.*;
+import org.hibernate.Hibernate;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.framework.jackson.JSON;
@@ -20,11 +22,12 @@ import org.jfantasy.framework.jackson.JSON;
  * @version 1.0
  * @since 2013-7-12 下午02:30:29
  */
-@Data
+@Getter
+@Setter
+@ToString
+@RequiredArgsConstructor
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = false)
 @Entity
 @Table(name = "STORAGE_CONFIG")
 @JsonIgnoreProperties({"hibernate_lazy_initializer", "handler", "folders", "fileDetails"})
@@ -44,7 +47,7 @@ public class StorageConfig extends BaseBusEntity {
   private String name;
   /** 文件管理器的类型 */
   @Enumerated(EnumType.STRING)
-  @Column(name = "TYPE", length = 20, nullable = false, insertable = true, updatable = false)
+  @Column(name = "TYPE", length = 20, nullable = false, updatable = false)
   private StorageType type;
   /** 描述 */
   @Column(name = "DESCRIPTION", length = 250)
@@ -58,6 +61,7 @@ public class StorageConfig extends BaseBusEntity {
 
   /** 文件管理器对应的文件 */
   @OneToMany(mappedBy = "storageConfig", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+  @ToString.Exclude
   private List<FileDetail> fileDetails;
 
   @Transient
@@ -85,5 +89,18 @@ public class StorageConfig extends BaseBusEntity {
       this.details = JSON.serialize(config);
       return this;
     }
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+    StorageConfig that = (StorageConfig) o;
+    return id != null && Objects.equals(id, that.id);
+  }
+
+  @Override
+  public int hashCode() {
+    return getClass().hashCode();
   }
 }

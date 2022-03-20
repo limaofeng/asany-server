@@ -14,7 +14,9 @@ import lombok.Setter;
 @Builder
 public class UploadContext {
   private UploadService uploadService;
+  /** 完成上传标志 */
   @Getter @Setter private boolean uploaded;
+
   @Getter private File file;
   @Getter private FileObject object;
   @Getter private UploadOptions options;

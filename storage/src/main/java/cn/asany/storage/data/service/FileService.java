@@ -8,15 +8,16 @@ import cn.asany.storage.data.dao.FileDetailDao;
 import cn.asany.storage.data.dao.SpaceDao;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
-import org.jfantasy.framework.util.common.DateUtil;
+import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
+import org.jfantasy.framework.error.ValidationException;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.common.StringUtil;
 import org.jfantasy.framework.util.regexp.RegexpUtil;
+import org.jfantasy.framework.util.web.WebUtil;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -50,8 +51,7 @@ public class FileService {
       long length,
       String md5,
       String storage,
-      String description,
-      Date lastModified) {
+      String description) {
     FileDetail fileDetail =
         FileDetail.builder()
             .path(path)
@@ -61,7 +61,7 @@ public class FileService {
             .size(length)
             .md5(md5)
             .isDirectory(false)
-            .lastModified(lastModified)
+            .extension(WebUtil.getExtension(fileName))
             .parentFile(createFolder(path.replaceFirst("[^/]+$", ""), storage))
             .description(description)
             .build();
@@ -152,7 +152,6 @@ public class FileService {
             .mimeType(DIR_MIME_TYPE)
             .size(0L)
             .name("")
-            .lastModified(DateUtil.now())
             .storageConfig(StorageConfig.builder().id(managerId).build())
             .md5(DIR_MD5)
             .build());
@@ -174,7 +173,6 @@ public class FileService {
             .mimeType(DIR_MIME_TYPE)
             .size(0L)
             .md5(DIR_MD5)
-            .lastModified(DateUtil.now())
             .storageConfig(StorageConfig.builder().id(managerId).build())
             .name(RegexpUtil.parseGroup(absolutePath, "([^/]+)\\/$", 1));
     if (ObjectUtil.isNotNull(parent)) {
@@ -255,38 +253,6 @@ public class FileService {
     return space.get();
   }
 
-  //  /**
-  //   * 获取存放文件的绝对路径
-  //   *
-  //   * @param absolutePath 虚拟目录
-  //   * @param fileManagerId 文件管理器Id
-  //   * @return {String}
-  //   */
-  //  public String getAbsolutePath(String absolutePath, String fileManagerId) {
-  //    String ext = WebUtil.getExtension(absolutePath);
-  //    // absolutePath = RegexpUtil.replace(absolutePath, "[^/]+[.]{0}[^.]{0}$","");
-  //    // 去掉后缀名称
-  //    if (RegexpUtil.isMatch(absolutePath, "([/][^/]{1,})([.][^./]{1,})$")) {
-  //      absolutePath = RegexpUtil.replace(absolutePath, "([/][^/]{1,})([.][^./]{1,})$", "$1");
-  //    }
-  //    // 可能有效率问题
-  //    List<FileDetail> details = new ArrayList<>(); // this.fileDetailDao.find(new
-  //    // Criterion[]{Restrictions.like("absolutePath", absolutePath,
-  //    // MatchMode.START), Restrictions.eq("namespace", fileManagerId)},
-  //    // "absolutePath", "asc");
-  //    if (details.isEmpty()
-  //        || ObjectUtil.find(details, "absolutePath", absolutePath + "." + ext) == null) {
-  //      return absolutePath + "." + ext;
-  //    }
-  //    for (int i = 1; i <= details.size(); i++) {
-  //      if (ObjectUtil.find(details, "absolutePath", absolutePath + "(" + i + ")." + ext) == null)
-  // {
-  //        return absolutePath + "(" + i + ")." + ext;
-  //      }
-  //    }
-  //    return absolutePath;
-  //  }
-
   public long count(List<PropertyFilter> filters) {
     return this.fileDetailDao.count(filters);
   }
@@ -328,5 +294,35 @@ public class FileService {
                 .build());
     this.spaceDao.deleteById(id);
     rootFolderOptional.ifPresent(this.fileDetailDao::delete);
+  }
+
+  public FileDetail renameFile(Long id, String name) {
+    FileDetail fileDetail = this.fileDetailDao.getById(id);
+
+    if (name.equals(fileDetail.getName())) {
+      return fileDetail;
+    }
+
+    PropertyFilterBuilder builder =
+        PropertyFilter.builder()
+            .equal("storageConfig.id", fileDetail.getStorageConfig().getId())
+            .notEqual("id", id);
+
+    if (fileDetail.getParentFile() == null) {
+      builder.isNull("parentFile.id");
+    } else {
+      builder.equal("parentFile.id", fileDetail.getParentFile().getId());
+    }
+
+    builder.equal("name", name);
+
+    if (this.fileDetailDao.exists(builder.build())) {
+      throw new ValidationException("重命名失败，文件名被占用");
+    }
+
+    fileDetail.setName(name);
+    fileDetail.setExtension(WebUtil.getExtension(name));
+
+    return fileDetail;
   }
 }

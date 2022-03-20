@@ -25,7 +25,6 @@ public interface Storage {
    *
    * @param remotePath 路径
    * @param file 文件对象
-   * @throws IOException
    */
   void writeFile(String remotePath, File file) throws IOException;
 
@@ -34,7 +33,6 @@ public interface Storage {
    *
    * @param remotePath 路径
    * @param in 输出流
-   * @throws IOException
    */
   void writeFile(String remotePath, InputStream in) throws IOException;
 
@@ -43,7 +41,6 @@ public interface Storage {
    *
    * @param remotePath 路径
    * @return {OutputStream}
-   * @throws IOException
    */
   OutputStream writeFile(String remotePath) throws IOException;
 
@@ -52,7 +49,6 @@ public interface Storage {
    *
    * @param remotePath 路径
    * @param localPath 路径
-   * @throws IOException
    */
   void readFile(String remotePath, String localPath) throws IOException;
 
@@ -61,7 +57,6 @@ public interface Storage {
    *
    * @param remotePath 路径
    * @param out 输出流
-   * @throws IOException
    */
   void readFile(String remotePath, OutputStream out) throws IOException;
 
@@ -70,7 +65,6 @@ public interface Storage {
    *
    * @param remotePath 路径
    * @return 返回 InputStream 对象
-   * @throws IOException
    */
   InputStream readFile(String remotePath) throws IOException;
 

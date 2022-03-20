@@ -11,8 +11,6 @@ import lombok.*;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 
 /**
  * 文件信息表
@@ -26,10 +24,11 @@ import org.springframework.data.annotation.LastModifiedDate;
 @Entity
 @Table(
     name = "STORAGE_FILEOBJECT",
-    uniqueConstraints =
-        @UniqueConstraint(
-            name = "UK_STORAGE_FILEOBJECT",
-            columnNames = {"STORAGE_ID", "PATH"}))
+    uniqueConstraints = {
+      @UniqueConstraint(
+          name = "UK_STORAGE_FILEOBJECT",
+          columnNames = {"STORAGE_ID", "PATH"})
+    })
 @AllArgsConstructor
 @Builder
 @JsonIgnoreProperties(
@@ -59,6 +58,9 @@ public class FileDetail extends BaseBusEntity implements Cloneable {
   /** 文件名称 */
   @Column(name = "NAME", length = 50, nullable = false)
   private String name;
+  /** 文件扩展名 */
+  @Column(name = "EXTENSION", length = 50)
+  private String extension;
   /** 是否为文件夹 */
   @Column(name = "IS_DIRECTORY", nullable = false)
   private Boolean isDirectory;
@@ -72,10 +74,8 @@ public class FileDetail extends BaseBusEntity implements Cloneable {
   @Column(name = "MD5", length = 50, nullable = false)
   private String md5;
   /** 文件修改时间 */
-  @CreatedDate
-  @LastModifiedDate
   @Temporal(TemporalType.TIMESTAMP)
-  @Column(name = "LAST_MODIFIED", nullable = false)
+  @Column(name = "UPDATED_AT", insertable = false, updatable = false)
   private Date lastModified;
   /** 文件夹 */
   @JoinColumn(
@@ -147,11 +147,12 @@ public class FileDetail extends BaseBusEntity implements Cloneable {
             .path(this.path)
             .name(this.name)
             .size(this.size)
-            .lastModified(this.lastModified)
+            .lastModified(this.getUpdatedAt())
             .directory(this.isDirectory)
             .mimeType(this.mimeType)
             .metadata(this.md5)
             .addUserMetadata("DESCRIPTION", this.description)
+            .addUserMetadata("EXTENSION", this.extension)
             .addUserMetadata("CREATED_AT", this.getCreatedAt());
     if (this.getStorageConfig() != null) {
       builder.storage(new SimpleFileObject.SimpleStorage(this.getStorageConfig().getId()));

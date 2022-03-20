@@ -168,9 +168,11 @@ public class StorageService {
                 .md5(fileObject.getMetadata().getContentMD5())
                 .parentFile(parentFile)
                 .storageConfig(StorageConfig.builder().id(storageId).build())
-                .lastModified(fileObject.lastModified())
                 .mimeType(fileObject.getMimeType());
-        this.insert(builder.build());
+        FileDetail fileDetail = builder.build();
+        fileDetail.setCreatedAt(fileObject.lastModified());
+        fileDetail.setUpdatedAt(fileObject.lastModified());
+        this.insert(fileDetail);
       }
 
       for (FileObject fileObject : results.getExceptA()) {

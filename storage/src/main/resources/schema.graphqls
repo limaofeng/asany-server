@@ -70,6 +70,8 @@ type FileObject {
   size: Number @fileSize(unit: "bytes")
   # 文件 MIME 类型
   mimeType: String
+  # 文件扩展名
+  extension: String
   # 更新时间
   lastModified: Date @dateFormat
   # 创建时间
@@ -192,6 +194,10 @@ extend type Mutation {
     file: Upload!
     options: UploadOptions = { space: "Default" }
   ): FileObject
+  """
+  重命名文件
+  """
+  renameFile(id: ID!, name: String!): FileObject!
 }
 
 scalar Upload

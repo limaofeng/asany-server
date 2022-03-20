@@ -14,8 +14,8 @@ import lombok.Getter;
  * @author limaofeng
  */
 public class UploadFileObject implements FileObject {
-  @Getter private File file;
-  @Getter private String name;
+  @Getter private final File file;
+  @Getter private final String name;
   @Getter private FileObjectMetadata metadata;
 
   public UploadFileObject(String name, File file, FileObjectMetadata metadata) {

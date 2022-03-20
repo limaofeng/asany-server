@@ -32,19 +32,19 @@ public class IdUtils {
           .rootPath(space.getPath());
 
       if (ids.length > 2) {
-        FileDetail folder =
+        FileDetail file =
             SpringBeanUtils.getBean(FileService.class).getFolderById(Long.parseLong(ids[2]));
-        builder.path(folder.getPath());
+        builder.path(file.getPath()).fileId(file.getId());
       }
 
     } else if ("file".equals(type)) {
-      FileDetail folder =
+      FileDetail file =
           SpringBeanUtils.getBean(FileService.class).getFolderById(Long.parseLong(ids[1]));
       builder
           .type("file")
-          .storage(folder.getStorageConfig().getId())
-          .path(folder.getPath())
-          .folder(folder.getId());
+          .storage(file.getStorageConfig().getId())
+          .path(file.getPath())
+          .fileId(file.getId());
     }
     return builder.build();
   }
@@ -61,7 +61,7 @@ public class IdUtils {
     private String storage;
     private String space;
     private String rootPath;
-    private Long folder;
+    private Long fileId;
     private String path;
   }
 }

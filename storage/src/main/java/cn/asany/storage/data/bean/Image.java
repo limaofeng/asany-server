@@ -2,6 +2,7 @@ package cn.asany.storage.data.bean;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * 图片
@@ -42,8 +43,8 @@ public class Image extends FileDetail implements Comparable<Image> {
   }
 
   @Override
-  public int compareTo(Image image) {
-    if (image == null || image.getSort() == null || this.getSort() == null) {
+  public int compareTo(@NotNull Image image) {
+    if (image.getSort() == null || this.getSort() == null) {
       return -1;
     }
     return this.getSort().compareTo(image.getSort());

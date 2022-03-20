@@ -8,7 +8,6 @@ import cn.asany.storage.data.bean.FileDetail;
 import cn.asany.storage.data.service.FileService;
 import cn.asany.storage.utils.UploadUtils;
 import java.io.File;
-import java.util.Date;
 import java.util.UUID;
 import lombok.SneakyThrows;
 import org.jfantasy.framework.util.common.DateUtil;
@@ -42,7 +41,6 @@ public class BaseStoragePlugin implements StoragePlugin {
     File file = context.getFile();
 
     String md5 = UploadUtils.md5(file);
-    Date lastModified = FileUtil.lastModified(file);
     String mimeType = FileUtil.getMimeType(file);
 
     String filename = StringUtil.hexTo64("0" + UUID.randomUUID().toString().replaceAll("-", ""));
@@ -63,8 +61,7 @@ public class BaseStoragePlugin implements StoragePlugin {
             object.getSize(),
             md5,
             context.getStorageId(),
-            "",
-            lastModified);
+            "");
     context.setUploaded(true);
     return detail.toFileObject();
   }
