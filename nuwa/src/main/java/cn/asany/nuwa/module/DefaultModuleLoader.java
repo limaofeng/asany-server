@@ -16,7 +16,7 @@ import org.jfantasy.framework.util.common.ClassUtil;
  */
 public class DefaultModuleLoader implements IModuleLoader {
 
-  private Map<String, IModule> modules = new HashMap<>();
+  private final Map<String, IModule> modules = new HashMap<>();
 
   public DefaultModuleLoader(List<IModule> modules) {
     for (IModule module : modules) {

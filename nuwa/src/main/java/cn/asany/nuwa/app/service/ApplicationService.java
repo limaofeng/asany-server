@@ -229,7 +229,6 @@ public class ApplicationService implements ClientDetailsService {
     for (IModuleProperties module : modules) {
       this.moduleLoader.load(module.getType(), module);
     }
-    //      this.moduleLoader
 
     return application;
   }
