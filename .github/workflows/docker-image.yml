@@ -22,7 +22,7 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew clean build -x test
       - name: Rename Boot Jar
-        run: mv boot/build/libs/asany-boot-0.0.0.jar build/app.jar
+        run: mv boot/build/libs/boot-0.0.0.jar build/app.jar
       - name: Upload Artifacts
         uses: actions/upload-artifact@main
         with:
