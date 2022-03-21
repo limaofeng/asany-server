@@ -6,7 +6,6 @@ import cn.asany.email.mailbox.bean.JamesMailbox;
 import cn.asany.email.mailbox.dao.MailboxDao;
 import cn.asany.email.user.bean.MailSettings;
 import cn.asany.email.user.bean.MailUser;
-import cn.asany.email.user.bean.toys.UpdateMode;
 import cn.asany.email.user.dao.MailSettingsDao;
 import cn.asany.email.user.dao.MailUserDao;
 import cn.asany.security.core.bean.User;
@@ -20,6 +19,7 @@ import org.apache.james.mailbox.DefaultMailboxes;
 import org.apache.james.mailbox.exception.MailboxException;
 import org.apache.james.mailbox.model.MailboxConstants;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
+import org.jfantasy.graphql.UpdateMode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

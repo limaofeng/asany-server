@@ -187,9 +187,13 @@ extend type Query {
 }
 
 extend type Mutation {
-  # 重建索引
+  """
+  重建索引
+  """
   storageReindex(id: ID!): Boolean
-  # 上传附件
+  """
+  上传附件
+  """
   upload(
     file: Upload!
     options: UploadOptions = { space: "Default" }
@@ -198,6 +202,28 @@ extend type Mutation {
   重命名文件
   """
   renameFile(id: ID!, name: String!): FileObject!
+  """
+  新建文件夹
+  """
+  createFolder(name: String!, parentFolder: ID!): FileObject!
+  """
+  为文件添加星标
+  """
+  addStarForFiles(
+    ids: [ID!]!
+    """
+    更新模式
+    """
+    mode: UpdateMode = ADD
+  ): [ID!]!
+  """
+  删除文件
+  """
+  deleteFiles(ids: [ID!]!): [ID!]!
+  """
+  清空 回收站
+  """
+  clearFilesInTrash: Int
 }
 
 scalar Upload

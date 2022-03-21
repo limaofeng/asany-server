@@ -10,7 +10,9 @@ import cn.asany.storage.utils.UploadUtils;
 import graphql.kickstart.tools.GraphQLMutationResolver;
 import graphql.schema.DataFetchingEnvironment;
 import java.io.IOException;
+import java.util.List;
 import javax.servlet.http.Part;
+import org.jfantasy.graphql.UpdateMode;
 import org.jfantasy.graphql.context.AuthorizationGraphQLServletContext;
 import org.springframework.stereotype.Component;
 
@@ -53,5 +55,30 @@ public class StorageGraphQLMutationResolver implements GraphQLMutationResolver {
     context.setAttribute("QUERY_ROOT_PATH", fileKey.getRootPath());
 
     return fileService.renameFile(fileKey.getFileId(), name).toFileObject();
+  }
+
+  public FileObject createFolder(
+      String name, String parentFolder, DataFetchingEnvironment environment) {
+    IdUtils.FileKey fileKey = IdUtils.parseKey(parentFolder);
+
+    AuthorizationGraphQLServletContext context = environment.getContext();
+
+    context.setAttribute("QUERY_ROOT_FILE_KEY", fileKey);
+    context.setAttribute("QUERY_ROOT_PATH", fileKey.getRootPath());
+
+    return fileService.createFolder(name, fileKey.getFileId()).toFileObject();
+  }
+
+  public List<String> addStarForFiles(List<String> ids, UpdateMode mode) {
+    return ids;
+  }
+
+  public List<String> deleteFiles(List<String> ids) {
+    System.out.println(ids);
+    return ids;
+  }
+
+  public Integer clearFilesInTrash() {
+    return 0;
   }
 }

@@ -5,8 +5,10 @@ import cn.asany.storage.data.bean.FileDetail;
 import cn.asany.storage.data.bean.Space;
 import cn.asany.storage.data.service.FileService;
 import cn.asany.storage.data.service.SpaceService;
+import java.util.Optional;
 import lombok.Builder;
 import lombok.Data;
+import org.jfantasy.framework.error.ValidationException;
 import org.jfantasy.framework.spring.SpringBeanUtils;
 import org.jfantasy.framework.util.common.StringUtil;
 
@@ -35,6 +37,12 @@ public class IdUtils {
         FileDetail file =
             SpringBeanUtils.getBean(FileService.class).getFolderById(Long.parseLong(ids[2]));
         builder.path(file.getPath()).fileId(file.getId());
+      } else {
+        Optional<FileDetail> optionalFileDetail =
+            SpringBeanUtils.getBean(FileService.class)
+                .findByPath(space.getStorage().getId(), space.getPath());
+        FileDetail file = optionalFileDetail.orElseThrow(() -> new ValidationException("文件夹不存在"));
+        builder.fileId(file.getId());
       }
 
     } else if ("file".equals(type)) {

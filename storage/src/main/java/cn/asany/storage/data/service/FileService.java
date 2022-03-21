@@ -69,6 +69,11 @@ public class FileService {
     return fileDetail;
   }
 
+  public FileDetail update(Long id, FileDetail file, boolean merge) {
+    file.setId(id);
+    return this.fileDetailDao.update(file, merge);
+  }
+
   public FileDetail update(FileDetail detail) {
     FileDetail fileDetail = this.getOneByPath(detail.getPath());
     fileDetail.setName(detail.getName());
@@ -142,6 +147,11 @@ public class FileService {
   @Cacheable(key = "targetClass + methodName + #p0", value = "STORAGE")
   public Optional<FileDetail> findByPath(String path) {
     return this.fileDetailDao.findOne(PropertyFilter.builder().equal("path", path).build());
+  }
+
+  public Optional<FileDetail> findByPath(String storage, String path) {
+    return this.fileDetailDao.findOne(
+        PropertyFilter.builder().equal("storageConfig.id", storage).equal("path", path).build());
   }
 
   private FileDetail createRootFolder(String absolutePath, String managerId) {
@@ -303,6 +313,10 @@ public class FileService {
       return fileDetail;
     }
 
+    if (RegexpUtil.isMatch(name, "[<>|*?,/]")) {
+      throw new ValidationException("文件名不能包含以下字符：<,>,|,*,?,,/");
+    }
+
     PropertyFilterBuilder builder =
         PropertyFilter.builder()
             .equal("storageConfig.id", fileDetail.getStorageConfig().getId())
@@ -324,5 +338,29 @@ public class FileService {
     fileDetail.setExtension(WebUtil.getExtension(name));
 
     return fileDetail;
+  }
+
+  public FileDetail createFolder(String name, Long parentFolder) {
+    FileDetail parent = this.fileDetailDao.getById(parentFolder);
+
+    if (RegexpUtil.isMatch(name, "[<>|*?,/]")) {
+      throw new ValidationException("文件名不能包含以下字符：<,>,|,*,?,,/");
+    }
+
+    if (this.fileDetailDao.exists(
+        PropertyFilter.builder()
+            .equal("parentFile.id", parent.getId())
+            .equal("name", name)
+            .build())) {
+      throw new ValidationException("新建文件夹失败，文件名被占用");
+    }
+
+    String path = parent.getPath() + name + "/";
+
+    return createFolder(path, parent.getStorageConfig().getId());
+  }
+
+  public List<FileDetail> findAll(List<PropertyFilter> filters) {
+    return this.fileDetailDao.findAll(filters);
   }
 }

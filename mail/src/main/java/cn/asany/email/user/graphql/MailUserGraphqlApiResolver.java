@@ -1,7 +1,6 @@
 package cn.asany.email.user.graphql;
 
 import cn.asany.email.user.bean.MailUser;
-import cn.asany.email.user.bean.toys.UpdateMode;
 import cn.asany.email.user.graphql.type.MailUserIdType;
 import cn.asany.email.user.service.MailUserService;
 import cn.asany.email.utils.JamesUtil;
@@ -14,6 +13,7 @@ import org.jfantasy.framework.security.SpringSecurityUtils;
 import org.jfantasy.framework.util.common.StringUtil;
 import org.jfantasy.framework.util.regexp.RegexpConstant;
 import org.jfantasy.framework.util.regexp.RegexpUtil;
+import org.jfantasy.graphql.UpdateMode;
 import org.springframework.stereotype.Component;
 
 @Component
