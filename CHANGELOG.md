@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.5](https://github.com/limaofeng/asany-server/compare/v0.1.4...v0.1.5) (2022-03-21)
+
+
+### Features
+
+* 优化邮件发送接口, 添加邮件清空回收站接口 ([0444d79](https://github.com/limaofeng/asany-server/commit/0444d797317bc480c1c3c4659e4c1d0922f452e3))
+* 发送邮件接口 ([ed4cce2](https://github.com/limaofeng/asany-server/commit/ed4cce262049abe9e00526be379e3997991f3e10))
+* 接口文件对象 FileObject 添加 createdAt， description ([4832942](https://github.com/limaofeng/asany-server/commit/4832942ec3f0acca15bfb7a39be50bca2d9d5a49))
+* 文件查询接口重构，支持复杂查询 ([91de34b](https://github.com/limaofeng/asany-server/commit/91de34badbb7f0ab01f68dd9ebb5f912eca714c5))
+* 文件重命名接口 ([98e5bac](https://github.com/limaofeng/asany-server/commit/98e5bacf936c17f9a6de1ab7562a6aad8254947a))
+* 新增新增与修改邮件接口 ([0a63c9b](https://github.com/limaofeng/asany-server/commit/0a63c9baa21098c4095a12f43e85b57513052def))
+* 添加云盘模块 ([058d27f](https://github.com/limaofeng/asany-server/commit/058d27fe18ebf286f819e9760c87ba144afe16d5))
+* 添加文件删除接口 ([aabb96e](https://github.com/limaofeng/asany-server/commit/aabb96e8f0fc9721b15fac01f94f77ff79669b76))
+* 添加联系人接口 ([dc2de14](https://github.com/limaofeng/asany-server/commit/dc2de1473f8d684352a98c4f5d061938cf124ec3))
+* 添加通讯录模块 ([be824e9](https://github.com/limaofeng/asany-server/commit/be824e9a2c1f0f4ffb5dfcb0653f4c6fa8257528))
+* 邮件默认按照 internalDate 排序 ([74e558e](https://github.com/limaofeng/asany-server/commit/74e558ef1c3365ef4668b414e73af1f79135c6fc))
+
+
+### Bug Fixes
+
+* 修复文件列表排序问题 ([ff36d1b](https://github.com/limaofeng/asany-server/commit/ff36d1bb49e624f08c2c5b090f438c6307a601c5))
+
 ### [0.1.4](https://github.com/limaofeng/asany-server/compare/v0.1.3...v0.1.4) (2022-03-06)
 
 
