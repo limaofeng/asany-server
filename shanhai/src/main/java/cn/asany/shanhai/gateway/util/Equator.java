@@ -26,7 +26,7 @@ public class Equator {
 
   private static List<DiffObject> diff(
       Object left, Object right, Structure structure, String parentPath) {
-    Property[] properties = ClassUtil.getPropertys(left.getClass());
+    Property[] properties = ClassUtil.getProperties(left.getClass());
     List<DiffObject> diffObjects = new ArrayList<>();
     for (Property property : properties) {
       if (property.isTransient()) {
@@ -251,22 +251,20 @@ public class Equator {
 
   public static <PK, T> Map<PK, T> toMap(List<T> list, String fieldName) {
     Map<PK, T> map = new LinkedHashMap<>();
-    for (Object t : list) {
-      map.put(OgnlUtil.getInstance().getValue(fieldName, t), (T) t);
+    for (T t : list) {
+      map.put(OgnlUtil.getInstance().getValue(fieldName, t), t);
     }
     return map;
   }
 
   public static Set<String> intersection(Set<String> left, Set<String> right) {
-    Set result = new LinkedHashSet();
-    result.addAll(left);
+    Set result = new LinkedHashSet(left);
     result.retainAll(right);
     return result;
   }
 
   public static Set<String> differenceSet(Set<String> left, Set<String> right) {
-    Set result = new LinkedHashSet();
-    result.addAll(left);
+    Set result = new LinkedHashSet(left);
     result.removeAll(right);
     return result;
   }

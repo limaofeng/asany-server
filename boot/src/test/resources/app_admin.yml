@@ -171,6 +171,8 @@ routes:
         component: cn.asany.ui.admin.drive.FileList
       - path: /drive/recent
         component: cn.asany.ui.admin.drive.DriveRecent
+      - path: /drive/starred
+        component: cn.asany.ui.admin.drive.DriveStarred
       - path: /drive/trash
         component: cn.asany.ui.admin.drive.DriveTrash
       - path: /storage

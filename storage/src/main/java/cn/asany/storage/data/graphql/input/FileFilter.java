@@ -9,4 +9,12 @@ import org.jfantasy.graphql.inputs.QueryFilter;
 @EqualsAndHashCode(callSuper = true)
 public class FileFilter extends QueryFilter<FileFilter, FileDetail> {
   private boolean recursive;
+
+  public void setStarred(Boolean starred) {
+    this.getBuilder().equal("labels.name", "starred");
+  }
+
+  public void setTrashed(Boolean trashed) {
+    this.getBuilder().equal("labels.name", "trashed");
+  }
 }

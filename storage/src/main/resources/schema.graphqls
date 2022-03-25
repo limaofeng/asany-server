@@ -78,6 +78,10 @@ type FileObject {
   createdAt: Date @dateFormat
   # 描述
   description: String
+  """
+  已加星标
+  """
+  starred: Boolean
   # 所有父级
   parents: [FileObject!]
   # 文件 MD5
@@ -107,6 +111,10 @@ input FileFilter {
   """
   mimeType: String
   """
+  是否为目录
+  """
+  isDirectory: Boolean
+  """
   媒体类型 匹配开始
   """
   mimeType_startsWith: String
@@ -126,6 +134,14 @@ input FileFilter {
   包含子目录
   """
   recursive: Boolean
+  """
+  加星标
+  """
+  starred: Boolean
+  """
+  已回收
+  """
+  trashed: Boolean
   """
   NOT 子句
   """
@@ -215,15 +231,23 @@ extend type Mutation {
     更新模式
     """
     mode: UpdateMode = ADD
-  ): [ID!]!
+  ): [FileObject!]!
+  """
+  移入回收站
+  """
+  moveFilesToTrash(ids: [ID!]!): [FileObject!]!
   """
   删除文件
   """
-  deleteFiles(ids: [ID!]!): [ID!]!
+  deleteFiles(ids: [ID!]!): [FileObject!]!
+  """
+  恢复文件
+  """
+  restoreFiles(ids: [ID!]!): [FileObject!]!
   """
   清空 回收站
   """
-  clearFilesInTrash: Int
+  clearFilesInTrash(folder: ID!): Int
 }
 
 scalar Upload

@@ -66,6 +66,11 @@ public class FileObjectGraphQLResolver implements GraphQLResolver<FileObject> {
     return (String) fileObject.getMetadata().getUserMetadata().get("EXTENSION");
   }
 
+  public Boolean starred(FileObject fileObject) {
+    return ObjectUtil.defaultValue(
+        (Boolean) fileObject.getMetadata().getUserMetadata().get("IS_STARRED"), Boolean.FALSE);
+  }
+
   public Boolean isRootFolder(FileObject fileObject, DataFetchingEnvironment environment) {
     AuthorizationGraphQLServletContext context = environment.getContext();
 

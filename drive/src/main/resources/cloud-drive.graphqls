@@ -43,6 +43,10 @@ type CloudDrive {
   跟文件夹
   """
   rootFolder: String!
+  """
+  回收站文件夹
+  """
+  recycler: String!
 }
 
 extend type Query {

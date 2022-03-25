@@ -82,21 +82,13 @@ public class FileService {
     return fileDetail;
   }
 
-  public FileDetail getFolderById(Long id) {
+  public FileDetail getFileById(Long id) {
     return this.fileDetailDao.getById(id);
   }
 
-  public Optional<FileDetail> getFolderByPath(String absolutePath, String storageId) {
-    return this.fileDetailDao.findOne(
-        PropertyFilter.builder()
-            .equal("path", absolutePath)
-            .equal("isDirectory", true)
-            .equal("storageConfig.id", storageId)
-            .build());
-  }
-
   public void delete(Long id) {
-    this.fileDetailDao.deleteById(id);
+    FileDetail fileDetail = this.fileDetailDao.getById(id);
+    this.fileDetailDao.deleteByPath(fileDetail.getPath());
   }
 
   /**
@@ -334,9 +326,17 @@ public class FileService {
       throw new ValidationException("重命名失败，文件名被占用");
     }
 
-    fileDetail.setName(name);
-    fileDetail.setExtension(WebUtil.getExtension(name));
+    if (fileDetail.getIsDirectory()) {
+      String path = fileDetail.getPath();
+      String newPath =
+          fileDetail.getPath().replaceFirst("[^/]+/$", "") + name + FileObject.SEPARATOR;
+      this.fileDetailDao.replacePath(fileDetail.getStorageConfig().getId(), path, newPath);
+      fileDetail.setPath(newPath);
+    } else {
+      fileDetail.setExtension(WebUtil.getExtension(name));
+    }
 
+    fileDetail.setName(name);
     return fileDetail;
   }
 
@@ -362,5 +362,33 @@ public class FileService {
 
   public List<FileDetail> findAll(List<PropertyFilter> filters) {
     return this.fileDetailDao.findAll(filters);
+  }
+
+  public Integer clearTrash(String storage, String path) {
+    FileDetail recycler = getRecycler(storage, path);
+    return this.fileDetailDao.clearTrash(recycler.getPath());
+  }
+
+  public FileDetail getRecycler(String storage, String path) {
+    Optional<FileDetail> optionalRootFile = this.findByPath(storage, path);
+    FileDetail rootFile = optionalRootFile.orElseGet(() -> this.createFolder(path, storage));
+    String recycler_path = path + "RECYCLER/";
+    Optional<FileDetail> optionalRecyclerFile = this.findByPath(storage, recycler_path);
+    return optionalRecyclerFile.orElseGet(() -> this.createFolder(recycler_path, storage));
+  }
+
+  public FileDetail getFolderByPath(String storage, String path) {
+    Optional<FileDetail> optionalRootFile = this.findByPath(storage, path);
+    return optionalRootFile.orElseGet(() -> this.createFolder(path, storage));
+  }
+
+  public FileDetail move(FileDetail file, FileDetail folder) {
+    String newPath = folder.getPath() + file.getName() + (file.getIsDirectory() ? "/" : "");
+    if (file.getIsDirectory()) {
+      this.fileDetailDao.replacePath(folder.getStorageConfig().getId(), file.getPath(), newPath);
+    }
+    file.setParentFile(folder);
+    file.setPath(newPath);
+    return this.fileDetailDao.save(file);
   }
 }

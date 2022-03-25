@@ -35,7 +35,7 @@ public class IdUtils {
 
       if (ids.length > 2) {
         FileDetail file =
-            SpringBeanUtils.getBean(FileService.class).getFolderById(Long.parseLong(ids[2]));
+            SpringBeanUtils.getBean(FileService.class).getFileById(Long.parseLong(ids[2]));
         builder.path(file.getPath()).fileId(file.getId());
       } else {
         Optional<FileDetail> optionalFileDetail =
@@ -47,7 +47,7 @@ public class IdUtils {
 
     } else if ("file".equals(type)) {
       FileDetail file =
-          SpringBeanUtils.getBean(FileService.class).getFolderById(Long.parseLong(ids[1]));
+          SpringBeanUtils.getBean(FileService.class).getFileById(Long.parseLong(ids[1]));
       builder
           .type("file")
           .storage(file.getStorageConfig().getId())

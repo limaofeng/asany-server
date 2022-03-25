@@ -11,7 +11,8 @@ import javax.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.GenericGenerator;
-import org.jfantasy.framework.dao.BaseBusBusinessEntity;
+import org.jfantasy.framework.dao.BaseBusEntity;
+import org.jfantasy.framework.util.common.ObjectUtil;
 
 /**
  * 文件信息表
@@ -43,7 +44,7 @@ import org.jfantasy.framework.dao.BaseBusBusinessEntity;
       "metadata",
       "inputStream"
     })
-public class FileDetail extends BaseBusBusinessEntity implements Cloneable {
+public class FileDetail extends BaseBusEntity implements Cloneable {
 
   @Id
   @Column(name = "ID", nullable = false, updatable = false, precision = 22)
@@ -79,10 +80,7 @@ public class FileDetail extends BaseBusBusinessEntity implements Cloneable {
   @Column(name = "UPDATED_AT", insertable = false, updatable = false)
   private Date lastModified;
   /** 文件夹 */
-  @JoinColumn(
-      name = "PARENT_ID",
-      updatable = false,
-      foreignKey = @ForeignKey(name = "FK_STORAGE_FILEOBJECT_PARENT"))
+  @JoinColumn(name = "PARENT_ID", foreignKey = @ForeignKey(name = "FK_STORAGE_FILEOBJECT_PARENT"))
   @ManyToOne(fetch = FetchType.LAZY)
   @ToString.Exclude
   private FileDetail parentFile;
@@ -100,14 +98,6 @@ public class FileDetail extends BaseBusBusinessEntity implements Cloneable {
   @ManyToOne(fetch = FetchType.LAZY)
   @ToString.Exclude
   private StorageConfig storageConfig;
-  //  /** 标记加心 */
-  //  @Builder.Default
-  //  @Column(name = "STARRED")
-  //  private Boolean starred = false;
-  //  /** 标记回收 */
-  //  @Builder.Default
-  //  @Column(name = "TRASHED")
-  //  private Boolean trashed = false;
 
   @OneToMany(
       mappedBy = "file",
@@ -174,6 +164,7 @@ public class FileDetail extends BaseBusBusinessEntity implements Cloneable {
             .metadata(this.md5)
             .addUserMetadata("DESCRIPTION", this.description)
             .addUserMetadata("EXTENSION", this.extension)
+            .addUserMetadata("IS_STARRED", ObjectUtil.exists(this.getLabels(), "name", "starred"))
             .addUserMetadata("CREATED_AT", this.getCreatedAt());
     if (this.getStorageConfig() != null) {
       builder.storage(new SimpleFileObject.SimpleStorage(this.getStorageConfig().getId()));
