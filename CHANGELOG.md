@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.8](https://github.com/limaofeng/asany-server/compare/v0.1.7...v0.1.8) (2022-03-25)
+
+
+### Features
+
+* 清空回收站操作 ([afeecf4](https://github.com/limaofeng/asany-server/commit/afeecf493b02ec6d14ebba5facad2ccb72a14476))
+
 ### [0.1.7](https://github.com/limaofeng/asany-server/compare/v0.1.6...v0.1.7) (2022-03-21)
 
 ### [0.1.6](https://github.com/limaofeng/asany-server/compare/v0.1.5...v0.1.6) (2022-03-21)
