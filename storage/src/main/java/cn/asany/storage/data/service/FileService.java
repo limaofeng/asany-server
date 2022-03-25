@@ -372,7 +372,7 @@ public class FileService {
   public FileDetail getRecycler(String storage, String path) {
     Optional<FileDetail> optionalRootFile = this.findByPath(storage, path);
     FileDetail rootFile = optionalRootFile.orElseGet(() -> this.createFolder(path, storage));
-    String recycler_path = path + "RECYCLER/";
+    String recycler_path = path + FileDetail.NAME_OF_THE_RECYCLE_BIN + FileObject.SEPARATOR;
     Optional<FileDetail> optionalRecyclerFile = this.findByPath(storage, recycler_path);
     return optionalRecyclerFile.orElseGet(() -> this.createFolder(recycler_path, storage));
   }

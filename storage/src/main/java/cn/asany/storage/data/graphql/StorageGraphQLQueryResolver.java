@@ -79,8 +79,10 @@ public class StorageGraphQLQueryResolver implements GraphQLQueryResolver {
       filterBuilder.equal("parentFile.path", fileKey.getPath());
     }
 
-    if (!fileKey.getPath().contains("/RECYCLER/")) {
-      filterBuilder.notStartsWith("path", fileKey.getRootPath() + "RECYCLER/");
+    if (!fileKey.getPath().contains(FileDetail.NAME_OF_THE_RECYCLE_BIN)) {
+      filterBuilder.notStartsWith(
+          "path",
+          fileKey.getRootPath() + FileDetail.NAME_OF_THE_RECYCLE_BIN + FileObject.SEPARATOR);
     }
 
     filterBuilder.equal("storageConfig.id", fileKey.getStorage());

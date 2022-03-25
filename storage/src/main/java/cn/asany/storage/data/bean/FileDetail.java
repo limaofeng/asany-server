@@ -46,6 +46,8 @@ import org.jfantasy.framework.util.common.ObjectUtil;
     })
 public class FileDetail extends BaseBusEntity implements Cloneable {
 
+  public static String NAME_OF_THE_RECYCLE_BIN = "$RECYCLE.BIN";
+
   @Id
   @Column(name = "ID", nullable = false, updatable = false, precision = 22)
   @GeneratedValue(generator = "fantasy-sequence")
