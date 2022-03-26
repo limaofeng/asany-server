@@ -4,9 +4,11 @@ import cn.asany.storage.data.bean.FileDetail;
 import cn.asany.storage.data.dao.FileDetailDao;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+import lombok.extern.slf4j.Slf4j;
 import org.jfantasy.framework.dao.jpa.ComplexJpaRepository;
 import org.jfantasy.framework.error.IgnoreException;
 
+@Slf4j
 public class FileDetailDaoImpl extends ComplexJpaRepository<FileDetail, Long>
     implements FileDetailDao {
 
@@ -28,12 +30,20 @@ public class FileDetailDaoImpl extends ComplexJpaRepository<FileDetail, Long>
     query.setParameter("startPath", path + '%');
     query.setParameter("path", path);
 
+    int deletedCount = query.executeUpdate();
+
+    log.debug("table storage_fileobject_label has " + deletedCount + " records deleted ");
+
     String sql = "DELETE FROM storage_fileobject where path like :startPath and path <> :path";
-    query = this.em.createNativeQuery(subTablesql);
+    query = this.em.createNativeQuery(sql);
     query.setParameter("startPath", path + '%');
     query.setParameter("path", path);
 
-    return query.executeUpdate();
+    deletedCount = query.executeUpdate();
+
+    log.debug("table storage_fileobject has " + deletedCount + " records deleted ");
+
+    return deletedCount;
   }
 
   @Override

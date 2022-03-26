@@ -175,15 +175,10 @@ routes:
         component: cn.asany.ui.admin.drive.DriveStarred
       - path: /drive/trash
         component: cn.asany.ui.admin.drive.DriveTrash
+      - path: /drive/quota
+        component: cn.asany.ui.admin.drive.DriveQuota
       - path: /storage
         component: cn.asany.ui.admin.storage.CloudStorage
-      - path: /storages/:id
-        component: cn.asany.ui.admin.storage.FileManager
-        routes:
-          - path: /storages/:id
-            component: cn.asany.ui.admin.storage.ListFiles
-          - path: /storages/:id/*
-            component: cn.asany.ui.admin.storage.ListFiles
       - path: /icon-libraries
         component: cn.asany.ui.admin.icon.Libraries
       - path: /icon-libraries/:id
