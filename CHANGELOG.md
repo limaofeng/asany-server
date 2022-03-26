@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.9](https://github.com/limaofeng/asany-server/compare/v0.1.8...v0.1.9) (2022-03-26)
+
+
+### Features
+
+* 将回收站的默认名称更改为"$RECYCLE.BIN" ([9233fd2](https://github.com/limaofeng/asany-server/commit/9233fd2f9b5d18ebf976c39ced0610a50d34794a))
+
+
+### Bug Fixes
+
+* 优化清空回收站逻辑 ([5410e43](https://github.com/limaofeng/asany-server/commit/5410e43c7c242b8c53122ae6f22e45cad87ab461))
+
 ### [0.1.8](https://github.com/limaofeng/asany-server/compare/v0.1.7...v0.1.8) (2022-03-25)
 
 
