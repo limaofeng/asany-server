@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 
 /**
  * 上传上下文
@@ -14,11 +13,10 @@ import lombok.Setter;
 @Builder
 public class UploadContext {
   private UploadService uploadService;
-  /** 完成上传标志 */
-  @Getter @Setter private boolean uploaded;
 
   @Getter private File file;
   @Getter private FileObject object;
+  @Getter private StorageSpace space;
   @Getter private UploadOptions options;
   @Getter private String location;
   @Getter private Storage storage;

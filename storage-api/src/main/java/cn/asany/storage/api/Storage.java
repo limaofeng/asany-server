@@ -131,4 +131,22 @@ public interface Storage {
    * @param remotePath 地址
    */
   void removeFile(String remotePath);
+
+  /**
+   * 是否支持 分片上传
+   *
+   * @return boolean
+   */
+  default boolean isMultipartUploadSupported() {
+    return this.multipartUpload() != null;
+  }
+
+  /**
+   * 分片上传 API
+   *
+   * @return MultipartUpload
+   */
+  default IMultipartUpload multipartUpload() {
+    return null;
+  }
 }

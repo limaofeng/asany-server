@@ -57,8 +57,23 @@ public class IdUtils {
     return builder.build();
   }
 
+  /**
+   * 转换ID
+   *
+   * @param type space | file | chunk
+   * @param id ID
+   * @return String
+   */
   public static String toKey(String type, String id) {
     return Hashids.toId(type + "." + id);
+  }
+
+  public static String toUploadId(Long id) {
+    return Hashids.toId(String.valueOf(id));
+  }
+
+  public static Long parseUploadId(String id) {
+    return Long.valueOf(Hashids.parseId(id));
   }
 
   @Data

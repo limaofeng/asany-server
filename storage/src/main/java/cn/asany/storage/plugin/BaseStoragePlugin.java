@@ -1,9 +1,6 @@
 package cn.asany.storage.plugin;
 
-import cn.asany.storage.api.FileObject;
-import cn.asany.storage.api.Storage;
-import cn.asany.storage.api.StoragePlugin;
-import cn.asany.storage.api.UploadContext;
+import cn.asany.storage.api.*;
 import cn.asany.storage.data.bean.FileDetail;
 import cn.asany.storage.data.service.FileService;
 import cn.asany.storage.utils.UploadUtils;
@@ -28,14 +25,19 @@ public class BaseStoragePlugin implements StoragePlugin {
 
   @Override
   public boolean supports(UploadContext context) {
-    return true;
+    return !context.getOptions().isMultipartUpload();
   }
 
   @Override
   @SneakyThrows
-  public FileObject upload(UploadContext context) {
+  public FileObject upload(UploadContext context, Invocation invocation) {
     String location = context.getLocation();
     Storage storage = context.getStorage();
+    StorageSpace space = context.getSpace();
+
+    UploadOptions options = context.getOptions();
+
+    String folder = options.getFolder();
 
     FileObject object = context.getObject();
     File file = context.getFile();
@@ -43,15 +45,23 @@ public class BaseStoragePlugin implements StoragePlugin {
     String md5 = UploadUtils.md5(file);
     String mimeType = FileUtil.getMimeType(file);
 
-    String filename = StringUtil.hexTo64("0" + UUID.randomUUID().toString().replaceAll("-", ""));
+    String extension = WebUtil.getExtension(object.getName());
+    String filename =
+        StringUtil.hexTo64("0" + UUID.randomUUID().toString().replaceAll("-", ""))
+            + (StringUtil.isNotBlank(extension) ? "." + extension : 0);
     // 获取虚拟目录
-    String absolutePath =
-        location
-            + DateUtil.format("yyyyMMdd")
-            + File.separator
-            + filename
-            + "."
-            + WebUtil.getExtension(object.getName());
+    String absolutePath;
+
+    if (StringUtil.isNotBlank(folder)) {
+      if (folder.startsWith("/")) {
+        absolutePath = folder.substring(1) + File.separator + filename;
+      } else {
+        absolutePath = space.getPath() + folder + File.separator + filename;
+      }
+    } else {
+      absolutePath = location + DateUtil.format("yyyyMMdd") + File.separator + filename;
+    }
+
     storage.writeFile(absolutePath, file);
     FileDetail detail =
         fileService.saveFileDetail(
@@ -62,7 +72,6 @@ public class BaseStoragePlugin implements StoragePlugin {
             md5,
             context.getStorageId(),
             "");
-    context.setUploaded(true);
     return detail.toFileObject();
   }
 }

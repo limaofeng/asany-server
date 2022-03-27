@@ -1,5 +1,6 @@
 package cn.asany.storage.data.bean;
 
+import cn.asany.storage.api.StorageSpace;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.Objects;
 import java.util.Set;
@@ -33,7 +34,7 @@ import org.jfantasy.framework.dao.hibernate.converter.StringSetConverter;
           columnNames = {"STORAGE_ID", "PATH"})
     })
 @JsonIgnoreProperties({"hibernate_lazy_initializer", "handler"})
-public class Space extends BaseBusEntity {
+public class Space extends BaseBusEntity implements StorageSpace {
 
   private static final long serialVersionUID = 8150927437017643578L;
 

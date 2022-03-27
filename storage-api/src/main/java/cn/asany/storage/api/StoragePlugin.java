@@ -21,5 +21,5 @@ public interface StoragePlugin {
    * @param context 上下文
    * @return FileObject
    */
-  FileObject upload(UploadContext context);
+  FileObject upload(UploadContext context, Invocation invocation) throws UploadException;
 }

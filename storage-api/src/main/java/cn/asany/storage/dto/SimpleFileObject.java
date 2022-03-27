@@ -100,6 +100,9 @@ public class SimpleFileObject implements FileObject {
   @Override
   @JsonIgnore
   public FileObjectMetadata getMetadata() {
+    if (this.metadata == null) {
+      return this.metadata = FileObjectMetadata.builder().build();
+    }
     return this.metadata;
   }
 

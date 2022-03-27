@@ -89,20 +89,30 @@ type FileObject {
 }
 
 input UploadOptions {
-  name: String
-  url: String
-  # 上传空间
+  """
+  上传空间
+  """
   space: String
-  # 插件 支持 fragment
-  plugin: String
-  # 文件名策略
+  """
+  上传到的文件夹
+  """
+  folder: String
+  """
+  插件 (预留,暂时没有可用插件)
+  """
+  plugins: [String]
+  """
+  文件名策略
+  """
   nameStrategy: String
-  # 分段上传时的完整 文件名
-  entireFileName: String
-  # 分段上传时的 唯一标识
-  entireFileHash: String
-  # 分段上传时的 片段标识
-  partFileHash: String
+  """
+  分段上传ID
+  """
+  uploadId: String
+  """
+  分段上传时的 唯一标识
+  """
+  hash: String
 }
 
 input FileFilter {
@@ -170,6 +180,52 @@ type FileObjectEdge {
   node: FileObject!
 }
 
+type FileChecksum {
+  id: ID!
+}
+
+type MultipartUploadChunk {
+  id: ID!
+  path: String!
+  size: Int!
+  hash: String!
+  index: Int!
+  etag: String!
+}
+
+type MultipartUpload {
+  id: ID!
+  name: String!
+  hash: String!
+  path: String!
+  storage: ID!
+  chunkSize: Int!
+  chunkLength: Int!
+  uploadedParts: Int!
+  chunks: [MultipartUploadChunk!]!
+}
+
+input MultipartUploadMetadataInput {
+  contentLength: Int
+  contentType: String
+}
+
+input MultipartUploadInput {
+  name: String!
+  hash: String!
+  space: ID!
+  folder: ID
+  """
+  每段大小
+  """
+  chunkSize: Int!
+  """
+  总的段数
+  """
+  chunkLength: Int!
+  metadata: MultipartUploadMetadataInput
+}
+
 extend type Query {
   # 存储器
   storages: [Storage]
@@ -200,6 +256,10 @@ extend type Query {
   ): FileObjectConnection!
   # 文件详情
   file(id: ID!): FileObject
+  """
+  获取已经上传的文件信息
+  """
+  listMultipartUploads(md5: String!): FileChecksum!
 }
 
 extend type Mutation {
@@ -207,6 +267,10 @@ extend type Mutation {
   重建索引
   """
   storageReindex(id: ID!): Boolean
+  """
+  初始化分段上传事件
+  """
+  initiateMultipartUpload(input: MultipartUploadInput!): MultipartUpload!
   """
   上传附件
   """

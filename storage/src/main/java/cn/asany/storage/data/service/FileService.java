@@ -74,12 +74,8 @@ public class FileService {
     return this.fileDetailDao.update(file, merge);
   }
 
-  public FileDetail update(FileDetail detail) {
-    FileDetail fileDetail = this.getOneByPath(detail.getPath());
-    fileDetail.setName(detail.getName());
-    fileDetail.setDescription(detail.getDescription());
-    this.fileDetailDao.save(fileDetail);
-    return fileDetail;
+  public FileDetail update(FileDetail fileDetail) {
+    return this.fileDetailDao.save(fileDetail);
   }
 
   public FileDetail getFileById(Long id) {

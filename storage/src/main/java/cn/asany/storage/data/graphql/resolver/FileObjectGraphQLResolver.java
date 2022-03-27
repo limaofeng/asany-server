@@ -36,6 +36,12 @@ public class FileObjectGraphQLResolver implements GraphQLResolver<FileObject> {
 
     IdUtils.FileKey fileKey = context.getAttribute("QUERY_ROOT_FILE_KEY");
 
+    String __id = (String) fileObject.getMetadata().getUserMetadata().get("__ID");
+
+    if (StringUtil.isNotBlank(__id)) {
+      return __id;
+    }
+
     Long id = OGNL_UTIL.getValue("id", fileObject);
     if (fileKey == null || "file".equals(fileKey.getType())) {
       return IdUtils.toKey("file", id.toString());

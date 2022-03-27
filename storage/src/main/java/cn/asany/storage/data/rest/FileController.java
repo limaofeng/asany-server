@@ -5,9 +5,9 @@ import cn.asany.storage.api.UploadOptions;
 import cn.asany.storage.api.UploadService;
 import cn.asany.storage.core.FileUploadService;
 import cn.asany.storage.data.bean.FileDetail;
-import cn.asany.storage.data.bean.FilePart;
-import cn.asany.storage.data.service.FilePartService;
+import cn.asany.storage.data.bean.MultipartUploadChunk;
 import cn.asany.storage.data.service.FileService;
+import cn.asany.storage.data.service.MultipartUploadService;
 import cn.asany.storage.utils.UploadUtils;
 import java.io.IOException;
 import java.util.HashMap;
@@ -30,13 +30,13 @@ public class FileController {
   private final FileService fileService;
   private final FileUploadService fileUploadService;
   private final UploadService uploadService;
-  private final FilePartService filePartService;
+  private final MultipartUploadService filePartService;
 
   @Autowired
   public FileController(
       FileService fileService,
       FileUploadService fileUploadService,
-      FilePartService filePartService,
+      MultipartUploadService filePartService,
       UploadService uploadService) {
     this.fileService = fileService;
     this.fileUploadService = fileUploadService;
@@ -69,9 +69,9 @@ public class FileController {
    */
   @RequestMapping(value = "/{hash}/pass", method = RequestMethod.GET)
   public Map<String, Object> pass(@PathVariable("hash") String hash) {
-    List<FilePart> parts = filePartService.find(hash);
+    List<MultipartUploadChunk> parts = filePartService.find(hash);
     Map<String, Object> data = new HashMap<>();
-    FilePart part = ObjectUtil.remove(parts, "index", 0);
+    MultipartUploadChunk part = ObjectUtil.remove(parts, "index", 0);
     if (part != null) {
       data.put("fileDetail", fileService.findByPath(part.getPath()));
     }

@@ -25,19 +25,20 @@ public class OSSStorage implements Storage {
   private final String accessKeyId;
   private final String accessKeySecret;
   private final String id;
-  private String bucketName;
-  private String endpoint;
-  private OSSClient client;
+  private final String bucketName;
+  private final String endpoint;
+  private final OSSClient client;
+  private final IMultipartUpload multipartUpload;
 
   public OSSStorage(
       String id, String endpoint, String accessKeyId, String accessKeySecret, String bucketName) {
     this.id = id;
-    this.endpoint = endpoint;
     this.accessKeyId = accessKeyId;
     this.accessKeySecret = accessKeySecret;
     this.bucketName = bucketName;
     this.endpoint = endpoint;
     this.client = new OSSClient(this.endpoint, this.accessKeyId, this.accessKeySecret);
+    this.multipartUpload = new OSSMultipartUpload(this.client, bucketName);
   }
 
   @Override
@@ -146,6 +147,11 @@ public class OSSStorage implements Storage {
   @Override
   public FileObject getFileItem(String remotePath) {
     return retrieveFileItem(remotePath);
+  }
+
+  @Override
+  public IMultipartUpload multipartUpload() {
+    return this.multipartUpload;
   }
 
   private FileObject retrieveFileItem(OSSObjectSummary objectSummary) {

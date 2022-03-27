@@ -30,6 +30,7 @@ import org.springframework.context.annotation.Configuration;
   "cn.asany.storage.*.service",
   "cn.asany.storage.*.runner",
   "cn.asany.storage.*.converter",
+  "cn.asany.storage.*.convert",
   "cn.asany.storage.*.graphql",
   "cn.asany.storage.*.rest"
 })

@@ -41,6 +41,10 @@ public class FileObjectMetadata {
     }
   }
 
+  public boolean hasMetadataByKey(String key) {
+    return metadata.containsKey(key);
+  }
+
   public FileObjectMetadata(Map<String, Object> metadata, Map<String, String> userMetadata) {
     this(metadata);
     this.setUserMetadata(userMetadata);
