@@ -7,6 +7,8 @@ package cn.asany.storage.api;
  */
 public interface StoragePlugin {
 
+  String id();
+
   /**
    * 判断是否启用
    *

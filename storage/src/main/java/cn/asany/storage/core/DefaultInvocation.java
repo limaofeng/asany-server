@@ -22,4 +22,8 @@ public class DefaultInvocation implements Invocation {
     }
     return this.handler.upload(this.context, new DefaultInvocation(this.context, this.iterator));
   }
+
+  public UploadContext getContext() {
+    return context;
+  }
 }

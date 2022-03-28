@@ -5,11 +5,8 @@ import cn.asany.storage.data.bean.FileDetail;
 import cn.asany.storage.data.service.FileService;
 import cn.asany.storage.utils.UploadUtils;
 import java.io.File;
-import java.util.UUID;
 import lombok.SneakyThrows;
-import org.jfantasy.framework.util.common.DateUtil;
 import org.jfantasy.framework.util.common.ObjectUtil;
-import org.jfantasy.framework.util.common.StringUtil;
 import org.jfantasy.framework.util.common.file.FileUtil;
 import org.jfantasy.framework.util.web.WebUtil;
 import org.springframework.stereotype.Component;
@@ -17,10 +14,17 @@ import org.springframework.stereotype.Component;
 @Component
 public class BaseStoragePlugin implements StoragePlugin {
 
+  public static String ID = "upload";
+
   private final FileService fileService;
 
   public BaseStoragePlugin(FileService fileService) {
     this.fileService = fileService;
+  }
+
+  @Override
+  public String id() {
+    return ID;
   }
 
   @Override
@@ -31,46 +35,32 @@ public class BaseStoragePlugin implements StoragePlugin {
   @Override
   @SneakyThrows
   public FileObject upload(UploadContext context, Invocation invocation) {
-    String location = context.getLocation();
-    Storage storage = context.getStorage();
-    StorageSpace space = context.getSpace();
-
     UploadOptions options = context.getOptions();
+    String rootFolder = context.getRootFolder();
+    UploadFileObject uploadFile = context.getFile();
+    Storage storage = context.getStorage();
 
-    String folder = options.getFolder();
+    String folder = context.getFolder();
+    String filename = context.getFilename();
 
-    FileObject object = context.getObject();
-    File file = context.getFile();
+    File file = uploadFile.getFile();
 
     String md5 = UploadUtils.md5(file);
     String mimeType = FileUtil.getMimeType(file);
 
-    String extension = WebUtil.getExtension(object.getName());
-    String filename =
-        StringUtil.hexTo64("0" + UUID.randomUUID().toString().replaceAll("-", ""))
-            + (StringUtil.isNotBlank(extension) ? "." + extension : 0);
-    // 获取虚拟目录
-    String absolutePath;
+    String extension = WebUtil.getExtension(uploadFile.getName());
 
-    if (StringUtil.isNotBlank(folder)) {
-      if (folder.startsWith("/")) {
-        absolutePath = folder.substring(1) + File.separator + filename;
-      } else {
-        absolutePath = space.getPath() + folder + File.separator + filename;
-      }
-    } else {
-      absolutePath = location + DateUtil.format("yyyyMMdd") + File.separator + filename;
-    }
+    String absolutePath = folder + filename;
 
     storage.writeFile(absolutePath, file);
     FileDetail detail =
         fileService.saveFileDetail(
             absolutePath,
-            object.getName(),
-            ObjectUtil.defaultValue(mimeType, object.getMimeType()),
-            object.getSize(),
+            uploadFile.getName(),
+            ObjectUtil.defaultValue(mimeType, uploadFile.getMimeType()),
+            uploadFile.getSize(),
             md5,
-            context.getStorageId(),
+            storage.getId(),
             "");
     return detail.toFileObject();
   }

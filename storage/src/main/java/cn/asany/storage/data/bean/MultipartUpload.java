@@ -42,6 +42,12 @@ public class MultipartUpload extends BaseBusEntity {
   /** 存储ID */
   @Column(name = "STORAGE_ID", nullable = false, updatable = false, length = 50)
   private String storage;
+  /** 文件类型 */
+  @Column(name = "MIME_TYPE", length = 50, nullable = false)
+  private String mimeType;
+  /** 文件长度 */
+  @Column(name = "SIZE", nullable = false)
+  private Long size;
   /** 每段大小 */
   @Column(name = "CHUNK_SIZE")
   private Long chunkSize;

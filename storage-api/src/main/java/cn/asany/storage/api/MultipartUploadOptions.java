@@ -18,6 +18,10 @@ public class MultipartUploadOptions {
   private UploadFileNameStrategy nameStrategy;
   /** Hash 值 */
   private String hash;
+  /** 文件类型 */
+  private String mimeType;
+  /** 文件大小 */
+  private Long size;
   /** 每段大小 */
   private Long chunkSize;
   /** 总的段数 */

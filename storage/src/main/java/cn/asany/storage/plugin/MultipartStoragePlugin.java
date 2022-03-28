@@ -1,15 +1,16 @@
 package cn.asany.storage.plugin;
 
 import cn.asany.storage.api.*;
+import cn.asany.storage.data.bean.FileDetail;
 import cn.asany.storage.data.bean.MultipartUpload;
 import cn.asany.storage.data.bean.MultipartUploadChunk;
 import cn.asany.storage.data.service.FileService;
 import cn.asany.storage.data.service.MultipartUploadService;
 import cn.asany.storage.data.util.IdUtils;
-import cn.asany.storage.dto.SimpleFileObject;
 import java.io.File;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.jfantasy.framework.util.common.ObjectUtil;
@@ -26,6 +27,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class MultipartStoragePlugin implements StoragePlugin {
 
+  public static String ID = "multi-part";
+
   private final FileService fileService;
   private final MultipartUploadService multipartUploadService;
 
@@ -33,6 +36,11 @@ public class MultipartStoragePlugin implements StoragePlugin {
       FileService fileService, MultipartUploadService multipartUploadService) {
     this.fileService = fileService;
     this.multipartUploadService = multipartUploadService;
+  }
+
+  @Override
+  public String id() {
+    return ID;
   }
 
   @Override
@@ -44,15 +52,17 @@ public class MultipartStoragePlugin implements StoragePlugin {
   @Override
   public FileObject upload(UploadContext context, Invocation invocation) {
     UploadOptions options = context.getOptions();
-    FileObject object = context.getObject();
-    File file = context.getFile();
+    String rootFolder = context.getRootFolder();
+    UploadFileObject uploadFile = context.getFile();
     Storage storage = context.getStorage();
-    String location = context.getLocation();
+
+    File file = uploadFile.getFile();
+
     String multipartUploadId = options.getUploadId();
     String fileHash = options.getHash();
 
-    String fileName = object.getName();
-    String contentType = object.getMimeType();
+    String fileName = uploadFile.getName();
+    String contentType = uploadFile.getMimeType();
 
     int partNumber =
         Integer.parseInt(RegexpUtil.parseGroup(WebUtil.getExtension(fileName), "part(\\d+)$", 1));
@@ -75,7 +85,8 @@ public class MultipartStoragePlugin implements StoragePlugin {
 
     MultipartUploadChunk upladed = ObjectUtil.find(chunks, "index", partNumber);
     if (upladed != null) {
-      return upladed.toFileObject();
+      FileObject fileObject = upladed.toFileObject();
+      return checksum(upladed.toFileObject(), multipartUpload, storage);
     }
 
     String uploadId = multipartUpload.getUploadId();
@@ -92,91 +103,36 @@ public class MultipartStoragePlugin implements StoragePlugin {
 
     this.multipartUploadService.updateMultipartUpload(multipartUpload);
 
-    if (Objects.equals(multipartUpload.getChunkLength(), multipartUpload.getUploadedParts())) {
-      System.out.println("全部片段已经上传, 开始合并文件");
-      return new SimpleFileObject();
-    } else {
-      return chunk.toFileObject();
-    }
-
-    // 获取文件上传目录的配置信息
-    //    Optional<MultipartUploadChunk> optionalFilePart =
-    //        filePartService.findByPartFileHash(options.getEntireFileHash(),
-    // options.getPartFileHash());
-
-    //    if (!optionalFilePart.isPresent()) {
-    // 上传分片数据
-    //      filePartService.save(
-    //          fileObject.getPath(),
-    //          storage.getId(),
-    //          options.getEntireFileHash(),
-    //          options.getPartFileHash(),
-    //          options.getTotalParts(),
-    //          partNumber);
-    //    }
-
-    // 查询上传的片段
-    //    List<MultipartUploadChunk> chunks = filePartService.find(options.getEntireFileHash());
-    //
-    //    if (chunks.size() == options.getTotalParts()) {
-    //      return completeMultipartUpload(chunks, options);
-    //    }
-
+    return checksum(chunk.toFileObject(), multipartUpload, storage);
   }
 
-  private FileObject completeMultipartUpload(
-      List<MultipartUploadChunk> chunks, UploadOptions options) {
+  private FileObject checksum(FileObject part, MultipartUpload multipartUpload, Storage storage) {
+    if (!Objects.equals(multipartUpload.getChunkLength(), multipartUpload.getUploadedParts())) {
+      return part;
+    }
 
-    //    FileDetail fileDetail = null;
-    //    List<FilePart> joinFileParts = new ArrayList<>();
-    //    ObjectUtil.join(joinFileParts, fileParts, "index");
-    //
-    //    if (joinFileParts.size() == uploadOptions.getTotalParts()) {
-    //      // 临时文件
-    //      File tmp = FileUtil.tmp();
-    //      // 合并 Part 文件
-    //      try (FileOutputStream out = new FileOutputStream(tmp)) {
-    //        for (FilePart filesPart : joinFileParts) {
-    //          InputStream in = storage.readFile(filesPart.getPath());
-    //          StreamUtil.copy(in, out);
-    //          StreamUtil.closeQuietly(in);
-    //          storage.removeFile(filesPart.getPath());
-    //          ObjectUtil.remove(
-    //              fileParts,
-    //              SpELUtil.getExpression(
-    //                  " absolutePath == #value.getAbsolutePath() and fileManagerId ==
-    // #value.getFileManagerId() "),
-    //              filePart);
-    //        }
-    //      }
-    //
-    //      // 保存合并后的新文件
-    //      fileDetail = null; // this.upload(tmp, contentType, uploadOptions.getEntireFileName(),
-    //      // uploadOptions.getEntireFileDir());
-    //
-    //      // 删除临时文件
-    //      FileUtil.delFile(tmp);
-    //
-    //      // 删除 Part 文件
-    //      for (FilePart filesPart : fileParts) {
-    //        storage.removeFile(filesPart.getPath());
-    //      }
-    //
-    //      // 在File_PART 表冗余一条数据 片段为 0
-    //      filePartService.save(
-    //          fileDetail.getPath(),
-    //          fileDetail.getStorageConfig().getId(),
-    //          uploadOptions.getEntireFileHash(),
-    //          uploadOptions.getEntireFileHash(),
-    //          uploadOptions.getTotalParts(),
-    //          0);
-    //    }
-    //    // 删除 Part 文件
-    //    for (FilePart filesPart : fileParts) {
-    //      storage.removeFile(filesPart.getPath());
-    //    }
-    //    return fileDetail.toFileObject();
-    //  }
-    return new SimpleFileObject();
+    List<MultipartUploadChunk> chunks = multipartUpload.getChunks();
+    List<String> partETags =
+        ObjectUtil.sort(chunks, "index", "asc").stream()
+            .map(MultipartUploadChunk::getEtag)
+            .collect(Collectors.toList());
+
+    storage
+        .multipartUpload()
+        .complete(multipartUpload.getPath(), multipartUpload.getUploadId(), partETags);
+
+    FileObject object = storage.getFileItem(multipartUpload.getPath());
+
+    FileDetail fileDetail =
+        fileService.saveFileDetail(
+            multipartUpload.getPath(),
+            multipartUpload.getName(),
+            object.getMetadata().getContentType(),
+            object.getSize(),
+            object.getMetadata().getETag(),
+            storage.getId(),
+            "");
+
+    return fileDetail.toFileObject();
   }
 }

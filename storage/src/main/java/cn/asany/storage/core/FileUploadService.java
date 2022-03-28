@@ -6,8 +6,7 @@ import cn.asany.storage.data.bean.Space;
 import cn.asany.storage.data.service.FileService;
 import cn.asany.storage.data.service.MultipartUploadService;
 import cn.asany.storage.data.util.IdUtils;
-import cn.asany.storage.plugin.BaseStoragePlugin;
-import cn.asany.storage.plugin.MultipartStoragePlugin;
+import cn.asany.storage.plugin.*;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -15,10 +14,8 @@ import java.util.*;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.jfantasy.framework.spring.SpringBeanUtils;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.common.StreamUtil;
-import org.jfantasy.framework.util.common.StringUtil;
 import org.jfantasy.framework.util.common.file.FileUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -38,72 +35,88 @@ public class FileUploadService implements UploadService {
   private final MultipartUploadService multipartUploadService;
   private final StorageResolver storageResolver;
 
-  private final Map<String, StoragePlugin> plugins = new HashedMap();
+  private final Map<String, StoragePlugin> pluginMap = new HashedMap();
 
   @Autowired
   public FileUploadService(
       FileService fileService,
       MultipartUploadService multipartUploadService,
-      StorageResolver storageResolver) {
+      StorageResolver storageResolver,
+      List<StoragePlugin> plugins) {
     this.fileService = fileService;
     this.multipartUploadService = multipartUploadService;
     this.storageResolver = storageResolver;
-    StoragePlugin multiPart =
-        SpringBeanUtils.createBean(
-            MultipartStoragePlugin.class, SpringBeanUtils.AutoType.AUTOWIRE_BY_TYPE);
-    StoragePlugin base =
-        SpringBeanUtils.createBean(
-            BaseStoragePlugin.class, SpringBeanUtils.AutoType.AUTOWIRE_BY_TYPE);
-    plugins.put("multi-part", multiPart);
-    plugins.put("base", base);
+
+    for (StoragePlugin plugin : plugins) {
+      pluginMap.put(plugin.id(), plugin);
+    }
+  }
+
+  private Invocation createInvocation(
+      Storage storage, Space space, UploadOptions options, UploadFileObject file) {
+
+    // 插件
+    Set<String> plugins =
+        new LinkedHashSet<>(ObjectUtil.defaultValue(space.getPlugins(), LinkedHashSet::new));
+
+    // 添加默认插件
+    plugins.add(MatchFolderPlugin.ID);
+    plugins.add(FindFolderPlugin.ID);
+    plugins.add(FileNameStrategyPlugin.ID);
+
+    if (!file.isNoFile()) {
+      plugins.add(MultipartStoragePlugin.ID);
+      plugins.add(BaseStoragePlugin.ID);
+    }
+
+    // 构建上传上下文对象
+    UploadContext context =
+        UploadContext.builder()
+            .uploadService(this)
+            .file(file)
+            .space(space)
+            .rootFolder(space.getPath())
+            .storage(storage)
+            .options(options)
+            .build();
+
+    List<StoragePlugin> storagePlugins = new ArrayList<>();
+
+    // 循环执行插件
+    for (String pluginKey : plugins) {
+      StoragePlugin plugin = this.pluginMap.get(pluginKey);
+      if (!plugin.supports(context)) {
+        continue;
+      }
+      storagePlugins.add(plugin);
+    }
+
+    return new DefaultInvocation(context, storagePlugins.iterator());
   }
 
   @Override
   public FileObject upload(FileObject file, UploadOptions options) throws UploadException {
     File temp = null;
+    UploadFileObject uploadFileObject;
     try {
       // 获取临时文件
       if (file instanceof UploadFileObject) {
         temp = ((UploadFileObject) file).getFile();
+        uploadFileObject = ((UploadFileObject) file);
       } else {
         temp = FileUtil.tmp();
         StreamUtil.copyThenClose(file.getInputStream(), new FileOutputStream(temp));
+        uploadFileObject = new UploadFileObject(file.getName(), temp, file.getMetadata());
       }
+
       // 将要上传的位置
       Space space = this.fileService.getSpace(options.getSpace());
+
       // 存储器
       Storage storage = this.storageResolver.resolve(space.getStorage().getId());
-      // 插件
-      Set<String> plugins =
-          new LinkedHashSet<>(ObjectUtil.defaultValue(space.getPlugins(), LinkedHashSet::new));
-      // 添加默认插件
-      plugins.add("multi-part");
-      plugins.add("base");
 
-      // 构建上传上下文对象
-      UploadContext context =
-          UploadContext.builder()
-              .uploadService(this)
-              .object(file)
-              .file(temp)
-              .space(space)
-              .location(space.getPath())
-              .storage(storage)
-              .storageId(space.getStorage().getId())
-              .options(options)
-              .build();
+      Invocation invocation = createInvocation(storage, space, options, uploadFileObject);
 
-      List<StoragePlugin> storagePlugins = new ArrayList<>();
-      // 循环执行插件
-      for (String pluginKey : plugins) {
-        StoragePlugin plugin = this.plugins.get(pluginKey);
-        if (!plugin.supports(context)) {
-          continue;
-        }
-        storagePlugins.add(plugin);
-      }
-
-      Invocation invocation = new DefaultInvocation(context, storagePlugins.iterator());
       FileObject object = invocation.invoke();
 
       // 如果上传成功，返回对象
@@ -134,17 +147,26 @@ public class FileUploadService implements UploadService {
         throw new UploadException("存储不支持分段上传");
       }
 
-      String path = name;
-      if (StringUtil.isNotBlank(options.getFolder())) {
-        IdUtils.FileKey fileKey = IdUtils.parseKey(options.getFolder());
-        if (!fileKey.getRootPath().equals(space.getPath())) {
-          throw new UploadException("文件夹位置错误");
-        }
-        path = fileKey.getPath() + name;
-      } else {
-        // TODO: 通过策略匹配具体位置
-        path = name;
-      }
+      UploadOptions uploadOptions =
+          UploadOptions.builder().space(space.getId()).folder(options.getFolder()).build();
+
+      FileObjectMetadata metadata =
+          FileObjectMetadata.builder()
+              .contentLength(options.getSize())
+              .contentType(options.getMimeType())
+              .build();
+
+      Invocation invocation =
+          createInvocation(storage, space, uploadOptions, new UploadFileObject(name, metadata));
+
+      invocation.invoke();
+
+      UploadContext context = invocation.getContext();
+
+      String folder = context.getFolder();
+      String filename = context.getFilename();
+
+      String path = folder + filename;
 
       Optional<MultipartUpload> prevMultipartUploadOptional =
           multipartUploadService.findMultipartUploadByPath(path, storage.getId());
@@ -157,9 +179,7 @@ public class FileUploadService implements UploadService {
         return IdUtils.toUploadId(prevMultipartUpload.getId());
       }
 
-      FileObjectMetadata objectMetadata = new FileObjectMetadata();
-
-      String uploadId = storage.multipartUpload().initiate(path, objectMetadata);
+      String uploadId = storage.multipartUpload().initiate(path, metadata);
 
       MultipartUpload multipartUpload = prevMultipartUpload;
       if (multipartUpload == null) {
@@ -171,7 +191,8 @@ public class FileUploadService implements UploadService {
                 options.getHash(),
                 storage.getId(),
                 options.getChunkSize(),
-                options.getChunkLength());
+                options.getChunkLength(),
+                metadata);
       } else {
 
         storage.multipartUpload().abort(multipartUpload.getUploadId());

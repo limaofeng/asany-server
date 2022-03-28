@@ -26,13 +26,13 @@ import org.springframework.context.annotation.Configuration;
 @EntityScan("cn.asany.storage.data.bean")
 @ComponentScan({
   "cn.asany.storage.core",
+  "cn.asany.storage.plugin",
   "cn.asany.storage.*.dao",
   "cn.asany.storage.*.service",
   "cn.asany.storage.*.runner",
   "cn.asany.storage.*.converter",
   "cn.asany.storage.*.convert",
   "cn.asany.storage.*.graphql",
-  "cn.asany.storage.*.rest"
 })
 public class StorageAutoConfiguration {
 

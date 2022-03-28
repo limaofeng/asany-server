@@ -72,7 +72,7 @@ public class FileDetail extends BaseBusEntity implements Cloneable {
   @Column(name = "DESCRIPTION", length = 150)
   private String description;
   /** 文件长度 */
-  @Column(name = "LENGTH")
+  @Column(name = "LENGTH", nullable = false)
   private Long size;
   /** 文件MD5码 */
   @Column(name = "MD5", length = 50, nullable = false)

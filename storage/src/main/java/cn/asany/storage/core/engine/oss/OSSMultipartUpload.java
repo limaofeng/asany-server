@@ -8,6 +8,9 @@ import com.aliyun.oss.model.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 import org.jfantasy.framework.util.regexp.RegexpUtil;
 
 public class OSSMultipartUpload implements IMultipartUpload {
@@ -55,6 +58,25 @@ public class OSSMultipartUpload implements IMultipartUpload {
     } catch (IOException e) {
       throw new UploadException(e.getMessage());
     }
+  }
+
+  @Override
+  public String complete(String remotePath, String uploadId, List<String> partETags) {
+    String path = RegexpUtil.replace(remotePath, "^/", "");
+
+    AtomicInteger i = new AtomicInteger();
+    CompleteMultipartUploadRequest request =
+        new CompleteMultipartUploadRequest(
+            this.bucketName,
+            path,
+            uploadId,
+            partETags.stream()
+                .map((etag) -> new PartETag(i.incrementAndGet(), etag))
+                .collect(Collectors.toList()));
+
+    CompleteMultipartUploadResult result = this.client.completeMultipartUpload(request);
+
+    return result.getETag();
   }
 
   @Override

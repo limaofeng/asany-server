@@ -1,6 +1,7 @@
 package cn.asany.storage.api;
 
 import java.io.File;
+import java.util.List;
 
 public interface IMultipartUpload {
 
@@ -19,6 +20,8 @@ public interface IMultipartUpload {
    */
   String uploadPart(String remotePath, String uploadId, int partNumber, File file, long partSize)
       throws UploadException;
+
+  String complete(String remotePath, String uploadId, List<String> partETags);
 
   void abort(String uploadId);
 }

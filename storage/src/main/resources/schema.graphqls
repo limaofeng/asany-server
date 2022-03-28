@@ -88,6 +88,11 @@ type FileObject {
   md5: String
 }
 
+enum UploadFileNameStrategy {
+  UUID
+  ORIGINAL
+}
+
 input UploadOptions {
   """
   上传空间
@@ -104,7 +109,7 @@ input UploadOptions {
   """
   文件名策略
   """
-  nameStrategy: String
+  nameStrategy: UploadFileNameStrategy = UUID
   """
   分段上传ID
   """

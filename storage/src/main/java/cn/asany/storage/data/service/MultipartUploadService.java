@@ -1,5 +1,6 @@
 package cn.asany.storage.data.service;
 
+import cn.asany.storage.api.FileObjectMetadata;
 import cn.asany.storage.data.bean.MultipartUpload;
 import cn.asany.storage.data.bean.MultipartUploadChunk;
 import cn.asany.storage.data.dao.MultipartUploadChunkDao;
@@ -37,7 +38,8 @@ public class MultipartUploadService {
       String hash,
       String storage,
       long chunkSize,
-      int chunkLength) {
+      int chunkLength,
+      FileObjectMetadata metadata) {
     return this.multipartUploadDao.save(
         MultipartUpload.builder()
             .name(name)
@@ -48,6 +50,8 @@ public class MultipartUploadService {
             .chunkSize(chunkSize)
             .chunkLength(chunkLength)
             .uploadedParts(0)
+            .size(metadata.getContentLength())
+            .mimeType(metadata.getContentType())
             .build());
   }
 
@@ -69,12 +73,6 @@ public class MultipartUploadService {
 
   public void delete(String path) {
     this.multipartUploadChunkDao.deleteById(path);
-  }
-
-  public List<MultipartUploadChunk> find(String entireFileHash) {
-    //        return this.filePartDao.find(new Criterion[]{Restrictions.eq("entireFileHash",
-    // entireFileHash)}, "index", "asc");
-    return new ArrayList<>();
   }
 
   public Optional<MultipartUploadChunk> findByPartFileHash(

@@ -14,13 +14,18 @@ import lombok.Getter;
  * @author limaofeng
  */
 public class UploadFileObject implements FileObject {
-  @Getter private final File file;
+  @Getter private File file;
   @Getter private final String name;
   @Getter private FileObjectMetadata metadata;
 
   public UploadFileObject(String name, File file, FileObjectMetadata metadata) {
     this.name = name;
     this.file = file;
+    this.metadata = metadata;
+  }
+
+  public UploadFileObject(String name, FileObjectMetadata metadata) {
+    this.name = name;
     this.metadata = metadata;
   }
 
@@ -82,5 +87,9 @@ public class UploadFileObject implements FileObject {
   @Override
   public Storage getStorage() {
     return null;
+  }
+
+  public boolean isNoFile() {
+    return this.file == null;
   }
 }
