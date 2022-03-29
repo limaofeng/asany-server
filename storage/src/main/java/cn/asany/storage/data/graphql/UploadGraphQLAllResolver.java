@@ -13,6 +13,8 @@ import graphql.kickstart.tools.GraphQLQueryResolver;
 import graphql.schema.DataFetchingEnvironment;
 import java.io.IOException;
 import javax.servlet.http.Part;
+import org.jfantasy.framework.util.common.StringUtil;
+import org.jfantasy.graphql.context.AuthorizationGraphQLServletContext;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -33,7 +35,18 @@ public class UploadGraphQLAllResolver implements GraphQLMutationResolver, GraphQ
 
   public FileObject upload(Part part, UploadOptions options, DataFetchingEnvironment env)
       throws IOException {
+    String space = options.getSpace();
     FileObject object = UploadUtils.partToObject(part);
+
+    AuthorizationGraphQLServletContext context = env.getContext();
+
+    String key = StringUtil.defaultValue(options.getFolder(), () -> IdUtils.toKey("space", space));
+
+    IdUtils.FileKey fileKey = IdUtils.parseKey(key);
+
+    context.setAttribute("QUERY_ROOT_FILE_KEY", fileKey);
+    context.setAttribute("QUERY_ROOT_PATH", fileKey.getRootPath());
+
     return uploadService.upload(object, options);
   }
 

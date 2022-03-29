@@ -5,6 +5,7 @@ import cn.asany.drive.bean.CloudDrive;
 import cn.asany.storage.data.bean.FileDetail;
 import cn.asany.storage.data.bean.Space;
 import cn.asany.storage.data.service.FileService;
+import cn.asany.storage.data.util.IdUtils;
 import graphql.kickstart.tools.GraphQLResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -20,14 +21,12 @@ public class CloudDriveGraphQLResolver implements GraphQLResolver<CloudDrive> {
 
   public String rootFolder(CloudDrive cloudDrive) {
     Space space = cloudDrive.getSpace();
-    String key = "space." + space.getId();
-    return Hashids.toId(key);
+    return IdUtils.toKey("space", space.getId());
   }
 
   public String recycler(CloudDrive cloudDrive) {
     Space space = cloudDrive.getSpace();
     FileDetail recycler = this.fileService.getRecycler(space.getStorage().getId(), space.getPath());
-    String key = "space." + space.getId() + "." + recycler.getId();
-    return Hashids.toId(key);
+    return IdUtils.toKey("space", space.getId(), recycler.getId());
   }
 }

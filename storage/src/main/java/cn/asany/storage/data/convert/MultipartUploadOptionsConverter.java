@@ -11,6 +11,9 @@ import org.mapstruct.*;
     nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
 public interface MultipartUploadOptionsConverter {
 
-  @Mappings({})
+  @Mappings({
+    @Mapping(source = "metadata.size", target = "size"),
+    @Mapping(source = "metadata.mimeType", target = "mimeType")
+  })
   MultipartUploadOptions toOptions(MultipartUploadInput input);
 }

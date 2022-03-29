@@ -373,6 +373,12 @@ public class FileService {
     return optionalRecyclerFile.orElseGet(() -> this.createFolder(recycler_path, storage));
   }
 
+  public FileDetail getParentFolderById(Long id) {
+    Optional<FileDetail> optionalParentFile =
+        this.fileDetailDao.findOne(PropertyFilter.builder().equal("parentFile.id", id).build());
+    return optionalParentFile.orElse(null);
+  }
+
   public FileDetail getFolderByPath(String storage, String path) {
     Optional<FileDetail> optionalRootFile = this.findByPath(storage, path);
     return optionalRootFile.orElseGet(() -> this.createFolder(path, storage));

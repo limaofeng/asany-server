@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class MultipartUploadMetadataInput {
-  private long contentLength;
-  private String contentType;
+  private long size;
+  private String mimeType;
 }

@@ -85,6 +85,30 @@ public class FileObjectGraphQLResolver implements GraphQLResolver<FileObject> {
     return "/".equals(fileObject.getPath()) || isRootFolderOfSpace(fileKey, fileObject.getPath());
   }
 
+  public FileObject parentFolder(FileObject fileObject) {
+    String __id = (String) fileObject.getMetadata().getUserMetadata().get("__ID");
+
+    if (StringUtil.isNotBlank(__id)) {
+      return null;
+    }
+
+    Long id = OGNL_UTIL.getValue("id", fileObject);
+
+    FileDetail fileDetail = fileService.getFileById(id);
+
+    if (fileDetail == null) {
+      return null;
+    }
+
+    FileDetail parentFile = fileDetail.getParentFile();
+
+    if (parentFile == null) {
+      return null;
+    }
+
+    return parentFile.toFileObject();
+  }
+
   public List<FileObject> parents(FileObject fileObject, DataFetchingEnvironment environment) {
     Long id = OGNL_UTIL.getValue("id", fileObject);
 
