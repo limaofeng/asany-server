@@ -31,18 +31,24 @@ public class IdUtils {
           .space(space.getId())
           .storage(space.getStorage().getId())
           .path(space.getPath())
+          .storePath(space.getPath())
+          .isFile(false)
           .rootPath(space.getPath());
 
       if (ids.length > 2) {
         FileDetail file =
             SpringBeanUtils.getBean(FileService.class).getFileById(Long.parseLong(ids[2]));
-        builder.path(file.getPath()).fileId(file.getId());
+        builder
+            .path(file.getPath())
+            .isFile(!file.getIsDirectory())
+            .fileId(file.getId())
+            .storePath(file.getStorePath());
       } else {
         Optional<FileDetail> optionalFileDetail =
             SpringBeanUtils.getBean(FileService.class)
                 .findByPath(space.getStorage().getId(), space.getPath());
         FileDetail file = optionalFileDetail.orElseThrow(() -> new ValidationException("文件夹不存在"));
-        builder.fileId(file.getId());
+        builder.fileId(file.getId()).isFile(!file.getIsDirectory());
       }
 
     } else if ("file".equals(type)) {
@@ -52,6 +58,8 @@ public class IdUtils {
           .type("file")
           .storage(file.getStorageConfig().getId())
           .path(file.getPath())
+          .isFile(!file.getIsDirectory())
+          .storePath(file.getStorePath())
           .fileId(file.getId());
     }
     return builder.build();
@@ -86,5 +94,7 @@ public class IdUtils {
     private String rootPath;
     private Long fileId;
     private String path;
+    private String storePath;
+    private boolean isFile;
   }
 }

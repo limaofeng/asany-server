@@ -137,7 +137,7 @@ input UploadOptions {
   """
   文件名策略
   """
-  nameStrategy: UploadFileNameStrategy = UUID
+  nameStrategy: UploadFileNameStrategy = ORIGINAL
   """
   分段上传ID
   """

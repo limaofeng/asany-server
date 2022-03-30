@@ -62,7 +62,7 @@ public class FileService {
             .size(length)
             .md5(md5)
             .isDirectory(false)
-            .extension(WebUtil.getExtension(fileName))
+            .extension(WebUtil.getExtension(fileName, true))
             .parentFile(createFolder(path.replaceFirst("[^/]+$", ""), storage))
             .description(description)
             .storePath(storePath)
@@ -143,9 +143,13 @@ public class FileService {
     return this.fileDetailDao.findOne(PropertyFilter.builder().equal("path", path).build());
   }
 
-  public boolean exists(String path, String storage) {
+  public boolean exists(String name, Long folder, String storage) {
     return this.fileDetailDao.exists(
-        PropertyFilter.builder().equal("storageConfig.id", storage).equal("path", path).build());
+        PropertyFilter.builder()
+            .equal("storageConfig.id", storage)
+            .equal("name", name)
+            .equal("parentFile.id", folder)
+            .build());
   }
 
   public Optional<FileDetail> findByPath(String storage, String path) {
@@ -340,7 +344,7 @@ public class FileService {
       this.fileDetailDao.replacePath(fileDetail.getStorageConfig().getId(), path, newPath);
       fileDetail.setPath(newPath);
     } else {
-      fileDetail.setExtension(WebUtil.getExtension(name));
+      fileDetail.setExtension(WebUtil.getExtension(name, true));
     }
 
     fileDetail.setName(name);

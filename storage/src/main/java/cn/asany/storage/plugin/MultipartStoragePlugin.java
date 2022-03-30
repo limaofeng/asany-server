@@ -61,7 +61,8 @@ public class MultipartStoragePlugin implements StoragePlugin {
     String contentType = uploadFile.getMimeType();
 
     int partNumber =
-        Integer.parseInt(RegexpUtil.parseGroup(WebUtil.getExtension(fileName), "part(\\d+)$", 1));
+        Integer.parseInt(
+            RegexpUtil.parseGroup(WebUtil.getExtension(fileName, true), "part(\\d+)$", 1));
 
     if (log.isDebugEnabled()) {
       log.debug(

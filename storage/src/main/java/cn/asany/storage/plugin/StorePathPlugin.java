@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.jfantasy.framework.util.common.DateUtil;
 import org.jfantasy.framework.util.common.StringUtil;
 import org.jfantasy.framework.util.common.file.FileUtil;
-import org.jfantasy.framework.util.web.WebUtil;
 import org.springframework.stereotype.Component;
 
 /**
@@ -34,15 +33,14 @@ public class StorePathPlugin implements StoragePlugin {
     String rootFolder = context.getRootFolder();
     UploadFileObject file = context.getFile();
 
-    String mimeType =
-        StringUtil.defaultValue(
-            file.getMimeType(),
-            () ->
-                file.isNoFile()
-                    ? "application/octet-stream"
-                    : FileUtil.getMimeType(file.getFile()));
+    String mimeType;
+    if (!file.isNoFile()) {
+      mimeType = FileUtil.getMimeType(file.getFile());
+    } else {
+      mimeType = StringUtil.defaultValue(file.getMimeType(), () -> "application/octet-stream");
+    }
 
-    String extension = WebUtil.getExtension(file.getName());
+    String extension = FileUtil.getExtension(mimeType);
 
     String folder =
         rootFolder
@@ -51,8 +49,7 @@ public class StorePathPlugin implements StoragePlugin {
             + mimeType
             + FileObject.SEPARATOR;
 
-    String filename =
-        StringUtil.shortUUID() + (StringUtil.isNotBlank(extension) ? "." + extension : "");
+    String filename = StringUtil.shortUUID() + extension;
 
     context.setStorePath(folder + filename);
 

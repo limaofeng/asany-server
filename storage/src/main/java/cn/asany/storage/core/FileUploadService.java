@@ -21,6 +21,7 @@ import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.common.StreamUtil;
 import org.jfantasy.framework.util.common.StringUtil;
 import org.jfantasy.framework.util.common.file.FileUtil;
+import org.jfantasy.framework.util.web.WebUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -264,10 +265,11 @@ public class FileUploadService implements UploadService {
 
       FileObject folder = context.getFolder();
       String filename = context.getFilename();
+      String extension = WebUtil.getExtension(multipartUpload.getMimeType());
 
       FileDetail fileDetail =
           fileService.saveFileDetail(
-              folder.getPath() + StringUtil.uuid(),
+              folder.getPath() + StringUtil.uuid() + extension,
               filename,
               object.getMetadata().getContentType(),
               object.getSize(),
