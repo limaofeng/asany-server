@@ -20,11 +20,20 @@ public interface UploadService {
   /**
    * 初始化分片上传
    *
-   * @param name 文件名
    * @param options 选项
    * @return Upload Id
    * @throws UploadException 异常
    */
-  String initiateMultipartUpload(String name, MultipartUploadOptions options)
+  String initiateMultipartUpload(MultipartUploadOptions options) throws UploadException;
+
+  /**
+   * 完成分片上传
+   *
+   * @param uploadId 上传ID
+   * @param name 文件名
+   * @param folder 上传到的文件夹
+   * @return FileObject
+   */
+  FileObject completeMultipartUpload(String uploadId, String name, String folder)
       throws UploadException;
 }

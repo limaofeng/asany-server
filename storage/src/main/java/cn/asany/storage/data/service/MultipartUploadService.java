@@ -22,7 +22,9 @@ public class MultipartUploadService {
 
   @Autowired
   public MultipartUploadService(
-      MultipartUploadDao multipartUploadDao, MultipartUploadChunkDao multipartUploadChunkDao) {
+      MultipartUploadDao multipartUploadDao,
+      MultipartUploadChunkDao multipartUploadChunkDao,
+      FileService fileService) {
     this.multipartUploadDao = multipartUploadDao;
     this.multipartUploadChunkDao = multipartUploadChunkDao;
   }
@@ -32,8 +34,8 @@ public class MultipartUploadService {
   }
 
   public MultipartUpload initiateMultipartUpload(
-      String name,
       String path,
+      String space,
       String uploadId,
       String hash,
       String storage,
@@ -42,10 +44,10 @@ public class MultipartUploadService {
       FileObjectMetadata metadata) {
     return this.multipartUploadDao.save(
         MultipartUpload.builder()
-            .name(name)
             .uploadId(uploadId)
             .hash(hash)
             .path(path)
+            .space(space)
             .storage(storage)
             .chunkSize(chunkSize)
             .chunkLength(chunkLength)
@@ -75,22 +77,23 @@ public class MultipartUploadService {
     this.multipartUploadChunkDao.deleteById(path);
   }
 
-  public Optional<MultipartUploadChunk> findByPartFileHash(
-      String entireFileHash, String partFileHash) {
-    return this.multipartUploadChunkDao.findOne(
-        PropertyFilter.builder()
-            .equal("entireFileHash", entireFileHash)
-            .equal("partFileHash", partFileHash)
-            .build());
-  }
-
   public MultipartUpload get(Long id) {
     return this.multipartUploadDao.getById(id);
   }
 
-  public Optional<MultipartUpload> findMultipartUploadByPath(String path, String storage) {
+  public Optional<MultipartUpload> findMultipartUploadByHash(
+      String hash, String space, String storage) {
     return this.multipartUploadDao.findOne(
-        PropertyFilter.builder().equal("path", path).equal("storage", storage).build());
+        PropertyFilter.builder()
+            .equal("hash", hash)
+            .equal("space", space)
+            .equal("storage", storage)
+            .build());
+  }
+
+  public Optional<MultipartUpload> findMultipartUploadByHash(String hash, String storage) {
+    return this.multipartUploadDao.findOne(
+        PropertyFilter.builder().equal("hash", hash).equal("storage", storage).build());
   }
 
   public void updateMultipartUpload(MultipartUpload multipartUpload) {

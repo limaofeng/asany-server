@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.util.Date;
 import java.util.List;
 import lombok.Getter;
+import org.jfantasy.framework.util.common.StringUtil;
 
 /**
  * 文件对象
@@ -26,6 +27,11 @@ public class UploadFileObject implements FileObject {
 
   public UploadFileObject(String name, FileObjectMetadata metadata) {
     this.name = name;
+    this.metadata = metadata;
+  }
+
+  public UploadFileObject(FileObjectMetadata metadata) {
+    this.name = StringUtil.shortUUID();
     this.metadata = metadata;
   }
 

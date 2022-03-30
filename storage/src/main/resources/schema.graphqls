@@ -228,10 +228,12 @@ type MultipartUploadChunk {
 
 type MultipartUpload {
   id: ID!
-  name: String!
   hash: String!
   path: String!
+  space: ID!
   storage: ID!
+  size: Int!
+  mimeType: String
   chunkSize: Int!
   chunkLength: Int!
   uploadedParts: Int!
@@ -245,10 +247,6 @@ input MultipartUploadMetadataInput {
 
 input MultipartUploadInput {
   """
-  上传文件名
-  """
-  name: String!
-  """
   文件 hash 值
   """
   hash: String!
@@ -256,10 +254,6 @@ input MultipartUploadInput {
   存储空间
   """
   space: ID!
-  """
-  上传到的目录
-  """
-  folder: ID
   """
   每段大小
   """
@@ -319,6 +313,20 @@ extend type Mutation {
   初始化分段上传事件
   """
   initiateMultipartUpload(input: MultipartUploadInput!): MultipartUpload!
+  """
+  手动完成分段上传
+  """
+  completeMultipartUpload(
+    id: ID!
+    """
+    上传文件名
+    """
+    name: String!
+    """
+    上传到的目录
+    """
+    folder: ID
+  ): FileObject!
   """
   上传附件
   """

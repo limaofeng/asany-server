@@ -35,12 +35,13 @@ public class BaseStoragePlugin implements StoragePlugin {
   @Override
   @SneakyThrows
   public FileObject upload(UploadContext context, Invocation invocation) {
+    String storePath = context.getStorePath();
     UploadOptions options = context.getOptions();
     String rootFolder = context.getRootFolder();
     UploadFileObject uploadFile = context.getFile();
     Storage storage = context.getStorage();
 
-    String folder = context.getFolder();
+    FileObject folder = context.getFolder();
     String filename = context.getFilename();
 
     File file = uploadFile.getFile();
@@ -50,16 +51,15 @@ public class BaseStoragePlugin implements StoragePlugin {
 
     String extension = WebUtil.getExtension(uploadFile.getName());
 
-    String absolutePath = folder + filename;
-
-    storage.writeFile(absolutePath, file);
+    storage.writeFile(storePath, file);
     FileDetail detail =
         fileService.saveFileDetail(
-            absolutePath,
+            folder.getPath() + filename,
             uploadFile.getName(),
             ObjectUtil.defaultValue(mimeType, uploadFile.getMimeType()),
             uploadFile.getSize(),
             md5,
+            storePath,
             storage.getId(),
             "");
     return detail.toFileObject();

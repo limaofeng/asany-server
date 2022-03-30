@@ -100,6 +100,9 @@ public class FileDetail extends BaseBusEntity implements Cloneable {
   @ManyToOne(fetch = FetchType.LAZY)
   @ToString.Exclude
   private StorageConfig storageConfig;
+  /** 文件存储路径 */
+  @Column(name = "STORE_PATH", length = 250, updatable = false)
+  private String storePath;
 
   @OneToMany(
       mappedBy = "file",

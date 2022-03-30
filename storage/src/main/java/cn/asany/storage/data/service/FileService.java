@@ -51,6 +51,7 @@ public class FileService {
       long length,
       String md5,
       String storage,
+      String storePath,
       String description) {
     FileDetail fileDetail =
         FileDetail.builder()
@@ -64,6 +65,7 @@ public class FileService {
             .extension(WebUtil.getExtension(fileName))
             .parentFile(createFolder(path.replaceFirst("[^/]+$", ""), storage))
             .description(description)
+            .storePath(storePath)
             .build();
     this.fileDetailDao.save(fileDetail);
     return fileDetail;
@@ -85,6 +87,10 @@ public class FileService {
   public void delete(Long id) {
     FileDetail fileDetail = this.fileDetailDao.getById(id);
     this.fileDetailDao.deleteByPath(fileDetail.getPath());
+  }
+
+  public FileDetail getFolderOrCreateIt(String path, String storage) {
+    return createFolder(path, storage);
   }
 
   /**
@@ -135,6 +141,11 @@ public class FileService {
   @Cacheable(key = "targetClass + methodName + #p0", value = "STORAGE")
   public Optional<FileDetail> findByPath(String path) {
     return this.fileDetailDao.findOne(PropertyFilter.builder().equal("path", path).build());
+  }
+
+  public boolean exists(String path, String storage) {
+    return this.fileDetailDao.exists(
+        PropertyFilter.builder().equal("storageConfig.id", storage).equal("path", path).build());
   }
 
   public Optional<FileDetail> findByPath(String storage, String path) {

@@ -1,6 +1,7 @@
 package cn.asany.storage.plugin;
 
 import cn.asany.storage.api.*;
+import cn.asany.storage.data.service.FileService;
 import cn.asany.storage.data.util.IdUtils;
 import org.jfantasy.framework.util.common.StringUtil;
 import org.springframework.stereotype.Component;
@@ -9,6 +10,12 @@ import org.springframework.stereotype.Component;
 public class FindFolderPlugin implements StoragePlugin {
 
   public static final String ID = "find-folder-name";
+
+  private final FileService fileService;
+
+  public FindFolderPlugin(FileService fileService) {
+    this.fileService = fileService;
+  }
 
   @Override
   public String id() {
@@ -24,6 +31,7 @@ public class FindFolderPlugin implements StoragePlugin {
   @Override
   public FileObject upload(UploadContext context, Invocation invocation) throws UploadException {
     UploadOptions options = context.getOptions();
+    Storage storage = context.getStorage();
 
     String rootFolder = context.getRootFolder();
 
@@ -33,7 +41,8 @@ public class FindFolderPlugin implements StoragePlugin {
       throw new UploadException("文件夹位置错误");
     }
 
-    context.setFolder(fileKey.getPath());
+    context.setFolder(
+        fileService.getFolderOrCreateIt(fileKey.getPath(), storage.getId()).toFileObject());
 
     return invocation.invoke();
   }

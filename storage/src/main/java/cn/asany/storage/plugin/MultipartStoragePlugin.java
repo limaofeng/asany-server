@@ -1,7 +1,6 @@
 package cn.asany.storage.plugin;
 
 import cn.asany.storage.api.*;
-import cn.asany.storage.data.bean.FileDetail;
 import cn.asany.storage.data.bean.MultipartUpload;
 import cn.asany.storage.data.bean.MultipartUploadChunk;
 import cn.asany.storage.data.service.FileService;
@@ -10,7 +9,6 @@ import cn.asany.storage.data.util.IdUtils;
 import java.io.File;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.jfantasy.framework.util.common.ObjectUtil;
@@ -29,12 +27,10 @@ public class MultipartStoragePlugin implements StoragePlugin {
 
   public static String ID = "multi-part";
 
-  private final FileService fileService;
   private final MultipartUploadService multipartUploadService;
 
   public MultipartStoragePlugin(
       FileService fileService, MultipartUploadService multipartUploadService) {
-    this.fileService = fileService;
     this.multipartUploadService = multipartUploadService;
   }
 
@@ -107,32 +103,9 @@ public class MultipartStoragePlugin implements StoragePlugin {
   }
 
   private FileObject checksum(FileObject part, MultipartUpload multipartUpload, Storage storage) {
-    if (!Objects.equals(multipartUpload.getChunkLength(), multipartUpload.getUploadedParts())) {
-      return part;
+    if (Objects.equals(multipartUpload.getChunkLength(), multipartUpload.getUploadedParts())) {
+      log.debug("全部分片已经上传:" + multipartUpload);
     }
-
-    List<MultipartUploadChunk> chunks = multipartUpload.getChunks();
-    List<String> partETags =
-        ObjectUtil.sort(chunks, "index", "asc").stream()
-            .map(MultipartUploadChunk::getEtag)
-            .collect(Collectors.toList());
-
-    storage
-        .multipartUpload()
-        .complete(multipartUpload.getPath(), multipartUpload.getUploadId(), partETags);
-
-    FileObject object = storage.getFileItem(multipartUpload.getPath());
-
-    FileDetail fileDetail =
-        fileService.saveFileDetail(
-            multipartUpload.getPath(),
-            multipartUpload.getName(),
-            object.getMetadata().getContentType(),
-            object.getSize(),
-            object.getMetadata().getETag(),
-            storage.getId(),
-            "");
-
-    return fileDetail.toFileObject();
+    return part;
   }
 }

@@ -58,8 +58,28 @@ public class UploadGraphQLAllResolver implements GraphQLMutationResolver, GraphQ
       throws UploadException {
     MultipartUploadOptions options = multipartUploadOptionsConverter.toOptions(input);
 
-    String id = uploadService.initiateMultipartUpload(input.getName(), options);
+    String id = uploadService.initiateMultipartUpload(options);
 
     return this.multipartUploadService.get(IdUtils.parseUploadId(id));
+  }
+
+  public FileObject completeMultipartUpload(
+      String key, String name, String folder, DataFetchingEnvironment env) throws UploadException {
+
+    AuthorizationGraphQLServletContext context = env.getContext();
+
+    Long id = IdUtils.parseUploadId(key);
+
+    MultipartUpload multipartUpload = this.multipartUploadService.get(id);
+
+    String folderKey =
+        StringUtil.defaultValue(folder, () -> IdUtils.toKey("space", multipartUpload.getSpace()));
+
+    IdUtils.FileKey fileKey = IdUtils.parseKey(folderKey);
+
+    context.setAttribute("QUERY_ROOT_FILE_KEY", fileKey);
+    context.setAttribute("QUERY_ROOT_PATH", fileKey.getRootPath());
+
+    return this.uploadService.completeMultipartUpload(key, name, folder);
   }
 }

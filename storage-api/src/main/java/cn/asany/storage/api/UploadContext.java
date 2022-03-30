@@ -21,11 +21,13 @@ public class UploadContext {
   @Getter private StorageSpace space;
   /** 上传参数 */
   @Getter private UploadOptions options;
-  /** 根目录 */
+  /** 根目录 (最好保证虚拟目录与存储目录一直) */
   @Getter private String rootFolder;
-  /** 上传到的 Storage 目录 */
-  @Getter @Setter private String folder;
-  /** 上传到的 Storage 名称 */
+  /** 上传到的虚拟目录 */
+  @Getter @Setter private FileObject folder;
+  /** 上传到的完整路径 */
+  @Getter @Setter private String storePath;
+  /** 保存到虚拟目录中的文件名 */
   @Getter @Setter private String filename;
   /** 存储器 */
   @Getter private Storage storage;

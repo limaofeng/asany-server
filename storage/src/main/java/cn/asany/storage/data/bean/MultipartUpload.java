@@ -30,15 +30,15 @@ public class MultipartUpload extends BaseBusEntity {
   /** 上传ID */
   @Column(name = "UPLOAD_ID", length = 50, nullable = false)
   private String uploadId;
-  /** 文件名称 */
-  @Column(name = "NAME", length = 50, nullable = false)
-  private String name;
   /** 文件唯一标识值 */
   @Column(name = "HASH", length = 100, nullable = false)
   private String hash;
   /** 存储路径 */
   @Column(name = "PATH", nullable = false, updatable = false, length = 250)
   private String path;
+  /** 存储空间 */
+  @Column(name = "SPACE_ID", nullable = false, updatable = false)
+  private String space;
   /** 存储ID */
   @Column(name = "STORAGE_ID", nullable = false, updatable = false, length = 50)
   private String storage;
