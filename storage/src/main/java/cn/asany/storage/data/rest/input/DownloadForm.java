@@ -9,5 +9,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class DownloadForm {
-  private List<String> ids;
+  private List<String> fidlist;
 }

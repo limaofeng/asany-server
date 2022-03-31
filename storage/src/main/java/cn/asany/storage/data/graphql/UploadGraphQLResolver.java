@@ -18,13 +18,13 @@ import org.jfantasy.graphql.context.AuthorizationGraphQLServletContext;
 import org.springframework.stereotype.Component;
 
 @Component
-public class UploadGraphQLAllResolver implements GraphQLMutationResolver, GraphQLQueryResolver {
+public class UploadGraphQLResolver implements GraphQLMutationResolver, GraphQLQueryResolver {
 
   private final UploadService uploadService;
   private final MultipartUploadService multipartUploadService;
   private final MultipartUploadOptionsConverter multipartUploadOptionsConverter;
 
-  public UploadGraphQLAllResolver(
+  public UploadGraphQLResolver(
       UploadService uploadService,
       MultipartUploadService multipartUploadService,
       MultipartUploadOptionsConverter multipartUploadOptionsConverter) {

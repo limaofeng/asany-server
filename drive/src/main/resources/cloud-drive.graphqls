@@ -40,6 +40,10 @@ type CloudDrive {
   """
   quota: CloudDriveQuota!
   """
+  对应的存储空间
+  """
+  space: ID!
+  """
   跟文件夹
   """
   rootFolder: String!

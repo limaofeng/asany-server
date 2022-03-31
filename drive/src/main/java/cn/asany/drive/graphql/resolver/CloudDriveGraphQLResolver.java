@@ -7,13 +7,16 @@ import cn.asany.storage.data.bean.Space;
 import cn.asany.storage.data.service.FileService;
 import cn.asany.storage.data.util.IdUtils;
 import graphql.kickstart.tools.GraphQLResolver;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class CloudDriveGraphQLResolver implements GraphQLResolver<CloudDrive> {
 
-  @Autowired private FileService fileService;
+  private final FileService fileService;
+
+  public CloudDriveGraphQLResolver(FileService fileService) {
+    this.fileService = fileService;
+  }
 
   public String id(CloudDrive cloudDrive) {
     return Hashids.toId(cloudDrive.getId().toString());

@@ -368,6 +368,10 @@ extend type Mutation {
   清空 回收站
   """
   clearFilesInTrash(folder: ID!): Int
+  """
+  创建下载链接
+  """
+  createDownloadURL: String
 }
 
 scalar Upload

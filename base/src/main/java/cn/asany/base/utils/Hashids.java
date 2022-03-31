@@ -14,14 +14,21 @@ public class Hashids {
   private static final String PRIVATE_KEY = StringUtil.md5("asany.cn");
 
   public static String toId(String str) {
-    return Base64.getEncoder().encodeToString(encode(PRIVATE_KEY, str)).replaceAll("/", "-");
+    return Base64.getEncoder()
+        .encodeToString(encode(PRIVATE_KEY, str))
+        .replaceAll("/", "_")
+        .replaceAll("[+]", "-");
   }
 
   public static String parseId(String key) {
     return new String(
         decode(
             PRIVATE_KEY,
-            Base64.getDecoder().decode(key.replaceAll("-", "/").getBytes(StandardCharsets.UTF_8))),
+            Base64.getDecoder()
+                .decode(
+                    key.replaceAll("_", "/")
+                        .replaceAll("-", "+")
+                        .getBytes(StandardCharsets.UTF_8))),
         StandardCharsets.UTF_8);
   }
 
