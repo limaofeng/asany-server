@@ -27,9 +27,9 @@ public class CloudDriveGraphQLResolver implements GraphQLResolver<CloudDrive> {
     return IdUtils.toKey("space", space.getId());
   }
 
-  public String recycler(CloudDrive cloudDrive) {
+  public String recycleBin(CloudDrive cloudDrive) {
     Space space = cloudDrive.getSpace();
-    FileDetail recycler = this.fileService.getRecycler(space.getStorage().getId(), space.getPath());
+    FileDetail recycler = this.fileService.getRecycleBin(space.getVFolder().getId());
     return IdUtils.toKey("space", space.getId(), recycler.getId());
   }
 }

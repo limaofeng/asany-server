@@ -1,25 +1,28 @@
 package cn.asany.storage.data.rest;
 
+import cn.asany.storage.api.FileItemSelector;
 import cn.asany.storage.api.FileObject;
 import cn.asany.storage.api.Storage;
 import cn.asany.storage.core.StorageResolver;
+import cn.asany.storage.core.engine.virtual.VirtualStorage;
 import cn.asany.storage.data.bean.FileDetail;
+import cn.asany.storage.data.bean.Space;
 import cn.asany.storage.data.service.FileService;
+import cn.asany.storage.data.util.CompressionOptions;
 import cn.asany.storage.data.util.IdUtils;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
+import cn.asany.storage.data.util.ZipUtil;
+import java.io.*;
+import java.util.*;
+import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.jfantasy.framework.util.common.StreamUtil;
 import org.jfantasy.framework.util.common.StringUtil;
+import org.jfantasy.framework.util.common.file.FileUtil;
 import org.jfantasy.framework.util.web.ServletUtils;
-import org.jfantasy.framework.util.web.WebUtil;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -35,6 +38,11 @@ public class DownloadController {
     this.storageResolver = storageResolver;
   }
 
+  @GetMapping("/thumbnail/{id}")
+  public void thumbnail(@PathVariable("id") String id) {
+    System.out.println(id);
+  }
+
   @GetMapping("/download")
   public void download(
       @RequestParam("fidlist") String fidlistString,
@@ -44,75 +52,67 @@ public class DownloadController {
 
     String[] fidlist = StringUtil.tokenizeToStringArray(fidlistString, ",");
 
-    String fid = fidlist[0];
+    if (fidlist.length == 0) {
+      response.sendError(404, "请求的文件不存在");
+      return;
+    }
 
-    IdUtils.FileKey fileKey = IdUtils.parseKey(fid);
+    IdUtils.FileKey firstFileKey = IdUtils.parseKey(fidlist[0]);
+    Space space = firstFileKey.getSpace();
+    Storage innerStorage = space.getStorage();
 
-    Storage storage = storageResolver.resolve(fileKey.getStorage());
-    FileDetail file = fileService.getFileById(fileKey.getFileId());
+    VirtualStorage storage = new VirtualStorage(space, innerStorage, fileService, true);
 
-    FileObject fileObject = storage.getFileItem(file.getStorePath());
+    FileObject fileObject =
+        fidlist.length > 1
+            ? compressPacking(space, storage, fidlist)
+            : storage.getFileItem(firstFileKey.getFile().getPath());
 
     response.setContentType(fileObject.getMimeType());
     response.setCharacterEncoding("UTF-8");
-    response.setHeader("Expires", "0");
-    response.setHeader("Cache-Control", "must-revalidate, post-check=0, pre-check=0");
-    response.setHeader("Pragma", "public");
-    response.setContentLength((int) fileObject.getSize());
 
-    String fileName = URLEncoder.encode(fileObject.getName(), "UTF-8");
+    ServletUtils.setContentDisposition(fileObject.getName(), request, response);
 
-    if (WebUtil.Browser.mozilla == WebUtil.browser(request)) {
-      byte[] bytes = fileObject.getName().getBytes(StandardCharsets.UTF_8);
-      fileName = new String(bytes, StandardCharsets.ISO_8859_1);
+    String rangeString = ServletUtils.getRange(request);
+
+    String etag = fileObject.getMetadata().getETag();
+    Date lastModified = fileObject.lastModified();
+    long size = fileObject.getSize();
+
+    if (ServletUtils.cacheable(request)) {
+      if (ServletUtils.checkCache(etag, lastModified, request)) {
+        if (rangeString == null) {
+          response.setStatus(304);
+          return;
+        }
+      } else if (rangeString != null) {
+        rangeString = "bytes=0-";
+      }
     }
 
-    response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
-
-    response.addHeader("Accept-Ranges", "bytes");
-    response.addHeader("Cneonction", "close");
-
-    String range = StringUtil.defaultValue(request.getHeader("Range"), "bytes=0-");
-    if ("keep-alive".equals(request.getHeader("connection"))) {
-      long fileLength = fileObject.getSize();
+    if (ServletUtils.isKeepAlive(request)) {
 
       response.setStatus(206);
-      String bytes = WebUtil.parseQuery(range).get("bytes")[0];
-      String[] sf = bytes.split("-");
-      int start = 0;
-      int end = 0;
-      if (sf.length == 2) {
-        start = Integer.parseInt(sf[0]);
-        end = Integer.parseInt(sf[1]);
-      } else if (bytes.startsWith("-")) {
-        end = (int) (fileLength - 1);
-      } else if (bytes.endsWith("-")) {
-        start = Integer.parseInt(sf[0]);
-        end = (int) (fileLength - 1);
-      }
-      int contentLength = end - start + 1;
 
-      response.setHeader("Connection", "keep-alive");
-      response.setHeader("Content-Type", fileObject.getMimeType());
-      response.setHeader("Cache-Control", "max-age=1024");
-      ServletUtils.setLastModifiedHeader(response, fileObject.lastModified().getTime());
-      response.setHeader(
-          "Content-Length", Long.toString(contentLength > fileLength ? fileLength : contentLength));
-      response.setHeader(
-          "Content-Range",
-          "bytes "
-              + start
-              + "-"
-              + (end != 1 && end >= fileLength ? end - 1 : end)
-              + "/"
-              + fileLength);
+      long[] range = ServletUtils.getRange(rangeString, size);
+
+      long start = range[0];
+      long end = range[1];
+
+      long contentLength = end - start + 1;
+
+      response.setContentLengthLong(Math.min(contentLength, size));
+
+      ServletUtils.setKeepAlive(start, end, size, response);
+      ServletUtils.setCache(etag, lastModified, response);
 
       response.flushBuffer();
 
       InputStream in = fileObject.getInputStream();
       OutputStream out = response.getOutputStream();
 
-      int loadLength = contentLength, bufferSize = 2048;
+      int loadLength = (int) contentLength;
+      int bufferSize = 2048;
 
       byte[] buf = new byte[bufferSize];
 
@@ -125,12 +125,106 @@ public class DownloadController {
       StreamUtil.closeQuietly(in);
       out.flush();
     } else {
+      response.setContentLengthLong(size);
+      ServletUtils.setCache(etag, lastModified, response);
+
       try {
         StreamUtil.copy(fileObject.getInputStream(), response.getOutputStream());
       } catch (FileNotFoundException e) {
         log.error(e.getMessage(), e);
         response.sendError(404);
       }
+    }
+  }
+
+  public FileObject compressPacking(Space space, VirtualStorage storage, String[] fidlist)
+      throws IOException {
+    Set<String> parentPath = new HashSet<>();
+
+    log.debug("开始查询需要打包的数据:" + Arrays.toString(fidlist));
+    List<FileObject> files = new ArrayList<>();
+    for (String fid : fidlist) {
+      IdUtils.FileKey fileKey = IdUtils.parseKey(fid);
+      FileObject file = fileKey.getFile().toFileObject(storage);
+
+      parentPath.add(
+          file.isDirectory()
+              ? file.getPath().replaceFirst("[^/]+/$", "")
+              : file.getPath().replaceFirst("[^/]+$", ""));
+
+      if (file.isDirectory()) {
+        List<FileObject> fileObjects = file.listFiles(new FileItemSelector() {});
+        files.addAll(
+            fileObjects.stream().filter(item -> !item.isDirectory()).collect(Collectors.toList()));
+      } else {
+        files.add(file);
+      }
+    }
+
+    log.debug("查询需要打包的数据:" + Arrays.toString(fidlist) + ", 共" + files.size() + "个文件");
+    String name =
+        StringUtil.md5(
+            files.stream()
+                .map(item -> item.getMetadata().getETag())
+                .sorted()
+                .collect(Collectors.joining(",")));
+
+    String filename = "download-" + name + ".zip";
+    String tempPath = storage.getRootPath() + ".temp/" + filename;
+
+    FileDetail tempFolder = fileService.getTempFolder(space.getVFolder().getId());
+
+    FileObject tempZip = storage.getFileItem(tempPath);
+
+    if (tempZip != null) {
+      log.debug("打包的数据:" + Arrays.toString(fidlist) + ", 存在缓存,返回缓存数据");
+      return tempZip;
+    }
+
+    log.debug("打包的数据:" + Arrays.toString(fidlist) + ", 没有缓存,执行打包操作");
+    File tmp = FileUtil.tmp();
+    FileOutputStream tempOutput = new FileOutputStream(tmp);
+    try {
+
+      String relative = null;
+      boolean noFolder = false;
+      if (parentPath.size() == 1) {
+        relative = parentPath.stream().findFirst().get();
+      } else {
+        noFolder = true;
+      }
+
+      ZipUtil.compress(
+          files,
+          tempOutput,
+          CompressionOptions.builder()
+              .encoding("utf-8")
+              .relative(relative)
+              .noFolder(noFolder)
+              .build());
+
+      log.debug("打包的数据:" + Arrays.toString(fidlist) + ", 完成压缩打包操作");
+
+      storage.getInnerStorage().writeFile(tempPath, tmp);
+
+      FileObject storeFile = storage.getInnerStorage().getFileItem(tempPath);
+
+      log.debug("打包的数据:" + Arrays.toString(fidlist) + ", 完成压缩包上传操作");
+      return fileService
+          .createFile(
+              tempFolder.getPath() + filename,
+              "【批量下载】" + files.get(0).getName() + " 等 (" + files.size() + ").zip",
+              "application/zip",
+              storeFile.getSize(),
+              storeFile.getMetadata().getETag(),
+              storage.getInnerStorage().getId(),
+              storeFile.getPath(),
+              "",
+              tempFolder.getId())
+          .toFileObject(storage);
+    } finally {
+      StreamUtil.closeQuietly(tempOutput);
+      FileUtil.delFile(tmp);
     }
   }
 }

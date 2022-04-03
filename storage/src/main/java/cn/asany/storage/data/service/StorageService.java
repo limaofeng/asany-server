@@ -150,7 +150,7 @@ public class StorageService {
 
       List<FileObject> alreadyExisted =
           this.fileDetailDao.findAll(filterBuilder.build()).stream()
-              .map(FileDetail::toFileObject)
+              .map((item) -> item.toFileObject())
               .collect(Collectors.toList());
 
       CompareResults<FileObject> results =
@@ -165,7 +165,7 @@ public class StorageService {
                 .name(fileObject.getName())
                 .isDirectory(fileObject.isDirectory())
                 .size(fileObject.getSize())
-                .md5(fileObject.getMetadata().getContentMD5())
+                .md5(fileObject.getMetadata().getETag())
                 .parentFile(parentFile)
                 .storageConfig(StorageConfig.builder().id(storageId).build())
                 .mimeType(fileObject.getMimeType());

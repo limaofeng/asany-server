@@ -125,7 +125,7 @@ public class SimpleFileObject implements FileObject {
               .dir(this.directory)
               .contentType(this.mimeType)
               .build();
-      this.metadata.setContentMD5(md5);
+      this.metadata.setETag(md5);
       return this;
     }
 

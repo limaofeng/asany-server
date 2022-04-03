@@ -10,7 +10,7 @@ package cn.asany.storage.api;
 public interface FileItemSelector {
 
   /**
-   * 判断是否这个文件或者目录应该被选择
+   * 判断这个文件或者目录是否应该被选择
    *
    * @param fileObject 文件对象
    * @return {boolean}

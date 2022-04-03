@@ -48,7 +48,7 @@ public class MultipartStoragePlugin implements StoragePlugin {
   @Override
   public FileObject upload(UploadContext context, Invocation invocation) {
     UploadOptions options = context.getOptions();
-    String rootFolder = context.getRootFolder();
+    FileObject rootFolder = context.getRootFolder();
     UploadFileObject uploadFile = context.getFile();
     Storage storage = context.getStorage();
 

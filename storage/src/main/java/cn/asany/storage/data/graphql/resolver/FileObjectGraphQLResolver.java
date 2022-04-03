@@ -1,18 +1,18 @@
 package cn.asany.storage.data.graphql.resolver;
 
 import cn.asany.storage.api.FileObject;
-import cn.asany.storage.data.bean.FileDetail;
-import cn.asany.storage.data.service.FileService;
+import cn.asany.storage.api.StorageSpace;
+import cn.asany.storage.core.engine.virtual.VirtualFileObject;
+import cn.asany.storage.core.engine.virtual.VirtualStorage;
 import cn.asany.storage.data.util.IdUtils;
 import graphql.kickstart.tools.GraphQLResolver;
 import graphql.schema.DataFetchingEnvironment;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.common.StringUtil;
 import org.jfantasy.framework.util.ognl.OgnlUtil;
-import org.jfantasy.graphql.context.AuthorizationGraphQLServletContext;
 import org.springframework.stereotype.Component;
 
 /**
@@ -23,18 +23,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class FileObjectGraphQLResolver implements GraphQLResolver<FileObject> {
 
-  private final FileService fileService;
-
   private static final OgnlUtil OGNL_UTIL = OgnlUtil.getInstance();
 
-  public FileObjectGraphQLResolver(FileService fileService) {
-    this.fileService = fileService;
-  }
+  public String id(FileObject fileObject) {
 
-  public String id(FileObject fileObject, DataFetchingEnvironment environment) {
-    AuthorizationGraphQLServletContext context = environment.getContext();
-
-    IdUtils.FileKey fileKey = context.getAttribute("QUERY_ROOT_FILE_KEY");
+    if (fileObject instanceof VirtualFileObject) {
+      StorageSpace space = ((VirtualStorage) fileObject.getStorage()).getSpace();
+      return IdUtils.toKey("space", space.getId(), ((VirtualFileObject) fileObject).getId());
+    }
 
     String __id = (String) fileObject.getMetadata().getUserMetadata().get("__ID");
 
@@ -43,10 +39,7 @@ public class FileObjectGraphQLResolver implements GraphQLResolver<FileObject> {
     }
 
     Long id = OGNL_UTIL.getValue("id", fileObject);
-    if (fileKey == null || "file".equals(fileKey.getType())) {
-      return IdUtils.toKey("file", id.toString());
-    }
-    return IdUtils.toKey(fileKey.getType(), fileKey.getSpace(), id);
+    return IdUtils.toKey("file", id.toString());
   }
 
   public String name(FileObject fileObject) {
@@ -56,83 +49,62 @@ public class FileObjectGraphQLResolver implements GraphQLResolver<FileObject> {
     return fileObject.getName();
   }
 
-  public String md5(FileObject fileObject) {
-    return fileObject.getMetadata().getContentMD5();
+  public String etag(FileObject fileObject) {
+    if (fileObject instanceof VirtualFileObject) {
+      return ((VirtualFileObject) fileObject).getMd5();
+    }
+    return fileObject.getMetadata().getETag();
   }
 
   public Date createdAt(FileObject fileObject) {
+    if (fileObject instanceof VirtualFileObject) {
+      return ((VirtualFileObject) fileObject).getCreatedAt();
+    }
     return (Date) fileObject.getMetadata().getUserMetadata().get("CREATED_AT");
   }
 
   public String description(FileObject fileObject) {
+    if (fileObject instanceof VirtualFileObject) {
+      return ((VirtualFileObject) fileObject).getDescription();
+    }
     return (String) fileObject.getMetadata().getUserMetadata().get("DESCRIPTION");
   }
 
   public String extension(FileObject fileObject) {
+    if (fileObject instanceof VirtualFileObject) {
+      return ((VirtualFileObject) fileObject).getExtension();
+    }
     return (String) fileObject.getMetadata().getUserMetadata().get("EXTENSION");
   }
 
   public Boolean starred(FileObject fileObject) {
+    if (fileObject instanceof VirtualFileObject) {
+      return ObjectUtil.exists(((VirtualFileObject) fileObject).getLabels(), "name", "starred");
+    }
     return ObjectUtil.defaultValue(
         (Boolean) fileObject.getMetadata().getUserMetadata().get("IS_STARRED"), Boolean.FALSE);
   }
 
-  public Boolean isRootFolder(FileObject fileObject, DataFetchingEnvironment environment) {
-    AuthorizationGraphQLServletContext context = environment.getContext();
-
-    IdUtils.FileKey fileKey = context.getAttribute("QUERY_ROOT_FILE_KEY");
-
-    return "/".equals(fileObject.getPath()) || isRootFolderOfSpace(fileKey, fileObject.getPath());
+  public Boolean isRootFolder(FileObject fileObject) {
+    if (fileObject instanceof VirtualFileObject) {
+      return ((VirtualFileObject) fileObject).isRootFolder();
+    }
+    return "/".equals(fileObject.getPath());
   }
 
   public FileObject parentFolder(FileObject fileObject) {
-    String __id = (String) fileObject.getMetadata().getUserMetadata().get("__ID");
-
-    if (StringUtil.isNotBlank(__id)) {
-      return null;
-    }
-
-    Long id = OGNL_UTIL.getValue("id", fileObject);
-
-    FileDetail fileDetail = fileService.getFileById(id);
-
-    if (fileDetail == null) {
-      return null;
-    }
-
-    FileDetail parentFile = fileDetail.getParentFile();
-
-    if (parentFile == null) {
-      return null;
-    }
-
-    return parentFile.toFileObject();
+    return fileObject.getParentFile();
   }
 
   public List<FileObject> parents(FileObject fileObject, DataFetchingEnvironment environment) {
-    Long id = OGNL_UTIL.getValue("id", fileObject);
 
-    AuthorizationGraphQLServletContext context = environment.getContext();
-    String rootPath = context.getAttribute("QUERY_ROOT_PATH");
+    List<FileObject> parents = new ArrayList<>();
 
-    List<FileObject> parentFiles =
-        fileService.getFileParentsById(id).stream()
-            .map(FileDetail::toFileObject)
-            .collect(Collectors.toList());
-
-    if (StringUtil.isNotBlank(rootPath)) {
-      return ObjectUtil.filter(
-          parentFiles,
-          (item) -> item.getPath().startsWith(rootPath) && !item.getPath().equals(rootPath));
+    FileObject parent = fileObject.getParentFile();
+    while (parent != null) {
+      parents.add(parent);
+      parent = parent.getParentFile();
     }
-
-    return parentFiles;
-  }
-
-  public static boolean isRootFolderOfSpace(IdUtils.FileKey fileKey, String path) {
-    if (fileKey == null || !"space".equals(fileKey.getType())) {
-      return false;
-    }
-    return fileKey.getRootPath().equals(path);
+    return parents;
   }
 }

@@ -1,6 +1,7 @@
 package cn.asany.storage.core;
 
 import cn.asany.storage.api.*;
+import cn.asany.storage.core.engine.virtual.VirtualFileObject;
 import cn.asany.storage.data.bean.FileDetail;
 import cn.asany.storage.data.bean.MultipartUpload;
 import cn.asany.storage.data.bean.MultipartUploadChunk;
@@ -57,8 +58,7 @@ public class FileUploadService implements UploadService {
     }
   }
 
-  private Invocation createInvocation(
-      Storage storage, Space space, UploadOptions options, UploadFileObject file) {
+  private Invocation createInvocation(Space space, UploadOptions options, UploadFileObject file) {
 
     // 插件
     Set<String> plugins =
@@ -81,8 +81,7 @@ public class FileUploadService implements UploadService {
             .uploadService(this)
             .file(file)
             .space(space)
-            .rootFolder(space.getPath())
-            .storage(storage)
+            .rootFolder(space.getFolder())
             .options(options)
             .build();
 
@@ -119,9 +118,9 @@ public class FileUploadService implements UploadService {
       Space space = this.fileService.getSpace(options.getSpace());
 
       // 存储器
-      Storage storage = this.storageResolver.resolve(space.getStorage().getId());
+      //      Storage storage = this.storageResolver.resolve(space.getStorage().getId());
 
-      Invocation invocation = createInvocation(storage, space, options, uploadFileObject);
+      Invocation invocation = createInvocation(space, options, uploadFileObject);
 
       FileObject object = invocation.invoke();
 
@@ -145,12 +144,6 @@ public class FileUploadService implements UploadService {
     try {
       // 将要上传的位置
       Space space = this.fileService.getSpace(options.getSpace());
-      // 存储器
-      Storage storage = this.storageResolver.resolve(space.getStorage().getId());
-
-      if (!storage.isMultipartUploadSupported()) {
-        throw new UploadException("存储不支持分段上传");
-      }
 
       UploadOptions uploadOptions = UploadOptions.builder().space(space.getId()).build();
 
@@ -161,7 +154,7 @@ public class FileUploadService implements UploadService {
               .build();
 
       Invocation invocation =
-          createInvocation(storage, space, uploadOptions, new UploadFileObject(metadata));
+          createInvocation(space, uploadOptions, new UploadFileObject(metadata));
 
       invocation.invoke();
 
@@ -169,6 +162,11 @@ public class FileUploadService implements UploadService {
 
       String storePath = context.getStorePath();
       String filename = context.getFilename();
+      Storage storage = context.getStorage();
+
+      if (!storage.isMultipartUploadSupported()) {
+        throw new UploadException("存储不支持分段上传");
+      }
 
       Optional<MultipartUpload> prevMultipartUploadOptional =
           multipartUploadService.findMultipartUploadByHash(
@@ -257,28 +255,29 @@ public class FileUploadService implements UploadService {
           UploadOptions.builder().space(space.getId()).folder(folderKey).build();
 
       Invocation invocation =
-          createInvocation(storage, space, uploadOptions, new UploadFileObject(name, metadata));
+          createInvocation(space, uploadOptions, new UploadFileObject(name, metadata));
 
       invocation.invoke();
 
       UploadContext context = invocation.getContext();
 
-      FileObject folder = context.getFolder();
+      VirtualFileObject folder = (VirtualFileObject) context.getFolder();
       String filename = context.getFilename();
       String extension = WebUtil.getExtension(multipartUpload.getMimeType());
 
       FileDetail fileDetail =
-          fileService.saveFileDetail(
-              folder.getPath() + StringUtil.uuid() + extension,
+          fileService.createFile(
+              folder.getOriginalPath() + StringUtil.uuid() + extension,
               filename,
               object.getMetadata().getContentType(),
               object.getSize(),
               object.getMetadata().getETag(),
               storage.getId(),
               multipartUpload.getPath(),
-              "");
+              "",
+              folder.getId());
 
-      return fileDetail.toFileObject();
+      return fileDetail.toFileObject(space);
     } catch (IOException e) {
       throw new UploadException(e.getMessage());
     }

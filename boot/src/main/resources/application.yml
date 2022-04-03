@@ -3,6 +3,8 @@ server:
 
 spring:
   servlet:
+    session:
+      tracking-modes: 'cookie'
     multipart:
       max-file-size: 50MB
       max-request-size: 60MB

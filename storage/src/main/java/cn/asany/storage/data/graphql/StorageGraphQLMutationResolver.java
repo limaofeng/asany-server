@@ -11,11 +11,11 @@ import graphql.kickstart.tools.GraphQLMutationResolver;
 import graphql.schema.DataFetchingEnvironment;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.graphql.UpdateMode;
-import org.jfantasy.graphql.context.AuthorizationGraphQLServletContext;
 import org.springframework.stereotype.Component;
 
 /**
@@ -40,42 +40,35 @@ public class StorageGraphQLMutationResolver implements GraphQLMutationResolver {
     return true;
   }
 
-  public FileObject renameFile(String key, String name, DataFetchingEnvironment environment) {
+  public FileObject renameFile(String key, String name) {
     IdUtils.FileKey fileKey = IdUtils.parseKey(key);
 
-    AuthorizationGraphQLServletContext context = environment.getContext();
-
-    context.setAttribute("QUERY_ROOT_FILE_KEY", fileKey);
-    context.setAttribute("QUERY_ROOT_PATH", fileKey.getRootPath());
-
-    return fileService.renameFile(fileKey.getFileId(), name).toFileObject();
+    return fileService.renameFile(fileKey.getFile().getId(), name).toFileObject(fileKey.getSpace());
   }
 
-  public FileObject createFolder(
-      String name, String parentFolder, DataFetchingEnvironment environment) {
+  public FileObject createFolder(String name, String parentFolder) {
     IdUtils.FileKey fileKey = IdUtils.parseKey(parentFolder);
 
-    AuthorizationGraphQLServletContext context = environment.getContext();
-
-    context.setAttribute("QUERY_ROOT_FILE_KEY", fileKey);
-    context.setAttribute("QUERY_ROOT_PATH", fileKey.getRootPath());
-
-    return fileService.createFolder(name, fileKey.getFileId()).toFileObject();
+    return fileService
+        .createFolder(name, fileKey.getFile().getId())
+        .toFileObject(fileKey.getSpace());
   }
 
-  public List<FileObject> addStarForFiles(
-      List<String> keys, UpdateMode mode, DataFetchingEnvironment environment) {
+  public List<FileObject> addStarForFiles(List<String> keys, UpdateMode mode) {
     List<FileDetail> fileDetails = new ArrayList<>();
 
-    AuthorizationGraphQLServletContext context = environment.getContext();
+    Optional<String> firstKey = keys.stream().findFirst();
+
+    if (!firstKey.isPresent()) {
+      return new ArrayList<>();
+    }
+
+    IdUtils.FileKey firstFileKey = IdUtils.parseKey(firstKey.get());
 
     for (String key : keys) {
       IdUtils.FileKey fileKey = IdUtils.parseKey(key);
 
-      context.setAttribute("QUERY_ROOT_FILE_KEY", fileKey);
-      context.setAttribute("QUERY_ROOT_PATH", fileKey.getRootPath());
-
-      FileDetail fileDetail = this.fileService.getFileById(fileKey.getFileId());
+      FileDetail fileDetail = this.fileService.getFileById(fileKey.getFile().getId());
       Set<FileLabel> labels = fileDetail.getLabels();
       FileLabel label = ObjectUtil.remove(labels, "name", "starred");
       if (label == null) {
@@ -90,23 +83,28 @@ public class StorageGraphQLMutationResolver implements GraphQLMutationResolver {
       this.fileService.update(fileDetail);
       fileDetails.add(fileDetail);
     }
-    return fileDetails.stream().map(FileDetail::toFileObject).collect(Collectors.toList());
+    return fileDetails.stream()
+        .map(item -> item.toFileObject(firstFileKey.getSpace()))
+        .collect(Collectors.toList());
   }
 
-  public List<FileObject> moveFilesToTrash(List<String> keys, DataFetchingEnvironment environment) {
+  public List<FileObject> moveFilesToTrash(List<String> keys) {
     List<FileDetail> fileDetails = new ArrayList<>();
 
-    AuthorizationGraphQLServletContext context = environment.getContext();
+    Optional<String> firstKey = keys.stream().findFirst();
+
+    if (!firstKey.isPresent()) {
+      return new ArrayList<>();
+    }
+
+    IdUtils.FileKey firstFileKey = IdUtils.parseKey(firstKey.get());
 
     for (String key : keys) {
       IdUtils.FileKey fileKey = IdUtils.parseKey(key);
 
-      FileDetail folder = fileService.getRecycler(fileKey.getStorage(), fileKey.getRootPath());
+      FileDetail folder = fileService.getRecycleBin(fileKey.getRootFolder().getId());
 
-      context.setAttribute("QUERY_ROOT_FILE_KEY", fileKey);
-      context.setAttribute("QUERY_ROOT_PATH", fileKey.getRootPath());
-
-      FileDetail fileDetail = this.fileService.getFileById(fileKey.getFileId());
+      FileDetail fileDetail = this.fileService.getFileById(fileKey.getFile().getId());
 
       Set<FileLabel> labels = fileDetail.getLabels();
 
@@ -124,41 +122,51 @@ public class StorageGraphQLMutationResolver implements GraphQLMutationResolver {
       fileDetails.add(this.fileService.move(fileDetail, folder));
     }
 
-    return fileDetails.stream().map(FileDetail::toFileObject).collect(Collectors.toList());
+    return fileDetails.stream()
+        .map(item -> item.toFileObject(firstFileKey.getSpace()))
+        .collect(Collectors.toList());
   }
 
-  public List<FileObject> deleteFiles(List<String> keys, DataFetchingEnvironment environment) {
+  public List<FileObject> deleteFiles(List<String> keys) {
     List<FileDetail> fileDetails = new ArrayList<>();
 
-    AuthorizationGraphQLServletContext context = environment.getContext();
+    Optional<String> firstKey = keys.stream().findFirst();
+
+    if (!firstKey.isPresent()) {
+      return new ArrayList<>();
+    }
+
+    IdUtils.FileKey firstFileKey = IdUtils.parseKey(firstKey.get());
 
     for (String key : keys) {
       IdUtils.FileKey fileKey = IdUtils.parseKey(key);
 
-      context.setAttribute("QUERY_ROOT_FILE_KEY", fileKey);
-      context.setAttribute("QUERY_ROOT_PATH", fileKey.getRootPath());
-
-      FileDetail fileDetail = this.fileService.getFileById(fileKey.getFileId());
+      FileDetail fileDetail = this.fileService.getFileById(fileKey.getFile().getId());
 
       this.fileService.delete(fileDetail.getId());
       fileDetails.add(fileDetail);
     }
 
-    return fileDetails.stream().map(FileDetail::toFileObject).collect(Collectors.toList());
+    return fileDetails.stream()
+        .map(item -> item.toFileObject(firstFileKey.getSpace()))
+        .collect(Collectors.toList());
   }
 
-  public List<FileObject> restoreFiles(List<String> keys, DataFetchingEnvironment environment) {
+  public List<FileObject> restoreFiles(List<String> keys) {
     List<FileDetail> fileDetails = new ArrayList<>();
 
-    AuthorizationGraphQLServletContext context = environment.getContext();
+    Optional<String> firstKey = keys.stream().findFirst();
+
+    if (!firstKey.isPresent()) {
+      return new ArrayList<>();
+    }
+
+    IdUtils.FileKey firstFileKey = IdUtils.parseKey(firstKey.get());
 
     for (String key : keys) {
       IdUtils.FileKey fileKey = IdUtils.parseKey(key);
 
-      context.setAttribute("QUERY_ROOT_FILE_KEY", fileKey);
-      context.setAttribute("QUERY_ROOT_PATH", fileKey.getRootPath());
-
-      FileDetail fileDetail = this.fileService.getFileById(fileKey.getFileId());
+      FileDetail fileDetail = this.fileService.getFileById(fileKey.getFile().getId());
 
       Set<FileLabel> labels = fileDetail.getLabels();
 
@@ -170,16 +178,19 @@ public class StorageGraphQLMutationResolver implements GraphQLMutationResolver {
 
       String originalPath = label.getValue();
 
-      FileDetail folder = fileService.getFolderByPath(fileKey.getStorage(), originalPath);
+      FileDetail folder = fileService.getFolderByPath(originalPath);
 
       fileDetails.add(this.fileService.move(fileDetail, folder));
     }
 
-    return fileDetails.stream().map(FileDetail::toFileObject).collect(Collectors.toList());
+    return fileDetails.stream()
+        .map(item -> item.toFileObject(firstFileKey.getSpace()))
+        .collect(Collectors.toList());
   }
 
   public Integer clearFilesInTrash(String key, DataFetchingEnvironment environment) {
     IdUtils.FileKey fileKey = IdUtils.parseKey(key);
-    return this.fileService.clearTrash(fileKey.getStorage(), fileKey.getRootPath());
+    Long rootFolder = fileKey.getRootFolder().getId();
+    return this.fileService.clearTrash(rootFolder);
   }
 }

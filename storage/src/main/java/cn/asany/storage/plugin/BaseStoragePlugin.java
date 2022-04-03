@@ -1,7 +1,9 @@
 package cn.asany.storage.plugin;
 
 import cn.asany.storage.api.*;
+import cn.asany.storage.core.engine.virtual.VirtualFileObject;
 import cn.asany.storage.data.bean.FileDetail;
+import cn.asany.storage.data.bean.Space;
 import cn.asany.storage.data.service.FileService;
 import cn.asany.storage.utils.UploadUtils;
 import java.io.File;
@@ -37,11 +39,11 @@ public class BaseStoragePlugin implements StoragePlugin {
   public FileObject upload(UploadContext context, Invocation invocation) {
     String storePath = context.getStorePath();
     UploadOptions options = context.getOptions();
-    String rootFolder = context.getRootFolder();
+    Space space = (Space) context.getSpace();
     UploadFileObject uploadFile = context.getFile();
     Storage storage = context.getStorage();
 
-    FileObject folder = context.getFolder();
+    VirtualFileObject folder = (VirtualFileObject) context.getFolder();
     String filename = context.getFilename();
 
     File file = uploadFile.getFile();
@@ -52,15 +54,16 @@ public class BaseStoragePlugin implements StoragePlugin {
 
     storage.writeFile(storePath, file);
     FileDetail detail =
-        fileService.saveFileDetail(
-            folder.getPath() + StringUtil.uuid() + extension,
+        fileService.createFile(
+            folder.getOriginalPath() + StringUtil.uuid() + extension,
             filename,
             ObjectUtil.defaultValue(mimeType, uploadFile.getMimeType()),
             uploadFile.getSize(),
             md5,
             storage.getId(),
             storePath,
-            "");
-    return detail.toFileObject();
+            "",
+            folder.getId());
+    return detail.toFileObject(space);
   }
 }

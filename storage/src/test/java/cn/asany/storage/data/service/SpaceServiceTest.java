@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import cn.asany.storage.TestApplication;
 import cn.asany.storage.data.bean.Space;
-import cn.asany.storage.data.bean.StorageConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,9 +27,9 @@ class SpaceServiceTest {
     this.spaceService.save(
         Space.builder()
             .id("Default")
-            .storage(StorageConfig.builder().id("Global").build())
+            //            .storage(StorageConfig.builder().id("Global").build())
             .name("默认")
-            .path("/temp")
+            //            .path("/temp")
             .build());
   }
 }

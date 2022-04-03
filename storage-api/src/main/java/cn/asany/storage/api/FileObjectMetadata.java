@@ -181,14 +181,6 @@ public class FileObjectMetadata {
     metadata.put(FileObjectMetadata.CONTENT_TYPE, contentType);
   }
 
-  public String getContentMD5() {
-    return (String) metadata.get(FileObjectMetadata.CONTENT_MD5);
-  }
-
-  public void setContentMD5(String contentMD5) {
-    metadata.put(FileObjectMetadata.CONTENT_MD5, contentMD5);
-  }
-
   /**
    * 获取Content-Encoding请求头，表示Object内容的编码方式。
    *

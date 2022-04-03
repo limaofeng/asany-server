@@ -10,14 +10,12 @@ import cn.asany.storage.data.service.SpaceService;
 import cn.asany.storage.data.service.StorageService;
 import cn.asany.storage.data.util.IdUtils;
 import graphql.kickstart.tools.GraphQLQueryResolver;
-import graphql.schema.DataFetchingEnvironment;
 import java.util.List;
 import java.util.Optional;
 import org.jfantasy.framework.dao.OrderBy;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
 import org.jfantasy.framework.util.common.ObjectUtil;
-import org.jfantasy.graphql.context.AuthorizationGraphQLServletContext;
 import org.jfantasy.graphql.util.Kit;
 import org.springframework.stereotype.Component;
 
@@ -44,48 +42,22 @@ public class StorageGraphQLQueryResolver implements GraphQLQueryResolver {
     return this.storageService.findById(id);
   }
 
-  public FileObject file(String key, DataFetchingEnvironment environment) {
+  public FileObject file(String key) {
     IdUtils.FileKey fileKey = IdUtils.parseKey(key);
-
-    AuthorizationGraphQLServletContext context = environment.getContext();
-
-    context.setAttribute("QUERY_ROOT_FILE_KEY", fileKey);
-    context.setAttribute("QUERY_ROOT_PATH", fileKey.getRootPath());
-
-    Optional<FileDetail> optionalFileDetail =
-        this.storageService.findOneByPath(fileKey.getStorage(), fileKey.getPath());
-    return optionalFileDetail.map(FileDetail::toFileObject).orElse(null);
+    return fileKey.getFile().toFileObject(fileKey.getSpace());
   }
 
   public FileObjectConnection listFiles(
-      String key,
-      FileFilter filter,
-      int page,
-      int pageSize,
-      OrderBy orderBy,
-      DataFetchingEnvironment environment) {
+      String key, FileFilter filter, int page, int pageSize, OrderBy orderBy) {
     IdUtils.FileKey fileKey = IdUtils.parseKey(key);
-
-    AuthorizationGraphQLServletContext context = environment.getContext();
-
-    context.setAttribute("QUERY_ROOT_FILE_KEY", fileKey);
 
     PropertyFilterBuilder filterBuilder =
         ObjectUtil.defaultValue(filter, FileFilter::new).getBuilder();
 
-    if (filter.isRecursive()) {
-      filterBuilder.startsWith("path", fileKey.getPath()).notEqual("path", fileKey.getPath());
-    } else {
-      filterBuilder.equal("parentFile.path", fileKey.getPath());
-    }
-
-    if (!fileKey.getPath().contains(FileDetail.NAME_OF_THE_RECYCLE_BIN)) {
-      filterBuilder.notStartsWith(
-          "path",
-          fileKey.getRootPath() + FileDetail.NAME_OF_THE_RECYCLE_BIN + FileObject.SEPARATOR);
-    }
-
-    filterBuilder.equal("storageConfig.id", fileKey.getStorage());
+    filterBuilder
+        .equal("hidden", false)
+        .notEqual("id", fileKey.getRootFolder().getId())
+        .startsWith("path", fileKey.getRootFolder().getPath());
 
     Pager<FileDetail> pager =
         this.storageService.findPager(
@@ -99,6 +71,9 @@ public class StorageGraphQLQueryResolver implements GraphQLQueryResolver {
     return Kit.connection(
         pager,
         FileObjectConnection.class,
-        (item) -> FileObjectConnection.FileObjectEdge.builder().node(item.toFileObject()).build());
+        (item) ->
+            FileObjectConnection.FileObjectEdge.builder()
+                .node(item.toFileObject(fileKey.getSpace()))
+                .build());
   }
 }

@@ -60,9 +60,11 @@ public class FileFilter extends GenericFilterBean {
       FileDetail file = optionalFile.get();
       String id = file.getStorageConfig().getId();
       Storage storage = storageResolver.resolve(id);
-      FileObject fileObject = with(storage.getFileItem(file.getPath()), file.toFileObject());
-      writeFile(request, response, fileObject);
+      chain.doFilter(request, response);
       return;
+      //      FileObject fileObject = with(storage.getFileItem(file.getPath()),
+      // file.toFileObject(null));
+      //      writeFile(request, response, fileObject);
     }
     if (RegexpUtil.find(url, REGEX)) {
       final String srcUrl = RegexpUtil.replace(url, REGEX, ".$3");
@@ -75,7 +77,8 @@ public class FileFilter extends GenericFilterBean {
       FileDetail file = optionalFile.get();
       String id = file.getStorageConfig().getId();
       Storage storage = storageResolver.resolve(id);
-      FileObject fileObject = with(storage.getFileItem(file.getPath()), file.toFileObject());
+      FileObject fileObject = null;
+      // with(storage.getFileItem(file.getPath()), file.toFileObject(null));
       if (fileObject == null) {
         chain.doFilter(request, response);
         return;
@@ -118,14 +121,16 @@ public class FileFilter extends GenericFilterBean {
     if ("POST".equalsIgnoreCase(WebUtil.getMethod(request))) {
       setDownloadFileHeader(request, response, fileObject);
     } else {
-      ServletUtils.setExpiresHeader(response, 1000 * 60 * 5L);
-      ServletUtils.setLastModifiedHeader(response, fileObject.lastModified().getTime());
+      ServletUtils.setCache(
+          fileObject.getMetadata().getETag(), fileObject.lastModified(), response);
     }
     if (fileObject.getMimeType().startsWith("video/")) {
       writeVideo(request, response, fileObject);
     } else {
-      if (ServletUtils.checkIfModifiedSince(
-          request, response, fileObject.lastModified().getTime())) {
+      if (ServletUtils.checkCache(
+          fileObject.getMetadata().getETag(), fileObject.lastModified(), request)) {
+        response.setStatus(304);
+      } else {
         try {
           response.setHeader("Content-Type", fileObject.getMimeType());
           StreamUtil.copy(fileObject.getInputStream(), response.getOutputStream());
@@ -183,8 +188,9 @@ public class FileFilter extends GenericFilterBean {
 
       response.setHeader("Connection", "keep-alive");
       response.setHeader("Content-Type", fileObject.getMimeType());
-      response.setHeader("Cache-Control", "max-age=1024");
-      ServletUtils.setLastModifiedHeader(response, fileObject.lastModified().getTime());
+
+      ServletUtils.setCache(1024, response);
+
       response.setHeader(
           "Content-Length", Long.toString(contentLength > fileLength ? fileLength : contentLength));
       response.setHeader(

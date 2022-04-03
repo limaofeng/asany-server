@@ -1,7 +1,8 @@
 package cn.asany.storage.data.bean;
 
-import cn.asany.storage.api.FileObject;
-import cn.asany.storage.dto.SimpleFileObject;
+import cn.asany.storage.api.*;
+import cn.asany.storage.core.engine.virtual.VirtualFileObject;
+import cn.asany.storage.core.engine.virtual.VirtualStorage;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.Date;
 import java.util.List;
@@ -12,7 +13,6 @@ import lombok.*;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.util.common.ObjectUtil;
 
 /**
  * 文件信息表
@@ -28,8 +28,8 @@ import org.jfantasy.framework.util.common.ObjectUtil;
     name = "STORAGE_FILEOBJECT",
     uniqueConstraints = {
       @UniqueConstraint(
-          name = "UK_STORAGE_FILEOBJECT",
-          columnNames = {"STORAGE_ID", "PATH"})
+          name = "UK_STORAGE_FILEOBJECT_PATH",
+          columnNames = {"PATH"})
     })
 @AllArgsConstructor
 @Builder
@@ -47,6 +47,7 @@ import org.jfantasy.framework.util.common.ObjectUtil;
 public class FileDetail extends BaseBusEntity implements Cloneable {
 
   public static String NAME_OF_THE_RECYCLE_BIN = "$RECYCLE.BIN";
+  public static String NAME_OF_THE_TEMP_FOLDER = ".temp";
 
   @Id
   @Column(name = "ID", nullable = false, updatable = false, precision = 22)
@@ -54,7 +55,7 @@ public class FileDetail extends BaseBusEntity implements Cloneable {
   @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
   /** 虚拟文件路径 */
-  @Column(name = "PATH", nullable = false, updatable = false, length = 250)
+  @Column(name = "PATH", nullable = false, length = 250)
   private String path;
   /** 文件类型 */
   @Column(name = "MIME_TYPE", length = 50, nullable = false)
@@ -95,14 +96,17 @@ public class FileDetail extends BaseBusEntity implements Cloneable {
   @JoinColumn(
       name = "STORAGE_ID",
       nullable = false,
-      updatable = false,
       foreignKey = @ForeignKey(name = "FK_STORAGE_FILEOBJECT_STORAGE"))
   @ManyToOne(fetch = FetchType.LAZY)
   @ToString.Exclude
   private StorageConfig storageConfig;
   /** 文件存储路径 */
-  @Column(name = "STORE_PATH", length = 250, updatable = false)
+  @Column(name = "STORE_PATH", nullable = false, length = 250)
   private String storePath;
+  /** 是否隐藏 */
+  @Builder.Default
+  @Column(name = "HIDDEN", nullable = false)
+  private Boolean hidden = Boolean.FALSE;
 
   @OneToMany(
       mappedBy = "file",
@@ -156,24 +160,45 @@ public class FileDetail extends BaseBusEntity implements Cloneable {
     return this.parentFile == null;
   }
 
+  private VirtualFileObject.VirtualFileObjectBuilder buildVirtualFileObject() {
+    return VirtualFileObject.builder()
+        .id(this.id)
+        .path(this.path)
+        .storePath(this.storePath)
+        .name(this.name)
+        .size(this.size)
+        .lastModified(this.getUpdatedAt())
+        .directory(this.isDirectory)
+        .mimeType(this.mimeType)
+        .description(this.description)
+        .extension(this.extension)
+        .metadata(this.md5)
+        .labels(labels)
+        .createdAt(this.getCreatedAt());
+  }
+
   public FileObject toFileObject() {
-    SimpleFileObject.SimpleFileObjectBuilder builder =
-        SimpleFileObject.builder()
-            .id(this.id)
-            .path(this.path)
-            .name(this.name)
-            .size(this.size)
-            .lastModified(this.getUpdatedAt())
-            .directory(this.isDirectory)
-            .mimeType(this.mimeType)
-            .metadata(this.md5)
-            .addUserMetadata("DESCRIPTION", this.description)
-            .addUserMetadata("EXTENSION", this.extension)
-            .addUserMetadata("IS_STARRED", ObjectUtil.exists(this.getLabels(), "name", "starred"))
-            .addUserMetadata("CREATED_AT", this.getCreatedAt());
-    if (this.getStorageConfig() != null) {
-      builder.storage(new SimpleFileObject.SimpleStorage(this.getStorageConfig().getId()));
-    }
+    VirtualFileObject.VirtualFileObjectBuilder builder = buildVirtualFileObject();
     return builder.build();
+  }
+
+  public FileObject toFileObject(StorageSpace space) {
+    VirtualFileObject.VirtualFileObjectBuilder builder = buildVirtualFileObject();
+    builder.storage(space, this.getStorageConfig().getId());
+    return builder.build();
+  }
+
+  public FileObject toFileObject(VirtualStorage storage) {
+    VirtualFileObject.VirtualFileObjectBuilder builder = buildVirtualFileObject();
+    builder.storage(storage);
+    return builder.build();
+  }
+
+  public static class FileDetailBuilder {
+
+    public FileDetailBuilder storage(String id) {
+      this.storageConfig = new StorageConfig(Storage.DEFAULT_STORAGE_ID);
+      return this;
+    }
   }
 }

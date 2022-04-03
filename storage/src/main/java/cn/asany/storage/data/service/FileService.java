@@ -1,20 +1,20 @@
 package cn.asany.storage.data.service;
 
 import cn.asany.storage.api.FileObject;
+import cn.asany.storage.api.Storage;
 import cn.asany.storage.data.bean.FileDetail;
+import cn.asany.storage.data.bean.FileLabel;
 import cn.asany.storage.data.bean.Space;
 import cn.asany.storage.data.bean.StorageConfig;
 import cn.asany.storage.data.dao.FileDetailDao;
 import cn.asany.storage.data.dao.SpaceDao;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
+import org.jfantasy.framework.dao.mybatis.keygen.util.DataBaseKeyGenerator;
 import org.jfantasy.framework.error.ValidationException;
-import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.common.StringUtil;
 import org.jfantasy.framework.util.regexp.RegexpUtil;
 import org.jfantasy.framework.util.web.WebUtil;
@@ -39,12 +39,20 @@ public class FileService {
   private final FileDetailDao fileDetailDao;
   private final SpaceDao spaceDao;
 
-  public FileService(FileDetailDao fileDetailDao, SpaceDao spaceDao) {
+  private final DataBaseKeyGenerator dataBaseKeyGenerator;
+
+  public FileService(
+      FileDetailDao fileDetailDao, SpaceDao spaceDao, DataBaseKeyGenerator dataBaseKeyGenerator) {
     this.fileDetailDao = fileDetailDao;
     this.spaceDao = spaceDao;
+    this.dataBaseKeyGenerator = dataBaseKeyGenerator;
   }
 
-  public FileDetail saveFileDetail(
+  private long nextId() {
+    return this.dataBaseKeyGenerator.nextValue("storage_fileobject:id");
+  }
+
+  public FileDetail createFile(
       String path,
       String fileName,
       String contentType,
@@ -52,7 +60,8 @@ public class FileService {
       String md5,
       String storage,
       String storePath,
-      String description) {
+      String description,
+      Long parentFolder) {
     FileDetail fileDetail =
         FileDetail.builder()
             .path(path)
@@ -63,7 +72,7 @@ public class FileService {
             .md5(md5)
             .isDirectory(false)
             .extension(WebUtil.getExtension(fileName, true))
-            .parentFile(createFolder(path.replaceFirst("[^/]+$", ""), storage))
+            .parentFile(this.fileDetailDao.getById(parentFolder))
             .description(description)
             .storePath(storePath)
             .build();
@@ -89,8 +98,67 @@ public class FileService {
     this.fileDetailDao.deleteByPath(fileDetail.getPath());
   }
 
-  public FileDetail getFolderOrCreateIt(String path, String storage) {
-    return createFolder(path, storage);
+  public FileDetail getFolderOrCreateIt(String name, Long parentFolder) {
+    Optional<FileDetail> folderOptional =
+        this.fileDetailDao.findOne(
+            PropertyFilter.builder()
+                .equal("name", name)
+                .equal("parentFile.id", parentFolder)
+                .build());
+    return folderOptional.orElseGet(() -> createFolder(name, new HashSet<>(), parentFolder));
+  }
+
+  public FileDetail getFolderOrCreateIt(String name, Long parentFolder, String storePath) {
+    Optional<FileDetail> folderOptional =
+        this.fileDetailDao.findOne(
+            PropertyFilter.builder()
+                .equal("name", name)
+                .equal("parentFile.id", parentFolder)
+                .build());
+    return folderOptional.orElseGet(() -> createFolder(name, new HashSet<>(), parentFolder));
+  }
+
+  public FileDetail createFolder(String name, FileDetail parentFolder) {
+    return this.createFolder(name, new HashSet<>(), parentFolder);
+  }
+
+  public FileDetail createFolder(String name, Set<FileLabel> labels, Long parentFolder) {
+    return this.createFolder(name, labels, fileDetailDao.getById(parentFolder));
+  }
+
+  public FileDetail createFolder(String name, Set<FileLabel> labels, FileDetail parentFolder) {
+    return this.createFolder(
+        name,
+        parentFolder,
+        FileOptions.builder().labels(labels).storePath(parentFolder.getStorePath()).build());
+  }
+
+  // Set<FileLabel> labels,
+  //  String storePath
+
+  public FileDetail createFolder(String name, FileDetail parentFolder, FileOptions options) {
+    long id = nextId();
+    FileDetail.FileDetailBuilder builder =
+        FileDetail.builder()
+            .id(id)
+            .mimeType(DIR_MIME_TYPE)
+            .path(parentFolder.getPath() + id + FileObject.SEPARATOR)
+            .isDirectory(true)
+            .size(0L)
+            .hidden(options.getHidden())
+            .md5(DIR_MD5)
+            .labels(options.getLabels())
+            .parentFile(parentFolder)
+            .storePath(options.getStorePath())
+            .storage(parentFolder.getStorageConfig().getId())
+            .name(name);
+
+    FileDetail fileDetail = builder.build();
+    for (FileLabel label : options.getLabels()) {
+      label.setFile(fileDetail);
+    }
+
+    return this.fileDetailDao.save(fileDetail);
   }
 
   /**
@@ -99,22 +167,18 @@ public class FileService {
    * @param path 路径
    * @return {Folder}
    */
+  @Deprecated
   public FileDetail createFolder(String path, String storage) {
-    Optional<FileDetail> optional =
-        this.fileDetailDao.findOne(
-            PropertyFilter.builder()
-                .equal("path", path)
-                .equal("isDirectory", true)
-                .equal("storageConfig.id", storage)
-                .build());
-    if (optional.isPresent()) {
-      return optional.get();
+    String[] names = StringUtil.tokenizeToStringArray(path, FileObject.SEPARATOR);
+    FileDetail folder = getRootFolderOrCreateIt();
+    for (String name : names) {
+      PropertyFilterBuilder builder = PropertyFilter.builder().equal("name", name);
+      builder.equal("parentFile.id", folder.getId());
+      Optional<FileDetail> file = this.fileDetailDao.findOne(builder.build());
+      FileDetail finalFolder = folder;
+      folder = file.orElseGet(() -> createFolder(name, new HashSet<>(), finalFolder));
     }
-    if (FileObject.ROOT_PATH.equals(path)) {
-      return createRootFolder(path, storage);
-    } else {
-      return createFolder(path, createFolder(path.replaceFirst("[^/]+/$", ""), storage), storage);
-    }
+    return folder;
   }
 
   //  public FileDetail findUniqueByMd5(String md5, String managerId) {
@@ -152,46 +216,42 @@ public class FileService {
             .build());
   }
 
-  public Optional<FileDetail> findByPath(String storage, String path) {
-    return this.fileDetailDao.findOne(
-        PropertyFilter.builder().equal("storageConfig.id", storage).equal("path", path).build());
-  }
-
-  private FileDetail createRootFolder(String absolutePath, String managerId) {
-    return this.fileDetailDao.save(
-        FileDetail.builder()
-            .isDirectory(true)
-            .path(absolutePath)
-            .mimeType(DIR_MIME_TYPE)
-            .size(0L)
-            .name("")
-            .storageConfig(StorageConfig.builder().id(managerId).build())
-            .md5(DIR_MD5)
-            .build());
-  }
-
-  /**
-   * 获取 Folder 对象
-   *
-   * @param absolutePath 路径
-   * @param parent 上级文件夹
-   * @param managerId 文件管理器
-   * @return {Folder}
-   */
-  private FileDetail createFolder(String absolutePath, FileDetail parent, String managerId) {
-    FileDetail.FileDetailBuilder builder =
-        FileDetail.builder()
-            .path(absolutePath)
-            .isDirectory(true)
-            .mimeType(DIR_MIME_TYPE)
-            .size(0L)
-            .md5(DIR_MD5)
-            .storageConfig(StorageConfig.builder().id(managerId).build())
-            .name(RegexpUtil.parseGroup(absolutePath, "([^/]+)\\/$", 1));
-    if (ObjectUtil.isNotNull(parent)) {
-      builder.parentFile(parent);
+  public Optional<FileDetail> findByNamePath(String path) {
+    String[] names = StringUtil.tokenizeToStringArray(path, FileObject.SEPARATOR);
+    FileDetail parent = null;
+    for (String name : names) {
+      PropertyFilterBuilder builder = PropertyFilter.builder().equal("name", name);
+      if (parent == null) {
+        builder.isNull("parentFile");
+      } else {
+        builder.equal("parentFile.id", path);
+      }
+      Optional<FileDetail> file = this.fileDetailDao.findOne(builder.build());
+      if (!file.isPresent()) {
+        return Optional.empty();
+      }
+      parent = file.get();
     }
-    return this.fileDetailDao.save(builder.build());
+    return Optional.ofNullable(parent);
+  }
+
+  private FileDetail getRootFolderOrCreateIt() {
+    Optional<FileDetail> rootFolder =
+        this.fileDetailDao.findOne(
+            PropertyFilter.builder().equal("path", FileObject.ROOT_PATH).build());
+    return rootFolder.orElseGet(
+        () ->
+            this.fileDetailDao.save(
+                FileDetail.builder()
+                    .isDirectory(true)
+                    .path(FileObject.ROOT_PATH)
+                    .mimeType(DIR_MIME_TYPE)
+                    .size(0L)
+                    .name("")
+                    .md5(DIR_MD5)
+                    .storage(Storage.DEFAULT_STORAGE_ID)
+                    .storePath("/")
+                    .build()));
   }
 
   public Pager<FileDetail> findPager(Pager<FileDetail> pager, List<PropertyFilter> filters) {
@@ -286,27 +346,16 @@ public class FileService {
   }
 
   public Space createStorageSpace(String id, String name, String path, String storage) {
-    Space space =
-        Space.builder()
-            .id(id)
-            .path(path)
-            .storage(StorageConfig.builder().id(storage).build())
-            .name(name)
-            .build();
+    Space space = Space.builder().id(id).name(name).build();
     this.createFolder(path, storage);
     return this.spaceDao.save(space);
   }
 
   public void deleteStorageSpace(String id) {
     Space space = this.spaceDao.getById(id);
-    Optional<FileDetail> rootFolderOptional =
-        this.fileDetailDao.findOne(
-            PropertyFilter.builder()
-                .equal("storageConfig.id", space.getStorage().getId())
-                .equal("path", space.getPath())
-                .build());
+    FileDetail rootFolder = space.getVFolder();
     this.spaceDao.deleteById(id);
-    rootFolderOptional.ifPresent(this.fileDetailDao::delete);
+    this.fileDetailDao.delete(rootFolder);
   }
 
   public FileDetail renameFile(Long id, String name) {
@@ -322,28 +371,15 @@ public class FileService {
 
     PropertyFilterBuilder builder =
         PropertyFilter.builder()
-            .equal("storageConfig.id", fileDetail.getStorageConfig().getId())
-            .notEqual("id", id);
-
-    if (fileDetail.getParentFile() == null) {
-      builder.isNull("parentFile.id");
-    } else {
-      builder.equal("parentFile.id", fileDetail.getParentFile().getId());
-    }
-
-    builder.equal("name", name);
+            .notEqual("id", id)
+            .equal("name", name)
+            .equal("parentFile.id", fileDetail.getParentFile().getId());
 
     if (this.fileDetailDao.exists(builder.build())) {
       throw new ValidationException("重命名失败，文件名被占用");
     }
 
-    if (fileDetail.getIsDirectory()) {
-      String path = fileDetail.getPath();
-      String newPath =
-          fileDetail.getPath().replaceFirst("[^/]+/$", "") + name + FileObject.SEPARATOR;
-      this.fileDetailDao.replacePath(fileDetail.getStorageConfig().getId(), path, newPath);
-      fileDetail.setPath(newPath);
-    } else {
+    if (!fileDetail.getIsDirectory()) {
       fileDetail.setExtension(WebUtil.getExtension(name, true));
     }
 
@@ -368,35 +404,79 @@ public class FileService {
 
     String path = parent.getPath() + name + "/";
 
-    return createFolder(path, parent.getStorageConfig().getId());
+    return createFolder(name, parent);
   }
 
   public List<FileDetail> findAll(List<PropertyFilter> filters) {
     return this.fileDetailDao.findAll(filters);
   }
 
-  public Integer clearTrash(String storage, String path) {
-    FileDetail recycler = getRecycler(storage, path);
+  public Integer clearTrash(Long rootFolder) {
+    FileDetail recycler = getRecycleBin(rootFolder);
     return this.fileDetailDao.clearTrash(recycler.getPath());
   }
 
-  public FileDetail getRecycler(String storage, String path) {
-    Optional<FileDetail> optionalRootFile = this.findByPath(storage, path);
-    FileDetail rootFile = optionalRootFile.orElseGet(() -> this.createFolder(path, storage));
-    String recycler_path = path + FileDetail.NAME_OF_THE_RECYCLE_BIN + FileObject.SEPARATOR;
-    Optional<FileDetail> optionalRecyclerFile = this.findByPath(storage, recycler_path);
-    return optionalRecyclerFile.orElseGet(() -> this.createFolder(recycler_path, storage));
+  public FileDetail getTempFolder(Long rootFolderId) {
+    String name = ".temp";
+
+    FileDetail rootFolder = this.fileDetailDao.getById(rootFolderId);
+
+    Optional<FileDetail> tempFolderOptional =
+        this.fileDetailDao.findOne(
+            PropertyFilter.builder()
+                .equal("parentFile.id", rootFolder.getId())
+                .equal("name", FileDetail.NAME_OF_THE_TEMP_FOLDER)
+                .equal("labels.name", FileDetail.NAME_OF_THE_TEMP_FOLDER)
+                .equal("labels.namespace", FileLabel.SYSTEM_NAMESPACE)
+                .build());
+
+    return tempFolderOptional.orElseGet(
+        () -> {
+          Set<FileLabel> labels = new HashSet<>();
+          labels.add(FileLabel.RECYCLE_BIN.build());
+
+          return this.createFolder(
+              FileDetail.NAME_OF_THE_TEMP_FOLDER,
+              rootFolder,
+              FileOptions.builder()
+                  .hidden(true)
+                  .labels(labels)
+                  .storePath(
+                      rootFolder.getStorePath()
+                          + FileDetail.NAME_OF_THE_TEMP_FOLDER
+                          + FileObject.SEPARATOR)
+                  .build());
+        });
   }
 
-  public FileDetail getParentFolderById(Long id) {
-    Optional<FileDetail> optionalParentFile =
-        this.fileDetailDao.findOne(PropertyFilter.builder().equal("parentFile.id", id).build());
-    return optionalParentFile.orElse(null);
+  @Transactional(propagation = Propagation.REQUIRES_NEW)
+  public FileDetail getRecycleBin(Long rootFolderId) {
+    FileDetail rootFolder = this.fileDetailDao.getById(rootFolderId);
+
+    Optional<FileDetail> recycleBinOptional =
+        this.fileDetailDao.findOne(
+            PropertyFilter.builder()
+                .equal("parentFile.id", rootFolder.getId())
+                .equal("name", FileDetail.NAME_OF_THE_RECYCLE_BIN)
+                .equal("labels.name", FileDetail.NAME_OF_THE_RECYCLE_BIN)
+                .equal("labels.namespace", FileLabel.SYSTEM_NAMESPACE)
+                .build());
+
+    return recycleBinOptional.orElseGet(
+        () -> {
+          Set<FileLabel> labels = new HashSet<>();
+          labels.add(FileLabel.RECYCLE_BIN.build());
+          return this.createFolder(
+              FileDetail.NAME_OF_THE_RECYCLE_BIN,
+              rootFolder,
+              FileOptions.builder().labels(labels).hidden(true).build());
+        });
   }
 
-  public FileDetail getFolderByPath(String storage, String path) {
-    Optional<FileDetail> optionalRootFile = this.findByPath(storage, path);
-    return optionalRootFile.orElseGet(() -> this.createFolder(path, storage));
+  // TODO: 查找原来的文件夹， 如果文件夹不存在。一直往上回溯。到一个正常的文件夹
+  public FileDetail getFolderByPath(String path) {
+    Optional<FileDetail> optionalRootFile = this.findByPath(path);
+    return optionalRootFile.orElseGet(() -> null);
   }
 
   public FileDetail move(FileDetail file, FileDetail folder) {

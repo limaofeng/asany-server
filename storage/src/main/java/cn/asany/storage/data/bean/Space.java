@@ -1,5 +1,7 @@
 package cn.asany.storage.data.bean;
 
+import cn.asany.storage.api.FileObject;
+import cn.asany.storage.api.Storage;
 import cn.asany.storage.api.StorageSpace;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.Objects;
@@ -26,13 +28,7 @@ import org.jfantasy.framework.dao.hibernate.converter.StringSetConverter;
 @Entity
 @Builder
 @AllArgsConstructor
-@Table(
-    name = "STORAGE_SPACE",
-    uniqueConstraints = {
-      @UniqueConstraint(
-          name = "UK_STORAGE_SPACE",
-          columnNames = {"STORAGE_ID", "PATH"})
-    })
+@Table(name = "STORAGE_SPACE")
 @JsonIgnoreProperties({"hibernate_lazy_initializer", "handler"})
 public class Space extends BaseBusEntity implements StorageSpace {
 
@@ -44,21 +40,18 @@ public class Space extends BaseBusEntity implements StorageSpace {
   /** 目录名称 */
   @Column(name = "NAME", length = 250)
   private String name;
-  /** 对应的默认目录 */
-  @Column(name = "PATH", length = 250)
-  private String path;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(
+      name = "FOLDER_ID",
+      nullable = false,
+      foreignKey = @ForeignKey(name = "FK_STORAGE_SPACE_FOLDER_ID"))
+  @ToString.Exclude
+  private FileDetail vFolder;
   /** 使用的插件 */
   @Convert(converter = StringSetConverter.class)
   @Column(name = "PLUGINS", length = 250)
   private Set<String> plugins;
-  /** 对应的文件管理器 */
-  @JoinColumn(
-      name = "STORAGE_ID",
-      updatable = false,
-      foreignKey = @ForeignKey(name = "FK_STORAGE_SPACE_STORAGE"))
-  @ManyToOne(fetch = FetchType.LAZY)
-  @ToString.Exclude
-  private StorageConfig storage;
 
   @Override
   public boolean equals(Object o) {
@@ -71,5 +64,15 @@ public class Space extends BaseBusEntity implements StorageSpace {
   @Override
   public int hashCode() {
     return getClass().hashCode();
+  }
+
+  @Override
+  public FileObject getFolder() {
+    return this.vFolder.toFileObject(this);
+  }
+
+  @Override
+  public Storage getStorage() {
+    return null;
   }
 }

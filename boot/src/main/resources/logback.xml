@@ -57,6 +57,7 @@
     <logger name="org.hibernate.engine.QueryParameters" level="ERROR"/>
     <logger name="org.hibernate.engine.query.HQLQueryPlan" level="ERROR"/>
     <logger name="org.jfantasy.framework" level="ERROR"/>
+    <logger name="cn.asany.storage.data.rest" level="DEBUG"/>
     <logger name="org.apache.james" level="DEBUG"/>
 
     <root level="INFO">

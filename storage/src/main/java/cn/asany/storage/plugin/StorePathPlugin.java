@@ -1,6 +1,7 @@
 package cn.asany.storage.plugin;
 
 import cn.asany.storage.api.*;
+import cn.asany.storage.core.engine.virtual.VirtualFileObject;
 import lombok.extern.slf4j.Slf4j;
 import org.jfantasy.framework.util.common.DateUtil;
 import org.jfantasy.framework.util.common.StringUtil;
@@ -30,7 +31,7 @@ public class StorePathPlugin implements StoragePlugin {
 
   @Override
   public FileObject upload(UploadContext context, Invocation invocation) throws UploadException {
-    String rootFolder = context.getRootFolder();
+    VirtualFileObject folder = (VirtualFileObject) context.getFolder();
     UploadFileObject file = context.getFile();
 
     String mimeType;
@@ -42,8 +43,8 @@ public class StorePathPlugin implements StoragePlugin {
 
     String extension = FileUtil.getExtension(mimeType);
 
-    String folder =
-        rootFolder
+    String folderPath =
+        folder.getStorePath()
             + DateUtil.format("yyyyMMdd")
             + FileObject.SEPARATOR
             + mimeType
@@ -51,7 +52,7 @@ public class StorePathPlugin implements StoragePlugin {
 
     String filename = StringUtil.shortUUID() + extension;
 
-    context.setStorePath(folder + filename);
+    context.setStorePath(folderPath + filename);
 
     return invocation.invoke();
   }

@@ -107,9 +107,9 @@ type FileObject {
   """
   parents: [FileObject!]
   """
-  文件 MD5
+  文件 ETag
   """
-  md5: String
+  etag: String
   """
   所属文件夹
   """
@@ -148,6 +148,17 @@ input UploadOptions {
   hash: String
 }
 
+input AcceptFolder {
+  """
+  文件夹
+  """
+  id: ID!
+  """
+  是否包含子文件夹
+  """
+  subfolders: Boolean = false
+}
+
 input FileFilter {
   """
   媒体类型
@@ -166,7 +177,23 @@ input FileFilter {
   """
   mimeType_notStartsWith: String
   """
-  媒体类型 in
+  路径 匹配开始
+  """
+  path_startsWith: String
+  """
+  文件扩展名
+  """
+  extension: String
+  """
+  文件扩展名
+  """
+  extension_in: [String]
+  """
+  文件扩展名
+  """
+  extension_notIn: [String]
+  """
+  媒体类型
   """
   mimeType_in: [String]
   """
@@ -174,9 +201,9 @@ input FileFilter {
   """
   mimeType_notIn: [String]
   """
-  包含子目录
+  所属目录
   """
-  recursive: Boolean
+  folder: AcceptFolder
   """
   加星标
   """
@@ -193,6 +220,10 @@ input FileFilter {
   AND 子句
   """
   AND: [FileFilter]
+  """
+  OR 子句
+  """
+  OR: [FileFilter]
 }
 
 type FileObjectConnection {
@@ -276,9 +307,9 @@ extend type Query {
   # 文件列表
   listFiles(
     """
-    文件夹
+    根文件夹
     """
-    folder: ID!
+    rootFolder: ID!
     """
     过滤器
     """

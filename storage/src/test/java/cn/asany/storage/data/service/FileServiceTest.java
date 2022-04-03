@@ -2,6 +2,7 @@ package cn.asany.storage.data.service;
 
 import cn.asany.base.utils.UUID;
 import cn.asany.storage.TestApplication;
+import cn.asany.storage.api.Storage;
 import cn.asany.storage.data.bean.FileDetail;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
@@ -45,5 +46,10 @@ class FileServiceTest {
       }
       fileService.update(item.getId(), item, false);
     }
+  }
+
+  @Test
+  void createFolder() {
+    fileService.createFolder("/CloudDrive/limaofeng/", Storage.DEFAULT_STORAGE_ID);
   }
 }

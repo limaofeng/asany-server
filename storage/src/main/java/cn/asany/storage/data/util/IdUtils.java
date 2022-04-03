@@ -5,10 +5,8 @@ import cn.asany.storage.data.bean.FileDetail;
 import cn.asany.storage.data.bean.Space;
 import cn.asany.storage.data.service.FileService;
 import cn.asany.storage.data.service.SpaceService;
-import java.util.Optional;
 import lombok.Builder;
 import lombok.Data;
-import org.jfantasy.framework.error.ValidationException;
 import org.jfantasy.framework.spring.SpringBeanUtils;
 import org.jfantasy.framework.util.common.StringUtil;
 
@@ -19,6 +17,8 @@ public class IdUtils {
   }
 
   public static FileKey parseKey(String folderId) {
+    FileService fileService = SpringBeanUtils.getBean(FileService.class);
+
     String key = Hashids.parseId(folderId);
     String[] ids = StringUtil.tokenizeToStringArray(key, ".");
     String type = ids[0];
@@ -26,41 +26,16 @@ public class IdUtils {
     FileKey.FileKeyBuilder builder = FileKey.builder().source(key);
     if ("space".equals(type)) {
       Space space = SpringBeanUtils.getBean(SpaceService.class).get(ids[1]);
-      builder
-          .type("space")
-          .space(space.getId())
-          .storage(space.getStorage().getId())
-          .path(space.getPath())
-          .storePath(space.getPath())
-          .isFile(false)
-          .rootPath(space.getPath());
+      FileDetail folder = space.getVFolder();
+      builder.type("space").space(space).rootFolder(folder).file(folder);
 
       if (ids.length > 2) {
-        FileDetail file =
-            SpringBeanUtils.getBean(FileService.class).getFileById(Long.parseLong(ids[2]));
-        builder
-            .path(file.getPath())
-            .isFile(!file.getIsDirectory())
-            .fileId(file.getId())
-            .storePath(file.getStorePath());
-      } else {
-        Optional<FileDetail> optionalFileDetail =
-            SpringBeanUtils.getBean(FileService.class)
-                .findByPath(space.getStorage().getId(), space.getPath());
-        FileDetail file = optionalFileDetail.orElseThrow(() -> new ValidationException("文件夹不存在"));
-        builder.fileId(file.getId()).isFile(!file.getIsDirectory());
+        FileDetail file = fileService.getFileById(Long.parseLong(ids[2]));
+        builder.file(file);
       }
-
     } else if ("file".equals(type)) {
-      FileDetail file =
-          SpringBeanUtils.getBean(FileService.class).getFileById(Long.parseLong(ids[1]));
-      builder
-          .type("file")
-          .storage(file.getStorageConfig().getId())
-          .path(file.getPath())
-          .isFile(!file.getIsDirectory())
-          .storePath(file.getStorePath())
-          .fileId(file.getId());
+      FileDetail file = fileService.getFileById(Long.parseLong(ids[1]));
+      builder.type("file").file(file);
     }
     return builder.build();
   }
@@ -87,14 +62,15 @@ public class IdUtils {
   @Data
   @Builder
   public static class FileKey {
+    /** 原始串 */
     private String source;
+    /** Key 类型 file / space */
     private String type;
-    private String storage;
-    private String space;
-    private String rootPath;
-    private Long fileId;
-    private String path;
-    private String storePath;
-    private boolean isFile;
+    /** 存储空间 */
+    private Space space;
+    /** 相对根目录 */
+    private FileDetail rootFolder;
+    /** 文件 */
+    private FileDetail file;
   }
 }

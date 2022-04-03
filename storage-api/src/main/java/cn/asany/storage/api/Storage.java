@@ -14,6 +14,7 @@ import java.util.List;
  * @since 2012-9-28 下午12:09:54
  */
 public interface Storage {
+  String DEFAULT_STORAGE_ID = "default";
   /**
    * ID
    *

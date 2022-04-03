@@ -1,5 +1,9 @@
 package cn.asany.storage.api;
 
 public interface StorageSpace {
-  String getPath();
+  String getId();
+
+  FileObject getFolder();
+
+  Storage getStorage();
 }

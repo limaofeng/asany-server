@@ -50,7 +50,7 @@ type CloudDrive {
   """
   回收站文件夹
   """
-  recycler: String!
+  recycleBin: String!
 }
 
 extend type Query {

@@ -13,8 +13,8 @@ import lombok.Setter;
  */
 @Builder
 public class UploadContext {
+  /** 上传服务 */
   private UploadService uploadService;
-
   /** 上传文件 */
   @Getter private UploadFileObject file;
   /** 存储空间 */
@@ -22,7 +22,7 @@ public class UploadContext {
   /** 上传参数 */
   @Getter private UploadOptions options;
   /** 根目录 (最好保证虚拟目录与存储目录一直) */
-  @Getter private String rootFolder;
+  @Getter private FileObject rootFolder;
   /** 上传到的虚拟目录 */
   @Getter @Setter private FileObject folder;
   /** 上传到的完整路径 */
@@ -30,7 +30,7 @@ public class UploadContext {
   /** 保存到虚拟目录中的文件名 */
   @Getter @Setter private String filename;
   /** 存储器 */
-  @Getter private Storage storage;
+  @Getter @Setter private Storage storage;
 
   public FileObject upload(File file, String space) throws IOException {
     return this.uploadService.upload(
