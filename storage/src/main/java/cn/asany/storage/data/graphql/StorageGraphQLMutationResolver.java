@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import lombok.extern.slf4j.Slf4j;
+import org.jfantasy.framework.error.ValidationException;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.graphql.UpdateMode;
 import org.springframework.stereotype.Component;
@@ -23,6 +25,7 @@ import org.springframework.stereotype.Component;
  *
  * @author limaofeng
  */
+@Slf4j
 @Component
 public class StorageGraphQLMutationResolver implements GraphQLMutationResolver {
 
@@ -178,9 +181,13 @@ public class StorageGraphQLMutationResolver implements GraphQLMutationResolver {
 
       String originalPath = label.getValue();
 
-      FileDetail folder = fileService.getFolderByPath(originalPath);
+      Optional<FileDetail> folderOptional = fileService.closest(originalPath);
 
-      fileDetails.add(this.fileService.move(fileDetail, folder));
+      if (!folderOptional.isPresent()) {
+        throw new ValidationException("原始路径错误[" + originalPath + "],找不到可以还原的位置");
+      }
+
+      fileDetails.add(this.fileService.move(fileDetail, folderOptional.get()));
     }
 
     return fileDetails.stream()

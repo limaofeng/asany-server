@@ -1,6 +1,7 @@
 package cn.asany.storage.core.engine.virtual;
 
 import cn.asany.storage.api.*;
+import cn.asany.storage.core.StorageResolver;
 import cn.asany.storage.data.bean.FileDetail;
 import cn.asany.storage.data.bean.Space;
 import cn.asany.storage.data.service.FileService;
@@ -10,30 +11,24 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
+import org.jfantasy.framework.util.common.StringUtil;
+import org.jfantasy.framework.util.common.file.FileUtil;
 
 public class VirtualStorage implements Storage {
 
   private final FileService fileService;
   private final Space space;
+  private final VirtualFileObject rootFolder;
+  private final StorageResolver storageResolver;
 
-  private final Storage storage;
-  private boolean alias = false;
-  private VirtualFileObject rootFolder;
-
-  public VirtualStorage(Space space, Storage storage, FileService fileService) {
-    this.storage = storage;
+  public VirtualStorage(Space space, StorageResolver storageResolver, FileService fileService) {
     this.space = space;
+    this.storageResolver = storageResolver;
     this.rootFolder = (VirtualFileObject) space.getVFolder().toFileObject(this);
     this.fileService = fileService;
-  }
-
-  public VirtualStorage(Space space, Storage storage, FileService fileService, boolean alias) {
-    this.storage = storage;
-    this.space = space;
-    this.fileService = fileService;
-    this.alias = alias;
   }
 
   @Override
@@ -41,8 +36,46 @@ public class VirtualStorage implements Storage {
     return "virtual";
   }
 
+  public void writeFile(String remotePath, File file, String name) throws IOException {
+    String path = getFullpath(remotePath);
+    FileDetail parentFolder = fileService.getOneByPath(path.replaceFirst("[^/]+$", ""));
+    String filename = path.substring(parentFolder.getPath().length());
+    Optional<FileDetail> fileDetailOptional = fileService.findByPath(path);
+    String showName = StringUtil.defaultValue(name, filename);
+    FileDetail fileDetail =
+        fileDetailOptional.orElseGet(
+            () -> {
+              String mimeType = FileUtil.getMimeType(file);
+              String storePath = parentFolder.getStorePath() + filename;
+              long size = file.length();
+              return fileService.createFile(
+                  path,
+                  showName,
+                  "application/zip",
+                  size,
+                  "",
+                  parentFolder.getStorageConfig().getId(),
+                  storePath,
+                  "",
+                  parentFolder.getId());
+            });
+
+    Storage innerStorage = this.storageResolver.resolve(fileDetail.getStorageConfig().getId());
+
+    innerStorage.writeFile(fileDetail.getStorePath(), file);
+
+    FileObject storeFile = innerStorage.getFileItem(fileDetail.getStorePath());
+
+    fileDetail.setName(showName);
+    fileDetail.setMd5(storeFile.getMetadata().getETag());
+
+    this.fileService.update(fileDetail);
+  }
+
   @Override
-  public void writeFile(String remotePath, File file) throws IOException {}
+  public void writeFile(String remotePath, File file) throws IOException {
+    this.writeFile(remotePath, file, null);
+  }
 
   @Override
   public void writeFile(String remotePath, InputStream in) throws IOException {}
@@ -60,7 +93,7 @@ public class VirtualStorage implements Storage {
 
   @Override
   public InputStream readFile(String remotePath) throws IOException {
-    return this.storage.readFile(remotePath);
+    return getRealFileItem(remotePath).getInputStream();
   }
 
   @Override
@@ -99,12 +132,28 @@ public class VirtualStorage implements Storage {
     return null;
   }
 
+  public String getFullpath(String remotePath) {
+    return this.getRootFolder().getOriginalPath() + remotePath.replaceFirst("^/", "");
+  }
+
+  public FileObject getRealFileItem(String remotePath) {
+    Optional<FileDetail> fileDetailOptional = this.fileService.findByPath(getFullpath(remotePath));
+    FileDetail fileDetail =
+        fileDetailOptional.orElseThrow(() -> new RuntimeException("文件[" + remotePath + "]不存在"));
+    if (fileDetail.getIsDirectory()) {
+      throw new RuntimeException("只能访问文件");
+    }
+    return this.storageResolver
+        .resolve(fileDetail.getStorageConfig().getId())
+        .getFileItem(fileDetail.getStorePath());
+  }
+
   @Override
   public FileObject getFileItem(String remotePath) {
     if (FileObject.ROOT_PATH.equals(remotePath)) {
       return null;
     }
-    String path = this.getRootFolder().getOriginalPath() + remotePath.replaceFirst("^/", "");
+    String path = getFullpath(remotePath);
     return this.fileService.findByPath(path).map(item -> item.toFileObject(this)).orElse(null);
   }
 
@@ -126,27 +175,19 @@ public class VirtualStorage implements Storage {
     return this.rootFolder;
   }
 
-  public Storage getInnerStorage() {
-    return storage;
-  }
-
-  public String convertPath(VirtualFileObject file) {
-    if (this.alias) {
-      List<VirtualFileObject> parents = new ArrayList<>();
-      VirtualFileObject parent = (VirtualFileObject) file.getParentFile();
-      parents.add(0, file);
-      while (parent != null) {
-        if (parent.getOriginalPath().equals(getRootPath())) {
-          parent = null;
-          continue;
-        }
-        parents.add(0, parent);
-        parent = (VirtualFileObject) parent.getParentFile();
+  public String getNamePath(VirtualFileObject file) {
+    List<VirtualFileObject> parents = new ArrayList<>();
+    VirtualFileObject parent = (VirtualFileObject) file.getParentFile();
+    parents.add(0, file);
+    while (parent != null) {
+      if (parent.getId().equals(getRootFolder().getId())) {
+        break;
       }
-      return FileObject.SEPARATOR
-          + parents.stream().map(FileObject::getName).collect(Collectors.joining("/"))
-          + (file.isDirectory() ? FileObject.SEPARATOR : "");
+      parents.add(0, parent);
+      parent = (VirtualFileObject) parent.getParentFile();
     }
-    return file.getOriginalPath().substring(getRootPath().length() - 1);
+    return FileObject.SEPARATOR
+        + parents.stream().map(FileObject::getName).collect(Collectors.joining("/"))
+        + (file.isDirectory() ? FileObject.SEPARATOR : "");
   }
 }

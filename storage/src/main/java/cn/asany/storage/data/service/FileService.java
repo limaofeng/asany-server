@@ -10,6 +10,7 @@ import cn.asany.storage.data.dao.FileDetailDao;
 import cn.asany.storage.data.dao.SpaceDao;
 import java.io.IOException;
 import java.util.*;
+import org.hibernate.Hibernate;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
@@ -89,8 +90,10 @@ public class FileService {
     return this.fileDetailDao.save(fileDetail);
   }
 
+  @Cacheable(key = "targetClass + '.' + methodName + '#' + #p0", value = "STORAGE")
   public FileDetail getFileById(Long id) {
-    return this.fileDetailDao.getById(id);
+    FileDetail fileDetail = this.fileDetailDao.getById(id);
+    return Hibernate.unproxy(fileDetail, FileDetail.class);
   }
 
   public void delete(Long id) {
@@ -133,9 +136,6 @@ public class FileService {
         FileOptions.builder().labels(labels).storePath(parentFolder.getStorePath()).build());
   }
 
-  // Set<FileLabel> labels,
-  //  String storePath
-
   public FileDetail createFolder(String name, FileDetail parentFolder, FileOptions options) {
     long id = nextId();
     FileDetail.FileDetailBuilder builder =
@@ -164,31 +164,16 @@ public class FileService {
   /**
    * 获取 Folder 对象
    *
-   * @param path 路径
-   * @return {Folder}
+   * @param namePath 显示路径
    */
-  @Deprecated
-  public FileDetail createFolder(String path, String storage) {
-    String[] names = StringUtil.tokenizeToStringArray(path, FileObject.SEPARATOR);
-    FileDetail folder = getRootFolderOrCreateIt();
+  public FileDetail createFolder(String namePath) {
+    String[] names = StringUtil.tokenizeToStringArray(namePath, FileObject.SEPARATOR);
+    FileDetail parent = getRootFolderOrCreateIt();
     for (String name : names) {
-      PropertyFilterBuilder builder = PropertyFilter.builder().equal("name", name);
-      builder.equal("parentFile.id", folder.getId());
-      Optional<FileDetail> file = this.fileDetailDao.findOne(builder.build());
-      FileDetail finalFolder = folder;
-      folder = file.orElseGet(() -> createFolder(name, new HashSet<>(), finalFolder));
+      parent = getFolderOrCreateIt(name, parent.getId());
     }
-    return folder;
+    return parent;
   }
-
-  //  public FileDetail findUniqueByMd5(String md5, String managerId) {
-  //    //        List<FileDetail> fileDetails =
-  //    // this.fileDetailDao.findBy(Restrictions.eq("fileManagerId", managerId),
-  // Restrictions.eq("md5",
-  //    // md5));
-  //    //        return fileDetails.isEmpty() ? null : fileDetails.get(0);
-  //    return null;
-  //  }
 
   public FileDetail getOneByPath(String path) {
     Optional<FileDetail> file = findByPath(path);
@@ -202,7 +187,7 @@ public class FileService {
     return this.fileDetailDao.findById(id);
   }
 
-  @Cacheable(key = "targetClass + methodName + #p0", value = "STORAGE")
+  @Cacheable(key = "targetClass + '.' + methodName + '#' + #p0", value = "STORAGE")
   public Optional<FileDetail> findByPath(String path) {
     return this.fileDetailDao.findOne(PropertyFilter.builder().equal("path", path).build());
   }
@@ -347,7 +332,7 @@ public class FileService {
 
   public Space createStorageSpace(String id, String name, String path, String storage) {
     Space space = Space.builder().id(id).name(name).build();
-    this.createFolder(path, storage);
+    this.createFolder(path);
     return this.spaceDao.save(space);
   }
 
@@ -473,19 +458,37 @@ public class FileService {
         });
   }
 
-  // TODO: 查找原来的文件夹， 如果文件夹不存在。一直往上回溯。到一个正常的文件夹
-  public FileDetail getFolderByPath(String path) {
-    Optional<FileDetail> optionalRootFile = this.findByPath(path);
-    return optionalRootFile.orElseGet(() -> null);
+  /**
+   * 查找最近的目录
+   *
+   * @param path 提供的路径
+   * @return Optional
+   */
+  public Optional<FileDetail> closest(String path) {
+    Optional<FileDetail> folder;
+    do {
+      folder = this.fileDetailDao.findOne(PropertyFilter.builder().equal("path", path).build());
+      if (folder.isPresent()) {
+        break;
+      }
+      path = path.replaceFirst("[^/]+/$", "");
+    } while (!FileObject.ROOT_PATH.equals(path));
+    return folder;
   }
 
   public FileDetail move(FileDetail file, FileDetail folder) {
-    String newPath = folder.getPath() + file.getName() + (file.getIsDirectory() ? "/" : "");
+    String originalFolderPath = file.getParentFile().getPath();
+    String newFolderPath = folder.getPath();
+    String newPath = newFolderPath + file.getPath().substring(originalFolderPath.length());
     if (file.getIsDirectory()) {
-      this.fileDetailDao.replacePath(folder.getStorageConfig().getId(), file.getPath(), newPath);
+      this.fileDetailDao.replacePath(file.getPath(), newPath);
     }
-    file.setParentFile(folder);
     file.setPath(newPath);
+    file.setParentFile(folder);
+    file.setHidden(folder.getHidden());
+    if (file.getIsDirectory()) {
+      this.fileDetailDao.hideFiles(newPath, folder.getHidden());
+    }
     return this.fileDetailDao.save(file);
   }
 }

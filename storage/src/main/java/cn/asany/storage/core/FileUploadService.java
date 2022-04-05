@@ -145,7 +145,8 @@ public class FileUploadService implements UploadService {
       // 将要上传的位置
       Space space = this.fileService.getSpace(options.getSpace());
 
-      UploadOptions uploadOptions = UploadOptions.builder().space(space.getId()).build();
+      UploadOptions uploadOptions =
+          UploadOptions.builder().space(space.getId()).folder(options.getFolder()).build();
 
       FileObjectMetadata metadata =
           FileObjectMetadata.builder()

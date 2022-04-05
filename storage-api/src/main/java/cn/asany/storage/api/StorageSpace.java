@@ -4,6 +4,4 @@ public interface StorageSpace {
   String getId();
 
   FileObject getFolder();
-
-  Storage getStorage();
 }

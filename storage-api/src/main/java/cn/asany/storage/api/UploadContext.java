@@ -36,4 +36,8 @@ public class UploadContext {
     return this.uploadService.upload(
         new UploadFileObject(file), UploadOptions.builder().space(space).build());
   }
+
+  public boolean isMultipartUpload() {
+    return this.options.isMultipartUpload();
+  }
 }

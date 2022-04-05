@@ -47,13 +47,22 @@ public class FileDetailDaoImpl extends ComplexJpaRepository<FileDetail, Long>
   }
 
   @Override
-  public int replacePath(String storage, String path, String newPath) {
+  public int replacePath(String path, String newPath) {
     String sql =
         "UPDATE STORAGE_FILEOBJECT SET PATH = CONCAT(:newPath, SUBSTRING(PATH, :length)) where PATH like :path ";
     Query query = this.em.createNativeQuery(sql);
     query.setParameter("path", path + '%');
     query.setParameter("length", path.length() + 1);
     query.setParameter("newPath", newPath);
+    return query.executeUpdate();
+  }
+
+  @Override
+  public Integer hideFiles(String path, boolean hidden) {
+    String sql = "UPDATE STORAGE_FILEOBJECT SET HIDDEN = :hidden where PATH like :path ";
+    Query query = this.em.createNativeQuery(sql);
+    query.setParameter("path", path + '%');
+    query.setParameter("hidden", hidden);
     return query.executeUpdate();
   }
 }

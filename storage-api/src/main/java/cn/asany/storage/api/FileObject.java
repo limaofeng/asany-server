@@ -127,6 +127,21 @@ public interface FileObject {
   @JsonIgnore
   InputStream getInputStream() throws IOException;
 
+  /**
+   * 获取文件输入流 - 范围下载
+   *
+   * @param start 开始位置
+   * @param end 结束位置
+   * @return InputStream
+   * @throws IOException IO 异常
+   */
+  @JsonIgnore
+  default InputStream getInputStream(long start, long end) throws IOException {
+    InputStream input = this.getInputStream();
+    long skipNumber = input.skip(start);
+    return input;
+  }
+
   class ParentFileItemSerialize extends JsonSerializer<FileObject> {
 
     @Override

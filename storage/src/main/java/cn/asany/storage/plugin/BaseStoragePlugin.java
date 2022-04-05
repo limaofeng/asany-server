@@ -31,7 +31,7 @@ public class BaseStoragePlugin implements StoragePlugin {
 
   @Override
   public boolean supports(UploadContext context) {
-    return !context.getOptions().isMultipartUpload();
+    return !context.isMultipartUpload();
   }
 
   @Override

@@ -3,8 +3,11 @@ package cn.asany.storage.data.service;
 import cn.asany.storage.data.bean.Space;
 import cn.asany.storage.data.dao.SpaceDao;
 import java.util.List;
+import org.hibernate.Hibernate;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,13 +32,16 @@ public class SpaceService {
     }
   }
 
-  public Space save(Space directory) {
-    spaceDao.save(directory);
-    return directory;
+  @CachePut(key = "targetClass + '#' + #p0.id", cacheNames = "STORAGE")
+  public Space save(Space space) {
+    spaceDao.save(space);
+    return space;
   }
 
+  @Cacheable(key = "targetClass + '#' + #p0", cacheNames = "STORAGE")
   public Space get(String id) {
-    return spaceDao.getById(id);
+    Space space = this.spaceDao.getById(id);
+    return (Space) Hibernate.unproxy(space);
   }
 
   public boolean direcroryKeyUnique(String key) {

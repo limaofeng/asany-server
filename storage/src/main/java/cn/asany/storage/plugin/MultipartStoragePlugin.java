@@ -41,14 +41,13 @@ public class MultipartStoragePlugin implements StoragePlugin {
 
   @Override
   public boolean supports(UploadContext context) {
-    return context.getOptions().isMultipartUpload();
+    return context.isMultipartUpload();
   }
 
   @SneakyThrows
   @Override
   public FileObject upload(UploadContext context, Invocation invocation) {
     UploadOptions options = context.getOptions();
-    FileObject rootFolder = context.getRootFolder();
     UploadFileObject uploadFile = context.getFile();
     Storage storage = context.getStorage();
 

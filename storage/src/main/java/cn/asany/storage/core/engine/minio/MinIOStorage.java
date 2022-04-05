@@ -19,13 +19,10 @@ import org.springframework.http.HttpStatus;
  */
 public class MinIOStorage implements Storage {
 
-  private final String endpoint;
-  private final String accessKeyId;
-  private final String accessKeySecret;
   protected final String bucketName;
-  private final boolean useSSL;
   private final String id;
   protected MinioClient client;
+  private final IMultipartUpload multipartUpload;
 
   public MinIOStorage(
       String id,
@@ -35,16 +32,13 @@ public class MinIOStorage implements Storage {
       String bucketName,
       boolean useSSL) {
     this.id = id;
-    this.accessKeyId = accessKeyId;
-    this.accessKeySecret = accessKeySecret;
     this.bucketName = bucketName;
-    this.endpoint = endpoint;
-    this.useSSL = useSSL;
     this.client =
         MinioClient.builder()
             .endpoint((useSSL ? "https://" : "http://") + endpoint)
             .credentials(accessKeyId, accessKeySecret)
             .build();
+    this.multipartUpload = new MinIOMultipartUpload(this.client, bucketName);
   }
 
   @SneakyThrows
@@ -201,12 +195,17 @@ public class MinIOStorage implements Storage {
   @Override
   public void removeFile(String remotePath) {}
 
-  private String path(String remotePath) {
+  public static String path(String remotePath) {
     return RegexpUtil.replace(remotePath, "^/", "");
   }
 
   @Override
   public String getId() {
     return id;
+  }
+
+  @Override
+  public IMultipartUpload multipartUpload() {
+    return this.multipartUpload;
   }
 }

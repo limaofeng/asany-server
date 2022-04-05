@@ -121,8 +121,8 @@ public class FileFilter extends GenericFilterBean {
     if ("POST".equalsIgnoreCase(WebUtil.getMethod(request))) {
       setDownloadFileHeader(request, response, fileObject);
     } else {
-      ServletUtils.setCache(
-          fileObject.getMetadata().getETag(), fileObject.lastModified(), response);
+      //      ServletUtils.setCache(
+      //          fileObject.getMetadata().getETag(), fileObject.lastModified(), response);
     }
     if (fileObject.getMimeType().startsWith("video/")) {
       writeVideo(request, response, fileObject);

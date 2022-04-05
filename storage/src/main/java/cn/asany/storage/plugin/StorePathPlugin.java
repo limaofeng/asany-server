@@ -26,7 +26,7 @@ public class StorePathPlugin implements StoragePlugin {
 
   @Override
   public boolean supports(UploadContext context) {
-    return StringUtil.isBlank(context.getStorePath());
+    return StringUtil.isBlank(context.getStorePath()) && !context.isMultipartUpload();
   }
 
   @Override

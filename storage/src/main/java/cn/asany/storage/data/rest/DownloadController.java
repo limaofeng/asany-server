@@ -2,17 +2,19 @@ package cn.asany.storage.data.rest;
 
 import cn.asany.storage.api.FileItemSelector;
 import cn.asany.storage.api.FileObject;
-import cn.asany.storage.api.Storage;
 import cn.asany.storage.core.StorageResolver;
+import cn.asany.storage.core.engine.virtual.VirtualFileObject;
 import cn.asany.storage.core.engine.virtual.VirtualStorage;
-import cn.asany.storage.data.bean.FileDetail;
 import cn.asany.storage.data.bean.Space;
 import cn.asany.storage.data.service.FileService;
+import cn.asany.storage.data.util.BandwidthLimiter;
 import cn.asany.storage.data.util.CompressionOptions;
 import cn.asany.storage.data.util.IdUtils;
 import cn.asany.storage.data.util.ZipUtil;
+import cn.asany.storage.data.web.wrapper.DownloadLimitServletOutputStream;
 import java.io.*;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -21,6 +23,7 @@ import org.jfantasy.framework.util.common.StreamUtil;
 import org.jfantasy.framework.util.common.StringUtil;
 import org.jfantasy.framework.util.common.file.FileUtil;
 import org.jfantasy.framework.util.web.ServletUtils;
+import org.springframework.http.CacheControl;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -59,19 +62,16 @@ public class DownloadController {
 
     IdUtils.FileKey firstFileKey = IdUtils.parseKey(fidlist[0]);
     Space space = firstFileKey.getSpace();
-    Storage innerStorage = space.getStorage();
 
-    VirtualStorage storage = new VirtualStorage(space, innerStorage, fileService, true);
+    VirtualStorage storage = new VirtualStorage(space, storageResolver, fileService);
 
     FileObject fileObject =
         fidlist.length > 1
             ? compressPacking(space, storage, fidlist)
-            : storage.getFileItem(firstFileKey.getFile().getPath());
+            : storage.getFileItem(firstFileKey.getFile().toFileObject(storage).getPath());
 
     response.setContentType(fileObject.getMimeType());
-    response.setCharacterEncoding("UTF-8");
-
-    ServletUtils.setContentDisposition(fileObject.getName(), request, response);
+    ServletUtils.setContentDisposition("inline", fileObject.getName(), request, response);
 
     String rangeString = ServletUtils.getRange(request);
 
@@ -79,60 +79,49 @@ public class DownloadController {
     Date lastModified = fileObject.lastModified();
     long size = fileObject.getSize();
 
-    if (ServletUtils.cacheable(request)) {
-      if (ServletUtils.checkCache(etag, lastModified, request)) {
-        if (rangeString == null) {
-          response.setStatus(304);
-          return;
-        }
-      } else if (rangeString != null) {
-        rangeString = "bytes=0-";
-      }
-    }
+    BandwidthLimiter limiter = new BandwidthLimiter(512);
+    OutputStream out = new DownloadLimitServletOutputStream(response.getOutputStream(), limiter);
 
     if (ServletUtils.isKeepAlive(request)) {
-
       response.setStatus(206);
 
       long[] range = ServletUtils.getRange(rangeString, size);
+      long contentLength = range[1] - range[0] + 1;
 
-      long start = range[0];
-      long end = range[1];
-
-      long contentLength = end - start + 1;
-
+      ServletUtils.setKeepAlive(range[0], range[1], size, response);
+      ServletUtils.setCache(
+          3600,
+          etag,
+          lastModified,
+          CacheControl.maxAge(3600, TimeUnit.SECONDS).cachePrivate(),
+          response);
       response.setContentLengthLong(Math.min(contentLength, size));
 
-      ServletUtils.setKeepAlive(start, end, size, response);
-      ServletUtils.setCache(etag, lastModified, response);
-
-      response.flushBuffer();
-
-      InputStream in = fileObject.getInputStream();
-      OutputStream out = response.getOutputStream();
-
-      int loadLength = (int) contentLength;
-      int bufferSize = 2048;
-
-      byte[] buf = new byte[bufferSize];
-
-      int bytesRead = in.read(buf, 0, Math.min(loadLength, bufferSize));
-      while (bytesRead != -1 && loadLength > 0) {
-        loadLength -= bytesRead;
-        out.write(buf, 0, bytesRead);
-        bytesRead = in.read(buf, 0, Math.min(loadLength, bufferSize));
-      }
-      StreamUtil.closeQuietly(in);
       out.flush();
-    } else {
-      response.setContentLengthLong(size);
-      ServletUtils.setCache(etag, lastModified, response);
+
+      InputStream in = fileObject.getInputStream(range[0], range[1]);
 
       try {
-        StreamUtil.copy(fileObject.getInputStream(), response.getOutputStream());
-      } catch (FileNotFoundException e) {
-        log.error(e.getMessage(), e);
-        response.sendError(404);
+        StreamUtil.copy(in, out);
+      } finally {
+        StreamUtil.closeQuietly(in);
+      }
+    } else {
+      response.setContentLengthLong(size);
+      ServletUtils.setCache(
+          3600,
+          etag,
+          lastModified,
+          CacheControl.maxAge(3600, TimeUnit.SECONDS).cachePrivate(),
+          response);
+
+      out.flush();
+
+      InputStream in = fileObject.getInputStream();
+      try {
+        StreamUtil.copy(in, out);
+      } finally {
+        StreamUtil.closeQuietly(in);
       }
     }
   }
@@ -170,9 +159,11 @@ public class DownloadController {
                 .collect(Collectors.joining(",")));
 
     String filename = "download-" + name + ".zip";
-    String tempPath = storage.getRootPath() + ".temp/" + filename;
 
-    FileDetail tempFolder = fileService.getTempFolder(space.getVFolder().getId());
+    FileObject tempFolder =
+        fileService.getTempFolder(space.getVFolder().getId()).toFileObject(storage);
+
+    String tempPath = tempFolder.getPath() + filename;
 
     FileObject tempZip = storage.getFileItem(tempPath);
 
@@ -190,38 +181,41 @@ public class DownloadController {
       boolean noFolder = false;
       if (parentPath.size() == 1) {
         relative = parentPath.stream().findFirst().get();
+        relative = ((VirtualFileObject) storage.getFileItem(relative)).getNamePath();
       } else {
         noFolder = true;
       }
 
-      ZipUtil.compress(
-          files,
-          tempOutput,
+      boolean finalNoFolder = noFolder;
+      String finalRelative = relative;
+      CompressionOptions options =
           CompressionOptions.builder()
               .encoding("utf-8")
-              .relative(relative)
-              .noFolder(noFolder)
-              .build());
+              .forward(
+                  file -> {
+                    if (finalNoFolder) {
+                      return file.getName();
+                    }
+                    if (finalRelative != null) {
+                      return ((VirtualFileObject) file)
+                          .getNamePath()
+                          .substring(finalRelative.length());
+                    }
+                    return ((VirtualFileObject) file).getNamePath();
+                  })
+              .build();
+
+      ZipUtil.compress(files, tempOutput, options);
 
       log.debug("打包的数据:" + Arrays.toString(fidlist) + ", 完成压缩打包操作");
 
-      storage.getInnerStorage().writeFile(tempPath, tmp);
+      String zipPath = tempFolder.getPath() + filename;
+      String showName = "【批量下载】" + files.get(0).getName() + " 等 (" + files.size() + ").zip";
 
-      FileObject storeFile = storage.getInnerStorage().getFileItem(tempPath);
+      storage.writeFile(zipPath, tmp, showName);
 
       log.debug("打包的数据:" + Arrays.toString(fidlist) + ", 完成压缩包上传操作");
-      return fileService
-          .createFile(
-              tempFolder.getPath() + filename,
-              "【批量下载】" + files.get(0).getName() + " 等 (" + files.size() + ").zip",
-              "application/zip",
-              storeFile.getSize(),
-              storeFile.getMetadata().getETag(),
-              storage.getInnerStorage().getId(),
-              storeFile.getPath(),
-              "",
-              tempFolder.getId())
-          .toFileObject(storage);
+      return storage.getFileItem(zipPath);
     } finally {
       StreamUtil.closeQuietly(tempOutput);
       FileUtil.delFile(tmp);

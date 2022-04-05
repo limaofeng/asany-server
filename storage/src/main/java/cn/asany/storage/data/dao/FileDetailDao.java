@@ -17,5 +17,8 @@ public interface FileDetailDao extends JpaRepository<FileDetail, Long> {
   @Modifying
   Integer clearTrash(@Param("path") String path);
 
-  int replacePath(String storage, String path, String newPath);
+  int replacePath(String path, String newPath);
+
+  @Modifying
+  Integer hideFiles(String path, boolean hidden);
 }

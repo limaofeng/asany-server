@@ -10,7 +10,7 @@ spring:
     username: root
     password: yV2jJxvNs8BD
     druid:
-      maxActive: 20
+      maxActive: 100
       initialSize: 10
       maxWait: 60000
       minIdle: 10

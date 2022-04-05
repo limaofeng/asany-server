@@ -286,6 +286,10 @@ input MultipartUploadInput {
   """
   space: ID!
   """
+  存储文件夹
+  """
+  folder: ID!
+  """
   每段大小
   """
   chunkSize: Int!

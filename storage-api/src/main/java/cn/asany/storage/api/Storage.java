@@ -70,6 +70,16 @@ public interface Storage {
   InputStream readFile(String remotePath) throws IOException;
 
   /**
+   * 通过一个地址获取文件对应的 InputStream
+   *
+   * @param remotePath 路径 @Param range 范围下载
+   * @return 返回 InputStream 对象
+   */
+  default InputStream readFile(String remotePath, long[] range) throws IOException {
+    return this.getFileItem(remotePath).getInputStream(range[0], range[1]);
+  }
+
+  /**
    * 获取跟目录的文件列表
    *
    * @return {List<FileItem>}

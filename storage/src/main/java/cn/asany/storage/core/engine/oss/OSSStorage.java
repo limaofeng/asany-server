@@ -2,7 +2,10 @@ package cn.asany.storage.core.engine.oss;
 
 import cn.asany.storage.api.*;
 import cn.asany.storage.core.AbstractFileObject;
+import com.aliyun.oss.ClientConfiguration;
 import com.aliyun.oss.OSSClient;
+import com.aliyun.oss.common.auth.CredentialsProvider;
+import com.aliyun.oss.common.auth.DefaultCredentialProvider;
 import com.aliyun.oss.model.*;
 import java.io.*;
 import java.util.ArrayList;
@@ -22,22 +25,18 @@ import org.jfantasy.framework.util.regexp.RegexpUtil;
  */
 public class OSSStorage implements Storage {
 
-  private final String accessKeyId;
-  private final String accessKeySecret;
   private final String id;
   private final String bucketName;
-  private final String endpoint;
   private final OSSClient client;
   private final IMultipartUpload multipartUpload;
 
   public OSSStorage(
       String id, String endpoint, String accessKeyId, String accessKeySecret, String bucketName) {
     this.id = id;
-    this.accessKeyId = accessKeyId;
-    this.accessKeySecret = accessKeySecret;
     this.bucketName = bucketName;
-    this.endpoint = endpoint;
-    this.client = new OSSClient(this.endpoint, this.accessKeyId, this.accessKeySecret);
+    CredentialsProvider credsProvider = new DefaultCredentialProvider(accessKeyId, accessKeySecret);
+    ClientConfiguration configuration = new ClientConfiguration();
+    this.client = new OSSClient(endpoint, credsProvider, configuration);
     this.multipartUpload = new OSSMultipartUpload(this.client, bucketName);
   }
 
@@ -46,16 +45,20 @@ public class OSSStorage implements Storage {
     return this.id;
   }
 
+  protected String getStorePath(String remotePath) {
+    String path = RegexpUtil.replace(remotePath, "[^/]+[/]{0,1}$", "");
+    return RegexpUtil.replace(remotePath, "^/", "");
+  }
+
   @Override
   public void writeFile(String remotePath, File file) throws IOException {
-    createFolder(
-        remotePath.endsWith("/")
-            ? remotePath
-            : RegexpUtil.replace(remotePath, "[^/]+[/]{0,1}$", ""));
-    String path = RegexpUtil.replace(remotePath, "^/", "");
+    String path = getStorePath(remotePath);
+    createFolder(path);
     ObjectMetadata metadata = new ObjectMetadata();
     metadata.setContentType(FileUtil.getMimeType(file));
-    client.putObject(new PutObjectRequest(bucketName, path, file).withMetadata(metadata));
+    PutObjectRequest request = new PutObjectRequest(bucketName, path, file);
+    request.setMetadata(metadata);
+    client.putObject(request);
   }
 
   @Override
@@ -117,7 +120,7 @@ public class OSSStorage implements Storage {
   @Override
   public List<FileObject> listFiles(String remotePath) {
     FileObject fileObject = retrieveFileItem(remotePath);
-    return fileObject == null ? Collections.<FileObject>emptyList() : fileObject.listFiles();
+    return fileObject == null ? Collections.emptyList() : fileObject.listFiles();
   }
 
   @Override
@@ -128,9 +131,7 @@ public class OSSStorage implements Storage {
   @Override
   public List<FileObject> listFiles(String remotePath, FileItemSelector selector) {
     FileObject fileObject = retrieveFileItem(remotePath);
-    return fileObject == null
-        ? Collections.<FileObject>emptyList()
-        : fileObject.listFiles(selector);
+    return fileObject == null ? Collections.emptyList() : fileObject.listFiles(selector);
   }
 
   @Override
@@ -141,7 +142,7 @@ public class OSSStorage implements Storage {
   @Override
   public List<FileObject> listFiles(String remotePath, FileItemFilter filter) {
     FileObject fileObject = retrieveFileItem(remotePath);
-    return fileObject == null ? Collections.<FileObject>emptyList() : fileObject.listFiles(filter);
+    return fileObject == null ? Collections.emptyList() : fileObject.listFiles(filter);
   }
 
   @Override
@@ -217,8 +218,8 @@ public class OSSStorage implements Storage {
   }
 
   public class OSSFileObject extends AbstractFileObject {
-    private String ossAbsolutePath;
-    private OSSStorage storage;
+    private final String ossAbsolutePath;
+    private final OSSStorage storage;
 
     protected OSSFileObject(
         OSSStorage storage, String absolutePath, ObjectMetadata objectMetadata) {
@@ -316,6 +317,16 @@ public class OSSStorage implements Storage {
         throw new IgnoreException("当前对象为一个目录,不能获取 InputStream ");
       }
       return client.getObject(bucketName, ossAbsolutePath).getObjectContent();
+    }
+
+    @Override
+    public InputStream getInputStream(long start, long end) throws IOException {
+      if (this.isDirectory()) {
+        throw new IgnoreException("当前对象为一个目录,不能获取 InputStream ");
+      }
+      GetObjectRequest getObjectRequest = new GetObjectRequest(bucketName, ossAbsolutePath);
+      getObjectRequest.setRange(start, end);
+      return client.getObject(getObjectRequest).getObjectContent();
     }
   }
 }

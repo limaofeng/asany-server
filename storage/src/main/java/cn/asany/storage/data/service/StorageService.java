@@ -14,6 +14,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.Hibernate;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.jpa.ComplexJpaRepository;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
@@ -21,6 +22,7 @@ import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
 import org.jfantasy.framework.spring.SpringBeanUtils;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.common.toys.CompareResults;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -45,8 +47,9 @@ public class StorageService {
     return storageConfigDao.findAll();
   }
 
+  @Cacheable(key = "targetClass + '.' + methodName + '#' + #p0", value = "STORAGE")
   public StorageConfig get(String id) {
-    return this.storageConfigDao.getById(id);
+    return Hibernate.unproxy(this.storageConfigDao.getById(id), StorageConfig.class);
   }
 
   public StorageConfig save(StorageConfig storage) {

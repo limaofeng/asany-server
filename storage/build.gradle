@@ -2,9 +2,9 @@ dependencies {
     implementation project(":base")
     implementation project(":security")
     implementation project(":storage-api")
-    implementation 'org.apache.ant:ant:1.8.2'
-    implementation 'io.minio:minio:8.2.1'
-    implementation 'com.aliyun.oss:aliyun-sdk-oss:2.0.6'
+    implementation 'org.apache.ant:ant:1.10.12'
+    implementation 'io.minio:minio:8.3.7'
+    implementation 'com.aliyun.oss:aliyun-sdk-oss:3.14.0'
     compileOnly "org.projectlombok:lombok:${LIB_LOMBOK_VER}"
     annotationProcessor "org.projectlombok:lombok:$LIB_LOMBOK_VER"
     testCompileOnly "org.projectlombok:lombok:${LIB_LOMBOK_VER}"

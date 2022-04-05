@@ -58,7 +58,11 @@ public class VirtualFileObject implements FileObject {
   }
 
   public String getPath() {
-    return storage.convertPath(this);
+    return this.getOriginalPath().substring(storage.getRootPath().length() - 1);
+  }
+
+  public String getNamePath() {
+    return this.storage.getNamePath(this);
   }
 
   @Override
@@ -90,7 +94,12 @@ public class VirtualFileObject implements FileObject {
 
   @Override
   public InputStream getInputStream() throws IOException {
-    return this.storage.readFile(this.storePath);
+    return this.storage.getRealFileItem(this.getPath()).getInputStream();
+  }
+
+  @Override
+  public InputStream getInputStream(long start, long end) throws IOException {
+    return this.storage.getRealFileItem(this.getPath()).getInputStream(start, end);
   }
 
   public static class VirtualFileObjectBuilder {
@@ -112,9 +121,10 @@ public class VirtualFileObject implements FileObject {
     }
 
     public VirtualFileObject.VirtualFileObjectBuilder storage(StorageSpace space, String id) {
-      Storage storage = SpringBeanUtils.getBean(StorageResolver.class).resolve(id);
+      StorageResolver storageResolver = SpringBeanUtils.getBean(StorageResolver.class);
       FileService fileService = SpringBeanUtils.getBean(FileService.class);
-      this.storage = new VirtualStorage((Space) space, storage, fileService);
+
+      this.storage = new VirtualStorage((Space) space, storageResolver, fileService);
       return this;
     }
 

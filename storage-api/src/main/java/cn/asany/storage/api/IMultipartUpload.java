@@ -21,7 +21,8 @@ public interface IMultipartUpload {
   String uploadPart(String remotePath, String uploadId, int partNumber, File file, long partSize)
       throws UploadException;
 
-  String complete(String remotePath, String uploadId, List<String> partETags);
+  String complete(String remotePath, String uploadId, List<String> partETags)
+      throws UploadException;
 
   void abort(String uploadId);
 }

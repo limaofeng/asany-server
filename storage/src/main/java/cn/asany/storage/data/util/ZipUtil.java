@@ -13,7 +13,6 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.tools.zip.ZipEntry;
 import org.apache.tools.zip.ZipOutputStream;
 import org.jfantasy.framework.util.common.StreamUtil;
-import org.jfantasy.framework.util.common.StringUtil;
 import org.jfantasy.framework.util.web.WebUtil;
 
 public class ZipUtil {
@@ -52,10 +51,10 @@ public class ZipUtil {
   private static String convertName(
       FileObject object, Set<String> names, CompressionOptions options) {
     String name = object.getPath();
-    if (options.isNoFolder()) {
-      name = object.getName();
-    } else if (StringUtil.isNotBlank(options.getRelative())) {
-      name = object.getPath().replaceFirst(options.getRelative(), "");
+
+    CompressionOptions.PathForward pathForward = options.getForward();
+    if (pathForward != null) {
+      name = pathForward.exec(object);
     }
 
     int i = 0;

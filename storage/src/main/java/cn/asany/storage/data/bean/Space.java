@@ -1,7 +1,6 @@
 package cn.asany.storage.data.bean;
 
 import cn.asany.storage.api.FileObject;
-import cn.asany.storage.api.Storage;
 import cn.asany.storage.api.StorageSpace;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.Objects;
@@ -37,11 +36,11 @@ public class Space extends BaseBusEntity implements StorageSpace {
   @Id
   @Column(name = "ID", nullable = false, updatable = false, length = 50, unique = true)
   private String id;
-  /** 目录名称 */
+  /** 空间名称 */
   @Column(name = "NAME", length = 250)
   private String name;
-
-  @ManyToOne(fetch = FetchType.LAZY)
+  /** 目录名称 */
+  @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(
       name = "FOLDER_ID",
       nullable = false,
@@ -67,12 +66,8 @@ public class Space extends BaseBusEntity implements StorageSpace {
   }
 
   @Override
+  @Transient
   public FileObject getFolder() {
     return this.vFolder.toFileObject(this);
-  }
-
-  @Override
-  public Storage getStorage() {
-    return null;
   }
 }

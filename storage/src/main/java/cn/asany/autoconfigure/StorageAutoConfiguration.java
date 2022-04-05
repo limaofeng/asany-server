@@ -8,15 +8,12 @@ import cn.asany.storage.core.engine.minio.MinIOStorageConfig;
 import cn.asany.storage.core.engine.oss.OSSStorageConfig;
 import cn.asany.storage.data.graphql.directive.FileFormatDirective;
 import cn.asany.storage.data.graphql.scalar.FileCoercing;
-import cn.asany.storage.data.web.FileFilter;
 import graphql.kickstart.servlet.apollo.ApolloScalars;
 import graphql.kickstart.tools.boot.SchemaDirective;
 import graphql.schema.GraphQLScalarType;
 import java.util.List;
-import javax.servlet.DispatcherType;
 import org.jfantasy.graphql.SchemaParserDictionaryBuilder;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -75,20 +72,31 @@ public class StorageAutoConfiguration {
     return new SchemaDirective("fileFormat", new FileFormatDirective());
   }
 
-  @Bean
-  public FileFilter fileFilter() {
-    return new FileFilter();
-  }
+  //  @Bean
+  //  public FileFilter fileFilter() {
+  //    return new FileFilter();
+  //  }
 
-  @Bean
-  public FilterRegistrationBean fileFilterRegistrationBean() {
-    FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean();
-    filterRegistrationBean.setFilter(fileFilter());
-    filterRegistrationBean.setEnabled(true);
-    filterRegistrationBean.setOrder(300);
-    filterRegistrationBean.addInitParameter("targetFilterLifecycle", "true");
-    filterRegistrationBean.setDispatcherTypes(DispatcherType.REQUEST);
-    filterRegistrationBean.addUrlPatterns("/*");
-    return filterRegistrationBean;
-  }
+  //  @Bean
+  //  public FilterRegistrationBean uploadLimitFilter() {
+  //    FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean();
+  //    filterRegistrationBean.setFilter(new UploadLimitFilter());
+  //    filterRegistrationBean.setEnabled(true);
+  //    filterRegistrationBean.setOrder(400);
+  //    filterRegistrationBean.setDispatcherTypes(DispatcherType.REQUEST);
+  //    filterRegistrationBean.addUrlPatterns("/*");
+  //    return filterRegistrationBean;
+  //  }
+
+  //  @Bean
+  //  public FilterRegistrationBean fileFilterRegistrationBean() {
+  //    FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean();
+  //    filterRegistrationBean.setFilter(fileFilter());
+  //    filterRegistrationBean.setEnabled(true);
+  //    filterRegistrationBean.setOrder(300);
+  //    filterRegistrationBean.addInitParameter("targetFilterLifecycle", "true");
+  //    filterRegistrationBean.setDispatcherTypes(DispatcherType.REQUEST);
+  //    filterRegistrationBean.addUrlPatterns("/*");
+  //    return filterRegistrationBean;
+  //  }
 }

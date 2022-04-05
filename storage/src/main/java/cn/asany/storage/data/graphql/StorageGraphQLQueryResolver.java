@@ -55,9 +55,12 @@ public class StorageGraphQLQueryResolver implements GraphQLQueryResolver {
         ObjectUtil.defaultValue(filter, FileFilter::new).getBuilder();
 
     filterBuilder
-        .equal("hidden", false)
         .notEqual("id", fileKey.getRootFolder().getId())
         .startsWith("path", fileKey.getRootFolder().getPath());
+
+    if (!fileKey.getFile().isRecycleBin()) {
+      filterBuilder.equal("hidden", false);
+    }
 
     Pager<FileDetail> pager =
         this.storageService.findPager(

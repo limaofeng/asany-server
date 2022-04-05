@@ -8,11 +8,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.Predicate;
 import javax.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
+import org.jfantasy.framework.util.common.ObjectUtil;
 
 /**
  * 文件信息表
@@ -160,6 +162,16 @@ public class FileDetail extends BaseBusEntity implements Cloneable {
     return this.parentFile == null;
   }
 
+  @Transient
+  public boolean isRecycleBin() {
+    return ObjectUtil.exists(
+        this.labels,
+        (Predicate<FileLabel>)
+            (label) ->
+                FileLabel.SYSTEM_NAMESPACE.equals(label.getNamespace())
+                    && FileDetail.NAME_OF_THE_RECYCLE_BIN.equals(label.getName()));
+  }
+
   private VirtualFileObject.VirtualFileObjectBuilder buildVirtualFileObject() {
     return VirtualFileObject.builder()
         .id(this.id)
@@ -177,17 +189,20 @@ public class FileDetail extends BaseBusEntity implements Cloneable {
         .createdAt(this.getCreatedAt());
   }
 
+  @Transient
   public FileObject toFileObject() {
     VirtualFileObject.VirtualFileObjectBuilder builder = buildVirtualFileObject();
     return builder.build();
   }
 
+  @Transient
   public FileObject toFileObject(StorageSpace space) {
     VirtualFileObject.VirtualFileObjectBuilder builder = buildVirtualFileObject();
     builder.storage(space, this.getStorageConfig().getId());
     return builder.build();
   }
 
+  @Transient
   public FileObject toFileObject(VirtualStorage storage) {
     VirtualFileObject.VirtualFileObjectBuilder builder = buildVirtualFileObject();
     builder.storage(storage);

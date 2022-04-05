@@ -1,6 +1,7 @@
 package cn.asany.storage.core.engine.minio;
 
 import cn.asany.storage.api.*;
+import io.minio.GetObjectArgs;
 import io.minio.ListObjectsArgs;
 import io.minio.Result;
 import io.minio.messages.Item;
@@ -11,6 +12,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.SneakyThrows;
+import org.jfantasy.framework.util.regexp.RegexpUtil;
 
 /**
  * 文件对象
@@ -104,6 +106,31 @@ public class MinIOFileObject implements FileObject {
 
   @Override
   public InputStream getInputStream() throws IOException {
-    return null;
+    GetObjectArgs getObjectArgs =
+        GetObjectArgs.builder()
+            .object(RegexpUtil.replace(remotePath, "^/", ""))
+            .bucket(this.storage.bucketName)
+            .build();
+    try {
+      return this.storage.client.getObject(getObjectArgs);
+    } catch (Exception e) {
+      throw new IOException(e.getMessage(), e);
+    }
+  }
+
+  @Override
+  public InputStream getInputStream(long start, long end) throws IOException {
+    GetObjectArgs getObjectArgs =
+        GetObjectArgs.builder()
+            .object(RegexpUtil.replace(remotePath, "^/", ""))
+            .bucket(this.storage.bucketName)
+            .offset(start)
+            .length(end - start)
+            .build();
+    try {
+      return this.storage.client.getObject(getObjectArgs);
+    } catch (Exception e) {
+      throw new IOException(e.getMessage(), e);
+    }
   }
 }
