@@ -1,5 +1,8 @@
 package cn.asany.storage.data.util;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class BandwidthLimiter {
 
   /* KB */
@@ -66,7 +69,7 @@ public class BandwidthLimiter {
         try {
           Thread.sleep(missedTime / 1000000, (int) (missedTime % 1000000));
         } catch (InterruptedException e) {
-          Thread.currentThread().interrupt();
+          log.error(e.getMessage(), e);
         }
       }
       this.bytesWillBeSentOrReceive -= CHUNK_LENGTH;

@@ -82,13 +82,13 @@ public class DownloadController {
     BandwidthLimiter limiter = new BandwidthLimiter(512);
     OutputStream out = new DownloadLimitServletOutputStream(response.getOutputStream(), limiter);
 
-    if (ServletUtils.isKeepAlive(request)) {
+    if (ServletUtils.isRange(request)) {
       response.setStatus(206);
 
       long[] range = ServletUtils.getRange(rangeString, size);
       long contentLength = range[1] - range[0] + 1;
 
-      ServletUtils.setKeepAlive(range[0], range[1], size, response);
+      ServletUtils.setContentRange(range[0], range[1], size, response);
       ServletUtils.setCache(
           3600,
           etag,
@@ -108,6 +108,7 @@ public class DownloadController {
       }
     } else {
       response.setContentLengthLong(size);
+      ServletUtils.setContentRange(0, size - 1, size, response);
       ServletUtils.setCache(
           3600,
           etag,
