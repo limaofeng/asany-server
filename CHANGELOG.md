@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.10](https://github.com/limaofeng/asany-server/compare/v0.1.9...v0.1.10) (2022-04-06)
+
+
+### Features
+
+* 优化分片上传，使分片上传功能，更加合理 ([48ce829](https://github.com/limaofeng/asany-server/commit/48ce8296205f81217521aa4a7439a1d85e58b546))
+* 优化视频的在线播放 ([c74e563](https://github.com/limaofeng/asany-server/commit/c74e563ff264d719183345696bb62833358a3da8))
+* 完成单个文件的下载功能 ([d6e8eda](https://github.com/limaofeng/asany-server/commit/d6e8edadcfdeb432d95c63dc3981c72b871f7dfd))
+* 添加下载 Controller ([53bbbb4](https://github.com/limaofeng/asany-server/commit/53bbbb44ea6e6bffd3fb3e6330f46406d302ea3c))
+* 重构文件 Storage 逻辑 ([27af82a](https://github.com/limaofeng/asany-server/commit/27af82acdda13701390d09ef9ef819800bef8c3d))
+
+
+### Bug Fixes
+
+* download 优化, isKeepAlive 的错误用户 ([f803bd0](https://github.com/limaofeng/asany-server/commit/f803bd0012241876e530cb708fba924548291dfb))
+* 为 Storage 添加 分片上传 API, 并实现基于 OSS 的分片上传逻辑 ([776fa9d](https://github.com/limaofeng/asany-server/commit/776fa9d241e5f2d1a0444b85a3fb94cb8b3e78f7))
+* 优化上传逻辑 ([eb9baa8](https://github.com/limaofeng/asany-server/commit/eb9baa8fc99d809f55d1ddaddba6b9ac658586f7))
+* 优化上传逻辑 ([1b1ab96](https://github.com/limaofeng/asany-server/commit/1b1ab96c6b383161f2311c9fb6cba76b5aad22b8))
+
 ### [0.1.9](https://github.com/limaofeng/asany-server/compare/v0.1.8...v0.1.9) (2022-03-26)
 
 
