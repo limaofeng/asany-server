@@ -115,11 +115,12 @@ public class StorageGraphQLMutationResolver implements GraphQLMutationResolver {
         continue;
       }
 
+      FileDetail parentFile = this.fileService.getFileById(fileDetail.getParentFile().getId());
       labels.add(
           FileLabel.builder()
               .file(fileDetail)
               .name("original_path")
-              .value(fileDetail.getParentFile().getPath())
+              .value(parentFile.getPath())
               .build());
 
       fileDetails.add(this.fileService.move(fileDetail, folder));

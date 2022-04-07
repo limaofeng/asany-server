@@ -1,8 +1,7 @@
 package cn.asany.storage.data.service;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import cn.asany.storage.TestApplication;
+import cn.asany.storage.api.Storage;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,9 +16,18 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
     classes = TestApplication.class,
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
-class SpaceServiceTest {
+class ThumbnailServiceTest {
 
-  @Autowired private SpaceService spaceService;
+  @Autowired private FileService fileService;
+
+  @Test
+  void createStorageSpace() {
+    this.fileService.createStorageSpace(
+        ThumbnailService.THUMBNAIL_STORAGE_SPACE_KEY,
+        "缩略图存放目录",
+        "/.cache/thumbnail",
+        Storage.DEFAULT_STORAGE_ID);
+  }
 
   @Test
   void save() {}

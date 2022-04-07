@@ -14,6 +14,7 @@ import org.apache.tomcat.util.http.fileupload.disk.DiskFileItem;
 import org.jfantasy.framework.error.IgnoreException;
 import org.jfantasy.framework.util.common.ClassUtil;
 import org.jfantasy.framework.util.common.StreamUtil;
+import org.jfantasy.framework.util.common.file.FileUtil;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,6 +29,14 @@ public class UploadUtils {
   public static FileObject partToObject(MultipartFile file) {
     ApplicationPart part = ClassUtil.getValue(file, "part");
     return partToObject(part);
+  }
+
+  public static FileObject fileToObject(File file) {
+    String mimeType = FileUtil.getMimeType(file);
+    return new UploadFileObject(
+        file.getName(),
+        file,
+        FileObjectMetadata.builder().contentLength(file.length()).contentType(mimeType).build());
   }
 
   public static FileObject partToObject(Part part) {

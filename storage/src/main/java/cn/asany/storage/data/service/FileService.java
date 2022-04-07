@@ -19,6 +19,8 @@ import org.jfantasy.framework.error.ValidationException;
 import org.jfantasy.framework.util.common.StringUtil;
 import org.jfantasy.framework.util.regexp.RegexpUtil;
 import org.jfantasy.framework.util.web.WebUtil;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -41,10 +43,15 @@ public class FileService {
   private final SpaceDao spaceDao;
 
   private final DataBaseKeyGenerator dataBaseKeyGenerator;
+  private final CacheManager cacheManager;
 
   public FileService(
-      FileDetailDao fileDetailDao, SpaceDao spaceDao, DataBaseKeyGenerator dataBaseKeyGenerator) {
+      CacheManager cacheManager,
+      FileDetailDao fileDetailDao,
+      SpaceDao spaceDao,
+      DataBaseKeyGenerator dataBaseKeyGenerator) {
     this.fileDetailDao = fileDetailDao;
+    this.cacheManager = cacheManager;
     this.spaceDao = spaceDao;
     this.dataBaseKeyGenerator = dataBaseKeyGenerator;
   }
@@ -72,7 +79,7 @@ public class FileService {
             .size(length)
             .md5(md5)
             .isDirectory(false)
-            .extension(WebUtil.getExtension(fileName, true))
+            .extension(WebUtil.getExtension(fileName, true).toLowerCase())
             .parentFile(this.fileDetailDao.getById(parentFolder))
             .description(description)
             .storePath(storePath)
@@ -82,12 +89,20 @@ public class FileService {
   }
 
   public FileDetail update(Long id, FileDetail file, boolean merge) {
-    file.setId(id);
-    return this.fileDetailDao.update(file, merge);
+    try {
+      file.setId(id);
+      return this.fileDetailDao.update(file, merge);
+    } finally {
+      cacheEvict(file);
+    }
   }
 
   public FileDetail update(FileDetail fileDetail) {
-    return this.fileDetailDao.save(fileDetail);
+    try {
+      return this.fileDetailDao.save(fileDetail);
+    } finally {
+      cacheEvict(fileDetail);
+    }
   }
 
   @Cacheable(key = "targetClass + '.' + methodName + '#' + #p0", value = "STORAGE")
@@ -331,15 +346,19 @@ public class FileService {
   }
 
   public Space createStorageSpace(String id, String name, String path, String storage) {
-    Space space = Space.builder().id(id).name(name).build();
-    this.createFolder(path);
-    return this.spaceDao.save(space);
+    Space.SpaceBuilder spaceBuilder = Space.builder().id(id).name(name).plugins(new HashSet<>());
+    FileDetail vFolder = this.createFolder(path);
+    spaceBuilder.vFolder(vFolder);
+    return this.spaceDao.save(spaceBuilder.build());
   }
 
   public void deleteStorageSpace(String id) {
     Space space = this.spaceDao.getById(id);
     FileDetail rootFolder = space.getVFolder();
     this.spaceDao.deleteById(id);
+
+    cacheEvict(rootFolder);
+
     this.fileDetailDao.delete(rootFolder);
   }
 
@@ -365,8 +384,10 @@ public class FileService {
     }
 
     if (!fileDetail.getIsDirectory()) {
-      fileDetail.setExtension(WebUtil.getExtension(name, true));
+      fileDetail.setExtension(WebUtil.getExtension(name, true).toLowerCase());
     }
+
+    cacheEvict(fileDetail);
 
     fileDetail.setName(name);
     return fileDetail;
@@ -398,6 +419,9 @@ public class FileService {
 
   public Integer clearTrash(Long rootFolder) {
     FileDetail recycler = getRecycleBin(rootFolder);
+
+    cacheEvict(recycler.getPath());
+
     return this.fileDetailDao.clearTrash(recycler.getPath());
   }
 
@@ -477,18 +501,42 @@ public class FileService {
   }
 
   public FileDetail move(FileDetail file, FileDetail folder) {
-    String originalFolderPath = file.getParentFile().getPath();
+    FileDetail originalFolder = this.fileDetailDao.getById(file.getParentFile().getId());
+    String originalFolderPath = originalFolder.getPath();
     String newFolderPath = folder.getPath();
     String newPath = newFolderPath + file.getPath().substring(originalFolderPath.length());
+
+    this.cacheEvict(file);
+
     if (file.getIsDirectory()) {
+      this.cacheEvict(file.getPath());
       this.fileDetailDao.replacePath(file.getPath(), newPath);
     }
+
     file.setPath(newPath);
     file.setParentFile(folder);
     file.setHidden(folder.getHidden());
     if (file.getIsDirectory()) {
       this.fileDetailDao.hideFiles(newPath, folder.getHidden());
     }
+
     return this.fileDetailDao.save(file);
+  }
+
+  private void cacheEvict(String path) {
+    for (FileDetail subFile :
+        this.fileDetailDao.findAll(
+            PropertyFilter.builder().startsWith("path", path).notEqual("path", path).build())) {
+      cacheEvict(subFile);
+    }
+  }
+
+  private void cacheEvict(FileDetail file) {
+    Cache cache = cacheManager.getCache("STORAGE");
+
+    assert cache != null;
+
+    cache.evictIfPresent(FileService.class + ".getFileById#" + file.getId());
+    cache.evictIfPresent(FileService.class + ".findByPath#" + file.getPath());
   }
 }

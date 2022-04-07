@@ -22,7 +22,8 @@ import org.yaml.snakeyaml.nodes.*;
 public abstract class YamlUtils {
 
   private static Yaml yaml;
-  private static Map<String, Class<? extends IModuleProperties>> moduleClasses = new HashMap<>();
+  private static final Map<String, Class<? extends IModuleProperties>> moduleClasses =
+      new HashMap<>();
 
   static {
     Constructor constructor = new Constructor(NativeApplication.class);

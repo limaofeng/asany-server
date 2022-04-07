@@ -56,11 +56,16 @@ spring:
     database: 0
     port: 6379
   quartz:
+    job-store-type: jdbc
+    wait-for-jobs-to-complete-on-shutdown: true
+    overwrite-existing-jobs: true
+    jdbc:
+      initialize-schema: always
     properties:
       org:
         quartz:
           scheduler:
-            instanceName: clusteredScheduler
+            instanceName: scheduler
             instanceId: AUTO
           jobStore:
             class: org.quartz.impl.jdbcjobstore.JobStoreTX
@@ -74,9 +79,6 @@ spring:
             threadCount: 10
             threadPriority: 5
             threadsInheritContextClassLoaderOfInitializingThread: true
-    job-store-type: jdbc
-    jdbc:
-      initialize-schema: never
 
 graphql:
   servlet:

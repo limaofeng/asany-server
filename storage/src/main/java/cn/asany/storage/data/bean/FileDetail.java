@@ -109,6 +109,11 @@ public class FileDetail extends BaseBusEntity implements Cloneable {
   @Builder.Default
   @Column(name = "HIDDEN", nullable = false)
   private Boolean hidden = Boolean.FALSE;
+  /** 所有的缩略图 */
+  @OneToMany(mappedBy = "source", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+  @OrderBy("createdAt ASC")
+  @ToString.Exclude
+  private List<Thumbnail> thumbnails;
 
   @OneToMany(
       mappedBy = "file",

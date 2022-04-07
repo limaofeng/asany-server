@@ -1,7 +1,7 @@
 package cn.asany.storage;
 
-import graphql.kickstart.spring.web.boot.GraphQLWebAutoConfiguration;
-import graphql.kickstart.tools.boot.GraphQLJavaToolsAutoConfiguration;
+import graphql.kickstart.autoconfigure.tools.GraphQLJavaToolsAutoConfiguration;
+import graphql.kickstart.autoconfigure.web.servlet.GraphQLWebAutoConfiguration;
 import lombok.extern.slf4j.Slf4j;
 import org.jfantasy.autoconfigure.GraphQLAutoConfiguration;
 import org.jfantasy.framework.dao.jpa.ComplexJpaRepository;
@@ -11,6 +11,7 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
 import org.springframework.boot.autoconfigure.quartz.QuartzAutoConfiguration;
 import org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.FilterType;
@@ -38,6 +39,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
       "cn.asany.*.*.dao",
     },
     repositoryBaseClass = ComplexJpaRepository.class)
+@EnableCaching
 @EnableAutoConfiguration(
     exclude = {
       MongoAutoConfiguration.class,

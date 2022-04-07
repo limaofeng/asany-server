@@ -61,8 +61,13 @@ public class FileUploadService implements UploadService {
   private Invocation createInvocation(Space space, UploadOptions options, UploadFileObject file) {
 
     // 插件
-    Set<String> plugins =
-        new LinkedHashSet<>(ObjectUtil.defaultValue(space.getPlugins(), LinkedHashSet::new));
+    Set<String> plugins = new LinkedHashSet<>();
+
+    // 负责删除上传的物理文件
+    plugins.add(CleanPlugin.ID);
+
+    // 存储空间配置的插件
+    plugins.addAll(ObjectUtil.defaultValue(space.getPlugins(), LinkedHashSet::new));
 
     // 添加默认插件
     plugins.add(MatchFolderPlugin.ID);
@@ -116,9 +121,6 @@ public class FileUploadService implements UploadService {
 
       // 将要上传的位置
       Space space = this.fileService.getSpace(options.getSpace());
-
-      // 存储器
-      //      Storage storage = this.storageResolver.resolve(space.getStorage().getId());
 
       Invocation invocation = createInvocation(space, options, uploadFileObject);
 

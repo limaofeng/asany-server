@@ -2,11 +2,15 @@ package cn.asany.storage.data.rest;
 
 import cn.asany.storage.api.FileItemSelector;
 import cn.asany.storage.api.FileObject;
+import cn.asany.storage.api.Storage;
 import cn.asany.storage.core.StorageResolver;
 import cn.asany.storage.core.engine.virtual.VirtualFileObject;
 import cn.asany.storage.core.engine.virtual.VirtualStorage;
+import cn.asany.storage.data.bean.FileDetail;
 import cn.asany.storage.data.bean.Space;
+import cn.asany.storage.data.bean.Thumbnail;
 import cn.asany.storage.data.service.FileService;
+import cn.asany.storage.data.service.ThumbnailService;
 import cn.asany.storage.data.util.BandwidthLimiter;
 import cn.asany.storage.data.util.CompressionOptions;
 import cn.asany.storage.data.util.IdUtils;
@@ -35,15 +39,51 @@ public class DownloadController {
 
   private final FileService fileService;
   private final StorageResolver storageResolver;
+  private final ThumbnailService thumbnailService;
 
-  public DownloadController(FileService fileService, StorageResolver storageResolver) {
+  public DownloadController(
+      FileService fileService, StorageResolver storageResolver, ThumbnailService thumbnailService) {
     this.fileService = fileService;
     this.storageResolver = storageResolver;
+    this.thumbnailService = thumbnailService;
   }
 
-  @GetMapping("/thumbnail/{id}")
-  public void thumbnail(@PathVariable("id") String id) {
-    System.out.println(id);
+  @GetMapping("/thumbnail/{fid}")
+  public void thumbnail(
+      @PathVariable("fid") String id,
+      @RequestParam("size") String size,
+      HttpServletResponse response)
+      throws IOException {
+    IdUtils.FileKey fileKey = IdUtils.parseKey(id);
+    Space space = fileKey.getSpace();
+
+    FileDetail fileDetail = fileKey.getFile();
+
+    if (!(fileDetail.getMimeType().startsWith("image/")
+        || fileDetail.getMimeType().startsWith("video/"))) {
+      response.sendError(404, "只有视频和图片可以生成缩略图");
+      return;
+    }
+
+    Optional<Thumbnail> thumbnailOptional = thumbnailService.findBySize(size, fileDetail.getId());
+
+    Thumbnail thumbnail =
+        thumbnailOptional.orElseGet(() -> thumbnailService.generate(size, fileDetail.getId()));
+
+    FileDetail thumbFile = fileService.getFileById(thumbnail.getFile().getId());
+
+    Storage storage = storageResolver.resolve(thumbFile.getStorageConfig().getId());
+
+    response.setContentType(thumbFile.getMimeType());
+    response.setContentLengthLong(thumbFile.getSize());
+    ServletUtils.setCache(
+        3600,
+        thumbFile.getMd5(),
+        thumbFile.getLastModified(),
+        CacheControl.maxAge(3600, TimeUnit.SECONDS).cachePrivate(),
+        response);
+
+    storage.readFile(thumbFile.getStorePath(), response.getOutputStream());
   }
 
   @GetMapping("/download")
