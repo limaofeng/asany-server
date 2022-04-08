@@ -1,7 +1,7 @@
 package cn.asany;
 
-import graphql.kickstart.spring.web.boot.GraphQLWebAutoConfiguration;
-import graphql.kickstart.tools.boot.GraphQLJavaToolsAutoConfiguration;
+import graphql.kickstart.autoconfigure.tools.GraphQLJavaToolsAutoConfiguration;
+import graphql.kickstart.autoconfigure.web.servlet.GraphQLWebAutoConfiguration;
 import lombok.extern.slf4j.Slf4j;
 import org.jfantasy.autoconfigure.GraphQLAutoConfiguration;
 import org.jfantasy.framework.dao.jpa.ComplexJpaRepository;
