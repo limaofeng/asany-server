@@ -8,7 +8,7 @@ spring:
     name: server
   datasource:
     name: datasource
-    url: jdbc:mysql://104.243.31.210:3306/asany-dev?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&rewriteBatchedStatements=true
+    url: jdbc:mysql://dev.local:3306/asany?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&rewriteBatchedStatements=true
     username: root
     password: yV2jJxvNs8BD
     druid:
