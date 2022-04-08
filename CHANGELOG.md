@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.11](https://github.com/limaofeng/asany-server/compare/v0.1.10...v0.1.11) (2022-04-08)
+
+
+### Features
+
+* 添加提取缩略图的接口 ([8401b01](https://github.com/limaofeng/asany-server/commit/8401b01563cff96cf996b8996abe10a81febdb42))
+
 ### [0.1.10](https://github.com/limaofeng/asany-server/compare/v0.1.9...v0.1.10) (2022-04-06)
 
 
