@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.14](https://github.com/limaofeng/asany-server/compare/v0.1.13...v0.1.14) (2022-04-08)
+
+
+### Bug Fixes
+
+* 解决 java 版本错误，导致运行失败 ([084f61b](https://github.com/limaofeng/asany-server/commit/084f61b046ad2544194b81c888309175292809c3))
+
 ### [0.1.13](https://github.com/limaofeng/asany-server/compare/v0.1.12...v0.1.13) (2022-04-08)
 
 
