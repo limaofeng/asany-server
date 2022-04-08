@@ -3,6 +3,7 @@ package cn.asany.shanhai;
 import org.jfantasy.framework.dao.jpa.ComplexJpaRepository;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.data.redis.RedisRepositoriesAutoConfiguration;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -43,7 +44,11 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
     },
     repositoryBaseClass = ComplexJpaRepository.class)
 @EnableCaching
-@EnableAutoConfiguration(exclude = {MongoAutoConfiguration.class})
+@EnableAutoConfiguration(
+    exclude = {
+      MongoAutoConfiguration.class,
+      RedisRepositoriesAutoConfiguration.class,
+    })
 public class Application extends SpringBootServletInitializer {
 
   public static void main(String[] args) {

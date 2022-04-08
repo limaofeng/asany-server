@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: 8181
 
 spring:
   servlet:
@@ -93,3 +93,7 @@ graphql:
   tools:
     introspection-enabled: true
 
+logging:
+  config: classpath:logback.xml
+  pattern:
+    charset: UTF-8
