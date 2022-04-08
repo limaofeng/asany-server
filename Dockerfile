@@ -1,4 +1,4 @@
-FROM limaofeng/java:v18
+FROM limaofeng/java:8
 
 ARG version_number=0
 

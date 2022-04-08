@@ -3,6 +3,7 @@ package cn.asany.shanhai;
 import org.jfantasy.framework.dao.jpa.ComplexJpaRepository;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.data.elasticsearch.ElasticsearchRepositoriesAutoConfiguration;
 import org.springframework.boot.autoconfigure.data.redis.RedisRepositoriesAutoConfiguration;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
@@ -48,6 +49,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
     exclude = {
       MongoAutoConfiguration.class,
       RedisRepositoriesAutoConfiguration.class,
+      ElasticsearchRepositoriesAutoConfiguration.class
     })
 public class Application extends SpringBootServletInitializer {
 

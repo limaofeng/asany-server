@@ -2,6 +2,13 @@ server:
   port: 8181
 
 spring:
+  data:
+    elasticsearch:
+      repositories:
+        enabled: false
+    redis:
+      repositories:
+        enabled: false
   servlet:
     session:
       tracking-modes: 'cookie'
