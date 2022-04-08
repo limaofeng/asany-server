@@ -6,7 +6,6 @@ ADD /app.jar /tmp/app/app.jar
 
 # 构建应用
 RUN cd /tmp/app && \
-    mkdir /app && \
     # 拷贝编译结果到指定目录
     mv /tmp/app/app.jar /app/app.jar && \
     #清理编译痕迹
