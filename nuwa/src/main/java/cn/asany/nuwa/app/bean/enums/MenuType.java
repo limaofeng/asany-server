@@ -8,6 +8,8 @@ package cn.asany.nuwa.app.bean.enums;
 public enum MenuType {
   /** 章节 */
   SECTION,
+  /** 分隔符 */
+  SEPARATOR,
   /** 链接地址 */
   URL,
   /** 菜单 */

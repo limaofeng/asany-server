@@ -33,7 +33,7 @@ class ApplicationServiceTest {
     // 调基础工具类的方法
     NativeApplication app = YamlUtils.load(inputStream);
     assert app.getName().equals("website");
-    applicationService.deleteApplication(app.getName());
+    applicationService.deleteApplication(app.getClientId());
     Application application = applicationService.createApplication(app);
     log.debug(
         String.format(
@@ -49,7 +49,7 @@ class ApplicationServiceTest {
     NativeApplication app = YamlUtils.load(inputStream);
     assert app.getName().equals("admin");
     //    channelService.deleteAll();
-    applicationService.deleteApplication(app.getName());
+    applicationService.deleteApplication(app.getClientId());
     Application application = applicationService.createApplication(app);
     log.debug(
         String.format(

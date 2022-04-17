@@ -156,13 +156,19 @@ type ClientSecret {
 type Menu {
   id: ID!
   # 菜单名称
-  name: String!
+  name: String
   # 路由类型
   type: MenuType!
   # 对应的图标
   icon: String
   # 树路径
   path: String
+  # 不在菜单中显示子菜单
+  hideChildrenInMenu: Boolean
+  # 在面包屑中隐藏菜单
+  hideInBreadcrumb: Boolean
+  # 不在菜单中显示
+  hideInMenu: Boolean
   # 徽章 / 印记
   badge: String
   # 需要提供的权限
@@ -259,6 +265,8 @@ enum MenuType {
   MENU
   # 脚本
   SCRIPT
+  # 分隔符
+  SEPARATOR
 }
 
 # 布局设置

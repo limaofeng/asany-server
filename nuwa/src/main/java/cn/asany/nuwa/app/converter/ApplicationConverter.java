@@ -124,6 +124,9 @@ public interface ApplicationConverter {
    */
   @Mappings({
     @Mapping(target = "children", ignore = true),
+    @Mapping(target = "hideChildrenInMenu", source = "hideChildrenInMenu", defaultValue = "false"),
+    @Mapping(target = "hideInBreadcrumb", source = "hideInBreadcrumb", defaultValue = "false"),
+    @Mapping(target = "hideInMenu", source = "hideInMenu", defaultValue = "false"),
     @Mapping(
         target = "component.blocks",
         source = "component.blocks",

@@ -133,10 +133,7 @@ public class UserService implements UserDetailsService {
   public User findUniqueByUsername(String username) {
     Optional<User> optional =
         this.userDao.findOne(Example.of(User.builder().username(username).build()));
-    if (optional.isPresent()) {
-      return optional.get();
-    }
-    return null;
+    return optional.orElse(null);
   }
 
   public Pager<User> findPager(Pager<User> pager, List<PropertyFilter> filters) {

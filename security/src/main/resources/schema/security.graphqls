@@ -120,6 +120,8 @@ type CurrentUser {
   signature: String
   # 权限
   authorities: [String]
+  # 账号
+  account: String
 }
 
 type PersonalAccessToken {

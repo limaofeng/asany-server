@@ -58,6 +58,15 @@ public class ApplicationMenu extends BaseBusEntity {
    */
   @Column(name = "PATH")
   private String path;
+  /** 不在菜单中显示子菜单 */
+  @Column(name = "HIDE_CHILDREN_IN_MENU", nullable = false)
+  private Boolean hideChildrenInMenu;
+  /** 在面包屑中隐藏菜单 */
+  @Column(name = "HIDE_IN_BREADCRUMB", nullable = false)
+  private Boolean hideInBreadcrumb;
+  /** 不在菜单中显示 */
+  @Column(name = "HIDE_IN_MENU", nullable = false)
+  private Boolean hideInMenu;
   /** 角标 */
   @Column(name = "BADGE")
   private String badge;

@@ -17,7 +17,9 @@ public class NuwaMenu {
   private MenuType type;
   private String icon;
   private String path;
-  private boolean hideInBreadcrumb;
   private NuwaComponent component;
   private List<NuwaMenu> children;
+  private Boolean hideInBreadcrumb;
+  private Boolean hideChildrenInMenu;
+  private Boolean hideInMenu;
 }

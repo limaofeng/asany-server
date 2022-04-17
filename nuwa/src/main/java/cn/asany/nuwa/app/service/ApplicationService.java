@@ -28,6 +28,8 @@ import org.jfantasy.framework.security.oauth2.core.ClientDetailsService;
 import org.jfantasy.framework.security.oauth2.core.ClientRegistrationException;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.common.StringUtil;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -43,6 +45,8 @@ public class ApplicationService implements ClientDetailsService {
 
   public static final String NONCE_CHARS = "abcdef0123456789";
 
+  public static final String CACHE_KEY = "NUWA";
+
   private final ApplicationDao applicationDao;
   private final ClientSecretDao clientSecretDao;
   private final ApplicationRouteDao applicationRouteDao;
@@ -52,8 +56,10 @@ public class ApplicationService implements ClientDetailsService {
   private final RoutespaceDao routespaceDao;
   private final ApplicationConverter applicationConverter;
   private final IModuleLoader moduleLoader;
+  private final CacheManager cacheManager;
 
   public ApplicationService(
+      CacheManager cacheManager,
       ApplicationDao applicationDao,
       ClientSecretDao clientSecretDao,
       ComponentDao componentDao,
@@ -72,6 +78,7 @@ public class ApplicationService implements ClientDetailsService {
     this.applicationMenuDao = applicationMenuDao;
     this.applicationTemplateDao = applicationTemplateDao;
     this.moduleLoader = moduleLoader;
+    this.cacheManager = cacheManager;
   }
 
   public List<Application> findAll(List<PropertyFilter> filter) {
@@ -79,7 +86,7 @@ public class ApplicationService implements ClientDetailsService {
   }
 
   @Override
-  @Cacheable(key = "targetClass + '.' +  methodName + '#' + #p0", value = "NUWA")
+  @Cacheable(key = "targetClass + '.' +  methodName + '#' + #p0", value = CACHE_KEY)
   public ClientDetails loadClientByClientId(String clientId) throws ClientRegistrationException {
     Optional<Application> optional =
         this.applicationDao.findOneWithClientDetails(
@@ -97,8 +104,9 @@ public class ApplicationService implements ClientDetailsService {
 
   @Transactional(rollbackFor = RuntimeException.class)
   @Cacheable(
-      key = "targetClass  + '.' +  methodName + '#' + #p0 + ',' + #p1 + ',' + #p2",
-      value = "NUWA")
+      key = "targetClass  + '.' +  methodName + '#' + #p0",
+      value = CACHE_KEY,
+      condition = "#p1 && #p2")
   public Optional<Application> findDetailsByClientId(
       String id, boolean hasFetchRoutes, boolean hasFetchMenus) {
     if (hasFetchRoutes && hasFetchMenus) {
@@ -115,8 +123,9 @@ public class ApplicationService implements ClientDetailsService {
 
   @Transactional(rollbackFor = RuntimeException.class)
   @Cacheable(
-      key = "targetClass + '.' + methodName + '#' + #p0 + ',' + #p1 + ',' + #p2",
-      value = "NUWA")
+      key = "targetClass + '.' + methodName + '#' + #p0",
+      value = CACHE_KEY,
+      condition = "#p1 && #p2")
   public Optional<Application> findDetailsById(
       Long id, boolean hasFetchRoutes, boolean hasFetchMenus) {
     if (hasFetchRoutes && hasFetchMenus) {
@@ -234,9 +243,9 @@ public class ApplicationService implements ClientDetailsService {
   }
 
   @Transactional(propagation = Propagation.REQUIRES_NEW)
-  public void deleteApplication(String name) {
+  public void deleteApplication(String clientId) {
     Optional<Application> application =
-        this.applicationDao.findOne(PropertyFilter.builder().equal("name", name).build());
+        this.applicationDao.findOne(PropertyFilter.builder().equal("clientId", clientId).build());
     if (!application.isPresent()) {
       return;
     }
@@ -245,6 +254,7 @@ public class ApplicationService implements ClientDetailsService {
 
   @Transactional(rollbackFor = Exception.class)
   public void deleteApplication(Long id) {
+    Application app = this.applicationDao.getById(id);
     // 路由组件
     List<ApplicationRoute> routes =
         this.applicationRouteDao.findAll(
@@ -267,11 +277,19 @@ public class ApplicationService implements ClientDetailsService {
     components.addAll(
         menus.stream().map(ApplicationMenu::getComponent).collect(Collectors.toList()));
 
+    String clientId = app.getClientId();
+
     // 删除应用
     this.applicationDao.deleteById(id);
 
     // 删除对应的组件
     this.componentDao.deleteAll(components);
+
+    Cache cache = this.cacheManager.getCache(CACHE_KEY);
+    assert cache != null;
+    cache.evictIfPresent(ApplicationService.class + ".loadClientByClientId#" + clientId);
+    cache.evictIfPresent(ApplicationService.class + ".findDetailsByClientId#" + clientId);
+    cache.evictIfPresent(ApplicationService.class + ".findDetailsById#" + id);
   }
 
   private Set<ApplicationMenu> getMenusFromNuwa(List<NuwaMenu> nuwaMenus) {

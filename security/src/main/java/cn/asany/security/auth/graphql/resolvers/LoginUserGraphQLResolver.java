@@ -28,4 +28,8 @@ public class LoginUserGraphQLResolver implements GraphQLResolver<LoginUser> {
     AbstractOAuth2Token accessToken = user.getAttribute("token");
     return accessToken != null ? accessToken.getTokenValue() : null;
   }
+
+  public String account(LoginUser user) {
+    return user.getUsername();
+  }
 }

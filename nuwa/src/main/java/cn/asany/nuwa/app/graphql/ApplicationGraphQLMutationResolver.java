@@ -37,7 +37,7 @@ public class ApplicationGraphQLMutationResolver implements GraphQLMutationResolv
     NativeApplication app = YamlUtils.load(part.getInputStream());
     if (this.applicationService.existsByClientId(app.getClientId())) {
       log.warn("实际使用过程中，应该提示 ClientId 冲突，由用户选择是否删除原来的应用");
-      applicationService.deleteApplication(app.getName());
+      applicationService.deleteApplication(app.getClientId());
     }
     return applicationService.createApplication(app);
   }

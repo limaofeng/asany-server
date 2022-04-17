@@ -6,7 +6,7 @@ import org.jfantasy.framework.security.core.GrantedAuthority;
 
 public class CurrentUser extends LoginUser {
 
-  private LoginUser user;
+  private final LoginUser user;
 
   public CurrentUser(LoginUser user) {
     this.user = user;
@@ -50,6 +50,10 @@ public class CurrentUser extends LoginUser {
   @Override
   public String getSignature() {
     return this.user.getSignature();
+  }
+
+  public String account() {
+    return this.user.getUsername();
   }
 
   @Override

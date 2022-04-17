@@ -13,6 +13,40 @@ menus:
     icon: Duotune/txt009
     path: /cms/my/drafts
     component: cn.asany.ui.admin.cms.ArticleSidebar
+  - name: 自定义建模
+    icon: Duotune/abs026
+    path: /shanhai
+    component: cn.asany.ui.admin.shanhai.MenuSidebar
+  - name: 个人中心
+    icon: Duotune/abs026
+    path: /settings
+    component: cn.asany.ui.admin.user.UserSettingsSidebar
+    hideInMenu: true
+    children:
+      - name: 用户资料
+        icon: Bootstrap/person
+        path: /settings/profile
+      - name: 账号
+        icon: Bootstrap/gear
+        path: /settings/account
+      - name: 偏好设置
+        icon: Bootstrap/brush
+        path: /settings/preferences
+      - name: 通知
+        icon: Bootstrap/bell
+        path: /settings/notifications
+      - type: SEPARATOR
+      - name: 访问
+        type: SECTION
+      - name: 电子邮件
+        icon: Bootstrap/envelope
+        path: /settings/emails
+      - name: 密码和身份验证
+        icon: Bootstrap/shield-lock
+        path: /settings/security
+      - name: 组织机构
+        icon: Bootstrap/building
+        path: /settings/organizations
   - name: 通讯录
     icon: Duotune/com005
     path: /contacts
@@ -25,33 +59,10 @@ menus:
     icon: Duotune/fil020
     path: /drive
     component: cn.asany.ui.admin.drive.Sidebar
-  - name: 自定义建模
-    icon: Duotune/abs026
-    path: /shanhai
-    component: cn.asany.ui.admin.shanhai.MenuSidebar
   - name: 邮箱
     icon: Duotune/com011
     path: /mail
     component: cn.asany.ui.admin.mail.Sidebar
-  #  - name: 项目管理
-  #    icon: Duotune/abs045
-  #    children:
-  #      - name: 我的任务
-  #        type: SECTION
-  #      - name: x1
-  #        icon: Duotune/gen032
-  #        path: /projects
-  #      - name: x2
-  #        icon: Duotune/gen032
-  #        path: /projects
-  #      - name: 项目
-  #        type: SECTION
-  #      - name: x1
-  #        icon: Duotune/gen032
-  #        path: /projects
-  #      - name: x2
-  #        icon: Duotune/gen032
-  #        path: /projects
   - name: 系统管理
     icon: Duotune/cod001
     children:
@@ -93,10 +104,10 @@ menus:
         icon: Duotune/fil023
 routes:
   - path: /login
-    component: cn.asany.ui.theme.metronic.authentication.SignIn
+    component: cn.asany.ui.admin.authentication.AsideLayoutSignIn
   - path: /
     authorized: true
-    component: cn.asany.ui.theme.metronic.Layout
+    component: cn.asany.ui.admin.layout.Demo7
     routes:
       - path: /apps
         component: cn.asany.ui.admin.app.AppList
@@ -184,6 +195,30 @@ routes:
       - path: /icon-libraries/:id
         component: cn.asany.ui.admin.icon.LibraryDetails
         hideMenu: true
+      - path: /settings
+        routes:
+          - path: /settings/profile
+            component: cn.asany.ui.admin.user.settings.Profile
+          - path: /settings/account
+            component: cn.asany.ui.admin.user.settings.Account
+          - path: /settings/preferences
+            component: cn.asany.ui.admin.user.settings.Preferences
+          - path: /settings/notifications
+            component: cn.asany.ui.admin.user.settings.Notifications
+          - path: /settings/emails
+            component: cn.asany.ui.admin.user.settings.Emails
+          - path: /settings/security
+            component: cn.asany.ui.admin.user.settings.Security
+          - path: /settings/organizations
+            component: cn.asany.ui.admin.user.settings.Organizations
+          - path: /settings
+            redirect: /settings/profile
+      - path: /organizations/:id/settings
+        routes:
+          - path: /organizations/:id/settings/profile
+            component: cn.asany.ui.admin.organization.settings.Profile
+          - path: /organizations/:id/settings/members
+            component: cn.asany.ui.admin.organization.settings.members
       - path: /
         component: cn.asany.ui.admin.Home
 #modules:

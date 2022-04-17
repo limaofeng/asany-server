@@ -14,6 +14,7 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
 import org.springframework.boot.autoconfigure.quartz.QuartzAutoConfiguration;
 import org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -33,6 +34,7 @@ import org.springframework.web.client.RestTemplate;
 @EntityScan({
   "cn.asany.*.*.bean",
 })
+@EnableCaching
 @EnableJpaRepositories(
     includeFilters = {
       @ComponentScan.Filter(
