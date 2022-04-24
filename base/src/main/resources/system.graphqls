@@ -1,0 +1,116 @@
+type DictConnection {
+    # 总数据条数
+    totalCount: Int
+    # 每页显示条数
+    pageSize: Int
+    # 总页数
+    totalPage: Int
+    # 当前页
+    currentPage: Int
+    edges: [DictEdge]
+    pageInfo: PageInfo
+}
+
+type DictEdge {
+    cursor: String
+    node: Dict
+}
+
+# 数据字典
+type Dict {
+    id: ID
+    # 代码
+    code: String
+    # 配置类型
+    type: String
+    # 路径
+    path: String
+    # 名称
+    name: String
+    # 顺序
+    index: Int
+    # 描述
+    description: String
+    # 上级数据字典
+    parent: Dict
+    # 下级数据字典
+    children: [Dict]
+}
+
+# 数据字典类型
+type DictType {
+    # 代码
+    id: ID
+    # 名称
+    name: String
+    # 层级
+    level: Int
+    # 路径
+    path: String
+    # 描述
+    description: String
+    # 顺序
+    index: Int
+    # 数据字典
+    dicts: [Dict]
+    # 上级数据字典分类
+    parent: DictType
+    # 下级书籍字典分类
+    children: [DictType]
+}
+
+"""
+字典过滤器
+"""
+input DictFilter {
+    # 编码
+    code: String
+    # 名称
+    name: String
+    # 类型
+    type: String
+    # 上级 ID
+    parent: String
+    # 类型 in
+    type_in: [String]
+    # 用于树行数据的查询
+    path_startsWith: String
+    # 类型路径匹配 用于查询某一大类下的所有数据
+    typePath_startsWith: String
+    #  层级
+    level: Int
+    # 层级 大于
+    level_gt: Int
+    # 层级 大于等于
+    level_gte: Int
+    # 层级 小于
+    level_lt: Int
+    # 层级 小于等于
+    level_lte: Int
+    # 描述
+    description: String
+}
+
+extend type Query {
+    """
+    查询数据字典分类
+    """
+    dictTypes: [DictType!]!
+    """
+    查询数据字典
+    """
+    dictsConnection(
+        filter: DictFilter = {}
+        page: Int = 1
+        pageSize: Int = 15
+        orderBy: OrderBy
+    ): DictConnection!
+    """
+    查询数据字典
+    """
+    dicts(filter: DictFilter = {}): [Dict!]!
+    """
+    数据字典
+    """
+    dict(id: ID): Dict
+}
