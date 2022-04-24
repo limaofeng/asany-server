@@ -1,6 +1,5 @@
 package cn.asany.security.core.service;
 
-import cn.asany.base.common.SecurityType;
 import cn.asany.security.core.bean.Role;
 import cn.asany.security.core.bean.User;
 import cn.asany.security.core.dao.GrantPermissionDao;
@@ -176,9 +175,9 @@ public class UserServiceUtil {
   private static Set<String> checkUserPermissions(User user, String[] permisstionArray) {
     Set<String> hasPermissionsList = new HashSet<>();
     for (String permission : permisstionArray) {
-      int c =
-          grantPermissionDao.countGrantPermissionByPermissionIdAndSecurityTypeAndValue(
-              permission, SecurityType.user, String.valueOf(user.getId()));
+      int c = 0;
+      //          grantPermissionDao.countGrantPermissionByPermissionIdAndSecurityTypeAndValue(
+      //              permission, SecurityType.user, String.valueOf(user.getId()));
       if (c > 0) {
         hasPermissionsList.add(permission);
       }
@@ -191,9 +190,9 @@ public class UserServiceUtil {
     Set<String> hasPermissionsList = new HashSet<>();
     for (String roleCode : userRoles) {
       for (String permission : permisstionArray) {
-        int c =
-            grantPermissionDao.countGrantPermissionByPermissionIdAndSecurityTypeAndValue(
-                permission, SecurityType.role, roleCode);
+        int c = 0;
+        //            grantPermissionDao.countGrantPermissionByPermissionIdAndSecurityTypeAndValue(
+        //                permission, SecurityType.role, roleCode);
         if (c > 0) {
           hasPermissionsList.add(permission);
         }

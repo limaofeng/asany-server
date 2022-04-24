@@ -157,7 +157,7 @@ public class SecurityGraphQLMutationResolver
             item ->
                 GrantPermission.builder()
                     .permission(Permission.builder().id(item.getPermission()).build())
-                    .resource(item.getResource())
+                    //                    .resource(item.getResource())
                     .build())
         .collect(Collectors.toList());
   }
@@ -271,9 +271,9 @@ public class SecurityGraphQLMutationResolver
    * @return
    */
   public PermissionType createPermissionType(PermissionTypeInput input) {
-    PermissionType permissionType = new PermissionType();
-    BeanUtils.copyProperties(input, permissionType);
-    return permissionService.savePermissionType(permissionType);
+    PermissionType type = new PermissionType();
+    BeanUtils.copyProperties(input, type);
+    return permissionService.savePermissionType(type);
   }
 
   /**
@@ -285,9 +285,9 @@ public class SecurityGraphQLMutationResolver
    * @return
    */
   public PermissionType updatePermissionType(String id, Boolean merge, PermissionTypeInput input) {
-    PermissionType permissionType = new PermissionType();
-    BeanUtils.copyProperties(input, permissionType);
-    return permissionService.updatePermissionType(id, merge, permissionType);
+    PermissionType permissionCategory = new PermissionType();
+    BeanUtils.copyProperties(input, permissionCategory);
+    return permissionService.updatePermissionType(id, merge, permissionCategory);
   }
 
   /**
@@ -310,10 +310,7 @@ public class SecurityGraphQLMutationResolver
   public Permission createPermission(PermissionUpdateInput input) {
     Permission permission = new Permission();
     BeanUtils.copyProperties(input, permission);
-    permission.setPermissionType(
-        PermissionType.builder()
-            .id(getPermissionTypeInput(input.getPermissionTypeInput()))
-            .build());
+    permission.setType(PermissionType.builder().id("").build());
     return permissionService.save(permission);
   }
 
@@ -336,10 +333,7 @@ public class SecurityGraphQLMutationResolver
   public Permission updatePermission(String id, Boolean merge, PermissionUpdateInput input) {
     Permission permission = new Permission();
     BeanUtils.copyProperties(input, permission);
-    permission.setPermissionType(
-        PermissionType.builder()
-            .id(getPermissionTypeInput(input.getPermissionTypeInput()))
-            .build());
+    permission.setType(PermissionType.builder().id(getPermissionTypeInput("")).build());
     return permissionService.update(id, merge, permission);
   }
 

@@ -1,0 +1,76 @@
+id: organization
+name: 组织权限
+permissions:
+  - id: organization:base_settings
+    name: 基础设置
+    scopes:
+      - id: organization:settings:delete
+        name: 组织删除
+      - id: organization:settings:rename
+        name: 组织重命名
+  - id: organization:people
+    name: 成员设置
+    scopes:
+      - id: organization:people:members
+        name: 成员管理
+      - id: organization:people:teams
+        name: 团队管理
+  - id: organization:structure
+    name: 组织架构
+    scopes:
+      - id: organization:structure:employees
+        name: 员工管理
+      - id: organization:structure:departments
+        name: 部门管理
+      - id: organization:structure:positions
+        name: 职务管理
+      - id: organization:structure:jobs
+        name: 岗位管理
+      - id: organization:structure:groups
+        name: 群组管理
+  - id: organization:security
+    name: 权限
+    scopes:
+      - id: organization:security:roles
+        name: 角色
+      - id: organization:security:permissions
+        name: 权限
+  - id: organization:cloud_drive
+    name: 网盘
+    scopes:
+      - id: organization:cloud_drive:settings
+        name: 设置
+  - id: organization:contacts
+    name: 通讯录
+    scopes:
+      - id: organization:contacts:settings
+        name: 管理
+      - id: organization:contacts:read_only
+        name: 只读
+  - id: organization:mail
+    name: 通讯录
+    scopes:
+      - id: organization:mail:settings
+        name: 管理
+      - id: organization:mail:read_only
+        name: 只读
+  - id: organization:cms
+    name: 内容管理系统
+    scopes:
+      - id: organization:cms:base
+        name: 基础
+        description: 包含内容管理的基础权限，包含：查看 / 评论 / 点赞 等
+      - id: organization:cms:channel
+        name: 栏目管理
+      - id: organization:cms:article
+        name: 文章管理
+        scopes:
+          - id: organization:cms:article:new
+            name: 发表文章
+          - id: organization:cms:article:delete
+            name: 删除文章
+          - id: organization:cms:article:comment
+            name: 文章评论管理
+          - id: organization:cms:article:base
+            name: 其他权限
+            description: 包含 点赞 / 点击数 的维护

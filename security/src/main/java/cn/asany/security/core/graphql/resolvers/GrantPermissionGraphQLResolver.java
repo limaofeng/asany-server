@@ -6,7 +6,6 @@ import cn.asany.security.core.bean.User;
 import cn.asany.security.core.graphql.enums.GrantPermissionReturnObjectType;
 import cn.asany.security.core.service.UserService;
 import graphql.kickstart.tools.GraphQLResolver;
-import org.jfantasy.framework.util.common.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -25,28 +24,30 @@ public class GrantPermissionGraphQLResolver implements GraphQLResolver<GrantPerm
   @Autowired private UserService userService;
 
   public String resourceType(GrantPermission grantPermission) {
-    return grantPermission.getPermission().getResourceType();
+    return ""; // grantPermission.getPermission().getResourceType();
   }
 
   private Long getObjectId(GrantPermission grantPermission, SecurityType type) {
-    if (type != grantPermission.getSecurityType()) {
-      return null;
-    }
-    if (StringUtil.isBlank(grantPermission.getValue())) {
-      return null;
-    }
-    return Long.valueOf(grantPermission.getValue());
+    //    if (type != grantPermission.getSecurityType()) {
+    //      return null;
+    //    }
+    //    if (StringUtil.isBlank(grantPermission.getValue())) {
+    //      return null;
+    //    }
+    //    return Long.valueOf(grantPermission.getValue());
+    return null;
   }
 
   private Long getObjectId(GrantPermission grantPermission, String type) {
-    String resourceType = grantPermission.getPermission().getResourceType();
-    if (!type.equals(resourceType)) {
-      return null;
-    }
-    if (StringUtil.isBlank(grantPermission.getResource())) {
-      return null;
-    }
-    return Long.valueOf(grantPermission.getResource());
+    //    String resourceType = grantPermission.getPermission().getResourceType();
+    //    if (!type.equals(resourceType)) {
+    //      return null;
+    //    }
+    //    if (StringUtil.isBlank(grantPermission.getResource())) {
+    //      return null;
+    //    }
+    //    return Long.valueOf(grantPermission.getResource());
+    return null;
   }
 
   private Long getObjectId(

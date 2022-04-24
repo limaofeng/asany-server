@@ -1,20 +1,19 @@
 package cn.asany.security.core.bean;
 
 import java.util.List;
+import java.util.Objects;
 import javax.persistence.*;
 import lombok.*;
+import org.hibernate.Hibernate;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
-/**
- * @author: guoyong
- * @description: 权限分类表
- * @create: 2020/6/9 11:18
- */
-@Data
-@EqualsAndHashCode(callSuper = false)
+/** 权限分类表 */
+@Getter
+@Setter
+@ToString
+@RequiredArgsConstructor
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
 @Entity
 @Table(name = "AUTH_PERMISSION_TYPE")
 public class PermissionType extends BaseBusEntity {
@@ -26,24 +25,35 @@ public class PermissionType extends BaseBusEntity {
 
   /** 权限分类编码 */
   @Id
-  @Column(name = "ID", length = 32)
+  @Column(name = "ID", length = 50)
   private String id;
   /** 权限分类名称 */
   @Column(name = "NAME", length = 50)
   private String name;
-
   /** 描述信息 */
   @Column(name = "DESCRIPTION", length = 250)
   private String description;
-
-  /** 排序 */
-  @Column(name = "SORT", length = 11)
-  private int sort;
-
+  /** 排序字段 */
+  @Column(name = "SORT")
+  private Integer index;
   /** 对应的权限定义 */
   @OneToMany(
-      mappedBy = "permissionType",
+      mappedBy = "type",
       fetch = FetchType.LAZY,
       cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
+  @ToString.Exclude
   private List<Permission> permissions;
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+    PermissionType that = (PermissionType) o;
+    return id != null && Objects.equals(id, that.id);
+  }
+
+  @Override
+  public int hashCode() {
+    return getClass().hashCode();
+  }
 }

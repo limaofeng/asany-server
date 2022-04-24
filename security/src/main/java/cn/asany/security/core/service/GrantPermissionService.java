@@ -35,14 +35,17 @@ public class GrantPermissionService {
     return grantPermissionDao.findAll(
         Example.of(
             GrantPermission.builder()
-                .permission(Permission.builder().resourceType(resourceType).build())
-                .resource(resource)
+                //
+                // .permission(Permission.builder().resourceType(resourceType).build())
+                //                .resource(resource)
                 .build()));
   }
 
   public List<GrantPermission> getGrantPermissions(SecurityType securityType, String value) {
-    return grantPermissionDao.findAll(
-        Example.of(GrantPermission.builder().securityType(securityType).value(value).build()));
+    //    return grantPermissionDao.findAll(
+    //
+    // Example.of(GrantPermission.builder().securityType(securityType).value(value).build()));
+    return new ArrayList<>();
   }
 
   public void deleteGrantPermission(GrantPermission grant) {
@@ -53,9 +56,9 @@ public class GrantPermissionService {
     Optional<GrantPermission> optional = this.grantPermissionDao.findOne(Example.of(grant));
     if (optional.isPresent()) {
       GrantPermission oldGrant = optional.get();
-      oldGrant.setSecurityType(grant.getSecurityType());
+      //      oldGrant.setSecurityType(grant.getSecurityType());
       oldGrant.setValue(grant.getValue());
-      oldGrant.setResource(grant.getResource());
+      //      oldGrant.setResource(grant.getResource());
       return this.grantPermissionDao.save(oldGrant);
     } else {
       grant.setPermission(permissionDao.getOne(grant.getPermission().getId()));
@@ -64,14 +67,14 @@ public class GrantPermissionService {
   }
 
   public GrantPermission saveGrantPermission(String resource, GrantPermission grant) {
-    grant.setResource(resource);
+    //    grant.setResource(resource);
     return this.saveGrantPermission(grant);
   }
 
   public GrantPermission saveGrantPermission(
       SecurityType securityType, String value, GrantPermission grant) {
-    grant.setSecurityType(securityType);
-    grant.setValue(value);
+    //    grant.setSecurityType(securityType);
+    //    grant.setValue(value);
     return this.saveGrantPermission(grant);
   }
 
@@ -116,15 +119,16 @@ public class GrantPermissionService {
   }
 
   public List<Permission> getPermissionsByRoleId(String roleId) {
-    List<GrantPermission> grantPermissionList =
-        grantPermissionDao.findGrantPermissionsBySecurityTypeAndValue(SecurityType.role, roleId);
+    List<GrantPermission> grantPermissionList = new ArrayList<>();
+    //        grantPermissionDao.findGrantPermissionsBySecurityTypeAndValue(SecurityType.role,
+    // roleId);
     return grantPermissionList.stream()
         .map(GrantPermission::getPermission)
         .collect(Collectors.toList());
   }
 
   public List<GrantPermission> getGrantPermissionsByPermissionId(String permissionId) {
-    return grantPermissionDao.findGrantPermissionsByPermissionId(permissionId);
+    return new ArrayList<>(); // grantPermissionDao.findGrantPermissionsByPermissionId(permissionId);
   }
 
   /**
@@ -146,8 +150,8 @@ public class GrantPermissionService {
       String[] arr = values.split(":");
       String entityType = arr[0];
       // 先删除
-      grantPermissionDao.deleteGrantPermissionByPermissionIdAndSecurityType(
-          permissionId, SecurityType.valueOf(entityType));
+      //      grantPermissionDao.deleteGrantPermissionByPermissionIdAndSecurityType(
+      //          permissionId, SecurityType.valueOf(entityType));
       if (arr.length != 2) {
         continue;
       }
@@ -162,8 +166,8 @@ public class GrantPermissionService {
       grantPermissionDao.save(
           GrantPermission.builder()
               .permission(permission)
-              .securityType(SecurityType.valueOf(entityType))
-              .value(entityId)
+              //              .securityType(SecurityType.valueOf(entityType))
+              //              .value(entityId)
               .build());
     }
   }

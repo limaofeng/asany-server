@@ -2,17 +2,21 @@ package cn.asany.security.core.service;
 
 import cn.asany.security.core.bean.Permission;
 import cn.asany.security.core.bean.PermissionType;
+import cn.asany.security.core.bean.enums.PermissionGrantType;
 import cn.asany.security.core.bean.enums.ResourceType;
 import cn.asany.security.core.dao.GrantPermissionDao;
 import cn.asany.security.core.dao.PermissionDao;
 import cn.asany.security.core.dao.PermissionTypeDao;
 import cn.asany.security.core.exception.ValidDataException;
+import cn.asany.security.core.service.dto.ImportPermission;
 import cn.asany.security.core.util.GrantPermissionUtils;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import org.apache.commons.collections.CollectionUtils;
+import org.jfantasy.framework.dao.OrderBy;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
+import org.jfantasy.framework.util.common.ObjectUtil;
+import org.jfantasy.framework.util.common.toys.CompareResults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
@@ -25,17 +29,26 @@ public class PermissionService {
 
   private final PermissionDao permissionDao;
 
-  @Autowired private PermissionTypeDao permissionTypeDao;
+  private final PermissionTypeDao permissionTypeDao;
 
-  @Autowired private GrantPermissionDao grantPermissionDao;
+  private final GrantPermissionDao grantPermissionDao;
 
   @Autowired
-  public PermissionService(PermissionDao permissionDao) {
+  public PermissionService(
+      PermissionDao permissionDao,
+      PermissionTypeDao permissionTypeDao,
+      GrantPermissionDao grantPermissionDao) {
     this.permissionDao = permissionDao;
+    this.permissionTypeDao = permissionTypeDao;
+    this.grantPermissionDao = grantPermissionDao;
   }
 
   public Pager<Permission> findPager(Pager<Permission> pager, List<PropertyFilter> filters) {
     return this.permissionDao.findPager(pager, filters);
+  }
+
+  public List<Permission> findAll(List<PropertyFilter> filters, OrderBy orderBy) {
+    return this.permissionDao.findAll(filters, orderBy.toSort());
   }
 
   public Permission save(Permission permission) {
@@ -43,6 +56,57 @@ public class PermissionService {
       throw new ValidDataException(ValidDataException.PERMISSION_EXISTS, permission.getId());
     }
     return this.permissionDao.save(permission);
+  }
+
+  public List<Permission> importPermission(ImportPermission importPermission) {
+
+    Optional<PermissionType> optionalType =
+        this.permissionTypeDao.findById(importPermission.getId());
+
+    PermissionType type =
+        optionalType.orElseGet(
+            () ->
+                this.permissionTypeDao.save(
+                    PermissionType.builder()
+                        .id(importPermission.getId())
+                        .name(importPermission.getName())
+                        .description(importPermission.getDescription())
+                        .index((int) (this.permissionTypeDao.count() + 1))
+                        .build()));
+
+    List<Permission> oldPermissions =
+        ObjectUtil.defaultValue(type.getPermissions(), new ArrayList<>());
+
+    List<Permission> permissions = importPermission.getPermissions();
+
+    ObjectUtil.recursive(
+        permissions,
+        (item, context) -> {
+          Permission parent = (Permission) context.getParent();
+          item.setParent(parent);
+          item.setType(type);
+          item.setEnabled(Boolean.TRUE);
+          item.setTokenTypes(new HashSet<>());
+          item.setIndex(context.getIndex());
+          item.setGrantType(PermissionGrantType.GENERAL);
+          return item;
+        },
+        "scopes");
+
+    List<Permission> allPermissions = ObjectUtil.flat(permissions, "scopes", "parent");
+
+    CompareResults<Permission> results =
+        ObjectUtil.compare(oldPermissions, allPermissions, Comparator.comparing(Permission::getId));
+
+    allPermissions.forEach(item -> item.setScopes(new ArrayList<>()));
+
+    this.permissionDao.saveAll(allPermissions);
+
+    if (!results.getExceptA().isEmpty()) {
+      this.permissionDao.deleteAll(results.getExceptA());
+    }
+
+    return allPermissions;
   }
 
   public Permission update(String id, Boolean merge, Permission permission) {
@@ -53,20 +117,12 @@ public class PermissionService {
     return permissionDao.save(permission);
   }
 
-  public Permission get(String id) {
-    Optional<Permission> optional = this.permissionDao.findById(id);
-    if (optional.isPresent()) {
-      return optional.get();
-    }
-    return null;
-  }
-
   public void delete(String... ids) {
     for (String id : ids) {
       if (!permissionDao.existsById(id)) {
         throw new ValidDataException(ValidDataException.PERMISSION_NOTEXISTS, id);
       }
-      grantPermissionDao.deleteGrantPermissionByPermissionId(id);
+      //      grantPermissionDao.deleteGrantPermissionByPermissionId(id);
       grantPermissionDao.flush();
       permissionDao.deleteById(id);
     }
@@ -112,9 +168,8 @@ public class PermissionService {
     if (!permissionTypeDao.existsById(id)) {
       throw new ValidDataException(ValidDataException.PERMITYPE_NOTEXISTS, id);
     }
-    PermissionType permissionType = permissionTypeDao.getOne(id);
-    if (CollectionUtils.isEmpty(permissionType.getPermissions())
-        || permissionType.getPermissions().size() == 0) {
+    PermissionType permissionType = permissionTypeDao.getById(id);
+    if (CollectionUtils.isEmpty(permissionType.getPermissions())) {
       permissionTypeDao.delete(permissionType);
     } else {
       throw new ValidDataException(ValidDataException.PERMITYPE_HAS_PERMISSIONS, id);

@@ -1,14 +1,16 @@
 package cn.asany.security.core.bean;
 
-import cn.asany.base.common.SecurityType;
 import cn.asany.security.core.bean.databind.PermissionDeserializer;
 import cn.asany.security.core.bean.databind.PermissionSerializer;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import java.util.Date;
+import java.util.Objects;
 import javax.persistence.*;
 import lombok.*;
+import org.hibernate.Hibernate;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
 /**
@@ -18,12 +20,11 @@ import org.jfantasy.framework.dao.BaseBusEntity;
  * @version V1.0
  * @date 2019-06-11 20:10
  */
-@Data
-@EqualsAndHashCode(
-    callSuper = false,
-    of = {"securityType", "value", "resource", "permission"})
+@Getter
+@Setter
+@ToString
+@RequiredArgsConstructor
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Table(name = "AUTH_GRANT_PERMISSION")
@@ -40,16 +41,13 @@ public class GrantPermission extends BaseBusEntity {
       pkColumnValue = "auth_grant_permission:id",
       valueColumnName = "gen_value")
   private Long id;
-  /** 授权类型 */
-  @Enumerated(EnumType.STRING)
-  @Column(name = "SECURITY_TYPE", length = 20, nullable = false)
-  private SecurityType securityType;
-  /** 授权 */
+  //  /** 授权类型 */
+  //  @Enumerated(EnumType.STRING)
+  //  @Column(name = "TYPE", length = 20, nullable = false)
+  //  private GrantPermissionType type;
+  /** 被授权者 */
   @Column(name = "VALUE", length = 25, nullable = false)
-  private String value;
-  /** 资源 */
-  @Column(name = "RESOURCE", length = 25)
-  private String resource;
+  private GrantPermissionValue value;
   /** 权限 */
   @JsonProperty("permission")
   @JsonSerialize(using = PermissionSerializer.class)
@@ -59,9 +57,23 @@ public class GrantPermission extends BaseBusEntity {
       name = "PERMISSION",
       foreignKey = @ForeignKey(name = "FK_SECURE_GRANT_PERMISSION_PID"),
       nullable = false)
+  @ToString.Exclude
   private Permission permission;
-  /** 权限方案 */
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "SCHEME", foreignKey = @ForeignKey(name = "FK_SECURE_GRANT_PERMISSION_SID"))
-  private PermissionScheme scheme;
+  /** 授权过期时间 不设置为永久 */
+  @Temporal(TemporalType.TIMESTAMP)
+  @Column(name = "EXPIRES_AT")
+  private Date expiresAt;
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+    GrantPermission that = (GrantPermission) o;
+    return id != null && Objects.equals(id, that.id);
+  }
+
+  @Override
+  public int hashCode() {
+    return getClass().hashCode();
+  }
 }

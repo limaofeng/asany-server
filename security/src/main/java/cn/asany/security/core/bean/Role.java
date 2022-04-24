@@ -4,13 +4,11 @@ import cn.asany.organization.core.bean.Organization;
 import cn.asany.security.core.bean.enums.RoleType;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.List;
+import java.util.Objects;
 import javax.persistence.*;
-import javax.persistence.Entity;
-import javax.persistence.ForeignKey;
-import javax.persistence.Table;
 import lombok.*;
-import net.bytebuddy.description.modifier.Ownership;
-import org.hibernate.annotations.*;
+import org.hibernate.Hibernate;
+import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
 /**
@@ -18,11 +16,12 @@ import org.jfantasy.framework.dao.BaseBusEntity;
  *
  * @author limaofeng
  */
-@Data
+@Getter
+@Setter
+@ToString
+@RequiredArgsConstructor
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
-@EqualsAndHashCode(callSuper = false)
 @Entity
 @Table(name = "AUTH_ROLE")
 @JsonIgnoreProperties({
@@ -35,7 +34,10 @@ import org.jfantasy.framework.dao.BaseBusEntity;
 })
 public class Role extends BaseBusEntity {
 
+  @Transient
   public static final Role USER = Role.builder().id(1L).code("USER").name("普通用户").build();
+
+  @Transient
   public static final Role ADMIN = Role.builder().id(2L).code("ADMIN").name("管理员").build();
 
   @Id
@@ -62,6 +64,7 @@ public class Role extends BaseBusEntity {
    */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "SPACE", foreignKey = @ForeignKey(name = "FK_ROLE_SCOPE"), updatable = false)
+  @ToString.Exclude
   private RoleSpace space;
   /** 对应的用户 */
   @ManyToMany(targetEntity = User.class, fetch = FetchType.LAZY)
@@ -73,24 +76,32 @@ public class Role extends BaseBusEntity {
               foreignKey = @ForeignKey(name = "FK_AUTH_ROLE_USER_ROLE")),
       inverseJoinColumns = @JoinColumn(name = "USER_ID"),
       foreignKey = @ForeignKey(name = "FK_ROLE_USER_RCODE"))
+  @ToString.Exclude
   private List<User> users;
   /** 角色类型 */
   @Enumerated(EnumType.STRING)
   @Column(name = "TYPE", length = 20, nullable = false)
   private RoleType type;
+  /** 所属组织 */
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(
+      name = "ORGANIZATION_ID",
+      foreignKey = @ForeignKey(name = "FK_ROLE_ORGANIZATION"),
+      updatable = false,
+      nullable = false)
+  @ToString.Exclude
+  private Organization organization;
 
-  /** 所有者 */
-  @Any(
-      metaColumn =
-          @Column(name = "OWNERSHIP_TYPE", length = 10, insertable = false, updatable = false),
-      fetch = FetchType.LAZY)
-  @AnyMetaDef(
-      idType = "long",
-      metaType = "string",
-      metaValues = {
-        @MetaValue(targetEntity = User.class, value = User.OWNERSHIP_KEY),
-        @MetaValue(targetEntity = Organization.class, value = Organization.OWNERSHIP_KEY)
-      })
-  @JoinColumn(name = "OWNERSHIP_ID", insertable = false, updatable = false)
-  private Ownership ownership;
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+    Role role = (Role) o;
+    return id != null && Objects.equals(id, role.id);
+  }
+
+  @Override
+  public int hashCode() {
+    return getClass().hashCode();
+  }
 }

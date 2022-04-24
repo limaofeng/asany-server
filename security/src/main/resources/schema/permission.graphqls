@@ -1,0 +1,103 @@
+type PermissionType {
+  id: ID
+  name: String
+}
+
+type ResourceType {
+  id: ID
+  name: String
+}
+
+enum PermissionGrantType {
+  GENERAL
+  RESOURCE
+}
+
+type Permission {
+  id: ID
+  """
+  名称
+  """
+  name: String
+  """
+  描述
+  """
+  description: String
+  """
+  启用状态
+  """
+  enabled: Boolean
+  """
+  预留 / 用于区分使用场合
+  """
+  tokenTypes: [String]
+  """
+  排序码
+  """
+  index: Int
+  """
+  权限类型
+  """
+  type: PermissionType
+  """
+  授权类型
+  """
+  grantType: PermissionGrantType
+  """
+  如果为资源授权，需要提供资源类型
+  """
+  resourceType: String
+  """
+  被授权的资源
+  """
+  resources: [String]
+  """
+  上级权限
+  """
+  parent: Permission
+  """
+  子权限
+  """
+  scopes: [Permission]
+}
+
+type PermissionConnection {
+  # 总数据条数
+  totalCount: Int
+  # 每页显示条数
+  pageSize: Int
+  # 总页数
+  totalPage: Int
+  # 当前页
+  currentPage: Int
+  edges: [PermissionEdge]
+  pageInfo: PageInfo
+}
+
+type PermissionEdge {
+  cursor: String
+  node: Permission
+}
+
+input PermissionFilter {
+  """
+  名称模糊查询
+  """
+  name: String
+}
+
+extend type Query {
+  """
+  查询权限 (分页)
+  """
+  permissionsConnection(
+    filter: PermissionFilter
+    page: Int = 1
+    pageSize: Int = 15
+    orderBy: OrderBy
+  ): PermissionConnection
+  """
+  查询权限
+  """
+  permissions(filter: PermissionFilter, orderBy: OrderBy): [Permission]
+}

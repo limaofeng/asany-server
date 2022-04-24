@@ -40,9 +40,9 @@ public class GrantPermissionUtils {
             item ->
                 GrantPermission.builder()
                     .permission(item.getPermission())
-                    .securityType(item.getSecurityType())
+                    //                    .securityType(item.getSecurityType())
                     .value(item.getValue())
-                    .resource(item.getResource())
+                    //                    .resource(item.getResource())
                     .build())
         .collect(Collectors.toList());
   }
@@ -62,7 +62,7 @@ public class GrantPermissionUtils {
             item ->
                 GrantPermission.builder()
                     .permission(item.getPermission())
-                    .securityType(item.getSecurityType())
+                    //                    .securityType(item.getSecurityType())
                     .value(item.getValue())
                     .build())
         .collect(Collectors.toList());
@@ -75,17 +75,17 @@ public class GrantPermissionUtils {
       stream = stream.filter(item -> item.getEnabled() && item.getId().equals(permissionKey));
     }
     List<User> users = new ArrayList<>();
-    stream.forEach(
-        p -> {
-          users.addAll(
-              p.getGrants().stream()
-                  .filter(item -> item.getSecurityType() == SecurityType.user)
-                  .filter(item -> StringUtil.isNotBlank(item.getValue()))
-                  .map(item -> getUserService().get(Long.valueOf(item.getValue())))
-                  .filter(Optional::isPresent)
-                  .map(Optional::get)
-                  .collect(Collectors.toList()));
-        });
+    //    stream.forEach(
+    //        p -> {
+    //          users.addAll(
+    //              p.getGrants().stream()
+    //                  .filter(item -> item.getSecurityType() == SecurityType.user)
+    //                  .filter(item -> StringUtil.isNotBlank(item.getValue()))
+    //                  .map(item -> getUserService().get(Long.valueOf(item.getValue())))
+    //                  .filter(Optional::isPresent)
+    //                  .map(Optional::get)
+    //                  .collect(Collectors.toList()));
+    //        });
     return users.stream();
   }
 
@@ -136,9 +136,9 @@ public class GrantPermissionUtils {
                     SecurityScope securityScope = SecurityScope.newInstance(grant);
                     grants.add(
                         GrantPermission.builder()
-                            .value(securityScope.getValue())
-                            .resource(resource.toString())
-                            .securityType(securityScope.getType())
+                            //                            .value(securityScope.getValue())
+                            //                            .resource(resource.toString())
+                            //                            .securityType(securityScope.getType())
                             .permission(Permission.builder().id(item.getPermission()).build())
                             .build());
                   });
