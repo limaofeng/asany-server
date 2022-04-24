@@ -297,11 +297,6 @@ enum ArticleType {
   video
 }
 
-type Permission {
-  resourceType: String
-  id: String
-}
-
 enum ArticleChannelStarType {
   # 关注
   follow
