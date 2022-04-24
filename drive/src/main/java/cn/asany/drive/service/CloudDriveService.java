@@ -7,6 +7,7 @@ import cn.asany.drive.bean.enums.CloudDriveType;
 import cn.asany.drive.dao.CloudDriveDao;
 import cn.asany.security.core.bean.User;
 import cn.asany.security.core.dao.UserDao;
+import cn.asany.storage.api.Storage;
 import cn.asany.storage.data.bean.Space;
 import cn.asany.storage.data.service.FileService;
 import java.util.List;
@@ -55,7 +56,7 @@ public class CloudDriveService {
     quota1.setCloudDrive(cloudDrive);
 
     // TODO 应该动态读取配置
-    String storage = "Global";
+    String storage = Storage.DEFAULT_STORAGE_ID;
 
     Space space =
         this.fileService.createStorageSpace(

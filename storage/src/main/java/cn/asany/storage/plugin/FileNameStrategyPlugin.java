@@ -53,6 +53,7 @@ public class FileNameStrategyPlugin implements StoragePlugin {
       int index = 1;
       while (fileService.exists(filename, folderId, storage.getId())) {
         filename = name + "_" + index + extension;
+        index++;
       }
     } else if (fileNameStrategy == UploadFileNameStrategy.UUID) {
       filename =

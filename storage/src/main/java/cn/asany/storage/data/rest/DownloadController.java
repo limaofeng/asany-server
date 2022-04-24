@@ -48,6 +48,13 @@ public class DownloadController {
     this.thumbnailService = thumbnailService;
   }
 
+  @GetMapping("/preview/{fid}")
+  public void preview(
+      @PathVariable("fid") String id, HttpServletRequest request, HttpServletResponse response)
+      throws IOException {
+    download(id, request, response);
+  }
+
   @GetMapping("/thumbnail/{fid}")
   public void thumbnail(
       @PathVariable("fid") String id,

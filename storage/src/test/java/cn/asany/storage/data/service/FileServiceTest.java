@@ -2,6 +2,7 @@ package cn.asany.storage.data.service;
 
 import cn.asany.base.utils.UUID;
 import cn.asany.storage.TestApplication;
+import cn.asany.storage.api.Storage;
 import cn.asany.storage.data.bean.FileDetail;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +26,8 @@ class FileServiceTest {
 
   @Test
   void createStorageSpace() {
-    fileService.createStorageSpace(UUID.getShortId(), "测试", "/test-001/", "Global");
+    fileService.createStorageSpace(
+        UUID.getShortId(), "门店", "/modules/landing/", Storage.DEFAULT_STORAGE_ID);
   }
 
   @Test
