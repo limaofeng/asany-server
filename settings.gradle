@@ -26,6 +26,7 @@ include ":shanhai",
         ":ui",
         ":cms",
         ":boot"
+        ":website"
 
 // 基础
 project(':base').projectDir = "$rootDir/base" as File
@@ -55,5 +56,7 @@ project(':sunrise').projectDir = "$rootDir/sunrise" as File
 project(':mail').projectDir = "$rootDir/mail" as File
 // 云盘
 project(':drive').projectDir = "$rootDir/drive" as File
+// 云盘
+project(':website').projectDir = "$rootDir/website" as File
 // 启动
 project(':boot').projectDir = "$rootDir/boot" as File

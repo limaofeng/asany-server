@@ -6,6 +6,34 @@ clientSecret: 3c833cf785c71234d5024aca9668dd466f050453
 menus:
   - name: 仪表盘
     icon: Duotune/gen025
+  - name: 网站管理
+    icon: Duotune/abs045
+    path: /website
+    component: cn.asany.ui.admin.website.Sidebar
+    children:
+      - name: 活动管理
+        type: SECTION
+      - name: 活动管理
+        icon: Bootstrap/phone
+        path: /website/landing/pages
+        hideChildrenInMenu: true
+        children:
+          - name: 活动详情
+            path: /website/landing/pages/:id
+      - name: 海报管理
+        icon: Bootstrap/file-image
+        path: /website/landing/posters
+        hideChildrenInMenu: true
+        children:
+          - name: 海报详情
+            path: /website/landing/posters/:id
+      - name: 门店管理
+        icon: Bootstrap/shop
+        path: /website/landing/stores
+        hideChildrenInMenu: true
+        children:
+          - name: 门店详情
+            path: /website/landing/stores/:id
   - name: 应用管理
     icon: Duotune/abs027
     path: /apps
@@ -17,6 +45,61 @@ menus:
     icon: Duotune/abs026
     path: /shanhai
     component: cn.asany.ui.admin.shanhai.MenuSidebar
+  - name: 通讯录
+    icon: Duotune/com005
+    path: /contacts
+    component: cn.asany.ui.admin.contacts.Sidebar
+  - name: 日历
+    icon: Duotune/gen014
+    path: /calendar
+    component: cn.asany.ui.admin.calendar.Sidebar
+  - name: 云盘
+    icon: Duotune/fil020
+    path: /drive
+    component: cn.asany.ui.admin.drive.Sidebar
+  - name: 邮箱
+    icon: Duotune/com011
+    path: /mail
+    component: cn.asany.ui.admin.mail.Sidebar
+  #  - name: 系统管理
+  #    icon: Duotune/cod001
+  #    children:
+  #      - name: 安全设置
+  #        type: SECTION
+  #      - name: 权限管理
+  #        icon: Duotune/gen049
+  #        children:
+  #          - name: 角色管理
+  #            path: /security/roles
+  #          - name: 权限管理
+  #            path: /security/permissions
+  #          - name: 角色管理
+  #            path: /security/roles
+  #      - name: 用户会话
+  #        icon: Duotune/abs046
+  #        children:
+  #          - name: 在线用户
+  #            path: /security/roles
+  #          - name: 异常用户
+  #            path: /security/roles
+  #          - name: 被锁定的用户
+  #            path: /security/roles
+  #      - name: 个性化
+  #        type: SECTION
+  #      - name: 图标库管理
+  #        icon: Duotune/soc005
+  #        path: /icon-libraries
+  #      - name: 系统集成
+  #        type: SECTION
+  #      - name: 移动办公平
+  #        icon: Duotune/elc002
+  #        children:
+  #          - name: 钉钉集成
+  #          - name: 企业微信
+  #      - name: 企业邮箱
+  #        icon: Duotune/com002
+  #      - name: 第三方存储
+  #        icon: Duotune/fil023
   - name: 个人中心
     icon: Duotune/abs026
     path: /settings
@@ -47,61 +130,55 @@ menus:
       - name: 组织机构
         icon: Bootstrap/building
         path: /settings/organizations
-  - name: 通讯录
-    icon: Duotune/com005
-    path: /contacts
-    component: cn.asany.ui.admin.contacts.Sidebar
-  - name: 日历
-    icon: Duotune/gen014
-    path: /calendar
-    component: cn.asany.ui.admin.calendar.Sidebar
-  - name: 云盘
-    icon: Duotune/fil020
-    path: /drive
-    component: cn.asany.ui.admin.drive.Sidebar
-  - name: 邮箱
-    icon: Duotune/com011
-    path: /mail
-    component: cn.asany.ui.admin.mail.Sidebar
-  - name: 系统管理
-    icon: Duotune/cod001
+      - name: 密码和身份验证
+        icon: Bootstrap/building
+        path: /settings/sessions
+        hideInMenu: true
+        children:
+          - name: 会话详情
+            path: /settings/sessions/:id
+  - name: 组织设置
+    path: /organizations/:id/settings
+    component: cn.asany.ui.admin.organization.OrganizationSettingsSidebar
+    hideInMenu: true
     children:
-      - name: 安全设置
+      - name: 基本信息
+        icon: Bootstrap/gear
+        path: /organizations/:id/settings/profile
+      - type: SEPARATOR
+      - name: 成员
+        icon: Bootstrap/person
+        path: /organizations/:id/settings/people
+      - name: 团队
+        icon: Bootstrap/people
+        path: /organizations/:id/settings/teams
+      - type: SEPARATOR
+      - name: 组织架构
         type: SECTION
+      - name: 员工管理
+        icon: Bootstrap/person-badge
+        path: /organizations/:id/settings/employees
+      - name: 部门管理
+        icon: Bootstrap/diagram-3
+        path: /organizations/:id/settings/departments
+      - name: 职务管理
+        icon: Bootstrap/filter-square
+        path: /organizations/:id/settings/positions
+      - name: 岗位
+        icon: Duotune/fin006
+        path: /organizations/:id/settings/jobs
+      - name: 群组
+        icon: Bootstrap/collection
+        path: /organizations/:id/settings/groups
+      - type: SEPARATOR
       - name: 权限管理
-        icon: Duotune/gen049
-        children:
-          - name: 角色管理
-            path: /security/roles
-          - name: 权限管理
-            path: /security/permissions
-          - name: 角色管理
-            path: /security/roles
-      - name: 用户会话
-        icon: Duotune/abs046
-        children:
-          - name: 在线用户
-            path: /security/roles
-          - name: 异常用户
-            path: /security/roles
-          - name: 被锁定的用户
-            path: /security/roles
-      - name: 个性化
         type: SECTION
-      - name: 图标库管理
-        icon: Duotune/soc005
-        path: /icon-libraries
-      - name: 系统集成
-        type: SECTION
-      - name: 移动办公平
-        icon: Duotune/elc002
-        children:
-          - name: 钉钉集成
-          - name: 企业微信
-      - name: 企业邮箱
-        icon: Duotune/com002
-      - name: 第三方存储
-        icon: Duotune/fil023
+      - name: 角色管理
+        icon: Bootstrap/shield
+        path: /organizations/:id/settings/roles
+      - name: 资源权限
+        icon: Bootstrap/intersect
+        path: /organizations/:id/settings/permissions
 routes:
   - path: /login
     component: cn.asany.ui.admin.authentication.AsideLayoutSignIn
@@ -211,14 +288,57 @@ routes:
             component: cn.asany.ui.admin.user.settings.Security
           - path: /settings/organizations
             component: cn.asany.ui.admin.user.settings.Organizations
+          - path: /settings/sessions/:id
+            component: cn.asany.ui.admin.user.settings.SessionDetails
+          - path: /settings/sessions
+            redirect: /settings/security
           - path: /settings
             redirect: /settings/profile
       - path: /organizations/:id/settings
         routes:
           - path: /organizations/:id/settings/profile
             component: cn.asany.ui.admin.organization.settings.Profile
-          - path: /organizations/:id/settings/members
-            component: cn.asany.ui.admin.organization.settings.members
+          - path: /organizations/:id/settings/people
+            component: cn.asany.ui.admin.organization.settings.People
+          - path: /organizations/:id/settings/teams
+            component: cn.asany.ui.admin.organization.settings.Teams
+          - path: /organizations/:id/settings/employees
+            component: cn.asany.ui.admin.organization.settings.Employees
+          - path: /organizations/:id/settings/departments
+            component: cn.asany.ui.admin.organization.settings.Departments
+          - path: /organizations/:id/settings/positions
+            component: cn.asany.ui.admin.organization.settings.Positions
+          - path: /organizations/:id/settings/jobs
+            component: cn.asany.ui.admin.organization.settings.Jobs
+          - path: /organizations/:id/settings/groups
+            component: cn.asany.ui.admin.organization.settings.Groups
+          - path: /organizations/:id/settings/roles
+            routes:
+              - path: /organizations/:id/settings/roles/:rid
+                name: 角色详情
+                component: cn.asany.ui.admin.organization.settings.RoleDetails
+              - path: /organizations/:id/settings/roles
+                component: cn.asany.ui.admin.organization.settings.Roles
+          - path: /organizations/:id/settings/permissions
+            component: cn.asany.ui.admin.organization.settings.Permissions
+          - path: /organizations/:id/settings
+            redirect: /organizations/:id/settings/profile
+      - path: /website
+        routes:
+          - path: /website/landing/pages/:id
+            component: cn.asany.ui.admin.website.landing.PageDetails
+          - path: /website/landing/pages
+            component: cn.asany.ui.admin.website.landing.PageList
+          - path: /website/landing/stores/:id
+            component: cn.asany.ui.admin.website.landing.StoreDetails
+          - path: /website/landing/stores
+            component: cn.asany.ui.admin.website.landing.StoreList
+          - path: /website/landing/posters/:id
+            component: cn.asany.ui.admin.website.landing.PosterDetails
+          - path: /website/landing/posters
+            component: cn.asany.ui.admin.website.landing.PosterList
+          - path: /website
+            redirect: /website/landing/pages
       - path: /
         component: cn.asany.ui.admin.Home
 #modules:

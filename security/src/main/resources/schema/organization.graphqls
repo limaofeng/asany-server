@@ -774,21 +774,6 @@ type Phone {
   status: PhoneStatus
 }
 
-type Address {
-  #国家
-  country: String
-  #省
-  province: String
-  #城市
-  city: String
-  #区
-  district: String
-  #街道
-  street: String
-  #邮编
-  postalCode: String
-}
-
 type TeamMember {
   id: ID!
   name: String

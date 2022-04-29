@@ -116,6 +116,7 @@ public interface FileObject {
    *
    * @return Storage
    */
+  @JsonIgnore
   Storage getStorage();
 
   /**

@@ -36,6 +36,7 @@ dependencies {
     implementation project(":storage")
     implementation project(":security")
     implementation project(":storage-api")
+    implementation project(":website")
     compileOnly "org.projectlombok:lombok:${LIB_LOMBOK_VER}"
     annotationProcessor "org.projectlombok:lombok:$LIB_LOMBOK_VER"
     testCompileOnly "org.projectlombok:lombok:${LIB_LOMBOK_VER}"

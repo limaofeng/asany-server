@@ -35,6 +35,9 @@ public class Address {
   /** 街道 */
   @Column(name = "STREET", length = 30)
   private String street;
+  /** 详细地址 */
+  @Column(name = "DETAILED_ADDRESS", length = 100)
+  private String detailedAddress;
   /** 邮编 */
   @Column(name = "POSTAL_CODE", length = 10)
   private String postalCode;

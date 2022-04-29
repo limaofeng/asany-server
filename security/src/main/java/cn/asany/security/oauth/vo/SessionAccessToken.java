@@ -15,7 +15,7 @@ public class SessionAccessToken {
   /** 设备 */
   private String device;
   /** 位置信息 */
-  private Geolocation location;
+  private SessionGeolocation location;
   /** 登录时间 */
   private Date loginTime;
 }

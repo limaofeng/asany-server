@@ -136,7 +136,7 @@ type PersonalAccessToken {
   scopes: [String]
 }
 
-type Geolocation {
+type SessionGeolocation {
   id: ID
   # IP 地址
   internetProtocolAddress: String
@@ -153,7 +153,7 @@ type Session {
   # 设备
   device: String
   # 位置
-  location: Geolocation
+  location: SessionGeolocation
   # 登录时间
   loginTime: Date
 }

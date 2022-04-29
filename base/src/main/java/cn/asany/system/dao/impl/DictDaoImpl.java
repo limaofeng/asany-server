@@ -4,15 +4,14 @@ import cn.asany.system.bean.Dict;
 import cn.asany.system.bean.DictKey;
 import cn.asany.system.bean.DictType;
 import cn.asany.system.dao.DictDao;
+import java.util.List;
+import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import org.jfantasy.framework.dao.jpa.ComplexJpaRepository;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class DictDaoImpl extends ComplexJpaRepository<Dict, DictKey> implements DictDao {
 

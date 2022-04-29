@@ -24,7 +24,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SimpleFileObject implements FileObject {
-  private Long id;
+  private String id;
   /** 文件名称 */
   private String name;
   /** 是否为目录 */
@@ -51,16 +51,10 @@ public class SimpleFileObject implements FileObject {
 
   public void setUrl(String url) {
     this.url = url;
-    if (this.mimeType == null) {
-      this.mimeType = URLConnection.guessContentTypeFromName(url);
-    }
   }
 
   public void setPath(String path) {
     this.path = path;
-    if (this.mimeType == null) {
-      this.mimeType = URLConnection.guessContentTypeFromName(path);
-    }
   }
 
   @Override
@@ -111,7 +105,6 @@ public class SimpleFileObject implements FileObject {
     return this.storage;
   }
 
-  @Override
   @JsonIgnore
   public InputStream getInputStream() throws IOException {
     return null;

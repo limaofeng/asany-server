@@ -8,6 +8,7 @@ import cn.asany.system.dao.DictTypeDao;
 import com.github.stuxuhai.jpinyin.PinyinException;
 import java.util.*;
 import java.util.stream.Collectors;
+import org.jfantasy.framework.dao.OrderBy;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
@@ -46,6 +47,10 @@ public class DictService {
 
   public Dict get(DictKey key) {
     return dictDao.findById(key).orElse(null);
+  }
+
+  public Optional<Dict> findByCode(String code, String type) {
+    return dictDao.findById(DictKey.newInstance(code, type));
   }
 
   public Dict get(String key) {
@@ -88,6 +93,10 @@ public class DictService {
 
   public List<Dict> findAll(List<PropertyFilter> filters) {
     return this.dictDao.findAll(filters);
+  }
+
+  public List<Dict> findAll(List<PropertyFilter> filters, OrderBy orderBy) {
+    return this.dictDao.findAll(filters, orderBy.toSort());
   }
 
   public Pager<DictType> findDictTypePager(Pager<DictType> pager, List<PropertyFilter> filters) {
@@ -405,5 +414,9 @@ public class DictService {
 
   public List<DictType> findTypes(Example<DictType> partyQueryMenu) {
     return dictTypeDao.findAll(partyQueryMenu);
+  }
+
+  public Optional<Dict> findOne(List<PropertyFilter> filter) {
+    return this.dictDao.findOne(filter);
   }
 }

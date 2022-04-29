@@ -2,6 +2,7 @@ package cn.asany.storage.api.converter;
 
 import cn.asany.storage.api.FileObject;
 import javax.persistence.AttributeConverter;
+import javax.persistence.Converter;
 import org.jfantasy.framework.jackson.JSON;
 import org.jfantasy.framework.util.common.StringUtil;
 
@@ -12,6 +13,7 @@ import org.jfantasy.framework.util.common.StringUtil;
  * @version V1.0
  * @date 2019-04-09 18:17
  */
+@Converter
 public class FileObjectConverter implements AttributeConverter<FileObject, String> {
 
   @Override

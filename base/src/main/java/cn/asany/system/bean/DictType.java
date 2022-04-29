@@ -23,6 +23,19 @@ import org.jfantasy.framework.dao.BaseBusEntity;
 @Entity
 @Table(name = "SYS_DICT_TYPE")
 public class DictType extends BaseBusEntity {
+  /** 国家 */
+  public static final String TYPE_CODE_COUNTRY = "country";
+  /** “省份、城市、区县、乡镇” 四级联动数据 */
+  public static final String TYPE_CODE_PCAS = "pcas";
+  /** 省份 */
+  public static final String TYPE_CODE_PCAS_PROVINCE = "province";
+  /** 城市 */
+  public static final String TYPE_CODE_PCAS_CITY = "city";
+  /** 区县 */
+  public static final String TYPE_CODE_PCAS_DISTRICT = "district";
+  /** 乡镇/街道 */
+  public static final String TYPE_CODE_PCAS_STREET = "street";
+
   public static final String PATH_SEPARATOR = "/";
   private static final long serialVersionUID = 6196296454047254419L;
 

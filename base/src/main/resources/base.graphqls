@@ -1,0 +1,88 @@
+type Address {
+  """
+  国家编码
+  """
+  country: String
+  """
+  国家名称
+  """
+  countryName: String
+  """
+  省编码
+  """
+  province: String
+  """
+  省名称
+  """
+  provinceName: String
+  """
+  城市编码
+  """
+  city: String
+  """
+  城市名称
+  """
+  cityName: String
+  """
+  区县编码
+  """
+  district: String
+  """
+  区县名称
+  """
+  districtName: String
+  """
+  街道编码
+  """
+  street: String
+  """
+  街道名称
+  """
+  streetName: String
+  """
+  详细地址 - 具体的小区楼栋信息
+  """
+  detailedAddress: String
+  """
+  完整地址
+  包含: provinceName + cityName + districtName + streetName + detailedAddress
+  """
+  fullAddress(excludeDetailed: Boolean): String
+  """
+  邮编
+  """
+  postalCode: String
+}
+
+type Geolocation {
+  """
+  经度
+  """
+  longitude: Float!
+  """
+  纬度
+  """
+  latitude: Float!
+}
+
+input GeolocationInput {
+  longitude: Float
+  latitude: Float
+}
+
+input AddressInput {
+  #国家
+  country: String
+  #省
+  province: String
+  #城市
+  city: String
+  #区
+  district: String
+  #街道
+  street: String
+  #邮编
+  postalCode: String
+  # 详细地址
+  detailedAddress: String
+}

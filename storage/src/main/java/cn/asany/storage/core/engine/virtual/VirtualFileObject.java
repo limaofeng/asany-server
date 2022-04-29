@@ -5,6 +5,7 @@ import cn.asany.storage.core.StorageResolver;
 import cn.asany.storage.data.bean.FileLabel;
 import cn.asany.storage.data.bean.Space;
 import cn.asany.storage.data.service.FileService;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
@@ -14,6 +15,16 @@ import org.jfantasy.framework.spring.SpringBeanUtils;
 
 @Getter
 @Builder
+@JsonIgnoreProperties({
+  "namePath",
+  "storage",
+  "storePath",
+  "labels",
+  "metadata",
+  "inputStream",
+  "rootFolder",
+  "parentFile"
+})
 public class VirtualFileObject implements FileObject {
   private Long id;
   private String name;
@@ -58,6 +69,9 @@ public class VirtualFileObject implements FileObject {
   }
 
   public String getPath() {
+    if (storage == null) {
+      return this.getOriginalPath();
+    }
     return this.getOriginalPath().substring(storage.getRootPath().length() - 1);
   }
 

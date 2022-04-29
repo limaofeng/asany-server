@@ -4,9 +4,8 @@ import cn.asany.system.TestApplication;
 import cn.asany.system.bean.Dict;
 import cn.asany.system.bean.DictType;
 import com.fasterxml.jackson.core.type.TypeReference;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.jfantasy.framework.jackson.JSON;
 import org.jfantasy.framework.util.common.ObjectUtil;
@@ -62,20 +61,37 @@ class DictServiceTest {
 
     String[] municipality = new String[] {"11", "12", "31", "50"};
 
+    String countyLevelCity = "省直辖县级行政区划";
+
     dicts =
         ObjectUtil.recursive(
             dicts,
             (item, context) -> {
               Dict parent = context.getParent();
-              if (parent != null) {
-                item.setLevel(parent.getLevel() + 1);
-                item.setType(codes[item.getLevel() - 1]);
-              } else {
-                item.setLevel(context.getLevel());
-                item.setType(codes[context.getLevel() - 1]);
+              if (item.getType() == null) {
+                if (parent != null) {
+                  item.setLevel(parent.getLevel() + 1);
+                  item.setType(codes[item.getLevel() - 1]);
+                } else {
+                  item.setLevel(context.getLevel());
+                  item.setType(codes[context.getLevel() - 1]);
+                }
               }
 
-              if (Arrays.stream(municipality).anyMatch(id -> id.equals(item.getCode()))) {
+              if (countyLevelCity.equals(item.getName())) {
+                assert parent != null;
+                parent
+                    .getChildren()
+                    .addAll(
+                        item.getChildren().stream()
+                            .peek(
+                                _item -> {
+                                  _item.setType("district");
+                                  _item.setLevel(3);
+                                })
+                            .collect(Collectors.toList()));
+                return null;
+              } else if (Arrays.stream(municipality).anyMatch(id -> id.equals(item.getCode()))) {
                 List<Dict> children =
                     item.getChildren().stream()
                         .reduce(
@@ -88,6 +104,7 @@ class DictServiceTest {
                               acc.addAll(bcc);
                               return acc;
                             });
+                item.setCode(item.getCode() + "0");
                 item.setLevel(context.getLevel() + 1);
                 item.setType(codes[item.getLevel() - 1]);
                 item.setChildren(children);

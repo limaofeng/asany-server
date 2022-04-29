@@ -305,7 +305,9 @@ public class ApplicationService implements ClientDetailsService {
 
               if (menu.getType() == null) {
                 // 这里使用的是 item， 因为子项在之后才会执行
-                if (item.getChildren() != null && !item.getChildren().isEmpty()) {
+                if (item.getChildren() != null
+                    && !item.getChildren().isEmpty()
+                    && !menu.getHideChildrenInMenu()) {
                   menu.setType(MenuType.MENU);
                 } else {
                   menu.setType(MenuType.URL);

@@ -1,0 +1,18 @@
+type Geocode {
+  formatted_address: String
+  country: String
+  province: String
+  citycode: String
+  city: String
+  district: String
+  adcode: String
+  location: String
+}
+
+type AmapOpenAPI {
+  geocode_geo(address: String, city: String): [Geocode!]!
+}
+
+extend type Query {
+  amapOpenAPI: AmapOpenAPI
+}

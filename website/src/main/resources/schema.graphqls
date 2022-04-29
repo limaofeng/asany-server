@@ -1,0 +1,335 @@
+enum LandingPageStatus {
+  """
+  草稿
+  """
+  DRAFT
+  """
+  已发布
+  """
+  PUBLISHED
+  """
+  结束
+  """
+  COMPLETED
+  """
+  中止
+  """
+  SUSPEND
+}
+
+type LandingStore {
+  id: ID!
+  code: String!
+  name: String!
+  address: Address
+  location: Geolocation
+  qrCode: File
+  leader: String
+  createdAt: Date! @dateFormat
+  description: String
+}
+
+type LandingPage {
+  id: ID!
+  name: String!
+  description: String
+  status: LandingPageStatus!
+  start: Date @dateFormat
+  end: Date @dateFormat
+  poster: LandingPoster
+  stores: [LandingStore!]!
+  createdAt: Date! @dateFormat
+}
+
+type LandingPageConnection {
+  # 总数据条数
+  totalCount: Int!
+  # 每页显示条数
+  pageSize: Int!
+  # 总页数
+  totalPage: Int!
+  # 当前页
+  currentPage: Int!
+  edges: [LandingPageEdge!]!
+  pageInfo: PageInfo
+}
+
+type LandingPageEdge {
+  cursor: String!
+  node: LandingPage!
+}
+
+type LandingPosterConnection {
+  # 总数据条数
+  totalCount: Int!
+  # 每页显示条数
+  pageSize: Int!
+  # 总页数
+  totalPage: Int!
+  # 当前页
+  currentPage: Int!
+  edges: [LandingPosterEdge!]!
+  pageInfo: PageInfo
+}
+
+type LandingPosterEdge {
+  cursor: String!
+  node: LandingPoster!
+}
+
+type LandingStoreConnection {
+  # 总数据条数
+  totalCount: Int!
+  # 每页显示条数
+  pageSize: Int!
+  # 总页数
+  totalPage: Int!
+  # 当前页
+  currentPage: Int!
+  edges: [LandingStoreEdge!]!
+  pageInfo: PageInfo
+}
+
+type LandingStoreEdge {
+  cursor: String
+  node: LandingStore!
+}
+
+type LandingPoster {
+  id: ID!
+  """
+  音乐
+  """
+  music: File
+  """
+  名称
+  """
+  name: String!
+  """
+  背景
+  """
+  background: File
+  """
+  描述
+  """
+  description: String
+  createdAt: Date! @dateFormat
+}
+
+input LandingPageFilter {
+  name_contains: String
+}
+
+input LandingPosterFilter {
+  name_contains: String
+}
+
+input LandingStoreFilter {
+  code_contains: String
+  name_contains: String
+}
+
+input LandingStoreCreateInput {
+  code: String!
+  name: String
+  address: AddressInput
+  location: GeolocationInput
+  qrCode: File
+  leader: String
+  description: String
+}
+
+input LandingStoreUpdateInput {
+  code: String!
+  name: String
+  address: AddressInput
+  location: GeolocationInput
+  qrCode: File
+  leader: String
+  description: String
+}
+
+input LandingPosterCreateInput {
+  """
+  音乐
+  """
+  music: File
+  """
+  名称
+  """
+  name: String
+  """
+  背景
+  """
+  background: File
+  """
+  描述
+  """
+  description: String
+}
+
+input LandingPosterUpdateInput {
+  """
+  音乐
+  """
+  music: File
+  """
+  名称
+  """
+  name: String
+  """
+  背景
+  """
+  background: File
+  """
+  描述
+  """
+  description: String
+}
+
+input LandingPageCreateInput {
+  """
+  名称
+  """
+  name: String!
+  """
+  描述
+  """
+  description: String
+  """
+  开始时间
+  """
+  start: Date
+  """
+  结束时间
+  """
+  end: Date
+  """
+  海报
+  """
+  poster: ID
+  """
+  门店
+  """
+  stores: [ID!]
+}
+
+input LandingPageUpdateInput {
+  """
+  名称
+  """
+  name: String!
+  """
+  描述
+  """
+  description: String
+  """
+  开始时间
+  """
+  start: Date
+  """
+  结束时间
+  """
+  end: Date
+  """
+  海报
+  """
+  poster: ID
+  """
+  门店
+  """
+  stores: [ID!]
+}
+
+extend type Mutation {
+  """
+  创建门店
+  """
+  createLandingStore(input: LandingStoreCreateInput!): LandingStore!
+  """
+  修改门店
+  """
+  updateLandingStore(
+    id: ID!
+    input: LandingStoreUpdateInput!
+    merge: Boolean = true
+  ): LandingStore!
+  """
+  删除门店
+  """
+  deleteLandingStore(ids: [ID!]!): Int
+  """
+  创建海报
+  """
+  createLandingPoster(input: LandingPosterCreateInput!): LandingPoster!
+  """
+  修改海报
+  """
+  updateLandingPoster(
+    id: ID!
+    input: LandingPosterUpdateInput!
+    merge: Boolean = true
+  ): LandingPoster!
+  """
+  删除海报
+  """
+  deleteLandingPoster(ids: [ID!]!): Int
+  """
+  创建活动页
+  """
+  createLandingPage(input: LandingPageCreateInput!): LandingPage!
+  """
+  修改活动页
+  """
+  updateLandingPage(
+    id: ID!
+    input: LandingPageUpdateInput!
+    merge: Boolean = true
+  ): LandingPage!
+  """
+  删除活动页
+  """
+  deleteLandingPage(ids: [ID!]!): Int
+}
+
+extend type Query {
+  """
+  活动页
+  """
+  landingPage(id: ID!): LandingPage
+  """
+  查询活动页
+  """
+  landingPagesConnection(
+    filter: LandingPageFilter
+    page: Int = 1
+    pageSize: Int = 15
+    orderBy: OrderBy
+  ): LandingPageConnection!
+  """
+  海报
+  """
+  landingPoster(id: ID!): LandingPoster
+  """
+  查询活动页海报
+  """
+  landingPostersConnection(
+    filter: LandingPosterFilter
+    page: Int = 1
+    pageSize: Int = 15
+    orderBy: OrderBy
+  ): LandingPosterConnection!
+  """
+  门店
+  """
+  landingStore(id: ID!): LandingStore
+  """
+  查询活动页门店
+  """
+  landingStoresConnection(
+    filter: LandingStoreFilter
+    page: Int = 1
+    pageSize: Int = 15
+    orderBy: OrderBy
+  ): LandingStoreConnection!
+}

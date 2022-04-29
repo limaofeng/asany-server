@@ -31,6 +31,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
     },
     basePackages = {
       "cn.asany.*.dao",
+      "cn.asany.*.*.dao",
     },
     repositoryBaseClass = ComplexJpaRepository.class)
 @EnableAutoConfiguration(

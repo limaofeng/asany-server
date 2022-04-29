@@ -3,7 +3,7 @@ package cn.asany.security.oauth.vo;
 import lombok.Data;
 
 @Data
-public class Geolocation {
+public class SessionGeolocation {
   /** ID */
   private String id;
   /** IP 地址 */
