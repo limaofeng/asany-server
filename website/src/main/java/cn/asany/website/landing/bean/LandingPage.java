@@ -50,6 +50,7 @@ public class LandingPage extends BaseBusEntity {
   private LandingPoster poster;
 
   @ManyToMany(fetch = FetchType.LAZY)
+  @OrderBy("id ASC")
   @JoinTable(
       name = "WEBSITE_LANDING_PAGE_STORE",
       joinColumns = {

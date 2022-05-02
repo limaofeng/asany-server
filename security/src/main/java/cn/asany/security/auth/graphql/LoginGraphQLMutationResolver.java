@@ -1,10 +1,11 @@
 package cn.asany.security.auth.graphql;
 
-import cn.asany.security.auth.authentication.*;
+import cn.asany.security.auth.authentication.DingtalkAuthenticationToken;
+import cn.asany.security.auth.authentication.LoginAuthenticationDetails;
+import cn.asany.security.auth.authentication.WeChatAuthenticationToken;
 import cn.asany.security.auth.graphql.types.LoginOptions;
 import cn.asany.security.auth.graphql.types.LoginType;
 import graphql.kickstart.tools.GraphQLMutationResolver;
-import graphql.schema.DataFetchingEnvironment;
 import lombok.extern.slf4j.Slf4j;
 import org.jfantasy.framework.security.AuthenticationManager;
 import org.jfantasy.framework.security.LoginUser;
@@ -18,7 +19,6 @@ import org.jfantasy.framework.security.oauth2.core.OAuth2AuthenticationDetails;
 import org.jfantasy.framework.security.oauth2.core.TokenType;
 import org.jfantasy.framework.security.oauth2.core.token.AuthorizationServerTokenServices;
 import org.jfantasy.framework.util.common.ObjectUtil;
-import org.jfantasy.graphql.context.AuthorizationGraphQLServletContext;
 import org.springframework.stereotype.Component;
 
 /**
@@ -26,7 +26,6 @@ import org.springframework.stereotype.Component;
  *
  * @author limaofeng
  * @version V1.0
- * @date 2019-04-01 15:17
  */
 @Component
 @Slf4j
@@ -51,7 +50,6 @@ public class LoginGraphQLMutationResolver implements GraphQLMutationResolver {
    * @param authCode 授权码
    * @param tmpAuthCode 临时授权码
    * @param options 选项
-   * @param environment 上下文
    * @return 登录用户
    */
   public LoginUser login(
@@ -61,8 +59,7 @@ public class LoginGraphQLMutationResolver implements GraphQLMutationResolver {
       String password,
       String authCode,
       String tmpAuthCode,
-      LoginOptions options,
-      DataFetchingEnvironment environment) {
+      LoginOptions options) {
     Authentication token =
         buildAuthenticationToken(loginType, username, password, authCode, tmpAuthCode, options);
 
@@ -72,7 +69,6 @@ public class LoginGraphQLMutationResolver implements GraphQLMutationResolver {
       throw new BadCredentialsException("Bad credentials");
     }
     LoginUser loginUser = (LoginUser) authentication.getPrincipal();
-    AuthorizationGraphQLServletContext context = environment.getContext();
     OAuth2AuthenticationDetails oAuth2AuthenticationDetails = new OAuth2AuthenticationDetails();
     oAuth2AuthenticationDetails.setClientId(clientId);
     oAuth2AuthenticationDetails.setTokenType(TokenType.SESSION);

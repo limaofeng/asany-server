@@ -1,3 +1,5 @@
+import org.gradle.plugins.ide.eclipse.model.SourceFolder
+
 buildscript {
     dependencies {
         classpath "org.hibernate:hibernate-gradle-plugin:${PLUGIN_HIBERNATE_VER}"
@@ -55,8 +57,7 @@ allprojects {
             }
         }
         classpath {
-            file.beforeMerged { cp ->
-                cp.entries.add(new org.gradle.plugins.ide.eclipse.model.SourceFolder('build/generated/sources/annotationProcessor/java/main/', null))
+            file.beforeMerged { cp -> cp.entries.add(new SourceFolder('build/generated/sources/annotationProcessor/java/main/', null))
             }
         }
     }

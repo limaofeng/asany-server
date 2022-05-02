@@ -11,13 +11,11 @@ import cn.asany.storage.data.service.MultipartUploadService;
 import cn.asany.storage.data.util.IdUtils;
 import cn.asany.storage.plugin.*;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.*;
 import java.util.stream.Collectors;
-import org.apache.commons.collections.map.HashedMap;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.common.StreamUtil;
 import org.jfantasy.framework.util.common.StringUtil;
@@ -31,17 +29,15 @@ import org.springframework.stereotype.Component;
  *
  * @author limaofeng
  */
+@Slf4j
 @Component
 public class FileUploadService implements UploadService {
 
-  private static final Log LOG = LogFactory.getLog(FileUploadService.class);
-
-  private static final String SEPARATOR = File.separator;
   private final FileService fileService;
   private final MultipartUploadService multipartUploadService;
   private final StorageResolver storageResolver;
 
-  private final Map<String, StoragePlugin> pluginMap = new HashedMap();
+  private final Map<String, StoragePlugin> pluginMap = new LinkedHashMap<>();
 
   @Autowired
   public FileUploadService(
@@ -115,7 +111,7 @@ public class FileUploadService implements UploadService {
         uploadFileObject = ((UploadFileObject) file);
       } else {
         temp = FileUtil.tmp();
-        StreamUtil.copyThenClose(file.getInputStream(), new FileOutputStream(temp));
+        StreamUtil.copyThenClose(file.getInputStream(), Files.newOutputStream(temp.toPath()));
         uploadFileObject = new UploadFileObject(file.getName(), temp, file.getMetadata());
       }
 
@@ -164,7 +160,6 @@ public class FileUploadService implements UploadService {
       UploadContext context = invocation.getContext();
 
       String storePath = context.getStorePath();
-      String filename = context.getFilename();
       Storage storage = context.getStorage();
 
       if (!storage.isMultipartUploadSupported()) {

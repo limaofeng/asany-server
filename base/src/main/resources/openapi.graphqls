@@ -9,7 +9,15 @@ type Geocode {
   location: String
 }
 
+type IpResult {
+  province: String
+  city: String
+  adcode: String
+  rectangle: String
+}
+
 type AmapOpenAPI {
+  ip(ip: String): IpResult!
   geocode_geo(address: String, city: String): [Geocode!]!
 }
 

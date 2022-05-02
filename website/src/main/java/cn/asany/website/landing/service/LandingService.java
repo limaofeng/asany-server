@@ -105,6 +105,15 @@ public class LandingService {
   }
 
   @Transactional
+  public List<LandingStore> saveStoreAllInBath(List<LandingStore> stores) {
+    for (LandingStore store : stores) {
+      resolveGeolocation(store);
+    }
+    this.landingStoreDao.saveAllInBatch(stores);
+    return stores;
+  }
+
+  @Transactional
   public LandingStore update(Long id, LandingStore store, boolean merge) {
     store.setId(id);
     resolveGeolocation(store);

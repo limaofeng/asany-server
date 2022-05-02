@@ -1,0 +1,23 @@
+name: mobile
+title: 移动端
+description: 移动端
+clientId: bd93206fe6d5b7eca678
+clientSecret: 9c38cc70af383d70f117a69750a4c3c0bac97492
+menus:
+  - name: 仪表盘
+    icon: Duotune/gen025
+  - name: 网站管理
+    icon: Duotune/abs045
+    path: /website
+    component: cn.asany.ui.mobile.website.Sidebar
+routes:
+  - path: /login
+    component: cn.asany.ui.mobile.authentication.AsideLayoutSignIn
+  - path: /lps/:id
+    component: cn.asany.ui.mobile.landingpage.PageView
+  - path: /
+    authorized: true
+    component: cn.asany.ui.mobile.layout.Sticky
+    routes:
+      - path: /
+        component: cn.asany.ui.mobile.Home
