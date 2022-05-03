@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.16](https://github.com/limaofeng/asany-server/compare/v0.1.15...v0.1.16) (2022-05-03)
+
+
+### Features
+
+* 数据字典相关代码 ([9a4f865](https://github.com/limaofeng/asany-server/commit/9a4f8658083c0921264360ac4941d418d602087f))
+* 文件预览接口 ([8494088](https://github.com/limaofeng/asany-server/commit/849408847d6a66c2e303c142b0ddb08ff7931874))
+* 门店,数据字典代码 ([d2700f1](https://github.com/limaofeng/asany-server/commit/d2700f19d0659dae035ae343e975df3bcc2204d3))
+* 高德 IP 定位 + 门店数据导入测试类 ([f4f65ac](https://github.com/limaofeng/asany-server/commit/f4f65acf20bc6cd2b5c62aee6054aa9a3f980283))
+
+
+### Bug Fixes
+
+* 支持通过 ID 查询门店 ([24a0cbc](https://github.com/limaofeng/asany-server/commit/24a0cbc5419a0cd20414541d82dbd458f2b7f331))
+* 登录接口返回 account 字段 ([3b04653](https://github.com/limaofeng/asany-server/commit/3b04653d95cc7a44368f1e73ab918023b80d4c9a))
+* 高德 IP 定位接口 JSON 解析错误的问题 ([f13a071](https://github.com/limaofeng/asany-server/commit/f13a071c3f68bba13632a1a089f4a8f741ac1194))
+
 ### [0.1.14](https://github.com/limaofeng/asany-server/compare/v0.1.13...v0.1.14) (2022-04-08)
 
 
