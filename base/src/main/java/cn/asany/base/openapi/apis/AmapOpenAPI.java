@@ -36,15 +36,17 @@ public class AmapOpenAPI {
       request.queryString("ip", ip);
     }
 
-    HttpResponse<IpResult> response = request.asObject(IpResult.class);
-    IpResult body = response.getBody();
+    HttpResponse<String> response = request.asString();
+    String body = response.getBody();
 
-    if ("0".equals(body.getStatus())) {
+    IpResult result = JSON.deserialize(body.replace("[]", "null"), IpResult.class);
+
+    if ("0".equals(result.getStatus())) {
       log.error("调用高德 OpenAPI /geocode/geo 失败,  响应结果为:" + body);
       throw new ValidationException("调用高德 OpenAPI /geocode/geo 失败");
     }
 
-    return body;
+    return result;
   }
 
   @SneakyThrows
