@@ -184,7 +184,9 @@ extend type Query {
 }
 
 extend type Mutation {
-  # 系统•登录
+  """
+  登录
+  """
   login(
     """
     登录方式， 默认为 password
@@ -192,25 +194,58 @@ extend type Mutation {
     loginType = dingtalk 时，  authCode 与 tmpAuthCode 其中一个不能为 NULL
     """
     loginType: LoginType = password
-    # 客户端ID
+    """
+    客户端ID
+    """
     clientId: String!
-    # 用户名
+    """
+    用户名
+    """
     username: String
-    # 密码
+    """
+    密码
+    """
     password: String
-    # 授权码
+    """
+    授权码
+    """
     authCode: String
-    # 临时授权码
+    """
+    临时授权码
+    """
     tmpAuthCode: String
-    #绑定第三方平台信息
+    """
+    绑定第三方平台信息
+    """
     options: LoginOptions
   ): LoginUser
-  # 创建个人访问令牌
+  """
+  创建个人访问令牌
+  """
   createPersonalAccessToken(clientId: String, name: String): PersonalAccessToken
-  # 撤销 Token
+  """
+  撤销 Token
+  """
   revokeToken(token: String): Boolean
-  # 撤销 Session
+  """
+  撤销 Session
+  """
   revokeSession(id: ID): Boolean
-  # 撤销个人 Token
+  """
+  撤销个人 Token
+  """
   revokePersonalAccessToken(id: ID): Boolean
+  """
+  修改密码
+  """
+  changePassword(
+    """
+    旧密码
+    """
+    oldPassword: String
+    """
+    新密码
+    """
+    newPassword: String
+  ): Boolean
 }

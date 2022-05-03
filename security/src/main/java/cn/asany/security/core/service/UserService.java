@@ -111,8 +111,15 @@ public class UserService implements UserDetailsService {
     return this.userDao.save(user);
   }
 
-  public User changePassword(Long id, String oldPassword, String newPassword) {
-    User user = this.userDao.getOne(id);
+  /**
+   * 修改密码
+   *
+   * @param id 用户ID
+   * @param oldPassword 旧密码
+   * @param newPassword 新密码
+   */
+  public void changePassword(Long id, String oldPassword, String newPassword) {
+    User user = this.userDao.getById(id);
     if (user.getId() == null) {
       throw new NotFoundException("用户不存在");
     }
@@ -123,7 +130,7 @@ public class UserService implements UserDetailsService {
       throw new ValidationException("100106", "提供的 password token 不正确!");
     }
     user.setPassword(passwordEncoder.encode(newPassword));
-    return this.userDao.save(user);
+    this.userDao.save(user);
   }
 
   public Optional<User> findOneByUsername(String username) {
