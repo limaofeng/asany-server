@@ -125,6 +125,7 @@ input LandingPosterFilter {
 }
 
 input LandingStoreFilter {
+  id_in: [ID!]
   code_contains: String
   name_contains: String
 }
