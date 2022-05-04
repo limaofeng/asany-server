@@ -95,7 +95,7 @@ public class Article extends BaseBusEntity {
   @Convert(converter = FileObjectConverter.class)
   private FileObject cover;
   /** 附件 */
-  @Column(name = "ATTACHMENTS", columnDefinition = "json")
+  @Column(name = "ATTACHMENTS", columnDefinition = "JSON")
   @Convert(converter = FileObjectsConverter.class)
   private List<FileObject> attachments;
   /** 作者 */

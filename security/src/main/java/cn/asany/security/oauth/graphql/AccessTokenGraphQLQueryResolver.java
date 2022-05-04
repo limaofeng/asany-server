@@ -11,21 +11,30 @@ import org.jfantasy.framework.security.SpringSecurityUtils;
 import org.jfantasy.framework.security.oauth2.JwtTokenPayload;
 import org.jfantasy.framework.security.oauth2.jwt.JwtUtils;
 import org.jfantasy.framework.security.oauth2.server.authentication.BearerTokenAuthentication;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-/** @author limaofeng */
+/**
+ * @author limaofeng
+ */
 @Component
 public class AccessTokenGraphQLQueryResolver implements GraphQLQueryResolver {
 
-  @Autowired private AccessTokenService accessTokenService;
+  private final AccessTokenService accessTokenService;
+
+  public AccessTokenGraphQLQueryResolver(AccessTokenService accessTokenService) {
+    this.accessTokenService = accessTokenService;
+  }
+
+  public SessionAccessToken session(Long id) {
+    return this.accessTokenService.getSessionById(id);
+  }
 
   public List<SessionAccessToken> sessions() {
     BearerTokenAuthentication authentication =
         (BearerTokenAuthentication) SecurityContextHolder.getContext().getAuthentication();
     LoginUser user = SpringSecurityUtils.getCurrentUser();
     JwtTokenPayload payload = JwtUtils.payload(authentication.getToken().getTokenValue());
-    Long uid = Long.valueOf(user.getUid());
+    Long uid = user.getUid();
     return this.accessTokenService.getSessions(payload.getClientId(), uid);
   }
 
@@ -34,7 +43,6 @@ public class AccessTokenGraphQLQueryResolver implements GraphQLQueryResolver {
         (BearerTokenAuthentication) SecurityContextHolder.getContext().getAuthentication();
     LoginUser user = SpringSecurityUtils.getCurrentUser();
     JwtTokenPayload payload = JwtUtils.payload(authentication.getToken().getTokenValue());
-    return this.accessTokenService.getPersonalAccessTokens(
-        payload.getClientId(), Long.valueOf(user.getUid()));
+    return this.accessTokenService.getPersonalAccessTokens(payload.getClientId(), user.getUid());
   }
 }

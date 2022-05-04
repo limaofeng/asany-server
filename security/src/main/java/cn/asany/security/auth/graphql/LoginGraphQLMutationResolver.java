@@ -6,6 +6,7 @@ import cn.asany.security.auth.authentication.WeChatAuthenticationToken;
 import cn.asany.security.auth.graphql.types.LoginOptions;
 import cn.asany.security.auth.graphql.types.LoginType;
 import graphql.kickstart.tools.GraphQLMutationResolver;
+import graphql.schema.DataFetchingEnvironment;
 import lombok.extern.slf4j.Slf4j;
 import org.jfantasy.framework.security.AuthenticationManager;
 import org.jfantasy.framework.security.LoginUser;
@@ -19,6 +20,7 @@ import org.jfantasy.framework.security.oauth2.core.OAuth2AuthenticationDetails;
 import org.jfantasy.framework.security.oauth2.core.TokenType;
 import org.jfantasy.framework.security.oauth2.core.token.AuthorizationServerTokenServices;
 import org.jfantasy.framework.util.common.ObjectUtil;
+import org.jfantasy.graphql.context.AuthorizationGraphQLServletContext;
 import org.springframework.stereotype.Component;
 
 /**
@@ -59,9 +61,14 @@ public class LoginGraphQLMutationResolver implements GraphQLMutationResolver {
       String password,
       String authCode,
       String tmpAuthCode,
-      LoginOptions options) {
+      LoginOptions options,
+      DataFetchingEnvironment environment) {
+
+    AuthorizationGraphQLServletContext context = environment.getContext();
+
     Authentication token =
-        buildAuthenticationToken(loginType, username, password, authCode, tmpAuthCode, options);
+        buildAuthenticationToken(
+            loginType, username, password, authCode, tmpAuthCode, options, context);
 
     Authentication authentication = authenticationManager.authenticate(token);
 
@@ -72,6 +79,7 @@ public class LoginGraphQLMutationResolver implements GraphQLMutationResolver {
     OAuth2AuthenticationDetails oAuth2AuthenticationDetails = new OAuth2AuthenticationDetails();
     oAuth2AuthenticationDetails.setClientId(clientId);
     oAuth2AuthenticationDetails.setTokenType(TokenType.SESSION);
+    oAuth2AuthenticationDetails.setRequest(context.getRequest());
     OAuth2Authentication oAuth2Authentication =
         new OAuth2Authentication(authentication, oAuth2AuthenticationDetails);
     OAuth2AccessToken accessToken = tokenServices.createAccessToken(oAuth2Authentication);
@@ -85,9 +93,12 @@ public class LoginGraphQLMutationResolver implements GraphQLMutationResolver {
       String password,
       String authCode,
       String tmpAuthCode,
-      LoginOptions options) {
+      LoginOptions options,
+      AuthorizationGraphQLServletContext context) {
+
     options = ObjectUtil.defaultValue(options, LoginOptions.builder().build());
-    LoginAuthenticationDetails details = new LoginAuthenticationDetails(loginType, options);
+    LoginAuthenticationDetails details =
+        new LoginAuthenticationDetails(loginType, options, context.getRequest());
     AbstractAuthenticationToken authentication;
 
     switch (loginType) {
@@ -103,6 +114,7 @@ public class LoginGraphQLMutationResolver implements GraphQLMutationResolver {
                     .build());
         break;
       case WeChatCP:
+      case WeChatPM:
         authentication =
             new WeChatAuthenticationToken(
                 WeChatAuthenticationToken.WeChatCredentials
@@ -111,15 +123,7 @@ public class LoginGraphQLMutationResolver implements GraphQLMutationResolver {
                     .connected(options.getConnected())
                     .build());
         break;
-      case WeChatPM:
-        authentication =
-            new WeChatAuthenticationToken(
-                WeChatAuthenticationToken.WeChatCredentials
-                    .builder() /*.type(Oauth2.MobileType.WeChatPM)*/
-                    .authCode(authCode)
-                    .connected(options.getConnected())
-                    .build());
-        break;
+        /*.type(Oauth2.MobileType.WeChatPM)*/
       default:
         throw new IllegalStateException("Unexpected AuthenticationToken By: " + loginType);
     }

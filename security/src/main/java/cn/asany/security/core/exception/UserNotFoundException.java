@@ -1,15 +1,13 @@
 package cn.asany.security.core.exception;
 
-import org.jfantasy.framework.error.ValidationException;
-
 /**
+ * 用户不存在
+ *
  * @author limaofeng
- * @version V1.0 @Description: TODO
- * @date 2019-06-26 09:48
  */
-public class UserNotFoundException extends ValidationException {
+public class UserNotFoundException extends RuntimeException {
 
   public UserNotFoundException(String message) {
-    super("100202", message);
+    super(message);
   }
 }

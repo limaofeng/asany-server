@@ -61,7 +61,7 @@ public class ArticleChannel extends BaseBusEntity {
   @Column(name = "ICON", length = 120)
   private String icon;
   /** 封面 */
-  @Column(name = "COVER", length = 500, columnDefinition = "json")
+  @Column(name = "COVER", length = 500, columnDefinition = "JSON")
   @Convert(converter = FileObjectConverter.class)
   private FileObject cover;
   /** 描述 */
@@ -74,7 +74,7 @@ public class ArticleChannel extends BaseBusEntity {
   @Column(name = "LEVEL")
   private Integer level;
   /** SEO 优化字段 */
-  @Column(name = "META_DATA", length = 250, columnDefinition = "json")
+  @Column(name = "META_DATA", length = 250, columnDefinition = "JSON")
   @Convert(converter = MetaDataConverter.class)
   private MetaData meta;
   /** 上级栏目 */

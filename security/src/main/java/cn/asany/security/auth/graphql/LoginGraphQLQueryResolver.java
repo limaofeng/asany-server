@@ -17,7 +17,6 @@ import org.springframework.stereotype.Component;
  *
  * @author limaofeng
  * @version V1.0
- * @date 2019-04-01 15:17
  */
 @Component
 public class LoginGraphQLQueryResolver implements GraphQLQueryResolver {

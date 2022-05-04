@@ -6,7 +6,6 @@ import cn.asany.storage.core.StorageResolver;
 import cn.asany.storage.data.bean.FileDetail;
 import cn.asany.storage.data.service.FileService;
 import java.io.*;
-import java.net.URLEncoder;
 import java.util.Optional;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -14,11 +13,13 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.jfantasy.framework.util.common.*;
+import org.jfantasy.framework.util.common.ClassUtil;
+import org.jfantasy.framework.util.common.ObjectUtil;
+import org.jfantasy.framework.util.common.StreamUtil;
+import org.jfantasy.framework.util.common.StringUtil;
 import org.jfantasy.framework.util.regexp.RegexpUtil;
 import org.jfantasy.framework.util.web.ServletUtils;
 import org.jfantasy.framework.util.web.WebUtil;
-import org.jfantasy.framework.util.web.WebUtil.Browser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.filter.GenericFilterBean;
 
@@ -152,11 +153,9 @@ public class FileFilter extends GenericFilterBean {
     response.setHeader("Pragma", "public");
     response.setContentLength((int) fileObject.getSize());
 
-    String fileName =
-        Browser.mozilla == WebUtil.browser(request)
-            ? new String(fileObject.getName().getBytes("UTF-8"), "iso8859-1")
-            : URLEncoder.encode(fileObject.getName(), "UTF-8");
-    response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
+    response.setHeader(
+        "Content-Disposition",
+        "attachment;filename=" + WebUtil.filename(fileObject.getName(), request));
   }
 
   private void writeVideo(

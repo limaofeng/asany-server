@@ -2,6 +2,7 @@ package cn.asany.security.auth.authentication;
 
 import cn.asany.security.auth.graphql.types.LoginOptions;
 import cn.asany.security.auth.graphql.types.LoginType;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * 登录详情
@@ -9,12 +10,20 @@ import cn.asany.security.auth.graphql.types.LoginType;
  * @author limaofeng
  */
 public class LoginAuthenticationDetails {
-  private LoginType loginType;
-  private LoginOptions options;
+  private final LoginType loginType;
+  private final LoginOptions options;
+  private HttpServletRequest request;
 
   public LoginAuthenticationDetails(LoginType loginType, LoginOptions options) {
     this.loginType = loginType;
     this.options = options;
+  }
+
+  public LoginAuthenticationDetails(
+      LoginType loginType, LoginOptions options, HttpServletRequest request) {
+    this.loginType = loginType;
+    this.options = options;
+    this.request = request;
   }
 
   public LoginType getLoginType() {
@@ -23,5 +32,9 @@ public class LoginAuthenticationDetails {
 
   public LoginOptions getOptions() {
     return options;
+  }
+
+  public HttpServletRequest getRequest() {
+    return request;
   }
 }

@@ -39,12 +39,12 @@ menus:
     path: /apps
   - name: 内容管理
     icon: Duotune/txt009
-    path: /cms/my/drafts
+    path: /cms
     component: cn.asany.ui.admin.cms.ArticleSidebar
-  - name: 自定义建模
-    icon: Duotune/abs026
-    path: /shanhai
-    component: cn.asany.ui.admin.shanhai.MenuSidebar
+#  - name: 自定义建模
+#    icon: Duotune/abs026
+#    path: /shanhai
+#    component: cn.asany.ui.admin.shanhai.MenuSidebar
   - name: 通讯录
     icon: Duotune/com005
     path: /contacts
@@ -229,6 +229,8 @@ routes:
       - path: /cms/articles/:id/edit
         component: cn.asany.ui.admin.cms.ArticleEdit
         layout: false
+      - path: /cms
+        redirect: /cms/my/drafts
       - path: /contacts
         component: cn.asany.ui.admin.contacts.MainContacts
         routes:

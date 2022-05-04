@@ -15,7 +15,13 @@ public interface AccessTokenConverter {
 
   @Mappings({
     @Mapping(source = "id", target = "id"),
+    @Mapping(source = "clientDetails.device", target = "device"),
+    @Mapping(source = "clientDetails.ip", target = "ip"),
+    @Mapping(source = "clientDetails.lastIp", target = "lastIp"),
+    @Mapping(source = "clientDetails.location", target = "location"),
+    @Mapping(source = "clientDetails.lastLocation", target = "lastLocation"),
     @Mapping(source = "issuedAt", target = "loginTime"),
+    @Mapping(source = "lastUsedTime", target = "lastUsedTime"),
   })
   SessionAccessToken toSession(AccessToken accessTokens);
 

@@ -64,12 +64,11 @@ public class AccessToken extends BaseBusEntity {
   @Temporal(TemporalType.TIMESTAMP)
   @Column(name = "LAST_USED_TIME")
   private Date lastUsedTime;
-  /** 最后的位置信息 */
-  @Column(name = "LAST_LOCATION", length = 32)
-  private String lastLocation;
   /** 应用 */
   @Column(name = "CLIENT_ID", length = 20, updatable = false, nullable = false)
   private String client;
+  /** 客户详细信息 */
+  @Embedded private AccessTokenClientDetails clientDetails;
   /** 用户 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(

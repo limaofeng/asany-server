@@ -7,6 +7,8 @@ import cn.asany.security.core.bean.User;
 import cn.asany.security.core.bean.enums.UserType;
 import cn.asany.security.core.dao.GrantPermissionDao;
 import cn.asany.security.core.dao.UserDao;
+import cn.asany.security.core.exception.UserInvalidException;
+import cn.asany.security.core.exception.UserNotFoundException;
 import java.util.*;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +24,6 @@ import org.jfantasy.framework.security.core.userdetails.UserDetailsService;
 import org.jfantasy.framework.security.core.userdetails.UsernameNotFoundException;
 import org.jfantasy.framework.security.crypto.password.PasswordEncoder;
 import org.jfantasy.framework.spring.mvc.error.LoginException;
-import org.jfantasy.framework.spring.mvc.error.NotFoundException;
 import org.jfantasy.framework.util.common.DateUtil;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.common.StringUtil;
@@ -121,10 +122,10 @@ public class UserService implements UserDetailsService {
   public void changePassword(Long id, String oldPassword, String newPassword) {
     User user = this.userDao.getById(id);
     if (user.getId() == null) {
-      throw new NotFoundException("用户不存在");
+      throw new UserNotFoundException("用户不存在");
     }
     if (!user.getEnabled()) {
-      throw new ValidationException("100101", "用户已被禁用");
+      throw new UserInvalidException("用户已被禁用");
     }
     if (!this.passwordEncoder.matches(oldPassword, user.getPassword())) {
       throw new ValidationException("100106", "提供的 password token 不正确!");

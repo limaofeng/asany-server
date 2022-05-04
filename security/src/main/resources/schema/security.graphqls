@@ -136,36 +136,87 @@ type PersonalAccessToken {
   scopes: [String]
 }
 
-type SessionGeolocation {
-  id: ID
-  # IP 地址
-  internetProtocolAddress: String
-  # 国家
-  country: String
-  # 省 / 州
-  state: String
-  # 城市
-  city: String
+enum DeviceType {
+  COMPUTER
+  MOBILE
+  TABLET
+  GAME_CONSOLE
+  DMR
+  WEARABLE
+  UNKNOWN
+}
+
+type ClientDevice {
+  """
+  原始 User-Agent 信息
+  """
+  userAgent: String
+  """
+  设备类型
+  """
+  type: DeviceType
+  """
+  浏览器
+  """
+  browser: String
+  """
+  操作系统
+  """
+  operatingSystem: String
 }
 
 type Session {
-  id: ID
-  # 设备
-  device: String
-  # 位置
-  location: SessionGeolocation
-  # 登录时间
-  loginTime: Date
+  id: ID!
+  """
+  设备
+  """
+  device: ClientDevice
+  """
+  登录时的 IP 地址
+  """
+  ip: String
+  """
+  最后一次使用的 IP 地址
+  """
+  lastIp: String
+  """
+  登录时的位置
+  """
+  location: String
+  """
+  最后一次访问的位置
+  """
+  lastLocation: String
+  """
+  登录时间
+  """
+  loginTime: Date!
+  """
+  最后一次访问时间
+  """
+  lastUsedTime: Date!
 }
 
 extend type Query {
-  # 系统•当前登录用户
+  """
+  系统•当前登录用户
+  """
   viewer(organization: ID): CurrentUser @auth(requires: "USER")
-  # 用户会话
-  sessions: [Session]
-  # 查询个人 Token
-  personalAccessTokens: [PersonalAccessToken]
-  # 查询用户
+  """
+  会话
+  """
+  session(id: ID!): Session!
+  """
+  用户会话
+  """
+  sessions: [Session!]!
+  """
+  查询个人 Token
+  """
+  personalAccessTokens: [PersonalAccessToken!]!
+  """
+  查询用户
+  """
   users(
     filter: UserFilter
     # 跳过
@@ -242,10 +293,10 @@ extend type Mutation {
     """
     旧密码
     """
-    oldPassword: String
+    oldPassword: String!
     """
     新密码
     """
-    newPassword: String
+    newPassword: String!
   ): Boolean
 }
