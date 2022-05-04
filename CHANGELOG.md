@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.19](https://github.com/limaofeng/asany-server/compare/v0.1.18...v0.1.19) (2022-05-04)
+
+
+### Features
+
+* 用户退出时,删除 token 记录 ([79f5979](https://github.com/limaofeng/asany-server/commit/79f59799a205ae77c54bcb0571bce0e71388ded4))
+
 ### [0.1.18](https://github.com/limaofeng/asany-server/compare/v0.1.17...v0.1.18) (2022-05-04)
 
 ### [0.1.17](https://github.com/limaofeng/asany-server/compare/v0.1.16...v0.1.17) (2022-05-04)
