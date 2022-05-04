@@ -13,9 +13,7 @@ import org.jfantasy.framework.security.oauth2.jwt.JwtUtils;
 import org.jfantasy.framework.security.oauth2.server.authentication.BearerTokenAuthentication;
 import org.springframework.stereotype.Component;
 
-/**
- * @author limaofeng
- */
+/** @author limaofeng */
 @Component
 public class AccessTokenGraphQLQueryResolver implements GraphQLQueryResolver {
 

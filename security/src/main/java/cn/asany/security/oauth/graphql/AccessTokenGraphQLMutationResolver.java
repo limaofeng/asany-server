@@ -5,12 +5,9 @@ import cn.asany.security.oauth.vo.PersonalAccessToken;
 import graphql.kickstart.tools.GraphQLMutationResolver;
 import org.jfantasy.framework.security.LoginUser;
 import org.jfantasy.framework.security.SpringSecurityUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-/**
- * @author limaofeng
- */
+/** @author limaofeng */
 @Component
 public class AccessTokenGraphQLMutationResolver implements GraphQLMutationResolver {
 
