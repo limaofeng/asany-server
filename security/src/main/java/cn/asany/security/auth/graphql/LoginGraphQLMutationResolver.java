@@ -3,6 +3,8 @@ package cn.asany.security.auth.graphql;
 import cn.asany.security.auth.authentication.DingtalkAuthenticationToken;
 import cn.asany.security.auth.authentication.LoginAuthenticationDetails;
 import cn.asany.security.auth.authentication.WeChatAuthenticationToken;
+import cn.asany.security.auth.event.LoginSuccessEvent;
+import cn.asany.security.auth.event.LogoutSuccessEvent;
 import cn.asany.security.auth.graphql.types.LoginOptions;
 import cn.asany.security.auth.graphql.types.LoginType;
 import graphql.kickstart.tools.GraphQLMutationResolver;
@@ -10,6 +12,7 @@ import graphql.schema.DataFetchingEnvironment;
 import lombok.extern.slf4j.Slf4j;
 import org.jfantasy.framework.security.AuthenticationManager;
 import org.jfantasy.framework.security.LoginUser;
+import org.jfantasy.framework.security.SecurityContextHolder;
 import org.jfantasy.framework.security.authentication.AbstractAuthenticationToken;
 import org.jfantasy.framework.security.authentication.Authentication;
 import org.jfantasy.framework.security.authentication.BadCredentialsException;
@@ -19,8 +22,11 @@ import org.jfantasy.framework.security.oauth2.core.OAuth2Authentication;
 import org.jfantasy.framework.security.oauth2.core.OAuth2AuthenticationDetails;
 import org.jfantasy.framework.security.oauth2.core.TokenType;
 import org.jfantasy.framework.security.oauth2.core.token.AuthorizationServerTokenServices;
+import org.jfantasy.framework.security.oauth2.core.token.ConsumerTokenServices;
+import org.jfantasy.framework.security.oauth2.server.authentication.BearerTokenAuthentication;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.graphql.context.AuthorizationGraphQLServletContext;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
 /**
@@ -35,11 +41,18 @@ public class LoginGraphQLMutationResolver implements GraphQLMutationResolver {
 
   private final AuthenticationManager authenticationManager;
   private final AuthorizationServerTokenServices tokenServices;
+  private final ConsumerTokenServices consumerTokenServices;
+  private final ApplicationEventPublisher publisher;
 
   public LoginGraphQLMutationResolver(
-      AuthenticationManager authenticationManager, AuthorizationServerTokenServices tokenServices) {
+      AuthenticationManager authenticationManager,
+      ConsumerTokenServices consumerTokenServices,
+      AuthorizationServerTokenServices tokenServices,
+      ApplicationEventPublisher publisher) {
     this.authenticationManager = authenticationManager;
+    this.consumerTokenServices = consumerTokenServices;
     this.tokenServices = tokenServices;
+    this.publisher = publisher;
   }
 
   /**
@@ -84,7 +97,16 @@ public class LoginGraphQLMutationResolver implements GraphQLMutationResolver {
         new OAuth2Authentication(authentication, oAuth2AuthenticationDetails);
     OAuth2AccessToken accessToken = tokenServices.createAccessToken(oAuth2Authentication);
     loginUser.setAttribute("token", accessToken);
+    publisher.publishEvent(new LoginSuccessEvent(authentication));
     return loginUser;
+  }
+
+  public Boolean logout() {
+    BearerTokenAuthentication authentication =
+        (BearerTokenAuthentication) SecurityContextHolder.getContext().getAuthentication();
+    consumerTokenServices.revokeToken(authentication.getToken().getTokenValue());
+    publisher.publishEvent(new LogoutSuccessEvent(authentication));
+    return Boolean.TRUE;
   }
 
   private Authentication buildAuthenticationToken(

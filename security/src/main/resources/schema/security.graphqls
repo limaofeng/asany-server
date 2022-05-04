@@ -271,6 +271,10 @@ extend type Mutation {
     options: LoginOptions
   ): LoginUser
   """
+  退出登录
+  """
+  logout: Boolean
+  """
   创建个人访问令牌
   """
   createPersonalAccessToken(clientId: String, name: String): PersonalAccessToken
