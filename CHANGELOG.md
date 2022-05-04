@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.17](https://github.com/limaofeng/asany-server/compare/v0.1.16...v0.1.17) (2022-05-04)
+
+
+### Features
+
+* 修改密码接口 ([03aed8c](https://github.com/limaofeng/asany-server/commit/03aed8c24af7ca2d7fd131a5f9463a239094a3c5))
+* 登录 Token 优化 ([d8d2f49](https://github.com/limaofeng/asany-server/commit/d8d2f49de28049d8e35f7d06365df46c61730586))
+
 ### [0.1.16](https://github.com/limaofeng/asany-server/compare/v0.1.15...v0.1.16) (2022-05-03)
 
 
