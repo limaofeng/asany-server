@@ -1,4 +1,4 @@
-package cn.asany.security.oauth.converter;
+package cn.asany.security.oauth.convert;
 
 import cn.asany.security.oauth.bean.AccessToken;
 import cn.asany.security.oauth.vo.PersonalAccessToken;

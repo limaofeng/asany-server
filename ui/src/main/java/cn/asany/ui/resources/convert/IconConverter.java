@@ -1,4 +1,4 @@
-package cn.asany.ui.resources.converter;
+package cn.asany.ui.resources.convert;
 
 import cn.asany.ui.resources.bean.Icon;
 import cn.asany.ui.resources.graphql.input.IconCreateInput;

@@ -6,14 +6,13 @@ import cn.asany.shanhai.core.support.model.IModelFeature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
-import org.springframework.stereotype.Component;
 
 /**
  * 初始化 Feature
  *
  * @author limaofeng
  */
-@Component
+// @Component
 @Profile("!test")
 public class PresetModelFeatureCommandLineRunner implements CommandLineRunner {
 

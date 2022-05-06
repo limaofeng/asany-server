@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
  *
  * @author limaofeng
  */
-@Component
+@Component("security.InitCommandLineRunner")
 @Profile("!test")
 @Slf4j
 public class InitCommandLineRunner implements CommandLineRunner {

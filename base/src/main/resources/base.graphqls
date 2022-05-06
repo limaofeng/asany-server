@@ -86,3 +86,15 @@ input AddressInput {
   # 详细地址
   detailedAddress: String
 }
+
+type Metadata {
+  thumb: File
+  title: String
+  description: String
+}
+
+input MetadataInput {
+  thumb: File
+  title: String
+  description: String
+}

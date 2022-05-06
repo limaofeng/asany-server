@@ -1,15 +1,12 @@
 package cn.asany.security.core.graphql;
 
-import cn.asany.base.common.SecurityType;
 import cn.asany.security.core.bean.*;
 import cn.asany.security.core.graphql.inputs.GrantPermissionByUserInput;
 import cn.asany.security.core.graphql.models.*;
 import cn.asany.security.core.service.*;
-import cn.asany.security.core.util.GrantPermissionUtils;
 import com.github.stuxuhai.jpinyin.PinyinException;
 import graphql.kickstart.tools.GraphQLMutationResolver;
 import graphql.kickstart.tools.GraphQLQueryResolver;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.jfantasy.framework.dao.OrderBy;
@@ -162,52 +159,6 @@ public class SecurityGraphQLMutationResolver
         .collect(Collectors.toList());
   }
 
-  /**
-   * 更新用户
-   *
-   * @param id
-   * @param merge
-   * @param input
-   * @return
-   */
-  public User updateUser(Long id, Long employeeId, Boolean merge, UserInput input) {
-    User user = new User();
-    BeanUtils.copyProperties(input, user, "grants", "tel", "roles");
-    if (input.getTel() != null) {
-      user.set("tel", input.getTel());
-    } else {
-      user.set("tel", "");
-    }
-    if (id == null && employeeId != null) {
-      User userOne = userService.findByEmployee(employeeId);
-      user.setId(userOne.getId());
-    } else {
-      user.setId(id);
-    }
-    if (input.getRoles() != null) {
-      List<Role> roles = new ArrayList<>();
-      for (Long roleId : input.getRoles()) {
-        roles.add(Role.builder().id(roleId).build());
-      }
-      user.setRoles(roles);
-    }
-    //        if (input.getEmployee() != null) {
-    //            user.setEmployee(Employee.builder().id(input.getEmployee()).build());
-    //        } else if (employeeId != null) {
-    //            user.setEmployee(Employee.builder().id(employeeId).build());
-    //        }
-
-    user = userService.update(user, merge);
-    if (input.getGrants() != null) {
-      user.setGrants(
-          GrantPermissionUtils.allocation(
-              SecurityType.user,
-              user.getId().toString(),
-              getGrantPermissionByUser(input.getGrants())));
-    }
-    return user;
-  }
-
   public Boolean removeUser(Long id) {
     userService.delete(id);
     return true;
@@ -346,14 +297,6 @@ public class SecurityGraphQLMutationResolver
   public Boolean removePermission(String id) {
     permissionService.delete(id);
     return true;
-  }
-
-  /**
-   * @param id
-   * @return
-   */
-  public Boolean updatePwd(String id, String oldPwd, String newPwd) {
-    return userService.updatePwd(id, oldPwd, newPwd);
   }
 
   /**

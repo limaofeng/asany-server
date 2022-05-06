@@ -11,24 +11,47 @@ import cn.asany.shanhai.core.utils.HibernateMappingHelper;
 import cn.asany.shanhai.data.engine.DefaultDataSourceLoader;
 import cn.asany.shanhai.data.engine.IDataSourceBuilder;
 import cn.asany.shanhai.data.engine.IDataSourceLoader;
+import cn.asany.shanhai.data.engine.IDataSourceOptions;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
+import org.jfantasy.framework.dao.jpa.ComplexJpaRepository;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 /** @author limaofeng */
 @Configuration
+@EntityScan({
+  "cn.asany.shanhai.core.bean",
+  "cn.asany.shanhai.data.bean",
+  "cn.asany.shanhai.gateway.bean",
+})
 @ComponentScan({
   "cn.asany.shanhai.core.support.model.types",
   "cn.asany.shanhai.core.support.model.features",
   "cn.asany.shanhai.core.runners",
-  "cn.asany.shanhai.core.service",
   "cn.asany.shanhai.core.utils",
   "cn.asany.shanhai.core.rest",
   "cn.asany.shanhai.core.dao",
-  "cn.asany.shanhai.data.engine"
+  "cn.asany.shanhai.core.service",
+  "cn.asany.shanhai.core.graphql",
+  "cn.asany.shanhai.data.engine",
+  "cn.asany.shanhai.data.dao",
+  "cn.asany.shanhai.data.service",
+  "cn.asany.shanhai.data.graphql",
+  "cn.asany.shanhai.gateway.dao",
+  "cn.asany.shanhai.gateway.service",
+  "cn.asany.shanhai.gateway.graphql",
 })
+@EnableJpaRepositories(
+    basePackages = {
+      "cn.asany.shanhai.core.dao",
+      "cn.asany.shanhai.data.dao",
+      "cn.asany.shanhai.gateway.dao"
+    },
+    repositoryBaseClass = ComplexJpaRepository.class)
 @Slf4j
 public class ShanhaiAutoConfiguration {
 
@@ -49,9 +72,9 @@ public class ShanhaiAutoConfiguration {
   }
 
   @Bean
-  public FieldTypeRegistry buildFieldTypeRegistry(List<FieldType> fieldTypes) {
+  public FieldTypeRegistry buildFieldTypeRegistry(List<FieldType<?, ?>> fieldTypes) {
     FieldTypeRegistry registry = new FieldTypeRegistry();
-    fieldTypes.stream().forEach(item -> registry.addType(item));
+    fieldTypes.forEach(registry::addType);
     return registry;
   }
 
@@ -64,12 +87,13 @@ public class ShanhaiAutoConfiguration {
   @Bean
   public ModelFeatureRegistry buildModelFeatureRegistry(List<IModelFeature> features) {
     ModelFeatureRegistry registry = new ModelFeatureRegistry();
-    features.stream().forEach(item -> registry.add(item));
+    features.forEach(registry::add);
     return registry;
   }
 
   @Bean
-  public IDataSourceLoader dataSourceFactory(List<IDataSourceBuilder> builders) {
+  public IDataSourceLoader dataSourceFactory(
+      List<IDataSourceBuilder<IDataSourceOptions>> builders) {
     IDataSourceLoader factory = new DefaultDataSourceLoader();
     builders.forEach(value -> factory.addBuilder(value.type(), value));
     return factory;

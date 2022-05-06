@@ -10,10 +10,12 @@ import org.apache.james.queue.api.MailQueueItemDecoratorFactory;
 import org.apache.james.queue.api.ManageableMailQueue;
 import org.apache.james.queue.api.RawMailQueueItemDecoratorFactory;
 import org.apache.james.queue.memory.MemoryMailQueueFactory;
+import org.jfantasy.framework.dao.jpa.ComplexJpaRepository;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 /**
  * Email 配置
@@ -28,7 +30,11 @@ import org.springframework.context.annotation.Configuration;
   "cn.asany.email.*.convert",
   "cn.asany.email.*.service",
   "cn.asany.email.*.component",
+  "cn.asany.email.*.graphql",
 })
+@EnableJpaRepositories(
+    basePackages = "cn.asany.email.*.dao",
+    repositoryBaseClass = ComplexJpaRepository.class)
 public class EmailAutoConfiguration {
 
   @Bean

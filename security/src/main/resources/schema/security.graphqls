@@ -101,6 +101,12 @@ type LoginUser {
   #    currentPosition(organization: ID!): Position
 }
 
+input UserUpdateInput {
+  username: String
+  avatar: File
+  nickName: String
+}
+
 type CurrentUser {
   # 用户ID
   uid(type: UIdType = id): String
@@ -303,4 +309,6 @@ extend type Mutation {
     """
     newPassword: String!
   ): Boolean
+
+  updateUser(id: ID, input: UserUpdateInput, merge: Boolean): User
 }

@@ -1,5 +1,6 @@
 package cn.asany.website.landing.bean;
 
+import cn.asany.base.common.bean.Metadata;
 import cn.asany.website.landing.bean.enums.LandingPageStatus;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.Date;
@@ -62,4 +63,6 @@ public class LandingPage extends BaseBusEntity {
       foreignKey = @ForeignKey(name = "FK_WEBSITE_LANDING_PAGE_STORE_SID"))
   @ToString.Exclude
   private List<LandingStore> stores;
+  /** 元数据 */
+  @Embedded private Metadata metadata;
 }

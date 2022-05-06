@@ -3,6 +3,7 @@ package cn.asany.security.core.bean;
 import cn.asany.base.common.Ownership;
 import cn.asany.base.common.bean.Email;
 import cn.asany.base.common.bean.Phone;
+import cn.asany.security.core.bean.enums.Sex;
 import cn.asany.security.core.bean.enums.UserType;
 import cn.asany.security.core.validators.UsernameCannotRepeatValidator;
 import cn.asany.storage.api.FileObject;
@@ -14,6 +15,7 @@ import java.util.*;
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import lombok.*;
+import org.hibernate.Hibernate;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
@@ -27,12 +29,11 @@ import org.jfantasy.framework.spring.validation.Use;
 import org.jfantasy.framework.util.common.ClassUtil;
 
 /** @author limaofeng */
-@Data
-@EqualsAndHashCode(callSuper = false)
+@Getter
+@Setter
+@RequiredArgsConstructor
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
-@ToString(exclude = {"password", "properties", "roles"})
 @Entity
 @Table(name = "AUTH_USER")
 @JsonIgnoreProperties({
@@ -98,6 +99,17 @@ public class User extends BaseBusEntity implements Ownership {
     @AttributeOverride(name = "address", column = @Column(name = "EMAIL_ADDRESS")),
   })
   private Email email;
+  /** 生日 */
+  @Column(name = "BIRTHDAY")
+  @Temporal(TemporalType.DATE)
+  private Date birthday;
+  /** 性别 */
+  @Enumerated(EnumType.STRING)
+  @Column(name = "SEX", length = 10)
+  private Sex sex;
+  /** 自我介绍 */
+  @Column(name = "BIO", length = 50)
+  private String bio;
   /** 是否启用 */
   @Column(name = "ENABLED")
   private Boolean enabled;
@@ -125,6 +137,7 @@ public class User extends BaseBusEntity implements Ownership {
       inverseJoinColumns = @JoinColumn(name = "ROLE_CODE"),
       foreignKey = @ForeignKey(name = "FK_ROLE_USER_UID"))
   @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+  @ToString.Exclude
   private List<Role> roles;
   /** 扩展字段 */
   @Convert(converter = MapConverter.class)
@@ -179,5 +192,18 @@ public class User extends BaseBusEntity implements Ownership {
   @Transient
   public String getOwnerType() {
     return OWNERSHIP_KEY;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+    User user = (User) o;
+    return id != null && Objects.equals(id, user.id);
+  }
+
+  @Override
+  public int hashCode() {
+    return getClass().hashCode();
   }
 }

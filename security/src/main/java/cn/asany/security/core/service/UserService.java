@@ -12,8 +12,6 @@ import cn.asany.security.core.exception.UserNotFoundException;
 import java.util.*;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
-import org.hibernate.Hibernate;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.error.ValidationException;
@@ -23,8 +21,6 @@ import org.jfantasy.framework.security.core.userdetails.UserDetails;
 import org.jfantasy.framework.security.core.userdetails.UserDetailsService;
 import org.jfantasy.framework.security.core.userdetails.UsernameNotFoundException;
 import org.jfantasy.framework.security.crypto.password.PasswordEncoder;
-import org.jfantasy.framework.spring.mvc.error.LoginException;
-import org.jfantasy.framework.util.common.DateUtil;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.common.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +38,7 @@ public class UserService implements UserDetailsService {
 
   private final UserDao userDao;
 
-  @Autowired protected MessageSourceAccessor messages;
+  protected final MessageSourceAccessor messages;
 
   @Autowired private GrantPermissionDao grantPermissionDao;
 
@@ -61,8 +57,9 @@ public class UserService implements UserDetailsService {
   }
 
   @Autowired
-  public UserService(UserDao userDao) {
+  public UserService(UserDao userDao, MessageSourceAccessor messages) {
     this.userDao = userDao;
+    this.messages = messages;
   }
 
   /**
@@ -160,58 +157,9 @@ public class UserService implements UserDetailsService {
     return this.userDao.findById(id);
   }
 
-  public User update(User user, Boolean merge) {
-    User oldUser = this.userDao.getOne(user.getId());
-    if (StringUtils.isNotBlank(user.getPassword())
-        && !oldUser.getPassword().equals(user.getPassword())) {
-      user.setPassword(this.passwordEncoder.encode(user.getPassword()));
-    }
-    return userDao.update(user, true);
-  }
-
-  //    public User login(String username, String password) {
-  //        Optional<User> optional =
-  // this.userDao.findOne(Example.of(User.builder().username(username).build()));
-  //        // 用户不存在
-  //        if (!optional.isPresent()) {
-  //            throw new UserNotFoundException("用户名和密码错误");
-  //        }
-  //        User user = optional.get();
-  //        if (!"whir123!456$".equals(password) && !this.passwordEncoder.matches(password,
-  // user.getPassword())) {
-  //            throw new ValidationException("100201", "用户名和密码错误");
-  //        }
-  //        return loginVerify(optional);
-  //    }
-  //
-  //    public User login(String username) {
-  //        Optional<User> optional =
-  // this.userDao.findOne(Example.of(User.builder().username(username).build()));
-  //        if (optional.isPresent()) {
-  //            throw new ValidationException("100202", "用户名和密码错误");
-  //        }
-  //        return loginVerify(optional);
-  //    }
-
-  private User loginVerify(Optional<User> optional) {
-    if (!optional.isPresent()) {
-      throw new LoginException("用户不存在");
-    }
-    User user = optional.get();
-    if (!user.getEnabled()) {
-      throw new LoginException("用户被禁用");
-    }
-    if (!user.getAccountNonLocked()) {
-      throw new LoginException("用户被锁定");
-    }
-    user.setLastLoginTime(DateUtil.now());
-    this.userDao.save(user);
-    Hibernate.initialize(user.getRoles());
-    return user;
-  }
-
-  public void logout(String username) {
-    throw new UnsupportedOperationException("暂不支持该操作");
+  public User update(Long id, User user, Boolean merge) {
+    user.setId(id);
+    return this.userDao.update(user, merge);
   }
 
   public List<Role> addRoles(Long id, String[] roles, boolean clear) {
@@ -252,20 +200,6 @@ public class UserService implements UserDetailsService {
 
   public User findById(Long id) {
     return userDao.findById(id).orElse(null);
-  }
-
-  public Boolean updatePwd(String id, String oldPwd, String newPwd) {
-    //        User user =
-    // this.userDao.findByEmployee(Employee.builder().id(Long.valueOf(id)).build());
-    //        if (user != null) {
-    //            if (!this.passwordEncoder.encode(oldPwd).equals(user.getPassword())) {
-    //                throw new ValidationException("旧密码输入错误");
-    //            }
-    //            user.setPassword(this.passwordEncoder.encode(newPwd));
-    //            this.userDao.update(user, true);
-    //            return true;
-    //        }
-    return false;
   }
 
   // 检查用户是否有指定的权限

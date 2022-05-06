@@ -7,9 +7,8 @@ import cn.asany.shanhai.core.support.graphql.resolvers.base.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
-import org.springframework.stereotype.Component;
 
-@Component
+// @Component
 @Profile("!test")
 public class DefaultCRUDDelegateCommandLineRunner implements CommandLineRunner {
 

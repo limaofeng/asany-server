@@ -12,11 +12,13 @@ import graphql.kickstart.autoconfigure.tools.SchemaDirective;
 import graphql.kickstart.servlet.apollo.ApolloScalars;
 import graphql.schema.GraphQLScalarType;
 import java.util.List;
+import org.jfantasy.framework.dao.jpa.ComplexJpaRepository;
 import org.jfantasy.graphql.SchemaParserDictionaryBuilder;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 /** @author limaofeng */
 @Configuration
@@ -32,6 +34,9 @@ import org.springframework.context.annotation.Configuration;
   "cn.asany.storage.*.graphql",
   "cn.asany.storage.*.rest",
 })
+@EnableJpaRepositories(
+    basePackages = "cn.asany.storage.*.dao",
+    repositoryBaseClass = ComplexJpaRepository.class)
 public class StorageAutoConfiguration {
 
   @Bean

@@ -1,7 +1,7 @@
 package cn.asany.security.oauth.service;
 
 import cn.asany.security.oauth.bean.AccessToken;
-import cn.asany.security.oauth.converter.AccessTokenConverter;
+import cn.asany.security.oauth.convert.AccessTokenConverter;
 import cn.asany.security.oauth.dao.AccessTokenDao;
 import cn.asany.security.oauth.vo.PersonalAccessToken;
 import cn.asany.security.oauth.vo.SessionAccessToken;

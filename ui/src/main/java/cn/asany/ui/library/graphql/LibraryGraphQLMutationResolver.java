@@ -1,7 +1,7 @@
 package cn.asany.ui.library.graphql;
 
 import cn.asany.ui.library.bean.Library;
-import cn.asany.ui.library.converter.LibraryConverter;
+import cn.asany.ui.library.convert.LibraryConverter;
 import cn.asany.ui.library.graphql.input.IconInput;
 import cn.asany.ui.library.graphql.input.LibraryCreateInput;
 import cn.asany.ui.library.graphql.input.LibraryUpdateInput;

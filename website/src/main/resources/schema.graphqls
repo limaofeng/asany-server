@@ -39,6 +39,7 @@ type LandingPage {
   poster: LandingPoster
   stores: [LandingStore!]!
   createdAt: Date! @dateFormat
+  metadata: Metadata
 }
 
 type LandingPageConnection {
@@ -213,6 +214,10 @@ input LandingPageCreateInput {
   门店
   """
   stores: [ID!]
+  """
+  元数据
+  """
+  metadata: MetadataInput
 }
 
 input LandingPageUpdateInput {
@@ -240,6 +245,10 @@ input LandingPageUpdateInput {
   门店
   """
   stores: [ID!]
+  """
+  元数据
+  """
+  metadata: MetadataInput
 }
 
 extend type Mutation {

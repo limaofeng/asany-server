@@ -52,9 +52,10 @@ public class Organization extends BaseBusEntity implements Ownership {
   @Column(name = "DESCRIPTION", length = 150)
   private String description;
   /** 备注 */
-  @Column(name = "remark", length = 300)
+  @Column(name = "REMARK", length = 300)
   private String remark;
   /** 所有者 - 用户ID */
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "OWNERSHIP_ID", insertable = false, updatable = false)
   private User ownership;
   /** 部门类型 */

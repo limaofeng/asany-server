@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
  *
  * @author limaofeng
  */
-@Component
+@Component("nuwa.app.InitCommandLineRunner")
 @Profile("!test")
 @Slf4j
 public class InitCommandLineRunner implements CommandLineRunner {

@@ -4,8 +4,10 @@ import cn.asany.shanhai.core.bean.Model;
 import cn.asany.shanhai.core.bean.ModelFieldMetadata;
 import cn.asany.shanhai.core.bean.enums.ModelType;
 import javax.persistence.AttributeConverter;
+import javax.persistence.Converter;
 import org.jfantasy.framework.dao.jpa.PropertyFilter.MatchType;
 
+@Converter
 public interface FieldType<JAVA, DB> extends AttributeConverter<JAVA, DB> {
   /** 查询 */
   Model Query = Model.builder().type(ModelType.OBJECT).id(1L).code("Query").name("Query").build();

@@ -5,8 +5,7 @@ import org.springframework.context.ApplicationEvent;
 
 /**
  * @author limaofeng
- * @version V1.0 @Description: TODO
- * @date 2019/11/27 11:46 上午
+ * @version V1.0
  */
 public class ArticleCreatedEvent extends ApplicationEvent {
 
