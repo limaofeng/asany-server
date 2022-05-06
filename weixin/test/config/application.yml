@@ -1,0 +1,101 @@
+logging:
+  config: classpath:logback.xml
+  path: /logs/zbsg_pay
+
+server:
+  port: 8080
+
+# datasource config
+spring:
+  datasource:
+    name: datasource
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mysql://192.16.10.211:3306/pay?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8
+    username: zbsg
+    password: zbsg
+    driver-class-name: com.mysql.jdbc.Driver
+    druid:
+      filters: stat,wall
+      max-active: 20
+      initial-size: 1
+      min-idle: 3
+      max-wait: 60000
+      time-between-eviction-runs-millis: 60000
+      min-evictable-idle-time-millis: 300000
+      validation-query: SELECT 'x' FROM DUAL
+      test-while-idle: true
+      test-on-borrow: false
+      test-on-return: false
+  redis:
+    host: 192.16.10.211
+    port: 6379
+    password:
+  jpa:
+    generate-ddl: true
+    hibernate:
+      ddl-auto: update
+      use-new-id-generator-mappings: true
+      naming:
+        strategy: org.hibernate.cfg.ImprovedNamingStrategy
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5Dialect
+        show_sql: true
+        current_session_context_class: org.springframework.orm.hibernate5.SpringSessionContext
+        cache:
+          use_query_cache: false
+          use_second_level_cache: false
+          #region:
+          #  factory_class: org.hibernate.cache.ehcache.EhCacheRegionFactory
+        ejb:
+          interceptor: org.jfantasy.framework.dao.hibernate.interceptors.BusEntityInterceptor
+          identifier_generator_strategy_provider: org.jfantasy.framework.dao.hibernate.spi.CustomIdentifierGeneratorStrategyProvider
+  thymeleaf:
+    cache: false
+  jackson:
+    mixin:
+      packages: org.jfantasy.pay.product,org.jfantasy.pay.bean,org.jfantasy.pay.order.entity
+  oauth:
+    redis:
+      host: 192.16.10.211
+      port: 6379
+      password:
+  apigateway:
+    url: http://114.55.142.155:8000
+
+aliyun:
+  ons:
+    accessKey: 44IzFLqkj8Pw2YOi
+    secretKey: XexMYOXZGBrPgQTUq4HtKuxxl9zMx1
+    producerId: PID-DEV_TRADE
+    consumerId: CID-DEV_TRADE
+    pay:
+      topicId: DEV-PAYNOTIFICATION
+    doctorincome:
+      topicId: TEST-DOCTOR_INCOME
+    order:
+      topicId: DEV-ORDER
+
+netty:
+  server:
+    host: localhost
+    port: 9090
+
+paynotify:
+  url: http://114.55.142.155:8000
+
+springfox:
+  documentation:
+    swagger:
+      v2:
+        path: /api-docs
+      api:
+        title: xxxx
+        description:
+        version: 2.0.0
+        termsOfServiceUrl: http://service.zbsg.com.cn
+        contact:
+          name: limaofeng
+          email: limaofeng@msn.com
+        license: MIT
+        licenseUrl: #
