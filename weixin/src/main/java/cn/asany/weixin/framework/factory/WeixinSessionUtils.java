@@ -4,28 +4,33 @@ import cn.asany.weixin.framework.exception.NoSessionException;
 import cn.asany.weixin.framework.exception.WeixinException;
 import cn.asany.weixin.framework.session.WeixinSession;
 
+/**
+ * 微信会话
+ *
+ * @author limaofeng
+ */
 public class WeixinSessionUtils {
 
   /** 当前 session 对象 */
-  private static ThreadLocal<WeixinSession> current = new ThreadLocal<>();
+  private static final ThreadLocal<WeixinSession> CURRENT = new ThreadLocal<>();
 
   private WeixinSessionUtils() {
     throw new IllegalStateException("Utility class");
   }
 
   public static WeixinSession getCurrentSession() throws WeixinException {
-    if (current.get() == null) {
+    if (CURRENT.get() == null) {
       throw new NoSessionException("未初始化 WeiXinSession 对象");
     }
-    return current.get();
+    return CURRENT.get();
   }
 
   public static WeixinSession saveSession(WeixinSession session) {
-    current.set(session);
+    CURRENT.set(session);
     return session;
   }
 
   public static void closeSession() {
-    current.remove();
+    CURRENT.remove();
   }
 }

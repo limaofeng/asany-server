@@ -1,6 +1,5 @@
 package cn.asany.weixin.framework.message.user;
 
-import cn.asany.weixin.bean.enums.Sex;
 import java.util.Date;
 
 /** 微信用户对象 */

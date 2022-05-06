@@ -23,4 +23,8 @@ type AmapOpenAPI {
 
 extend type Query {
   amapOpenAPI: AmapOpenAPI
+  """
+  微信API
+  """
+  weixin: Weixin
 }

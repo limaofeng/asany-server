@@ -1,11 +1,12 @@
 dependencies {
+    implementation project(":base")
+    implementation project(":storage-api")
+    implementation project(":openapi")
     implementation 'com.nimbusds:nimbus-jose-jwt:9.15.2'
     implementation group: 'redis.clients', name: 'jedis'
     implementation("org.springframework.boot:spring-boot-starter-data-redis") {
         exclude group: 'io.lettuce', module: 'lettuce-core'
     }
-    implementation project(":base")
-    implementation project(":storage-api")
 }
 
 repositories {

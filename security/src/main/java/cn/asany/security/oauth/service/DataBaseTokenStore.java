@@ -1,7 +1,7 @@
 package cn.asany.security.oauth.service;
 
-import cn.asany.base.openapi.apis.AmapOpenAPI;
-import cn.asany.base.openapi.service.OpenAPIService;
+import cn.asany.openapi.apis.AmapOpenAPI;
+import cn.asany.openapi.service.OpenAPIService;
 import cn.asany.security.core.bean.User;
 import cn.asany.security.oauth.bean.AccessToken;
 import cn.asany.security.oauth.bean.AccessTokenClientDetails;

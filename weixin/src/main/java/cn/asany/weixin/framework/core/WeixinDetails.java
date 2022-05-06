@@ -1,6 +1,7 @@
 package cn.asany.weixin.framework.core;
 
 import cn.asany.weixin.framework.session.WeixinApp;
+import cn.asany.weixin.framework.session.WeixinAppType;
 import me.chanjar.weixin.cp.api.WxCpInMemoryConfigStorage;
 import me.chanjar.weixin.cp.api.WxCpService;
 import me.chanjar.weixin.cp.api.WxCpServiceImpl;
@@ -8,11 +9,16 @@ import me.chanjar.weixin.mp.api.WxMpInMemoryConfigStorage;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.api.impl.WxMpServiceImpl;
 
+/**
+ * 微信详情
+ *
+ * @author limaofeng
+ */
 public class WeixinDetails {
-  private WeixinService weixinService;
+  private final WeixinService weixinService;
 
   public WeixinDetails(WeixinApp weixinApp) {
-    if (WeixinApp.Type.enterprise == weixinApp.getType()) {
+    if (WeixinAppType.enterprise == weixinApp.getType()) {
       WxCpService wxCpService = new WxCpServiceImpl();
       WxCpInMemoryConfigStorage wxMpConfigStorage = new WxCpInMemoryConfigStorage();
       wxMpConfigStorage.setCorpId(weixinApp.getId());

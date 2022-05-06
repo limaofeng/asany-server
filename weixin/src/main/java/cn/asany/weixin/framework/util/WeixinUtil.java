@@ -1,6 +1,6 @@
 package cn.asany.weixin.framework.util;
 
-import cn.asany.weixin.bean.enums.Sex;
+import cn.asany.weixin.framework.message.user.Sex;
 import cn.asany.weixin.framework.message.user.User;
 import java.util.Date;
 import me.chanjar.weixin.mp.bean.result.WxMpUser;

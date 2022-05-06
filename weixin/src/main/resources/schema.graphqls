@@ -1,0 +1,25 @@
+enum WeixinType {
+  open
+  service
+  subscription
+  enterprise
+}
+
+type WeixinSignature {
+  noncestr: String
+  appid: String
+  timestamp: Int
+  url: String
+  signature: String
+}
+
+type WeixinJsapi {
+  ticket: String
+  signature(url: String): WeixinSignature
+}
+
+type Weixin {
+  id: String
+  type: WeixinType
+  jsapi: WeixinJsapi
+}

@@ -3,14 +3,13 @@ package cn.asany.openapi.bean;
 import cn.asany.openapi.IOpenApiConfig;
 import cn.asany.openapi.bean.enums.OpenApiType;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.util.Objects;
+import javax.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.framework.jackson.JSON;
-
-import javax.persistence.*;
-import java.util.Objects;
 
 /**
  * Open Api 配置

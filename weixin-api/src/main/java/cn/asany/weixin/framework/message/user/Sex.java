@@ -1,4 +1,4 @@
-package cn.asany.weixin.bean.enums;
+package cn.asany.weixin.framework.message.user;
 
 /**
  * 性别枚举

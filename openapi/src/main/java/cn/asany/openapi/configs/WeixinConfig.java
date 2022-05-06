@@ -1,7 +1,9 @@
 package cn.asany.openapi.configs;
 
 import cn.asany.openapi.IOpenApiConfig;
+import cn.asany.weixin.framework.session.WeixinApp;
 import cn.asany.weixin.framework.session.WeixinAppType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,7 +18,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class WeixinConfig implements IOpenApiConfig {
+public class WeixinConfig implements IOpenApiConfig, WeixinApp {
   /** App ID */
   private String appId;
   /** 密钥 */
@@ -34,4 +36,16 @@ public class WeixinConfig implements IOpenApiConfig {
    * 企业号才需要配置该属性
    */
   private Integer agentId;
+
+  @Override
+  @JsonIgnore
+  public String getId() {
+    return this.appId;
+  }
+
+  @Override
+  @JsonIgnore
+  public String getSecret() {
+    return this.appSecret;
+  }
 }

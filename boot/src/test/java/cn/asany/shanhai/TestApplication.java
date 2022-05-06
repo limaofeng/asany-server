@@ -30,7 +30,7 @@ import org.springframework.web.client.RestTemplate;
  */
 @Slf4j
 @Configuration
-@ComponentScan({"cn.asany.*.*.service", "cn.asany.*.*.convert"})
+@ComponentScan({"cn.asany.openapi.service", "cn.asany.*.*.convert"})
 @EntityScan({
   "cn.asany.*.*.bean",
 })
@@ -43,7 +43,7 @@ import org.springframework.web.client.RestTemplate;
     },
     basePackages = {
       "cn.asany.*.dao",
-      "cn.asany.*.*.dao",
+      "cn.asany.openapi.dao",
     },
     repositoryBaseClass = ComplexJpaRepository.class)
 @EnableAutoConfiguration(

@@ -22,13 +22,6 @@ public interface WeixinApp {
   WeixinAppType getType();
 
   /**
-   * 名称
-   *
-   * @return String
-   */
-  String getName();
-
-  /**
    * 密钥
    *
    * @return String

@@ -19,7 +19,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @Slf4j
 @Configuration
-@ComponentScan({"cn.asany.*.*.service", "cn.asany.*.*.converter"})
+@ComponentScan({"cn.asany.openapi.service", "cn.asany.*.*.converter"})
 @EntityScan({
   "cn.asany.*.*.bean",
 })
@@ -30,7 +30,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
           value = {JpaRepository.class})
     },
     basePackages = {
-      "cn.asany.*.*.dao",
+      "cn.asany.openapi.dao",
     },
     repositoryBaseClass = ComplexJpaRepository.class)
 @EnableAutoConfiguration(

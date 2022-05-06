@@ -13,6 +13,9 @@ pluginManagement {
 
 rootProject.name = 'shanhai'
 include ":shanhai",
+        ":weixin-api",
+        ":weixin",
+        ":openapi",
         ":base",
         ":contacts",
         ":sunrise",
@@ -55,5 +58,11 @@ project(':sunrise').projectDir = "$rootDir/sunrise" as File
 project(':mail').projectDir = "$rootDir/mail" as File
 // 云盘
 project(':drive').projectDir = "$rootDir/drive" as File
+// 微信
+project(':weixin').projectDir = "$rootDir/weixin" as File
+// 微信 API
+project(':weixin-api').projectDir = "$rootDir/weixin-api" as File
+// open-api
+project(':openapi').projectDir = "$rootDir/openapi" as File
 // 启动
 project(':boot').projectDir = "$rootDir/boot" as File

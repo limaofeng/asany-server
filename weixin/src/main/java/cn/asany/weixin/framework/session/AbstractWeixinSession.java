@@ -5,29 +5,26 @@ import cn.asany.weixin.framework.core.Openapi;
 import cn.asany.weixin.framework.core.WeixinCoreHelper;
 import cn.asany.weixin.framework.exception.WeixinException;
 import cn.asany.weixin.framework.message.content.*;
-import cn.asany.weixin.framework.message.user.Group;
 import cn.asany.weixin.framework.message.user.User;
-import java.util.ArrayList;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.jfantasy.framework.error.IgnoreException;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.jfantasy.framework.error.IgnoreException;
 
 /** 微信 session 抽象实现 */
 public abstract class AbstractWeixinSession implements WeixinSession {
 
   private final Log LOG = LogFactory.getLog(this.getClass());
 
-  private String id;
+  private final String id;
 
-  // 缓存所有group信息
-  private List<Group> groups = new ArrayList<Group>();
-  private WeixinApp weixinApp;
-  private WeixinCoreHelper weixinCoreHelper;
-  private static final ExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+  private final WeixinApp weixinApp;
+  private final WeixinCoreHelper weixinCoreHelper;
+  private static final ExecutorService EXECUTOR = Executors.newSingleThreadScheduledExecutor();
 
   public AbstractWeixinSession(WeixinApp weixinApp, WeixinCoreHelper weixinCoreHelper) {
     this.weixinApp = weixinApp;
@@ -42,7 +39,7 @@ public abstract class AbstractWeixinSession implements WeixinSession {
 
   @Override
   public void sendImageMessage(final Image content, final String... toUsers) {
-    executor.execute(
+    EXECUTOR.execute(
         new Runnable() {
           @Override
           public void run() {
@@ -58,7 +55,7 @@ public abstract class AbstractWeixinSession implements WeixinSession {
 
   @Override
   public void sendImageMessage(final Image content, final long toGroup) {
-    executor.execute(
+    EXECUTOR.execute(
         () -> {
           try {
             AbstractWeixinSession.this.weixinCoreHelper.sendImageMessage(
@@ -71,7 +68,7 @@ public abstract class AbstractWeixinSession implements WeixinSession {
 
   @Override
   public void sendVoiceMessage(final Voice content, final String... toUsers) {
-    executor.execute(
+    EXECUTOR.execute(
         () -> {
           try {
             AbstractWeixinSession.this.weixinCoreHelper.sendVoiceMessage(
@@ -84,7 +81,7 @@ public abstract class AbstractWeixinSession implements WeixinSession {
 
   @Override
   public void sendVoiceMessage(final Voice content, final long toGroup) {
-    executor.execute(
+    EXECUTOR.execute(
         () -> {
           try {
             AbstractWeixinSession.this.weixinCoreHelper.sendVoiceMessage(
@@ -97,7 +94,7 @@ public abstract class AbstractWeixinSession implements WeixinSession {
 
   @Override
   public void sendVideoMessage(final Video content, final String... toUsers) {
-    executor.execute(
+    EXECUTOR.execute(
         () -> {
           try {
             AbstractWeixinSession.this.weixinCoreHelper.sendVideoMessage(
@@ -110,7 +107,7 @@ public abstract class AbstractWeixinSession implements WeixinSession {
 
   @Override
   public void sendVideoMessage(final Video content, final long toGroup) {
-    executor.execute(
+    EXECUTOR.execute(
         () -> {
           try {
             AbstractWeixinSession.this.weixinCoreHelper.sendVideoMessage(
@@ -123,7 +120,7 @@ public abstract class AbstractWeixinSession implements WeixinSession {
 
   @Override
   public void sendMusicMessage(final Music content, final String toUser) {
-    executor.execute(
+    EXECUTOR.execute(
         () -> {
           try {
             AbstractWeixinSession.this.weixinCoreHelper.sendMusicMessage(
@@ -139,7 +136,7 @@ public abstract class AbstractWeixinSession implements WeixinSession {
     if (content.isEmpty()) {
       return;
     }
-    executor.execute(
+    EXECUTOR.execute(
         () -> {
           try {
             AbstractWeixinSession.this.weixinCoreHelper.sendNewsMessage(
@@ -152,7 +149,7 @@ public abstract class AbstractWeixinSession implements WeixinSession {
 
   @Override
   public void sendNewsMessage(final List<News> content, final String toUser) {
-    executor.execute(
+    EXECUTOR.execute(
         () -> {
           try {
             AbstractWeixinSession.this.weixinCoreHelper.sendNewsMessage(
@@ -165,7 +162,7 @@ public abstract class AbstractWeixinSession implements WeixinSession {
 
   @Override
   public void sendNewsMessage(final List<Article> content, final long toGroup) {
-    executor.execute(
+    EXECUTOR.execute(
         new Runnable() {
           @Override
           public void run() {
@@ -181,7 +178,7 @@ public abstract class AbstractWeixinSession implements WeixinSession {
 
   @Override
   public void sendTextMessage(final String content, final String... toUsers) {
-    executor.execute(
+    EXECUTOR.execute(
         () -> {
           try {
             AbstractWeixinSession.this.weixinCoreHelper.sendTextMessage(
@@ -194,7 +191,7 @@ public abstract class AbstractWeixinSession implements WeixinSession {
 
   @Override
   public void sendTextMessage(final String content, final long toGroup) {
-    executor.execute(
+    EXECUTOR.execute(
         () -> {
           try {
             AbstractWeixinSession.this.weixinCoreHelper.sendTextMessage(
@@ -207,7 +204,7 @@ public abstract class AbstractWeixinSession implements WeixinSession {
 
   @Override
   public void sendTemplateMessage(final Template content, final String toUser) {
-    executor.execute(
+    EXECUTOR.execute(
         () -> {
           try {
             AbstractWeixinSession.this.weixinCoreHelper.sendTemplateMessage(
@@ -221,7 +218,7 @@ public abstract class AbstractWeixinSession implements WeixinSession {
   @Override
   public User getUser(String userId) {
     try {
-      if (getWeixinApp().getType() == WeixinApp.Type.open) {
+      if (getWeixinApp().getType() == WeixinAppType.open) {
         return this.weixinCoreHelper.getOpenapi(this).getUser(userId);
       } else {
         return this.weixinCoreHelper.getUser(this, userId);

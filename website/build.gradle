@@ -2,6 +2,7 @@ description = "网站"
 
 dependencies {
     implementation project(":base")
+    implementation project(":openapi")
     implementation project(":security")
     implementation project(":storage-api")
     testImplementation project(":storage")

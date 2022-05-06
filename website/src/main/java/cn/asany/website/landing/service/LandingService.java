@@ -2,8 +2,8 @@ package cn.asany.website.landing.service;
 
 import cn.asany.base.common.bean.Geolocation;
 import cn.asany.base.common.service.AddressService;
-import cn.asany.base.openapi.apis.AmapOpenAPI;
-import cn.asany.base.openapi.service.OpenAPIService;
+import cn.asany.openapi.apis.AmapOpenAPI;
+import cn.asany.openapi.service.OpenAPIService;
 import cn.asany.website.landing.bean.LandingPage;
 import cn.asany.website.landing.bean.LandingPoster;
 import cn.asany.website.landing.bean.LandingStore;
