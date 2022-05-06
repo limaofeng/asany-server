@@ -1,6 +1,6 @@
-package cn.asany.base.openapi.graphql.type;
+package cn.asany.openapi.graphql.type;
 
-import cn.asany.base.openapi.apis.AmapOpenAPI;
+import cn.asany.openapi.apis.AmapOpenAPI;
 import graphql.kickstart.tools.GraphQLResolver;
 import graphql.schema.DataFetchingEnvironment;
 import org.jfantasy.framework.util.common.StringUtil;

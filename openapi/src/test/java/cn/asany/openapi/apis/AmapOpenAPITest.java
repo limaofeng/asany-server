@@ -1,8 +1,8 @@
-package cn.asany.base.openapi.apis;
+package cn.asany.openapi.apis;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import cn.asany.base.openapi.configs.AmapApiConfig;
+import cn.asany.openapi.configs.AmapApiConfig;
 import com.mashape.unirest.http.Unirest;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;

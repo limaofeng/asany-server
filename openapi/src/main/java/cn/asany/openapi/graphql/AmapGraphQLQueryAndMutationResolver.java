@@ -1,7 +1,7 @@
-package cn.asany.base.openapi.graphql;
+package cn.asany.openapi.graphql;
 
-import cn.asany.base.openapi.apis.AmapOpenAPI;
-import cn.asany.base.openapi.service.OpenAPIService;
+import cn.asany.openapi.apis.AmapOpenAPI;
+import cn.asany.openapi.service.OpenAPIService;
 import graphql.kickstart.tools.GraphQLMutationResolver;
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import org.springframework.stereotype.Component;

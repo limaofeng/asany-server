@@ -1,6 +1,6 @@
-package cn.asany.base.openapi.apis;
+package cn.asany.openapi.apis;
 
-import cn.asany.base.openapi.configs.AmapApiConfig;
+import cn.asany.openapi.configs.AmapApiConfig;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.mashape.unirest.http.HttpResponse;

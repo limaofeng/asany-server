@@ -1,18 +1,22 @@
-package cn.asany.base.openapi.bean;
+package cn.asany.openapi.bean;
 
-import cn.asany.base.openapi.IOpenApiConfig;
-import cn.asany.base.openapi.bean.enums.OpenApiType;
-import cn.asany.base.openapi.configs.AmapApiConfig;
+import cn.asany.openapi.IOpenApiConfig;
+import cn.asany.openapi.bean.enums.OpenApiType;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import java.util.Objects;
-import javax.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.error.ValidationException;
 import org.jfantasy.framework.jackson.JSON;
 
+import javax.persistence.*;
+import java.util.Objects;
+
+/**
+ * Open Api 配置
+ *
+ * @author limaofeng
+ */
 @Getter
 @Setter
 @ToString
@@ -20,7 +24,12 @@ import org.jfantasy.framework.jackson.JSON;
 @Builder
 @AllArgsConstructor
 @Entity
-@Table(name = "OPEN_API_CONFIG")
+@Table(
+    name = "OPEN_API_CONFIG",
+    uniqueConstraints =
+        @UniqueConstraint(
+            name = "UK_OPEN_API_CONFIG_APPID",
+            columnNames = {"TYPE", "APPID"}))
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class OpenApiConfig extends BaseBusEntity {
 
@@ -39,22 +48,26 @@ public class OpenApiConfig extends BaseBusEntity {
   /** 描述 */
   @Column(name = "DESCRIPTION", length = 500)
   private String description;
+  /** APPID 唯一值, 方便检索配置 */
+  @Column(name = "APPID", length = 100, nullable = false)
+  private String appid;
   /** 存放配置参数 */
   @Column(name = "CONFIG_STORE", columnDefinition = "JSON")
   private String details;
 
   @Transient
-  public <T extends IOpenApiConfig> T toConfig() {
-    if (this.getType() == OpenApiType.AMAP) {
-      return (T) JSON.deserialize(this.getDetails(), AmapApiConfig.class);
-    }
-    throw new ValidationException("不支持的类型");
+  public <T extends IOpenApiConfig> T toConfig(Class<T> tClass) {
+    return JSON.deserialize(this.getDetails(), tClass);
   }
 
   @Override
   public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+    if (this == o) {
+      return true;
+    }
+    if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) {
+      return false;
+    }
     OpenApiConfig store = (OpenApiConfig) o;
     return id != null && Objects.equals(id, store.id);
   }

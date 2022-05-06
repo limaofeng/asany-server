@@ -1,6 +1,6 @@
-package cn.asany.base.openapi.configs;
+package cn.asany.openapi.configs;
 
-import cn.asany.base.openapi.IOpenApiConfig;
+import cn.asany.openapi.IOpenApiConfig;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

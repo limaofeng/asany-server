@@ -1,6 +1,6 @@
-package cn.asany.base.openapi.dao;
+package cn.asany.openapi.dao;
 
-import cn.asany.base.openapi.bean.OpenApiConfig;
+import cn.asany.openapi.bean.OpenApiConfig;
 import org.jfantasy.framework.dao.jpa.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -1,7 +1,8 @@
-package cn.asany.base.openapi.service;
+package cn.asany.openapi.service;
 
-import cn.asany.base.openapi.apis.AmapOpenAPI;
-import cn.asany.base.openapi.bean.OpenApiConfig;
+import cn.asany.openapi.apis.AmapOpenAPI;
+import cn.asany.openapi.bean.OpenApiConfig;
+import cn.asany.openapi.configs.AmapApiConfig;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -16,6 +17,6 @@ public class OpenAPIService {
   public AmapOpenAPI getDefaultAmap() {
     OpenApiConfig config = openApiConfigService.getAmapDefault();
     assert config != null;
-    return new AmapOpenAPI(config.toConfig());
+    return new AmapOpenAPI(config.toConfig(AmapApiConfig.class));
   }
 }

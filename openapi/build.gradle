@@ -1,0 +1,6 @@
+description = '第三方开发平台接口'
+
+dependencies {
+    implementation project(":storage-api")
+    implementation project(":weixin-api")
+}
