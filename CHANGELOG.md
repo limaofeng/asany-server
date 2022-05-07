@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.21](https://github.com/limaofeng/asany-server/compare/v0.1.20...v0.1.21) (2022-05-07)
+
+
+### Features
+
+* 从 base 分离 openapi 模块 ([0e02db2](https://github.com/limaofeng/asany-server/commit/0e02db22b1921f2ca13dcf34fff7c7e45c3b3b06))
+* 分离微信模块中的接口，避免模块间的循环依赖 ([9c902d9](https://github.com/limaofeng/asany-server/commit/9c902d97d0b331169eba7509bc7b3c0dd34922b5))
+* 完善微信 JSAPI ([2938c82](https://github.com/limaofeng/asany-server/commit/2938c82623520f04ddb971285822af6c708ccc72))
+* 添加微信模块 ([0d941dd](https://github.com/limaofeng/asany-server/commit/0d941dd8a550606fcba935bd7db7b29268323960))
+* 链接微信模块 与 openapi 模块 ([d5b474a](https://github.com/limaofeng/asany-server/commit/d5b474a683cbd09a0f98cbb369f16f9f50e24104))
+
 ### [0.1.20](https://github.com/limaofeng/asany-server/compare/v0.1.19...v0.1.20) (2022-05-06)
 
 
