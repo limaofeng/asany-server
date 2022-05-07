@@ -1,20 +1,22 @@
 package cn.asany.openapi.configs;
 
 import cn.asany.openapi.IOpenApiConfig;
+import cn.asany.weixin.framework.exception.WeixinException;
+import cn.asany.weixin.framework.factory.WeixinSessionFactory;
 import cn.asany.weixin.framework.session.WeixinApp;
 import cn.asany.weixin.framework.session.WeixinAppType;
+import cn.asany.weixin.framework.session.WeixinSession;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.jfantasy.framework.spring.SpringBeanUtils;
 
 /**
  * 微信配置
  *
  * @author limaofeng
  */
-@Data
+@Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -36,6 +38,10 @@ public class WeixinConfig implements IOpenApiConfig, WeixinApp {
    * 企业号才需要配置该属性
    */
   private Integer agentId;
+  /** 微信 Session */
+  @Getter(AccessLevel.NONE)
+  @Setter(AccessLevel.NONE)
+  private WeixinSession session;
 
   @Override
   @JsonIgnore
@@ -47,5 +53,15 @@ public class WeixinConfig implements IOpenApiConfig, WeixinApp {
   @JsonIgnore
   public String getSecret() {
     return this.appSecret;
+  }
+
+  @JsonIgnore
+  public WeixinSession getSession() throws WeixinException {
+    if (session == null) {
+      WeixinSessionFactory weixinSessionFactory =
+          SpringBeanUtils.getBean(WeixinSessionFactory.class);
+      session = weixinSessionFactory.openSession(this.appId);
+    }
+    return session;
   }
 }

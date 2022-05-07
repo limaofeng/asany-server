@@ -6,14 +6,13 @@ import cn.asany.weixin.framework.core.WeixinCoreHelper;
 import cn.asany.weixin.framework.exception.WeixinException;
 import cn.asany.weixin.framework.message.content.*;
 import cn.asany.weixin.framework.message.user.User;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.jfantasy.framework.error.IgnoreException;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.jfantasy.framework.error.IgnoreException;
 
 /** 微信 session 抽象实现 */
 public abstract class AbstractWeixinSession implements WeixinSession {

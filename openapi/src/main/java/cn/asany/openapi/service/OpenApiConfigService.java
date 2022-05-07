@@ -9,6 +9,7 @@ import cn.asany.weixin.framework.exception.AppidNotFoundException;
 import cn.asany.weixin.framework.session.WeixinApp;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.springframework.stereotype.Service;
 
@@ -54,6 +55,9 @@ public class OpenApiConfigService implements WeixinAppService {
 
   @Override
   public List<WeixinApp> getAll() {
-    return null;
+    return this.openApiConfigDao
+        .findAll(PropertyFilter.builder().equal("type", OpenApiType.WEIXIN).build()).stream()
+        .map(it -> it.toConfig(WeixinConfig.class))
+        .collect(Collectors.toList());
   }
 }

@@ -13,6 +13,7 @@ import cn.asany.weixin.framework.intercept.WeixinMessageInterceptor;
 import cn.asany.weixin.framework.message.EventMessage;
 import cn.asany.weixin.framework.message.WeixinMessage;
 import cn.asany.weixin.framework.session.DefaultWeixinSession;
+import cn.asany.weixin.framework.session.WeixinApp;
 import cn.asany.weixin.framework.session.WeixinSession;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -20,13 +21,18 @@ import java.util.concurrent.ConcurrentMap;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.springframework.context.ApplicationContext;
 
+/**
+ * 微信会话工厂默认实现
+ *
+ * @author limaofeng
+ */
 public class DefaultWeixinSessionFactory implements WeixinSessionFactory {
 
   private WeixinCoreHelper weixinCoreHelper;
 
   private WeixinAppService weixinAppService;
 
-  private ApplicationContext applicationContext;
+  private final ApplicationContext applicationContext;
 
   private Class<? extends WeixinSession> sessionClass = DefaultWeixinSession.class;
 
@@ -57,10 +63,9 @@ public class DefaultWeixinSessionFactory implements WeixinSessionFactory {
   @Override
   public WeixinSession openSession(String appid) throws WeixinException {
     if (!weiXinSessions.containsKey(appid)) {
-      weiXinSessions.putIfAbsent(
-          appid,
-          new DefaultWeixinSession(
-              this.weixinAppService.loadAccountByAppid(appid), weixinCoreHelper));
+      WeixinApp weixinApp = this.weixinAppService.loadAccountByAppid(appid);
+      this.weixinCoreHelper.register(weixinApp);
+      weiXinSessions.put(appid, new DefaultWeixinSession(weixinApp, weixinCoreHelper));
     }
     return weiXinSessions.get(appid);
   }

@@ -1,5 +1,7 @@
 package cn.asany.weixin.framework.session;
 
+import cn.asany.weixin.framework.exception.WeixinException;
+
 /**
  * 微信号，账号详细质料
  *
@@ -56,4 +58,12 @@ public interface WeixinApp {
    * @return Integer
    */
   Integer getAgentId();
+
+  /**
+   * 获取 WeixinSession
+   *
+   * @return WeixinSession
+   * @throws WeixinException 微信配置异常
+   */
+  WeixinSession getSession() throws WeixinException;
 }

@@ -26,6 +26,7 @@ bootRun {
 dependencies {
     implementation project(":ui")
     implementation project(":base")
+    implementation project(":weixin")
     implementation project(":openapi")
     implementation project(":mail")
     implementation project(":nuwa")

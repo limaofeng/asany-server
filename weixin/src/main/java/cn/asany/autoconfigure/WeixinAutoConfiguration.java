@@ -1,5 +1,8 @@
 package cn.asany.autoconfigure;
 
+import cn.asany.weixin.framework.account.WeixinAppService;
+import cn.asany.weixin.framework.core.MpCoreHelper;
+import cn.asany.weixin.framework.core.WeixinCoreHelper;
 import cn.asany.weixin.framework.factory.WeixinSessionFactoryBean;
 import cn.asany.weixin.framework.message.EventMessage;
 import cn.asany.weixin.listener.SubscribeListener;
@@ -12,13 +15,17 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
+/**
+ * 微信模块自动配置类
+ *
+ * @author limaofeng
+ */
 @Configuration
 @EntityScan("cn.asany.weixin.bean")
 @ComponentScan({
   "cn.asany.weixin.dao",
   "cn.asany.weixin.service",
   "cn.asany.weixin.graphql",
-  "cn.asany.weixin.convert"
 })
 @EnableJpaRepositories(
     basePackages = "cn.asany.weixin.dao",
@@ -38,9 +45,18 @@ public class WeixinAutoConfiguration {
   }
 
   @Bean
-  public WeixinSessionFactoryBean weiXinSessionFactoryBean() {
+  public WeixinCoreHelper weixinCoreHelper() {
+    return new MpCoreHelper();
+  }
+
+  @Bean
+  public WeixinSessionFactoryBean weiXinSessionFactoryBean(
+      WeixinAppService weixinAppService, WeixinCoreHelper weixinCoreHelper) {
     WeixinSessionFactoryBean weixinSessionFactoryBean = new WeixinSessionFactoryBean();
     weixinSessionFactoryBean.setApplicationContext(applicationContext);
+
+    weixinSessionFactoryBean.setWeixinAppService(weixinAppService);
+    weixinSessionFactoryBean.setWeixinCoreHelper(weixinCoreHelper);
 
     // 关注时,记录粉丝信息
     weixinSessionFactoryBean.addEventListener(

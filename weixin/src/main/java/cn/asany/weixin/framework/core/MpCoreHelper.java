@@ -11,19 +11,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
-import org.springframework.stereotype.Component;
 
-/** 微信服务号与订阅号 */
-@Component
+/**
+ * 微信服务号与订阅号
+ *
+ * @author limaofeng
+ */
 public class MpCoreHelper implements WeixinCoreHelper {
 
-  private Map<String, WeixinDetails> weiXinDetailsMap = new HashMap<String, WeixinDetails>();
+  private final Map<String, WeixinDetails> weiXinDetailsMap = new HashMap<>();
 
   @Override
   public void register(WeixinApp weixinApp) {
-    if (weiXinDetailsMap.containsKey(weixinApp.getId())) {
-      weiXinDetailsMap.remove(weixinApp.getId());
-    }
+    weiXinDetailsMap.remove(weixinApp.getId());
     weiXinDetailsMap.put(weixinApp.getId(), new WeixinDetails(weixinApp));
   }
 

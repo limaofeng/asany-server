@@ -2,7 +2,6 @@ package cn.asany.weixin.graphql.resolver;
 
 import cn.asany.weixin.framework.core.Jsapi;
 import cn.asany.weixin.framework.exception.WeixinException;
-import cn.asany.weixin.framework.factory.WeixinSessionUtils;
 import cn.asany.weixin.framework.message.user.User;
 import cn.asany.weixin.framework.session.WeixinApp;
 import cn.asany.weixin.framework.session.WeixinSession;
@@ -19,12 +18,12 @@ import org.springframework.stereotype.Component;
 public class WeixinAppGraphQLResolver implements GraphQLResolver<WeixinApp> {
 
   public List<User> users(WeixinApp app) throws WeixinException {
-    WeixinSession session = WeixinSessionUtils.getCurrentSession();
+    WeixinSession session = app.getSession();
     return session.getUsers();
   }
 
-  public Jsapi jsapi() throws WeixinException {
-    WeixinSession session = WeixinSessionUtils.getCurrentSession();
+  public Jsapi jsapi(WeixinApp app) throws WeixinException {
+    WeixinSession session = app.getSession();
     Jsapi jsapi = session.getJsapi();
     if (jsapi == null) {
       throw new WeixinException(" jsapi is null ");

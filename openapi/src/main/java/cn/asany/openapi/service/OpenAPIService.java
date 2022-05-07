@@ -23,7 +23,9 @@ public class OpenAPIService {
 
   public WeixinConfig getDefaultWeixin() {
     OpenApiConfig config = openApiConfigService.getDefaultWeixin();
-    assert config != null;
+    if (config == null) {
+      return null;
+    }
     return config.toConfig(WeixinConfig.class);
   }
 }

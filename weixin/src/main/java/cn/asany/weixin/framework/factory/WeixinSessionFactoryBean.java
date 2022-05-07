@@ -1,7 +1,6 @@
 package cn.asany.weixin.framework.factory;
 
 import cn.asany.weixin.framework.account.WeixinAppService;
-import cn.asany.weixin.framework.core.MpCoreHelper;
 import cn.asany.weixin.framework.core.WeixinCoreHelper;
 import cn.asany.weixin.framework.event.WeixinEventListener;
 import cn.asany.weixin.framework.handler.DefaultEventHandler;
@@ -11,7 +10,6 @@ import cn.asany.weixin.framework.intercept.LogInterceptor;
 import cn.asany.weixin.framework.intercept.WeixinMessageInterceptor;
 import cn.asany.weixin.framework.message.EventMessage;
 import cn.asany.weixin.framework.session.DefaultWeixinSession;
-import cn.asany.weixin.framework.session.WeixinApp;
 import cn.asany.weixin.framework.session.WeixinSession;
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -19,10 +17,14 @@ import java.util.List;
 import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.jfantasy.framework.spring.SpringBeanUtils;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.context.ApplicationContext;
 
+/**
+ * 微信会话工厂类
+ *
+ * @author limaofeng
+ */
 public class WeixinSessionFactoryBean implements FactoryBean<WeixinSessionFactory> {
 
   private static final Log LOG = LogFactory.getLog(WeixinSessionFactoryBean.class);
@@ -54,16 +56,9 @@ public class WeixinSessionFactoryBean implements FactoryBean<WeixinSessionFactor
 
     DefaultWeixinSessionFactory factory = new DefaultWeixinSessionFactory(applicationContext);
 
-    //    if (this.weixinAppService == null) {
-    //      this.weixinAppService = SpringBeanUtils.getBeanByType(AppService.class);
-    //    }
     factory.setWeixinAppService(this.weixinAppService);
 
-    if (this.weixinCoreHelper != null) {
-      factory.setWeixinCoreHelper(this.weixinCoreHelper);
-    } else {
-      factory.setWeixinCoreHelper(SpringBeanUtils.getBeanByType(MpCoreHelper.class));
-    }
+    factory.setWeixinCoreHelper(this.weixinCoreHelper);
 
     factory.setMessageHandler(this.messageHandler);
     factory.setEventHandler(this.eventHandler);
@@ -73,15 +68,11 @@ public class WeixinSessionFactoryBean implements FactoryBean<WeixinSessionFactor
 
     this.weixinSessionFactory = factory;
 
-    for (WeixinApp weixinApp : weixinSessionFactory.getWeixinAppService().getAll()) {
-      weixinSessionFactory.getWeixinCoreHelper().register(weixinApp);
-    }
-
     LOG.error("\n初始化 WeiXinSessionFactory 耗时:" + (System.currentTimeMillis() - start) + "ms");
   }
 
   @Override
-  public WeixinSessionFactory getObject() throws Exception {
+  public WeixinSessionFactory getObject() {
     if (this.weixinSessionFactory == null) {
       afterPropertiesSet();
     }

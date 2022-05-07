@@ -6,6 +6,7 @@ import cn.asany.weixin.framework.exception.WeixinException;
 import cn.asany.weixin.framework.message.WeixinMessage;
 import cn.asany.weixin.framework.session.WeixinSession;
 
+/** 微信会话工厂 */
 public interface WeixinSessionFactory {
 
   /**

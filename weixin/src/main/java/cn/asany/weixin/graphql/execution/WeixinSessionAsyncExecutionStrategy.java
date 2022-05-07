@@ -7,14 +7,12 @@ import graphql.execution.ExecutionContext;
 import graphql.execution.ExecutionStrategyParameters;
 import graphql.execution.NonNullableFieldWasNullException;
 import java.util.concurrent.CompletableFuture;
-import org.springframework.stereotype.Component;
 
 /**
  * 请求结束后移除上下问中的 WeixinSession
  *
  * @author limaofeng
  */
-@Component
 public class WeixinSessionAsyncExecutionStrategy extends AsyncExecutionStrategy {
 
   @Override

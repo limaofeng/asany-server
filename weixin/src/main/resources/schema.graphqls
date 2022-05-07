@@ -6,20 +6,21 @@ enum WeixinType {
 }
 
 type WeixinSignature {
-  noncestr: String
-  appid: String
-  timestamp: Int
-  url: String
-  signature: String
+  appid: String!
+  timestamp: Int!
+  noncestr: String!
+
+  signature: String!
+  url: String!
 }
 
 type WeixinJsapi {
-  ticket: String
-  signature(url: String): WeixinSignature
+  ticket: String!
+  signature(url: String): WeixinSignature!
 }
 
 type Weixin {
-  id: String
-  type: WeixinType
-  jsapi: WeixinJsapi
+  id: String!
+  type: WeixinType!
+  jsapi: WeixinJsapi!
 }
