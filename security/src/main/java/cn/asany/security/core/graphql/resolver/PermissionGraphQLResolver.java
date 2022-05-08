@@ -1,4 +1,4 @@
-package cn.asany.security.core.graphql.resolvers;
+package cn.asany.security.core.graphql.resolver;
 
 import cn.asany.security.core.bean.GrantPermission;
 import cn.asany.security.core.bean.Permission;

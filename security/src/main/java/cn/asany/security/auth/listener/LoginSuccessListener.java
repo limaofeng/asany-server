@@ -1,7 +1,8 @@
 package cn.asany.security.auth.listener;
 
+import cn.asany.security.auth.event.LoginSuccessEvent;
+import cn.asany.security.core.service.UserService;
 import org.jfantasy.framework.security.authentication.Authentication;
-import org.jfantasy.framework.security.authentication.event.AuthenticationSuccessEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
@@ -11,14 +12,20 @@ import org.springframework.stereotype.Component;
  * @author limaofeng
  */
 @Component
-public class LoginSuccessListener implements ApplicationListener<AuthenticationSuccessEvent> {
+public class LoginSuccessListener implements ApplicationListener<LoginSuccessEvent> {
 
-  //    @Autowired
-  //    private EmployeeService employeeService;
+  private final UserService userService;
+
+  public LoginSuccessListener(UserService userService) {
+    this.userService = userService;
+  }
 
   @Override
-  public void onApplicationEvent(AuthenticationSuccessEvent event) {
+  public void onApplicationEvent(LoginSuccessEvent event) {
     Authentication authentication = event.getAuthentication();
+
+    userService.loginSuccess();
+
     //        AuthenticationDetails details = (AuthenticationDetails) authentication.getDetails();
     //        LoginUser user = (LoginUser) authentication.getPrincipal();
     //        if (details.getLoginType() != LoginType.password) {

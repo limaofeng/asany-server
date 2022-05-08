@@ -1,7 +1,7 @@
 package cn.asany.security.core.graphql;
 
 import cn.asany.security.core.bean.*;
-import cn.asany.security.core.graphql.inputs.GrantPermissionByUserInput;
+import cn.asany.security.core.graphql.input.GrantPermissionByUserInput;
 import cn.asany.security.core.graphql.models.*;
 import cn.asany.security.core.service.*;
 import com.github.stuxuhai.jpinyin.PinyinException;
@@ -115,11 +115,11 @@ public class SecurityGraphQLMutationResolver
   public User createUser(String organization, UserInput input) {
     User user = new User();
     BeanUtils.copyProperties(input, user, "grants", "tel", "roles");
-    if (input.getTel() != null) {
-      user.set("tel", input.getTel());
-    } else {
-      user.set("tel", "");
-    }
+    //    if (input.getTel() != null) {
+    //      user.set("tel", input.getTel());
+    //    } else {
+    //      user.set("tel", "");
+    //    }
     //        user.setOrganization(Organization.builder().id(organization).build());
     //        if (input.getEmployee() != null) {
     //            user.setEmployee(Employee.builder().id(input.getEmployee()).build());

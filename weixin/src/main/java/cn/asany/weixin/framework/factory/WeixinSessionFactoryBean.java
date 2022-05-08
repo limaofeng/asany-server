@@ -68,7 +68,7 @@ public class WeixinSessionFactoryBean implements FactoryBean<WeixinSessionFactor
 
     this.weixinSessionFactory = factory;
 
-    LOG.error("\n初始化 WeiXinSessionFactory 耗时:" + (System.currentTimeMillis() - start) + "ms");
+    LOG.debug("\n初始化 WeiXinSessionFactory 耗时:" + (System.currentTimeMillis() - start) + "ms");
   }
 
   @Override

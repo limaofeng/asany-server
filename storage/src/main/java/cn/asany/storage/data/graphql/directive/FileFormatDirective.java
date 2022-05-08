@@ -17,8 +17,7 @@ import org.jfantasy.framework.util.ognl.OgnlUtil;
 /**
  * 文件对象格式指令
  *
- * @author fengmeng
- * @date 2019/5/7 20:45
+ * @author limaofeng
  */
 @Slf4j
 public class FileFormatDirective implements SchemaDirectiveWiring {
@@ -28,38 +27,43 @@ public class FileFormatDirective implements SchemaDirectiveWiring {
   private static final String FORMAT_URL = "url";
   private static final String FORMAT_PATH = "path";
 
+  private static final String FORMAT_ID = "id";
+
+  private static final GraphQLArgument.Builder FORMAT_ARGUMENT =
+      GraphQLArgument.newArgument()
+          .name(FORMAT_NAME)
+          .type(
+              GraphQLEnumType.newEnum()
+                  .name(DIRECTIVE_NAME)
+                  .description("文件自定在格式")
+                  .value(FORMAT_BASE64, FORMAT_BASE64, "仅支持图片")
+                  .value(FORMAT_URL, FORMAT_URL, "自动添加上域名")
+                  .value(FORMAT_PATH, FORMAT_PATH, "只返回 PATH")
+                  .value(FORMAT_ID, FORMAT_ID, "只返回 ID")
+                  .build())
+          .description("文件自定在格式");
+
   @Override
   public GraphQLFieldDefinition onField(
       SchemaDirectiveWiringEnvironment<GraphQLFieldDefinition> environment) {
     GraphQLFieldDefinition field = environment.getElement();
     GraphQLFieldsContainer parentType = environment.getFieldsContainer();
+
     DataFetcher<?> originalDataFetcher =
         environment.getCodeRegistry().getDataFetcher(parentType, field);
     DataFetcher<?> dataFetcher =
-        dataFetchingEnvironment -> {
-          Object value = originalDataFetcher.get(dataFetchingEnvironment);
-          String format = dataFetchingEnvironment.getArgument(FORMAT_NAME);
-          if (value instanceof FileObject && format != null) {
-            return buildFileObject((FileObject) value, format);
-          }
-          return value;
-        };
-
-    GraphQLArgument.Builder formatArgument =
-        GraphQLArgument.newArgument()
-            .name(FORMAT_NAME)
-            .type(
-                GraphQLEnumType.newEnum()
-                    .name(DIRECTIVE_NAME)
-                    .description("文件自定在格式")
-                    .value(FORMAT_BASE64, FORMAT_BASE64, "仅支持图片")
-                    .value(FORMAT_URL, FORMAT_URL, "自动添加上域名")
-                    .value(FORMAT_PATH, FORMAT_PATH, "只返回 PATH")
-                    .build())
-            .description("文件自定在格式");
+        DataFetcherFactories.wrapDataFetcher(
+            originalDataFetcher,
+            (dataFetchingEnvironment, value) -> {
+              String format = dataFetchingEnvironment.getArgument(FORMAT_NAME);
+              if (value instanceof FileObject && format != null) {
+                return buildFileObject((FileObject) value, format);
+              }
+              return value;
+            });
 
     environment.getCodeRegistry().dataFetcher(parentType, field, dataFetcher);
-    return field.transform(builder -> builder.argument(formatArgument));
+    return field.transform(builder -> builder.argument(FORMAT_ARGUMENT));
   }
 
   private String buildFileObject(FileObject fileObject, String format) {
@@ -70,6 +74,9 @@ public class FileFormatDirective implements SchemaDirectiveWiring {
     if (FORMAT_URL.equals(format)) {
       String url = OgnlUtil.getInstance().getValue("url", fileObject);
       return StringUtil.defaultValue(url, path);
+    }
+    if (FORMAT_ID.equals(format)) {
+      return OgnlUtil.getInstance().getValue("id", fileObject);
     }
     return path;
   }
@@ -94,8 +101,7 @@ public class FileFormatDirective implements SchemaDirectiveWiring {
    * 在线图片转换成base64字符串
    *
    * @param imgUrl 图片线上路径
-   * @author ZHANGJL
-   * @date 2018-02-23 14:43:18
+   * @author limaofeng
    * @return String
    */
   public static String imageToBase64ByOnline(String imgUrl) throws IOException {

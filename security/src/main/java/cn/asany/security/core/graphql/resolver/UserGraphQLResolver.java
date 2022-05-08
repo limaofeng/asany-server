@@ -1,4 +1,4 @@
-package cn.asany.security.core.graphql.resolvers;
+package cn.asany.security.core.graphql.resolver;
 
 import cn.asany.base.common.SecurityScope;
 import cn.asany.base.common.SecurityType;
@@ -12,9 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
+ * 用户详情
+ *
  * @author limaofeng
- * @version V1.0 @Description: TODO
- * @date 2019-04-02 12:01
+ * @version V1.0
  */
 @Component
 public class UserGraphQLResolver implements GraphQLResolver<User> {
@@ -23,12 +24,8 @@ public class UserGraphQLResolver implements GraphQLResolver<User> {
   //    @Autowired
   //    private EmployeeService employeeService;
 
-  public String tel(User user) {
-    return user.get("tel");
-  }
-
   public String name(User user) {
-    return user.getUsername();
+    return user.getName();
   }
 
   public String username(User user) {

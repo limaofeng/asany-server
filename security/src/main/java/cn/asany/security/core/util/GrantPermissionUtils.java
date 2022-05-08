@@ -5,7 +5,7 @@ import cn.asany.base.common.SecurityType;
 import cn.asany.security.core.bean.GrantPermission;
 import cn.asany.security.core.bean.Permission;
 import cn.asany.security.core.bean.User;
-import cn.asany.security.core.graphql.inputs.PermissionInput;
+import cn.asany.security.core.graphql.input.PermissionInput;
 import cn.asany.security.core.service.GrantPermissionService;
 import cn.asany.security.core.service.UserService;
 import java.util.ArrayList;

@@ -1,63 +1,69 @@
 package cn.asany.security.auth.graphql.types;
 
-import java.util.Set;
-import org.jfantasy.framework.security.LoginUser;
-import org.jfantasy.framework.security.core.GrantedAuthority;
+import cn.asany.base.common.bean.Email;
+import cn.asany.base.common.bean.Phone;
+import cn.asany.security.core.bean.GrantPermission;
+import cn.asany.security.core.bean.Role;
+import cn.asany.security.core.bean.User;
+import cn.asany.security.core.bean.enums.Sex;
+import cn.asany.security.core.bean.enums.UserType;
+import cn.asany.storage.api.FileObject;
+import java.util.Date;
+import java.util.List;
+import lombok.*;
 
-public class CurrentUser extends LoginUser {
+@Data
+@NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
+public class CurrentUser extends User {
 
-  private final LoginUser user;
-
-  public CurrentUser(LoginUser user) {
-    this.user = user;
-  }
-
-  @Override
-  public Long getUid() {
-    return this.user.getUid();
-  }
-
-  @Override
-  public String getType() {
-    return this.user.getType();
-  }
-
-  @Override
-  public String getName() {
-    return this.user.getName();
-  }
-
-  @Override
-  public String getTitle() {
-    return this.user.getTitle();
-  }
-
-  @Override
-  public String getAvatar() {
-    return this.user.getAvatar();
-  }
-
-  @Override
-  public String getPhone() {
-    return this.user.getPhone();
-  }
-
-  @Override
-  public String getEmail() {
-    return this.user.getEmail();
-  }
-
-  @Override
-  public String getSignature() {
-    return this.user.getSignature();
-  }
-
-  public String account() {
-    return this.user.getUsername();
-  }
-
-  @Override
-  public Set<? extends GrantedAuthority> getAuthorities() {
-    return this.user.getAuthorities();
+  @Builder(builderMethodName = "CurrentUserBuilder")
+  public CurrentUser(
+      Long id,
+      String username,
+      String password,
+      UserType userType,
+      FileObject avatar,
+      String nickName,
+      String title,
+      Phone phone,
+      Email email,
+      Date birthday,
+      Sex sex,
+      String company,
+      String location,
+      String bio,
+      Boolean enabled,
+      Boolean accountNonExpired,
+      Boolean accountNonLocked,
+      Boolean credentialsNonExpired,
+      Date lockTime,
+      Date lastLoginTime,
+      List<Role> roles,
+      List<GrantPermission> grants) {
+    super(
+        id,
+        username,
+        password,
+        userType,
+        avatar,
+        nickName,
+        title,
+        phone,
+        email,
+        birthday,
+        sex,
+        company,
+        location,
+        bio,
+        enabled,
+        accountNonExpired,
+        accountNonLocked,
+        credentialsNonExpired,
+        lockTime,
+        lastLoginTime,
+        roles,
+        grants);
   }
 }

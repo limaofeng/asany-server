@@ -2,9 +2,9 @@ package cn.asany.security.core.graphql;
 
 import cn.asany.security.core.bean.*;
 import cn.asany.security.core.graphql.enums.ResultTypeScope;
-import cn.asany.security.core.graphql.inputs.ContextInput;
-import cn.asany.security.core.graphql.inputs.ScopeTypeAttribute;
-import cn.asany.security.core.graphql.inputs.ScopeTypeResult;
+import cn.asany.security.core.graphql.input.ContextInput;
+import cn.asany.security.core.graphql.input.ScopeTypeAttribute;
+import cn.asany.security.core.graphql.input.ScopeTypeResult;
 import cn.asany.security.core.graphql.models.*;
 import cn.asany.security.core.graphql.types.SecurityScopeObject;
 import cn.asany.security.core.service.PermissionService;
@@ -59,11 +59,6 @@ public class SecurityGraphQLQueryResolver implements GraphQLQueryResolver {
     Pager<User> pager = new Pager<>(page, pageSize, orderBy);
     PropertyFilterBuilder builder = ObjectUtil.defaultValue(filter, new UserFilter()).getBuilder();
     return Kit.connection(userService.findPager(pager, builder.build()), UserConnection.class);
-  }
-
-  /** 查询单个用户 */
-  public User user(Long id) {
-    return userService.findById(id);
   }
 
   public List<SecurityScopeObject> securityScopes(

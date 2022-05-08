@@ -14,11 +14,13 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 /** @author limaofeng */
 @Configuration
-@EntityScan({"cn.asany.security.*.bean", "cn.asany.security.*.convert"})
+@EntityScan({"cn.asany.security.*.bean"})
 @ComponentScan({
   "cn.asany.security.*.dao",
   "cn.asany.security.*.convert",
   "cn.asany.security.*.service",
+  "cn.asany.security.*.listener",
+  "cn.asany.security.*.validators",
   "cn.asany.security.*.graphql",
   "cn.asany.security.runner",
 })

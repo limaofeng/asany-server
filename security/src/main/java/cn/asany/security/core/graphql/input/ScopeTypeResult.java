@@ -1,4 +1,4 @@
-package cn.asany.security.core.graphql.inputs;
+package cn.asany.security.core.graphql.input;
 
 import cn.asany.security.core.graphql.enums.ResultTypeScope;
 import java.util.List;

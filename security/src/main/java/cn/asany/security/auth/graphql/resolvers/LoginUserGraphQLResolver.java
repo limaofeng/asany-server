@@ -1,5 +1,8 @@
 package cn.asany.security.auth.graphql.resolvers;
 
+import static cn.asany.security.core.service.UserService.LOGIN_ATTRS_AVATAR;
+
+import cn.asany.storage.api.FileObject;
 import graphql.kickstart.tools.GraphQLResolver;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -13,7 +16,6 @@ import org.springframework.stereotype.Component;
  *
  * @author limaofeng
  * @version V1.0
- * @date 2019-04-08 16:54
  */
 @Component
 public class LoginUserGraphQLResolver implements GraphQLResolver<LoginUser> {
@@ -31,5 +33,9 @@ public class LoginUserGraphQLResolver implements GraphQLResolver<LoginUser> {
 
   public String account(LoginUser user) {
     return user.getUsername();
+  }
+
+  public FileObject avatar(LoginUser user) {
+    return user.getAttribute(LOGIN_ATTRS_AVATAR);
   }
 }

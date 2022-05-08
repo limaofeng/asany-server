@@ -23,20 +23,134 @@ type UserEdge {
   node: User
 }
 
+enum UserType {
+  """
+  用户
+  """
+  USER
+  """
+  管理员
+  """
+  ADMIN
+}
+
 type User {
   id: ID
-  # 称号
+  """
+  称号
+  """
   title: String
-  #管理员姓名
-  nickName: String
-  #登录名
+  """
+  名称
+  """
+  name: String
+  """
+  登录名
+  """
   username: String
-  #登录密码
+  """
+  登录密码
+  """
   password: String
-  #是否启用
+  """
+  头像
+  """
+  avatar: File @fileFormat
+  """
+  用户类型
+  """
+  userType: UserType
+  """
+  电话
+  """
+  phone: Phone
+  """
+  邮箱
+  """
+  email: Email
+  """
+  生日
+  """
+  birthday: Date
+  """
+  性别
+  """
+  sex: Sex
+  """
+  公司
+  """
+  company: String
+  """
+  位置
+  """
+  location: String
+  """
+  自我介绍
+  """
+  bio: String
+  """
+  是否启用
+  """
   enabled: Boolean
-  # 电话
-  tel: String
+  """
+  未过期
+  """
+  accountNonExpired: Boolean
+  """
+  未锁定
+  """
+  accountNonLocked: Boolean
+  """
+  未失效
+  """
+  credentialsNonExpired: Boolean
+  """
+  锁定时间
+  """
+  lockTime: Date
+  """
+  最后登录时间
+  """
+  lastLoginTime: Date
+}
+
+input UserUpdateInput {
+  """
+  名称
+  """
+  name: String
+  """
+  头像
+  """
+  avatar: File
+  """
+  电话
+  """
+  phone: String
+  """
+  邮箱
+  """
+  email: String
+  """
+  生日
+  """
+  birthday: Date
+  """
+  性别
+  """
+  sex: Sex
+  """
+  自我介绍
+  """
+  bio: String
+  """
+  公司
+  """
+  company: String
+  """
+  位置
+  """
+  location: String
 }
 
 enum LoginType {
@@ -67,28 +181,105 @@ enum UIdType {
 
 # 登录用户对象
 type LoginUser {
-  # 用户ID
-  uid: String
-  # 名称
+  """
+  用户ID
+  """
+  uid: String!
+  """
+  名称
+  """
   name: String
-  # 称号
+  """
+  称号
+  """
   title: String
-  # 用户类型
-  type: String
-  # 头像
-  avatar: String
-  # 邮箱
+  """
+  用户类型
+  """
+  type: String!
+  """
+  头像
+  """
+  avatar: File @fileFormat
+  """
+  邮箱
+  """
   email: String
-  # 签名
-  signature: String
-  # 组名
+  """
+  组名
+  """
   group: String
-  # 电话
+  """
+  电话
+  """
   phone: String
-  # 权限 -> authorities
-  authorities: [String]
-  # 令牌
-  token: String
+  """
+  权限 -> authorities
+  """
+  authorities: [String!]!
+  """
+  令牌
+  """
+  token: String!
+}
+
+type CurrentUser {
+  """
+  用户ID
+  """
+  uid(type: UIdType = id): String!
+  """
+  名称
+  """
+  name: String
+  """
+  称号
+  """
+  title: String
+  """
+  用户类型
+  """
+  type: String!
+  """
+  头像
+  """
+  avatar: File @fileFormat
+  """
+  电话
+  """
+  phone: String
+  """
+  邮箱
+  """
+  email: String
+  """
+  权限
+  """
+  authorities: [String!]!
+  """
+  账号
+  """
+  account: String!
+  """
+  生日
+  """
+  birthday: Date
+  """
+  性别
+  """
+  sex: Sex
+  """
+  自我介绍
+  """
+  bio: String
+  """
+  公司
+  """
+  company: String
+  """
+  位置
+  """
+  location: String
   # 部门
   #    departments(organization: ID): [Department]
   # 职务
@@ -99,35 +290,6 @@ type LoginUser {
   #    currentDepartment(organization: ID!): Department
   #当前职务
   #    currentPosition(organization: ID!): Position
-}
-
-input UserUpdateInput {
-  username: String
-  avatar: File
-  nickName: String
-}
-
-type CurrentUser {
-  # 用户ID
-  uid(type: UIdType = id): String
-  # 名称
-  name: String
-  # 称号
-  title: String
-  # 用户类型
-  type: String
-  # 头像
-  avatar: String
-  # 电话
-  phone: String
-  # 邮箱
-  email: String
-  # 签名
-  signature: String
-  # 权限
-  authorities: [String]
-  # 账号
-  account: String
 }
 
 type PersonalAccessToken {
@@ -238,6 +400,10 @@ extend type Query {
     # 排序
     orderBy: OrderBy
   ): [User]
+  """
+  用户详情
+  """
+  user(id: ID): User!
 }
 
 extend type Mutation {
@@ -310,5 +476,5 @@ extend type Mutation {
     newPassword: String!
   ): Boolean
 
-  updateUser(id: ID, input: UserUpdateInput, merge: Boolean): User
+  updateUser(id: ID, input: UserUpdateInput!, merge: Boolean = true): User
 }

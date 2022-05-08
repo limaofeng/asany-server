@@ -146,9 +146,9 @@ public interface FileObject {
   class ParentFileItemSerialize extends JsonSerializer<FileObject> {
 
     @Override
-    public void serialize(FileObject fileObject, JsonGenerator jgen, SerializerProvider provider)
+    public void serialize(FileObject fileObject, JsonGenerator jGen, SerializerProvider provider)
         throws IOException {
-      jgen.writeString(fileObject.getPath());
+      jGen.writeString(fileObject.getPath());
     }
   }
 

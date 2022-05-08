@@ -36,6 +36,10 @@ import org.springframework.util.CollectionUtils;
 @Transactional(rollbackFor = Exception.class)
 public class UserService implements UserDetailsService {
 
+  public static final String LOGIN_ATTRS_AVATAR = "_avatar";
+
+  public static final String LOGIN_ATTRS_NICKNAME = "_nickName";
+
   private final UserDao userDao;
 
   protected final MessageSourceAccessor messages;
@@ -214,6 +218,10 @@ public class UserService implements UserDetailsService {
     return UserServiceUtil.comparePermissionsResult(hasPermissionsList, permisstionArray);
   }
 
+  public void loginSuccess() {}
+
+  public void loginFailure() {}
+
   // 获取用户角色for Authoritys
   public Set<String> getUserRoleCodesAuthoritys(User user) {
     Set<String> authoritys = new HashSet<>();
@@ -276,6 +284,8 @@ public class UserService implements UserDetailsService {
       builder.phone(user.getEmail().getAddress());
     }
 
-    return builder.build();
+    LoginUser loginUser = builder.build();
+    loginUser.setAttribute(LOGIN_ATTRS_AVATAR, user.getAvatar());
+    return loginUser;
   }
 }

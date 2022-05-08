@@ -1,4 +1,4 @@
-package cn.asany.security.core.graphql.inputs;
+package cn.asany.security.core.graphql.input;
 
 import java.util.List;
 import lombok.Data;

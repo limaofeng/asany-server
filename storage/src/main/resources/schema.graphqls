@@ -1,5 +1,3 @@
-directive @fileFormat on FIELD_DEFINITION
-
 interface StorageProperties {
   id: ID
 }

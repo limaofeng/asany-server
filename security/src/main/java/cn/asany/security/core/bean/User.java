@@ -8,7 +8,6 @@ import cn.asany.security.core.bean.enums.UserType;
 import cn.asany.security.core.validators.UsernameCannotRepeatValidator;
 import cn.asany.storage.api.FileObject;
 import cn.asany.storage.api.converter.FileObjectConverter;
-import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.*;
@@ -21,12 +20,10 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.validator.constraints.Length;
 import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.dao.hibernate.converter.MapConverter;
 import org.jfantasy.framework.security.core.GrantedAuthority;
 import org.jfantasy.framework.security.core.SimpleGrantedAuthority;
 import org.jfantasy.framework.spring.validation.Operation;
 import org.jfantasy.framework.spring.validation.Use;
-import org.jfantasy.framework.util.common.ClassUtil;
 
 /** @author limaofeng */
 @Getter
@@ -107,8 +104,14 @@ public class User extends BaseBusEntity implements Ownership {
   @Enumerated(EnumType.STRING)
   @Column(name = "SEX", length = 10)
   private Sex sex;
+  /** 公司 */
+  @Column(name = "COMPANY", length = 200)
+  private String company;
+  /** 位置 */
+  @Column(name = "LOCATION", length = 200)
+  private String location;
   /** 自我介绍 */
-  @Column(name = "BIO", length = 50)
+  @Column(name = "BIO", length = 500)
   private String bio;
   /** 是否启用 */
   @Column(name = "ENABLED")
@@ -139,38 +142,8 @@ public class User extends BaseBusEntity implements Ownership {
   @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
   @ToString.Exclude
   private List<Role> roles;
-  /** 扩展字段 */
-  @Convert(converter = MapConverter.class)
-  @Column(name = "PROPERTIES", columnDefinition = "Text")
-  private Map<String, Object> properties;
-
   /** 用户权限 */
   @Transient private List<GrantPermission> grants;
-
-  @JsonAnySetter
-  public void set(String key, Object value) {
-    if (this.properties == null) {
-      this.properties = new HashMap<>(10);
-    }
-    this.properties.put(key, value);
-  }
-
-  @Transient
-  public String get(String key) {
-    if (this.properties == null || !this.properties.containsKey(key)) {
-      return null;
-    }
-    return this.properties.getOrDefault(key, "").toString();
-  }
-
-  @Transient
-  public <T> T get(String key, Class<T> toClass) {
-    String value = this.get(key);
-    if (value == null) {
-      return null;
-    }
-    return ClassUtil.newInstance(toClass, value);
-  }
 
   @Transient
   public Set<? extends GrantedAuthority> getAuthorities() {
