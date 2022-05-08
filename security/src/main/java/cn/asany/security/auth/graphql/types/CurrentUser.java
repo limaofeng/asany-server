@@ -5,12 +5,16 @@ import cn.asany.base.common.bean.Phone;
 import cn.asany.security.core.bean.GrantPermission;
 import cn.asany.security.core.bean.Role;
 import cn.asany.security.core.bean.User;
+import cn.asany.security.core.bean.UserStatus;
 import cn.asany.security.core.bean.enums.Sex;
 import cn.asany.security.core.bean.enums.UserType;
 import cn.asany.storage.api.FileObject;
 import java.util.Date;
 import java.util.List;
+import javax.validation.constraints.NotEmpty;
 import lombok.*;
+import org.hibernate.validator.constraints.Length;
+import org.jfantasy.framework.spring.validation.Operation;
 
 @Data
 @NoArgsConstructor
@@ -21,12 +25,18 @@ public class CurrentUser extends User {
   @Builder(builderMethodName = "CurrentUserBuilder")
   public CurrentUser(
       Long id,
-      String username,
+      @NotEmpty(groups = {Operation.Create.class, Operation.Update.class})
+          @Length(
+              min = 6,
+              max = 20,
+              groups = {Operation.Create.class, Operation.Update.class})
+          String username,
       String password,
       UserType userType,
       FileObject avatar,
       String nickName,
       String title,
+      UserStatus status,
       Phone phone,
       Email email,
       Date birthday,
@@ -50,6 +60,7 @@ public class CurrentUser extends User {
         avatar,
         nickName,
         title,
+        status,
         phone,
         email,
         birthday,

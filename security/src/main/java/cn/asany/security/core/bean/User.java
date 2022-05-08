@@ -82,6 +82,13 @@ public class User extends BaseBusEntity implements Ownership {
   /** 用户显示昵称 */
   @Column(name = "TITLE", length = 50)
   private String title;
+  /** 用户状态 */
+  @OneToOne(
+      fetch = FetchType.LAZY,
+      cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
+  @PrimaryKeyJoinColumn(name = "ID", referencedColumnName = "USER_ID")
+  @ToString.Exclude
+  private UserStatus status;
   /** 电话 */
   @Embedded
   @AttributeOverrides({
