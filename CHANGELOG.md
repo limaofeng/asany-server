@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.23](https://github.com/limaofeng/asany-server/compare/v0.1.22...v0.1.23) (2022-05-09)
+
+
+### Features
+
+* 用户状态表 ([83f7072](https://github.com/limaofeng/asany-server/commit/83f70721e8f35f0987b2ab1b13f07735dcbb268a))
+
+
+### Bug Fixes
+
+* 文件夹不能重名 ([0a61eca](https://github.com/limaofeng/asany-server/commit/0a61ecaa108481f436504e52691987d0f0b60d0e))
+
 ### [0.1.22](https://github.com/limaofeng/asany-server/compare/v0.1.21...v0.1.22) (2022-05-08)
 
 
