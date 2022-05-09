@@ -31,7 +31,10 @@ import org.jfantasy.framework.util.common.ObjectUtil;
     uniqueConstraints = {
       @UniqueConstraint(
           name = "UK_STORAGE_FILEOBJECT_PATH",
-          columnNames = {"PATH"})
+          columnNames = {"PATH"}),
+      @UniqueConstraint(
+          name = "UK_STORAGE_FILE_NAME",
+          columnNames = {"NAME", "PARENT_ID"})
     })
 @AllArgsConstructor
 @Builder

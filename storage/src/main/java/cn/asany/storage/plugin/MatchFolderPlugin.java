@@ -44,7 +44,6 @@ public class MatchFolderPlugin implements StoragePlugin {
   @Override
   public FileObject upload(UploadContext context, Invocation invocation) throws UploadException {
     VirtualFileObject rootFolder = (VirtualFileObject) context.getRootFolder();
-    Storage storage = context.getStorage();
     UploadOptions options = context.getOptions();
     StorageSpace space = context.getSpace();
 

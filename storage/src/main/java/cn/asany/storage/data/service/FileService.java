@@ -116,17 +116,7 @@ public class FileService {
     this.fileDetailDao.deleteByPath(fileDetail.getPath());
   }
 
-  public FileDetail getFolderOrCreateIt(String name, Long parentFolder) {
-    Optional<FileDetail> folderOptional =
-        this.fileDetailDao.findOne(
-            PropertyFilter.builder()
-                .equal("name", name)
-                .equal("parentFile.id", parentFolder)
-                .build());
-    return folderOptional.orElseGet(() -> createFolder(name, new HashSet<>(), parentFolder));
-  }
-
-  public FileDetail getFolderOrCreateIt(String name, Long parentFolder, String storePath) {
+  public synchronized FileDetail getFolderOrCreateIt(String name, Long parentFolder) {
     Optional<FileDetail> folderOptional =
         this.fileDetailDao.findOne(
             PropertyFilter.builder()
