@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.24](https://github.com/limaofeng/asany-server/compare/v0.1.23...v0.1.24) (2022-05-10)
+
+
+### Bug Fixes
+
+* 城市缓存，优化 LandingPage 查询 ([edb1e6f](https://github.com/limaofeng/asany-server/commit/edb1e6f5df06c5d85181d1eda3d7b4b2914523e0))
+
 ### [0.1.23](https://github.com/limaofeng/asany-server/compare/v0.1.22...v0.1.23) (2022-05-09)
 
 
