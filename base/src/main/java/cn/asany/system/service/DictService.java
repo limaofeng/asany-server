@@ -18,6 +18,8 @@ import org.jfantasy.framework.util.PinyinUtils;
 import org.jfantasy.framework.util.common.BeanUtil;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.common.StringUtil;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -31,7 +33,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional(rollbackFor = Exception.class)
 public class DictService {
-
+  public static final String CACHE_KEY = "SYS_DICT";
   private final DictTypeDao dictTypeDao;
   private final DictDao dictDao;
 
@@ -91,6 +93,7 @@ public class DictService {
     return this.dictDao.findPager(pager, filters);
   }
 
+  @Cacheable(key = "targetClass + methodName + '#' + #p0.toString()", value = CACHE_KEY)
   public List<Dict> findAll(List<PropertyFilter> filters) {
     return this.dictDao.findAll(filters);
   }
@@ -107,6 +110,7 @@ public class DictService {
     return this.dictDao.findAll((root, query, builder) -> builder.equal(root.get("type"), type));
   }
 
+  @CacheEvict(value = CACHE_KEY)
   public List<Dict> saveAll(List<Dict> dicts) {
     dicts =
         ObjectUtil.recursive(

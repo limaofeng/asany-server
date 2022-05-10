@@ -16,6 +16,27 @@ import org.jfantasy.framework.dao.BaseBusEntity;
 @RequiredArgsConstructor
 @Builder
 @AllArgsConstructor
+@NamedEntityGraph(
+    name = "Graph.LandingPage.FetchDetails",
+    attributeNodes = {
+      @NamedAttributeNode(value = "poster", subgraph = "SubGraph.LandingPoster"),
+      @NamedAttributeNode(value = "stores", subgraph = "SubGraph.LandingStore")
+    },
+    subgraphs = {
+      @NamedSubgraph(
+          name = "SubGraph.LandingPoster",
+          attributeNodes = {
+            @NamedAttributeNode(value = "music"),
+            @NamedAttributeNode(value = "background")
+          }),
+      @NamedSubgraph(
+          name = "SubGraph.LandingStore",
+          attributeNodes = {
+            @NamedAttributeNode(value = "qrCode"),
+            @NamedAttributeNode(value = "address"),
+            @NamedAttributeNode(value = "location"),
+          })
+    })
 @Entity
 @Table(name = "WEBSITE_LANDING_PAGE")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})

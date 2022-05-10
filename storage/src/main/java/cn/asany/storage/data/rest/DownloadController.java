@@ -62,7 +62,6 @@ public class DownloadController {
       HttpServletResponse response)
       throws IOException {
     IdUtils.FileKey fileKey = IdUtils.parseKey(id);
-    Space space = fileKey.getSpace();
 
     FileDetail fileDetail = fileKey.getFile();
 
@@ -126,7 +125,7 @@ public class DownloadController {
     Date lastModified = fileObject.lastModified();
     long size = fileObject.getSize();
 
-    BandwidthLimiter limiter = new BandwidthLimiter(512);
+    BandwidthLimiter limiter = new BandwidthLimiter(1024);
     OutputStream out = new DownloadLimitServletOutputStream(response.getOutputStream(), limiter);
 
     if (ServletUtils.isRange(request)) {

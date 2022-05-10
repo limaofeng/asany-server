@@ -133,7 +133,7 @@ public class LandingService {
 
   @Transactional(readOnly = true)
   public Optional<LandingPage> findPage(Long id) {
-    return this.landingPageDao.findById(id);
+    return this.landingPageDao.findByIdWithPosterAndStores(id);
   }
 
   @Transactional(readOnly = true)
