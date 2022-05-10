@@ -2,7 +2,7 @@ package cn.asany.organization.core.service;
 
 import cn.asany.organization.core.bean.*;
 import cn.asany.organization.core.bean.enums.MemberRole;
-import cn.asany.organization.core.converter.NuwaOrganizationConverter;
+import cn.asany.organization.core.convert.NuwaOrganizationConverter;
 import cn.asany.organization.core.dao.*;
 import cn.asany.organization.core.service.dto.NuwaOrgDimension;
 import cn.asany.organization.core.service.dto.NuwaOrganization;
@@ -414,6 +414,10 @@ public class OrganizationService {
     return organization;
   }
 
+  public Optional<Organization> findByCode(String code) {
+    return organizationDao.findOneBy("code", code);
+  }
+
   public Optional<Organization> findById(Long id) {
     return organizationDao.findById(id);
   }
@@ -425,6 +429,11 @@ public class OrganizationService {
   public Organization update(Long id, boolean merge, Organization department) {
     department.setId(id);
     return this.organizationDao.update(department, merge);
+  }
+
+  public Organization updateOrganizationProfile(Long id, Organization organization) {
+    organization.setId(id);
+    return this.organizationDao.update(organization, true);
   }
 
   public void delete(Long id) {

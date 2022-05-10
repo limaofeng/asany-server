@@ -23,7 +23,9 @@ import org.jfantasy.framework.dao.BaseBusEntity;
 @Builder
 @AllArgsConstructor
 @Entity
-@Table(name = "AUTH_ROLE")
+@Table(
+    name = "AUTH_ROLE",
+    uniqueConstraints = @UniqueConstraint(columnNames = {"CODE", "ORGANIZATION_ID"}))
 @JsonIgnoreProperties({
   "hibernateLazyInitializer",
   "handler",

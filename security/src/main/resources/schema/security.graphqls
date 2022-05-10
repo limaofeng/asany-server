@@ -1,5 +1,20 @@
 directive @auth(requires: String) on OBJECT | FIELD_DEFINITION
 
+type RoleSpace {
+  id: ID!
+  code: String!
+  name: String!
+}
+
+type Role {
+  id: ID!
+  code: String!
+  name: String!
+  enabled: Boolean
+  space: RoleSpace
+  description: String
+}
+
 input UserFilter {
   # 昵称模糊查询
   nickname_like: String
@@ -476,5 +491,5 @@ extend type Mutation {
     newPassword: String!
   ): Boolean
 
-  updateUser(id: ID, input: UserUpdateInput!, merge: Boolean = true): User
+  updateUser(id: ID, input: UserUpdateInput!): User
 }

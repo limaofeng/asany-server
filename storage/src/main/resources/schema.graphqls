@@ -363,10 +363,7 @@ extend type Mutation {
   """
   上传附件
   """
-  upload(
-    file: Upload!
-    options: UploadOptions = { space: "Default" }
-  ): FileObject
+  upload(file: Upload!, options: UploadOptions!): FileObject
   """
   重命名文件
   """

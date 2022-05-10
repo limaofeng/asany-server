@@ -6,11 +6,13 @@ import java.util.Objects;
 import javax.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
+import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
 /**
- * @author liumeng @Description: (这里用一句话描述这个类的作用)
- * @date 14:34 2020-04-22
+ * 角色命名空间
+ *
+ * @author limaofeng
  */
 @Getter
 @Setter
@@ -19,18 +21,25 @@ import org.jfantasy.framework.dao.BaseBusEntity;
 @Builder
 @AllArgsConstructor
 @Entity
-@Table(name = "AUTH_ROLE_SPACE")
+@Table(
+    name = "AUTH_ROLE_SPACE",
+    uniqueConstraints =
+        @UniqueConstraint(
+            columnNames = {"CODE", "ORGANIZATION_ID"},
+            name = "UK_AUTH_ROLE_SPACE_CODE"))
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class RoleSpace extends BaseBusEntity {
   @Id
-  @Column(name = "ID", length = 50)
-  private String id;
+  @Column(name = "ID")
+  @GeneratedValue(generator = "fantasy-sequence")
+  @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+  private Long id;
+  /** 编码 */
+  @Column(name = "CODE", length = 32)
+  private String code;
   /** 名称 */
   @Column(name = "NAME", length = 50)
   private String name;
-  /** 是否启用 */
-  @Column(name = "ENABLED")
-  private Boolean enabled;
   /** 所属组织 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(

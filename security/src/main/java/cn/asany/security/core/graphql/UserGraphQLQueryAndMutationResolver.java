@@ -29,12 +29,10 @@ public class UserGraphQLQueryAndMutationResolver
         ObjectUtil.defaultValue(id, () -> SpringSecurityUtils.getCurrentUser().getUid()));
   }
 
-  public User updateUser(Long id, UserUpdateInput input, Boolean merge) {
+  public User updateUser(Long id, UserUpdateInput input) {
     User user = this.userConverter.toUser(input);
     return this.userService.update(
-        ObjectUtil.defaultValue(id, () -> SpringSecurityUtils.getCurrentUser().getUid()),
-        user,
-        merge);
+        ObjectUtil.defaultValue(id, () -> SpringSecurityUtils.getCurrentUser().getUid()), user);
   }
 
   public Boolean changePassword(String oldPassword, String newPassword) {

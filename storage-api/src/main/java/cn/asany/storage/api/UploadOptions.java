@@ -19,7 +19,7 @@ import org.jfantasy.framework.util.common.StringUtil;
 @AllArgsConstructor
 public class UploadOptions {
   /** 上传空间 */
-  @Builder.Default private String space = "Default";
+  private String space;
   /** 上传目录 */
   private String folder;
   /** 启用插件 */

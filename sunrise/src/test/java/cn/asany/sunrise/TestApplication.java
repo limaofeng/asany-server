@@ -19,7 +19,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @Slf4j
 @Configuration
-@ComponentScan({"cn.asany.openapi.service", "cn.asany.*.*.converter"})
+@ComponentScan({"cn.asany.openapi.service", "cn.asany.*.*.convert"})
 @EntityScan({
   "cn.asany.*.*.bean",
 })

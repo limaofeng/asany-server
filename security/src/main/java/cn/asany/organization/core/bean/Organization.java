@@ -2,6 +2,8 @@ package cn.asany.organization.core.bean;
 
 import cn.asany.base.common.Ownership;
 import cn.asany.security.core.bean.User;
+import cn.asany.storage.api.FileObject;
+import cn.asany.storage.api.converter.FileObjectConverter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.util.List;
@@ -33,6 +35,7 @@ public class Organization extends BaseBusEntity implements Ownership {
 
   public static final String DEFAULT_DIMENSION = "members";
   public static final String OWNERSHIP_KEY = "ORGANIZATION";
+  public static final String DEFAULT_ORGANIZATION_CODE = "asany";
 
   @Id
   @Column(name = "ID")
@@ -45,6 +48,10 @@ public class Organization extends BaseBusEntity implements Ownership {
   /** 机构名称 */
   @Column(name = "NAME", length = 50)
   private String name;
+  /** 组织 */
+  @Convert(converter = FileObjectConverter.class)
+  @Column(name = "LOGO", precision = 500)
+  private FileObject logo;
   /** 排序字段 */
   @Column(name = "SORT")
   private Integer sort;
@@ -65,6 +72,9 @@ public class Organization extends BaseBusEntity implements Ownership {
   /** 组织纬度 */
   @OneToMany(mappedBy = "organization", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
   private List<OrganizationDimension> dimensions;
+  /** 组织成员 */
+  @OneToMany(mappedBy = "organization", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+  private List<OrganizationMember> members;
 
   @Override
   @Transient

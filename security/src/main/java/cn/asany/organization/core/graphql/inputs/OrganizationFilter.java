@@ -10,7 +10,6 @@ import org.jfantasy.graphql.inputs.QueryFilter;
  *
  * @author limaofeng
  * @version V1.0
- * @date 2019/9/6 11:45 上午
  */
 @Data
 @EqualsAndHashCode(callSuper = false)

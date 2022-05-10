@@ -19,7 +19,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 })
 @ComponentScan({
   "cn.asany.organization.core.dao",
-  "cn.asany.organization.core.converter",
+  "cn.asany.organization.core.convert",
   "cn.asany.organization.core.service",
   "cn.asany.organization.core.graphql",
   "cn.asany.organization.employee.dao",

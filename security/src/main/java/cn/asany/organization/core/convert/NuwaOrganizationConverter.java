@@ -1,4 +1,4 @@
-package cn.asany.organization.core.converter;
+package cn.asany.organization.core.convert;
 
 import cn.asany.base.common.bean.Email;
 import cn.asany.base.common.bean.Phone;

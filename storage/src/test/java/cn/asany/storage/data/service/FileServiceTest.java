@@ -51,6 +51,6 @@ class FileServiceTest {
 
   @Test
   void createFolder() {
-    fileService.createFolder("/CloudDrive/limaofeng/");
+    fileService.createFolder("/Applications/CloudDrive/limaofeng/");
   }
 }

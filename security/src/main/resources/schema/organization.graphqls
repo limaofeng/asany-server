@@ -410,8 +410,19 @@ enum Sex {
 
 # 组织
 type Organization {
-  id: ID
-  name: String
+  id: ID!
+  """
+  编码
+  """
+  code: String!
+  """
+  名称
+  """
+  name: String!
+  """
+  标志
+  """
+  logo: File @fileFormat
   # 组织部门
   #    departments(filter: DepartmentFilter): [Department]
   # 组织员工
@@ -434,10 +445,24 @@ type Organization {
   #    multiSectoral: Boolean
   # 支持最多部门数
   #    multiSectoralNumber: Int
-  # 机构描述信息
+  """
+  描述信息
+  """
   description: String
-  # 备注
+  """
+  备注
+  """
   remark: String
+  """
+  在组织内的角色(特指系统角色 成员 / 所有者 )
+  """
+  role(
+    """
+    用户ID
+    默认为当前用户
+    """
+    of: ID
+  ): Role
 }
 
 type Department {
@@ -478,6 +503,11 @@ type Department {
   # employeeCount(recursive: Boolean!, filter: EmployeeFilter): Int
   # 下属部门数（过滤可获得包括子部门的总数）
   # childrenCount(recursive: Boolean!, filter: DepartmentFilter): Int
+}
+
+input UpdateOrganizationProfileUpdateInput {
+    name: String
+    logo: File
 }
 
 input EmployeeFilter {
@@ -784,7 +814,7 @@ type TeamMember {
 
 extend type Query {
   # 组织•组织列表
-  organizations(filter: OrganizationFilter): [Organization!]!
+  organizations(filter: OrganizationFilter = {}): [Organization!]!
   # 团队成员
   teamMembers: [TeamMember!]!
   # 组织•单个组织
@@ -823,7 +853,8 @@ extend type Query {
   #    groupType(id: ID!): EmployeeGroupScope
 }
 
-#type Mutation {
+extend type Mutation {
+    updateOrganizationProfile(id: ID!, input: UpdateOrganizationProfileUpdateInput!): Organization
 #    # 创建组织
 #    createOrganization(input: OrganizationCreateInput!): Organization
 #    # 更新组织信息
@@ -904,4 +935,4 @@ extend type Query {
 #    removeEmployeePhone(id: ID!): Boolean
 #    # 账号验证接口
 #    accountVerification(account: String): Boolean
-#}
+}

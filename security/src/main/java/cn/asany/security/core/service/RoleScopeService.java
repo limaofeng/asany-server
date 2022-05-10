@@ -31,7 +31,7 @@ public class RoleScopeService {
     return roleSpaceDao.findAll(filters);
   }
 
-  public RoleSpace update(String id, boolean merge, RoleSpace scope) {
+  public RoleSpace update(Long id, boolean merge, RoleSpace scope) {
     scope.setId(id);
     return this.roleSpaceDao.update(scope, merge);
   }

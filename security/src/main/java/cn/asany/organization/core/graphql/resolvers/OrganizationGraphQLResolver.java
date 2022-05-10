@@ -3,14 +3,21 @@ package cn.asany.organization.core.graphql.resolvers;
 import cn.asany.organization.core.bean.Department;
 import cn.asany.organization.core.bean.Job;
 import cn.asany.organization.core.bean.Organization;
+import cn.asany.organization.core.bean.OrganizationMember;
 import cn.asany.organization.core.graphql.inputs.DepartmentFilter;
 import cn.asany.organization.core.service.DepartmentService;
 import cn.asany.organization.core.service.DepartmentTypeService;
 import cn.asany.organization.core.service.JobService;
+import cn.asany.organization.core.service.OrganizationMemberService;
 import cn.asany.organization.employee.service.EmployeeService;
+import cn.asany.security.core.bean.Role;
 import graphql.kickstart.tools.GraphQLResolver;
 import java.util.List;
+import java.util.Optional;
 import org.jfantasy.framework.dao.OrderBy;
+import org.jfantasy.framework.security.LoginUser;
+import org.jfantasy.framework.security.SpringSecurityUtils;
+import org.jfantasy.framework.util.common.ObjectUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -19,7 +26,6 @@ import org.springframework.stereotype.Component;
  *
  * @author limaofeng
  * @version V1.0
- * @date 2019-04-02 12:01
  */
 @Component
 public class OrganizationGraphQLResolver implements GraphQLResolver<Organization> {
@@ -28,6 +34,8 @@ public class OrganizationGraphQLResolver implements GraphQLResolver<Organization
   @Autowired private EmployeeService employeeService;
   @Autowired private JobService jobService;
   @Autowired private DepartmentTypeService departmentTypeService;
+
+  @Autowired private OrganizationMemberService organizationMemberService;
 
   public List<Job> jobs(Organization organization, OrderBy orderBy) {
     return jobService.findAll(organization.getId(), orderBy);
@@ -70,4 +78,17 @@ public class OrganizationGraphQLResolver implements GraphQLResolver<Organization
   //    public List<DepartmentType> departmentTypes(Organization organization) {
   //        return departmentTypeService.selectDepartmentTypeByOrganization(organization.getId());
   //    }
+
+  public Optional<Role> role(Organization organization, Long of) {
+    LoginUser loginUser = SpringSecurityUtils.getCurrentUser();
+
+    Long user = ObjectUtil.defaultValue(of, () -> loginUser != null ? loginUser.getUid() : null);
+    if (user == null) {
+      return Optional.empty();
+    }
+
+    return organizationMemberService
+        .findOneByUserAndOrganization(user, organization.getId())
+        .map(OrganizationMember::getRole);
+  }
 }

@@ -220,7 +220,10 @@ public class FileDetail extends BaseBusEntity implements Cloneable {
   public static class FileDetailBuilder {
 
     public FileDetailBuilder storage(String id) {
-      this.storageConfig = new StorageConfig(Storage.DEFAULT_STORAGE_ID);
+      this.storageConfig =
+          StorageConfig.builder()
+              .id(ObjectUtil.defaultValue(id, Storage.DEFAULT_STORAGE_ID))
+              .build();
       return this;
     }
   }

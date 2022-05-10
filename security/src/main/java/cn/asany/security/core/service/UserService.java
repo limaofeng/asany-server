@@ -21,8 +21,10 @@ import org.jfantasy.framework.security.core.userdetails.UserDetails;
 import org.jfantasy.framework.security.core.userdetails.UserDetailsService;
 import org.jfantasy.framework.security.core.userdetails.UsernameNotFoundException;
 import org.jfantasy.framework.security.crypto.password.PasswordEncoder;
+import org.jfantasy.framework.util.common.BeanUtil;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.common.StringUtil;
+import org.jfantasy.framework.util.reflect.Property;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.data.domain.Example;
@@ -161,9 +163,20 @@ public class UserService implements UserDetailsService {
     return this.userDao.findById(id);
   }
 
-  public User update(Long id, User user, Boolean merge) {
+  public User update(Long id, User user) {
     user.setId(id);
-    return this.userDao.update(user, merge);
+    User oldUser = this.userDao.getById(id);
+    BeanUtil.copyProperties(
+        oldUser,
+        user,
+        (Property property, Object value, Object _dest) -> {
+          if ("avatar".equals(property.getName())) {
+            return true;
+          }
+          return value != null;
+        });
+    user = this.userDao.update(oldUser);
+    return user;
   }
 
   public List<Role> addRoles(Long id, String[] roles, boolean clear) {
