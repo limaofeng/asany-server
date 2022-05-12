@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.25](https://github.com/limaofeng/asany-server/compare/v0.1.24...v0.1.25) (2022-05-12)
+
+
+### Features
+
+* 添加组织与用户的关联逻辑 ([fb3829b](https://github.com/limaofeng/asany-server/commit/fb3829b6867f2667c490f0bfd84f3561c24f53a8))
+* 添加组织资料维护接口 ([fecd580](https://github.com/limaofeng/asany-server/commit/fecd580cd3282665248581564a939ae00319933b))
+
 ### [0.1.24](https://github.com/limaofeng/asany-server/compare/v0.1.23...v0.1.24) (2022-05-10)
 
 
