@@ -165,7 +165,7 @@ menus:
         icon: Bootstrap/filter-square
         path: /organizations/:id/settings/positions
       - name: 岗位
-        icon: Duotune/fin006
+        icon: Bootstrap/bi-person-workspace
         path: /organizations/:id/settings/jobs
       - name: 群组
         icon: Bootstrap/collection

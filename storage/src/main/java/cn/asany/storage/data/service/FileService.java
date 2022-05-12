@@ -468,7 +468,11 @@ public class FileService {
           return this.createFolder(
               FileDetail.NAME_OF_THE_RECYCLE_BIN,
               rootFolder,
-              FileOptions.builder().labels(labels).hidden(true).build());
+              FileOptions.builder()
+                  .labels(labels)
+                  .hidden(true)
+                  .storePath(rootFolder.getStorePath())
+                  .build());
         });
   }
 

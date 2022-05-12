@@ -89,7 +89,7 @@ public class Permission extends BaseBusEntity {
       mappedBy = "parent",
       fetch = FetchType.LAZY,
       cascade = {CascadeType.REMOVE})
-  @OrderBy("sort ASC")
+  @OrderBy("index ASC")
   @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
   @ToString.Exclude
   private List<Permission> scopes;

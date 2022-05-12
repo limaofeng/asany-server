@@ -71,19 +71,53 @@ input GeolocationInput {
 }
 
 input AddressInput {
-  #国家
+  """
+  国家编码
+  """
   country: String
-  #省
+  """
+  国家名称
+  """
+  countryName: String
+  """
+  省编码
+  """
   province: String
-  #城市
+  """
+  省名称
+  """
+  provinceName: String
+  """
+  城市编码
+  """
   city: String
-  #区
+  """
+  城市名称
+  """
+  cityName: String
+  """
+  区县编码
+  """
   district: String
-  #街道
+  """
+  区县名称
+  """
+  districtName: String
+  """
+  街道编码
+  """
   street: String
-  #邮编
+  """
+  街道名称
+  """
+  streetName: String
+  """
+  邮编
+  """
   postalCode: String
-  # 详细地址
+  """
+  详细地址
+  """
   detailedAddress: String
 }
 

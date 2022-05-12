@@ -1,7 +1,7 @@
 package cn.asany.organization.core.bean;
 
 import cn.asany.base.common.Ownership;
-import cn.asany.security.core.bean.User;
+import cn.asany.base.common.bean.Address;
 import cn.asany.storage.api.FileObject;
 import cn.asany.storage.api.converter.FileObjectConverter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -58,13 +58,14 @@ public class Organization extends BaseBusEntity implements Ownership {
   /** 机构描述信息 */
   @Column(name = "DESCRIPTION", length = 150)
   private String description;
-  /** 备注 */
-  @Column(name = "REMARK", length = 300)
-  private String remark;
-  /** 所有者 - 用户ID */
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "OWNERSHIP_ID", insertable = false, updatable = false)
-  private User ownership;
+  /** 邮箱 */
+  @Column(name = "EMAIL", length = 25)
+  private String email;
+  /** 网址 */
+  @Column(name = "URL", length = 100)
+  private String url;
+  /** 位置 */
+  @Embedded private Address location;
   /** 部门类型 */
   @JsonManagedReference
   @OneToMany(mappedBy = "organization", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)

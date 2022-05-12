@@ -20,7 +20,9 @@ import cn.asany.organization.relationship.dao.PositionDao;
 import java.util.*;
 import org.jfantasy.framework.dao.OrderBy;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
+import org.jfantasy.framework.util.common.BeanUtil;
 import org.jfantasy.framework.util.common.ObjectUtil;
+import org.jfantasy.framework.util.reflect.Property;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,7 +31,6 @@ import org.springframework.transaction.annotation.Transactional;
  *
  * @author limaofeng
  * @version V1.0
- * @date 2019-04-24 17:01
  */
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -433,10 +434,32 @@ public class OrganizationService {
 
   public Organization updateOrganizationProfile(Long id, Organization organization) {
     organization.setId(id);
-    return this.organizationDao.update(organization, true);
+    Organization oldOrganization = this.organizationDao.getById(id);
+    BeanUtil.copyProperties(
+        oldOrganization,
+        organization,
+        (Property property, Object value, Object _dest) -> {
+          if ("logo".equals(property.getName())) {
+            return true;
+          }
+          return value != null;
+        });
+    return this.organizationDao.update(oldOrganization);
   }
 
-  public void delete(Long id) {
+  public Organization renameOrganizationCode(Long id, String code) {
+    Organization oldOrganization = this.organizationDao.getById(id);
+    oldOrganization.setCode(code);
+    return this.organizationDao.update(oldOrganization);
+  }
+
+  public void deleteOrganization(Long id) {
+    // 删除成员
+
+    // 删除邀请
+
+    // 删除团队
+
     this.organizationDao.deleteById(id);
   }
 

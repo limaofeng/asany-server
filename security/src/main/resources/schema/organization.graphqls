@@ -420,9 +420,25 @@ type Organization {
   """
   name: String!
   """
+  描述信息
+  """
+  description: String
+  """
   标志
   """
   logo: File @fileFormat
+  """
+  邮箱
+  """
+  email: String
+  """
+  网址
+  """
+  url: String
+  """
+  位置
+  """
+  location: Address
   # 组织部门
   #    departments(filter: DepartmentFilter): [Department]
   # 组织员工
@@ -445,14 +461,7 @@ type Organization {
   #    multiSectoral: Boolean
   # 支持最多部门数
   #    multiSectoralNumber: Int
-  """
-  描述信息
-  """
-  description: String
-  """
-  备注
-  """
-  remark: String
+
   """
   在组织内的角色(特指系统角色 成员 / 所有者 )
   """
@@ -506,8 +515,12 @@ type Department {
 }
 
 input UpdateOrganizationProfileUpdateInput {
-    name: String
-    logo: File
+  name: String
+  description: String
+  logo: File
+  email: String
+  url: String
+  location: AddressInput
 }
 
 input EmployeeFilter {
@@ -854,85 +867,98 @@ extend type Query {
 }
 
 extend type Mutation {
-    updateOrganizationProfile(id: ID!, input: UpdateOrganizationProfileUpdateInput!): Organization
-#    # 创建组织
-#    createOrganization(input: OrganizationCreateInput!): Organization
-#    # 更新组织信息
-#    updateOrganization(id: ID!, merge: Boolean = true, input: OrganizationUpdateInput!): Organization
-#    # 删除组织
-#    removeOrganization(id: ID!): Boolean
-#    # 创建职务
-#    createJob(organization: ID!, input: JobCreateInput!): Job
-#    # 更新职务信息
-#    updateJob(id: ID!, merge: Boolean = true, input: JobUpdateInput!): Job
-#    # 删除职务
-#    removeJob(id: ID!): Boolean
-#    # 创建职位
-#    createPosition(department: ID!, job: ID!): Position
-#    # 删除职位
-#    removePosition(id: ID!): Boolean
-#    # 创建部门
-#    createDepartment(organization: ID, input: DepartmentCreateInput!): Department
-#    # 更新部门信息
-#    updateDepartment(id: ID!, merge: Boolean = true, input: DepartmentUpdateInput!): Department
-#    # 移动部门
-#    moveDepartment(id: ID!, parentDepartment: ID, location: Int): Department
-#    # 删除部门
-#    removeDepartment(id: ID!): Boolean
-#    # 创建员工
-#    createEmployee(input: EmployeeCreateInput!): Employee
-#    # 导入员工
-#    importEmployees(path: String!,isUpdate: Boolean): Boolean
-#    # 更新员工roles
-#    updateEmployee(id: ID!, merge: Boolean = true, input: EmployeeUpdateInput!): Employee
-#    # 批量更新员工的职位
-#    batchUpdateEmployeePosition(employees: [ID]!, position: ID!): Boolean
-#    # 删除员工
-#    removeEmployee(id: ID!): Boolean
-#    # 创建群组 businessId（业务id）
-#    createEmployeeGroup(scope: String!, businessId: ID, input: EmployeeGroupCreateInput!): EmployeeGroup
-#    # 更新群组
-#    updateEmployeeGroup(id: ID!, merge: Boolean = true, input: EmployeeGroupUpdateInput!): EmployeeGroup
-#    # 删除群组
-#    removeEmployeeGroup(id: ID!): Boolean
-#    # 向群组中添加成员
-#    #addEmployeeToGroup(employee: ID!, group: ID!): Boolean
-#    # 向群组中添加成员
-#    addEmployeeToGroup(employee: [ID]!, group: ID!, businessId: ID): Boolean
-#    #向群组中移除成员
-#    removeEmployeeToGroup(employee: ID!, group: ID!, businessId: ID): Boolean
-#    # 创建部门类型
-#    createDepartmentType(organization: ID!, input: DepartmentTypeCreateInput): DepartmentType
-#    # 删除部门类型
-#    removeDepartmentType(id: ID!): Boolean
-#    #更新员工所在部门
-#    updateEmployeePosition(input: EmployeePositionUpdateInput): Employee
-#    #批量删除员工
-#    batchRemoveEmployee(ids: [ID]!): Boolean
-#    # 创建组织人员状态
-#    createOrganizationEmployeeStatus(organization: ID!,input: OrganizationEmployeeStatusCreateInput!): OrganizationEmployeeStatus
-#    # 更新组织人员状态
-#    updateOrganizationEmployeeStatus(organization: ID!,id: ID!,merge: Boolean = true,input: OrganizationEmployeeStatusUpdateInput!): OrganizationEmployeeStatus
-#    # 删除组织人员状态
-#    removeOrganizationEmployeeStatus(id: ID!): Boolean
-#    # 创建群组分类
-#    createGroupTypes(input: EmployeeGroupScopeCreateInput!,organization: ID!): EmployeeGroupScope
-#    # 更新群组分类
-#    updateGroupTypes(input: EmployeeGroupScopeUpdateInput!,organization: ID!,merge: Boolean = true): EmployeeGroupScope
-#    # 删除群组分类
-#    removeGroupTypes(id: ID!): Boolean
-#    # 新增员工邮箱
-#    createEmployeeEmail(employeeId: ID!, input: EmployeeEmailInput): EmployeeEmail
-#    # 修改员工邮箱
-#    updateEmployeeEmail(employeeId: ID!, emailId: ID!, merge: Boolean = true,  input: EmployeeEmailInput): EmployeeEmail
-#    # 删除员工邮箱
-#    removeEmployeeEmail(id: ID!): Boolean
-#    # 新增员工手机号
-#    createEmployeePhone(employeeId: ID!, input: EmployeePhoneInput): EmployeePhone
-#    # 修改员工邮箱
-#    updateEmployeePhone(employeeId: ID!, phoneId: ID!, merge: Boolean = true,  input: EmployeePhoneInput): EmployeePhone
-#    # 删除员工邮箱
-#    removeEmployeePhone(id: ID!): Boolean
-#    # 账号验证接口
-#    accountVerification(account: String): Boolean
+  """
+  更新组织资料
+  """
+  updateOrganizationProfile(
+    id: ID!
+    input: UpdateOrganizationProfileUpdateInput!
+  ): Organization
+  """
+  重命名组织代码
+  """
+  renameOrganizationCode(id: ID!, code: String!): Organization
+  """
+  删除组织
+  """
+  deleteOrganization(id: ID!): Boolean
+  #    # 创建组织
+  #    createOrganization(input: OrganizationCreateInput!): Organization
+  #    # 更新组织信息
+  #    updateOrganization(id: ID!, merge: Boolean = true, input: OrganizationUpdateInput!): Organization
+
+  #    # 创建职务
+  #    createJob(organization: ID!, input: JobCreateInput!): Job
+  #    # 更新职务信息
+  #    updateJob(id: ID!, merge: Boolean = true, input: JobUpdateInput!): Job
+  #    # 删除职务
+  #    removeJob(id: ID!): Boolean
+  #    # 创建职位
+  #    createPosition(department: ID!, job: ID!): Position
+  #    # 删除职位
+  #    removePosition(id: ID!): Boolean
+  #    # 创建部门
+  #    createDepartment(organization: ID, input: DepartmentCreateInput!): Department
+  #    # 更新部门信息
+  #    updateDepartment(id: ID!, merge: Boolean = true, input: DepartmentUpdateInput!): Department
+  #    # 移动部门
+  #    moveDepartment(id: ID!, parentDepartment: ID, location: Int): Department
+  #    # 删除部门
+  #    removeDepartment(id: ID!): Boolean
+  #    # 创建员工
+  #    createEmployee(input: EmployeeCreateInput!): Employee
+  #    # 导入员工
+  #    importEmployees(path: String!,isUpdate: Boolean): Boolean
+  #    # 更新员工roles
+  #    updateEmployee(id: ID!, merge: Boolean = true, input: EmployeeUpdateInput!): Employee
+  #    # 批量更新员工的职位
+  #    batchUpdateEmployeePosition(employees: [ID]!, position: ID!): Boolean
+  #    # 删除员工
+  #    removeEmployee(id: ID!): Boolean
+  #    # 创建群组 businessId（业务id）
+  #    createEmployeeGroup(scope: String!, businessId: ID, input: EmployeeGroupCreateInput!): EmployeeGroup
+  #    # 更新群组
+  #    updateEmployeeGroup(id: ID!, merge: Boolean = true, input: EmployeeGroupUpdateInput!): EmployeeGroup
+  #    # 删除群组
+  #    removeEmployeeGroup(id: ID!): Boolean
+  #    # 向群组中添加成员
+  #    #addEmployeeToGroup(employee: ID!, group: ID!): Boolean
+  #    # 向群组中添加成员
+  #    addEmployeeToGroup(employee: [ID]!, group: ID!, businessId: ID): Boolean
+  #    #向群组中移除成员
+  #    removeEmployeeToGroup(employee: ID!, group: ID!, businessId: ID): Boolean
+  #    # 创建部门类型
+  #    createDepartmentType(organization: ID!, input: DepartmentTypeCreateInput): DepartmentType
+  #    # 删除部门类型
+  #    removeDepartmentType(id: ID!): Boolean
+  #    #更新员工所在部门
+  #    updateEmployeePosition(input: EmployeePositionUpdateInput): Employee
+  #    #批量删除员工
+  #    batchRemoveEmployee(ids: [ID]!): Boolean
+  #    # 创建组织人员状态
+  #    createOrganizationEmployeeStatus(organization: ID!,input: OrganizationEmployeeStatusCreateInput!): OrganizationEmployeeStatus
+  #    # 更新组织人员状态
+  #    updateOrganizationEmployeeStatus(organization: ID!,id: ID!,merge: Boolean = true,input: OrganizationEmployeeStatusUpdateInput!): OrganizationEmployeeStatus
+  #    # 删除组织人员状态
+  #    removeOrganizationEmployeeStatus(id: ID!): Boolean
+  #    # 创建群组分类
+  #    createGroupTypes(input: EmployeeGroupScopeCreateInput!,organization: ID!): EmployeeGroupScope
+  #    # 更新群组分类
+  #    updateGroupTypes(input: EmployeeGroupScopeUpdateInput!,organization: ID!,merge: Boolean = true): EmployeeGroupScope
+  #    # 删除群组分类
+  #    removeGroupTypes(id: ID!): Boolean
+  #    # 新增员工邮箱
+  #    createEmployeeEmail(employeeId: ID!, input: EmployeeEmailInput): EmployeeEmail
+  #    # 修改员工邮箱
+  #    updateEmployeeEmail(employeeId: ID!, emailId: ID!, merge: Boolean = true,  input: EmployeeEmailInput): EmployeeEmail
+  #    # 删除员工邮箱
+  #    removeEmployeeEmail(id: ID!): Boolean
+  #    # 新增员工手机号
+  #    createEmployeePhone(employeeId: ID!, input: EmployeePhoneInput): EmployeePhone
+  #    # 修改员工邮箱
+  #    updateEmployeePhone(employeeId: ID!, phoneId: ID!, merge: Boolean = true,  input: EmployeePhoneInput): EmployeePhone
+  #    # 删除员工邮箱
+  #    removeEmployeePhone(id: ID!): Boolean
+  #    # 账号验证接口
+  #    accountVerification(account: String): Boolean
 }

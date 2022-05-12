@@ -96,4 +96,13 @@ public class OrganizationGraphQLQueryAndMutationResolver
     Organization organization = this.organizationConverter.toOrganization(input);
     return this.organizationService.updateOrganizationProfile(id, organization);
   }
+
+  public Organization renameOrganizationCode(Long id, String code) {
+    return this.organizationService.renameOrganizationCode(id, code);
+  }
+
+  public Boolean deleteOrganization(Long id) {
+    this.organizationService.deleteOrganization(id);
+    return Boolean.TRUE;
+  }
 }
