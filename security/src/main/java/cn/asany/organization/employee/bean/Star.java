@@ -36,7 +36,11 @@ public class Star extends BaseBusEntity {
   private Long id;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "TYPE", updatable = false, nullable = false)
+  @JoinColumn(
+      name = "TYPE",
+      updatable = false,
+      nullable = false,
+      foreignKey = @ForeignKey(name = "FK_STAR_TYPE"))
   private StarType starType;
 
   @Column(name = "VALUE", updatable = false, nullable = false, length = 50)

@@ -34,7 +34,7 @@ public class Contact extends BaseBusEntity {
   @ManyToOne(
       fetch = FetchType.LAZY,
       cascade = {javax.persistence.CascadeType.REFRESH})
-  @JoinColumn(name = "BOOK_ID")
+  @JoinColumn(name = "BOOK_ID", foreignKey = @ForeignKey(name = "FK_CARDHOP_CONTACT_BOOK"))
   private ContactBook book;
   /** 联系人照片 */
   @Convert(converter = FileObjectConverter.class)

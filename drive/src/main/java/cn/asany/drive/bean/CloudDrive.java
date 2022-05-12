@@ -44,7 +44,10 @@ public class CloudDrive extends BaseBusEntity {
   private CloudDriveType type;
   /** 存储位置 */
   @ManyToOne
-  @JoinColumn(name = "SPACE_ID", nullable = false)
+  @JoinColumn(
+      name = "SPACE_ID",
+      nullable = false,
+      foreignKey = @ForeignKey(name = "FK_CLOUD_DRIVE_SPACE"))
   private Space space;
   /** 存储空间 */
   @OneToOne(

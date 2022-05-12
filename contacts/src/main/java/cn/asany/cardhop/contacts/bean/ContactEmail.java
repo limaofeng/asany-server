@@ -34,7 +34,7 @@ public class ContactEmail extends BaseBusEntity {
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(
       name = "CONTACT_ID",
-      foreignKey = @ForeignKey(name = "CARDHOP_CONTACT_EMAIL_CID"),
+      foreignKey = @ForeignKey(name = "FK_CARDHOP_CONTACT_EMAIL_CID"),
       nullable = false,
       updatable = false)
   private Contact contact;

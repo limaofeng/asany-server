@@ -26,7 +26,7 @@ public class RolePlay extends BaseBusEntity {
   private String id;
   /** 对应角色 */
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "ROLE_ID")
+  @JoinColumn(name = "ROLE_ID", foreignKey = @ForeignKey(name = "FK_ROLE_PLAY_ROLE_ID"))
   private Role role;
   /** 业务ID */
   @Column(name = "PLAYER", length = 50)

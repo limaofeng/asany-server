@@ -12,7 +12,10 @@ import org.apache.james.mailbox.store.user.model.Subscription;
 @Entity(name = "Subscription")
 @Table(
     name = "JAMES_SUBSCRIPTION",
-    uniqueConstraints = @UniqueConstraint(columnNames = {"USER_NAME", "MAILBOX_NAME"}))
+    uniqueConstraints =
+        @UniqueConstraint(
+            columnNames = {"USER_NAME", "MAILBOX_NAME"},
+            name = "UK_JAMES_SUBSCRIPTION_USER_MAILBOX"))
 public class JamesSubscription implements Subscription {
 
   private static final String TO_STRING_SEPARATOR = "  ";
