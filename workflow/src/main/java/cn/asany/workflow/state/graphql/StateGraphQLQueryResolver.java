@@ -8,7 +8,7 @@ import graphql.kickstart.tools.GraphQLQueryResolver;
 import java.util.ArrayList;
 import java.util.List;
 import org.jfantasy.framework.dao.OrderBy;
-import org.jfantasy.framework.dao.Pager;
+import org.springframework.data.domain.Pageable;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.graphql.util.Kit;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +22,8 @@ public class StateGraphQLQueryResolver implements GraphQLQueryResolver {
   /** 增加任务状态 */
   /** 查询所有优先级 */
   public StateConnection states(StateFilter filter, int page, int pageSize, OrderBy orderBy) {
-    Pager<State> pager = new Pager<>(page, pageSize, orderBy);
+    Pageable pageable = PageRequest.of(page, pageSize, orderBy.toSort());
     List<PropertyFilter> list = new ArrayList<>();
-    return Kit.connection(stateService.findPager(pager, list), StateConnection.class);
+    return Kit.connection(stateService.findPage(pageable, list), StateConnection.class);
   }
 }

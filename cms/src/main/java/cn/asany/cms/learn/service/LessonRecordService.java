@@ -13,10 +13,12 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import org.jfantasy.framework.dao.OrderBy;
-import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -95,8 +97,7 @@ public class LessonRecordService {
     return lessonRecord;
   }
 
-  public Pager<Course> compulsoryCourseAndRecords(
-      Pager<Course> pager, List<PropertyFilter> filters) {
+  public Page<Course> compulsoryCourseAndRecords(Pageable pageable, List<PropertyFilter> filters) {
     Set<Course> courses = new HashSet<>();
     // 查询该用户的所有课程（区分选修必修）
     List<Learner> learnerList = learnerDao.findAll(filters);
@@ -112,14 +113,16 @@ public class LessonRecordService {
       }
     }
     List<Course> courseList = new ArrayList<>(courses);
-    pager.reset(courseList);
-    return pager;
+    // TODO 未完工 😩
+    return Page.empty(pageable);
   }
 
-  public Pager<LessonRecord> findPage(Pager<LessonRecord> pager, List<PropertyFilter> filters) {
-    if (pager.getOrderBy() == null) {
-      pager.setOrderBy(OrderBy.desc("createdAt"));
+  public Page<LessonRecord> findPage(Pageable pageable, List<PropertyFilter> filters) {
+    if (pageable.getSort().isUnsorted()) {
+      pageable =
+          PageRequest.of(
+              pageable.getPageNumber(), pageable.getPageSize(), Sort.by("createdAt").descending());
     }
-    return lessonRecordDao.findPager(pager, filters);
+    return lessonRecordDao.findPage(pageable, filters);
   }
 }

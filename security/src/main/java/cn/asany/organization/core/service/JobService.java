@@ -9,8 +9,6 @@ import cn.asany.organization.relationship.dao.PositionDao;
 import java.util.List;
 import java.util.Optional;
 import org.jfantasy.framework.dao.OrderBy;
-import org.jfantasy.framework.dao.Pager;
-import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
@@ -65,19 +63,8 @@ public class JobService {
     return true;
   }
 
-  public List<Job> findJobData(List<PropertyFilter> filters) {
-    Pager<Job> objectPager = new Pager<>();
-    objectPager.setPageSize(10000);
-    Pager<Job> pager = jobDao.findPager(objectPager, filters);
-    List<Job> pageItems = pager.getPageItems();
-    return pageItems;
-  }
-
   public Job get(Long id) {
     Optional<Job> byId = jobDao.findById(id);
-    if (byId.isPresent()) {
-      return byId.get();
-    }
-    return null;
+    return byId.orElse(null);
   }
 }

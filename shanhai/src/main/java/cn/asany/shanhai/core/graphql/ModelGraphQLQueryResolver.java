@@ -11,9 +11,10 @@ import graphql.kickstart.tools.GraphQLQueryResolver;
 import java.util.List;
 import java.util.Optional;
 import org.jfantasy.framework.dao.OrderBy;
-import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.graphql.util.Kit;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 /**
@@ -31,16 +32,16 @@ public class ModelGraphQLQueryResolver implements GraphQLQueryResolver {
   }
 
   public List<Model> models(ModelFilter filter, int first, int offset, OrderBy orderBy) {
-    Pager<Model> pager = Pager.newPager(offset, orderBy, first);
+    Pageable pageable = PageRequest.of(offset, first, orderBy.toSort());
     filter = ObjectUtil.defaultValue(filter, new ModelFilter());
-    return modelService.findPager(pager, filter.build()).getPageItems();
+    return modelService.findPage(pageable, filter.build()).getContent();
   }
 
   public ModelConnection modelsConnection(
       ModelFilter filter, int page, int pageSize, OrderBy orderBy) {
-    Pager<Model> pager = new Pager<>(page, pageSize, orderBy);
+    Pageable pageable = PageRequest.of(page, pageSize, orderBy.toSort());
     filter = ObjectUtil.defaultValue(filter, new ModelFilter());
-    return Kit.connection(modelService.findPager(pager, filter.build()), ModelConnection.class);
+    return Kit.connection(modelService.findPage(pageable, filter.build()), ModelConnection.class);
   }
 
   public Optional<Model> model(String id, ModelIdType idType) {

@@ -14,10 +14,11 @@ import graphql.schema.DataFetchingEnvironment;
 import java.util.List;
 import java.util.Optional;
 import org.jfantasy.framework.dao.OrderBy;
-import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.spring.mvc.error.NotFoundException;
 import org.jfantasy.graphql.context.AuthorizationGraphQLServletContext;
 import org.jfantasy.graphql.util.Kit;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -82,7 +83,7 @@ public class ContactsGraphqlApiResolver implements GraphQLQueryResolver, GraphQL
       OrderBy orderBy,
       /* 环境 */
       DataFetchingEnvironment environment) {
-    Pager<Contact> pager = Pager.newPager();
+    Pageable pageable = PageRequest.of(page, pageSize, orderBy.toSort());
 
     IdUtils.IdKey idKey = IdUtils.parseKey(filter.getToken());
 
@@ -98,7 +99,7 @@ public class ContactsGraphqlApiResolver implements GraphQLQueryResolver, GraphQL
     IContactsService service = contactsServiceFactory.getService(contactBook.getType());
 
     return Kit.connection(
-        service.findPager(contactBook, idKey.getNamespace(), pager, filter.build()),
+        service.findPager(contactBook, idKey.getNamespace(), pageable, filter.build()),
         ContactConnection.class);
   }
 }

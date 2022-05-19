@@ -27,11 +27,13 @@ import java.util.*;
 import java.util.stream.Collectors;
 import org.apache.commons.collections.CollectionUtils;
 import org.jfantasy.framework.dao.OrderBy;
-import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.graphql.util.Kit;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -58,7 +60,7 @@ public class CourseGraphQLResolver implements GraphQLResolver<Course> {
         ObjectUtil.defaultValue(filter, new LearnerFilter()).getBuilder();
     return Kit.connection(
         lessonRecordService.compulsoryCourseAndRecords(
-            new Pager<>(page, pageSize, orderBy), builder.build()),
+            PageRequest.of(page, pageSize, orderBy.toSort()), builder.build()),
         CourseConnection.class);
   }
 
@@ -68,7 +70,7 @@ public class CourseGraphQLResolver implements GraphQLResolver<Course> {
         ObjectUtil.defaultValue(filter, new LearnerFilter()).getBuilder();
     builder.equal("course", course.getId());
 
-    Pager vpager = null;
+    Page vpage = null;
     if (filter != null && LearnerType.compulsory == filter.getType()) {
       filter
           .getEmployeeBuilder()
@@ -102,9 +104,11 @@ public class CourseGraphQLResolver implements GraphQLResolver<Course> {
       //                    .learningProgress(learnerService.findLearningProgress(item, course))
       //                    .build()).collect(Collectors.toList()));
     } else {
-      vpager = learnerService.findPager(new Pager<>(page, pageSize, orderBy), builder.build());
+      vpage =
+          learnerService.findPage(
+              PageRequest.of(page, pageSize, orderBy.toSort()), builder.build());
     }
-    return Kit.connection(vpager, LearnerConnection.class);
+    return Kit.connection(vpage, LearnerConnection.class);
   }
 
   public LessonRecordConnection lessonRecords(
@@ -112,7 +116,8 @@ public class CourseGraphQLResolver implements GraphQLResolver<Course> {
     PropertyFilterBuilder builder =
         ObjectUtil.defaultValue(filter, new LessonRecordFilter()).getBuilder();
     return Kit.connection(
-        lessonRecordService.findPage(new Pager<>(page, pageSize, orderBy), builder.build()),
+        lessonRecordService.findPage(
+            PageRequest.of(page, pageSize, orderBy.toSort()), builder.build()),
         LessonRecordConnection.class);
   }
 
@@ -147,9 +152,9 @@ public class CourseGraphQLResolver implements GraphQLResolver<Course> {
 
   public LearnerScopeConnection scopes(
       Course course, LearnerScopeFilter filter, int page, int pageSize, OrderBy orderBy) {
-    Pager<LearnerScope> pager = new Pager<>(page, pageSize, orderBy);
+    Pageable pageable = PageRequest.of(page, pageSize, orderBy.toSort());
     return Kit.connection(
-        learnerScopeService.pager(pager, filter.build()), LearnerScopeConnection.class);
+        learnerScopeService.findPage(pageable, filter.build()), LearnerScopeConnection.class);
   }
 
   public Boolean hasJoined(Course course, Long employeeId) {

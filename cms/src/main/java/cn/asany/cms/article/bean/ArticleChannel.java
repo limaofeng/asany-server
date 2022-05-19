@@ -18,7 +18,7 @@ import lombok.*;
 import org.hibernate.annotations.*;
 import org.hibernate.annotations.Cache;
 import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.lucene.annotations.IndexEmbedBy;
+import org.jfantasy.framework.search.annotations.IndexEmbedBy;
 
 /**
  * 文章 - 频道 / 栏目
@@ -87,7 +87,7 @@ public class ArticleChannel extends BaseBusEntity {
       mappedBy = "parent",
       fetch = FetchType.LAZY,
       cascade = {CascadeType.REMOVE})
-  @OrderBy("sort ASC")
+  @OrderBy("index ASC")
   @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
   private List<ArticleChannel> children;
   /** 所有者 */

@@ -432,7 +432,7 @@ extend type Query {
     """
     排序
     """
-    orderBy: OrderBy
+    orderBy: OrderBy = {}
   ): MailboxMessageConnection
   """
   邮件详情

@@ -4,23 +4,23 @@ import cn.asany.cms.article.bean.ArticleTag;
 import cn.asany.cms.article.dao.ArticleTagDao;
 import java.util.List;
 import java.util.Optional;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.util.common.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 @Transactional
 public class ArticleTagService {
 
-  private static final Log Log = LogFactory.getLog(ArticleTagService.class);
   private static final String PATH_SEPARATOR = "/";
   private final ArticleTagDao tagDao;
 
@@ -29,8 +29,8 @@ public class ArticleTagService {
     this.tagDao = tagDao;
   }
 
-  public Pager<ArticleTag> findPager(Pager<ArticleTag> pager, List<PropertyFilter> filters) {
-    return this.tagDao.findPager(pager, filters);
+  public Page<ArticleTag> findPage(Pageable pageable, List<PropertyFilter> filters) {
+    return this.tagDao.findPage(pageable, filters);
   }
 
   public Optional<ArticleTag> get(Long id) {
@@ -81,8 +81,8 @@ public class ArticleTagService {
   /**
    * 保存栏目
    *
-   * @param tag
-   * @return
+   * @param tag 标签
+   * @return ArticleTag
    */
   public ArticleTag save(ArticleTag tag) {
     tag.setSlug(
@@ -136,7 +136,7 @@ public class ArticleTagService {
   /**
    * * 删除栏目
    *
-   * @param id
+   * @param id ID
    */
   public boolean delete(Long id) {
     ArticleTag tag = this.findOne(id);

@@ -4,9 +4,10 @@ import cn.asany.storage.data.bean.Space;
 import cn.asany.storage.data.dao.SpaceDao;
 import java.util.List;
 import org.hibernate.Hibernate;
-import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,8 +22,8 @@ public class SpaceService {
     this.spaceDao = spaceDao;
   }
 
-  public Pager<Space> findPager(Pager<Space> pager, List<PropertyFilter> filters) {
-    return spaceDao.findPager(pager, filters);
+  public Page<Space> findPage(Pageable pageable, List<PropertyFilter> filters) {
+    return spaceDao.findPage(pageable, filters);
   }
 
   public void delete(String... ids) {

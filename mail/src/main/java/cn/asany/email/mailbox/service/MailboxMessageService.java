@@ -13,8 +13,10 @@ import org.apache.james.mailbox.DefaultMailboxes;
 import org.apache.james.mailbox.MessageUid;
 import org.apache.james.mailbox.store.mail.model.Property;
 import org.jfantasy.framework.dao.OrderBy;
-import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -43,13 +45,13 @@ public class MailboxMessageService {
 
   public List<JamesMailboxMessage> findUnseenMessagesInMailboxOrderByUid(long mailbox, int size) {
     return this.mailboxMessageDao
-        .findPager(
-            new Pager<>(1, size, OrderBy.asc("id")),
+        .findPage(
+            PageRequest.of(1, size, OrderBy.asc("id").toSort()),
             PropertyFilter.builder()
                 .equal("mailbox.id", mailbox)
                 .equal("seen", Boolean.FALSE)
                 .build())
-        .getPageItems();
+        .getContent();
   }
 
   public List<MessageUid> findRecentMessageUidsInMailbox(long mailbox) {
@@ -180,13 +182,12 @@ public class MailboxMessageService {
   /**
    * 邮件分页查询
    *
-   * @param pager 分页对象
+   * @param pageable 分页对象
    * @param filters 筛选条件
    * @return Pager<JamesMailboxMessage>
    */
-  public Pager<JamesMailboxMessage> findPager(
-      Pager<JamesMailboxMessage> pager, List<PropertyFilter> filters) {
-    return this.mailboxMessageDao.findWithDetailsPager(pager, filters);
+  public Page<JamesMailboxMessage> findPage(Pageable pageable, List<PropertyFilter> filters) {
+    return this.mailboxMessageDao.findWithDetailsPage(pageable, filters);
   }
 
   public JamesMailboxMessage update(String id, JamesMailboxMessage message, Boolean merge) {

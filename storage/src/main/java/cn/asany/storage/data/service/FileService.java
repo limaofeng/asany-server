@@ -11,7 +11,6 @@ import cn.asany.storage.data.dao.SpaceDao;
 import java.io.IOException;
 import java.util.*;
 import org.hibernate.Hibernate;
-import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
 import org.jfantasy.framework.dao.mybatis.keygen.util.DataBaseKeyGenerator;
@@ -22,6 +21,8 @@ import org.jfantasy.framework.util.web.WebUtil;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -244,8 +245,8 @@ public class FileService {
                     .build()));
   }
 
-  public Pager<FileDetail> findPager(Pager<FileDetail> pager, List<PropertyFilter> filters) {
-    return this.fileDetailDao.findPager(pager, filters);
+  public Page<FileDetail> findPage(Pageable pageable, List<PropertyFilter> filters) {
+    return this.fileDetailDao.findPage(pageable, filters);
   }
 
   public List<FileDetail> listFolder(String path, String storage, String orderBy) {

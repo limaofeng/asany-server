@@ -15,7 +15,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.Hibernate;
-import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.jpa.ComplexJpaRepository;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
@@ -23,6 +22,8 @@ import org.jfantasy.framework.spring.SpringBeanUtils;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.common.toys.CompareResults;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -118,8 +119,8 @@ public class StorageService {
     }
   }
 
-  public Pager<FileDetail> findPager(Pager<FileDetail> pager, List<PropertyFilter> filters) {
-    return this.fileDetailDao.findPager(pager, filters);
+  public Page<FileDetail> findPage(Pageable pageable, List<PropertyFilter> filters) {
+    return this.fileDetailDao.findPage(pageable, filters);
   }
 
   public Optional<FileDetail> findOneByPath(String id, String path) {

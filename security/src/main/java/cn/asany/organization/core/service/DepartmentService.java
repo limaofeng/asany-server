@@ -14,11 +14,12 @@ import cn.asany.organization.relationship.service.PositionService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,8 +42,8 @@ public class DepartmentService {
   @Autowired private JobService jobService;
   @Autowired private PositionService positionService;
 
-  public Pager<Department> findPager(Pager<Department> pager, List<PropertyFilter> filters) {
-    return departmentDao.findPager(pager, filters);
+  public Page<Department> findPage(Pageable pageable, List<PropertyFilter> filters) {
+    return departmentDao.findPage(pageable, filters);
   }
 
   public Department save(Department department) {

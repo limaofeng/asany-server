@@ -10,7 +10,6 @@ import cn.asany.organization.employee.dao.EmployeeDao;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.common.StringUtil;
@@ -139,13 +138,5 @@ public class EmployeeGroupService {
     }
 
     this.employeeDao.save(employee);
-  }
-
-  public List<EmployeeGroup> findEmployeeGroupData(List<PropertyFilter> filters) {
-    Pager<EmployeeGroup> objectPager = new Pager<>();
-    objectPager.setPageSize(10000);
-    Pager<EmployeeGroup> pager = employeeGroupDao.findPager(objectPager, filters);
-    List<EmployeeGroup> pageItems = pager.getPageItems();
-    return pageItems;
   }
 }

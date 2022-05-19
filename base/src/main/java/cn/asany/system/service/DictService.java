@@ -9,7 +9,6 @@ import com.github.stuxuhai.jpinyin.PinyinException;
 import java.util.*;
 import java.util.stream.Collectors;
 import org.jfantasy.framework.dao.OrderBy;
-import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
 import org.jfantasy.framework.error.ValidationException;
@@ -21,6 +20,8 @@ import org.jfantasy.framework.util.common.StringUtil;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -85,12 +86,12 @@ public class DictService {
   /**
    * 分页查询方法
    *
-   * @param pager 分页对象
+   * @param pageable 分页对象
    * @param filters 过滤条件
    * @return {List}
    */
-  public Pager<Dict> findPager(Pager<Dict> pager, List<PropertyFilter> filters) {
-    return this.dictDao.findPager(pager, filters);
+  public Page<Dict> findPage(Pageable pageable, List<PropertyFilter> filters) {
+    return this.dictDao.findPage(pageable, filters);
   }
 
   @Cacheable(key = "targetClass + methodName + '#' + #p0.toString()", value = CACHE_KEY)
@@ -102,8 +103,8 @@ public class DictService {
     return this.dictDao.findAll(filters, orderBy.toSort());
   }
 
-  public Pager<DictType> findDictTypePager(Pager<DictType> pager, List<PropertyFilter> filters) {
-    return this.dictTypeDao.findPager(pager, filters);
+  public Page<DictType> findDictTypePage(Pageable pageable, List<PropertyFilter> filters) {
+    return this.dictTypeDao.findPage(pageable, filters);
   }
 
   public List<Dict> findType(String type) {

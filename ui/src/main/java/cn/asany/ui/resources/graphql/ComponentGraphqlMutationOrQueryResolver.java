@@ -11,10 +11,12 @@ import graphql.kickstart.tools.GraphQLMutationResolver;
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import java.util.List;
 import java.util.Optional;
+import org.jfantasy.framework.dao.LimitPageRequest;
 import org.jfantasy.framework.dao.OrderBy;
-import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.graphql.util.Kit;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 /**
  * 组件接口
@@ -53,16 +55,16 @@ public class ComponentGraphqlMutationOrQueryResolver
 
   public List<Component> components(
       ComponentFilter filter, int first, int offset, OrderBy orderBy) {
-    Pager<Component> pager = Pager.newPager(offset, orderBy, first);
+    Pageable pageable = LimitPageRequest.of(offset, first, orderBy.toSort());
     filter = ObjectUtil.defaultValue(filter, new ComponentFilter());
-    return componentService.findPager(pager, filter.build()).getPageItems();
+    return componentService.findPage(pageable, filter.build()).getContent();
   }
 
   public ComponentConnection componentsConnection(
       ComponentFilter filter, int page, int pageSize, OrderBy orderBy) {
-    Pager<Component> pager = new Pager<>(page, pageSize, orderBy);
+    Pageable pageable = PageRequest.of(page, pageSize, orderBy.toSort());
     filter = ObjectUtil.defaultValue(filter, new ComponentFilter());
     return Kit.connection(
-        componentService.findPager(pager, filter.build()), ComponentConnection.class);
+        componentService.findPage(pageable, filter.build()), ComponentConnection.class);
   }
 }

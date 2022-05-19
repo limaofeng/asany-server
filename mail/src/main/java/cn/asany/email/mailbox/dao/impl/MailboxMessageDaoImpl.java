@@ -6,10 +6,11 @@ import cn.asany.email.mailbox.dao.MailboxMessageDao;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
-import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.jpa.ComplexJpaRepository;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.error.IgnoreException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public class MailboxMessageDaoImpl
     extends ComplexJpaRepository<JamesMailboxMessage, MailboxIdUidKey>
@@ -61,8 +62,8 @@ public class MailboxMessageDaoImpl
   }
 
   @Override
-  public Pager<JamesMailboxMessage> findWithDetailsPager(
-      Pager<JamesMailboxMessage> pager, List<PropertyFilter> filters) {
-    return this.findPager(pager, filters);
+  public Page<JamesMailboxMessage> findWithDetailsPage(
+      Pageable pageable, List<PropertyFilter> filters) {
+    return this.findPage(pageable, filters);
   }
 }

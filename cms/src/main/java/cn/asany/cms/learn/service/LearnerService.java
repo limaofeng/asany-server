@@ -9,10 +9,12 @@ import java.util.Date;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.jfantasy.framework.dao.OrderBy;
-import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -52,11 +54,13 @@ public class LearnerService {
     return true;
   }
 
-  public Pager<Learner> findPager(Pager<Learner> pager, List<PropertyFilter> filter) {
-    if (pager.getOrderBy() == null) {
-      pager.setOrderBy(OrderBy.desc("createdAt"));
+  public Page<Learner> findPage(Pageable pageable, List<PropertyFilter> filter) {
+    if (pageable.getSort().isUnsorted()) {
+      pageable =
+          PageRequest.of(
+              pageable.getPageNumber(), pageable.getPageSize(), OrderBy.desc("createdAt").toSort());
     }
-    return learnerDao.findPager(pager, filter);
+    return learnerDao.findPage(pageable, filter);
   }
 
   public float lengthStudy(Course course, Long learner) {
@@ -76,13 +80,12 @@ public class LearnerService {
     if (learner.getCourse() != null) {
       builder.equal("course", learner.getCourse());
     }
-    Pager<LessonRecord> lessonRecordPager =
-        lessonRecordDao.findPager(
-            new Pager<>(page, pageSize, OrderBy.desc("updatedAt")), builder.build());
-    if (CollectionUtils.isEmpty(lessonRecordPager.getPageItems())) {
+    Pageable pageable = PageRequest.of(page, pageSize, OrderBy.desc("updatedAt").toSort());
+    Page<LessonRecord> lessonRecordPager = lessonRecordDao.findPage(pageable, builder.build());
+    if (CollectionUtils.isEmpty(lessonRecordPager.getContent())) {
       return null;
     }
-    LessonRecord record = lessonRecordPager.getPageItems().get(0);
+    LessonRecord record = lessonRecordPager.getContent().get(0);
     return record.getUpdatedAt();
   }
 

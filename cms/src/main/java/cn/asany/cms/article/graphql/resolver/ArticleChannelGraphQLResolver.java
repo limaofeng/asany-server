@@ -8,14 +8,17 @@ import cn.asany.cms.article.service.ArticleChannelService;
 import cn.asany.cms.article.service.ArticleService;
 import cn.asany.cms.permission.bean.Permission;
 import graphql.kickstart.tools.GraphQLResolver;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
+import org.jfantasy.framework.dao.LimitPageRequest;
 import org.jfantasy.framework.dao.OrderBy;
-import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.common.StringUtil;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 /**
@@ -98,9 +101,8 @@ public class ArticleChannelGraphQLResolver implements GraphQLResolver<ArticleCha
       int last,
       /* 排序 */
       OrderBy orderBy) {
-    Pager<Article> pager = new Pager<>(first);
-    pager.setOrderBy(orderBy);
-    pager.setOffset(skip);
+
+    Pageable pageable = LimitPageRequest.of(skip, first, orderBy.toSort());
 
     PropertyFilterBuilder builder = PropertyFilter.builder();
 
@@ -114,8 +116,7 @@ public class ArticleChannelGraphQLResolver implements GraphQLResolver<ArticleCha
       builder.and(filter.getBuilder());
     }
 
-    pager = this.articleService.findPager(pager, builder.build());
-    return pager.getPageItems();
+    return this.articleService.findPage(pageable, builder.build()).getContent();
   }
 
   public Permission permissions(ArticleChannel channel) {

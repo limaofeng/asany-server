@@ -18,7 +18,7 @@ import net.bytebuddy.description.modifier.Ownership;
 import org.hibernate.annotations.*;
 import org.hibernate.annotations.Cache;
 import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.lucene.annotations.IndexEmbedBy;
+import org.jfantasy.framework.search.annotations.IndexEmbedBy;
 
 /**
  * 文章 - 标签
@@ -77,7 +77,7 @@ public class ArticleTag extends BaseBusEntity {
       mappedBy = "parent",
       fetch = FetchType.LAZY,
       cascade = {CascadeType.REMOVE})
-  @OrderBy("sort ASC")
+  @OrderBy("index ASC")
   @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
   private List<ArticleTag> children;
 

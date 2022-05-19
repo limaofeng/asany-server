@@ -11,11 +11,12 @@ import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.util.common.DateUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -73,8 +74,8 @@ public class CourseService {
     return save;
   }
 
-  public Pager<Course> findPage(Pager<Course> pager, List<PropertyFilter> filters) {
-    return courseDao.findPager(pager, filters);
+  public Page<Course> findPage(Pageable pageable, List<PropertyFilter> filters) {
+    return courseDao.findPage(pageable, filters);
   }
 
   @Transactional(rollbackFor = Exception.class)
@@ -121,7 +122,7 @@ public class CourseService {
           if (learner != null) {
             List<LessonRecord> lessonRecords =
                 lessonRecordDao.findByCourseAndLearner(Course.builder().id(id).build(), learner);
-            lessonRecords.forEach(lessonRecord -> lessonRecordDao.delete(lessonRecord));
+            lessonRecordDao.deleteAll(lessonRecords);
             learnerService.removeLearner(learner.getId());
           }
         }
@@ -136,7 +137,7 @@ public class CourseService {
     List<Lesson> lessonList = lessonService.lessonsByCourseId(course);
     for (Lesson lesson : lessonList) {
       List<LessonRecord> lessonRecords = lessonRecordDao.findByLesson(lesson);
-      lessonRecords.forEach(lessonRecord -> lessonRecordDao.delete(lessonRecord));
+      lessonRecordDao.deleteAll(lessonRecords);
       // 删除该课程所有章节内容
       lessonService.deleteLesson(lesson.getId());
       Article article = articleService.get(lesson.getArticle().getId());
@@ -148,7 +149,7 @@ public class CourseService {
     learners.forEach(learner -> learnerService.removeLearner(learner.getId()));
     List<LearnerScope> learnerScopes =
         learnerScopeDao.findByCourse(Course.builder().id(id).build());
-    learnerScopes.forEach(learnerScope -> learnerScopeDao.delete(learnerScope));
+    learnerScopeDao.deleteAll(learnerScopes);
     courseDao.deleteById(id);
     return true;
   }

@@ -12,7 +12,6 @@ import cn.asany.security.core.exception.UserNotFoundException;
 import java.util.*;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
-import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.error.ValidationException;
 import org.jfantasy.framework.security.LoginUser;
@@ -28,6 +27,8 @@ import org.jfantasy.framework.util.reflect.Property;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -147,8 +148,8 @@ public class UserService implements UserDetailsService {
     return optional.orElse(null);
   }
 
-  public Pager<User> findPager(Pager<User> pager, List<PropertyFilter> filters) {
-    return this.userDao.findPager(pager, filters);
+  public Page<User> findPage(Pageable pageable, List<PropertyFilter> filters) {
+    return this.userDao.findPage(pageable, filters);
   }
 
   public void delete(Long... ids) {

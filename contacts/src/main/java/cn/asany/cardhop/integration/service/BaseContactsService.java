@@ -8,9 +8,10 @@ import cn.asany.cardhop.contacts.service.ContactsService;
 import cn.asany.cardhop.integration.IContactsService;
 import java.util.List;
 import java.util.Optional;
-import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -33,11 +34,11 @@ public class BaseContactsService implements IContactsService {
   }
 
   @Override
-  public Pager<Contact> findPager(
-      ContactBook book, String namespace, Pager<Contact> pager, List<PropertyFilter> filters) {
+  public Page<Contact> findPager(
+      ContactBook book, String namespace, Pageable pageable, List<PropertyFilter> filters) {
     PropertyFilterBuilder builder = new PropertyFilterBuilder(filters);
-    return this.contactsService.findPager(
-        pager,
+    return this.contactsService.findPage(
+        pageable,
         builder.equal("groups.book.id", book.getId()).equal("groups.namespace", namespace).build());
   }
 

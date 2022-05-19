@@ -24,7 +24,7 @@ public class ModelResultTransformer implements ResultTransformer {
     FieldTypeRegistry registry = SpringBeanUtils.getBeanByType(FieldTypeRegistry.class);
     this.fields = fields;
     for (ModelField field : fields) {
-      AttributeConverter type = registry.getType(field.getType().getCode());
+      AttributeConverter<?, ?> type = registry.getType(field.getType().getCode());
       converterMap.put(field.getCode(), type);
     }
     ognlUtil = OgnlUtil.getInstance();

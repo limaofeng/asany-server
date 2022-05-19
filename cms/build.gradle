@@ -4,4 +4,5 @@ dependencies {
     implementation project(":base")
     implementation project(":security")
     implementation project(":storage-api")
+    implementation "cn.asany.chaos:jfantasy-search:$LIB_JFAN_VER"
 }

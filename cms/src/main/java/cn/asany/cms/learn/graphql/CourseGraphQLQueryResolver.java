@@ -5,12 +5,12 @@ import cn.asany.cms.learn.graphql.inputs.CourseFilter;
 import cn.asany.cms.learn.graphql.types.CourseConnection;
 import cn.asany.cms.learn.service.CourseService;
 import graphql.kickstart.tools.GraphQLQueryResolver;
-import org.jfantasy.framework.dao.OrderBy;
-import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.graphql.util.Kit;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -29,7 +29,7 @@ public class CourseGraphQLQueryResolver implements GraphQLQueryResolver {
     //            builder.in("learnerScope.scope", emp.getAuthoritys());
     //        }
     return Kit.connection(
-        courseService.findPage(new Pager<>(page, pageSize, OrderBy.desc("top")), builder.build()),
+        courseService.findPage(PageRequest.of(page, pageSize, Sort.by("top")), builder.build()),
         CourseConnection.class);
   }
 }

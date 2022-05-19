@@ -11,8 +11,6 @@ import java.util.*;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Hibernate;
 import org.htmlcleaner.TagNode;
-import org.jfantasy.framework.dao.OrderBy;
-import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.util.common.DateUtil;
 import org.jfantasy.framework.util.common.ObjectUtil;
@@ -20,7 +18,7 @@ import org.jfantasy.framework.util.common.StringUtil;
 import org.jfantasy.framework.util.htmlcleaner.HtmlCleanerUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.data.domain.Example;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -61,15 +59,19 @@ public class ArticleService {
   /**
    * 文章查询方法
    *
-   * @param pager 翻页对象
+   * @param pageable 翻页对象
    * @param filters 筛选条件
    * @return string
    */
-  public Pager<Article> findPager(Pager<Article> pager, List<PropertyFilter> filters) {
-    if (!pager.isOrderBySetted()) {
-      pager.sort("publishedAt", OrderBy.Direction.DESC);
+  public Page<Article> findPage(Pageable pageable, List<PropertyFilter> filters) {
+    if (pageable.getSort().isUnsorted()) {
+      pageable =
+          PageRequest.of(
+              pageable.getPageNumber(),
+              pageable.getPageSize(),
+              Sort.by("publishedAt").descending());
     }
-    return articleDao.findPager(pager, filters);
+    return articleDao.findPage(pageable, filters);
   }
 
   public List<Article> findAll(Article article) {

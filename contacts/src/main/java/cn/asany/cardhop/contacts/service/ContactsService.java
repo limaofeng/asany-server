@@ -8,9 +8,10 @@ import cn.asany.cardhop.contacts.dao.ContactDao;
 import cn.asany.cardhop.contacts.dao.ContactGroupDao;
 import java.util.List;
 import java.util.Optional;
-import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,8 +33,8 @@ public class ContactsService {
   //        return new AddressBook(book);
   //    }
 
-  public Pager<Contact> findPager(Pager<Contact> pager, List<PropertyFilter> filters) {
-    return this.contactDao.findPager(pager, filters);
+  public Page<Contact> findPage(Pageable pageable, List<PropertyFilter> filters) {
+    return this.contactDao.findPage(pageable, filters);
   }
 
   //    public AddressBook myBook(String username) {

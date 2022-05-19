@@ -13,11 +13,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,8 +40,8 @@ public class RoleService {
     return roleDao.findAll(Example.of(Role.builder().enabled(true).build()));
   }
 
-  public Pager<Role> findPager(Pager<Role> pager, List<PropertyFilter> filters) {
-    return this.roleDao.findPager(pager, filters);
+  public Page<Role> findPage(Pageable pageable, List<PropertyFilter> filters) {
+    return this.roleDao.findPage(pageable, filters);
   }
 
   public Role save(Role role) {
@@ -218,13 +219,5 @@ public class RoleService {
       //                    .securityType(SecurityType.role)
       //                    .value(roleId).build());
     }
-  }
-
-  public List<Role> findRoleData(List<PropertyFilter> filters) {
-    Pager<Role> objectPager = new Pager<>();
-    objectPager.setPageSize(10000);
-    Pager<Role> pager = roleDao.findPager(objectPager, filters);
-    List<Role> pageItems = pager.getPageItems();
-    return pageItems;
   }
 }

@@ -1,23 +1,26 @@
 package cn.asany.cms.article.graphql;
 
-import cn.asany.cms.article.bean.Comment;
 import cn.asany.cms.article.bean.enums.CommentTargetType;
 import cn.asany.cms.article.graphql.input.CommentFilter;
 import cn.asany.cms.article.graphql.type.CommentConnection;
 import cn.asany.cms.article.service.CommentService;
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import org.jfantasy.framework.dao.OrderBy;
-import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.graphql.util.Kit;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 @Component
 public class CommentGraphQLQueryResolver implements GraphQLQueryResolver {
 
-  @Autowired private CommentService commentService;
+  private final CommentService commentService;
+
+  public CommentGraphQLQueryResolver(CommentService commentService) {
+    this.commentService = commentService;
+  }
 
   public CommentConnection comments(
       CommentTargetType targetType,
@@ -33,8 +36,8 @@ public class CommentGraphQLQueryResolver implements GraphQLQueryResolver {
     if (orderBy == null) {
       orderBy = OrderBy.desc("createdAt");
     }
-    Pager<Comment> pager = new Pager<>(page, pageSize, orderBy);
+    Pageable pageable = PageRequest.of(page, pageSize, orderBy.toSort());
     return Kit.connection(
-        this.commentService.findPager(pager, builder.build()), CommentConnection.class);
+        this.commentService.findPage(pageable, builder.build()), CommentConnection.class);
   }
 }

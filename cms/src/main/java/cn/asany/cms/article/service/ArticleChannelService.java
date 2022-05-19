@@ -13,7 +13,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
-import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
 import org.jfantasy.framework.util.PinyinUtils;
@@ -21,6 +20,8 @@ import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.common.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,9 +45,8 @@ public class ArticleChannelService {
     this.articleDao = articleDao;
   }
 
-  public Pager<ArticleChannel> findPager(
-      Pager<ArticleChannel> pager, List<PropertyFilter> filters) {
-    return this.channelDao.findPager(pager, filters);
+  public Page<ArticleChannel> findPage(Pageable pageable, List<PropertyFilter> filters) {
+    return this.channelDao.findPage(pageable, filters);
   }
 
   public Optional<ArticleChannel> get(Long id) {

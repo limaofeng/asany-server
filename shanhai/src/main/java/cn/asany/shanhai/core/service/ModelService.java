@@ -14,12 +14,13 @@ import java.util.*;
 import java.util.stream.Collectors;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
 import org.jfantasy.framework.error.ValidationException;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.common.StringUtil;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -58,8 +59,8 @@ public class ModelService {
     this.modelFieldMetadataDao = modelFieldMetadataDao;
   }
 
-  public Pager<Model> findPager(Pager<Model> pager, List<PropertyFilter> filters) {
-    return modelDao.findPager(pager, filters);
+  public Page<Model> findPage(Pageable pageable, List<PropertyFilter> filters) {
+    return modelDao.findPage(pageable, filters);
   }
 
   @Transactional

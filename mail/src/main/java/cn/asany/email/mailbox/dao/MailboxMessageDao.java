@@ -3,9 +3,10 @@ package cn.asany.email.mailbox.dao;
 import cn.asany.email.mailbox.bean.JamesMailboxMessage;
 import cn.asany.email.mailbox.bean.toys.MailboxIdUidKey;
 import java.util.List;
-import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.jpa.JpaRepository;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -43,6 +44,5 @@ public interface MailboxMessageDao extends JpaRepository<JamesMailboxMessage, Ma
   @EntityGraph(
       value = "Graph.MailboxMessage.FetchDetails",
       type = EntityGraph.EntityGraphType.FETCH)
-  Pager<JamesMailboxMessage> findWithDetailsPager(
-      Pager<JamesMailboxMessage> pager, List<PropertyFilter> filters);
+  Page<JamesMailboxMessage> findWithDetailsPage(Pageable pageable, List<PropertyFilter> filters);
 }

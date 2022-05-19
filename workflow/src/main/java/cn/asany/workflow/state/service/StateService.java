@@ -3,7 +3,7 @@ package cn.asany.workflow.state.service;
 import cn.asany.workflow.state.bean.State;
 import cn.asany.workflow.state.dao.StateDao;
 import java.util.List;
-import org.jfantasy.framework.dao.Pager;
+import org.springframework.data.domain.Pageable;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -43,7 +43,7 @@ public class StateService {
     return stateDao.save(state);
   }
 
-  public Pager<State> findPager(Pager<State> pager, List<PropertyFilter> filters) {
-    return stateDao.findPager(pager, filters);
+  public Page<State> findPage(Pageable pageable, List<PropertyFilter> filters) {
+    return stateDao.findPage(pageable, filters);
   }
 }

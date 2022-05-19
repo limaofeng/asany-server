@@ -44,7 +44,6 @@ import org.apache.james.server.core.MimeMessageCopyOnWriteProxy;
 import org.apache.james.server.core.MimeMessageInputStreamSource;
 import org.apache.mailet.Mail;
 import org.jfantasy.framework.dao.OrderBy;
-import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.error.ValidationException;
 import org.jfantasy.framework.security.LoginUser;
 import org.jfantasy.framework.security.SpringSecurityUtils;
@@ -53,6 +52,8 @@ import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.common.StringUtil;
 import org.jfantasy.graphql.Edge;
 import org.jfantasy.graphql.util.Kit;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -107,17 +108,16 @@ public class MailboxMessageGraphqlApiResolver
 
     String mailUserId = StringUtil.isBlank(account) ? JamesUtil.getUserName(user) : account;
 
-    Pager<JamesMailboxMessage> pager;
+    Pageable pageable;
 
     if (first > 0) {
-      pager = Pager.newPager(first, orderBy, offset);
+      pageable = PageRequest.of(offset, first, orderBy.toSort());
     } else {
-      pager = Pager.newPager(page, pageSize, orderBy);
+      pageable = PageRequest.of(page, pageSize, orderBy.toSort());
     }
 
-    pager = this.mailboxMessageService.findPager(pager, filter.build(mailUserId));
     return Kit.connection(
-        pager,
+        this.mailboxMessageService.findPage(pageable, filter.build(mailUserId)),
         MailboxMessageConnection.class,
         (Function<JamesMailboxMessage, Edge>)
             message -> new MailboxMessageConnection.MailboxMessageEdge(JamesUtil.wrap(message)));

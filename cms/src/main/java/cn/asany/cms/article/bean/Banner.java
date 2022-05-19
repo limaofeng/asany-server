@@ -8,7 +8,6 @@ import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.lucene.annotations.Indexed;
 
 /**
  * 横幅
@@ -20,7 +19,6 @@ import org.jfantasy.framework.lucene.annotations.Indexed;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-@Indexed
 @Entity
 @Table(name = "CMS_BANNER")
 @DynamicUpdate

@@ -13,12 +13,12 @@ import cn.asany.security.core.util.GrantPermissionUtils;
 import java.util.*;
 import org.apache.commons.collections.CollectionUtils;
 import org.jfantasy.framework.dao.OrderBy;
-import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.common.toys.CompareResults;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,8 +43,8 @@ public class PermissionService {
     this.grantPermissionDao = grantPermissionDao;
   }
 
-  public Pager<Permission> findPager(Pager<Permission> pager, List<PropertyFilter> filters) {
-    return this.permissionDao.findPager(pager, filters);
+  public Page<Permission> findPage(Pageable pageable, List<PropertyFilter> filters) {
+    return this.permissionDao.findPage(pageable, filters);
   }
 
   public List<Permission> findAll(List<PropertyFilter> filters, OrderBy orderBy) {
@@ -139,13 +139,8 @@ public class PermissionService {
         (root, query, builder) -> builder.equal(root.get("roles.id"), roleId));
   }
 
-  public List<Permission> find(Example example) {
-    return this.permissionDao.findAll(example);
-  }
-
-  public Pager<PermissionType> findTypePager(
-      Pager<PermissionType> pager, List<PropertyFilter> filters) {
-    return this.permissionTypeDao.findPager(pager, filters);
+  public Page<PermissionType> findTypePage(Pageable pageable, List<PropertyFilter> filters) {
+    return this.permissionTypeDao.findPage(pageable, filters);
   }
 
   public PermissionType savePermissionType(PermissionType permissionType) {

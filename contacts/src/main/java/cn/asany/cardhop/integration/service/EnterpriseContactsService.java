@@ -17,10 +17,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
 import org.jfantasy.framework.util.common.StringUtil;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -71,24 +72,20 @@ public class EnterpriseContactsService implements IContactsService {
   }
 
   @Override
-  public Pager<Contact> findPager(
-      ContactBook book, String namespace, Pager<Contact> pager, List<PropertyFilter> filters) {
+  public Page<Contact> findPager(
+      ContactBook book, String namespace, Pageable pageable, List<PropertyFilter> filters) {
     Organization organization = (Organization) book.getOwner();
 
     String finalNamespace =
         StringUtil.defaultValue(namespace, () -> ContactGroupNamespace.ENTERPRISE_DEPARTMENT);
 
     if (ContactGroupNamespace.ENTERPRISE_DEPARTMENT.equals(finalNamespace)) {
-      Pager<Employee> _pager = new Pager(pager);
       PropertyFilterBuilder builder = PropertyFilter.builder().and(filters);
-      _pager = this.employeeService.findPager(_pager, builder.build());
-      List<Contact> contacts = contactsConverter.toContacts(_pager.getPageItems());
-      pager = new Pager<>(_pager);
-      pager.reset(contacts);
-      return pager;
+      Page<Employee> page = this.employeeService.findPage(pageable, builder.build());
+      return page.map(contactsConverter::toContact);
     }
 
-    return pager;
+    return Page.empty(pageable);
   }
 
   @Override

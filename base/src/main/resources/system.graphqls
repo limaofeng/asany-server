@@ -105,7 +105,7 @@ extend type Query {
     filter: DictFilter = {}
     page: Int = 1
     pageSize: Int = 15
-    orderBy: OrderBy
+    orderBy: OrderBy = {}
   ): DictConnection!
   """
   查询数据字典

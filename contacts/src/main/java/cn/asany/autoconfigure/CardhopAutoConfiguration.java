@@ -16,7 +16,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EntityScan({"cn.asany.cardhop.contacts.bean"})
 @ComponentScan({
   "cn.asany.cardhop.contacts.dao",
-  "cn.asany.cardhop.contacts.convert",
   "cn.asany.cardhop.contacts.service",
   "cn.asany.cardhop.contacts.graphql",
   "cn.asany.cardhop.integration.convert",

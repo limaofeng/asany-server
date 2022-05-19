@@ -12,7 +12,6 @@ import cn.asany.organization.core.service.OrganizationService;
 import cn.asany.organization.employee.bean.*;
 import cn.asany.organization.employee.bean.enums.InviteStatus;
 import cn.asany.organization.employee.dao.*;
-import cn.asany.organization.employee.dao.EmployeeStatusDao;
 import cn.asany.organization.relationship.bean.EmployeePosition;
 import cn.asany.organization.relationship.bean.Position;
 import cn.asany.organization.relationship.dao.EmployeePositionDao;
@@ -25,7 +24,6 @@ import java.util.stream.Collectors;
 import javax.persistence.criteria.Join;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
-import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
 import org.jfantasy.framework.error.ValidationException;
@@ -34,6 +32,8 @@ import org.jfantasy.framework.spring.mvc.error.NotFoundException;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -77,8 +77,8 @@ public class EmployeeService {
   @Autowired private EmployeeIdentityDao employeeIdentityDao;
   @Autowired private EmployeeStatusDao employeeStatusDao;
 
-  public Pager<Employee> findPager(Pager<Employee> pager, List<PropertyFilter> filters) {
-    return employeeDao.findPager(pager, filters);
+  public Page<Employee> findPage(Pageable pageable, List<PropertyFilter> filters) {
+    return employeeDao.findPage(pageable, filters);
   }
 
   public Employee save(Long orgId, MemberRole role, Employee employee) {
@@ -664,14 +664,6 @@ public class EmployeeService {
 
   public Long findEmployeeCount(List<PropertyFilter> filters) {
     return employeeDao.count(filters);
-  }
-
-  public List<Employee> findEmployeeData(List<PropertyFilter> filters) {
-    Pager<Employee> objectPager = new Pager<>();
-    objectPager.setPageSize(10000);
-    Pager<Employee> pager = employeeDao.findPager(objectPager, filters);
-    List<Employee> pageItems = pager.getPageItems();
-    return pageItems;
   }
 
   public Long findEmployeeCount(Department department, List<String> status) {

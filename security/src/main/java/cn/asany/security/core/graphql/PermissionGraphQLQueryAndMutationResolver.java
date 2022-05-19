@@ -8,9 +8,10 @@ import graphql.kickstart.tools.GraphQLMutationResolver;
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import java.util.List;
 import org.jfantasy.framework.dao.OrderBy;
-import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.graphql.util.Kit;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -27,9 +28,9 @@ public class PermissionGraphQLQueryAndMutationResolver
   public PermissionConnection permissionsConnection(
       PermissionFilter filter, int page, int pageSize, OrderBy orderBy) {
     filter = ObjectUtil.defaultValue(filter, new PermissionFilter());
-    Pager<Permission> pager = Pager.newPager(page, pageSize, orderBy);
+    Pageable pageable = PageRequest.of(page, pageSize, orderBy.toSort());
     return Kit.connection(
-        permissionService.findPager(pager, filter.build()), PermissionConnection.class);
+        permissionService.findPage(pageable, filter.build()), PermissionConnection.class);
   }
 
   /** 查询权限 */

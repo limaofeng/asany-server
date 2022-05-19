@@ -17,18 +17,19 @@ import graphql.kickstart.tools.GraphQLQueryResolver;
 import java.util.List;
 import java.util.Optional;
 import org.jfantasy.framework.dao.OrderBy;
-import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.regexp.RegexpConstant;
 import org.jfantasy.framework.util.regexp.RegexpUtil;
 import org.jfantasy.graphql.util.Kit;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 /**
  * @author limaofeng
- * @version V1.0 @Description: TODO
+ * @version V1.0
  * @date 2019-04-01 15:17
  */
 @Component
@@ -68,10 +69,10 @@ public class ArticleGraphQLQueryResolver implements GraphQLQueryResolver {
     PropertyFilterBuilder builder =
         ObjectUtil.defaultValue(filter, new ArticleFilter()).getBuilder();
 
-    Pager<Article> pager = Pager.newPager(pageSize, OrderBy.desc("createdAt"));
+    Pageable pageable = PageRequest.of(page, pageSize, OrderBy.desc("createdAt").toSort());
 
     return Kit.connection(
-        articleService.findPager(pager, builder.build()), ArticleConnection.class);
+        articleService.findPage(pageable, builder.build()), ArticleConnection.class);
   }
 
   /**
@@ -136,9 +137,11 @@ public class ArticleGraphQLQueryResolver implements GraphQLQueryResolver {
         ObjectUtil.defaultValue(filter, new ArticleFilter()).getBuilder();
     builder.and(new StarSpecification(employee, starType.getValue()));
     return Kit.connection(
-        articleService.findPager(
-            new Pager<>(
-                page, pageSize, ObjectUtil.defaultValue(orderBy, OrderBy.desc("createdAt"))),
+        articleService.findPage(
+            PageRequest.of(
+                page,
+                pageSize,
+                ObjectUtil.defaultValue(orderBy, OrderBy.desc("createdAt")).toSort()),
             builder.build()),
         ArticleConnection.class);
   }

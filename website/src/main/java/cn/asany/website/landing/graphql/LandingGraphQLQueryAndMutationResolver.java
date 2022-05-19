@@ -15,9 +15,10 @@ import graphql.kickstart.tools.GraphQLMutationResolver;
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import java.util.Optional;
 import org.jfantasy.framework.dao.OrderBy;
-import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.graphql.util.Kit;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -61,9 +62,9 @@ public class LandingGraphQLQueryAndMutationResolver
   public LandingPageConnection landingPagesConnection(
       LandingPageFilter filter, int page, int pageSize, OrderBy orderBy) {
     filter = ObjectUtil.defaultValue(filter, new LandingPageFilter());
-    Pager<LandingPage> pager = Pager.newPager(page, pageSize, orderBy);
+    Pageable pageable = PageRequest.of(page, pageSize, orderBy.toSort());
     return Kit.connection(
-        landingService.findLandingPagePager(pager, filter.build()), LandingPageConnection.class);
+        landingService.findLandingPagePager(pageable, filter.build()), LandingPageConnection.class);
   }
 
   public LandingPoster createLandingPoster(LandingPosterCreateInput input) {
@@ -87,9 +88,9 @@ public class LandingGraphQLQueryAndMutationResolver
   public LandingPosterConnection landingPostersConnection(
       LandingPosterFilter filter, int page, int pageSize, OrderBy orderBy) {
     filter = ObjectUtil.defaultValue(filter, new LandingPosterFilter());
-    Pager<LandingPoster> pager = Pager.newPager(page, pageSize, orderBy);
+    Pageable pageable = PageRequest.of(page, pageSize, orderBy.toSort());
     return Kit.connection(
-        landingService.findLandingPosterPager(pager, filter.build()),
+        landingService.findLandingPosterPage(pageable, filter.build()),
         LandingPosterConnection.class);
   }
 
@@ -114,8 +115,9 @@ public class LandingGraphQLQueryAndMutationResolver
   public LandingStoreConnection landingStoresConnection(
       LandingStoreFilter filter, int page, int pageSize, OrderBy orderBy) {
     filter = ObjectUtil.defaultValue(filter, new LandingStoreFilter());
-    Pager<LandingStore> pager = Pager.newPager(page, pageSize, orderBy);
+    Pageable pageable = PageRequest.of(page, pageSize, orderBy.toSort());
     return Kit.connection(
-        landingService.findLandingStorePager(pager, filter.build()), LandingStoreConnection.class);
+        landingService.findLandingStorePage(pageable, filter.build()),
+        LandingStoreConnection.class);
   }
 }

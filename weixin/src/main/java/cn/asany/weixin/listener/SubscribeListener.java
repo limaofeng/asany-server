@@ -20,7 +20,7 @@ public class SubscribeListener implements SubscribeEventListener {
   @Autowired private FansService fansService;
 
   @Override
-  public void onSubscribe(final WeixinSession session, Event event, final EventMessage message) {
+  public void onSubscribe(final WeixinSession session, Event event, final EventMessage<?> message) {
     Executor executor = SpringBeanUtils.getBeanByType(Executor.class);
     assert executor != null;
     executor.execute(

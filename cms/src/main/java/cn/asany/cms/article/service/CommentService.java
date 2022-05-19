@@ -7,9 +7,9 @@ import cn.asany.cms.article.dao.CommentDao;
 import java.util.List;
 import java.util.Optional;
 import org.jfantasy.framework.dao.OrderBy;
-import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,7 +19,11 @@ public class CommentService {
 
   private static final String PATH_SEPARATOR = "/";
 
-  @Autowired private CommentDao commentDao;
+  private final CommentDao commentDao;
+
+  public CommentService(CommentDao commentDao) {
+    this.commentDao = commentDao;
+  }
 
   public Comment addComment(CommentTargetType targetType, String targetId, Comment comment) {
     comment.setTargetType(targetType);
@@ -27,7 +31,7 @@ public class CommentService {
     comment.setStatus(CommentStatus.pending);
     this.commentDao.save(comment);
     if (comment.getForComment() != null) {
-      Comment forComment = this.commentDao.getOne(comment.getForComment().getId());
+      Comment forComment = this.commentDao.getById(comment.getForComment().getId());
       comment.setPath(forComment.getPath() + comment.getId() + PATH_SEPARATOR);
     } else {
       comment.setPath(comment.getId() + PATH_SEPARATOR);
@@ -40,13 +44,12 @@ public class CommentService {
     return this.commentDao.update(comment, merge);
   }
 
-  public Pager<Comment> findPager(Pager<Comment> pager, List<PropertyFilter> filters) {
-
-    return this.commentDao.findPager(pager, filters);
+  public Page<Comment> findPage(Pageable pageable, List<PropertyFilter> filters) {
+    return this.commentDao.findPage(pageable, filters);
   }
 
   public Comment get(Long id) {
-    return this.commentDao.getOne(id);
+    return this.commentDao.getById(id);
   }
 
   public List<Comment> findAll(List<PropertyFilter> filters) {

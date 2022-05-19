@@ -3,9 +3,9 @@ package cn.asany.security.core.service;
 import cn.asany.security.core.bean.RoleSpace;
 import cn.asany.security.core.dao.RoleSpaceDao;
 import java.util.List;
-import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,10 +13,14 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class RoleScopeService {
 
-  @Autowired private RoleSpaceDao roleSpaceDao;
+  private final RoleSpaceDao roleSpaceDao;
 
-  public Pager<RoleSpace> findPager(Pager<RoleSpace> pager, List<PropertyFilter> filters) {
-    return this.roleSpaceDao.findPager(pager, filters);
+  public RoleScopeService(RoleSpaceDao roleSpaceDao) {
+    this.roleSpaceDao = roleSpaceDao;
+  }
+
+  public Page<RoleSpace> findPage(Pageable pageable, List<PropertyFilter> filters) {
+    return this.roleSpaceDao.findPage(pageable, filters);
   }
 
   public RoleSpace get(String id) {

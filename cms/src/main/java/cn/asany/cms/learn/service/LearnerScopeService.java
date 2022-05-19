@@ -6,10 +6,11 @@ import cn.asany.cms.learn.dao.LearnerScopeDao;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service("learnerScopeService")
@@ -21,9 +22,9 @@ public class LearnerScopeService {
     return learnerScopeDao.findByCourse(course);
   }
 
-  public Pager<LearnerScope> pager(Pager<LearnerScope> pager, List<PropertyFilter> filters) {
-    Pager<LearnerScope> pager1 = learnerScopeDao.findPager(pager, filters);
-    List<LearnerScope> pageItems = pager1.getPageItems();
+  public Page<LearnerScope> findPage(Pageable pageable, List<PropertyFilter> filters) {
+    Page<LearnerScope> pager1 = learnerScopeDao.findPage(pageable, filters);
+    List<LearnerScope> pageItems = pager1.getContent();
     List<LearnerScope> learnerScopes = new ArrayList<>();
     //        for(LearnerScope pageItem : pageItems){
     //            String scope = pageItem.getScope();
@@ -55,7 +56,6 @@ public class LearnerScopeService {
     ////                }
     //            }
     //        }
-    pager1.reset(learnerScopes);
     return pager1;
   }
 

@@ -4,8 +4,9 @@ import cn.asany.ui.resources.bean.Component;
 import cn.asany.ui.resources.dao.ComponentDao;
 import java.util.List;
 import java.util.Optional;
-import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 /**
@@ -22,8 +23,8 @@ public class ComponentService {
     this.componentDao = componentDao;
   }
 
-  public Pager<Component> findPager(Pager<Component> pager, List<PropertyFilter> filters) {
-    return componentDao.findPager(pager, filters);
+  public Page<Component> findPage(Pageable pageable, List<PropertyFilter> filters) {
+    return componentDao.findPage(pageable, filters);
   }
 
   public Component save(Component component) {

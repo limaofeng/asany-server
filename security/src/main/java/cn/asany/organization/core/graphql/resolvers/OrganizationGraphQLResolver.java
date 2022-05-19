@@ -62,8 +62,8 @@ public class OrganizationGraphQLResolver implements GraphQLResolver<Organization
   //            builder.and(filter.getBuilder());
   //        }
   //        builder.equal("organizationEmployees.organization.id", organization.getId());
-  //        Pager<Employee> pager = new Pager<>(page, pageSize, orderBy);
-  //        return Kit.connection(employeeService.findPager(pager, builder.build()),
+  //        Pageable pageable = PageRequest.of(page, pageSize, orderBy.toSort());
+  //        return Kit.connection(employeeService.findPage(pageable, builder.build()),
   // EmployeeConnection.class, new EmployeeEdgeConverter(item -> {
   //            item.setCurrentOrganization(organization);
   //            return item;

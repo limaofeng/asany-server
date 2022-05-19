@@ -17,8 +17,9 @@ import java.util.List;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,21 +47,18 @@ public class LandingService {
   }
 
   @Transactional(readOnly = true)
-  public Pager<LandingPage> findLandingPagePager(
-      Pager<LandingPage> pager, List<PropertyFilter> filter) {
-    return this.landingPageDao.findPager(pager, filter);
+  public Page<LandingPage> findLandingPagePager(Pageable pageable, List<PropertyFilter> filter) {
+    return this.landingPageDao.findPage(pageable, filter);
   }
 
   @Transactional(readOnly = true)
-  public Pager<LandingPoster> findLandingPosterPager(
-      Pager<LandingPoster> pager, List<PropertyFilter> filter) {
-    return this.landingPosterDao.findPager(pager, filter);
+  public Page<LandingPoster> findLandingPosterPage(Pageable pageable, List<PropertyFilter> filter) {
+    return this.landingPosterDao.findPage(pageable, filter);
   }
 
   @Transactional(readOnly = true)
-  public Pager<LandingStore> findLandingStorePager(
-      Pager<LandingStore> pager, List<PropertyFilter> filter) {
-    return this.landingStoreDao.findPager(pager, filter);
+  public Page<LandingStore> findLandingStorePage(Pageable pageable, List<PropertyFilter> filter) {
+    return this.landingStoreDao.findPage(pageable, filter);
   }
 
   public void resolveGeolocation(LandingStore store) {

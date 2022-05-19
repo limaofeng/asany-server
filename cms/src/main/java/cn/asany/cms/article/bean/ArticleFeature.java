@@ -5,7 +5,6 @@ import javax.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.lucene.annotations.Indexed;
 
 /**
  * 文章推荐位
@@ -17,7 +16,6 @@ import org.jfantasy.framework.lucene.annotations.Indexed;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Indexed
 @Entity
 @Table(name = "CMS_ARTICLE_FEATURE")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})

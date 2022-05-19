@@ -9,13 +9,15 @@ import graphql.kickstart.tools.GraphQLMutationResolver;
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.jfantasy.framework.dao.LimitPageRequest;
 import org.jfantasy.framework.dao.OrderBy;
-import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.graphql.util.Kit;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -37,17 +39,17 @@ public class SecurityGraphQLMutationResolver
   /** 查询所有用户 - 分页 */
   public UserConnection usersConnection(
       UserFilter filter, int page, int pageSize, OrderBy orderBy) {
-    Pager<User> pager = new Pager<>(page, pageSize, orderBy);
+    Pageable pageable = PageRequest.of(page, pageSize, orderBy.toSort());
     PropertyFilterBuilder builder = ObjectUtil.defaultValue(filter, new UserFilter()).getBuilder();
-    return Kit.connection(userService.findPager(pager, builder.build()), UserConnection.class);
+    return Kit.connection(userService.findPage(pageable, builder.build()), UserConnection.class);
   }
 
   /** 查询所有用户 - 列表 */
   public List<User> users(
       UserFilter filter, int skip, int after, int before, int first, int last, OrderBy orderBy) {
-    Pager<User> pager = Pager.newPager(first, orderBy, skip);
+    Pageable pageable = LimitPageRequest.of(skip, first, orderBy.toSort());
     PropertyFilterBuilder builder = ObjectUtil.defaultValue(filter, new UserFilter()).getBuilder();
-    return userService.findPager(pager, builder.build()).getPageItems();
+    return userService.findPage(pageable, builder.build()).getContent();
   }
 
   /**

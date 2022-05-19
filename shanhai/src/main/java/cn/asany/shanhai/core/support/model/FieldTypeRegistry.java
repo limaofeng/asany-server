@@ -1,15 +1,15 @@
 package cn.asany.shanhai.core.support.model;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
 
 public class FieldTypeRegistry {
 
-  private Map<String, FieldType> caches = new ConcurrentHashMap<>();
+  private final Map<String, FieldType<?, ?>> caches = new ConcurrentHashMap<>();
 
-  public void addType(FieldType type) {
+  public void addType(FieldType<?, ?> type) {
     caches.put(type.getId(), type);
   }
 
@@ -17,7 +17,7 @@ public class FieldTypeRegistry {
     return caches.get(type);
   }
 
-  public List<FieldType> types() {
-    return caches.values().stream().collect(Collectors.toList());
+  public List<FieldType<?, ?>> types() {
+    return new ArrayList<>(caches.values());
   }
 }

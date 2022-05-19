@@ -9,9 +9,10 @@ import cn.asany.weixin.framework.message.user.User;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,8 +47,8 @@ public class FansService {
     this.fansDao.deleteById(key);
   }
 
-  public Pager<Fans> findPager(Pager<Fans> pager, List<PropertyFilter> filters) {
-    return this.fansDao.findPager(pager, filters);
+  public Page<Fans> findPage(Pageable pageable, List<PropertyFilter> filters) {
+    return this.fansDao.findPage(pageable, filters);
   }
 
   public Fans save(String id, User user) {
