@@ -27,5 +27,5 @@ public interface ModelDao extends JpaRepository<Model, Long> {
   @EntityGraph(
       value = "Graph.Model.FetchMetadataAndFields",
       type = EntityGraph.EntityGraphType.FETCH)
-  List<Model> findAllWithMetadataAndFields(List<PropertyFilter> filters, Sort sort);
+  List<Model> findAllWithMetadataAndFields(List<PropertyFilter> filters, Sort orderBy);
 }

@@ -45,7 +45,7 @@ public class ThumbnailService {
   }
 
   private Thumbnail getById(Long id) {
-    return this.thumbnailDao.getById(id);
+    return this.thumbnailDao.getReferenceById(id);
   }
 
   @Transactional(readOnly = true)
@@ -100,7 +100,7 @@ public class ThumbnailService {
       schedulerUtil.addTrigger(JOBKEY_GENERATE_THUMBNAIL, taskId, data);
     }
     Long thumbnailId = thumbnailFuture.get();
-    Thumbnail thumbnail = this.thumbnailDao.getById(thumbnailId);
+    Thumbnail thumbnail = this.thumbnailDao.getReferenceById(thumbnailId);
     Hibernate.initialize(thumbnail.getFile());
     return Hibernate.unproxy(thumbnail, Thumbnail.class);
   }

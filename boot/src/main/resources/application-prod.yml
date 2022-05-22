@@ -4,11 +4,6 @@ spring:
     url: jdbc:mysql://${DATABASE_HOST}/${DATABASE_INSTANCE_NAME}?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&useSSL=false
     username: ${DATABASE_USERNAME}
     password: ${DATABASE_PASSWORD}
-    druid:
-      maxActive: 500
-      initialSize: 20
-      maxWait: 60000
-      minIdle: 1
   redis:
     database: 0
     host: ${REDIS_HOST}

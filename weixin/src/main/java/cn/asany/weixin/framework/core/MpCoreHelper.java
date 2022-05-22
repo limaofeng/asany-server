@@ -1,5 +1,6 @@
 package cn.asany.weixin.framework.core;
 
+import cn.asany.storage.api.FileObject;
 import cn.asany.weixin.framework.exception.WeixinException;
 import cn.asany.weixin.framework.message.WeixinMessage;
 import cn.asany.weixin.framework.message.content.*;
@@ -28,13 +29,13 @@ public class MpCoreHelper implements WeixinCoreHelper {
   }
 
   @Override
-  public WeixinMessage parseInMessage(WeixinSession session, HttpServletRequest request)
+  public WeixinMessage<?> parseInMessage(WeixinSession session, HttpServletRequest request)
       throws WeixinException {
     return getWeiXinDetails(session.getId()).getWeixinService().parseInMessage(request);
   }
 
   @Override
-  public String buildOutMessage(WeixinSession session, String encryptType, WeixinMessage message)
+  public String buildOutMessage(WeixinSession session, String encryptType, WeixinMessage<?> message)
       throws WeixinException {
     return getWeiXinDetails(session.getId())
         .getWeixinService()
@@ -144,7 +145,7 @@ public class MpCoreHelper implements WeixinCoreHelper {
     return getWeiXinDetails(session.getId()).getWeixinService().mediaUpload(mediaType, fileItem);
   }
 
-  public Object mediaDownload(WeixinSession session, String mediaId) throws WeixinException {
+  public FileObject mediaDownload(WeixinSession session, String mediaId) throws WeixinException {
     return getWeiXinDetails(session.getId()).getWeixinService().mediaDownload(mediaId);
   }
 

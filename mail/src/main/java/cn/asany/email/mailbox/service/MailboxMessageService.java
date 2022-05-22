@@ -12,7 +12,6 @@ import java.util.stream.Collectors;
 import org.apache.james.mailbox.DefaultMailboxes;
 import org.apache.james.mailbox.MessageUid;
 import org.apache.james.mailbox.store.mail.model.Property;
-import org.jfantasy.framework.dao.OrderBy;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -46,7 +45,7 @@ public class MailboxMessageService {
   public List<JamesMailboxMessage> findUnseenMessagesInMailboxOrderByUid(long mailbox, int size) {
     return this.mailboxMessageDao
         .findPage(
-            PageRequest.of(1, size, OrderBy.asc("id").toSort()),
+            PageRequest.of(0, size, Sort.by("id").ascending()),
             PropertyFilter.builder()
                 .equal("mailbox.id", mailbox)
                 .equal("seen", Boolean.FALSE)
@@ -202,6 +201,6 @@ public class MailboxMessageService {
   }
 
   public JamesMailboxMessage getMailboxMessageById(long mailboxId, long uid) {
-    return this.mailboxMessageDao.getById(new MailboxIdUidKey(mailboxId, uid));
+    return this.mailboxMessageDao.getReferenceById(new MailboxIdUidKey(mailboxId, uid));
   }
 }

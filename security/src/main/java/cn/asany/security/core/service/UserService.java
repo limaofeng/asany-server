@@ -124,7 +124,7 @@ public class UserService implements UserDetailsService {
    * @param newPassword 新密码
    */
   public void changePassword(Long id, String oldPassword, String newPassword) {
-    User user = this.userDao.getById(id);
+    User user = this.userDao.getReferenceById(id);
     if (user.getId() == null) {
       throw new UserNotFoundException("用户不存在");
     }
@@ -166,7 +166,7 @@ public class UserService implements UserDetailsService {
 
   public User update(Long id, User user) {
     user.setId(id);
-    User oldUser = this.userDao.getById(id);
+    User oldUser = this.userDao.getReferenceById(id);
     BeanUtil.copyProperties(
         oldUser,
         user,
@@ -181,7 +181,7 @@ public class UserService implements UserDetailsService {
   }
 
   public List<Role> addRoles(Long id, String[] roles, boolean clear) {
-    User user = this.userDao.getById(id);
+    User user = this.userDao.getReferenceById(id);
     if (clear) {
       user.getRoles().clear();
     }

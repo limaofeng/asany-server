@@ -8,10 +8,10 @@ import cn.asany.organization.relationship.bean.Position;
 import cn.asany.organization.relationship.dao.PositionDao;
 import java.util.List;
 import java.util.Optional;
-import org.jfantasy.framework.dao.OrderBy;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -79,7 +79,6 @@ public class PositionService {
   }
 
   public List<Position> findAll(List<PropertyFilter> builder) {
-    OrderBy orderBy = new OrderBy("createdAt", OrderBy.Direction.DESC);
-    return this.positionDao.findAll(builder, orderBy.toSort());
+    return this.positionDao.findAll(builder, Sort.by("createdAt").descending());
   }
 }

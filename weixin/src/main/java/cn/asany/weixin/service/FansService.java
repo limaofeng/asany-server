@@ -28,11 +28,11 @@ public class FansService {
   }
 
   public Fans get(String appId, String openId) {
-    return fansDao.getById(new UserKey(appId, openId));
+    return fansDao.getReferenceById(new UserKey(appId, openId));
   }
 
   public Fans get(UserKey key) {
-    return fansDao.getById(key);
+    return fansDao.getReferenceById(key);
   }
 
   public Fans save(Fans ui) {

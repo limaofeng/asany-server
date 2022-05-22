@@ -413,7 +413,7 @@ extend type Query {
     # 之前几条
     last: Int
     # 排序
-    orderBy: OrderBy = {}
+    orderBy: OrderBy = "unsorted"
   ): [User]
   """
   用户详情

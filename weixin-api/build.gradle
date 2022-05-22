@@ -1,9 +1,7 @@
+description = '微信 API'
+
 dependencies {
-    implementation project(":base")
     implementation project(":storage-api")
-    implementation "org.apache.ant:ant:${LIB_APACHE_ANT_VER}"
-    implementation "io.minio:minio:${LIB_MINIO_VER}"
-    implementation "com.aliyun.oss:aliyun-sdk-oss:${LIB_ALIYUN_SDK_OSS_VER}"
     compileOnly "org.projectlombok:lombok:${LIB_LOMBOK_VER}"
     annotationProcessor "org.projectlombok:lombok:$LIB_LOMBOK_VER"
     testCompileOnly "org.projectlombok:lombok:${LIB_LOMBOK_VER}"

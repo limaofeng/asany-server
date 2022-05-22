@@ -49,12 +49,12 @@ public class ArticleTagService {
     return this.tagDao.findAll(filters);
   }
 
-  public List<ArticleTag> findAllArticle(List<PropertyFilter> filters, Sort sort) {
-    return this.tagDao.findAll(filters, sort);
+  public List<ArticleTag> findAllArticle(List<PropertyFilter> filters, Sort orderBy) {
+    return this.tagDao.findAll(filters, orderBy);
   }
 
-  public List<ArticleTag> findAll(ArticleTag articleTag, Sort sort) {
-    return this.tagDao.findAll(Example.of(articleTag), sort);
+  public List<ArticleTag> findAll(ArticleTag articleTag, Sort orderBy) {
+    return this.tagDao.findAll(Example.of(articleTag), orderBy);
   }
 
   public ArticleTag update(ArticleTag tag, boolean patch) {

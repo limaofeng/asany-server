@@ -14,7 +14,7 @@ import org.jfantasy.graphql.types.BaseConnection;
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class MailboxMessageConnection
-    extends BaseConnection<MailboxMessageConnection.MailboxMessageEdge> {
+    extends BaseConnection<MailboxMessageConnection.MailboxMessageEdge, MailboxMessageResult> {
 
   private List<MailboxMessageConnection.MailboxMessageEdge> edges;
 
@@ -24,6 +24,7 @@ public class MailboxMessageConnection
     private MailboxMessageResult node;
 
     public MailboxMessageEdge(MailboxMessageResult node) {
+      this.cursor = node.getMailboxMessage().getKey().toKey();
       this.node = node;
     }
   }

@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -80,7 +81,7 @@ public class LearnerService {
     if (learner.getCourse() != null) {
       builder.equal("course", learner.getCourse());
     }
-    Pageable pageable = PageRequest.of(page, pageSize, OrderBy.desc("updatedAt").toSort());
+    Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by("updatedAt").descending());
     Page<LessonRecord> lessonRecordPager = lessonRecordDao.findPage(pageable, builder.build());
     if (CollectionUtils.isEmpty(lessonRecordPager.getContent())) {
       return null;

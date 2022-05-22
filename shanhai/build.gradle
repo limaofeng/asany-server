@@ -13,7 +13,7 @@ hibernate {
 }
 
 dependencies {
-    implementation "com.hankcs:hanlp:portable-1.7.1"
+    implementation "com.hankcs:hanlp:${LIB_HANLP_VER}"
     compileOnly "org.projectlombok:lombok:${LIB_LOMBOK_VER}"
     annotationProcessor "org.projectlombok:lombok:$LIB_LOMBOK_VER"
     testCompileOnly "org.projectlombok:lombok:${LIB_LOMBOK_VER}"

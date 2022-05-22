@@ -71,7 +71,7 @@ public class CloudDriveService {
   }
 
   public void deleteCloudDrive(Long id) {
-    CloudDrive cloudDrive = this.cloudDriveDao.getById(id);
+    CloudDrive cloudDrive = this.cloudDriveDao.getReferenceById(id);
     this.cloudDriveDao.deleteById(id);
     this.fileService.deleteStorageSpace(cloudDrive.getSpace().getId());
   }
@@ -95,6 +95,6 @@ public class CloudDriveService {
   }
 
   public CloudDrive getCloudDriveById(Long id) {
-    return this.cloudDriveDao.getById(id);
+    return this.cloudDriveDao.getReferenceById(id);
   }
 }

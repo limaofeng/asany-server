@@ -64,7 +64,8 @@ public class ApplicationTemplateService {
 
   @Transactional
   public ApplicationTemplate updateApplicationTemplate(ApplicationTemplate application) {
-    ApplicationTemplate oldObject = this.applicationTemplateDao.getById(application.getId());
+    ApplicationTemplate oldObject =
+        this.applicationTemplateDao.getReferenceById(application.getId());
     ObjectUtil.copy(application, oldObject, "routes", "id");
     List<ApplicationTemplateRoute> routes = setupDefault(application.getRoutes());
     this.applicationTemplateDao.update(oldObject);

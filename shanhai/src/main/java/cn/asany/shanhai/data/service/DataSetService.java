@@ -33,6 +33,6 @@ public class DataSetService {
   }
 
   public DataSetConfig getConfig(Long id) {
-    return this.dataSetDao.getById(id);
+    return this.dataSetDao.getReferenceById(id);
   }
 }

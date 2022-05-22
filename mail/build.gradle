@@ -4,23 +4,23 @@ dependencies {
     implementation project(":base")
     implementation project(":security")
     implementation project(":storage-api")
-    implementation 'com.squareup.okio:okio:1.13.0'
-    implementation 'org.apache.james:metrics-logger:3.4.0'
-    implementation 'org.apache.james:james-server-core:3.4.0'
-    implementation 'org.apache.james:james-server-data-library:3.4.0'
-    implementation 'org.apache.james:james-server-protocols-imap4:3.4.0'
-    implementation 'org.apache.james:james-server-protocols-smtp:3.4.0'
-    implementation 'org.apache.james:james-server-dnsservice-dnsjava:3.4.0'
-    implementation 'org.apache.james:james-server-queue-memory:3.4.0'
-    implementation 'org.apache.james:james-server-mailrepository-api:3.4.0'
-    implementation 'org.apache.james:james-server-mailetcontainer-camel:3.4.0'
-    implementation 'org.apache.james:apache-mailet-standard:3.4.0'
-    implementation 'org.apache.james:james-server-data-file:3.4.0'
-    implementation 'org.apache.james:metrics-dropwizard:3.4.0'
-    implementation 'org.apache.james:james-server-mailets:3.4.0'
-    implementation('org.apache.james:james-server-spring:3.4.0') {
+    implementation "com.squareup.okio:okio:${LIB_OKIO_VER}"
+    implementation "org.apache.james:metrics-logger:${LIB_JAMES_VER}"
+    implementation "org.apache.james:james-server-core:${LIB_JAMES_VER}"
+    implementation "org.apache.james:james-server-data-library:${LIB_JAMES_VER}"
+    implementation "org.apache.james:james-server-protocols-imap4:${LIB_JAMES_VER}"
+    implementation "org.apache.james:james-server-protocols-smtp:${LIB_JAMES_VER}"
+    implementation "org.apache.james:james-server-dnsservice-dnsjava:${LIB_JAMES_VER}"
+    implementation "org.apache.james:james-server-queue-memory:${LIB_JAMES_VER}"
+    implementation "org.apache.james:james-server-mailrepository-api:${LIB_JAMES_VER}"
+    implementation "org.apache.james:james-server-mailetcontainer-camel:${LIB_JAMES_VER}"
+    implementation "org.apache.james:apache-mailet-standard:${LIB_JAMES_VER}"
+    implementation "org.apache.james:james-server-data-file:${LIB_JAMES_VER}"
+    implementation "org.apache.james:metrics-dropwizard:${LIB_JAMES_VER}"
+    implementation "org.apache.james:james-server-mailets:${LIB_JAMES_VER}"
+    implementation("org.apache.james:james-server-spring:${LIB_JAMES_VER}") {
         exclude group: 'org.apache.activemq'
         exclude group: 'org.slf4j', module: 'slf4j-log4j12'
     }
-    implementation 'org.apache.camel:camel-spring:2.24.1'
+    implementation "org.apache.camel:camel-spring:${LIB_CAMEL_SPRING_VER}"
 }

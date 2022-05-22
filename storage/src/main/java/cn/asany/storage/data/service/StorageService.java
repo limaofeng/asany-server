@@ -50,7 +50,7 @@ public class StorageService {
 
   @Cacheable(key = "targetClass + '.' + methodName + '#' + #p0", value = "STORAGE")
   public StorageConfig get(String id) {
-    return Hibernate.unproxy(this.storageConfigDao.getById(id), StorageConfig.class);
+    return Hibernate.unproxy(this.storageConfigDao.getReferenceById(id), StorageConfig.class);
   }
 
   public StorageConfig save(StorageConfig storage) {

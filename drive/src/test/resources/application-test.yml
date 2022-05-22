@@ -1,9 +1,8 @@
 spring:
   jackson:
     default-property-inclusion: non_null
-  jfantasy:
-    sequence:
-      pool-size: 250
+  sequence:
+    pool-size: 250
   application:
     name: server
   datasource:
@@ -11,11 +10,6 @@ spring:
     url: jdbc:mysql://dev.local:3306/asany?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&rewriteBatchedStatements=true
     username: root
     password: yV2jJxvNs8BD
-    druid:
-      maxActive: 20
-      initialSize: 10
-      maxWait: 60000
-      minIdle: 1
   redis:
     database: 0
     host: dev.local

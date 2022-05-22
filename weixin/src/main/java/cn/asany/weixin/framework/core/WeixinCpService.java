@@ -1,5 +1,6 @@
 package cn.asany.weixin.framework.core;
 
+import cn.asany.storage.api.FileObject;
 import cn.asany.weixin.framework.exception.WeixinException;
 import cn.asany.weixin.framework.message.*;
 import cn.asany.weixin.framework.message.content.*;
@@ -30,9 +31,9 @@ public class WeixinCpService implements WeixinService {
 
   private static final Log LOG = LogFactory.getLog(WeixinCpService.class);
 
-  private WxCpService wxCpService;
-  private WxCpConfigStorage wxCpConfigStorage;
-  private Jsapi jsapi;
+  private final WxCpService wxCpService;
+  private final WxCpConfigStorage wxCpConfigStorage;
+  private final Jsapi jsapi;
 
   public WeixinCpService(WxCpService wxCpService, WxCpConfigStorage wxCpConfigStorage) {
     this.wxCpService = wxCpService;
@@ -41,7 +42,7 @@ public class WeixinCpService implements WeixinService {
   }
 
   @Override
-  public WeixinMessage parseInMessage(HttpServletRequest request) throws WeixinException {
+  public WeixinMessage<?> parseInMessage(HttpServletRequest request) throws WeixinException {
     String signature = request.getParameter("signature");
     String nonce = request.getParameter("nonce");
     String timestamp = request.getParameter("timestamp");
@@ -138,7 +139,8 @@ public class WeixinCpService implements WeixinService {
   }
 
   @Override
-  public String parseInMessage(String encryptType, WeixinMessage message) throws WeixinException {
+  public String parseInMessage(String encryptType, WeixinMessage<?> message)
+      throws WeixinException {
     WxCpXmlOutMessage outMessage;
     if (message instanceof TextMessage) {
       outMessage =
@@ -393,7 +395,7 @@ public class WeixinCpService implements WeixinService {
     throw new WeixinException("未实现方法");
   }
 
-  public Object mediaDownload(String mediaId) throws WeixinException {
+  public FileObject mediaDownload(String mediaId) throws WeixinException {
     throw new WeixinException("未实现方法");
   }
 
@@ -402,7 +404,7 @@ public class WeixinCpService implements WeixinService {
     throw new WeixinException("未实现方法");
   }
 
-  public Jsapi getJsapi() throws WeixinException {
+  public Jsapi getJsapi() {
     return this.jsapi;
   }
 
@@ -436,7 +438,7 @@ public class WeixinCpService implements WeixinService {
                   type,
                   button.getName(),
                   StringUtil.defaultValue(button.getKey(), button.getUrl()),
-                  subMenus.toArray(new Menu[subMenus.size()])));
+                  subMenus.toArray(new Menu[0])));
         }
       }
       return menus;

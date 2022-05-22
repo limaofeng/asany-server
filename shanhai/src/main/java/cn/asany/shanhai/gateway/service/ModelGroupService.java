@@ -34,7 +34,7 @@ public class ModelGroupService {
     List<ModelField> fields = modelFieldDao.findByUngrouped();
 
     CRFLexicalAnalyzer analyzer = new CRFLexicalAnalyzer();
-    ClusterAnalyzer<String> clusterAnalyzer = new ClusterAnalyzer<String>();
+    ClusterAnalyzer<String> clusterAnalyzer = new ClusterAnalyzer<>();
 
     for (ModelField field : fields) {
       ModelFieldState.ModelFieldStateBuilder builder = ModelFieldState.builder().current(field);
@@ -52,33 +52,35 @@ public class ModelGroupService {
     }
 
     List<Set<String>> list = clusterAnalyzer.repeatedBisection(1.0);
-    for (Set set : list) {
+    for (Set<String> set : list) {
       Map<String, Integer> names = new HashMap<>();
 
-      set.stream()
-          .forEach(
-              item -> {
-                if (state.get(item).words == null) {
-                  return;
-                }
-                state.get(item).words.wordList.stream()
-                    .forEach(
-                        word -> {
-                          if (word.getValue().length() <= 2) {
-                            return;
-                          }
-                          if (ObjectUtil.exists(
-                              new String[] {"Query", "yml", "创建", "查询", "更新", "新增", "修改", "删除"},
-                              word.getValue())) {
-                            return;
-                          }
-                          if (!names.containsKey(word.getValue())) {
-                            names.put(word.getValue(), 1);
-                          } else {
-                            names.put(word.getValue(), names.get(word.getValue()) + 1);
-                          }
-                        });
-              });
+      set.forEach(
+          item -> {
+            if (state.get(item).words == null) {
+              return;
+            }
+            state
+                .get(item)
+                .words
+                .wordList
+                .forEach(
+                    word -> {
+                      if (word.getValue().length() <= 2) {
+                        return;
+                      }
+                      if (ObjectUtil.exists(
+                          new String[] {"Query", "yml", "创建", "查询", "更新", "新增", "修改", "删除"},
+                          word.getValue())) {
+                        return;
+                      }
+                      if (!names.containsKey(word.getValue())) {
+                        names.put(word.getValue(), 1);
+                      } else {
+                        names.put(word.getValue(), names.get(word.getValue()) + 1);
+                      }
+                    });
+          });
 
       Optional<Map.Entry<String, Integer>> optional =
           names.entrySet().stream().max((a, b) -> a.getValue() > b.getValue() ? 1 : -1);

@@ -26,7 +26,6 @@ import graphql.kickstart.tools.GraphQLResolver;
 import java.util.*;
 import java.util.stream.Collectors;
 import org.apache.commons.collections.CollectionUtils;
-import org.jfantasy.framework.dao.OrderBy;
 import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.graphql.util.Kit;
@@ -34,6 +33,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -55,17 +55,17 @@ public class CourseGraphQLResolver implements GraphQLResolver<Course> {
   }
 
   public CourseConnection compulsoryCourseAndRecords(
-      Course course, LearnerFilter filter, int page, int pageSize, OrderBy orderBy) {
+      Course course, LearnerFilter filter, int page, int pageSize, Sort orderBy) {
     PropertyFilterBuilder builder =
         ObjectUtil.defaultValue(filter, new LearnerFilter()).getBuilder();
     return Kit.connection(
         lessonRecordService.compulsoryCourseAndRecords(
-            PageRequest.of(page, pageSize, orderBy.toSort()), builder.build()),
+            PageRequest.of(page - 1, pageSize, orderBy), builder.build()),
         CourseConnection.class);
   }
 
   public LearnerConnection learners(
-      Course course, LearnerFilter filter, int page, int pageSize, OrderBy orderBy) {
+      Course course, LearnerFilter filter, int page, int pageSize, Sort orderBy) {
     PropertyFilterBuilder builder =
         ObjectUtil.defaultValue(filter, new LearnerFilter()).getBuilder();
     builder.equal("course", course.getId());
@@ -104,20 +104,17 @@ public class CourseGraphQLResolver implements GraphQLResolver<Course> {
       //                    .learningProgress(learnerService.findLearningProgress(item, course))
       //                    .build()).collect(Collectors.toList()));
     } else {
-      vpage =
-          learnerService.findPage(
-              PageRequest.of(page, pageSize, orderBy.toSort()), builder.build());
+      vpage = learnerService.findPage(PageRequest.of(page - 1, pageSize, orderBy), builder.build());
     }
     return Kit.connection(vpage, LearnerConnection.class);
   }
 
   public LessonRecordConnection lessonRecords(
-      Course course, LessonRecordFilter filter, int page, int pageSize, OrderBy orderBy) {
+      Course course, LessonRecordFilter filter, int page, int pageSize, Sort orderBy) {
     PropertyFilterBuilder builder =
         ObjectUtil.defaultValue(filter, new LessonRecordFilter()).getBuilder();
     return Kit.connection(
-        lessonRecordService.findPage(
-            PageRequest.of(page, pageSize, orderBy.toSort()), builder.build()),
+        lessonRecordService.findPage(PageRequest.of(page - 1, pageSize, orderBy), builder.build()),
         LessonRecordConnection.class);
   }
 
@@ -126,7 +123,7 @@ public class CourseGraphQLResolver implements GraphQLResolver<Course> {
   }
 
   public CommentConnection comments(
-      Course course, CommentFilter filter, int page, int pageSize, OrderBy orderBy) {
+      Course course, CommentFilter filter, int page, int pageSize, Sort orderBy) {
     CommentConnection connection = new CommentConnection();
     List<CommentConnection.CommentEdge> comments = new ArrayList<>();
     List<Lesson> lessons = lessonService.findLessonByCourse(course.getId());
@@ -151,8 +148,8 @@ public class CourseGraphQLResolver implements GraphQLResolver<Course> {
   }
 
   public LearnerScopeConnection scopes(
-      Course course, LearnerScopeFilter filter, int page, int pageSize, OrderBy orderBy) {
-    Pageable pageable = PageRequest.of(page, pageSize, orderBy.toSort());
+      Course course, LearnerScopeFilter filter, int page, int pageSize, Sort orderBy) {
+    Pageable pageable = PageRequest.of(page - 1, pageSize, orderBy);
     return Kit.connection(
         learnerScopeService.findPage(pageable, filter.build()), LearnerScopeConnection.class);
   }

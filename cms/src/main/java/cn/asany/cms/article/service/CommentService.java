@@ -6,10 +6,10 @@ import cn.asany.cms.article.bean.enums.CommentTargetType;
 import cn.asany.cms.article.dao.CommentDao;
 import java.util.List;
 import java.util.Optional;
-import org.jfantasy.framework.dao.OrderBy;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,7 +31,7 @@ public class CommentService {
     comment.setStatus(CommentStatus.pending);
     this.commentDao.save(comment);
     if (comment.getForComment() != null) {
-      Comment forComment = this.commentDao.getById(comment.getForComment().getId());
+      Comment forComment = this.commentDao.getReferenceById(comment.getForComment().getId());
       comment.setPath(forComment.getPath() + comment.getId() + PATH_SEPARATOR);
     } else {
       comment.setPath(comment.getId() + PATH_SEPARATOR);
@@ -49,12 +49,11 @@ public class CommentService {
   }
 
   public Comment get(Long id) {
-    return this.commentDao.getById(id);
+    return this.commentDao.getReferenceById(id);
   }
 
   public List<Comment> findAll(List<PropertyFilter> filters) {
-    OrderBy orderBy = new OrderBy("createdAt", OrderBy.Direction.ASC);
-    return this.commentDao.findAll(filters, orderBy.toSort());
+    return this.commentDao.findAll(filters, Sort.by("createdAt").ascending());
   }
 
   public Boolean removeComment(Long id) {

@@ -4,16 +4,6 @@ server:
 spring:
   main:
     allow-bean-definition-overriding: true
-  datasource:
-    druid:
-      timeBetweenEvictionRunsMillis: 60000
-      minEvictableIdleTimeMillis: 300000
-      validationQuery: select 'x'
-      testWhileIdle: true
-      testOnBorrow: true
-      testOnReturn: true
-      poolPreparedStatements: true
-      maxOpenPreparedStatements: 20
   jpa:
     hibernate:
       ddl-auto: update

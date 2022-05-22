@@ -8,9 +8,9 @@ import cn.asany.organization.relationship.dao.EmployeePositionDao;
 import cn.asany.organization.relationship.dao.PositionDao;
 import java.util.List;
 import java.util.Optional;
-import org.jfantasy.framework.dao.OrderBy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,13 +28,13 @@ public class JobService {
   @Autowired private PositionDao positionDao;
   @Autowired private EmployeePositionDao employeePositionDao;
 
-  public List<Job> findAll(Long org, OrderBy orderBy) {
-    if (orderBy == null) {
-      orderBy = new OrderBy("createdAt", OrderBy.Direction.DESC);
+  public List<Job> findAll(Long org, Sort orderBy) {
+    if (orderBy.isUnsorted()) {
+      orderBy = Sort.by("createdAt").descending();
     }
     return this.jobDao.findAll(
         Example.of(Job.builder().organization(Organization.builder().id(org).build()).build()),
-        orderBy.toSort());
+        orderBy);
   }
 
   public Job save(Job job) {

@@ -13,7 +13,8 @@ import org.jfantasy.graphql.types.BaseConnection;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class PermissionConnection extends BaseConnection<PermissionConnection.PermissionEdge> {
+public class PermissionConnection
+    extends BaseConnection<PermissionConnection.PermissionEdge, Permission> {
 
   private List<PermissionEdge> edges;
 

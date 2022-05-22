@@ -8,7 +8,8 @@ import org.jfantasy.graphql.types.BaseConnection;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class FileObjectConnection extends BaseConnection<FileObjectConnection.FileObjectEdge> {
+public class FileObjectConnection
+    extends BaseConnection<FileObjectConnection.FileObjectEdge, FileObject> {
   private List<FileObjectEdge> edges;
 
   @Data

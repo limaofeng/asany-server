@@ -16,13 +16,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.lang3.ObjectUtils;
-import org.jfantasy.framework.dao.OrderBy;
 import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.graphql.util.Kit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 /**
@@ -56,8 +56,8 @@ public class SecurityGraphQLQueryResolver implements GraphQLQueryResolver {
   }
 
   /** 查询所有用户,带条件查询 */
-  public UserConnection users(UserFilter filter, int page, int pageSize, OrderBy orderBy) {
-    Pageable pageable = PageRequest.of(page, pageSize, orderBy.toSort());
+  public UserConnection users(UserFilter filter, int page, int pageSize, Sort orderBy) {
+    Pageable pageable = PageRequest.of(page - 1, pageSize, orderBy);
     PropertyFilterBuilder builder = ObjectUtil.defaultValue(filter, new UserFilter()).getBuilder();
     return Kit.connection(userService.findPage(pageable, builder.build()), UserConnection.class);
   }
@@ -188,16 +188,16 @@ public class SecurityGraphQLQueryResolver implements GraphQLQueryResolver {
   }
 
   /** 查询角色 */
-  public RoleConnection findRoles(RoleFilter filter, int page, int pageSize, OrderBy orderBy) {
-    Pageable pageable = PageRequest.of(page, pageSize, orderBy.toSort());
+  public RoleConnection findRoles(RoleFilter filter, int page, int pageSize, Sort orderBy) {
+    Pageable pageable = PageRequest.of(page - 1, pageSize, orderBy);
     PropertyFilterBuilder builder = ObjectUtil.defaultValue(filter, new RoleFilter()).getBuilder();
     return Kit.connection(roleService.findPage(pageable, builder.build()), RoleConnection.class);
   }
 
   /** 查询权限分类 */
   public PermissionTypeConnection permissionTypes(
-      PermissionTypeFilter filter, int page, int pageSize, OrderBy orderBy) {
-    Pageable pageable = PageRequest.of(page, pageSize, orderBy.toSort());
+      PermissionTypeFilter filter, int page, int pageSize, Sort orderBy) {
+    Pageable pageable = PageRequest.of(page - 1, pageSize, orderBy);
     PropertyFilterBuilder builder =
         ObjectUtil.defaultValue(filter, new PermissionTypeFilter()).getBuilder();
     return Kit.connection(
@@ -206,8 +206,8 @@ public class SecurityGraphQLQueryResolver implements GraphQLQueryResolver {
 
   /** 查询权限分类 */
   public PermissionConnection permissions(
-      PermissionFilter filter, int page, int pageSize, OrderBy orderBy) {
-    Pageable pageable = PageRequest.of(page, pageSize, orderBy.toSort());
+      PermissionFilter filter, int page, int pageSize, Sort orderBy) {
+    Pageable pageable = PageRequest.of(page - 1, pageSize, orderBy);
     PropertyFilterBuilder builder =
         ObjectUtil.defaultValue(filter, new PermissionFilter()).getBuilder();
     return Kit.connection(

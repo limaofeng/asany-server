@@ -8,7 +8,8 @@ import org.jfantasy.graphql.types.BaseConnection;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class RoleScopeConnection extends BaseConnection<RoleScopeConnection.RoleScopeEdge> {
+public class RoleScopeConnection
+    extends BaseConnection<RoleScopeConnection.RoleScopeEdge, RoleSpace> {
 
   private List<RoleScopeEdge> edges;
 

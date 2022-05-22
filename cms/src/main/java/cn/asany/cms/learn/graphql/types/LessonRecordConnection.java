@@ -10,7 +10,7 @@ import org.jfantasy.graphql.types.BaseConnection;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class LessonRecordConnection
-    extends BaseConnection<LessonRecordConnection.LessonRecordEdge> {
+    extends BaseConnection<LessonRecordConnection.LessonRecordEdge, LessonRecord> {
 
   private List<LessonRecordConnection.LessonRecordEdge> edges;
 

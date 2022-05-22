@@ -23,7 +23,6 @@ import graphql.schema.DataFetchingEnvironment;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import javax.mail.MessagingException;
 import lombok.SneakyThrows;
@@ -43,17 +42,15 @@ import org.apache.james.server.core.MailImpl;
 import org.apache.james.server.core.MimeMessageCopyOnWriteProxy;
 import org.apache.james.server.core.MimeMessageInputStreamSource;
 import org.apache.mailet.Mail;
-import org.jfantasy.framework.dao.OrderBy;
 import org.jfantasy.framework.error.ValidationException;
 import org.jfantasy.framework.security.LoginUser;
 import org.jfantasy.framework.security.SpringSecurityUtils;
 import org.jfantasy.framework.spring.mvc.error.NotFoundException;
-import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.common.StringUtil;
-import org.jfantasy.graphql.Edge;
 import org.jfantasy.graphql.util.Kit;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -99,28 +96,25 @@ public class MailboxMessageGraphqlApiResolver
       String before,
       int page,
       int pageSize,
-      OrderBy orderBy) {
+      Sort orderBy) {
 
     JamesDomain domain = domainService.getDefaultDomain();
     LoginUser user = SpringSecurityUtils.getCurrentUser();
-
-    orderBy = ObjectUtil.defaultValue(orderBy, () -> OrderBy.desc("internalDate"));
 
     String mailUserId = StringUtil.isBlank(account) ? JamesUtil.getUserName(user) : account;
 
     Pageable pageable;
 
     if (first > 0) {
-      pageable = PageRequest.of(offset, first, orderBy.toSort());
+      pageable = PageRequest.of(offset, first, orderBy);
     } else {
-      pageable = PageRequest.of(page, pageSize, orderBy.toSort());
+      pageable = PageRequest.of(page - 1, pageSize, orderBy);
     }
 
     return Kit.connection(
         this.mailboxMessageService.findPage(pageable, filter.build(mailUserId)),
         MailboxMessageConnection.class,
-        (Function<JamesMailboxMessage, Edge>)
-            message -> new MailboxMessageConnection.MailboxMessageEdge(JamesUtil.wrap(message)));
+        message -> new MailboxMessageConnection.MailboxMessageEdge(JamesUtil.wrap(message)));
   }
 
   public MailboxMessageResult createMailboxMessage(MailboxMessageCreateInput input, String user)

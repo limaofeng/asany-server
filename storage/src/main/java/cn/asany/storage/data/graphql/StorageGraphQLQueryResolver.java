@@ -12,12 +12,12 @@ import cn.asany.storage.data.util.IdUtils;
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import java.util.List;
 import java.util.Optional;
-import org.jfantasy.framework.dao.OrderBy;
 import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.graphql.util.Kit;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 /**
@@ -49,7 +49,7 @@ public class StorageGraphQLQueryResolver implements GraphQLQueryResolver {
   }
 
   public FileObjectConnection listFiles(
-      String key, FileFilter filter, int _page, int pageSize, OrderBy orderBy) {
+      String key, FileFilter filter, int _page, int pageSize, Sort orderBy) {
     IdUtils.FileKey fileKey = IdUtils.parseKey(key);
 
     PropertyFilterBuilder filterBuilder =
@@ -65,19 +65,14 @@ public class StorageGraphQLQueryResolver implements GraphQLQueryResolver {
 
     Page<FileDetail> page =
         this.storageService.findPage(
-            PageRequest.of(
-                _page,
-                pageSize,
-                ObjectUtil.defaultValue(
-                        orderBy, () -> OrderBy.by(OrderBy.desc("isDirectory"), OrderBy.asc("name")))
-                    .toSort()),
-            filterBuilder.build());
+            PageRequest.of(_page - 1, pageSize, orderBy), filterBuilder.build());
 
     return Kit.connection(
         page,
         FileObjectConnection.class,
         (item) ->
             FileObjectConnection.FileObjectEdge.builder()
+                .cursor(IdUtils.toKey(fileKey.getType(), fileKey.getSpace().getId(), item.getId()))
                 .node(item.toFileObject(fileKey.getSpace()))
                 .build());
   }

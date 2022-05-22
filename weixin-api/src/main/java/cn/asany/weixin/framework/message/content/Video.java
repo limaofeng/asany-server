@@ -1,5 +1,7 @@
 package cn.asany.weixin.framework.message.content;
 
+import cn.asany.storage.api.FileObject;
+
 /** 视频消息 */
 public class Video {
 
@@ -12,20 +14,20 @@ public class Video {
   /** 视频 */
   private Media media;
 
-  public Video(String title, String description, Object media) {
+  public Video(String title, String description, FileObject media) {
     this.title = title;
     this.description = description;
     this.media = new Media(media, Media.Type.video);
   }
 
-  public Video(String title, String description, Object media, Object thumb) {
+  public Video(String title, String description, FileObject media, FileObject thumb) {
     this.title = title;
     this.description = description;
     this.media = new Media(media, Media.Type.video);
     this.thumb = new Media(thumb, Media.Type.thumb);
   }
 
-  public Video(Object media, Object thumb) {
+  public Video(FileObject media, FileObject thumb) {
     this.media = new Media(media, Media.Type.video);
     this.thumb = new Media(thumb, Media.Type.thumb);
   }

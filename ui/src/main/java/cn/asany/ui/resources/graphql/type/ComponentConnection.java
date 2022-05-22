@@ -13,7 +13,8 @@ import org.jfantasy.graphql.types.BaseConnection;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class ComponentConnection extends BaseConnection<ComponentConnection.ComponentEdge> {
+public class ComponentConnection
+    extends BaseConnection<ComponentConnection.ComponentEdge, Component> {
   private List<ComponentEdge> edges;
 
   @Data

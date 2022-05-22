@@ -228,7 +228,7 @@ public class ModelService {
   }
 
   public void publish(Long id) {
-    Model model = modelDao.getById(id);
+    Model model = modelDao.getReferenceById(id);
     //        ModelMetadata metadata = model.getMetadata();
     //        String xml = hibernateMappingHelper.generateXML(model);
     //        metadata.setHbm(xml);
@@ -242,13 +242,13 @@ public class ModelService {
 
   public int delete(Long[] ids) {
     for (Long id : ids) {
-      this.modelDao.delete(this.modelDao.getById(id));
+      this.modelDao.delete(this.modelDao.getReferenceById(id));
     }
     return ids.length;
   }
 
   public void delete(Long id) {
-    this.modelDao.delete(this.modelDao.getById(id));
+    this.modelDao.delete(this.modelDao.getReferenceById(id));
   }
 
   private void aggregate(

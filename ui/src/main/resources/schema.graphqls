@@ -235,14 +235,14 @@ extend type Query {
     filter: ComponentFilter
     page: Int = 1
     pageSize: Int = 15
-    orderBy: OrderBy = {}
+    orderBy: OrderBy = "unsorted"
   ): [Component]
   # 查询组件 分页
   componentsConnection(
     filter: ComponentFilter
     page: Int = 1
     pageSize: Int = 15
-    orderBy: OrderBy = {}
+    orderBy: OrderBy = "unsorted"
   ): ComponentConnection
 }
 

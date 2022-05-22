@@ -9,7 +9,7 @@ import org.jfantasy.graphql.types.BaseConnection;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class DictConnection extends BaseConnection<DictConnection.DictEdge> {
+public class DictConnection extends BaseConnection<DictConnection.DictEdge, Dict> {
 
   private List<DictEdge> edges;
 

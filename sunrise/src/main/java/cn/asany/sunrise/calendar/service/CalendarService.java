@@ -233,7 +233,7 @@ public class CalendarService {
     Integer index = calendar.getIndex();
 
     if (index != null) {
-      Calendar source = this.calendarDao.getById(id);
+      Calendar source = this.calendarDao.getReferenceById(id);
       Integer sourceIndex = source.getIndex();
       List<Calendar> calendars =
           this.calendarDao.findAll(
@@ -259,7 +259,7 @@ public class CalendarService {
   }
 
   public Boolean deleteCalendar(Long id) {
-    Calendar source = this.calendarDao.getById(id);
+    Calendar source = this.calendarDao.getReferenceById(id);
     Integer sourceIndex = source.getIndex();
 
     List<Calendar> calendars =
@@ -346,7 +346,7 @@ public class CalendarService {
     Integer index = calendarSet.getIndex();
 
     if (index != null) {
-      CalendarSet source = this.calendarSetDao.getById(id);
+      CalendarSet source = this.calendarSetDao.getReferenceById(id);
       Integer sourceIndex = source.getIndex();
       List<CalendarSet> calendarSets =
           this.calendarSetDao.findAll(
@@ -372,7 +372,7 @@ public class CalendarService {
   }
 
   public Boolean deleteCalendarSet(Long id) {
-    CalendarSet source = this.calendarSetDao.getById(id);
+    CalendarSet source = this.calendarSetDao.getReferenceById(id);
     Integer sourceIndex = source.getIndex();
 
     List<CalendarSet> calendarSets =
@@ -433,8 +433,8 @@ public class CalendarService {
   }
 
   public CalendarSet addCalendarToSet(Long id, Long set) {
-    CalendarSet calendarSet = this.calendarSetDao.getById(set);
-    Calendar calendar = this.calendarDao.getById(id);
+    CalendarSet calendarSet = this.calendarSetDao.getReferenceById(set);
+    Calendar calendar = this.calendarDao.getReferenceById(id);
     if (!ObjectUtil.exists(calendarSet.getCalendars(), "id", id)) {
       calendarSet.getCalendars().add(calendar);
     }
@@ -442,7 +442,7 @@ public class CalendarService {
   }
 
   public CalendarSet removeCalendarFromSet(Long id, Long set) {
-    CalendarSet calendarSet = this.calendarSetDao.getById(set);
+    CalendarSet calendarSet = this.calendarSetDao.getReferenceById(set);
     if (!ObjectUtil.exists(calendarSet.getCalendars(), "id", id)) {
       return calendarSet;
     }
@@ -451,7 +451,7 @@ public class CalendarService {
   }
 
   public CalendarEvent addCalendarEvent(Long calendar, CalendarEvent event) {
-    event.setCalendar(this.calendarDao.getById(calendar));
+    event.setCalendar(this.calendarDao.getReferenceById(calendar));
     if (event.getRemind() == null) {
       event.setRemind(Remind.builder().alert(Alert.NONE).build());
     }

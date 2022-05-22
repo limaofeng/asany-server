@@ -1,10 +1,12 @@
 package cn.asany.weixin.framework.message.content;
 
+import cn.asany.storage.api.FileObject;
+
 /** 微信媒体消息 */
 public class Media {
 
   /** 媒体文件类型 */
-  public static enum Type {
+  public enum Type {
     /** 图片 */
     image,
     /** 语音 */
@@ -21,7 +23,7 @@ public class Media {
 
   private String format;
 
-  private Object fileItem;
+  private FileObject fileItem;
 
   public Media() {}
 
@@ -34,7 +36,7 @@ public class Media {
     this.format = format;
   }
 
-  public Media(Object fileItem, Type type) {
+  public Media(FileObject fileItem, Type type) {
     this.fileItem = fileItem;
     this.type = type;
   }
@@ -67,7 +69,7 @@ public class Media {
     this.format = format;
   }
 
-  public void setFileItem(Object fileItem) {
+  public void setFileItem(FileObject fileItem) {
     this.fileItem = fileItem;
   }
 

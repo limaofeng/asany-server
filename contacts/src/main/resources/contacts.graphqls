@@ -241,6 +241,6 @@ extend type Query {
     """
     排序
     """
-    orderBy: OrderBy = {}
+    orderBy: OrderBy = "unsorted"
   ): ContactConnection
 }

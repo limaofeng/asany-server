@@ -61,12 +61,12 @@ public class MailUserService {
 
   @Transactional
   public void createUser(Long id) {
-    this.createUser(this.userDao.getById(id));
+    this.createUser(this.userDao.getReferenceById(id));
   }
 
   @Transactional
   public MailUser repairUser(Long id) {
-    User user = this.userDao.getById(id);
+    User user = this.userDao.getReferenceById(id);
     JamesDomain domain = this.domainService.getDefaultDomain();
     String username = user.getUsername() + "@" + domain.getName();
     Optional<MailUser> mailUser = this.mailUserDao.findById(username);
@@ -173,7 +173,7 @@ public class MailUserService {
   }
 
   private MailSettings initializeMailSettings(String user) {
-    MailUser mailUser = this.mailUserDao.getById(user);
+    MailUser mailUser = this.mailUserDao.getReferenceById(user);
     MailSettings settings =
         MailSettings.builder()
             .user(mailUser)

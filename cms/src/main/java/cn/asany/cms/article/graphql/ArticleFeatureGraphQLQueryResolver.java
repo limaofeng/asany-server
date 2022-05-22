@@ -8,9 +8,7 @@ import cn.asany.cms.article.service.ArticleFeatureService;
 import graphql.kickstart.tools.GraphQLMutationResolver;
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import java.util.List;
-import org.jfantasy.framework.dao.OrderBy;
-import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
-import org.jfantasy.framework.util.common.ObjectUtil;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 /**
@@ -32,14 +30,9 @@ public class ArticleFeatureGraphQLQueryResolver
   }
 
   public List<ArticleFeature> articleFeatures(
-      String organization, ArticleFeatureFilter filter, OrderBy orderBy) {
-    PropertyFilterBuilder builder =
-        ObjectUtil.defaultValue(filter, new ArticleFeatureFilter()).getBuilder();
-    builder.equal("organization.id", organization);
-    if (orderBy == null) {
-      orderBy = OrderBy.desc("createdAt");
-    }
-    return featureService.findAll(builder.build(), orderBy.toSort());
+      String organization, ArticleFeatureFilter filter, Sort orderBy) {
+    filter.getBuilder().equal("organization.id", organization);
+    return featureService.findAll(filter.build(), orderBy);
   }
 
   public ArticleFeature articleFeature(Long id) {

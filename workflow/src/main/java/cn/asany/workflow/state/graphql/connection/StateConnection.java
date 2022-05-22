@@ -16,7 +16,7 @@ import org.jfantasy.graphql.types.BaseConnection;
  * @date: 2019/6/11 18:00
  */
 @Data
-public class StateConnection extends BaseConnection<StateConnection.StateEdge> {
+public class StateConnection extends BaseConnection<StateConnection.StateEdge, State> {
   private List<StateEdge> edges;
 
   @Data

@@ -10,7 +10,7 @@ import org.jfantasy.graphql.types.BaseConnection;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class LearnerScopeConnection
-    extends BaseConnection<LearnerScopeConnection.LearnerScopeEdge> {
+    extends BaseConnection<LearnerScopeConnection.LearnerScopeEdge, LearnerScope> {
   private List<LearnerScopeConnection.LearnerScopeEdge> edges;
 
   @Data

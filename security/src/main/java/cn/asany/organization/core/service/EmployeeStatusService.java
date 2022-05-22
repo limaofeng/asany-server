@@ -3,10 +3,10 @@ package cn.asany.organization.core.service;
 import cn.asany.organization.core.bean.EmployeeStatus;
 import cn.asany.organization.employee.dao.EmployeeStatusDao;
 import java.util.List;
-import org.jfantasy.framework.dao.OrderBy;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,8 +23,7 @@ public class EmployeeStatusService {
   }
 
   public List<EmployeeStatus> findAll(List<PropertyFilter> filter) {
-    OrderBy orderBy = new OrderBy("createdAt", OrderBy.Direction.DESC);
-    return this.employeeStatusDao.findAll(filter, orderBy.toSort());
+    return this.employeeStatusDao.findAll(filter, Sort.by("createdAt").descending());
   }
 
   public EmployeeStatus save(EmployeeStatus employeeStatus) {

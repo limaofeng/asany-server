@@ -24,7 +24,7 @@ public class RoleScopeService {
   }
 
   public RoleSpace get(String id) {
-    return this.roleSpaceDao.getById(id);
+    return this.roleSpaceDao.getReferenceById(id);
   }
 
   public RoleSpace save(RoleSpace scope) {

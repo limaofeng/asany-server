@@ -240,13 +240,13 @@ extend type Query {
     filter: ModelFilter
     first: Int = 1
     offset: Int = 15
-    orderBy: OrderBy = {}
+    orderBy: OrderBy = "unsorted"
   ): [Model]
   modelsConnection(
     filter: ModelFilter
     page: Int = 1
     pageSize: Int = 15
-    orderBy: OrderBy = {}
+    orderBy: OrderBy = "unsorted"
   ): ModelConnection
   # 查询单个模型
   model(id: ID, idType: ModelIdType = id): Model

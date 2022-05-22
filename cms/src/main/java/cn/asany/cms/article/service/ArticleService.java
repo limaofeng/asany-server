@@ -165,7 +165,7 @@ public class ArticleService {
 
         if (null != article.getId()) {
           // 编辑
-          Article oldArticle = this.articleDao.getById(article.getId());
+          Article oldArticle = this.articleDao.getReferenceById(article.getId());
           Content oldContent = oldArticle.getContent();
           boolean exist = oldArticle.getContent() != null;
           if (exist) {

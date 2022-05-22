@@ -65,12 +65,12 @@ public class ArticleChannelService {
     return this.channelDao.findAll(filters);
   }
 
-  public List<ArticleChannel> findAllArticle(List<PropertyFilter> filters, Sort sort) {
-    return this.channelDao.findAll(filters, sort);
+  public List<ArticleChannel> findAllArticle(List<PropertyFilter> filters, Sort orderBy) {
+    return this.channelDao.findAll(filters, orderBy);
   }
 
-  public List<ArticleChannel> findAll(ArticleChannel ArticleChannel, Sort sort) {
-    return this.channelDao.findAll(Example.of(ArticleChannel), sort);
+  public List<ArticleChannel> findAll(ArticleChannel ArticleChannel, Sort orderBy) {
+    return this.channelDao.findAll(Example.of(ArticleChannel), orderBy);
   }
 
   public ArticleChannel update(ArticleChannel channel, boolean patch) {
@@ -96,14 +96,13 @@ public class ArticleChannelService {
               if (item.getArticles() != null) {
                 articles.addAll(
                     item.getArticles().stream()
-                        .map(
+                        .peek(
                             article -> {
                               article.setChannels(new ArrayList<>());
                               article.getChannels().add(item);
                               article.setType(ArticleType.text);
                               article.setCategory(ArticleCategory.news);
                               article.setStatus(ArticleStatus.PUBLISHED);
-                              return article;
                             })
                         .collect(Collectors.toList()));
               }
@@ -150,15 +149,16 @@ public class ArticleChannelService {
   /**
    * 保存栏目
    *
-   * @param channel
-   * @return
+   * @param channel 频道
+   * @return ArticleChannel
    */
   public ArticleChannel save(ArticleChannel channel) {
     Integer index = channel.getIndex();
 
     boolean isRoot = channel.getParent() == null;
 
-    ArticleChannel parent = isRoot ? this.channelDao.getById(channel.getParent().getId()) : null;
+    ArticleChannel parent =
+        isRoot ? null : this.channelDao.getReferenceById(channel.getParent().getId());
 
     if (StringUtil.isBlank(channel.getSlug())) {
       channel.setSlug(pinyin(channel.getName()));
@@ -194,14 +194,14 @@ public class ArticleChannelService {
   /**
    * 修改栏目
    *
-   * @param id
-   * @param merge
-   * @param channel
-   * @return
+   * @param id ID
+   * @param merge 合并
+   * @param channel 栏目
+   * @return ArticleChannel
    */
   public ArticleChannel update(Long id, boolean merge, ArticleChannel channel) {
     channel.setId(id);
-    ArticleChannel prev = this.channelDao.getById(id);
+    ArticleChannel prev = this.channelDao.getReferenceById(id);
 
     int sourceIndex = prev.getIndex();
     Integer index = channel.getIndex();
@@ -211,7 +211,7 @@ public class ArticleChannelService {
 
     boolean notRoot = parent != null && !parent.getId().equals(0L);
     if (notRoot) {
-      parent = channelDao.getById(parent.getId());
+      parent = channelDao.getReferenceById(parent.getId());
     }
 
     boolean _isChangeParent = isChangeParent(parent, sourceParent);
@@ -312,7 +312,7 @@ public class ArticleChannelService {
   /**
    * * 删除栏目
    *
-   * @param id
+   * @param id ID
    */
   public boolean delete(Long id) {
     ArticleChannel channel = this.findOne(id);

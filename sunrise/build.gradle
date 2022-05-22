@@ -4,5 +4,5 @@ dependencies {
     implementation project(":base")
     implementation project(":security")
     implementation project(":storage-api")
-    implementation 'org.mnode.ical4j:ical4j:3.1.1'
+    implementation "org.mnode.ical4j:ical4j:${LIB_ICAL4J_VER}"
 }

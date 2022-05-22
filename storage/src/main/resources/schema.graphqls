@@ -327,7 +327,7 @@ extend type Query {
     """
     排序
     """
-    orderBy: OrderBy = {}
+    orderBy: OrderBy = "isDirectory_DESC,name_ASC"
   ): FileObjectConnection!
   # 文件详情
   file(id: ID!): FileObject

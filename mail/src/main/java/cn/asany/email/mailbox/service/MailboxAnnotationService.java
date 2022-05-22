@@ -45,7 +45,7 @@ public class MailboxAnnotationService {
   }
 
   public JamesMailboxAnnotation getById(JPAMailboxAnnotationId id) {
-    return this.mailboxAnnotationDao.getById(id);
+    return this.mailboxAnnotationDao.getReferenceById(id);
   }
 
   public long countAnnotationsInMailbox(long mailboxId) {

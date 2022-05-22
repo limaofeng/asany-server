@@ -62,7 +62,7 @@ public class ContactsService {
   }
 
   public Contact get(Long id) {
-    return this.contactDao.getById(id);
+    return this.contactDao.getReferenceById(id);
   }
 
   public Optional<ContactBook> findBookById(Long id) {

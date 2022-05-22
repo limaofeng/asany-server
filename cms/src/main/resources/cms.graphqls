@@ -176,7 +176,7 @@ type ArticleChannel {
     # 之前几条
     last: Int
     # 排序
-    orderBy: OrderBy = {}
+    orderBy: OrderBy = "unsorted"
   ): [Article!]!
 }
 
@@ -241,7 +241,7 @@ type Article {
   # 内容
   content(format: ContentFormat): Content
   #查询评论
-  #    comments(filter: CommentFilter, page: Int = 1, pageSize: Int = 15, orderBy: OrderBy = {}): CommentConnection
+  #    comments(filter: CommentFilter, page: Int = 1, pageSize: Int = 15, orderBy: OrderBy = "unsorted"): CommentConnection
   # 频道
   channels: [ArticleChannel!]!
   # 标签
@@ -567,18 +567,18 @@ extend type Query {
     first: Int = 0
     page: Int = 1
     pageSize: Int = 15
-    orderBy: OrderBy = {}
+    orderBy: OrderBy = "unsorted"
   ): ArticleConnection
   # 文章栏目
   articleChannels(
     filter: ArticleChannelFilter = {}
-    orderBy: OrderBy = {}
+    orderBy: OrderBy = "unsorted"
   ): [ArticleChannel!]!
   # 文章标签
   articleTags(
     organization: ID!
     filter: ArticleChannelFilter
-    orderBy: OrderBy = {}
+    orderBy: OrderBy = "unsorted"
   ): [ArticleTag]
   # 文章权限
   # articlePermissions(category: ArticleCategory!): [Permission]
@@ -596,20 +596,20 @@ extend type Query {
     filter: ArticleFilter = {}
     page: Int = 1
     pageSize: Int = 15
-    orderBy: OrderBy = {}
+    orderBy: OrderBy = "unsorted"
   ): ArticleConnection
   # 查询所有推荐位
   articleFeatures(
     organization: ID!
-    filter: ArticleFeatureFilter
-    orderBy: OrderBy = {}
+    filter: ArticleFeatureFilter = {}
+    orderBy: OrderBy = "createdAt_DESC"
   ): [ArticleFeature]
   # 根据id查询推荐位
   articleFeature(id: ID!): ArticleFeature
   # 横幅广告
   banner(id: ID!): Banner
   # 横幅广告
-  banners(filter: BannerFilter, orderBy: OrderBy = {}): [Banner]
+  banners(filter: BannerFilter = {}, orderBy: OrderBy = "unsorted"): [Banner]
 }
 
 type Mutation {

@@ -6,8 +6,8 @@ import cn.asany.cms.article.service.BannerService;
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import java.util.List;
 import java.util.Optional;
-import org.jfantasy.framework.dao.OrderBy;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -32,10 +32,7 @@ public class BannerGraphQLQueryResolver implements GraphQLQueryResolver {
    * @param orderBy 排序
    * @return List<Banner>
    */
-  public List<Banner> banners(BannerFilter filter, OrderBy orderBy) {
-    if (filter == null) {
-      filter = new BannerFilter();
-    }
+  public List<Banner> banners(BannerFilter filter, Sort orderBy) {
     return this.bannerService.findAll(filter.build(), orderBy);
   }
 }

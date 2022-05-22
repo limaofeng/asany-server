@@ -76,5 +76,5 @@ public interface CalendarEventDao extends JpaRepository<CalendarEvent, Long> {
   DateRange calendarEventDateStartAndEndByCalendarSet(Long calendarSet, Date date, int day);
 
   @EntityGraph(value = "Graph.CalendarEvent.FetchDates", type = EntityGraph.EntityGraphType.FETCH)
-  List<CalendarEvent> findAllWithDates(List<PropertyFilter> filters, Sort sort);
+  List<CalendarEvent> findAllWithDates(List<PropertyFilter> filters, Sort orderBy);
 }

@@ -1,17 +1,16 @@
 package cn.asany.weixin.framework.message;
 
-import net.sf.cglib.proxy.MethodInterceptor;
-import net.sf.cglib.proxy.MethodProxy;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.jfantasy.framework.util.cglib.CglibUtil;
+import cn.asany.storage.api.FileObject;
 import cn.asany.weixin.framework.core.WeixinService;
 import cn.asany.weixin.framework.exception.WeixinException;
 import cn.asany.weixin.framework.factory.WeixinSessionUtils;
 import cn.asany.weixin.framework.message.content.*;
-
-import java.lang.reflect.Method;
 import java.util.Date;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.jfantasy.framework.util.cglib.CglibUtil;
+import org.jfantasy.framework.util.common.ClassUtil;
+import org.jfantasy.framework.util.common.StringUtil;
 
 /** 微信消息工厂 */
 public class MessageFactory {
@@ -57,35 +56,31 @@ public class MessageFactory {
     Media media =
         CglibUtil.newInstance(
             Media.class,
-            new MethodInterceptor() {
-              @Override
-              public Object intercept(
-                  Object o, Method method, Object[] objects, MethodProxy methodProxy)
-                  throws Throwable {
-                try {
-                  if ("getFileItem".equalsIgnoreCase(method.getName())) {
-                    /*
-                    FileItem fileItem = (FileItem) methodProxy.invokeSuper(o, objects);
-                    org.jfantasy.framework.util.reflect.MethodProxy _methodProxy = ClassUtil.getMethodProxy(Media.class, "getId");
-                    if (_methodProxy == null) {
-                        return null;
-                    }
-                    String id = (String) _methodProxy.invoke(o);
-                    if (fileItem == null && StringUtil.isNotBlank(id)) {
-                        _methodProxy = ClassUtil.getMethodProxy(Media.class, "setFileItem", FileItem.class);
-                        if (_methodProxy == null) {
-                            return null;
-                        }
-                        _methodProxy.invoke(o, fileItem = weiXinService.mediaDownload(id));
-                    }*/
+            (o, method, objects, methodProxy) -> {
+              try {
+                if ("getFileItem".equalsIgnoreCase(method.getName())) {
+                  FileObject fileItem = (FileObject) methodProxy.invokeSuper(o, objects);
+                  org.jfantasy.framework.util.reflect.MethodProxy _methodProxy =
+                      ClassUtil.getMethodProxy(Media.class, "getId");
+                  if (_methodProxy == null) {
                     return null;
-                  } else {
-                    return methodProxy.invokeSuper(o, objects);
                   }
-                } catch (Throwable throwable) { // NOSONAR
-                  LOG.error(throwable.getMessage());
-                  return null;
+                  String id = (String) _methodProxy.invoke(o);
+                  if (fileItem == null && StringUtil.isNotBlank(id)) {
+                    _methodProxy =
+                        ClassUtil.getMethodProxy(Media.class, "setFileItem", FileObject.class);
+                    if (_methodProxy == null) {
+                      return null;
+                    }
+                    _methodProxy.invoke(o, fileItem = weiXinService.mediaDownload(id));
+                  }
+                  return fileItem;
+                } else {
+                  return methodProxy.invokeSuper(o, objects);
                 }
+              } catch (Throwable throwable) {
+                LOG.error(throwable.getMessage());
+                return null;
               }
             });
     media.setId(mediaId);

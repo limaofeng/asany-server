@@ -14,7 +14,7 @@ import org.jfantasy.graphql.types.BaseConnection;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class CourseConnection extends BaseConnection<CourseConnection.CourseEdge> {
+public class CourseConnection extends BaseConnection<CourseConnection.CourseEdge, Course> {
 
   private List<CourseEdge> edges;
 

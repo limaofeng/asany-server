@@ -40,7 +40,7 @@ public class SpecialService {
   }
 
   public Special get(String id) {
-    return this.specialDao.getById(id);
+    return this.specialDao.getReferenceById(id);
   }
 
   @Transactional

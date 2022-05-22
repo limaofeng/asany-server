@@ -81,7 +81,7 @@ public class FileService {
             .md5(md5)
             .isDirectory(false)
             .extension(WebUtil.getExtension(fileName, true).toLowerCase())
-            .parentFile(this.fileDetailDao.getById(parentFolder))
+            .parentFile(this.fileDetailDao.getReferenceById(parentFolder))
             .description(description)
             .storePath(storePath)
             .build();
@@ -108,12 +108,12 @@ public class FileService {
 
   @Cacheable(key = "targetClass + '.' + methodName + '#' + #p0", value = "STORAGE")
   public FileDetail getFileById(Long id) {
-    FileDetail fileDetail = this.fileDetailDao.getById(id);
+    FileDetail fileDetail = this.fileDetailDao.getReferenceById(id);
     return Hibernate.unproxy(fileDetail, FileDetail.class);
   }
 
   public void delete(Long id) {
-    FileDetail fileDetail = this.fileDetailDao.getById(id);
+    FileDetail fileDetail = this.fileDetailDao.getReferenceById(id);
     this.fileDetailDao.deleteByPath(fileDetail.getPath());
   }
 
@@ -132,7 +132,7 @@ public class FileService {
   }
 
   public FileDetail createFolder(String name, Set<FileLabel> labels, Long parentFolder) {
-    return this.createFolder(name, labels, fileDetailDao.getById(parentFolder));
+    return this.createFolder(name, labels, fileDetailDao.getReferenceById(parentFolder));
   }
 
   public FileDetail createFolder(String name, Set<FileLabel> labels, FileDetail parentFolder) {
@@ -322,7 +322,7 @@ public class FileService {
   }
 
   public List<FileDetail> getFileParentsById(Long id) {
-    FileDetail fileDetail = this.fileDetailDao.getById(id);
+    FileDetail fileDetail = this.fileDetailDao.getReferenceById(id);
     String[] parents = StringUtil.tokenizeToStringArray(fileDetail.getPath(), "/");
     List<String> newPaths = new ArrayList<>();
     String basePath = "/";
@@ -344,7 +344,7 @@ public class FileService {
   }
 
   public void deleteStorageSpace(String id) {
-    Space space = this.spaceDao.getById(id);
+    Space space = this.spaceDao.getReferenceById(id);
     FileDetail rootFolder = space.getVFolder();
     this.spaceDao.deleteById(id);
 
@@ -354,7 +354,7 @@ public class FileService {
   }
 
   public FileDetail renameFile(Long id, String name) {
-    FileDetail fileDetail = this.fileDetailDao.getById(id);
+    FileDetail fileDetail = this.fileDetailDao.getReferenceById(id);
 
     if (name.equals(fileDetail.getName())) {
       return fileDetail;
@@ -385,7 +385,7 @@ public class FileService {
   }
 
   public FileDetail createFolder(String name, Long parentFolder) {
-    FileDetail parent = this.fileDetailDao.getById(parentFolder);
+    FileDetail parent = this.fileDetailDao.getReferenceById(parentFolder);
 
     if (RegexpUtil.isMatch(name, "[<>|*?,/]")) {
       throw new ValidationException("文件名不能包含以下字符：<,>,|,*,?,,/");
@@ -419,7 +419,7 @@ public class FileService {
   public FileDetail getTempFolder(Long rootFolderId) {
     String name = ".temp";
 
-    FileDetail rootFolder = this.fileDetailDao.getById(rootFolderId);
+    FileDetail rootFolder = this.fileDetailDao.getReferenceById(rootFolderId);
 
     Optional<FileDetail> tempFolderOptional =
         this.fileDetailDao.findOne(
@@ -451,7 +451,7 @@ public class FileService {
 
   @Transactional(propagation = Propagation.REQUIRES_NEW)
   public FileDetail getRecycleBin(Long rootFolderId) {
-    FileDetail rootFolder = this.fileDetailDao.getById(rootFolderId);
+    FileDetail rootFolder = this.fileDetailDao.getReferenceById(rootFolderId);
 
     Optional<FileDetail> recycleBinOptional =
         this.fileDetailDao.findOne(
@@ -496,7 +496,7 @@ public class FileService {
   }
 
   public FileDetail move(FileDetail file, FileDetail folder) {
-    FileDetail originalFolder = this.fileDetailDao.getById(file.getParentFile().getId());
+    FileDetail originalFolder = this.fileDetailDao.getReferenceById(file.getParentFile().getId());
     String originalFolderPath = originalFolder.getPath();
     String newFolderPath = folder.getPath();
     String newPath = newFolderPath + file.getPath().substring(originalFolderPath.length());

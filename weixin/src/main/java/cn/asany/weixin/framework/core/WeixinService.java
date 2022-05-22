@@ -1,5 +1,6 @@
 package cn.asany.weixin.framework.core;
 
+import cn.asany.storage.api.FileObject;
 import cn.asany.weixin.framework.exception.WeixinException;
 import cn.asany.weixin.framework.message.WeixinMessage;
 import cn.asany.weixin.framework.message.content.*;
@@ -10,9 +11,9 @@ import javax.servlet.http.HttpServletRequest;
 
 public interface WeixinService {
 
-  WeixinMessage parseInMessage(HttpServletRequest request) throws WeixinException;
+  WeixinMessage<?> parseInMessage(HttpServletRequest request) throws WeixinException;
 
-  String parseInMessage(String encryptType, WeixinMessage message) throws WeixinException;
+  String parseInMessage(String encryptType, WeixinMessage<?> message) throws WeixinException;
 
   void sendImageMessage(Image content, String... toUsers) throws WeixinException;
 
@@ -51,7 +52,7 @@ public interface WeixinService {
   User getUser(String userId) throws WeixinException;
 
   @Deprecated
-  Object mediaDownload(String mediaId) throws WeixinException;
+  FileObject mediaDownload(String mediaId) throws WeixinException;
 
   void refreshMenu(Menu... menus) throws WeixinException;
 

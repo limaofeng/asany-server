@@ -78,7 +78,7 @@ public class MultipartUploadService {
   }
 
   public MultipartUpload get(Long id) {
-    return this.multipartUploadDao.getById(id);
+    return this.multipartUploadDao.getReferenceById(id);
   }
 
   public Optional<MultipartUpload> findMultipartUploadByHash(

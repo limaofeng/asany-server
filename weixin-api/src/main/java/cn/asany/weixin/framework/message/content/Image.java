@@ -1,5 +1,7 @@
 package cn.asany.weixin.framework.message.content;
 
+import cn.asany.storage.api.FileObject;
+
 /** 图片消息对象 */
 public class Image {
 
@@ -7,7 +9,7 @@ public class Image {
 
   private Media media;
 
-  public Image(Object fileItem) {
+  public Image(FileObject fileItem) {
     this.media = new Media(fileItem, Media.Type.image);
   }
 

@@ -10,7 +10,6 @@ import graphql.kickstart.tools.GraphQLQueryResolver;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.jfantasy.framework.dao.LimitPageRequest;
-import org.jfantasy.framework.dao.OrderBy;
 import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.graphql.util.Kit;
@@ -18,6 +17,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -37,17 +37,16 @@ public class SecurityGraphQLMutationResolver
   @Autowired private GrantPermissionService grantPermissionService;
 
   /** 查询所有用户 - 分页 */
-  public UserConnection usersConnection(
-      UserFilter filter, int page, int pageSize, OrderBy orderBy) {
-    Pageable pageable = PageRequest.of(page, pageSize, orderBy.toSort());
+  public UserConnection usersConnection(UserFilter filter, int page, int pageSize, Sort orderBy) {
+    Pageable pageable = PageRequest.of(page - 1, pageSize, orderBy);
     PropertyFilterBuilder builder = ObjectUtil.defaultValue(filter, new UserFilter()).getBuilder();
     return Kit.connection(userService.findPage(pageable, builder.build()), UserConnection.class);
   }
 
   /** 查询所有用户 - 列表 */
   public List<User> users(
-      UserFilter filter, int skip, int after, int before, int first, int last, OrderBy orderBy) {
-    Pageable pageable = LimitPageRequest.of(skip, first, orderBy.toSort());
+      UserFilter filter, int skip, int after, int before, int first, int last, Sort orderBy) {
+    Pageable pageable = LimitPageRequest.of(skip, first, orderBy);
     PropertyFilterBuilder builder = ObjectUtil.defaultValue(filter, new UserFilter()).getBuilder();
     return userService.findPage(pageable, builder.build()).getContent();
   }

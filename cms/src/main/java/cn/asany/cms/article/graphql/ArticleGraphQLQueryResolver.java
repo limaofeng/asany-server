@@ -16,7 +16,6 @@ import cn.asany.cms.permission.specification.StarSpecification;
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import java.util.List;
 import java.util.Optional;
-import org.jfantasy.framework.dao.OrderBy;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
 import org.jfantasy.framework.util.common.ObjectUtil;
@@ -25,6 +24,7 @@ import org.jfantasy.framework.util.regexp.RegexpUtil;
 import org.jfantasy.graphql.util.Kit;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 /**
@@ -65,11 +65,11 @@ public class ArticleGraphQLQueryResolver implements GraphQLQueryResolver {
    * @return ArticleConnection
    */
   public ArticleConnection articles(
-      ArticleFilter filter, int first, int page, int pageSize, OrderBy orderBy) {
+      ArticleFilter filter, int first, int page, int pageSize, Sort orderBy) {
     PropertyFilterBuilder builder =
         ObjectUtil.defaultValue(filter, new ArticleFilter()).getBuilder();
 
-    Pageable pageable = PageRequest.of(page, pageSize, OrderBy.desc("createdAt").toSort());
+    Pageable pageable = PageRequest.of(page - 1, pageSize, orderBy);
 
     return Kit.connection(
         articleService.findPage(pageable, builder.build()), ArticleConnection.class);
@@ -80,9 +80,9 @@ public class ArticleGraphQLQueryResolver implements GraphQLQueryResolver {
    *
    * @return List<ArticleChannel>
    */
-  public List<ArticleChannel> articleChannels(ArticleChannelFilter filter, OrderBy orderBy) {
+  public List<ArticleChannel> articleChannels(ArticleChannelFilter filter, Sort orderBy) {
     if (orderBy != null) {
-      return channelService.findAllArticle(filter.build(), orderBy.toSort());
+      return channelService.findAllArticle(filter.build(), orderBy);
     } else {
       return channelService.findAll(filter.build());
     }
@@ -106,14 +106,14 @@ public class ArticleGraphQLQueryResolver implements GraphQLQueryResolver {
   }
 
   public List<ArticleTag> articleTags(
-      String organization, ArticleChannelFilter filter, OrderBy orderBy) {
+      String organization, ArticleChannelFilter filter, Sort orderBy) {
     PropertyFilterBuilder builder =
         ObjectUtil.defaultValue(filter, new ArticleChannelFilter()).getBuilder();
     if (organization != null) {
       builder.equal("organization.id", organization);
     }
     if (orderBy != null) {
-      return articleTagService.findAllArticle(builder.build(), orderBy.toSort());
+      return articleTagService.findAllArticle(builder.build(), orderBy);
     } else {
       return articleTagService.findAll(builder.build());
     }
@@ -132,17 +132,12 @@ public class ArticleGraphQLQueryResolver implements GraphQLQueryResolver {
       ArticleFilter filter,
       int page,
       int pageSize,
-      OrderBy orderBy) {
+      Sort orderBy) {
     PropertyFilterBuilder builder =
         ObjectUtil.defaultValue(filter, new ArticleFilter()).getBuilder();
     builder.and(new StarSpecification(employee, starType.getValue()));
     return Kit.connection(
-        articleService.findPage(
-            PageRequest.of(
-                page,
-                pageSize,
-                ObjectUtil.defaultValue(orderBy, OrderBy.desc("createdAt")).toSort()),
-            builder.build()),
+        articleService.findPage(PageRequest.of(page - 1, pageSize, orderBy), builder.build()),
         ArticleConnection.class);
   }
 }

@@ -14,11 +14,11 @@ import cn.asany.security.core.bean.Role;
 import graphql.kickstart.tools.GraphQLResolver;
 import java.util.List;
 import java.util.Optional;
-import org.jfantasy.framework.dao.OrderBy;
 import org.jfantasy.framework.security.LoginUser;
 import org.jfantasy.framework.security.SpringSecurityUtils;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 /**
@@ -37,7 +37,7 @@ public class OrganizationGraphQLResolver implements GraphQLResolver<Organization
 
   @Autowired private OrganizationMemberService organizationMemberService;
 
-  public List<Job> jobs(Organization organization, OrderBy orderBy) {
+  public List<Job> jobs(Organization organization, Sort orderBy) {
     return jobService.findAll(organization.getId(), orderBy);
   }
 
@@ -50,7 +50,7 @@ public class OrganizationGraphQLResolver implements GraphQLResolver<Organization
   }
 
   //    public EmployeeConnection employees(Organization organization, EmployeeFilter filter, int
-  // page, int pageSize, OrderBy orderBy) {
+  // page, int pageSize, Sort orderBy) {
   //        PropertyFilterBuilder builder = PropertyFilter.builder();
   //        if (organization.getEmployeeFilter() != null) {
   //            builder.and(organization.getEmployeeFilter().getBuilder());

@@ -13,12 +13,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.jfantasy.framework.dao.LimitPageRequest;
-import org.jfantasy.framework.dao.OrderBy;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.common.StringUtil;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 /**
@@ -100,9 +100,9 @@ public class ArticleChannelGraphQLResolver implements GraphQLResolver<ArticleCha
       /* 之前几条 */
       int last,
       /* 排序 */
-      OrderBy orderBy) {
+      Sort orderBy) {
 
-    Pageable pageable = LimitPageRequest.of(skip, first, orderBy.toSort());
+    Pageable pageable = LimitPageRequest.of(skip, first, orderBy);
 
     PropertyFilterBuilder builder = PropertyFilter.builder();
 

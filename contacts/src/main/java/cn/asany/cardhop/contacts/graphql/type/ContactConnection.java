@@ -9,7 +9,7 @@ import org.jfantasy.graphql.types.BaseConnection;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class ContactConnection extends BaseConnection<ContactConnection.ContactEdge> {
+public class ContactConnection extends BaseConnection<ContactConnection.ContactEdge, Contact> {
 
   private List<ContactEdge> edges;
 

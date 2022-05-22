@@ -258,7 +258,7 @@ public class EmployeeService {
 
   @Transactional
   public Employee get(Long id) {
-    return employeeDao.getById(id);
+    return employeeDao.getReferenceById(id);
   }
 
   public Employee update(Long id, boolean merge, Employee employee) {

@@ -34,6 +34,6 @@ public class DataSourceService {
   }
 
   public DataSourceConfig getConfig(Long id) {
-    return this.dataSourceDao.getById(id);
+    return this.dataSourceDao.getReferenceById(id);
   }
 }

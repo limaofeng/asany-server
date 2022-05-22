@@ -1,5 +1,7 @@
 package cn.asany.weixin.framework.core;
 
+import cn.asany.storage.api.FileObject;
+import cn.asany.storage.api.UploadService;
 import me.chanjar.weixin.common.api.WxConsts;
 import me.chanjar.weixin.common.bean.menu.WxMenu;
 import me.chanjar.weixin.common.bean.menu.WxMenuButton;
@@ -38,11 +40,13 @@ import java.util.List;
 public class WeixinMpService implements WeixinService {
 
     private static final Log LOG = LogFactory.getLog(WeixinMpService.class);
-    private WxMpService wxMpService;
-    private WxMpConfigStorage wxMpConfigStorage;
-    private WxMpUserService userService;
-    private Jsapi jsapi;
-    private Openapi openapi;
+    private final WxMpService wxMpService;
+    private final WxMpConfigStorage wxMpConfigStorage;
+    private final WxMpUserService userService;
+    private final Jsapi jsapi;
+    private final Openapi openapi;
+
+    private UploadService uploadService;
 
     public WeixinMpService(WxMpService wxMpService, WxMpConfigStorage wxMpConfigStorage) {
         this.wxMpService = wxMpService;
@@ -53,7 +57,7 @@ public class WeixinMpService implements WeixinService {
     }
 
     @Override
-    public WeixinMessage parseInMessage(HttpServletRequest request) throws WeixinException {
+    public WeixinMessage<?> parseInMessage(HttpServletRequest request) throws WeixinException {
         String signature = request.getParameter("signature");
         String nonce = request.getParameter("nonce");
         String timestamp = request.getParameter("timestamp");
@@ -157,7 +161,7 @@ public class WeixinMpService implements WeixinService {
     }
 
     @Override
-    public String parseInMessage(String encryptType, WeixinMessage message) throws WeixinException {
+    public String parseInMessage(String encryptType, WeixinMessage<?> message) throws WeixinException {
         WxMpXmlOutMessage outMessage;
         if (message instanceof TextMessage) {
             outMessage = WxMpXmlOutMessage.TEXT()
@@ -527,7 +531,7 @@ public class WeixinMpService implements WeixinService {
         }
     }
 
-    public Object mediaDownload(String mediaId) throws WeixinException {
+    public FileObject mediaDownload(String mediaId) throws WeixinException {
         WxMpMaterialService materialService = wxMpService.getMaterialService();
         try {
             File file = materialService.mediaDownload(mediaId);
@@ -589,11 +593,11 @@ public class WeixinMpService implements WeixinService {
                 if (button.getSubButtons().isEmpty()) {
                     menus.add(new Menu(type, button.getName(), StringUtil.defaultValue(button.getKey(), button.getUrl())));
                 } else {
-                    List<Menu> subMenus = new ArrayList<Menu>();
+                    List<Menu> subMenus = new ArrayList<>();
                     for (WxMenuButton wxMenuButton : button.getSubButtons()) {
                         subMenus.add(new Menu(Menu.MenuType.valueOf(wxMenuButton.getType().toUpperCase()), wxMenuButton.getName(), StringUtil.defaultValue(wxMenuButton.getKey(), wxMenuButton.getUrl())));
                     }
-                    menus.add(new Menu(type, button.getName(), StringUtil.defaultValue(button.getKey(), button.getUrl()), subMenus.toArray(new Menu[subMenus.size()])));
+                    menus.add(new Menu(type, button.getName(), StringUtil.defaultValue(button.getKey(), button.getUrl()), subMenus.toArray(new Menu[0])));
                 }
             }
             return menus;

@@ -13,12 +13,12 @@ import graphql.kickstart.tools.GraphQLQueryResolver;
 import graphql.schema.DataFetchingEnvironment;
 import java.util.List;
 import java.util.Optional;
-import org.jfantasy.framework.dao.OrderBy;
 import org.jfantasy.framework.spring.mvc.error.NotFoundException;
 import org.jfantasy.graphql.context.AuthorizationGraphQLServletContext;
 import org.jfantasy.graphql.util.Kit;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -80,10 +80,10 @@ public class ContactsGraphqlApiResolver implements GraphQLQueryResolver, GraphQL
       /* 每页返回数据条数 */
       int pageSize,
       /* 排序 */
-      OrderBy orderBy,
+      Sort orderBy,
       /* 环境 */
       DataFetchingEnvironment environment) {
-    Pageable pageable = PageRequest.of(page, pageSize, orderBy.toSort());
+    Pageable pageable = PageRequest.of(page - 1, pageSize, orderBy);
 
     IdUtils.IdKey idKey = IdUtils.parseKey(filter.getToken());
 

@@ -6,5 +6,5 @@ dependencies {
     implementation project(":security")
     implementation project(":storage-api")
     testImplementation project(":storage")
-    testImplementation 'com.alibaba:easyexcel:3.0.5'
+    testImplementation "com.alibaba:easyexcel:${LIB_EASYEXCEL_VER}"
 }

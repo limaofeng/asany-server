@@ -9,7 +9,7 @@ import org.jfantasy.graphql.types.BaseConnection;
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class LandingStoreConnection
-    extends BaseConnection<LandingStoreConnection.LandingStoreEdge> {
+    extends BaseConnection<LandingStoreConnection.LandingStoreEdge, LandingStore> {
 
   private List<LandingStoreConnection.LandingStoreEdge> edges;
 

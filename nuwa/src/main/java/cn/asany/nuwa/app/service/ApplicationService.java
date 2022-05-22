@@ -254,7 +254,7 @@ public class ApplicationService implements ClientDetailsService {
 
   @Transactional(rollbackFor = Exception.class)
   public void deleteApplication(Long id) {
-    Application app = this.applicationDao.getById(id);
+    Application app = this.applicationDao.getReferenceById(id);
     // 路由组件
     List<ApplicationRoute> routes =
         this.applicationRouteDao.findAll(

@@ -6,7 +6,6 @@ import cn.asany.cms.article.dao.BannerDao;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import org.jfantasy.framework.dao.OrderBy;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -26,8 +25,8 @@ public class BannerService {
   }
 
   @Transactional(readOnly = true)
-  public List<Banner> findAll(List<PropertyFilter> filters, OrderBy orderBy) {
-    return bannerDao.findAll(filters, orderBy != null ? orderBy.toSort() : Sort.unsorted());
+  public List<Banner> findAll(List<PropertyFilter> filters, Sort orderBy) {
+    return bannerDao.findAll(filters, orderBy);
   }
 
   @Transactional(readOnly = true)

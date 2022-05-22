@@ -1,5 +1,6 @@
 package cn.asany.weixin.framework.core;
 
+import cn.asany.storage.api.FileObject;
 import cn.asany.weixin.framework.exception.WeixinException;
 import cn.asany.weixin.framework.message.WeixinMessage;
 import cn.asany.weixin.framework.message.content.*;
@@ -26,9 +27,9 @@ public interface WeixinCoreHelper {
    * @param session 微信号session对象
    * @param request HTTP请求
    * @return WeiXinMessage
-   * @throws WeixinException
+   * @throws WeixinException 异常
    */
-  WeixinMessage parseInMessage(WeixinSession session, HttpServletRequest request)
+  WeixinMessage<?> parseInMessage(WeixinSession session, HttpServletRequest request)
       throws WeixinException;
 
   /**
@@ -38,9 +39,9 @@ public interface WeixinCoreHelper {
    * @param encryptType encryptType
    * @param message 消息
    * @return String
-   * @throws WeixinException
+   * @throws WeixinException 异常
    */
-  String buildOutMessage(WeixinSession session, String encryptType, WeixinMessage message)
+  String buildOutMessage(WeixinSession session, String encryptType, WeixinMessage<?> message)
       throws WeixinException;
 
   /**
@@ -49,7 +50,7 @@ public interface WeixinCoreHelper {
    * @param session 微信号session对象
    * @param content 图片消息
    * @param toUsers 接收人
-   * @throws WeixinException
+   * @throws WeixinException 异常
    */
   void sendImageMessage(WeixinSession session, Image content, String... toUsers)
       throws WeixinException;
@@ -60,7 +61,7 @@ public interface WeixinCoreHelper {
    * @param session 微信号session对象
    * @param content 图片消息
    * @param toGroup 接收组
-   * @throws WeixinException
+   * @throws WeixinException 异常
    */
   void sendImageMessage(WeixinSession session, Image content, long toGroup) throws WeixinException;
 
@@ -70,7 +71,7 @@ public interface WeixinCoreHelper {
    * @param session 微信号session对象
    * @param content 语音消息
    * @param toUsers 接收人
-   * @throws WeixinException
+   * @throws WeixinException 异常
    */
   void sendVoiceMessage(WeixinSession session, Voice content, String... toUsers)
       throws WeixinException;
@@ -81,7 +82,7 @@ public interface WeixinCoreHelper {
    * @param session 微信号session对象
    * @param content 语音消息
    * @param toGroup 接收人
-   * @throws WeixinException
+   * @throws WeixinException 异常
    */
   void sendVoiceMessage(WeixinSession session, Voice content, long toGroup) throws WeixinException;
 
@@ -91,7 +92,7 @@ public interface WeixinCoreHelper {
    * @param session 微信号session对象
    * @param content 视频消息
    * @param toUsers 接收人
-   * @throws WeixinException
+   * @throws WeixinException 异常
    */
   void sendVideoMessage(WeixinSession session, Video content, String... toUsers)
       throws WeixinException;
@@ -102,7 +103,7 @@ public interface WeixinCoreHelper {
    * @param session 微信号session对象
    * @param content 视频消息
    * @param toGroup 接收人
-   * @throws WeixinException
+   * @throws WeixinException 异常
    */
   void sendVideoMessage(WeixinSession session, Video content, long toGroup) throws WeixinException;
 
@@ -112,7 +113,7 @@ public interface WeixinCoreHelper {
    * @param session 微信号session对象
    * @param content 音乐消息
    * @param toUser 接收人
-   * @throws WeixinException
+   * @throws WeixinException 异常
    */
   void sendMusicMessage(WeixinSession session, Music content, String toUser) throws WeixinException;
 
@@ -122,7 +123,7 @@ public interface WeixinCoreHelper {
    * @param session 微信号session对象
    * @param content 图文消息
    * @param toUser 接收人
-   * @throws WeixinException
+   * @throws WeixinException 异常
    */
   void sendNewsMessage(WeixinSession session, List<News> content, String toUser)
       throws WeixinException;
@@ -133,7 +134,7 @@ public interface WeixinCoreHelper {
    * @param session 微信号session对象
    * @param articles 图文消息
    * @param toUsers 接收人
-   * @throws WeixinException
+   * @throws WeixinException 异常
    */
   void sendNewsMessage(WeixinSession session, List<Article> articles, String... toUsers)
       throws WeixinException;
@@ -144,7 +145,7 @@ public interface WeixinCoreHelper {
    * @param session 微信号session对象
    * @param articles 图文消息
    * @param toGroup 接收人
-   * @throws WeixinException
+   * @throws WeixinException 异常
    */
   void sendNewsMessage(WeixinSession session, List<Article> articles, long toGroup)
       throws WeixinException;
@@ -155,7 +156,7 @@ public interface WeixinCoreHelper {
    * @param session 微信号session对象
    * @param content 文本消息
    * @param toUsers 接收人
-   * @throws WeixinException
+   * @throws WeixinException 异常
    */
   void sendTextMessage(WeixinSession session, String content, String... toUsers)
       throws WeixinException;
@@ -166,7 +167,7 @@ public interface WeixinCoreHelper {
    * @param session 微信号session对象
    * @param content 文本消息
    * @param toGroup 接收组
-   * @throws WeixinException
+   * @throws WeixinException 异常
    */
   void sendTextMessage(WeixinSession session, String content, long toGroup) throws WeixinException;
 
@@ -176,7 +177,7 @@ public interface WeixinCoreHelper {
    * @param session 微信号session对象
    * @param content 模板消息
    * @param toUser 接收人
-   * @throws WeixinException
+   * @throws WeixinException 异常
    */
   void sendTemplateMessage(WeixinSession session, Template content, String toUser)
       throws WeixinException;
@@ -233,29 +234,16 @@ public interface WeixinCoreHelper {
    * @param session 微信号session对象
    * @param mediaId 媒体id
    * @return FileItem
-   * @throws WeixinException
+   * @throws WeixinException 异常
    */
-  Object mediaDownload(WeixinSession session, String mediaId) throws WeixinException;
-
-  /**
-   * 获取安全链接
-   *
-   * @param session 微信号session对象
-   * @param redirectUri 授权后重定向的回调链接地址，请使用urlencode对链接进行处理
-   * @param scope 应用授权作用域，snsapi_base （不弹出授权页面，直接跳转，只能获取用户openid），snsapi_userinfo
-   *     （弹出授权页面，可通过openid拿到昵称、性别、所在地。并且，即使在未关注的情况下，只要用户授权，也能获取其信息）
-   * @param state 重定向后会带上state参数，开发者可以填写a-zA-Z0-9的参数值
-   * @return url
-   * @throws WeixinException String oauth2buildAuthorizationUrl(WeixinSession session, String
-   *     redirectUri, Scope scope, String state) throws WeixinException;
-   */
+  FileObject mediaDownload(WeixinSession session, String mediaId) throws WeixinException;
 
   /**
    * 刷新菜单配置
    *
    * @param session 微信号session对象
    * @param menus 菜单数组
-   * @throws WeixinException
+   * @throws WeixinException 异常
    */
   void refreshMenu(WeixinSession session, Menu... menus) throws WeixinException;
 
@@ -264,7 +252,7 @@ public interface WeixinCoreHelper {
    *
    * @param session 微信号session对象
    * @return List<Menu>
-   * @throws WeixinException
+   * @throws WeixinException 异常
    */
   List<Menu> getMenus(WeixinSession session) throws WeixinException;
 
@@ -272,7 +260,7 @@ public interface WeixinCoreHelper {
    * 清除Menu配置
    *
    * @param session 微信号session对象
-   * @throws WeixinException
+   * @throws WeixinException 异常
    */
   void clearMenu(WeixinSession session) throws WeixinException;
 
@@ -281,7 +269,7 @@ public interface WeixinCoreHelper {
    *
    * @param session 微信号session对象
    * @return Jsapi
-   * @throws WeixinException
+   * @throws WeixinException 异常
    */
   Jsapi getJsapi(WeixinSession session) throws WeixinException;
 

@@ -34,7 +34,7 @@ public class SpaceService {
 
   @Cacheable(key = "targetClass + '#' + #p0", cacheNames = "STORAGE")
   public Space get(String id) {
-    Space space = this.spaceDao.getById(id);
+    Space space = this.spaceDao.getReferenceById(id);
     return (Space) Hibernate.unproxy(space);
   }
 

@@ -29,7 +29,7 @@ public class CourseGraphQLQueryResolver implements GraphQLQueryResolver {
     //            builder.in("learnerScope.scope", emp.getAuthoritys());
     //        }
     return Kit.connection(
-        courseService.findPage(PageRequest.of(page, pageSize, Sort.by("top")), builder.build()),
+        courseService.findPage(PageRequest.of(page - 1, pageSize, Sort.by("top")), builder.build()),
         CourseConnection.class);
   }
 }

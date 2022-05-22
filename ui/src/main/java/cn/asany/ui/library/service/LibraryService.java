@@ -62,7 +62,7 @@ public class LibraryService {
   }
 
   public Library update(Long id, Library library) {
-    Library oldLibrary = this.libraryDao.getById(id);
+    Library oldLibrary = this.libraryDao.getReferenceById(id);
     oldLibrary.setName(library.getName());
     oldLibrary.setDescription(library.getDescription());
     return this.libraryDao.update(oldLibrary);

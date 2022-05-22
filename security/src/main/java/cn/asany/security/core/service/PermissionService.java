@@ -12,13 +12,13 @@ import cn.asany.security.core.service.dto.ImportPermission;
 import cn.asany.security.core.util.GrantPermissionUtils;
 import java.util.*;
 import org.apache.commons.collections.CollectionUtils;
-import org.jfantasy.framework.dao.OrderBy;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.common.toys.CompareResults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,8 +47,8 @@ public class PermissionService {
     return this.permissionDao.findPage(pageable, filters);
   }
 
-  public List<Permission> findAll(List<PropertyFilter> filters, OrderBy orderBy) {
-    return this.permissionDao.findAll(filters, orderBy.toSort());
+  public List<Permission> findAll(List<PropertyFilter> filters, Sort orderBy) {
+    return this.permissionDao.findAll(filters, orderBy);
   }
 
   public Permission save(Permission permission) {
@@ -163,7 +163,7 @@ public class PermissionService {
     if (!permissionTypeDao.existsById(id)) {
       throw new ValidDataException(ValidDataException.PERMITYPE_NOTEXISTS, id);
     }
-    PermissionType permissionType = permissionTypeDao.getById(id);
+    PermissionType permissionType = permissionTypeDao.getReferenceById(id);
     if (CollectionUtils.isEmpty(permissionType.getPermissions())) {
       permissionTypeDao.delete(permissionType);
     } else {

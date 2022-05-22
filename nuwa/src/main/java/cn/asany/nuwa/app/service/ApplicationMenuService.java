@@ -29,7 +29,7 @@ public class ApplicationMenuService {
   }
 
   public ApplicationMenu get(Long id) {
-    return this.menuDao.getById(id);
+    return this.menuDao.getReferenceById(id);
   }
 
   public ApplicationMenu create(ApplicationMenu menu) {
@@ -48,7 +48,7 @@ public class ApplicationMenuService {
       }
     }
     // 计算 Level
-    menu.setLevel(parentId == null ? 1 : this.menuDao.getById(parentId).getLevel() + 1);
+    menu.setLevel(parentId == null ? 1 : this.menuDao.getReferenceById(parentId).getLevel() + 1);
     return this.menuDao.save(menu);
   }
 
@@ -57,7 +57,7 @@ public class ApplicationMenuService {
 
     menu.setId(id);
 
-    ApplicationMenu beforeMenu = this.menuDao.getById(id);
+    ApplicationMenu beforeMenu = this.menuDao.getReferenceById(id);
 
     if (hasModifyIndex(menu, beforeMenu)) {
       // 计算 Index
@@ -88,7 +88,7 @@ public class ApplicationMenuService {
       // 移出
       locomotion(beforeMenu.getApplication().getId(), beforeParentId, beforeMenu, false);
 
-      menu.setLevel(parentId == null ? 1 : this.menuDao.getById(parentId).getLevel() + 1);
+      menu.setLevel(parentId == null ? 1 : this.menuDao.getReferenceById(parentId).getLevel() + 1);
     }
     return this.menuDao.update(menu, merge);
   }

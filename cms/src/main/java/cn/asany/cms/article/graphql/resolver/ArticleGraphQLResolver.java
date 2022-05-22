@@ -16,8 +16,8 @@ import cn.asany.security.core.bean.Permission;
 import graphql.kickstart.tools.GraphQLResolver;
 import java.util.ArrayList;
 import java.util.List;
-import org.jfantasy.framework.dao.OrderBy;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 /**
@@ -119,7 +119,7 @@ public class ArticleGraphQLResolver implements GraphQLResolver<Article> {
   //    }
 
   public CommentConnection comments(
-      Article article, CommentFilter filter, int page, int pageSize, OrderBy orderBy) {
+      Article article, CommentFilter filter, int page, int pageSize, Sort orderBy) {
     CommentConnection comments = new CommentConnection();
     if (article.getCategory() == ArticleCategory.news) {
       comments =

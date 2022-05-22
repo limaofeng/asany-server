@@ -314,7 +314,7 @@ extend type Query {
     filter: LandingPageFilter
     page: Int = 1
     pageSize: Int = 15
-    orderBy: OrderBy = {}
+    orderBy: OrderBy = "unsorted"
   ): LandingPageConnection!
   """
   海报
@@ -327,7 +327,7 @@ extend type Query {
     filter: LandingPosterFilter
     page: Int = 1
     pageSize: Int = 15
-    orderBy: OrderBy = {}
+    orderBy: OrderBy = "unsorted"
   ): LandingPosterConnection!
   """
   门店
@@ -340,6 +340,6 @@ extend type Query {
     filter: LandingStoreFilter
     page: Int = 1
     pageSize: Int = 15
-    orderBy: OrderBy = {}
+    orderBy: OrderBy = "unsorted"
   ): LandingStoreConnection!
 }

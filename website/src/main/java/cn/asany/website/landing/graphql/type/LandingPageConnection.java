@@ -8,7 +8,8 @@ import org.jfantasy.graphql.types.BaseConnection;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class LandingPageConnection extends BaseConnection<LandingPageConnection.LandingPageEdge> {
+public class LandingPageConnection
+    extends BaseConnection<LandingPageConnection.LandingPageEdge, LandingPage> {
 
   private List<LandingPageConnection.LandingPageEdge> edges;
 

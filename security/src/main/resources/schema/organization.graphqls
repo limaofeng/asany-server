@@ -442,11 +442,11 @@ type Organization {
   # 组织部门
   #    departments(filter: DepartmentFilter): [Department]
   # 组织员工
-  #    employees(filter: EmployeeFilter, page: Int = 1, pageSize: Int = 15, orderBy: OrderBy = {}): EmployeeConnection
+  #    employees(filter: EmployeeFilter, page: Int = 1, pageSize: Int = 15, orderBy: OrderBy = "unsorted"): EmployeeConnection
   #    # 组织下的角色
   #    roles(enabled: Boolean = true,scope:String = "GLOBAL"): [Role]
   # 组织职位
-  jobs(orderBy: OrderBy = {}): [Job]
+  jobs(orderBy: OrderBy = "unsorted"): [Job]
   # 创建人
   createdBy: String
   # 修改人
@@ -837,7 +837,7 @@ extend type Query {
   # 单个部门
   department(id: ID!): Department
   #    # 员工分页查询
-  #    employees(organization: ID!, filter: EmployeeFilter = {}, page: Int = 1, pageSize: Int = 15, orderBy: OrderBy = {}): EmployeeConnection
+  #    employees(organization: ID!, filter: EmployeeFilter = {}, page: Int = 1, pageSize: Int = 15, orderBy: OrderBy = "unsorted"): EmployeeConnection
   #    # 单个员工
   #    employee(id: ID!, idType: EmployeeIdType = id): Employee
   #    # 查询全部群组
@@ -845,7 +845,7 @@ extend type Query {
   #    # 查询单个群组
   #    employeeGroup(id: ID!): EmployeeGroup
   #    # 全部职务
-  #    jobs(organization: ID!,orderBy: OrderBy = {}): [Job]
+  #    jobs(organization: ID!,orderBy: OrderBy = "unsorted"): [Job]
   #    #根据组织获取人员分组使用范围
   #    employeeGroupScopes(organization: ID!):[EmployeeGroupScope]
   #    # 查询所有部门类型

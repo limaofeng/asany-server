@@ -10,7 +10,6 @@ import cn.asany.system.service.DictService;
 import graphql.kickstart.tools.GraphQLMutationResolver;
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import java.util.List;
-import org.jfantasy.framework.dao.OrderBy;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
 import org.jfantasy.framework.error.ValidationException;
@@ -18,6 +17,7 @@ import org.jfantasy.framework.util.common.StringUtil;
 import org.jfantasy.graphql.util.Kit;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -44,9 +44,8 @@ public class DictGraphQLQueryAndMutationResolver
    * @param orderBy 排序
    * @return DictConnection
    */
-  public DictConnection dictsConnection(
-      DictFilter filter, int page, int pageSize, OrderBy orderBy) {
-    Pageable pageable = PageRequest.of(page, pageSize, orderBy.toSort());
+  public DictConnection dictsConnection(DictFilter filter, int page, int pageSize, Sort orderBy) {
+    Pageable pageable = PageRequest.of(page - 1, pageSize, orderBy);
     return Kit.connection(dictService.findPage(pageable, filter.build()), DictConnection.class);
   }
 

@@ -1,5 +1,7 @@
 package cn.asany.weixin.framework.message.content;
 
+import cn.asany.storage.api.FileObject;
+
 /** 微信图文消息 */
 public class Article {
   /** (必填) 缩略图文件 生成图文消息缩略图 生成thumbMediaId字段 */
@@ -17,7 +19,7 @@ public class Article {
   /** 是否显示封面，true为显示，false为不显示 */
   private boolean showCoverPic;
 
-  public Article(String title, String content, Object fileItem) {
+  public Article(String title, String content, FileObject fileItem) {
     this.thumb = new Media(fileItem, Media.Type.thumb);
     this.title = title;
     this.content = content;

@@ -424,7 +424,7 @@ public class OrganizationService {
   }
 
   public Organization getById(Long id) {
-    return organizationDao.getById(id);
+    return organizationDao.getReferenceById(id);
   }
 
   public Organization update(Long id, boolean merge, Organization department) {
@@ -434,7 +434,7 @@ public class OrganizationService {
 
   public Organization updateOrganizationProfile(Long id, Organization organization) {
     organization.setId(id);
-    Organization oldOrganization = this.organizationDao.getById(id);
+    Organization oldOrganization = this.organizationDao.getReferenceById(id);
     BeanUtil.copyProperties(
         oldOrganization,
         organization,
@@ -448,7 +448,7 @@ public class OrganizationService {
   }
 
   public Organization renameOrganizationCode(Long id, String code) {
-    Organization oldOrganization = this.organizationDao.getById(id);
+    Organization oldOrganization = this.organizationDao.getReferenceById(id);
     oldOrganization.setCode(code);
     return this.organizationDao.update(oldOrganization);
   }

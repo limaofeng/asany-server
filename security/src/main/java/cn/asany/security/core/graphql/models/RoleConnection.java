@@ -13,7 +13,7 @@ import org.jfantasy.graphql.types.BaseConnection;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class RoleConnection extends BaseConnection<RoleConnection.RoleEdge> {
+public class RoleConnection extends BaseConnection<RoleConnection.RoleEdge, Role> {
 
   private List<RoleEdge> edges;
 

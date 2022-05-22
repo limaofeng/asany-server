@@ -204,7 +204,7 @@ public class CalendarEventDaoImpl extends ComplexJpaRepository<CalendarEvent, Lo
   }
 
   @Override
-  public List<CalendarEvent> findAllWithDates(List<PropertyFilter> filters, Sort sort) {
-    return this.findAll(filters, sort);
+  public List<CalendarEvent> findAllWithDates(List<PropertyFilter> filters, Sort orderBy) {
+    return this.findAll(filters, orderBy);
   }
 }

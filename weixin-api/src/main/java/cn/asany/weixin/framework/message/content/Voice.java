@@ -1,5 +1,7 @@
 package cn.asany.weixin.framework.message.content;
 
+import cn.asany.storage.api.FileObject;
+
 /** 语音消息 */
 public class Voice {
 
@@ -14,7 +16,7 @@ public class Voice {
     this.recognition = recognition;
   }
 
-  public Voice(Object fileItem) {
+  public Voice(FileObject fileItem) {
     this.media = new Media(fileItem, Media.Type.voice);
   }
 

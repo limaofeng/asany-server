@@ -9,7 +9,7 @@ import org.jfantasy.graphql.types.BaseConnection;
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class LandingPosterConnection
-    extends BaseConnection<LandingPosterConnection.LandingPosterEdge> {
+    extends BaseConnection<LandingPosterConnection.LandingPosterEdge, LandingPoster> {
 
   private List<LandingPosterConnection.LandingPosterEdge> edges;
 

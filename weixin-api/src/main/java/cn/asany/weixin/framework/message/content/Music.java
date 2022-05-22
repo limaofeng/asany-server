@@ -1,5 +1,7 @@
 package cn.asany.weixin.framework.message.content;
 
+import cn.asany.storage.api.FileObject;
+
 /** 音乐消息 */
 public class Music {
   /** 音乐标题 */
@@ -13,13 +15,13 @@ public class Music {
   /** 缩略图 */
   private Media thumb;
 
-  public Music(String title, String description, String url, String hqUrl, Object thumb) {
+  public Music(String title, String description, String url, String hqUrl, FileObject thumb) {
     this(url, hqUrl, thumb);
     this.title = title;
     this.description = description;
   }
 
-  public Music(String url, String hqUrl, Object thumb) {
+  public Music(String url, String hqUrl, FileObject thumb) {
     this.url = url;
     this.hqUrl = hqUrl;
     this.thumb = new Media(thumb, Media.Type.thumb);

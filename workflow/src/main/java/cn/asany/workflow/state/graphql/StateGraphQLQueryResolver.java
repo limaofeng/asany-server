@@ -21,8 +21,8 @@ public class StateGraphQLQueryResolver implements GraphQLQueryResolver {
 
   /** 增加任务状态 */
   /** 查询所有优先级 */
-  public StateConnection states(StateFilter filter, int page, int pageSize, OrderBy orderBy) {
-    Pageable pageable = PageRequest.of(page, pageSize, orderBy.toSort());
+  public StateConnection states(StateFilter filter, int page, int pageSize, Sort orderBy) {
+    Pageable pageable = PageRequest.of(page - 1, pageSize, sort);
     List<PropertyFilter> list = new ArrayList<>();
     return Kit.connection(stateService.findPage(pageable, list), StateConnection.class);
   }

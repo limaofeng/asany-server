@@ -27,8 +27,8 @@ import org.hibernate.Hibernate;
 import org.hibernate.annotations.*;
 import org.hibernate.annotations.Cache;
 import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.search.annotations.Document;
-import org.jfantasy.framework.search.annotations.Field;
+import org.jfantasy.framework.search.annotations.IndexProperty;
+import org.jfantasy.framework.search.annotations.Indexed;
 import org.jfantasy.framework.spring.validation.Operation;
 
 /**
@@ -43,7 +43,7 @@ import org.jfantasy.framework.spring.validation.Operation;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Document(indexName = "articles")
+@Indexed(indexName = "articles")
 @Entity
 @Table(
     name = "CMS_ARTICLE",
@@ -83,11 +83,11 @@ public class Article extends BaseBusEntity {
   @Column(name = "STATUS", length = 20, nullable = false)
   private ArticleStatus status;
   /** 文章标题 */
-  @Field(store = true)
+  @IndexProperty(store = true)
   @Column(name = "TITLE")
   private String title;
   /** 摘要 */
-  @Field(store = true)
+  @IndexProperty(store = true)
   @Column(name = "SUMMARY", length = 500)
   private String summary;
   /** 文章封面 */
@@ -133,7 +133,7 @@ public class Article extends BaseBusEntity {
   @Convert(converter = MetaDataConverter.class)
   private MetaData meta;
   /** 发布日期 */
-  @Field(store = true)
+  @IndexProperty(store = true)
   @Temporal(TemporalType.TIMESTAMP)
   @Column(name = "RELEASE_DATE")
   private Date publishedAt;
