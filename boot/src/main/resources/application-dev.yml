@@ -3,6 +3,11 @@ spring:
     name: server
   sequence:
     pool-size: 10
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        generate_statistics: true
   datasource:
     name: datasource
     url: jdbc:mysql://dev.local:3306/asany?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&rewriteBatchedStatements=true
@@ -11,7 +16,11 @@ spring:
     hikari:
       minimum-idle: 5
       maximum-pool-size: 20
+    proxy: true
   redis:
     host: dev.local
     port: 6379
     password: sOmE_sEcUrE_pAsS
+logging:
+  level:
+    org.hibernate.type.descriptor.sql: trace
