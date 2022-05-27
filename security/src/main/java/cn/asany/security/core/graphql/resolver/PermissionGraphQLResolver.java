@@ -1,7 +1,7 @@
 package cn.asany.security.core.graphql.resolver;
 
-import cn.asany.security.core.bean.GrantPermission;
-import cn.asany.security.core.bean.Permission;
+import cn.asany.security.core.domain.GrantPermission;
+import cn.asany.security.core.domain.Permission;
 import cn.asany.security.core.graphql.types.SecurityScopeObject;
 import cn.asany.security.core.service.GrantPermissionService;
 import graphql.kickstart.tools.GraphQLResolver;

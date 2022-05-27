@@ -1,7 +1,7 @@
 package cn.asany.security.core.graphql.resolver;
 
-import cn.asany.security.core.bean.Role;
-import cn.asany.security.core.bean.RoleSpace;
+import cn.asany.security.core.domain.Role;
+import cn.asany.security.core.domain.RoleSpace;
 import cn.asany.security.core.service.RoleService;
 import graphql.kickstart.tools.GraphQLResolver;
 import java.util.ArrayList;

@@ -1,8 +1,8 @@
 package cn.asany.shanhai.core.support.model;
 
-import cn.asany.shanhai.core.bean.Model;
-import cn.asany.shanhai.core.bean.ModelEndpoint;
-import cn.asany.shanhai.core.bean.ModelField;
+import cn.asany.shanhai.core.domain.Model;
+import cn.asany.shanhai.core.domain.ModelEndpoint;
+import cn.asany.shanhai.core.domain.ModelField;
 import cn.asany.shanhai.core.support.model.features.*;
 import java.util.Collections;
 import java.util.List;

@@ -1,9 +1,9 @@
 package cn.asany.openapi.service;
 
 import cn.asany.openapi.apis.AmapOpenAPI;
-import cn.asany.openapi.bean.OpenApiConfig;
 import cn.asany.openapi.configs.AmapApiConfig;
 import cn.asany.openapi.configs.WeixinConfig;
+import cn.asany.openapi.domain.OpenApiConfig;
 import org.springframework.stereotype.Component;
 
 @Component

@@ -1,6 +1,6 @@
 package cn.asany.cms.article.graphql.resolver;
 
-import cn.asany.cms.article.bean.Banner;
+import cn.asany.cms.article.domain.Banner;
 import graphql.kickstart.tools.GraphQLResolver;
 import org.springframework.stereotype.Component;
 

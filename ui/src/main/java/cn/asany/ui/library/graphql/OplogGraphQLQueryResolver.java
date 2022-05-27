@@ -1,6 +1,6 @@
 package cn.asany.ui.library.graphql;
 
-import cn.asany.ui.library.bean.Oplog;
+import cn.asany.ui.library.domain.Oplog;
 import cn.asany.ui.library.graphql.input.OplogFilter;
 import cn.asany.ui.library.service.OplogService;
 import graphql.kickstart.tools.GraphQLQueryResolver;

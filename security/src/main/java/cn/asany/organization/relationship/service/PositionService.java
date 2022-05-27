@@ -1,11 +1,11 @@
 package cn.asany.organization.relationship.service;
 
-import cn.asany.organization.core.bean.Department;
-import cn.asany.organization.core.bean.Job;
 import cn.asany.organization.core.dao.DepartmentDao;
 import cn.asany.organization.core.dao.JobDao;
-import cn.asany.organization.relationship.bean.Position;
+import cn.asany.organization.core.domain.Department;
+import cn.asany.organization.core.domain.Job;
 import cn.asany.organization.relationship.dao.PositionDao;
+import cn.asany.organization.relationship.domain.Position;
 import java.util.List;
 import java.util.Optional;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;

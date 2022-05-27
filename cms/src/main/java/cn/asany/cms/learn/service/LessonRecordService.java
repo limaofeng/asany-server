@@ -1,14 +1,14 @@
 package cn.asany.cms.learn.service;
 
-import cn.asany.cms.learn.bean.Course;
-import cn.asany.cms.learn.bean.Learner;
-import cn.asany.cms.learn.bean.Lesson;
-import cn.asany.cms.learn.bean.LessonRecord;
-import cn.asany.cms.learn.bean.enums.LearnerType;
 import cn.asany.cms.learn.dao.CourseDao;
 import cn.asany.cms.learn.dao.LearnerDao;
 import cn.asany.cms.learn.dao.LessonDao;
 import cn.asany.cms.learn.dao.LessonRecordDao;
+import cn.asany.cms.learn.domain.Course;
+import cn.asany.cms.learn.domain.Learner;
+import cn.asany.cms.learn.domain.Lesson;
+import cn.asany.cms.learn.domain.LessonRecord;
+import cn.asany.cms.learn.domain.enums.LearnerType;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;

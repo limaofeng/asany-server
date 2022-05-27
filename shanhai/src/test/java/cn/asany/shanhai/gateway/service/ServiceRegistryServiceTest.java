@@ -1,7 +1,7 @@
 package cn.asany.shanhai.gateway.service;
 
 import cn.asany.shanhai.TestApplication;
-import cn.asany.shanhai.gateway.bean.Service;
+import cn.asany.shanhai.gateway.domain.Service;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

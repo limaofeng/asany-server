@@ -1,17 +1,17 @@
 package cn.asany.cardhop.integration.service;
 
-import cn.asany.cardhop.contacts.bean.Contact;
-import cn.asany.cardhop.contacts.bean.ContactBook;
-import cn.asany.cardhop.contacts.bean.ContactGroup;
-import cn.asany.cardhop.contacts.bean.enums.ContactBookType;
+import cn.asany.cardhop.contacts.domain.Contact;
+import cn.asany.cardhop.contacts.domain.ContactBook;
+import cn.asany.cardhop.contacts.domain.ContactGroup;
+import cn.asany.cardhop.contacts.domain.enums.ContactBookType;
 import cn.asany.cardhop.contacts.graphql.type.ContactGroupNamespace;
 import cn.asany.cardhop.integration.IContactsService;
 import cn.asany.cardhop.integration.convert.EnterpriseContactsConverter;
-import cn.asany.organization.core.bean.Department;
-import cn.asany.organization.core.bean.Organization;
-import cn.asany.organization.core.bean.OrganizationDimension;
+import cn.asany.organization.core.domain.Department;
+import cn.asany.organization.core.domain.Organization;
+import cn.asany.organization.core.domain.OrganizationDimension;
 import cn.asany.organization.core.service.DepartmentService;
-import cn.asany.organization.employee.bean.Employee;
+import cn.asany.organization.employee.domain.Employee;
 import cn.asany.organization.employee.service.EmployeeService;
 import java.util.ArrayList;
 import java.util.List;

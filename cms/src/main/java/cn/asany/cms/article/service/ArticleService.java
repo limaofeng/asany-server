@@ -1,10 +1,10 @@
 package cn.asany.cms.article.service;
 
-import cn.asany.cms.article.bean.Article;
-import cn.asany.cms.article.bean.Content;
-import cn.asany.cms.article.bean.HtmlContent;
-import cn.asany.cms.article.bean.enums.ArticleStatus;
 import cn.asany.cms.article.dao.ArticleDao;
+import cn.asany.cms.article.domain.Article;
+import cn.asany.cms.article.domain.Content;
+import cn.asany.cms.article.domain.HtmlContent;
+import cn.asany.cms.article.domain.enums.ArticleStatus;
 import cn.asany.cms.article.event.ArticleUpdateEvent;
 import cn.asany.cms.article.graphql.input.PermissionInput;
 import java.util.*;

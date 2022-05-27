@@ -1,8 +1,8 @@
 package cn.asany.storage.plugin;
 
 import cn.asany.storage.api.*;
-import cn.asany.storage.data.bean.MultipartUpload;
-import cn.asany.storage.data.bean.MultipartUploadChunk;
+import cn.asany.storage.data.domain.MultipartUpload;
+import cn.asany.storage.data.domain.MultipartUploadChunk;
 import cn.asany.storage.data.service.FileService;
 import cn.asany.storage.data.service.MultipartUploadService;
 import cn.asany.storage.data.util.IdUtils;

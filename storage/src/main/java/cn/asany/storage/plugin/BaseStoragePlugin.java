@@ -2,8 +2,8 @@ package cn.asany.storage.plugin;
 
 import cn.asany.storage.api.*;
 import cn.asany.storage.core.engine.virtual.VirtualFileObject;
-import cn.asany.storage.data.bean.FileDetail;
-import cn.asany.storage.data.bean.Space;
+import cn.asany.storage.data.domain.FileDetail;
+import cn.asany.storage.data.domain.Space;
 import cn.asany.storage.data.service.FileService;
 import cn.asany.storage.utils.UploadUtils;
 import java.io.File;

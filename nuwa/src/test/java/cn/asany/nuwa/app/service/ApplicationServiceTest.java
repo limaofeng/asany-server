@@ -1,7 +1,7 @@
 package cn.asany.nuwa.app.service;
 
 import cn.asany.nuwa.TestApplication;
-import cn.asany.nuwa.app.bean.Application;
+import cn.asany.nuwa.app.domain.Application;
 import cn.asany.nuwa.app.service.dto.NativeApplication;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;

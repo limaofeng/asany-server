@@ -1,13 +1,13 @@
 package cn.asany.shanhai.core.utils;
 
-import cn.asany.shanhai.core.bean.*;
-import cn.asany.shanhai.core.bean.enums.ModelConnectType;
-import cn.asany.shanhai.core.bean.enums.ModelDelegateType;
-import cn.asany.shanhai.core.bean.enums.ModelType;
 import cn.asany.shanhai.core.dao.ModelDao;
 import cn.asany.shanhai.core.dao.ModelDelegateDao;
 import cn.asany.shanhai.core.dao.ModelEndpointDao;
 import cn.asany.shanhai.core.dao.ModelFieldDao;
+import cn.asany.shanhai.core.domain.*;
+import cn.asany.shanhai.core.domain.enums.ModelConnectType;
+import cn.asany.shanhai.core.domain.enums.ModelDelegateType;
+import cn.asany.shanhai.core.domain.enums.ModelType;
 import cn.asany.shanhai.core.service.ModelFeatureService;
 import cn.asany.shanhai.core.service.ModelService;
 import cn.asany.shanhai.core.support.graphql.resolvers.BaseDataFetcher;

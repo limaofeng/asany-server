@@ -1,14 +1,14 @@
 package cn.asany.shanhai.gateway.service;
 
-import cn.asany.shanhai.core.bean.Model;
+import cn.asany.shanhai.core.domain.Model;
 import cn.asany.shanhai.core.service.ModelService;
-import cn.asany.shanhai.gateway.bean.Service;
-import cn.asany.shanhai.gateway.bean.ServiceSchema;
-import cn.asany.shanhai.gateway.bean.ServiceSchemaVersion;
-import cn.asany.shanhai.gateway.bean.ServiceSchemaVersionPatch;
 import cn.asany.shanhai.gateway.dao.ServiceSchemaDao;
 import cn.asany.shanhai.gateway.dao.ServiceSchemaVersionDao;
 import cn.asany.shanhai.gateway.dao.ServiceSchemaVersionPatchDao;
+import cn.asany.shanhai.gateway.domain.Service;
+import cn.asany.shanhai.gateway.domain.ServiceSchema;
+import cn.asany.shanhai.gateway.domain.ServiceSchemaVersion;
+import cn.asany.shanhai.gateway.domain.ServiceSchemaVersionPatch;
 import cn.asany.shanhai.gateway.util.GraphQLField;
 import cn.asany.shanhai.gateway.util.GraphQLObjectType;
 import cn.asany.shanhai.gateway.util.GraphQLSchema;

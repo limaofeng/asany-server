@@ -1,6 +1,6 @@
 package cn.asany.base.common.graphql.resolver;
 
-import cn.asany.base.common.bean.Address;
+import cn.asany.base.common.domain.Address;
 import cn.asany.base.common.service.AddressService;
 import graphql.kickstart.tools.GraphQLResolver;
 import java.util.Optional;

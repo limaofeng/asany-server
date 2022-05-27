@@ -1,13 +1,13 @@
 package cn.asany.ui.library.graphql;
 
-import cn.asany.ui.library.bean.Library;
 import cn.asany.ui.library.convert.LibraryConverter;
+import cn.asany.ui.library.domain.Library;
 import cn.asany.ui.library.graphql.input.IconInput;
 import cn.asany.ui.library.graphql.input.LibraryCreateInput;
 import cn.asany.ui.library.graphql.input.LibraryUpdateInput;
 import cn.asany.ui.library.graphql.type.ILibrary;
 import cn.asany.ui.library.service.LibraryService;
-import cn.asany.ui.resources.bean.Icon;
+import cn.asany.ui.resources.domain.Icon;
 import cn.asany.ui.resources.service.IconService;
 import graphql.kickstart.tools.GraphQLMutationResolver;
 import java.util.List;

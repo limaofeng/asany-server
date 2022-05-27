@@ -1,7 +1,7 @@
 package cn.asany.security.core;
 
 import cn.asany.base.common.SecurityType;
-import cn.asany.security.core.bean.Permission;
+import cn.asany.security.core.domain.Permission;
 
 /**
  * @author limaofeng

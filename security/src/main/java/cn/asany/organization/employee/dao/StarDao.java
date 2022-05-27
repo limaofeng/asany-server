@@ -1,8 +1,8 @@
 package cn.asany.organization.employee.dao;
 
-import cn.asany.organization.employee.bean.Employee;
-import cn.asany.organization.employee.bean.Star;
-import cn.asany.organization.employee.bean.StarType;
+import cn.asany.organization.employee.domain.Employee;
+import cn.asany.organization.employee.domain.Star;
+import cn.asany.organization.employee.domain.StarType;
 import java.util.List;
 import org.jfantasy.framework.dao.jpa.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

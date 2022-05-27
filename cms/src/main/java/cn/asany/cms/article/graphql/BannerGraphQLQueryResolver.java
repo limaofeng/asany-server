@@ -1,6 +1,6 @@
 package cn.asany.cms.article.graphql;
 
-import cn.asany.cms.article.bean.Banner;
+import cn.asany.cms.article.domain.Banner;
 import cn.asany.cms.article.graphql.input.BannerFilter;
 import cn.asany.cms.article.service.BannerService;
 import graphql.kickstart.tools.GraphQLQueryResolver;

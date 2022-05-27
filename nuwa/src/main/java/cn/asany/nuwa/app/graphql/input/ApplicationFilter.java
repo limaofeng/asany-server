@@ -1,6 +1,6 @@
 package cn.asany.nuwa.app.graphql.input;
 
-import cn.asany.nuwa.app.bean.Application;
+import cn.asany.nuwa.app.domain.Application;
 import org.jfantasy.graphql.inputs.QueryFilter;
 
 /**

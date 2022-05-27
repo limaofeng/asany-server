@@ -1,6 +1,6 @@
 package cn.asany.cms.article.graphql.resolver;
 
-import cn.asany.cms.article.bean.ArticleTag;
+import cn.asany.cms.article.domain.ArticleTag;
 import graphql.kickstart.tools.GraphQLResolver;
 import org.springframework.stereotype.Component;
 

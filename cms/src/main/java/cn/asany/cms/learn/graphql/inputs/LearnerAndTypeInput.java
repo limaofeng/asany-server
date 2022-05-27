@@ -1,6 +1,6 @@
 package cn.asany.cms.learn.graphql.inputs;
 
-import cn.asany.cms.learn.bean.enums.LearnerType;
+import cn.asany.cms.learn.domain.enums.LearnerType;
 import lombok.Data;
 
 /** @Date 2019/11/28 9:57 @Description TODO */

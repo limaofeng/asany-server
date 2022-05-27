@@ -1,6 +1,6 @@
 package cn.asany.shanhai.data.engine;
 
-import cn.asany.shanhai.data.bean.DataSourceConfig;
+import cn.asany.shanhai.data.domain.DataSourceConfig;
 import cn.asany.shanhai.data.service.DataSourceService;
 import java.util.HashMap;
 import java.util.List;

@@ -22,7 +22,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @Configuration
 @ComponentScan({"cn.asany.*.service", "cn.asany.openapi.service", "cn.asany.*.*.convert"})
 @EntityScan({
-  "cn.asany.*.*.bean",
+  "cn.asany.**.domain",
 })
 @EnableJpaRepositories(
     includeFilters = {

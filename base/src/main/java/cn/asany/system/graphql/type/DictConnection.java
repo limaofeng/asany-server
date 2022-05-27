@@ -1,6 +1,6 @@
 package cn.asany.system.graphql.type;
 
-import cn.asany.system.bean.Dict;
+import cn.asany.system.domain.Dict;
 import java.util.List;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

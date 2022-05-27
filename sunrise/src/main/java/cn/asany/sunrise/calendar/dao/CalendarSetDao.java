@@ -1,6 +1,6 @@
 package cn.asany.sunrise.calendar.dao;
 
-import cn.asany.sunrise.calendar.bean.CalendarSet;
+import cn.asany.sunrise.calendar.domain.CalendarSet;
 import org.jfantasy.framework.dao.jpa.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

@@ -1,9 +1,9 @@
 package cn.asany.security.core.convert;
 
-import cn.asany.base.common.bean.Email;
-import cn.asany.base.common.bean.Phone;
+import cn.asany.base.common.domain.Email;
+import cn.asany.base.common.domain.Phone;
 import cn.asany.security.auth.graphql.types.CurrentUser;
-import cn.asany.security.core.bean.User;
+import cn.asany.security.core.domain.User;
 import cn.asany.security.core.graphql.input.UserUpdateInput;
 import org.mapstruct.*;
 

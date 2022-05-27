@@ -1,6 +1,6 @@
 package cn.asany.organization.relationship.dao;
 
-import cn.asany.organization.relationship.bean.EmployeePosition;
+import cn.asany.organization.relationship.domain.EmployeePosition;
 import org.jfantasy.framework.dao.jpa.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

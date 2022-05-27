@@ -1,5 +1,7 @@
 package cn.asany.workflow.core.graphql;
 
+import cn.asany.workflow.core.domain.Workflow;
+import cn.asany.workflow.core.domain.WorkflowScheme;
 import com.coxautodev.graphql.tools.GraphQLQueryResolver;
 import java.util.List;
 import net.whir.hos.issue.attribute.bean.IssueStatus;
@@ -45,7 +47,7 @@ public class WorkflowGraphQLQueryResolver implements GraphQLQueryResolver {
    * @author penghanying
    * @date 2019/5/23
    */
-  public IssueWorkflow issueWorkflow(Long id) {
+  public Workflow issueWorkflow(Long id) {
     return issueWorkflowService.issueWorkflow(id);
   }
 
@@ -55,7 +57,7 @@ public class WorkflowGraphQLQueryResolver implements GraphQLQueryResolver {
    * @author penghanying
    * @date 2019/5/23
    */
-  public List<IssueWorkflowScheme> issueWorkflowSchemes() {
+  public List<WorkflowScheme> issueWorkflowSchemes() {
     return issueWorkflowSchemeService.issueWorkflowSchemes();
   }
 

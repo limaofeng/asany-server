@@ -1,12 +1,12 @@
 package cn.asany.organization.core.service;
 
 import cn.asany.TestApplication;
-import cn.asany.organization.core.bean.Organization;
-import cn.asany.organization.core.bean.enums.MemberRole;
+import cn.asany.organization.core.domain.Organization;
+import cn.asany.organization.core.domain.enums.MemberRole;
 import cn.asany.organization.core.service.dto.NuwaOrganization;
-import cn.asany.organization.employee.bean.Employee;
+import cn.asany.organization.employee.domain.Employee;
 import cn.asany.organization.employee.service.EmployeeService;
-import cn.asany.security.core.bean.User;
+import cn.asany.security.core.domain.User;
 import cn.asany.security.core.service.UserService;
 import java.io.InputStream;
 import java.util.Optional;

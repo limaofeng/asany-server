@@ -1,13 +1,13 @@
 package cn.asany.security.auth.graphql.types;
 
-import cn.asany.base.common.bean.Email;
-import cn.asany.base.common.bean.Phone;
-import cn.asany.security.core.bean.GrantPermission;
-import cn.asany.security.core.bean.Role;
-import cn.asany.security.core.bean.User;
-import cn.asany.security.core.bean.UserStatus;
-import cn.asany.security.core.bean.enums.Sex;
-import cn.asany.security.core.bean.enums.UserType;
+import cn.asany.base.common.domain.Email;
+import cn.asany.base.common.domain.Phone;
+import cn.asany.security.core.domain.GrantPermission;
+import cn.asany.security.core.domain.Role;
+import cn.asany.security.core.domain.User;
+import cn.asany.security.core.domain.UserStatus;
+import cn.asany.security.core.domain.enums.Sex;
+import cn.asany.security.core.domain.enums.UserType;
 import cn.asany.storage.api.FileObject;
 import java.util.Date;
 import java.util.List;

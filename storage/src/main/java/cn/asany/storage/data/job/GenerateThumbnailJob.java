@@ -2,8 +2,8 @@ package cn.asany.storage.data.job;
 
 import cn.asany.storage.api.Storage;
 import cn.asany.storage.core.StorageResolver;
-import cn.asany.storage.data.bean.FileDetail;
-import cn.asany.storage.data.bean.Thumbnail;
+import cn.asany.storage.data.domain.FileDetail;
+import cn.asany.storage.data.domain.Thumbnail;
 import cn.asany.storage.data.service.FileService;
 import cn.asany.storage.data.service.ThumbnailService;
 import java.io.File;

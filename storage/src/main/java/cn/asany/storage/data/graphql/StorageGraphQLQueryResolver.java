@@ -1,8 +1,8 @@
 package cn.asany.storage.data.graphql;
 
 import cn.asany.storage.api.FileObject;
-import cn.asany.storage.data.bean.FileDetail;
-import cn.asany.storage.data.bean.StorageConfig;
+import cn.asany.storage.data.domain.FileDetail;
+import cn.asany.storage.data.domain.StorageConfig;
 import cn.asany.storage.data.graphql.input.FileFilter;
 import cn.asany.storage.data.graphql.type.FileObjectConnection;
 import cn.asany.storage.data.service.FileService;

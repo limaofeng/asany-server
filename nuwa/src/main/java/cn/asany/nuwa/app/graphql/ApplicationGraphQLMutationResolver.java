@@ -1,9 +1,9 @@
 package cn.asany.nuwa.app.graphql;
 
 import cn.asany.nuwa.YamlUtils;
-import cn.asany.nuwa.app.bean.Application;
-import cn.asany.nuwa.app.bean.ApplicationRoute;
 import cn.asany.nuwa.app.converter.ApplicationConverter;
+import cn.asany.nuwa.app.domain.Application;
+import cn.asany.nuwa.app.domain.ApplicationRoute;
 import cn.asany.nuwa.app.graphql.input.ApplicationCreateInput;
 import cn.asany.nuwa.app.graphql.input.RouteCreateInput;
 import cn.asany.nuwa.app.graphql.input.RouteUpdateInput;

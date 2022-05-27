@@ -1,8 +1,8 @@
 package cn.asany.cms.learn.service;
 
-import cn.asany.cms.learn.bean.Course;
-import cn.asany.cms.learn.bean.LearnerScope;
 import cn.asany.cms.learn.dao.LearnerScopeDao;
+import cn.asany.cms.learn.domain.Course;
+import cn.asany.cms.learn.domain.LearnerScope;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;

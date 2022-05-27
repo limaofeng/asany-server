@@ -1,9 +1,7 @@
 package cn.asany.shanhai.data.engine;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import cn.asany.shanhai.TestApplication;
-import cn.asany.shanhai.data.bean.DataSetConfig;
+import cn.asany.shanhai.data.domain.DataSetConfig;
 import cn.asany.shanhai.data.service.DataSetService;
 import java.util.HashMap;
 import lombok.extern.slf4j.Slf4j;

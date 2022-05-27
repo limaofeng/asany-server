@@ -1,10 +1,10 @@
 package cn.asany.storage.data.service;
 
 import cn.asany.storage.api.FileObjectMetadata;
-import cn.asany.storage.data.bean.MultipartUpload;
-import cn.asany.storage.data.bean.MultipartUploadChunk;
 import cn.asany.storage.data.dao.MultipartUploadChunkDao;
 import cn.asany.storage.data.dao.MultipartUploadDao;
+import cn.asany.storage.data.domain.MultipartUpload;
+import cn.asany.storage.data.domain.MultipartUploadChunk;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;

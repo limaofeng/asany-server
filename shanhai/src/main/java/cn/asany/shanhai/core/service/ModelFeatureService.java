@@ -1,7 +1,7 @@
 package cn.asany.shanhai.core.service;
 
-import cn.asany.shanhai.core.bean.ModelFeature;
 import cn.asany.shanhai.core.dao.ModelFeatureDao;
+import cn.asany.shanhai.core.domain.ModelFeature;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

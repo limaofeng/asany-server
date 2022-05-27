@@ -1,14 +1,14 @@
 package cn.asany.ui.library.convert;
 
-import cn.asany.ui.library.bean.Library;
-import cn.asany.ui.library.bean.LibraryItem;
-import cn.asany.ui.library.bean.enums.LibraryType;
+import cn.asany.ui.library.domain.Library;
+import cn.asany.ui.library.domain.LibraryItem;
+import cn.asany.ui.library.domain.enums.LibraryType;
 import cn.asany.ui.library.graphql.input.IconInput;
 import cn.asany.ui.library.graphql.input.LibraryCreateInput;
 import cn.asany.ui.library.graphql.input.LibraryUpdateInput;
 import cn.asany.ui.library.graphql.type.ILibrary;
 import cn.asany.ui.library.graphql.type.IconLibrary;
-import cn.asany.ui.resources.bean.Icon;
+import cn.asany.ui.resources.domain.Icon;
 import java.util.*;
 import java.util.stream.Collectors;
 import org.mapstruct.*;

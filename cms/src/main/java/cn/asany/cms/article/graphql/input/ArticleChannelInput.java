@@ -1,7 +1,7 @@
 package cn.asany.cms.article.graphql.input;
 
-import cn.asany.cms.article.bean.MetaData;
-import cn.asany.cms.article.bean.enums.PromptType;
+import cn.asany.cms.article.domain.MetaData;
+import cn.asany.cms.article.domain.enums.PromptType;
 import cn.asany.storage.api.FileObject;
 import java.util.List;
 import lombok.Data;

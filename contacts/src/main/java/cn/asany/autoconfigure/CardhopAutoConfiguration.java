@@ -13,7 +13,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @Configuration
 @Slf4j
-@EntityScan({"cn.asany.cardhop.contacts.bean"})
+@EntityScan({"cn.asany.cardhop.contacts.domain"})
 @ComponentScan({
   "cn.asany.cardhop.contacts.dao",
   "cn.asany.cardhop.contacts.service",

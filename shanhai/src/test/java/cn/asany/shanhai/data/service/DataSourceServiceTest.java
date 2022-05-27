@@ -1,9 +1,7 @@
 package cn.asany.shanhai.data.service;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import cn.asany.shanhai.TestApplication;
-import cn.asany.shanhai.data.bean.DataSourceConfig;
+import cn.asany.shanhai.data.domain.DataSourceConfig;
 import cn.asany.shanhai.data.engine.graphql.GraphQLDataSourceBuilder;
 import cn.asany.shanhai.data.engine.graphql.GraphQLDataSourceOptions;
 import lombok.extern.slf4j.Slf4j;

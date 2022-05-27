@@ -1,8 +1,8 @@
 package cn.asany.cms.learn.graphql.inputs;
 
-import cn.asany.cms.learn.bean.Course;
-import cn.asany.cms.learn.bean.Learner;
-import cn.asany.cms.learn.bean.enums.LearnerType;
+import cn.asany.cms.learn.domain.Course;
+import cn.asany.cms.learn.domain.Learner;
+import cn.asany.cms.learn.domain.enums.LearnerType;
 import cn.asany.cms.learn.service.LearnerScopeService;
 import cn.asany.cms.learn.service.LearnerService;
 import com.fasterxml.jackson.annotation.JsonProperty;

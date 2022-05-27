@@ -1,6 +1,6 @@
 package cn.asany.nuwa.app.dao;
 
-import cn.asany.nuwa.app.bean.ApplicationMenu;
+import cn.asany.nuwa.app.domain.ApplicationMenu;
 import org.jfantasy.framework.dao.jpa.JpaRepository;
 import org.springframework.stereotype.Repository;
 

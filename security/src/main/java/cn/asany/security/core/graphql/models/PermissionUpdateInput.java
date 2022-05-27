@@ -1,6 +1,6 @@
 package cn.asany.security.core.graphql.models;
 
-import cn.asany.security.core.bean.Permission;
+import cn.asany.security.core.domain.Permission;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

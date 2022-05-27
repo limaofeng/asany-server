@@ -1,6 +1,6 @@
 package cn.asany.shanhai.core.graphql.types;
 
-import cn.asany.shanhai.core.bean.Model;
+import cn.asany.shanhai.core.domain.Model;
 import java.util.List;
 import lombok.*;
 import org.jfantasy.graphql.Edge;

@@ -2,12 +2,12 @@ package cn.asany.storage.data.service;
 
 import cn.asany.storage.api.FileObject;
 import cn.asany.storage.api.Storage;
-import cn.asany.storage.data.bean.FileDetail;
-import cn.asany.storage.data.bean.FileLabel;
-import cn.asany.storage.data.bean.Space;
-import cn.asany.storage.data.bean.StorageConfig;
 import cn.asany.storage.data.dao.FileDetailDao;
 import cn.asany.storage.data.dao.SpaceDao;
+import cn.asany.storage.data.domain.FileDetail;
+import cn.asany.storage.data.domain.FileLabel;
+import cn.asany.storage.data.domain.Space;
+import cn.asany.storage.data.domain.StorageConfig;
 import java.io.IOException;
 import java.util.*;
 import org.hibernate.Hibernate;

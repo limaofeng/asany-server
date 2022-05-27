@@ -1,6 +1,6 @@
 package cn.asany.organization.core.dao;
 
-import cn.asany.organization.core.bean.EmployeeIdentity;
+import cn.asany.organization.core.domain.EmployeeIdentity;
 import org.jfantasy.framework.dao.jpa.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

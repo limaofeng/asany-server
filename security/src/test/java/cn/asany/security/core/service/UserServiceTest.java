@@ -1,8 +1,8 @@
 package cn.asany.security.core.service;
 
 import cn.asany.TestApplication;
-import cn.asany.security.core.bean.User;
-import cn.asany.security.core.bean.enums.UserType;
+import cn.asany.security.core.domain.User;
+import cn.asany.security.core.domain.enums.UserType;
 import java.util.HashSet;
 import java.util.Set;
 import lombok.extern.slf4j.Slf4j;

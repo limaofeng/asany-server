@@ -1,6 +1,6 @@
 package cn.asany.cms.article.dao;
 
-import cn.asany.cms.article.bean.ArticleTag;
+import cn.asany.cms.article.domain.ArticleTag;
 import org.apache.ibatis.annotations.Param;
 import org.jfantasy.framework.dao.jpa.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;

@@ -1,13 +1,12 @@
 package cn.asany.workflow.state.graphql;
 
-import cn.asany.workflow.state.bean.State;
 import cn.asany.workflow.state.graphql.connection.StateConnection;
 import cn.asany.workflow.state.graphql.filter.StateFilter;
 import cn.asany.workflow.state.service.StateService;
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import java.util.ArrayList;
 import java.util.List;
-import org.jfantasy.framework.dao.OrderBy;
+
 import org.springframework.data.domain.Pageable;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.graphql.util.Kit;

@@ -1,6 +1,6 @@
 package cn.asany.security.core.graphql.input;
 
-import cn.asany.security.core.bean.enums.Sex;
+import cn.asany.security.core.domain.enums.Sex;
 import cn.asany.storage.api.FileObject;
 import java.util.Date;
 import lombok.AllArgsConstructor;

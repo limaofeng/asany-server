@@ -1,6 +1,6 @@
 package cn.asany.security.auth.graphql.types;
 
-import cn.asany.security.core.bean.enums.SocialProvider;
+import cn.asany.security.core.domain.enums.SocialProvider;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

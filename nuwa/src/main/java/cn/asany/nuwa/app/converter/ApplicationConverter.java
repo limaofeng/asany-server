@@ -1,17 +1,17 @@
 package cn.asany.nuwa.app.converter;
 
-import cn.asany.nuwa.app.bean.Application;
-import cn.asany.nuwa.app.bean.ApplicationMenu;
-import cn.asany.nuwa.app.bean.ApplicationRoute;
-import cn.asany.nuwa.app.bean.Routespace;
+import cn.asany.nuwa.app.domain.Application;
+import cn.asany.nuwa.app.domain.ApplicationMenu;
+import cn.asany.nuwa.app.domain.ApplicationRoute;
+import cn.asany.nuwa.app.domain.Routespace;
 import cn.asany.nuwa.app.graphql.input.ApplicationCreateInput;
 import cn.asany.nuwa.app.service.dto.NativeApplication;
 import cn.asany.nuwa.app.service.dto.NuwaMenu;
 import cn.asany.nuwa.app.service.dto.NuwaRoute;
 import cn.asany.nuwa.app.service.dto.OAuthApplication;
-import cn.asany.nuwa.template.bean.ApplicationTemplateMenu;
-import cn.asany.nuwa.template.bean.ApplicationTemplateRoute;
-import cn.asany.ui.resources.bean.toy.ComponentData;
+import cn.asany.nuwa.template.domain.ApplicationTemplateMenu;
+import cn.asany.nuwa.template.domain.ApplicationTemplateRoute;
+import cn.asany.ui.resources.domain.toy.ComponentData;
 import com.fasterxml.jackson.core.type.TypeReference;
 import java.util.ArrayList;
 import java.util.List;

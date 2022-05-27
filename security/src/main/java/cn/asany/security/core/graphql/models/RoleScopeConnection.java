@@ -1,6 +1,6 @@
 package cn.asany.security.core.graphql.models;
 
-import cn.asany.security.core.bean.RoleSpace;
+import cn.asany.security.core.domain.RoleSpace;
 import java.util.List;
 import lombok.*;
 import org.jfantasy.graphql.Edge;

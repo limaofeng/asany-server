@@ -1,11 +1,11 @@
 package cn.asany.website.landing.graphql;
 
-import cn.asany.website.landing.bean.LandingPage;
-import cn.asany.website.landing.bean.LandingPoster;
-import cn.asany.website.landing.bean.LandingStore;
 import cn.asany.website.landing.convert.PageConverter;
 import cn.asany.website.landing.convert.PosterConverter;
 import cn.asany.website.landing.convert.StoreConverter;
+import cn.asany.website.landing.domain.LandingPage;
+import cn.asany.website.landing.domain.LandingPoster;
+import cn.asany.website.landing.domain.LandingStore;
 import cn.asany.website.landing.graphql.input.*;
 import cn.asany.website.landing.graphql.type.LandingPageConnection;
 import cn.asany.website.landing.graphql.type.LandingPosterConnection;

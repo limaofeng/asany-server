@@ -1,6 +1,6 @@
 package cn.asany.security.core.dao;
 
-import cn.asany.security.core.bean.RoleSpace;
+import cn.asany.security.core.domain.RoleSpace;
 import org.jfantasy.framework.dao.jpa.JpaRepository;
 import org.springframework.stereotype.Repository;
 

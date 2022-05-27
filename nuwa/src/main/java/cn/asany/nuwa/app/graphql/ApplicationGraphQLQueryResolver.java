@@ -1,7 +1,7 @@
 package cn.asany.nuwa.app.graphql;
 
-import cn.asany.nuwa.app.bean.Application;
-import cn.asany.nuwa.app.bean.ApplicationRoute;
+import cn.asany.nuwa.app.domain.Application;
+import cn.asany.nuwa.app.domain.ApplicationRoute;
 import cn.asany.nuwa.app.graphql.input.ApplicationFilter;
 import cn.asany.nuwa.app.graphql.type.ApplicationIdType;
 import cn.asany.nuwa.app.service.ApplicationService;

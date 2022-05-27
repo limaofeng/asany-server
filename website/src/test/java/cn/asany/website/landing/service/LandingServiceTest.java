@@ -10,7 +10,7 @@ import cn.asany.storage.data.util.IdUtils;
 import cn.asany.storage.dto.SimpleFileObject;
 import cn.asany.storage.utils.UploadUtils;
 import cn.asany.website.TestApplication;
-import cn.asany.website.landing.bean.LandingStore;
+import cn.asany.website.landing.domain.LandingStore;
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.metadata.data.ReadCellData;

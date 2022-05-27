@@ -2,10 +2,10 @@ package cn.asany.shanhai.core.support.graphql;
 
 import static graphql.schema.idl.RuntimeWiring.newRuntimeWiring;
 
-import cn.asany.shanhai.core.bean.Model;
-import cn.asany.shanhai.core.bean.ModelEndpoint;
-import cn.asany.shanhai.core.bean.enums.ModelEndpointType;
-import cn.asany.shanhai.core.bean.enums.ModelType;
+import cn.asany.shanhai.core.domain.Model;
+import cn.asany.shanhai.core.domain.ModelEndpoint;
+import cn.asany.shanhai.core.domain.enums.ModelEndpointType;
+import cn.asany.shanhai.core.domain.enums.ModelType;
 import cn.asany.shanhai.core.support.dao.ModelRepository;
 import cn.asany.shanhai.core.utils.ModelUtils;
 import cn.asany.shanhai.core.utils.TemplateDataOfEndpoint;

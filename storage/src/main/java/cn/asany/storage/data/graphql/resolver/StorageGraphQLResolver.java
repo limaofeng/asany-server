@@ -1,6 +1,6 @@
 package cn.asany.storage.data.graphql.resolver;
 
-import cn.asany.storage.data.bean.StorageConfig;
+import cn.asany.storage.data.domain.StorageConfig;
 import cn.asany.storage.data.service.StorageService;
 import graphql.kickstart.tools.GraphQLResolver;
 import java.math.BigDecimal;

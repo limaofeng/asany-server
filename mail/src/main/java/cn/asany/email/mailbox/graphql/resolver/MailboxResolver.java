@@ -1,6 +1,6 @@
 package cn.asany.email.mailbox.graphql.resolver;
 
-import cn.asany.email.mailbox.bean.JamesMailbox;
+import cn.asany.email.mailbox.domain.JamesMailbox;
 import cn.asany.email.mailbox.graphql.type.MailboxCountType;
 import cn.asany.email.mailbox.service.MailboxMessageService;
 import graphql.kickstart.tools.GraphQLResolver;

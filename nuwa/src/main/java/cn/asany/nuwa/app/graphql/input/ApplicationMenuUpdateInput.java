@@ -1,6 +1,6 @@
 package cn.asany.nuwa.app.graphql.input;
 
-import cn.asany.nuwa.app.bean.enums.MenuType;
+import cn.asany.nuwa.app.domain.enums.MenuType;
 import java.util.Set;
 import lombok.Data;
 

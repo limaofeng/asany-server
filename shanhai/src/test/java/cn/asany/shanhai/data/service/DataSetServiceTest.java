@@ -1,10 +1,8 @@
 package cn.asany.shanhai.data.service;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import cn.asany.shanhai.TestApplication;
-import cn.asany.shanhai.data.bean.DataSetConfig;
-import cn.asany.shanhai.data.bean.DataSourceConfig;
+import cn.asany.shanhai.data.domain.DataSetConfig;
+import cn.asany.shanhai.data.domain.DataSourceConfig;
 import cn.asany.shanhai.data.engine.graphql.GraphQLDataSetOptions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

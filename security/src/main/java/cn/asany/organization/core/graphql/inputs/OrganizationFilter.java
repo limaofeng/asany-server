@@ -1,6 +1,6 @@
 package cn.asany.organization.core.graphql.inputs;
 
-import cn.asany.organization.core.bean.Organization;
+import cn.asany.organization.core.domain.Organization;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.jfantasy.graphql.inputs.QueryFilter;

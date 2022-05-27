@@ -1,6 +1,6 @@
 package cn.asany.shanhai.data.engine.local;
 
-import cn.asany.shanhai.data.bean.DataSetConfig;
+import cn.asany.shanhai.data.domain.DataSetConfig;
 import cn.asany.shanhai.data.engine.DataSet;
 import cn.asany.shanhai.data.engine.Field;
 import cn.asany.shanhai.data.engine.ISchema;

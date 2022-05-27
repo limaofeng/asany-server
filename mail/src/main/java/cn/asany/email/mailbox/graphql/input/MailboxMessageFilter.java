@@ -1,6 +1,6 @@
 package cn.asany.email.mailbox.graphql.input;
 
-import cn.asany.email.mailbox.bean.JamesMailboxMessage;
+import cn.asany.email.mailbox.domain.JamesMailboxMessage;
 import cn.asany.email.utils.JamesUtil;
 import java.util.List;
 import lombok.Data;

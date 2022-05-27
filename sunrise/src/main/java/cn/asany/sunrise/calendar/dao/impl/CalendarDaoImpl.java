@@ -1,8 +1,8 @@
 package cn.asany.sunrise.calendar.dao.impl;
 
-import cn.asany.sunrise.calendar.bean.Calendar;
-import cn.asany.sunrise.calendar.bean.enums.CalendarType;
 import cn.asany.sunrise.calendar.dao.CalendarDao;
+import cn.asany.sunrise.calendar.domain.Calendar;
+import cn.asany.sunrise.calendar.domain.enums.CalendarType;
 import java.math.BigDecimal;
 import java.util.Comparator;
 import java.util.List;

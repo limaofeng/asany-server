@@ -1,6 +1,6 @@
 package cn.asany.workflow.state.graphql.filter;
 
-import cn.asany.workflow.state.bean.State;
+import cn.asany.workflow.state.domain.State;
 import lombok.Data;
 import org.jfantasy.graphql.inputs.QueryFilter;
 

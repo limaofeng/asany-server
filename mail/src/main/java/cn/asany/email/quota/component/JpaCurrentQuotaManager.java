@@ -1,6 +1,6 @@
 package cn.asany.email.quota.component;
 
-import cn.asany.email.quota.bean.JamesCurrentQuota;
+import cn.asany.email.quota.domain.JamesCurrentQuota;
 import com.google.common.base.Preconditions;
 import java.util.Optional;
 import javax.inject.Inject;

@@ -1,7 +1,7 @@
 package cn.asany.security.core.service;
 
 import cn.asany.TestApplication;
-import cn.asany.security.core.bean.Role;
+import cn.asany.security.core.domain.Role;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

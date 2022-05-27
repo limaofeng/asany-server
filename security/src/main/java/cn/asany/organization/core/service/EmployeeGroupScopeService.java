@@ -1,9 +1,9 @@
 package cn.asany.organization.core.service;
 
-import cn.asany.organization.core.bean.EmployeeGroup;
-import cn.asany.organization.core.bean.EmployeeGroupScope;
 import cn.asany.organization.core.dao.EmployeeGroupDao;
 import cn.asany.organization.core.dao.EmployeeGroupScopeDao;
+import cn.asany.organization.core.domain.EmployeeGroup;
+import cn.asany.organization.core.domain.EmployeeGroupScope;
 import java.util.List;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;

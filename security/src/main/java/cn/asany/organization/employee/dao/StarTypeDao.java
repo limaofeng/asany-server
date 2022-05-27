@@ -1,6 +1,6 @@
 package cn.asany.organization.employee.dao;
 
-import cn.asany.organization.employee.bean.StarType;
+import cn.asany.organization.employee.domain.StarType;
 import org.jfantasy.framework.dao.jpa.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -1,6 +1,6 @@
 package cn.asany.shanhai.core.support.dao;
 
-import cn.asany.shanhai.core.bean.ModelField;
+import cn.asany.shanhai.core.domain.ModelField;
 import cn.asany.shanhai.core.support.model.FieldType;
 import cn.asany.shanhai.core.support.model.FieldTypeRegistry;
 import java.util.ArrayList;

@@ -1,15 +1,15 @@
 package cn.asany.organization.core.service;
 
-import cn.asany.organization.core.bean.Department;
-import cn.asany.organization.core.bean.DepartmentLink;
-import cn.asany.organization.core.bean.Job;
-import cn.asany.organization.core.bean.Organization;
-import cn.asany.organization.core.bean.enums.DepartmentLinkType;
 import cn.asany.organization.core.dao.DepartmentDao;
 import cn.asany.organization.core.dao.DepartmentLinkDao;
-import cn.asany.organization.employee.bean.Employee;
-import cn.asany.organization.relationship.bean.EmployeePosition;
-import cn.asany.organization.relationship.bean.Position;
+import cn.asany.organization.core.domain.Department;
+import cn.asany.organization.core.domain.DepartmentLink;
+import cn.asany.organization.core.domain.Job;
+import cn.asany.organization.core.domain.Organization;
+import cn.asany.organization.core.domain.enums.DepartmentLinkType;
+import cn.asany.organization.employee.domain.Employee;
+import cn.asany.organization.relationship.domain.EmployeePosition;
+import cn.asany.organization.relationship.domain.Position;
 import cn.asany.organization.relationship.service.PositionService;
 import java.util.ArrayList;
 import java.util.List;

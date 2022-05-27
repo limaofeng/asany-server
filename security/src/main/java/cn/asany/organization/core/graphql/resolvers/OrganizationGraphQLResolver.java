@@ -1,16 +1,16 @@
 package cn.asany.organization.core.graphql.resolvers;
 
-import cn.asany.organization.core.bean.Department;
-import cn.asany.organization.core.bean.Job;
-import cn.asany.organization.core.bean.Organization;
-import cn.asany.organization.core.bean.OrganizationMember;
+import cn.asany.organization.core.domain.Department;
+import cn.asany.organization.core.domain.Job;
+import cn.asany.organization.core.domain.Organization;
+import cn.asany.organization.core.domain.OrganizationMember;
 import cn.asany.organization.core.graphql.inputs.DepartmentFilter;
 import cn.asany.organization.core.service.DepartmentService;
 import cn.asany.organization.core.service.DepartmentTypeService;
 import cn.asany.organization.core.service.JobService;
 import cn.asany.organization.core.service.OrganizationMemberService;
 import cn.asany.organization.employee.service.EmployeeService;
-import cn.asany.security.core.bean.Role;
+import cn.asany.security.core.domain.Role;
 import graphql.kickstart.tools.GraphQLResolver;
 import java.util.List;
 import java.util.Optional;

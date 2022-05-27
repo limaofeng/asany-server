@@ -1,8 +1,8 @@
 package cn.asany.shanhai.core.support.model;
 
-import cn.asany.shanhai.core.bean.Model;
-import cn.asany.shanhai.core.bean.ModelFieldMetadata;
-import cn.asany.shanhai.core.bean.enums.ModelType;
+import cn.asany.shanhai.core.domain.Model;
+import cn.asany.shanhai.core.domain.ModelFieldMetadata;
+import cn.asany.shanhai.core.domain.enums.ModelType;
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 import org.jfantasy.framework.dao.jpa.PropertyFilter.MatchType;

@@ -1,9 +1,9 @@
 package cn.asany.system.graphql;
 
 import cn.asany.base.utils.Hashids;
-import cn.asany.system.bean.Dict;
-import cn.asany.system.bean.DictKey;
-import cn.asany.system.bean.DictType;
+import cn.asany.system.domain.Dict;
+import cn.asany.system.domain.DictKey;
+import cn.asany.system.domain.DictType;
 import cn.asany.system.graphql.input.DictFilter;
 import cn.asany.system.graphql.type.DictConnection;
 import cn.asany.system.service.DictService;

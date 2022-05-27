@@ -1,6 +1,6 @@
 package cn.asany.cms.learn.graphql.types;
 
-import cn.asany.cms.learn.bean.Course;
+import cn.asany.cms.learn.domain.Course;
 import java.util.List;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

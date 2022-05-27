@@ -1,8 +1,8 @@
 package cn.asany.system.graphql.input;
 
 import cn.asany.base.utils.Hashids;
-import cn.asany.system.bean.Dict;
-import cn.asany.system.bean.DictKey;
+import cn.asany.system.domain.Dict;
+import cn.asany.system.domain.DictKey;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.jfantasy.graphql.inputs.QueryFilter;
 

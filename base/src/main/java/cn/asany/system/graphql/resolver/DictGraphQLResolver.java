@@ -1,7 +1,7 @@
 package cn.asany.system.graphql.resolver;
 
 import cn.asany.base.utils.Hashids;
-import cn.asany.system.bean.Dict;
+import cn.asany.system.domain.Dict;
 import cn.asany.system.service.DictService;
 import graphql.kickstart.tools.GraphQLResolver;
 import java.util.Collections;

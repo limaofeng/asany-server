@@ -1,9 +1,9 @@
 package cn.asany.cms.article.service;
 
-import cn.asany.cms.article.bean.Comment;
-import cn.asany.cms.article.bean.enums.CommentStatus;
-import cn.asany.cms.article.bean.enums.CommentTargetType;
 import cn.asany.cms.article.dao.CommentDao;
+import cn.asany.cms.article.domain.Comment;
+import cn.asany.cms.article.domain.enums.CommentStatus;
+import cn.asany.cms.article.domain.enums.CommentTargetType;
 import java.util.List;
 import java.util.Optional;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;

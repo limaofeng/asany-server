@@ -1,7 +1,7 @@
 package cn.asany.storage.data.graphql.resolver;
 
-import cn.asany.storage.data.bean.MultipartUpload;
-import cn.asany.storage.data.bean.MultipartUploadChunk;
+import cn.asany.storage.data.domain.MultipartUpload;
+import cn.asany.storage.data.domain.MultipartUploadChunk;
 import cn.asany.storage.data.util.IdUtils;
 import graphql.kickstart.tools.GraphQLResolver;
 import java.util.ArrayList;

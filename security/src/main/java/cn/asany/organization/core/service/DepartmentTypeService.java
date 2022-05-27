@@ -1,10 +1,10 @@
 package cn.asany.organization.core.service;
 
-import cn.asany.organization.core.bean.Department;
-import cn.asany.organization.core.bean.DepartmentType;
-import cn.asany.organization.core.bean.Organization;
 import cn.asany.organization.core.dao.DepartmentDao;
 import cn.asany.organization.core.dao.DepartmentTypeDao;
+import cn.asany.organization.core.domain.Department;
+import cn.asany.organization.core.domain.DepartmentType;
+import cn.asany.organization.core.domain.Organization;
 import java.util.List;
 import java.util.Optional;
 import org.apache.commons.collections.CollectionUtils;

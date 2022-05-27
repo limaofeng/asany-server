@@ -1,9 +1,9 @@
 package cn.asany.sunrise.calendar.service;
 
 import cn.asany.sunrise.TestApplication;
-import cn.asany.sunrise.calendar.bean.Calendar;
-import cn.asany.sunrise.calendar.bean.CalendarEvent;
-import cn.asany.sunrise.calendar.bean.CalendarSet;
+import cn.asany.sunrise.calendar.domain.Calendar;
+import cn.asany.sunrise.calendar.domain.CalendarEvent;
+import cn.asany.sunrise.calendar.domain.CalendarSet;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;

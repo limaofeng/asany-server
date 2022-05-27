@@ -1,9 +1,9 @@
 package cn.asany.cardhop.contacts.graphql.resolver;
 
 import cn.asany.base.common.Ownership;
-import cn.asany.cardhop.contacts.bean.ContactBook;
-import cn.asany.cardhop.contacts.bean.ContactGroup;
-import cn.asany.cardhop.contacts.bean.enums.ContactBookType;
+import cn.asany.cardhop.contacts.domain.ContactBook;
+import cn.asany.cardhop.contacts.domain.ContactGroup;
+import cn.asany.cardhop.contacts.domain.enums.ContactBookType;
 import cn.asany.cardhop.contacts.graphql.type.ContactGroupNamespace;
 import cn.asany.cardhop.contacts.service.DefaultContactsServiceFactory;
 import cn.asany.cardhop.contacts.utils.IdUtils;

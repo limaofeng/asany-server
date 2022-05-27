@@ -1,7 +1,7 @@
 package cn.asany.security.core.service;
 
-import cn.asany.security.core.bean.RoleSpace;
 import cn.asany.security.core.dao.RoleSpaceDao;
+import cn.asany.security.core.domain.RoleSpace;
 import java.util.List;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.springframework.data.domain.Page;

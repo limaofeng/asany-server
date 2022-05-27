@@ -1,9 +1,9 @@
 package cn.asany.openapi.service;
 
-import cn.asany.openapi.bean.OpenApiConfig;
-import cn.asany.openapi.bean.enums.OpenApiType;
 import cn.asany.openapi.configs.WeixinConfig;
 import cn.asany.openapi.dao.OpenApiConfigDao;
+import cn.asany.openapi.domain.OpenApiConfig;
+import cn.asany.openapi.domain.enums.OpenApiType;
 import cn.asany.weixin.framework.account.WeixinAppService;
 import cn.asany.weixin.framework.exception.AppidNotFoundException;
 import cn.asany.weixin.framework.session.WeixinApp;

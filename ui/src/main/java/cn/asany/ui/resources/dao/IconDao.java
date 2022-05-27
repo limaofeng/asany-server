@@ -1,6 +1,6 @@
 package cn.asany.ui.resources.dao;
 
-import cn.asany.ui.resources.bean.Icon;
+import cn.asany.ui.resources.domain.Icon;
 import org.jfantasy.framework.dao.jpa.JpaRepository;
 import org.springframework.stereotype.Repository;
 

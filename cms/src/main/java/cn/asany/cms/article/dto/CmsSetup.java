@@ -1,6 +1,6 @@
 package cn.asany.cms.article.dto;
 
-import cn.asany.cms.article.bean.ArticleChannel;
+import cn.asany.cms.article.domain.ArticleChannel;
 import java.util.List;
 import lombok.Data;
 import lombok.NoArgsConstructor;

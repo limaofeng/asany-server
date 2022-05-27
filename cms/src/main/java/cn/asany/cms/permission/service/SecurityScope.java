@@ -1,6 +1,6 @@
 package cn.asany.cms.permission.service;
 
-import cn.asany.cms.permission.bean.enums.SecurityType;
+import cn.asany.cms.permission.domain.enums.SecurityType;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;

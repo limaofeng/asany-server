@@ -22,7 +22,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 /** @author limaofeng */
 @Configuration
-@EntityScan("cn.asany.storage.data.bean")
+@EntityScan("cn.asany.storage.data.domain")
 @ComponentScan({
   "cn.asany.storage.core",
   "cn.asany.storage.plugin",

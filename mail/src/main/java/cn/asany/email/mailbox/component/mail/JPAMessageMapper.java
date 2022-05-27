@@ -1,11 +1,11 @@
 package cn.asany.email.mailbox.component.mail;
 
-import cn.asany.email.mailbox.bean.AbstractJPAMailboxMessage;
-import cn.asany.email.mailbox.bean.JamesMailbox;
-import cn.asany.email.mailbox.bean.JamesMailboxMessage;
-import cn.asany.email.mailbox.bean.toys.MailboxIdUidKey;
 import cn.asany.email.mailbox.component.JPAId;
 import cn.asany.email.mailbox.component.JPATransactionalMapper;
+import cn.asany.email.mailbox.domain.AbstractJPAMailboxMessage;
+import cn.asany.email.mailbox.domain.JamesMailbox;
+import cn.asany.email.mailbox.domain.JamesMailboxMessage;
+import cn.asany.email.mailbox.domain.toys.MailboxIdUidKey;
 import cn.asany.email.mailbox.service.MailboxMessageService;
 import cn.asany.email.mailbox.service.MailboxService;
 import com.github.steveash.guavate.Guavate;

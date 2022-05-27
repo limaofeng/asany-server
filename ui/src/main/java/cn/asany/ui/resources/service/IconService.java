@@ -1,14 +1,14 @@
 package cn.asany.ui.resources.service;
 
-import cn.asany.ui.library.bean.Library;
-import cn.asany.ui.library.bean.LibraryItem;
-import cn.asany.ui.library.bean.enums.LibraryType;
 import cn.asany.ui.library.convert.LibraryConverter;
 import cn.asany.ui.library.dao.LibraryDao;
 import cn.asany.ui.library.dao.LibraryItemDao;
-import cn.asany.ui.resources.bean.Icon;
-import cn.asany.ui.resources.bean.enums.IconType;
+import cn.asany.ui.library.domain.Library;
+import cn.asany.ui.library.domain.LibraryItem;
+import cn.asany.ui.library.domain.enums.LibraryType;
 import cn.asany.ui.resources.dao.IconDao;
+import cn.asany.ui.resources.domain.Icon;
+import cn.asany.ui.resources.domain.enums.IconType;
 import java.util.*;
 import java.util.stream.Collectors;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;

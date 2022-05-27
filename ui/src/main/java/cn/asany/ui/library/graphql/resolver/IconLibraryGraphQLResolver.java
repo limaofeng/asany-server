@@ -2,7 +2,7 @@ package cn.asany.ui.library.graphql.resolver;
 
 import cn.asany.ui.library.graphql.type.IconLibrary;
 import cn.asany.ui.library.service.LibraryService;
-import cn.asany.ui.resources.bean.Icon;
+import cn.asany.ui.resources.domain.Icon;
 import graphql.kickstart.tools.GraphQLResolver;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;

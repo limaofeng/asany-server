@@ -1,7 +1,7 @@
 package cn.asany.cardhop.contacts.graphql;
 
-import cn.asany.cardhop.contacts.bean.Contact;
-import cn.asany.cardhop.contacts.bean.ContactBook;
+import cn.asany.cardhop.contacts.domain.Contact;
+import cn.asany.cardhop.contacts.domain.ContactBook;
 import cn.asany.cardhop.contacts.graphql.input.ContactFilter;
 import cn.asany.cardhop.contacts.graphql.type.ContactConnection;
 import cn.asany.cardhop.contacts.service.ContactsService;

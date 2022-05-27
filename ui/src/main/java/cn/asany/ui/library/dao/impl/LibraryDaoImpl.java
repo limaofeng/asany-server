@@ -1,7 +1,7 @@
 package cn.asany.ui.library.dao.impl;
 
-import cn.asany.ui.library.bean.Library;
 import cn.asany.ui.library.dao.LibraryDao;
+import cn.asany.ui.library.domain.Library;
 import java.util.List;
 import java.util.Optional;
 import javax.persistence.EntityManager;

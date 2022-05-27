@@ -1,6 +1,6 @@
 package cn.asany.security.core.graphql.models;
 
-import cn.asany.security.core.bean.PermissionType;
+import cn.asany.security.core.domain.PermissionType;
 import java.util.List;
 import lombok.*;
 import org.jfantasy.graphql.Edge;

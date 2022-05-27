@@ -1,9 +1,9 @@
 package cn.asany.cms.article.graphql.input;
 
-import cn.asany.cms.article.bean.MetaData;
-import cn.asany.cms.article.bean.enums.ArticleCategory;
-import cn.asany.cms.article.bean.enums.ArticleStatus;
-import cn.asany.cms.article.bean.enums.ArticleType;
+import cn.asany.cms.article.domain.MetaData;
+import cn.asany.cms.article.domain.enums.ArticleCategory;
+import cn.asany.cms.article.domain.enums.ArticleStatus;
+import cn.asany.cms.article.domain.enums.ArticleType;
 import cn.asany.storage.api.FileObject;
 import java.util.Date;
 import java.util.List;

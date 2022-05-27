@@ -1,7 +1,7 @@
 package cn.asany.cms.article.service;
 
 import cn.asany.cms.TestApplication;
-import cn.asany.cms.article.bean.ArticleChannel;
+import cn.asany.cms.article.domain.ArticleChannel;
 import cn.asany.cms.article.dto.CmsSetup;
 import java.io.InputStream;
 import java.util.List;

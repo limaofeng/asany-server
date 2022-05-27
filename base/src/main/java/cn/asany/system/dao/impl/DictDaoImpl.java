@@ -1,9 +1,9 @@
 package cn.asany.system.dao.impl;
 
-import cn.asany.system.bean.Dict;
-import cn.asany.system.bean.DictKey;
-import cn.asany.system.bean.DictType;
 import cn.asany.system.dao.DictDao;
+import cn.asany.system.domain.Dict;
+import cn.asany.system.domain.DictKey;
+import cn.asany.system.domain.DictType;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.persistence.EntityManager;

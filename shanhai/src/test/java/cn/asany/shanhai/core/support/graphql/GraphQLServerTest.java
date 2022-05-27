@@ -2,8 +2,8 @@ package cn.asany.shanhai.core.support.graphql;
 
 import cn.asany.shanhai.TestApplication;
 import cn.asany.shanhai.autoconfigure.ShanhaiAutoConfiguration;
-import cn.asany.shanhai.core.bean.Model;
-import cn.asany.shanhai.core.bean.enums.ModelType;
+import cn.asany.shanhai.core.domain.Model;
+import cn.asany.shanhai.core.domain.enums.ModelType;
 import cn.asany.shanhai.core.service.ModelService;
 import cn.asany.shanhai.core.support.dao.ModelRepository;
 import cn.asany.shanhai.core.support.dao.ModelSessionFactory;

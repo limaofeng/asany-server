@@ -1,7 +1,7 @@
 package cn.asany.nuwa.app.service;
 
-import cn.asany.nuwa.app.bean.ApplicationMenu;
 import cn.asany.nuwa.app.dao.ApplicationMenuDao;
+import cn.asany.nuwa.app.domain.ApplicationMenu;
 import java.util.*;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;

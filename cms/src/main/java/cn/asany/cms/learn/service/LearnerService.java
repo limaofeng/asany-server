@@ -1,10 +1,10 @@
 package cn.asany.cms.learn.service;
 
-import cn.asany.cms.learn.bean.Course;
-import cn.asany.cms.learn.bean.Learner;
-import cn.asany.cms.learn.bean.LessonRecord;
 import cn.asany.cms.learn.dao.LearnerDao;
 import cn.asany.cms.learn.dao.LessonRecordDao;
+import cn.asany.cms.learn.domain.Course;
+import cn.asany.cms.learn.domain.Learner;
+import cn.asany.cms.learn.domain.LessonRecord;
 import java.util.Date;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;

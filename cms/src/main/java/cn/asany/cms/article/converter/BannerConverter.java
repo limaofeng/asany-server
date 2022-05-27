@@ -1,6 +1,6 @@
 package cn.asany.cms.article.converter;
 
-import cn.asany.cms.article.bean.Banner;
+import cn.asany.cms.article.domain.Banner;
 import cn.asany.cms.article.graphql.input.BannerCreateInput;
 import cn.asany.cms.article.graphql.input.BannerUpdateInput;
 import org.mapstruct.Mapper;

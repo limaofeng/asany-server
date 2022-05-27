@@ -13,7 +13,7 @@
 package cn.asany.email.user.component;
 
 import cn.asany.email.mailbox.component.JPATransactionalMapper;
-import cn.asany.email.user.bean.JamesSubscription;
+import cn.asany.email.user.domain.JamesSubscription;
 import cn.asany.email.user.service.SubscriptionService;
 import java.util.ArrayList;
 import java.util.List;

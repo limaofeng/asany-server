@@ -1,6 +1,6 @@
 package cn.asany.organization.core.convert;
 
-import cn.asany.organization.core.bean.Organization;
+import cn.asany.organization.core.domain.Organization;
 import cn.asany.organization.core.graphql.inputs.UpdateOrganizationProfileUpdateInput;
 import org.mapstruct.*;
 

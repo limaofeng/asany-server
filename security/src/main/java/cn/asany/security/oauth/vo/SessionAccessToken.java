@@ -1,6 +1,6 @@
 package cn.asany.security.oauth.vo;
 
-import cn.asany.security.oauth.bean.ClientDevice;
+import cn.asany.security.oauth.domain.ClientDevice;
 import java.util.Date;
 import lombok.Data;
 

@@ -1,8 +1,8 @@
 package cn.asany.security.core.service;
 
-import cn.asany.security.core.bean.Role;
-import cn.asany.security.core.bean.User;
 import cn.asany.security.core.dao.GrantPermissionDao;
+import cn.asany.security.core.domain.Role;
+import cn.asany.security.core.domain.User;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;

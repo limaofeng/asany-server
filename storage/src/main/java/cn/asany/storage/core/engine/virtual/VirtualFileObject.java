@@ -2,8 +2,8 @@ package cn.asany.storage.core.engine.virtual;
 
 import cn.asany.storage.api.*;
 import cn.asany.storage.core.StorageResolver;
-import cn.asany.storage.data.bean.FileLabel;
-import cn.asany.storage.data.bean.Space;
+import cn.asany.storage.data.domain.FileLabel;
+import cn.asany.storage.data.domain.Space;
 import cn.asany.storage.data.service.FileService;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.IOException;

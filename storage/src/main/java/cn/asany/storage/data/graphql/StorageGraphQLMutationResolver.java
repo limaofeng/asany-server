@@ -2,8 +2,8 @@ package cn.asany.storage.data.graphql;
 
 import cn.asany.storage.api.FileObject;
 import cn.asany.storage.api.UploadService;
-import cn.asany.storage.data.bean.FileDetail;
-import cn.asany.storage.data.bean.FileLabel;
+import cn.asany.storage.data.domain.FileDetail;
+import cn.asany.storage.data.domain.FileLabel;
 import cn.asany.storage.data.service.FileService;
 import cn.asany.storage.data.service.StorageService;
 import cn.asany.storage.data.util.IdUtils;

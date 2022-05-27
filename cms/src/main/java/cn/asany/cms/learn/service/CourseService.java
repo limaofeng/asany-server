@@ -1,11 +1,11 @@
 package cn.asany.cms.learn.service;
 
-import cn.asany.cms.article.bean.Article;
+import cn.asany.cms.article.domain.Article;
 import cn.asany.cms.article.service.ArticleService;
-import cn.asany.cms.learn.bean.*;
 import cn.asany.cms.learn.dao.CourseDao;
 import cn.asany.cms.learn.dao.LearnerScopeDao;
 import cn.asany.cms.learn.dao.LessonRecordDao;
+import cn.asany.cms.learn.domain.*;
 import cn.asany.cms.learn.graphql.inputs.CourseInput;
 import java.util.ArrayList;
 import java.util.List;

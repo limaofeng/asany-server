@@ -1,6 +1,6 @@
 package cn.asany.cardhop.contacts.service;
 
-import cn.asany.cardhop.contacts.bean.enums.ContactBookType;
+import cn.asany.cardhop.contacts.domain.enums.ContactBookType;
 import cn.asany.cardhop.integration.IContactsService;
 import java.util.List;
 import java.util.Map;

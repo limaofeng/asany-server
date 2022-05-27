@@ -1,9 +1,9 @@
 package cn.asany.email.mailbox.component.mail;
 
-import cn.asany.email.mailbox.bean.JPAMailboxAnnotationId;
-import cn.asany.email.mailbox.bean.JamesMailboxAnnotation;
 import cn.asany.email.mailbox.component.JPAId;
 import cn.asany.email.mailbox.component.JPATransactionalMapper;
+import cn.asany.email.mailbox.domain.JPAMailboxAnnotationId;
+import cn.asany.email.mailbox.domain.JamesMailboxAnnotation;
 import cn.asany.email.mailbox.service.MailboxAnnotationService;
 import com.github.steveash.guavate.Guavate;
 import com.google.common.base.Preconditions;

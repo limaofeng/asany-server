@@ -1,7 +1,7 @@
 package cn.asany.security.core.service;
 
 import cn.asany.TestApplication;
-import cn.asany.security.core.bean.Permission;
+import cn.asany.security.core.domain.Permission;
 import cn.asany.security.core.service.dto.ImportPermission;
 import java.io.InputStream;
 import java.util.List;

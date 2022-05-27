@@ -15,26 +15,3 @@ enum FileSizeUnit {
   GB
   TB
 }
-
-# 页信息
-type PageInfo {
-  # 是否存在下一页
-  hasNextPage: Boolean
-  # 是否存在上一页
-  hasPreviousPage: Boolean
-  # 数据页第一个游标
-  startCursor: String
-  # 数据页最后一个游标
-  endCursor: String
-}
-
-interface BaseEntity {
-  # 创建时间
-  createdAt: Date @dateFormat
-  # 创建人
-  createdBy: ID
-  # 更新时间
-  updatedAt: Date @dateFormat
-  # 更新人
-  updatedBy: ID
-}

@@ -1,6 +1,6 @@
 package cn.asany.sunrise.calendar.graphql.input;
 
-import cn.asany.sunrise.calendar.bean.toys.Remind;
+import cn.asany.sunrise.calendar.domain.toys.Remind;
 import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Data;

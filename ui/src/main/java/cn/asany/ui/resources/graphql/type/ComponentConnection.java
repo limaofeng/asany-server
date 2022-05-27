@@ -1,6 +1,6 @@
 package cn.asany.ui.resources.graphql.type;
 
-import cn.asany.ui.resources.bean.Component;
+import cn.asany.ui.resources.domain.Component;
 import java.util.List;
 import lombok.*;
 import org.jfantasy.graphql.Edge;

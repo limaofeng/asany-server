@@ -1,7 +1,7 @@
 package cn.asany.cms.article.graphql;
 
-import cn.asany.cms.article.bean.Comment;
-import cn.asany.cms.article.bean.enums.CommentTargetType;
+import cn.asany.cms.article.domain.Comment;
+import cn.asany.cms.article.domain.enums.CommentTargetType;
 import cn.asany.cms.article.graphql.input.CommentInput;
 import cn.asany.cms.article.service.CommentService;
 import graphql.kickstart.tools.GraphQLMutationResolver;

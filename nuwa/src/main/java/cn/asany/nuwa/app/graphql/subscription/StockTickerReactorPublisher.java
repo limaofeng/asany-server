@@ -1,6 +1,6 @@
 package cn.asany.nuwa.app.graphql.subscription;
 
-import cn.asany.nuwa.template.bean.ApplicationTemplateRoute;
+import cn.asany.nuwa.template.domain.ApplicationTemplateRoute;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;

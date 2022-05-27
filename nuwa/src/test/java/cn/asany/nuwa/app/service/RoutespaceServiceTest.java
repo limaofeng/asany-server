@@ -1,7 +1,7 @@
 package cn.asany.nuwa.app.service;
 
 import cn.asany.nuwa.TestApplication;
-import cn.asany.nuwa.app.bean.Routespace;
+import cn.asany.nuwa.app.domain.Routespace;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

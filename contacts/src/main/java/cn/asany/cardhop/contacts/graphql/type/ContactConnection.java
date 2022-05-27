@@ -1,6 +1,6 @@
 package cn.asany.cardhop.contacts.graphql.type;
 
-import cn.asany.cardhop.contacts.bean.Contact;
+import cn.asany.cardhop.contacts.domain.Contact;
 import java.util.List;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

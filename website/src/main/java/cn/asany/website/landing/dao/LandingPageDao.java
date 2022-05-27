@@ -1,6 +1,6 @@
 package cn.asany.website.landing.dao;
 
-import cn.asany.website.landing.bean.LandingPage;
+import cn.asany.website.landing.domain.LandingPage;
 import java.util.Optional;
 import org.jfantasy.framework.dao.jpa.JpaRepository;
 import org.springframework.data.jpa.repository.EntityGraph;

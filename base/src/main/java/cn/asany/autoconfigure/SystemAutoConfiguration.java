@@ -14,7 +14,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
  */
 @Configuration
 @Slf4j
-@EntityScan({"cn.asany.system.bean"})
+@EntityScan({"cn.asany.system.domain"})
 @ComponentScan({
   "cn.asany.system.dao",
   "cn.asany.system.convert",

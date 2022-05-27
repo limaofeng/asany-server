@@ -1,6 +1,6 @@
 package cn.asany.shanhai.core.dao;
 
-import cn.asany.shanhai.core.bean.ModelMetadata;
+import cn.asany.shanhai.core.domain.ModelMetadata;
 import org.jfantasy.framework.dao.jpa.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -1,7 +1,7 @@
 package cn.asany.nuwa.app.service.dto;
 
 import cn.asany.base.IModuleProperties;
-import cn.asany.nuwa.app.bean.enums.ApplicationType;
+import cn.asany.nuwa.app.domain.enums.ApplicationType;
 import java.util.List;
 import java.util.Set;
 import lombok.AllArgsConstructor;

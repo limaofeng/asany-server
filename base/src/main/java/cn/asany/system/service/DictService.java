@@ -1,10 +1,10 @@
 package cn.asany.system.service;
 
-import cn.asany.system.bean.Dict;
-import cn.asany.system.bean.DictKey;
-import cn.asany.system.bean.DictType;
 import cn.asany.system.dao.DictDao;
 import cn.asany.system.dao.DictTypeDao;
+import cn.asany.system.domain.Dict;
+import cn.asany.system.domain.DictKey;
+import cn.asany.system.domain.DictType;
 import com.github.stuxuhai.jpinyin.PinyinException;
 import java.util.*;
 import java.util.stream.Collectors;

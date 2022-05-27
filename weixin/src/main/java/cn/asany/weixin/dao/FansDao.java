@@ -1,7 +1,7 @@
 package cn.asany.weixin.dao;
 
-import cn.asany.weixin.bean.Fans;
-import cn.asany.weixin.bean.UserKey;
+import cn.asany.weixin.domain.Fans;
+import cn.asany.weixin.domain.UserKey;
 import org.jfantasy.framework.dao.jpa.JpaRepository;
 import org.springframework.stereotype.Repository;
 

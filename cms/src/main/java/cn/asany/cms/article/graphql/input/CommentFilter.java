@@ -1,6 +1,6 @@
 package cn.asany.cms.article.graphql.input;
 
-import cn.asany.cms.article.bean.Comment;
+import cn.asany.cms.article.domain.Comment;
 import cn.asany.cms.article.service.CommentService;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;

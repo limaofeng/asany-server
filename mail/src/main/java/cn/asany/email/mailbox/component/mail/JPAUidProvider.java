@@ -1,7 +1,7 @@
 package cn.asany.email.mailbox.component.mail;
 
-import cn.asany.email.mailbox.bean.JamesMailbox;
 import cn.asany.email.mailbox.component.JPAId;
+import cn.asany.email.mailbox.domain.JamesMailbox;
 import cn.asany.email.mailbox.service.MailboxService;
 import java.util.Optional;
 import javax.inject.Inject;

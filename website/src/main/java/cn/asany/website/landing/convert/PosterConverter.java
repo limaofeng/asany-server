@@ -1,6 +1,6 @@
 package cn.asany.website.landing.convert;
 
-import cn.asany.website.landing.bean.LandingPoster;
+import cn.asany.website.landing.domain.LandingPoster;
 import cn.asany.website.landing.graphql.input.LandingPosterCreateInput;
 import cn.asany.website.landing.graphql.input.LandingPosterUpdateInput;
 import org.mapstruct.*;

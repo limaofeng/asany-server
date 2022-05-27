@@ -1,6 +1,6 @@
 package cn.asany.email.mailbox.component;
 
-import cn.asany.email.user.bean.JamesSubscription;
+import cn.asany.email.user.domain.JamesSubscription;
 import javax.inject.Inject;
 import org.apache.james.mailbox.MailboxSession;
 import org.apache.james.mailbox.store.StoreSubscriptionManager;

@@ -1,6 +1,6 @@
 package cn.asany.security.core.graphql;
 
-import cn.asany.security.core.bean.*;
+import cn.asany.security.core.domain.*;
 import cn.asany.security.core.graphql.input.GrantPermissionByUserInput;
 import cn.asany.security.core.graphql.models.*;
 import cn.asany.security.core.service.*;

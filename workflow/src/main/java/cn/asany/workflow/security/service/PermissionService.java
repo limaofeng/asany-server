@@ -1,6 +1,6 @@
 package cn.asany.workflow.security.service;
 
-import cn.asany.workflow.security.bean.GrantPermission;
+import cn.asany.workflow.security.domain.GrantPermission;
 import cn.asany.workflow.security.dao.GrantPermissionDao;
 import cn.asany.workflow.security.dao.PermissionDao;
 import cn.asany.workflow.security.dao.PermissionSchemeDao;

@@ -1,6 +1,6 @@
 package cn.asany.website.landing.dao;
 
-import cn.asany.website.landing.bean.LandingStore;
+import cn.asany.website.landing.domain.LandingStore;
 import org.jfantasy.framework.dao.jpa.JpaRepository;
 import org.springframework.stereotype.Repository;
 

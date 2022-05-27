@@ -1,6 +1,6 @@
 package cn.asany.email.utils;
 
-import cn.asany.email.mailbox.bean.JamesMailboxMessage;
+import cn.asany.email.mailbox.domain.JamesMailboxMessage;
 
 public class SentMailContext {
   private JamesMailboxMessage message;

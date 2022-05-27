@@ -3,7 +3,7 @@ package cn.asany.storage.data.web;
 import cn.asany.storage.api.FileObject;
 import cn.asany.storage.api.Storage;
 import cn.asany.storage.core.StorageResolver;
-import cn.asany.storage.data.bean.FileDetail;
+import cn.asany.storage.data.domain.FileDetail;
 import cn.asany.storage.data.service.FileService;
 import java.io.*;
 import java.util.Optional;

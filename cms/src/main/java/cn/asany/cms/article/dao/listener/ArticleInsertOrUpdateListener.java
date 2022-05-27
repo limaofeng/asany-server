@@ -1,6 +1,6 @@
 package cn.asany.cms.article.dao.listener;
 
-import cn.asany.cms.article.bean.Article;
+import cn.asany.cms.article.domain.Article;
 import cn.asany.cms.article.event.ArticleCreatedEvent;
 import org.hibernate.event.spi.EventType;
 import org.hibernate.event.spi.PostInsertEvent;

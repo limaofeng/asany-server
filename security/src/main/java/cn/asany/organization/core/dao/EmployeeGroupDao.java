@@ -1,6 +1,6 @@
 package cn.asany.organization.core.dao;
 
-import cn.asany.organization.core.bean.EmployeeGroup;
+import cn.asany.organization.core.domain.EmployeeGroup;
 import java.util.List;
 import org.jfantasy.framework.dao.jpa.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

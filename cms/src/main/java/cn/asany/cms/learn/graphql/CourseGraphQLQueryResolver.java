@@ -1,6 +1,6 @@
 package cn.asany.cms.learn.graphql;
 
-import cn.asany.cms.learn.bean.Course;
+import cn.asany.cms.learn.domain.Course;
 import cn.asany.cms.learn.graphql.inputs.CourseFilter;
 import cn.asany.cms.learn.graphql.types.CourseConnection;
 import cn.asany.cms.learn.service.CourseService;

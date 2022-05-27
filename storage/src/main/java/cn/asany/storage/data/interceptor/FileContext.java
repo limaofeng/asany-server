@@ -1,6 +1,6 @@
 package cn.asany.storage.data.interceptor;
 
-import cn.asany.storage.data.bean.FileDetail;
+import cn.asany.storage.data.domain.FileDetail;
 import java.util.Stack;
 
 public class FileContext {

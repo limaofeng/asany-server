@@ -1,6 +1,6 @@
 package cn.asany.shanhai.core.support.model.types;
 
-import cn.asany.shanhai.core.bean.ModelFieldMetadata;
+import cn.asany.shanhai.core.domain.ModelFieldMetadata;
 import cn.asany.shanhai.core.support.model.FieldType;
 import java.sql.Timestamp;
 import java.util.Date;

@@ -1,8 +1,8 @@
 package cn.asany.system.service;
 
 import cn.asany.system.TestApplication;
-import cn.asany.system.bean.Dict;
-import cn.asany.system.bean.DictType;
+import cn.asany.system.domain.Dict;
+import cn.asany.system.domain.DictType;
 import com.fasterxml.jackson.core.type.TypeReference;
 import java.util.*;
 import java.util.stream.Collectors;

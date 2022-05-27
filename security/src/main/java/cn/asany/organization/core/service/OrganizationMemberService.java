@@ -1,7 +1,7 @@
 package cn.asany.organization.core.service;
 
-import cn.asany.organization.core.bean.OrganizationMember;
 import cn.asany.organization.core.dao.OrganizationMemberDao;
+import cn.asany.organization.core.domain.OrganizationMember;
 import java.util.Optional;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.springframework.stereotype.Service;

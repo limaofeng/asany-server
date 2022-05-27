@@ -1,7 +1,7 @@
 package cn.asany.organization.core.service;
 
-import cn.asany.organization.core.bean.TeamMember;
 import cn.asany.organization.core.dao.TeamMemberDao;
+import cn.asany.organization.core.domain.TeamMember;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

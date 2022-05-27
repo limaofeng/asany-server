@@ -1,14 +1,14 @@
 package cn.asany.cms.learn.service;
 
-import cn.asany.cms.article.bean.Article;
+import cn.asany.cms.article.domain.Article;
 import cn.asany.cms.article.graphql.input.ArticleInput;
 import cn.asany.cms.article.service.ArticleService;
-import cn.asany.cms.learn.bean.Course;
-import cn.asany.cms.learn.bean.Lesson;
-import cn.asany.cms.learn.bean.LessonRecord;
-import cn.asany.cms.learn.bean.enums.LessonScheduleType;
 import cn.asany.cms.learn.dao.LessonDao;
 import cn.asany.cms.learn.dao.LessonRecordDao;
+import cn.asany.cms.learn.domain.Course;
+import cn.asany.cms.learn.domain.Lesson;
+import cn.asany.cms.learn.domain.LessonRecord;
+import cn.asany.cms.learn.domain.enums.LessonScheduleType;
 import cn.asany.cms.learn.graphql.inputs.LessonInput;
 import java.text.NumberFormat;
 import java.util.List;

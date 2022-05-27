@@ -1,6 +1,6 @@
 package cn.asany.cms.learn.event;
 
-import cn.asany.cms.learn.bean.Course;
+import cn.asany.cms.learn.domain.Course;
 import org.springframework.context.ApplicationEvent;
 
 /**

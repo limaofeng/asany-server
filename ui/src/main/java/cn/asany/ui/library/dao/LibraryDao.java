@@ -1,6 +1,6 @@
 package cn.asany.ui.library.dao;
 
-import cn.asany.ui.library.bean.Library;
+import cn.asany.ui.library.domain.Library;
 import java.util.List;
 import java.util.Optional;
 import org.jfantasy.framework.dao.jpa.JpaRepository;

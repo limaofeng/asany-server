@@ -1,6 +1,6 @@
 package cn.asany.ui.library.graphql.input;
 
-import cn.asany.ui.library.bean.enums.LibraryType;
+import cn.asany.ui.library.domain.enums.LibraryType;
 import lombok.Data;
 
 @Data

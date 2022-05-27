@@ -3,7 +3,7 @@ package cn.asany.nuwa.app;
 import cn.asany.cms.article.service.ArticleChannelService;
 import cn.asany.cms.module.CmsModuleProperties;
 import cn.asany.nuwa.YamlUtils;
-import cn.asany.nuwa.app.bean.Application;
+import cn.asany.nuwa.app.domain.Application;
 import cn.asany.nuwa.app.service.ApplicationService;
 import cn.asany.nuwa.app.service.dto.NativeApplication;
 import cn.asany.shanhai.TestApplication;

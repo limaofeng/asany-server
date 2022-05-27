@@ -12,7 +12,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
  * @author limaofeng
  */
 @Configuration
-@EntityScan("cn.asany.sunrise.*.bean")
+@EntityScan("cn.asany.sunrise*.domain")
 @ComponentScan({
   "cn.asany.sunrise.*.dao",
   "cn.asany.sunrise.*.service",

@@ -3,8 +3,8 @@ package cn.asany.cms.article.service;
 import static org.junit.jupiter.api.Assertions.*;
 
 import cn.asany.cms.TestApplication;
-import cn.asany.cms.article.bean.Banner;
 import cn.asany.cms.article.converter.BannerConverter;
+import cn.asany.cms.article.domain.Banner;
 import cn.asany.cms.article.graphql.input.BannerCreateInput;
 import cn.asany.cms.article.graphql.input.BannerFilter;
 import cn.asany.cms.article.graphql.input.BannerUpdateInput;

@@ -1,6 +1,6 @@
 package cn.asany.cms.learn.dao;
 
-import cn.asany.cms.learn.bean.CourseSection;
+import cn.asany.cms.learn.domain.CourseSection;
 import org.jfantasy.framework.dao.jpa.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -3,7 +3,7 @@ package cn.asany.storage.data.service;
 import cn.asany.base.utils.UUID;
 import cn.asany.storage.TestApplication;
 import cn.asany.storage.api.Storage;
-import cn.asany.storage.data.bean.FileDetail;
+import cn.asany.storage.data.domain.FileDetail;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;

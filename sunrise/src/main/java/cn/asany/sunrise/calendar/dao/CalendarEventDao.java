@@ -1,8 +1,8 @@
 package cn.asany.sunrise.calendar.dao;
 
-import cn.asany.sunrise.calendar.bean.CalendarEvent;
-import cn.asany.sunrise.calendar.bean.toys.CalendarEventDateStat;
-import cn.asany.sunrise.calendar.bean.toys.DateRange;
+import cn.asany.sunrise.calendar.domain.CalendarEvent;
+import cn.asany.sunrise.calendar.domain.toys.CalendarEventDateStat;
+import cn.asany.sunrise.calendar.domain.toys.DateRange;
 import java.util.Date;
 import java.util.List;
 import org.jfantasy.framework.dao.jpa.JpaRepository;

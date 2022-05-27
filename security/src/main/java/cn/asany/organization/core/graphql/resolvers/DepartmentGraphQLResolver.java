@@ -1,10 +1,10 @@
 package cn.asany.organization.core.graphql.resolvers;
 
-import cn.asany.organization.core.bean.Department;
-import cn.asany.organization.core.bean.Job;
+import cn.asany.organization.core.domain.Department;
+import cn.asany.organization.core.domain.Job;
 import cn.asany.organization.core.graphql.enums.DepartmentIdType;
 import cn.asany.organization.core.service.DepartmentService;
-import cn.asany.organization.relationship.bean.Position;
+import cn.asany.organization.relationship.domain.Position;
 import graphql.kickstart.tools.GraphQLResolver;
 import java.util.ArrayList;
 import java.util.List;

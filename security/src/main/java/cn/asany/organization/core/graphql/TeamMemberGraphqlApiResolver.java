@@ -1,6 +1,6 @@
 package cn.asany.organization.core.graphql;
 
-import cn.asany.organization.core.bean.TeamMember;
+import cn.asany.organization.core.domain.TeamMember;
 import cn.asany.organization.core.service.TeamMemberService;
 import graphql.kickstart.tools.GraphQLMutationResolver;
 import graphql.kickstart.tools.GraphQLQueryResolver;
