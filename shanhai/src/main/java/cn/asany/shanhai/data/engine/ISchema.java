@@ -1,6 +1,6 @@
 package cn.asany.shanhai.data.engine;
 
-import cn.asany.shanhai.data.bean.DataSetConfig;
+import cn.asany.shanhai.data.domain.DataSetConfig;
 
 /**
  * @author limaofeng

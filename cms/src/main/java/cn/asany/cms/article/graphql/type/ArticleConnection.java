@@ -1,6 +1,6 @@
 package cn.asany.cms.article.graphql.type;
 
-import cn.asany.cms.article.bean.Article;
+import cn.asany.cms.article.domain.Article;
 import java.util.List;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

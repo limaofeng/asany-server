@@ -24,9 +24,9 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 /** @author limaofeng */
 @Configuration
 @EntityScan({
-  "cn.asany.shanhai.core.bean",
-  "cn.asany.shanhai.data.bean",
-  "cn.asany.shanhai.gateway.bean",
+  "cn.asany.shanhai.core.domain",
+  "cn.asany.shanhai.data.domain",
+  "cn.asany.shanhai.gateway.domain",
 })
 @ComponentScan({
   "cn.asany.shanhai.core.support.model.types",

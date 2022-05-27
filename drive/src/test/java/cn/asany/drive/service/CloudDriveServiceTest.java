@@ -1,7 +1,7 @@
 package cn.asany.drive.service;
 
 import cn.asany.drive.TestApplication;
-import cn.asany.drive.bean.CloudDrive;
+import cn.asany.drive.domain.CloudDrive;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;

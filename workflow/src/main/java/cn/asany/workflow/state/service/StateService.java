@@ -1,6 +1,6 @@
 package cn.asany.workflow.state.service;
 
-import cn.asany.workflow.state.bean.State;
+import cn.asany.workflow.state.domain.State;
 import cn.asany.workflow.state.dao.StateDao;
 import java.util.List;
 import org.springframework.data.domain.Pageable;

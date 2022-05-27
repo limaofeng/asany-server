@@ -1,6 +1,6 @@
 package cn.asany.security.core.graphql;
 
-import cn.asany.security.core.bean.*;
+import cn.asany.security.core.domain.*;
 import cn.asany.security.core.graphql.enums.ResultTypeScope;
 import cn.asany.security.core.graphql.input.ContextInput;
 import cn.asany.security.core.graphql.input.ScopeTypeAttribute;

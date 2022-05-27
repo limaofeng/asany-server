@@ -1,12 +1,12 @@
 package cn.asany.cms.article.graphql.resolver;
 
-import cn.asany.cms.article.bean.Article;
-import cn.asany.cms.article.bean.ArticleChannel;
+import cn.asany.cms.article.domain.Article;
+import cn.asany.cms.article.domain.ArticleChannel;
 import cn.asany.cms.article.graphql.input.ArticleFilter;
 import cn.asany.cms.article.graphql.type.Starrable;
 import cn.asany.cms.article.service.ArticleChannelService;
 import cn.asany.cms.article.service.ArticleService;
-import cn.asany.cms.permission.bean.Permission;
+import cn.asany.cms.permission.domain.Permission;
 import graphql.kickstart.tools.GraphQLResolver;
 import java.util.Arrays;
 import java.util.Collections;

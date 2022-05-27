@@ -1,7 +1,7 @@
 package cn.asany.sunrise.calendar.convert;
 
-import cn.asany.sunrise.calendar.bean.Calendar;
-import cn.asany.sunrise.calendar.bean.CalendarEvent;
+import cn.asany.sunrise.calendar.domain.Calendar;
+import cn.asany.sunrise.calendar.domain.CalendarEvent;
 import cn.asany.sunrise.calendar.graphql.input.CalendarEventCreateInput;
 import cn.asany.sunrise.calendar.graphql.input.CalendarUpdateInput;
 import org.mapstruct.*;

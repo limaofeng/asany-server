@@ -1,7 +1,7 @@
 package cn.asany.ui.library.service;
 
 import cn.asany.ui.TestApplication;
-import cn.asany.ui.resources.bean.Icon;
+import cn.asany.ui.resources.domain.Icon;
 import cn.asany.ui.resources.service.IconService;
 import java.util.Set;
 import lombok.extern.slf4j.Slf4j;

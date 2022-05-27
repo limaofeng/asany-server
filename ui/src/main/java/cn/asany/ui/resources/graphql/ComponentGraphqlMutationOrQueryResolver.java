@@ -1,7 +1,7 @@
 package cn.asany.ui.resources.graphql;
 
-import cn.asany.ui.resources.bean.Component;
 import cn.asany.ui.resources.convert.ComponentConverter;
+import cn.asany.ui.resources.domain.Component;
 import cn.asany.ui.resources.graphql.input.ComponentFilter;
 import cn.asany.ui.resources.graphql.type.ComponentConnection;
 import cn.asany.ui.resources.graphql.type.ComponentCreateInput;

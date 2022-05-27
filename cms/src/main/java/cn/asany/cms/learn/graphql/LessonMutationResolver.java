@@ -1,6 +1,6 @@
 package cn.asany.cms.learn.graphql;
 
-import cn.asany.cms.learn.bean.Lesson;
+import cn.asany.cms.learn.domain.Lesson;
 import cn.asany.cms.learn.graphql.inputs.LessonInput;
 import cn.asany.cms.learn.service.LessonService;
 import graphql.kickstart.tools.GraphQLMutationResolver;

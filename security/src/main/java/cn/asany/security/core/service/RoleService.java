@@ -1,11 +1,11 @@
 package cn.asany.security.core.service;
 
-import cn.asany.security.core.bean.Permission;
-import cn.asany.security.core.bean.Role;
-import cn.asany.security.core.bean.enums.RoleType;
 import cn.asany.security.core.dao.GrantPermissionDao;
 import cn.asany.security.core.dao.PermissionDao;
 import cn.asany.security.core.dao.RoleDao;
+import cn.asany.security.core.domain.Permission;
+import cn.asany.security.core.domain.Role;
+import cn.asany.security.core.domain.enums.RoleType;
 import cn.asany.security.core.exception.ValidDataException;
 import cn.asany.security.core.graphql.enums.RoleAssignEntityTypeEnum;
 import java.util.Arrays;

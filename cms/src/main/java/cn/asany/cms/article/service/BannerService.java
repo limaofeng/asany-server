@@ -1,8 +1,8 @@
 package cn.asany.cms.article.service;
 
-import cn.asany.cms.article.bean.Banner;
-import cn.asany.cms.article.bean.enums.BackgroundType;
 import cn.asany.cms.article.dao.BannerDao;
+import cn.asany.cms.article.domain.Banner;
+import cn.asany.cms.article.domain.enums.BackgroundType;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;

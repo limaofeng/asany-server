@@ -1,7 +1,7 @@
 package cn.asany.cms.article.service;
 
-import cn.asany.cms.article.bean.ArticleFeature;
 import cn.asany.cms.article.dao.ArticleFeatureDao;
+import cn.asany.cms.article.domain.ArticleFeature;
 import java.util.List;
 import java.util.Optional;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;

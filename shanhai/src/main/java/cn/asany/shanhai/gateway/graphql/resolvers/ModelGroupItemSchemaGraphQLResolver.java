@@ -1,6 +1,6 @@
 package cn.asany.shanhai.gateway.graphql.resolvers;
 
-import cn.asany.shanhai.gateway.bean.ModelGroupItem;
+import cn.asany.shanhai.gateway.domain.ModelGroupItem;
 import graphql.kickstart.tools.GraphQLResolver;
 import org.springframework.stereotype.Component;
 

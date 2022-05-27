@@ -1,6 +1,6 @@
 package cn.asany.shanhai.core.support.dao;
 
-import cn.asany.shanhai.core.bean.Model;
+import cn.asany.shanhai.core.domain.Model;
 import cn.asany.shanhai.core.utils.HibernateMappingHelper;
 import java.io.ByteArrayInputStream;
 import java.util.EnumSet;

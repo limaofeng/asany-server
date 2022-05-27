@@ -1,6 +1,6 @@
 package cn.asany.email.domainlist.dao;
 
-import cn.asany.email.domainlist.bean.JamesDomain;
+import cn.asany.email.domainlist.domain.JamesDomain;
 import org.jfantasy.framework.dao.jpa.JpaRepository;
 import org.springframework.stereotype.Repository;
 

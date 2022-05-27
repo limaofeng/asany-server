@@ -1,11 +1,9 @@
 package cn.asany.storage.data.service;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import cn.asany.storage.TestApplication;
 import cn.asany.storage.core.engine.oss.OSSStorageConfig;
-import cn.asany.storage.data.bean.StorageConfig;
-import cn.asany.storage.data.bean.enums.StorageType;
+import cn.asany.storage.data.domain.StorageConfig;
+import cn.asany.storage.data.domain.enums.StorageType;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

@@ -1,8 +1,8 @@
 package cn.asany.ui.library.service;
 
 import cn.asany.ui.TestApplication;
-import cn.asany.ui.library.bean.Library;
-import cn.asany.ui.library.bean.enums.LibraryType;
+import cn.asany.ui.library.domain.Library;
+import cn.asany.ui.library.domain.enums.LibraryType;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;

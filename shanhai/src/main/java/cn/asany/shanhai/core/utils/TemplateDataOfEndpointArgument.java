@@ -1,6 +1,6 @@
 package cn.asany.shanhai.core.utils;
 
-import cn.asany.shanhai.core.bean.ModelEndpointArgument;
+import cn.asany.shanhai.core.domain.ModelEndpointArgument;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor

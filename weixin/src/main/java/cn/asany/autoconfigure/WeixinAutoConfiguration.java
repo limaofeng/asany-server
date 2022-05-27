@@ -21,7 +21,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
  * @author limaofeng
  */
 @Configuration
-@EntityScan("cn.asany.weixin.bean")
+@EntityScan("cn.asany.weixin.domain")
 @ComponentScan({
   "cn.asany.weixin.dao",
   "cn.asany.weixin.service",

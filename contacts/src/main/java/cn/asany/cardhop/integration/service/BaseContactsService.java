@@ -1,9 +1,9 @@
 package cn.asany.cardhop.integration.service;
 
-import cn.asany.cardhop.contacts.bean.Contact;
-import cn.asany.cardhop.contacts.bean.ContactBook;
-import cn.asany.cardhop.contacts.bean.ContactGroup;
-import cn.asany.cardhop.contacts.bean.enums.ContactBookType;
+import cn.asany.cardhop.contacts.domain.Contact;
+import cn.asany.cardhop.contacts.domain.ContactBook;
+import cn.asany.cardhop.contacts.domain.ContactGroup;
+import cn.asany.cardhop.contacts.domain.enums.ContactBookType;
 import cn.asany.cardhop.contacts.service.ContactsService;
 import cn.asany.cardhop.integration.IContactsService;
 import java.util.List;

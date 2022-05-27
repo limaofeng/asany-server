@@ -1,9 +1,9 @@
 package cn.asany.shanhai.core.support.graphql;
 
-import cn.asany.shanhai.core.bean.Model;
-import cn.asany.shanhai.core.bean.ModelDelegate;
-import cn.asany.shanhai.core.bean.ModelEndpoint;
-import cn.asany.shanhai.core.bean.enums.ModelDelegateType;
+import cn.asany.shanhai.core.domain.Model;
+import cn.asany.shanhai.core.domain.ModelDelegate;
+import cn.asany.shanhai.core.domain.ModelEndpoint;
+import cn.asany.shanhai.core.domain.enums.ModelDelegateType;
 import cn.asany.shanhai.core.support.dao.ModelRepository;
 import cn.asany.shanhai.core.support.graphql.resolvers.DelegateDataFetcher;
 import java.lang.reflect.Constructor;

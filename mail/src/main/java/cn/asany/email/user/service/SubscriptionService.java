@@ -1,7 +1,7 @@
 package cn.asany.email.user.service;
 
-import cn.asany.email.user.bean.JamesSubscription;
 import cn.asany.email.user.dao.SubscriptionDao;
+import cn.asany.email.user.domain.JamesSubscription;
 import java.util.List;
 import java.util.Optional;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;

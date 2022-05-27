@@ -1,6 +1,6 @@
 package cn.asany.nuwa.app.dao;
 
-import cn.asany.nuwa.app.bean.Application;
+import cn.asany.nuwa.app.domain.Application;
 import java.util.List;
 import java.util.Optional;
 import org.jfantasy.framework.dao.jpa.JpaRepository;

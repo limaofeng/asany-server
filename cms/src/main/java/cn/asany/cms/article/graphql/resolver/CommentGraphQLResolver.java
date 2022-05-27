@@ -1,6 +1,6 @@
 package cn.asany.cms.article.graphql.resolver;
 
-import cn.asany.cms.article.bean.Comment;
+import cn.asany.cms.article.domain.Comment;
 import cn.asany.cms.article.graphql.enums.CommentStarType;
 import cn.asany.cms.article.graphql.input.CommentFilter;
 import cn.asany.cms.article.graphql.type.Starrable;

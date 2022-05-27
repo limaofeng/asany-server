@@ -1,7 +1,7 @@
 package cn.asany.shanhai.gateway.graphql.types;
 
-import cn.asany.shanhai.core.bean.Model;
-import cn.asany.shanhai.core.bean.ModelField;
+import cn.asany.shanhai.core.domain.Model;
+import cn.asany.shanhai.core.domain.ModelField;
 import java.util.List;
 import lombok.Builder;
 import lombok.Data;

@@ -17,7 +17,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
  * @author limaofeng
  */
 @Configuration
-@EntityScan("cn.asany.nuwa.*.bean")
+@EntityScan("cn.asany.nuwa*.domain")
 @ComponentScan({
   "cn.asany.nuwa.*.dao",
   "cn.asany.nuwa.*.service",

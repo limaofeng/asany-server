@@ -1,6 +1,6 @@
 package cn.asany.shanhai.core.runners;
 
-import cn.asany.shanhai.core.bean.Model;
+import cn.asany.shanhai.core.domain.Model;
 import cn.asany.shanhai.core.service.ModelService;
 import cn.asany.shanhai.core.utils.ModelUtils;
 import org.springframework.beans.factory.annotation.Autowired;

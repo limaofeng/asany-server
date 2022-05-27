@@ -1,6 +1,6 @@
 package cn.asany.nuwa.app.graphql.subscription;
 
-import cn.asany.nuwa.template.bean.ApplicationTemplateRoute;
+import cn.asany.nuwa.template.domain.ApplicationTemplateRoute;
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
 import io.reactivex.Observable;

@@ -1,7 +1,7 @@
 package cn.asany.storage.data.service;
 
-import cn.asany.storage.data.bean.Space;
 import cn.asany.storage.data.dao.SpaceDao;
+import cn.asany.storage.data.domain.Space;
 import java.util.List;
 import org.hibernate.Hibernate;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;

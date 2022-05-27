@@ -1,7 +1,7 @@
 package cn.asany.shanhai.gateway.service;
 
-import cn.asany.shanhai.gateway.bean.Service;
 import cn.asany.shanhai.gateway.dao.ServiceDao;
+import cn.asany.shanhai.gateway.domain.Service;
 import java.util.List;
 import java.util.Optional;
 import org.jfantasy.framework.util.PinyinUtils;

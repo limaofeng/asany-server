@@ -1,6 +1,6 @@
 package cn.asany.organization.core.service;
 
-import cn.asany.organization.core.bean.EmployeeStatus;
+import cn.asany.organization.core.domain.EmployeeStatus;
 import cn.asany.organization.employee.dao.EmployeeStatusDao;
 import java.util.List;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;

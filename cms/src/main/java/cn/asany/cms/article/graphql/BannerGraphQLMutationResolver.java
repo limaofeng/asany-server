@@ -1,7 +1,7 @@
 package cn.asany.cms.article.graphql;
 
-import cn.asany.cms.article.bean.Banner;
 import cn.asany.cms.article.converter.BannerConverter;
+import cn.asany.cms.article.domain.Banner;
 import cn.asany.cms.article.graphql.input.BannerCreateInput;
 import cn.asany.cms.article.graphql.input.BannerUpdateInput;
 import cn.asany.cms.article.service.BannerService;

@@ -1,7 +1,7 @@
 package cn.asany.email.mailbox.dao;
 
-import cn.asany.email.mailbox.bean.JamesMailboxMessage;
-import cn.asany.email.mailbox.bean.toys.MailboxIdUidKey;
+import cn.asany.email.mailbox.domain.JamesMailboxMessage;
+import cn.asany.email.mailbox.domain.toys.MailboxIdUidKey;
 import java.util.List;
 import org.jfantasy.framework.dao.jpa.JpaRepository;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;

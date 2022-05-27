@@ -1,6 +1,6 @@
 package cn.asany.storage.data.graphql.input;
 
-import cn.asany.storage.data.bean.FileDetail;
+import cn.asany.storage.data.domain.FileDetail;
 import cn.asany.storage.data.util.IdUtils;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

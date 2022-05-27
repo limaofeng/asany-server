@@ -1,7 +1,7 @@
 package cn.asany.organization.core.dao.specification;
 
-import cn.asany.organization.employee.bean.Employee;
-import cn.asany.organization.employee.bean.Star;
+import cn.asany.organization.employee.domain.Employee;
+import cn.asany.organization.employee.domain.Star;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.criteria.*;

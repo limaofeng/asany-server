@@ -1,8 +1,8 @@
 package cn.asany.email.mailbox.service;
 
-import cn.asany.email.mailbox.bean.JamesMailbox;
 import cn.asany.email.mailbox.dao.MailboxDao;
 import cn.asany.email.mailbox.dao.MailboxMessageDao;
+import cn.asany.email.mailbox.domain.JamesMailbox;
 import java.util.List;
 import java.util.Optional;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;

@@ -1,13 +1,13 @@
 package cn.asany.nuwa.template.service;
 
-import cn.asany.nuwa.app.bean.enums.RouteType;
-import cn.asany.nuwa.template.bean.ApplicationTemplate;
-import cn.asany.nuwa.template.bean.ApplicationTemplateRoute;
+import cn.asany.nuwa.app.domain.enums.RouteType;
 import cn.asany.nuwa.template.dao.ApplicationTemplateDao;
 import cn.asany.nuwa.template.dao.ApplicationTemplateRouteDao;
-import cn.asany.ui.resources.bean.Component;
-import cn.asany.ui.resources.bean.enums.ComponentScope;
+import cn.asany.nuwa.template.domain.ApplicationTemplate;
+import cn.asany.nuwa.template.domain.ApplicationTemplateRoute;
 import cn.asany.ui.resources.dao.ComponentDao;
+import cn.asany.ui.resources.domain.Component;
+import cn.asany.ui.resources.domain.enums.ComponentScope;
 import java.util.*;
 import java.util.stream.Collectors;
 import javax.transaction.Transactional;

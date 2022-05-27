@@ -22,5 +22,4 @@ spring:
     port: 6379
     password: sOmE_sEcUrE_pAsS
 logging:
-  level:
-    org.hibernate.type.descriptor.sql: trace
+  config: classpath:logback-dev.xml

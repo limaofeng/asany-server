@@ -1,7 +1,7 @@
 package cn.asany.cms.article.graphql.input;
 
-import cn.asany.cms.article.bean.Article;
-import cn.asany.cms.article.bean.ArticleChannel;
+import cn.asany.cms.article.domain.Article;
+import cn.asany.cms.article.domain.ArticleChannel;
 import cn.asany.cms.article.service.ArticleChannelService;
 import cn.asany.cms.article.service.ArticleService;
 import com.fasterxml.jackson.annotation.JsonProperty;

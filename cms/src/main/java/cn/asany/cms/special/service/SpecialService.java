@@ -1,11 +1,11 @@
 package cn.asany.cms.special.service;
 
-import cn.asany.cms.special.bean.Special;
-import cn.asany.cms.special.bean.SpecialArticle;
-import cn.asany.cms.special.bean.Subscriber;
 import cn.asany.cms.special.dao.SpecialArticleDao;
 import cn.asany.cms.special.dao.SpecialDao;
 import cn.asany.cms.special.dao.SubscriberDao;
+import cn.asany.cms.special.domain.Special;
+import cn.asany.cms.special.domain.SpecialArticle;
+import cn.asany.cms.special.domain.Subscriber;
 import java.util.List;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.springframework.beans.factory.annotation.Autowired;

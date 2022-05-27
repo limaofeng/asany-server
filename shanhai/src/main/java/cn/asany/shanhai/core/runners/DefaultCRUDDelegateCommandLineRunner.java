@@ -1,7 +1,7 @@
 package cn.asany.shanhai.core.runners;
 
-import cn.asany.shanhai.core.bean.ModelDelegate;
-import cn.asany.shanhai.core.bean.enums.ModelDelegateType;
+import cn.asany.shanhai.core.domain.ModelDelegate;
+import cn.asany.shanhai.core.domain.enums.ModelDelegateType;
 import cn.asany.shanhai.core.service.ModelDelegateService;
 import cn.asany.shanhai.core.support.graphql.resolvers.base.*;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -2,10 +2,10 @@ package cn.asany.storage.core;
 
 import cn.asany.storage.api.*;
 import cn.asany.storage.core.engine.virtual.VirtualFileObject;
-import cn.asany.storage.data.bean.FileDetail;
-import cn.asany.storage.data.bean.MultipartUpload;
-import cn.asany.storage.data.bean.MultipartUploadChunk;
-import cn.asany.storage.data.bean.Space;
+import cn.asany.storage.data.domain.FileDetail;
+import cn.asany.storage.data.domain.MultipartUpload;
+import cn.asany.storage.data.domain.MultipartUploadChunk;
+import cn.asany.storage.data.domain.Space;
 import cn.asany.storage.data.service.FileService;
 import cn.asany.storage.data.service.MultipartUploadService;
 import cn.asany.storage.data.util.IdUtils;

@@ -1,6 +1,6 @@
 package cn.asany.email.domainlist.component;
 
-import cn.asany.email.domainlist.bean.JamesDomain;
+import cn.asany.email.domainlist.domain.JamesDomain;
 import cn.asany.email.domainlist.service.DomainService;
 import com.github.steveash.guavate.Guavate;
 import java.util.List;

@@ -1,6 +1,6 @@
 package cn.asany.nuwa.app.graphql.type;
 
-import cn.asany.nuwa.app.bean.Application;
+import cn.asany.nuwa.app.domain.Application;
 import java.util.List;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

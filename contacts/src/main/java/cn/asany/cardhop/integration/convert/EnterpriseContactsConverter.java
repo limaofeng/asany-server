@@ -1,9 +1,9 @@
 package cn.asany.cardhop.integration.convert;
 
-import cn.asany.cardhop.contacts.bean.Contact;
-import cn.asany.cardhop.contacts.bean.ContactGroup;
-import cn.asany.organization.core.bean.Department;
-import cn.asany.organization.employee.bean.Employee;
+import cn.asany.cardhop.contacts.domain.Contact;
+import cn.asany.cardhop.contacts.domain.ContactGroup;
+import cn.asany.organization.core.domain.Department;
+import cn.asany.organization.employee.domain.Employee;
 import java.util.List;
 import org.mapstruct.*;
 

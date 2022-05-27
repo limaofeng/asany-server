@@ -1,7 +1,7 @@
 package cn.asany.nuwa.app.dao.impl;
 
-import cn.asany.nuwa.app.bean.Application;
 import cn.asany.nuwa.app.dao.ApplicationDao;
+import cn.asany.nuwa.app.domain.Application;
 import java.util.List;
 import java.util.Optional;
 import javax.persistence.EntityManager;

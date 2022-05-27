@@ -2,8 +2,8 @@ package cn.asany.security.auth.graphql;
 
 import cn.asany.security.auth.error.UnauthorizedException;
 import cn.asany.security.auth.graphql.types.CurrentUser;
-import cn.asany.security.core.bean.User;
 import cn.asany.security.core.convert.UserConverter;
+import cn.asany.security.core.domain.User;
 import cn.asany.security.core.exception.UserNotFoundException;
 import cn.asany.security.core.service.UserService;
 import graphql.kickstart.tools.GraphQLQueryResolver;

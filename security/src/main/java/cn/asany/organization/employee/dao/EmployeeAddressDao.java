@@ -1,7 +1,7 @@
 package cn.asany.organization.employee.dao;
 
-import cn.asany.organization.employee.bean.Employee;
-import cn.asany.organization.employee.bean.EmployeeAddress;
+import cn.asany.organization.employee.domain.Employee;
+import cn.asany.organization.employee.domain.EmployeeAddress;
 import java.util.List;
 import org.jfantasy.framework.dao.jpa.JpaRepository;
 import org.springframework.stereotype.Repository;

@@ -1,9 +1,7 @@
 package cn.asany.security.oauth.service;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import cn.asany.TestApplication;
-import cn.asany.security.oauth.bean.AccessToken;
+import cn.asany.security.oauth.domain.AccessToken;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;

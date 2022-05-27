@@ -2,9 +2,9 @@ package cn.asany.security.core.util;
 
 import cn.asany.base.common.SecurityScope;
 import cn.asany.base.common.SecurityType;
-import cn.asany.security.core.bean.GrantPermission;
-import cn.asany.security.core.bean.Permission;
-import cn.asany.security.core.bean.User;
+import cn.asany.security.core.domain.GrantPermission;
+import cn.asany.security.core.domain.Permission;
+import cn.asany.security.core.domain.User;
 import cn.asany.security.core.graphql.input.PermissionInput;
 import cn.asany.security.core.service.GrantPermissionService;
 import cn.asany.security.core.service.UserService;

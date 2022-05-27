@@ -1,8 +1,8 @@
 package cn.asany.shanhai.core.service;
 
 import cn.asany.shanhai.TestApplication;
-import cn.asany.shanhai.core.bean.Model;
-import cn.asany.shanhai.core.bean.ModelField;
+import cn.asany.shanhai.core.domain.Model;
+import cn.asany.shanhai.core.domain.ModelField;
 import cn.asany.shanhai.core.support.model.FieldType;
 import cn.asany.shanhai.core.support.model.IModelFeature;
 import java.util.ArrayList;

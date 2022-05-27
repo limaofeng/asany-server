@@ -1,8 +1,8 @@
 package cn.asany.email.mailbox.component.mail;
 
-import cn.asany.email.mailbox.bean.JamesMailbox;
 import cn.asany.email.mailbox.component.JPAId;
 import cn.asany.email.mailbox.component.JPATransactionalMapper;
+import cn.asany.email.mailbox.domain.JamesMailbox;
 import cn.asany.email.mailbox.service.MailboxService;
 import com.github.steveash.guavate.Guavate;
 import com.google.common.base.Objects;

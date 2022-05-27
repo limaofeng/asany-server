@@ -1,9 +1,9 @@
 package cn.asany.cardhop.integration;
 
-import cn.asany.cardhop.contacts.bean.Contact;
-import cn.asany.cardhop.contacts.bean.ContactBook;
-import cn.asany.cardhop.contacts.bean.ContactGroup;
-import cn.asany.cardhop.contacts.bean.enums.ContactBookType;
+import cn.asany.cardhop.contacts.domain.Contact;
+import cn.asany.cardhop.contacts.domain.ContactBook;
+import cn.asany.cardhop.contacts.domain.ContactGroup;
+import cn.asany.cardhop.contacts.domain.enums.ContactBookType;
 import java.util.List;
 import java.util.Optional;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;

@@ -1,6 +1,6 @@
 package cn.asany.shanhai.core.support.dao;
 
-import cn.asany.shanhai.core.bean.Model;
+import cn.asany.shanhai.core.domain.Model;
 import java.lang.reflect.Array;
 import java.util.*;
 import org.hibernate.Criteria;

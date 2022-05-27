@@ -1,6 +1,6 @@
 package cn.asany.shanhai.gateway.dao;
 
-import cn.asany.shanhai.gateway.bean.ModelGroup;
+import cn.asany.shanhai.gateway.domain.ModelGroup;
 import java.util.List;
 import org.jfantasy.framework.dao.jpa.JpaRepository;
 import org.springframework.data.jpa.repository.EntityGraph;

@@ -1,7 +1,7 @@
 package cn.asany.nuwa.app.service;
 
-import cn.asany.nuwa.app.bean.Routespace;
 import cn.asany.nuwa.app.dao.RoutespaceDao;
+import cn.asany.nuwa.app.domain.Routespace;
 import java.util.List;
 import java.util.Optional;
 import javax.transaction.Transactional;

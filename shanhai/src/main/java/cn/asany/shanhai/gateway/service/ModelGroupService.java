@@ -1,9 +1,9 @@
 package cn.asany.shanhai.gateway.service;
 
-import cn.asany.shanhai.core.bean.ModelField;
 import cn.asany.shanhai.core.dao.ModelFieldDao;
-import cn.asany.shanhai.gateway.bean.ModelGroup;
+import cn.asany.shanhai.core.domain.ModelField;
 import cn.asany.shanhai.gateway.dao.ModelGroupDao;
+import cn.asany.shanhai.gateway.domain.ModelGroup;
 import com.hankcs.hanlp.corpus.document.sentence.Sentence;
 import com.hankcs.hanlp.mining.cluster.ClusterAnalyzer;
 import com.hankcs.hanlp.model.crf.CRFLexicalAnalyzer;

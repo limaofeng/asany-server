@@ -1,9 +1,9 @@
 package cn.asany.ui.library.graphql;
 
 import cn.asany.base.common.graphql.input.OwnershipInput;
-import cn.asany.ui.library.bean.Library;
-import cn.asany.ui.library.bean.enums.LibraryType;
 import cn.asany.ui.library.convert.LibraryConverter;
+import cn.asany.ui.library.domain.Library;
+import cn.asany.ui.library.domain.enums.LibraryType;
 import cn.asany.ui.library.graphql.input.IconLibraryFilter;
 import cn.asany.ui.library.graphql.type.ILibrary;
 import cn.asany.ui.library.graphql.type.IconLibrary;

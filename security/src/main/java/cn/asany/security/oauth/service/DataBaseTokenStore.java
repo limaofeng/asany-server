@@ -2,11 +2,11 @@ package cn.asany.security.oauth.service;
 
 import cn.asany.openapi.apis.AmapOpenAPI;
 import cn.asany.openapi.service.OpenAPIService;
-import cn.asany.security.core.bean.User;
-import cn.asany.security.oauth.bean.AccessToken;
-import cn.asany.security.oauth.bean.AccessTokenClientDetails;
-import cn.asany.security.oauth.bean.ClientDevice;
+import cn.asany.security.core.domain.User;
 import cn.asany.security.oauth.dao.AccessTokenDao;
+import cn.asany.security.oauth.domain.AccessToken;
+import cn.asany.security.oauth.domain.AccessTokenClientDetails;
+import cn.asany.security.oauth.domain.ClientDevice;
 import eu.bitwalker.useragentutils.UserAgent;
 import java.time.Instant;
 import java.util.Date;

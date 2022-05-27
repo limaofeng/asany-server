@@ -1,7 +1,7 @@
 package cn.asany.email.mailbox.graphql.type;
 
-import cn.asany.email.mailbox.bean.JamesMailbox;
-import cn.asany.email.mailbox.bean.JamesMailboxMessage;
+import cn.asany.email.mailbox.domain.JamesMailbox;
+import cn.asany.email.mailbox.domain.JamesMailboxMessage;
 import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

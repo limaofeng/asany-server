@@ -1,6 +1,6 @@
 package cn.asany.workflow.state.graphql.connection;
 
-import cn.asany.workflow.state.bean.State;
+import cn.asany.workflow.state.domain.State;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

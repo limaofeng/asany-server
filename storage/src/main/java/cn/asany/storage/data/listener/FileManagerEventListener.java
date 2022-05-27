@@ -1,6 +1,6 @@
 package cn.asany.storage.data.listener;
 
-import cn.asany.storage.data.bean.StorageConfig;
+import cn.asany.storage.data.domain.StorageConfig;
 import cn.asany.storage.data.service.FileManagerFactory;
 import org.hibernate.event.spi.EventType;
 import org.hibernate.event.spi.PostDeleteEvent;

@@ -1,6 +1,6 @@
 package cn.asany.website.landing.graphql.input;
 
-import cn.asany.base.common.bean.Geolocation;
+import cn.asany.base.common.domain.Geolocation;
 import cn.asany.base.common.graphql.input.AddressInput;
 import cn.asany.storage.api.FileObject;
 import lombok.Data;

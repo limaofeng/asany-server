@@ -1,6 +1,6 @@
 package cn.asany.email.user.graphql.resolver;
 
-import cn.asany.email.user.bean.MailUser;
+import cn.asany.email.user.domain.MailUser;
 import graphql.kickstart.tools.GraphQLResolver;
 import org.springframework.stereotype.Component;
 

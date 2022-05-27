@@ -1,6 +1,6 @@
 package cn.asany.organization.employee.dao;
 
-import cn.asany.organization.employee.bean.EmployeePhoneNumber;
+import cn.asany.organization.employee.domain.EmployeePhoneNumber;
 import org.jfantasy.framework.dao.jpa.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

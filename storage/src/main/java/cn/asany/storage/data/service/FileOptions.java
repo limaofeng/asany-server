@@ -1,6 +1,6 @@
 package cn.asany.storage.data.service;
 
-import cn.asany.storage.data.bean.FileLabel;
+import cn.asany.storage.data.domain.FileLabel;
 import java.util.Set;
 import lombok.Builder;
 import lombok.Data;

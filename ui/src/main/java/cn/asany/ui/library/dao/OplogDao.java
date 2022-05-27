@@ -1,6 +1,6 @@
 package cn.asany.ui.library.dao;
 
-import cn.asany.ui.library.bean.Oplog;
+import cn.asany.ui.library.domain.Oplog;
 import org.jfantasy.framework.dao.jpa.JpaRepository;
 import org.springframework.stereotype.Repository;
 

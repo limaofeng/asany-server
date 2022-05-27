@@ -1,7 +1,7 @@
 package cn.asany.shanhai.gateway.graphql;
 
-import cn.asany.shanhai.gateway.bean.Consumer;
-import cn.asany.shanhai.gateway.bean.Service;
+import cn.asany.shanhai.gateway.domain.Consumer;
+import cn.asany.shanhai.gateway.domain.Service;
 import cn.asany.shanhai.gateway.graphql.types.IdType;
 import cn.asany.shanhai.gateway.service.ServiceRegistryService;
 import graphql.kickstart.tools.GraphQLQueryResolver;

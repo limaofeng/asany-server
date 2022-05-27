@@ -1,7 +1,7 @@
 package cn.asany.shanhai.core.support.graphql.resolvers.base;
 
-import cn.asany.shanhai.core.bean.Model;
-import cn.asany.shanhai.core.bean.ModelEndpoint;
+import cn.asany.shanhai.core.domain.Model;
+import cn.asany.shanhai.core.domain.ModelEndpoint;
 import cn.asany.shanhai.core.support.dao.ModelRepository;
 import cn.asany.shanhai.core.support.graphql.resolvers.MutationDeleteDataFetcher;
 

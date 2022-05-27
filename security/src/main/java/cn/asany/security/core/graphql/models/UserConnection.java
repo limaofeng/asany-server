@@ -1,6 +1,6 @@
 package cn.asany.security.core.graphql.models;
 
-import cn.asany.security.core.bean.User;
+import cn.asany.security.core.domain.User;
 import java.util.List;
 import lombok.*;
 import org.jfantasy.graphql.Edge;

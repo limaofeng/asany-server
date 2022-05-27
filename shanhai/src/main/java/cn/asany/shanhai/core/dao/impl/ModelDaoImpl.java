@@ -1,8 +1,8 @@
 package cn.asany.shanhai.core.dao.impl;
 
-import cn.asany.shanhai.core.bean.Model;
-import cn.asany.shanhai.core.bean.enums.ModelType;
 import cn.asany.shanhai.core.dao.ModelDao;
+import cn.asany.shanhai.core.domain.Model;
+import cn.asany.shanhai.core.domain.enums.ModelType;
 import java.util.List;
 import javax.persistence.EntityManager;
 import org.jfantasy.framework.dao.jpa.ComplexJpaRepository;

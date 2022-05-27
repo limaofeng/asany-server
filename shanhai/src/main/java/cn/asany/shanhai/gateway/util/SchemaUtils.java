@@ -2,7 +2,7 @@ package cn.asany.shanhai.gateway.util;
 
 import static graphql.schema.idl.SchemaPrinter.Options.defaultOptions;
 
-import cn.asany.shanhai.gateway.bean.ServiceSchemaVersionPatch;
+import cn.asany.shanhai.gateway.domain.ServiceSchemaVersionPatch;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import graphql.introspection.IntrospectionQuery;
 import graphql.introspection.IntrospectionResultToSchema;

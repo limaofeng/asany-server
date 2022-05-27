@@ -1,7 +1,7 @@
 package cn.asany.shanhai.data.graphql.type;
 
-import cn.asany.shanhai.data.bean.toy.DataSetField;
-import cn.asany.shanhai.data.bean.toy.DataSetFilter;
+import cn.asany.shanhai.data.domain.toy.DataSetField;
+import cn.asany.shanhai.data.domain.toy.DataSetFilter;
 import cn.asany.shanhai.data.engine.DataSet;
 import java.util.List;
 import lombok.AllArgsConstructor;

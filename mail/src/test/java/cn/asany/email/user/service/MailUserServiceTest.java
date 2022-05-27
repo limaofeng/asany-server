@@ -1,7 +1,7 @@
 package cn.asany.email.user.service;
 
 import cn.asany.email.TestApplication;
-import cn.asany.email.user.bean.MailUser;
+import cn.asany.email.user.domain.MailUser;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

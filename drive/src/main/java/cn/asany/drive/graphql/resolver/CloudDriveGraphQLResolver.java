@@ -1,9 +1,9 @@
 package cn.asany.drive.graphql.resolver;
 
 import cn.asany.base.utils.Hashids;
-import cn.asany.drive.bean.CloudDrive;
-import cn.asany.storage.data.bean.FileDetail;
-import cn.asany.storage.data.bean.Space;
+import cn.asany.drive.domain.CloudDrive;
+import cn.asany.storage.data.domain.FileDetail;
+import cn.asany.storage.data.domain.Space;
 import cn.asany.storage.data.service.FileService;
 import cn.asany.storage.data.util.IdUtils;
 import graphql.kickstart.tools.GraphQLResolver;

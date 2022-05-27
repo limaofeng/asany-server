@@ -1,6 +1,6 @@
 package cn.asany.security.core.dao;
 
-import cn.asany.security.core.bean.User;
+import cn.asany.security.core.domain.User;
 import org.jfantasy.framework.dao.jpa.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

@@ -1,7 +1,7 @@
 package cn.asany.sunrise.calendar.graphql.resolver;
 
-import cn.asany.sunrise.calendar.bean.CalendarEvent;
-import cn.asany.sunrise.calendar.bean.CalendarEventDate;
+import cn.asany.sunrise.calendar.domain.CalendarEvent;
+import cn.asany.sunrise.calendar.domain.CalendarEventDate;
 import graphql.kickstart.tools.GraphQLResolver;
 import java.util.Date;
 import java.util.List;

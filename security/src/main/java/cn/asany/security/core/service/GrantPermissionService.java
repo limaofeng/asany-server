@@ -2,10 +2,10 @@ package cn.asany.security.core.service;
 
 import cn.asany.base.common.SecurityScope;
 import cn.asany.base.common.SecurityType;
-import cn.asany.security.core.bean.GrantPermission;
-import cn.asany.security.core.bean.Permission;
 import cn.asany.security.core.dao.GrantPermissionDao;
 import cn.asany.security.core.dao.PermissionDao;
+import cn.asany.security.core.domain.GrantPermission;
+import cn.asany.security.core.domain.Permission;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;

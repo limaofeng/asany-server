@@ -1,11 +1,11 @@
 package cn.asany.organization.core.service;
 
-import cn.asany.organization.core.bean.Job;
-import cn.asany.organization.core.bean.Organization;
 import cn.asany.organization.core.dao.JobDao;
-import cn.asany.organization.relationship.bean.Position;
+import cn.asany.organization.core.domain.Job;
+import cn.asany.organization.core.domain.Organization;
 import cn.asany.organization.relationship.dao.EmployeePositionDao;
 import cn.asany.organization.relationship.dao.PositionDao;
+import cn.asany.organization.relationship.domain.Position;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;

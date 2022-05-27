@@ -1,10 +1,10 @@
 package cn.asany.shanhai.core.support.model.features;
 
-import cn.asany.shanhai.core.bean.Model;
-import cn.asany.shanhai.core.bean.ModelEndpoint;
-import cn.asany.shanhai.core.bean.ModelField;
-import cn.asany.shanhai.core.bean.enums.ModelEndpointType;
-import cn.asany.shanhai.core.bean.enums.ModelType;
+import cn.asany.shanhai.core.domain.Model;
+import cn.asany.shanhai.core.domain.ModelEndpoint;
+import cn.asany.shanhai.core.domain.ModelField;
+import cn.asany.shanhai.core.domain.enums.ModelEndpointType;
+import cn.asany.shanhai.core.domain.enums.ModelType;
 import cn.asany.shanhai.core.support.graphql.resolvers.base.*;
 import cn.asany.shanhai.core.support.model.FieldType;
 import cn.asany.shanhai.core.support.model.FieldTypeRegistry;

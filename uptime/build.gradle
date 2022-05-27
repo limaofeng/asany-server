@@ -1,0 +1,9 @@
+description = "站点健康"
+
+apply plugin: 'jacoco'
+
+dependencies {
+    implementation project(":base")
+    implementation project(":security")
+    implementation project(":storage-api")
+}

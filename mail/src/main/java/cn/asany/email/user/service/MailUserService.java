@@ -1,15 +1,15 @@
 package cn.asany.email.user.service;
 
-import cn.asany.email.domainlist.bean.JamesDomain;
+import cn.asany.email.domainlist.domain.JamesDomain;
 import cn.asany.email.domainlist.service.DomainService;
-import cn.asany.email.mailbox.bean.JamesMailbox;
 import cn.asany.email.mailbox.dao.MailboxDao;
-import cn.asany.email.user.bean.MailSettings;
-import cn.asany.email.user.bean.MailUser;
+import cn.asany.email.mailbox.domain.JamesMailbox;
 import cn.asany.email.user.dao.MailSettingsDao;
 import cn.asany.email.user.dao.MailUserDao;
-import cn.asany.security.core.bean.User;
+import cn.asany.email.user.domain.MailSettings;
+import cn.asany.email.user.domain.MailUser;
 import cn.asany.security.core.dao.UserDao;
+import cn.asany.security.core.domain.User;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;

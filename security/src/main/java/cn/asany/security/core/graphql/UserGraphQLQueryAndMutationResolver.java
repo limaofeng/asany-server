@@ -1,7 +1,7 @@
 package cn.asany.security.core.graphql;
 
-import cn.asany.security.core.bean.User;
 import cn.asany.security.core.convert.UserConverter;
+import cn.asany.security.core.domain.User;
 import cn.asany.security.core.graphql.input.UserUpdateInput;
 import cn.asany.security.core.service.UserService;
 import graphql.kickstart.tools.GraphQLMutationResolver;

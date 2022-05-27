@@ -1,6 +1,6 @@
 package cn.asany.ui.library.graphql.type;
 
-import cn.asany.ui.resources.bean.Icon;
+import cn.asany.ui.resources.domain.Icon;
 import java.util.Set;
 import lombok.*;
 

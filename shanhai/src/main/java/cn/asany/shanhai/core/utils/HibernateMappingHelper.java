@@ -1,6 +1,6 @@
 package cn.asany.shanhai.core.utils;
 
-import cn.asany.shanhai.core.bean.Model;
+import cn.asany.shanhai.core.domain.Model;
 import com.github.jknack.handlebars.Template;
 import lombok.SneakyThrows;
 import org.jfantasy.framework.util.HandlebarsTemplateUtils;

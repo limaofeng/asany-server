@@ -1,7 +1,7 @@
 package cn.asany.organization.relationship.dao;
 
-import cn.asany.organization.core.bean.Job;
-import cn.asany.organization.relationship.bean.Position;
+import cn.asany.organization.core.domain.Job;
+import cn.asany.organization.relationship.domain.Position;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 import org.jfantasy.framework.dao.jpa.JpaRepository;

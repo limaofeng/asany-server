@@ -1,6 +1,6 @@
 package cn.asany.cardhop.contacts.graphql.resolver;
 
-import cn.asany.cardhop.contacts.bean.ContactGroup;
+import cn.asany.cardhop.contacts.domain.ContactGroup;
 import cn.asany.cardhop.contacts.utils.IdUtils;
 import graphql.kickstart.tools.GraphQLResolver;
 import org.jfantasy.framework.util.common.StringUtil;

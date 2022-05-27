@@ -1,8 +1,8 @@
 package cn.asany.base.common.service;
 
-import cn.asany.base.common.bean.Address;
-import cn.asany.system.bean.Dict;
-import cn.asany.system.bean.DictType;
+import cn.asany.base.common.domain.Address;
+import cn.asany.system.domain.Dict;
+import cn.asany.system.domain.DictType;
 import cn.asany.system.service.DictService;
 import java.util.Arrays;
 import java.util.List;

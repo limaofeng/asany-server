@@ -13,9 +13,9 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
  */
 @Configuration
 @EntityScan({
-  "cn.asany.organization.core.bean",
-  "cn.asany.organization.employee.bean",
-  "cn.asany.organization.relationship.bean"
+  "cn.asany.organization.core.domain",
+  "cn.asany.organization.employee.domain",
+  "cn.asany.organization.relationship.domain"
 })
 @ComponentScan({
   "cn.asany.organization.core.dao",

@@ -1,15 +1,15 @@
 package cn.asany.cms.learn.graphql.resolver;
 
-import cn.asany.cms.article.bean.Article;
-import cn.asany.cms.article.bean.ArticleChannel;
 import cn.asany.cms.article.converter.ArticleChannelConverter;
+import cn.asany.cms.article.domain.Article;
+import cn.asany.cms.article.domain.ArticleChannel;
 import cn.asany.cms.article.service.ArticleService;
-import cn.asany.cms.learn.bean.Course;
-import cn.asany.cms.learn.bean.Learner;
-import cn.asany.cms.learn.bean.Lesson;
-import cn.asany.cms.learn.bean.LessonRecord;
 import cn.asany.cms.learn.dao.LearnerDao;
 import cn.asany.cms.learn.dao.LessonRecordDao;
+import cn.asany.cms.learn.domain.Course;
+import cn.asany.cms.learn.domain.Learner;
+import cn.asany.cms.learn.domain.Lesson;
+import cn.asany.cms.learn.domain.LessonRecord;
 import cn.asany.cms.learn.service.CourseService;
 import cn.asany.cms.learn.service.LessonService;
 import cn.asany.storage.api.FileObject;

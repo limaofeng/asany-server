@@ -1,16 +1,16 @@
 package cn.asany.website.landing.service;
 
-import cn.asany.base.common.bean.Geolocation;
+import cn.asany.base.common.domain.Geolocation;
 import cn.asany.base.common.service.AddressService;
 import cn.asany.openapi.apis.AmapOpenAPI;
 import cn.asany.openapi.service.OpenAPIService;
-import cn.asany.website.landing.bean.LandingPage;
-import cn.asany.website.landing.bean.LandingPoster;
-import cn.asany.website.landing.bean.LandingStore;
-import cn.asany.website.landing.bean.enums.LandingPageStatus;
 import cn.asany.website.landing.dao.LandingPageDao;
 import cn.asany.website.landing.dao.LandingPosterDao;
 import cn.asany.website.landing.dao.LandingStoreDao;
+import cn.asany.website.landing.domain.LandingPage;
+import cn.asany.website.landing.domain.LandingPoster;
+import cn.asany.website.landing.domain.LandingStore;
+import cn.asany.website.landing.domain.enums.LandingPageStatus;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;

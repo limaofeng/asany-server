@@ -1,8 +1,8 @@
 package cn.asany.weixin.service;
 
-import cn.asany.weixin.bean.Fans;
-import cn.asany.weixin.bean.UserKey;
 import cn.asany.weixin.dao.FansDao;
+import cn.asany.weixin.domain.Fans;
+import cn.asany.weixin.domain.UserKey;
 import cn.asany.weixin.framework.exception.WeixinException;
 import cn.asany.weixin.framework.factory.WeixinSessionUtils;
 import cn.asany.weixin.framework.message.user.User;

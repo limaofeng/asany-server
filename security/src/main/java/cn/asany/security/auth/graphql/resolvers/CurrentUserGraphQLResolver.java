@@ -1,10 +1,10 @@
 package cn.asany.security.auth.graphql.resolvers;
 
-import cn.asany.base.common.bean.Email;
-import cn.asany.base.common.bean.Phone;
+import cn.asany.base.common.domain.Email;
+import cn.asany.base.common.domain.Phone;
 import cn.asany.security.auth.graphql.types.CurrentUser;
-import cn.asany.security.core.bean.enums.IdType;
-import cn.asany.security.core.bean.enums.UserType;
+import cn.asany.security.core.domain.enums.IdType;
+import cn.asany.security.core.domain.enums.UserType;
 import graphql.kickstart.tools.GraphQLResolver;
 import java.util.Optional;
 import java.util.Set;

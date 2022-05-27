@@ -1,7 +1,7 @@
 package cn.asany.website.landing.convert;
 
-import cn.asany.base.common.bean.Geolocation;
-import cn.asany.website.landing.bean.LandingStore;
+import cn.asany.base.common.domain.Geolocation;
+import cn.asany.website.landing.domain.LandingStore;
 import cn.asany.website.landing.graphql.input.LandingStoreCreateInput;
 import cn.asany.website.landing.graphql.input.LandingStoreUpdateInput;
 import org.mapstruct.*;

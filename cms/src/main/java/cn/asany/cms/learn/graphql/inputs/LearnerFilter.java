@@ -1,6 +1,6 @@
 package cn.asany.cms.learn.graphql.inputs;
 
-import cn.asany.cms.learn.bean.enums.LearnerType;
+import cn.asany.cms.learn.domain.enums.LearnerType;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import lombok.Data;

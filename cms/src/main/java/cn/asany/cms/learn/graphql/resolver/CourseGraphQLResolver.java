@@ -1,14 +1,14 @@
 package cn.asany.cms.learn.graphql.resolver;
 
-import cn.asany.cms.article.bean.Article;
+import cn.asany.cms.article.domain.Article;
 import cn.asany.cms.article.graphql.input.CommentFilter;
 import cn.asany.cms.article.graphql.resolver.ArticleGraphQLResolver;
 import cn.asany.cms.article.graphql.type.CommentConnection;
 import cn.asany.cms.article.service.ArticleService;
-import cn.asany.cms.learn.bean.Course;
-import cn.asany.cms.learn.bean.LearnerScope;
-import cn.asany.cms.learn.bean.Lesson;
-import cn.asany.cms.learn.bean.enums.LearnerType;
+import cn.asany.cms.learn.domain.Course;
+import cn.asany.cms.learn.domain.LearnerScope;
+import cn.asany.cms.learn.domain.Lesson;
+import cn.asany.cms.learn.domain.enums.LearnerType;
 import cn.asany.cms.learn.graphql.inputs.LearnerFilter;
 import cn.asany.cms.learn.graphql.inputs.LearnerScopeFilter;
 import cn.asany.cms.learn.graphql.inputs.LessonRecordFilter;

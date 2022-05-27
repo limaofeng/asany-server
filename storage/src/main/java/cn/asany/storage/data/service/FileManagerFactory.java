@@ -2,8 +2,8 @@ package cn.asany.storage.data.service;
 
 import cn.asany.storage.api.Storage;
 import cn.asany.storage.api.StorageBuilder;
-import cn.asany.storage.data.bean.StorageConfig;
-import cn.asany.storage.data.bean.enums.StorageType;
+import cn.asany.storage.data.domain.StorageConfig;
+import cn.asany.storage.data.domain.enums.StorageType;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

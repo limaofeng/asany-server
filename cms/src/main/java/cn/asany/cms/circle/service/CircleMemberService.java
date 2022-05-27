@@ -1,7 +1,7 @@
 package cn.asany.cms.circle.service;
 
-import cn.asany.cms.circle.bean.CircleMember;
 import cn.asany.cms.circle.dao.CircleMemberDao;
+import cn.asany.cms.circle.domain.CircleMember;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

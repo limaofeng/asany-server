@@ -1,8 +1,8 @@
 package cn.asany.organization.core.graphql;
 
-import cn.asany.organization.core.bean.Department;
-import cn.asany.organization.core.bean.Organization;
 import cn.asany.organization.core.convert.OrganizationConverter;
+import cn.asany.organization.core.domain.Department;
+import cn.asany.organization.core.domain.Organization;
 import cn.asany.organization.core.graphql.inputs.DepartmentFilter;
 import cn.asany.organization.core.graphql.inputs.OrganizationFilter;
 import cn.asany.organization.core.graphql.inputs.UpdateOrganizationProfileUpdateInput;

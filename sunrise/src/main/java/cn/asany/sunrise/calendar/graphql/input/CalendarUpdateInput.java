@@ -1,6 +1,6 @@
 package cn.asany.sunrise.calendar.graphql.input;
 
-import cn.asany.sunrise.calendar.bean.enums.Refresh;
+import cn.asany.sunrise.calendar.domain.enums.Refresh;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

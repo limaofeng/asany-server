@@ -1,7 +1,7 @@
 package cn.asany.cms.article.service;
 
-import cn.asany.cms.article.bean.ArticleTag;
 import cn.asany.cms.article.dao.ArticleTagDao;
+import cn.asany.cms.article.domain.ArticleTag;
 import java.util.List;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;

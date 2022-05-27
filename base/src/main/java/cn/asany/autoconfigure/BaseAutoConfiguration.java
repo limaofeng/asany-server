@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @Slf4j
-@EntityScan({"cn.asany.base.*.bean"})
+@EntityScan({"cn.asany.base*.domain"})
 @ComponentScan({
   "cn.asany.base.*.service",
   "cn.asany.base.*.graphql",

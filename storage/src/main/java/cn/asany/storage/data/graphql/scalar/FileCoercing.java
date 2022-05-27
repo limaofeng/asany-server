@@ -1,7 +1,7 @@
 package cn.asany.storage.data.graphql.scalar;
 
 import cn.asany.storage.api.FileObject;
-import cn.asany.storage.data.bean.FileDetail;
+import cn.asany.storage.data.domain.FileDetail;
 import cn.asany.storage.data.service.FileService;
 import cn.asany.storage.data.util.IdUtils;
 import cn.asany.storage.dto.SimpleFileObject;

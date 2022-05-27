@@ -1,12 +1,12 @@
 package cn.asany.cms.article.service;
 
-import cn.asany.cms.article.bean.Article;
-import cn.asany.cms.article.bean.ArticleChannel;
-import cn.asany.cms.article.bean.enums.ArticleCategory;
-import cn.asany.cms.article.bean.enums.ArticleStatus;
-import cn.asany.cms.article.bean.enums.ArticleType;
 import cn.asany.cms.article.dao.ArticleChannelDao;
 import cn.asany.cms.article.dao.ArticleDao;
+import cn.asany.cms.article.domain.Article;
+import cn.asany.cms.article.domain.ArticleChannel;
+import cn.asany.cms.article.domain.enums.ArticleCategory;
+import cn.asany.cms.article.domain.enums.ArticleStatus;
+import cn.asany.cms.article.domain.enums.ArticleType;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;

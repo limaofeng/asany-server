@@ -1,7 +1,7 @@
 package cn.asany.shanhai.core.graphql;
 
-import cn.asany.shanhai.core.bean.Model;
-import cn.asany.shanhai.core.bean.ModelField;
+import cn.asany.shanhai.core.domain.Model;
+import cn.asany.shanhai.core.domain.ModelField;
 import cn.asany.shanhai.core.graphql.enums.EndpointIdType;
 import cn.asany.shanhai.core.graphql.enums.ModelIdType;
 import cn.asany.shanhai.core.graphql.inputs.ModelFilter;

@@ -1,6 +1,6 @@
 package cn.asany.shanhai.gateway.graphql.types;
 
-import cn.asany.shanhai.gateway.bean.Service;
+import cn.asany.shanhai.gateway.domain.Service;
 import graphql.kickstart.tools.GraphQLResolver;
 import org.springframework.stereotype.Component;
 

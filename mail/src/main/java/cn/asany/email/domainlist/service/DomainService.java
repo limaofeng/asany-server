@@ -1,7 +1,7 @@
 package cn.asany.email.domainlist.service;
 
-import cn.asany.email.domainlist.bean.JamesDomain;
 import cn.asany.email.domainlist.dao.JamesDomainDao;
+import cn.asany.email.domainlist.domain.JamesDomain;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;

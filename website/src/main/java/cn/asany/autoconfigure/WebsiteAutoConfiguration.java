@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @Configuration
-@EntityScan("cn.asany.website.*.bean")
+@EntityScan("cn.asany.website*.domain")
 @ComponentScan({
   "cn.asany.website.*.dao",
   "cn.asany.website.*.service",

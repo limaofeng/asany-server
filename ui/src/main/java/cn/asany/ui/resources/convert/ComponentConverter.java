@@ -1,6 +1,6 @@
 package cn.asany.ui.resources.convert;
 
-import cn.asany.ui.resources.bean.Component;
+import cn.asany.ui.resources.domain.Component;
 import cn.asany.ui.resources.graphql.type.ComponentCreateInput;
 import cn.asany.ui.resources.graphql.type.ComponentUpdateInput;
 import org.mapstruct.Builder;

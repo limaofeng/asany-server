@@ -1,7 +1,7 @@
 package cn.asany.shanhai.core.support.dao;
 
 import cn.asany.shanhai.TestApplication;
-import cn.asany.shanhai.core.bean.Model;
+import cn.asany.shanhai.core.domain.Model;
 import cn.asany.shanhai.core.service.ModelService;
 import java.util.HashMap;
 import java.util.Map;

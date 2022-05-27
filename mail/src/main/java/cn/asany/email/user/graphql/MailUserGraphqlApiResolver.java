@@ -1,6 +1,6 @@
 package cn.asany.email.user.graphql;
 
-import cn.asany.email.user.bean.MailUser;
+import cn.asany.email.user.domain.MailUser;
 import cn.asany.email.user.graphql.type.MailUserIdType;
 import cn.asany.email.user.service.MailUserService;
 import cn.asany.email.utils.JamesUtil;

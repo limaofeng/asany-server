@@ -1,6 +1,6 @@
 package cn.asany.shanhai.core.dao;
 
-import cn.asany.shanhai.core.bean.ModelField;
+import cn.asany.shanhai.core.domain.ModelField;
 import java.util.List;
 import org.jfantasy.framework.dao.jpa.JpaRepository;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;

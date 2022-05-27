@@ -1,8 +1,8 @@
 package cn.asany.nuwa.app.service;
 
-import cn.asany.nuwa.app.bean.Licence;
-import cn.asany.nuwa.app.bean.enums.LicenceStatus;
 import cn.asany.nuwa.app.dao.LicenceDao;
+import cn.asany.nuwa.app.domain.Licence;
+import cn.asany.nuwa.app.domain.enums.LicenceStatus;
 import java.util.Optional;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.springframework.stereotype.Service;

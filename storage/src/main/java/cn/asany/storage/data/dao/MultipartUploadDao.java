@@ -1,6 +1,6 @@
 package cn.asany.storage.data.dao;
 
-import cn.asany.storage.data.bean.MultipartUpload;
+import cn.asany.storage.data.domain.MultipartUpload;
 import org.jfantasy.framework.dao.jpa.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -1,7 +1,7 @@
 package cn.asany.ui.resources.service;
 
-import cn.asany.ui.resources.bean.Component;
 import cn.asany.ui.resources.dao.ComponentDao;
+import cn.asany.ui.resources.domain.Component;
 import java.util.List;
 import java.util.Optional;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;

@@ -1,8 +1,8 @@
 package cn.asany.email.mailbox.service;
 
-import cn.asany.email.mailbox.bean.*;
-import cn.asany.email.mailbox.bean.toys.MailboxIdUidKey;
 import cn.asany.email.mailbox.dao.MailboxMessageDao;
+import cn.asany.email.mailbox.domain.*;
+import cn.asany.email.mailbox.domain.toys.MailboxIdUidKey;
 import cn.asany.email.utils.SentMailContext;
 import java.util.Arrays;
 import java.util.Date;

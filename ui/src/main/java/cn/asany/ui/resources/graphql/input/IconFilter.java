@@ -1,6 +1,6 @@
 package cn.asany.ui.resources.graphql.input;
 
-import cn.asany.ui.library.bean.Oplog;
+import cn.asany.ui.library.domain.Oplog;
 import cn.asany.ui.library.graphql.input.OplogFilter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;

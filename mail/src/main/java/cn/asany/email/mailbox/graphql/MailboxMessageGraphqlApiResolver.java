@@ -1,12 +1,12 @@
 package cn.asany.email.mailbox.graphql;
 
-import cn.asany.email.domainlist.bean.JamesDomain;
+import cn.asany.email.domainlist.domain.JamesDomain;
 import cn.asany.email.domainlist.service.DomainService;
-import cn.asany.email.mailbox.bean.JamesMailbox;
-import cn.asany.email.mailbox.bean.JamesMailboxMessage;
-import cn.asany.email.mailbox.bean.toys.MailboxIdUidKey;
 import cn.asany.email.mailbox.component.JPAId;
 import cn.asany.email.mailbox.convert.MailboxMessageConverter;
+import cn.asany.email.mailbox.domain.JamesMailbox;
+import cn.asany.email.mailbox.domain.JamesMailboxMessage;
+import cn.asany.email.mailbox.domain.toys.MailboxIdUidKey;
 import cn.asany.email.mailbox.graphql.input.MailboxMessageCreateInput;
 import cn.asany.email.mailbox.graphql.input.MailboxMessageFilter;
 import cn.asany.email.mailbox.graphql.input.MailboxMessageUpdateInput;

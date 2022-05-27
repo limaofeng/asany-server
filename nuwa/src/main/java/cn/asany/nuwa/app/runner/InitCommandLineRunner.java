@@ -1,6 +1,6 @@
 package cn.asany.nuwa.app.runner;
 
-import cn.asany.nuwa.app.bean.Routespace;
+import cn.asany.nuwa.app.domain.Routespace;
 import cn.asany.nuwa.app.service.RoutespaceService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;

@@ -1,11 +1,11 @@
 package cn.asany.cardhop.contacts.service;
 
-import cn.asany.cardhop.contacts.bean.Contact;
-import cn.asany.cardhop.contacts.bean.ContactBook;
-import cn.asany.cardhop.contacts.bean.ContactGroup;
 import cn.asany.cardhop.contacts.dao.ContactBookDao;
 import cn.asany.cardhop.contacts.dao.ContactDao;
 import cn.asany.cardhop.contacts.dao.ContactGroupDao;
+import cn.asany.cardhop.contacts.domain.Contact;
+import cn.asany.cardhop.contacts.domain.ContactBook;
+import cn.asany.cardhop.contacts.domain.ContactGroup;
 import java.util.List;
 import java.util.Optional;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;

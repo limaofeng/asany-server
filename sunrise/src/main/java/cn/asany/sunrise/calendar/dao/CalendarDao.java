@@ -1,6 +1,6 @@
 package cn.asany.sunrise.calendar.dao;
 
-import cn.asany.sunrise.calendar.bean.Calendar;
+import cn.asany.sunrise.calendar.domain.Calendar;
 import java.util.List;
 import org.jfantasy.framework.dao.jpa.JpaRepository;
 import org.springframework.data.jpa.repository.EntityGraph;

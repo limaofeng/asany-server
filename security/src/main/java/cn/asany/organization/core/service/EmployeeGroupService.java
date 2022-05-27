@@ -1,12 +1,12 @@
 package cn.asany.organization.core.service;
 
-import cn.asany.organization.core.bean.EmployeeGroup;
-import cn.asany.organization.core.bean.EmployeeGroupScope;
-import cn.asany.organization.core.bean.Organization;
 import cn.asany.organization.core.dao.EmployeeGroupDao;
 import cn.asany.organization.core.dao.EmployeeGroupScopeDao;
-import cn.asany.organization.employee.bean.Employee;
+import cn.asany.organization.core.domain.EmployeeGroup;
+import cn.asany.organization.core.domain.EmployeeGroupScope;
+import cn.asany.organization.core.domain.Organization;
 import cn.asany.organization.employee.dao.EmployeeDao;
+import cn.asany.organization.employee.domain.Employee;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;

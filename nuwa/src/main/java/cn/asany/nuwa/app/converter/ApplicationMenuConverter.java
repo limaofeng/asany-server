@@ -1,6 +1,6 @@
 package cn.asany.nuwa.app.converter;
 
-import cn.asany.nuwa.app.bean.ApplicationMenu;
+import cn.asany.nuwa.app.domain.ApplicationMenu;
 import cn.asany.nuwa.app.graphql.input.ApplicationMenuCreateInput;
 import cn.asany.nuwa.app.graphql.input.ApplicationMenuUpdateInput;
 import org.mapstruct.*;

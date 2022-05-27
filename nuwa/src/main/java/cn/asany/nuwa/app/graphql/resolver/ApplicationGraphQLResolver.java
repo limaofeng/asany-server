@@ -1,9 +1,9 @@
 package cn.asany.nuwa.app.graphql.resolver;
 
-import cn.asany.nuwa.app.bean.Application;
-import cn.asany.nuwa.app.bean.ApplicationRoute;
-import cn.asany.nuwa.app.bean.ClientSecret;
-import cn.asany.nuwa.app.bean.Licence;
+import cn.asany.nuwa.app.domain.Application;
+import cn.asany.nuwa.app.domain.ApplicationRoute;
+import cn.asany.nuwa.app.domain.ClientSecret;
+import cn.asany.nuwa.app.domain.Licence;
 import cn.asany.nuwa.app.service.ApplicationService;
 import cn.asany.nuwa.app.service.LicenceService;
 import graphql.execution.ExecutionStepInfo;

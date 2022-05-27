@@ -2,7 +2,7 @@ package cn.asany.storage.plugin;
 
 import cn.asany.storage.api.*;
 import cn.asany.storage.core.StorageResolver;
-import cn.asany.storage.data.bean.FileDetail;
+import cn.asany.storage.data.domain.FileDetail;
 import cn.asany.storage.data.util.IdUtils;
 import org.jfantasy.framework.util.common.StringUtil;
 import org.springframework.stereotype.Component;

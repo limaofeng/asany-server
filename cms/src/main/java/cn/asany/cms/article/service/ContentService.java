@@ -1,8 +1,8 @@
 package cn.asany.cms.article.service;
 
-import cn.asany.cms.article.bean.Content;
-import cn.asany.cms.article.bean.HtmlContent;
 import cn.asany.cms.article.dao.HtmlContentDao;
+import cn.asany.cms.article.domain.Content;
+import cn.asany.cms.article.domain.HtmlContent;
 import org.springframework.stereotype.Service;
 
 /**

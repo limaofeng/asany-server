@@ -1,13 +1,13 @@
 package cn.asany.email.utils;
 
-import cn.asany.email.domainlist.bean.JamesDomain;
+import cn.asany.email.domainlist.domain.JamesDomain;
 import cn.asany.email.domainlist.service.DomainService;
-import cn.asany.email.mailbox.bean.JamesMailboxMessage;
 import cn.asany.email.mailbox.component.JPAMailboxSessionMapperFactory;
+import cn.asany.email.mailbox.domain.JamesMailboxMessage;
 import cn.asany.email.mailbox.graphql.type.MailboxMessageResult;
-import cn.asany.email.user.bean.MailUser;
+import cn.asany.email.user.domain.MailUser;
 import cn.asany.email.user.service.MailUserService;
-import cn.asany.security.core.bean.User;
+import cn.asany.security.core.domain.User;
 import cn.asany.security.core.service.UserService;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;

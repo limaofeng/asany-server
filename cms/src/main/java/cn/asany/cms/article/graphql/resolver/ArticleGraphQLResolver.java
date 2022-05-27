@@ -1,18 +1,18 @@
 package cn.asany.cms.article.graphql.resolver;
 
-import cn.asany.cms.article.bean.Article;
-import cn.asany.cms.article.bean.ArticleChannel;
-import cn.asany.cms.article.bean.Content;
-import cn.asany.cms.article.bean.enums.ArticleCategory;
-import cn.asany.cms.article.bean.enums.CommentTargetType;
 import cn.asany.cms.article.converter.ArticleChannelConverter;
+import cn.asany.cms.article.domain.Article;
+import cn.asany.cms.article.domain.ArticleChannel;
+import cn.asany.cms.article.domain.Content;
+import cn.asany.cms.article.domain.enums.ArticleCategory;
+import cn.asany.cms.article.domain.enums.CommentTargetType;
 import cn.asany.cms.article.graphql.CommentGraphQLQueryResolver;
 import cn.asany.cms.article.graphql.enums.ArticleStarType;
 import cn.asany.cms.article.graphql.input.CommentFilter;
 import cn.asany.cms.article.graphql.input.ContentFormat;
 import cn.asany.cms.article.graphql.type.CommentConnection;
 import cn.asany.cms.article.graphql.type.Starrable;
-import cn.asany.security.core.bean.Permission;
+import cn.asany.security.core.domain.Permission;
 import graphql.kickstart.tools.GraphQLResolver;
 import java.util.ArrayList;
 import java.util.List;

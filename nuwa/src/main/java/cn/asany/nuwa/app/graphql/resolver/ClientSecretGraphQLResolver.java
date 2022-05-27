@@ -1,6 +1,6 @@
 package cn.asany.nuwa.app.graphql.resolver;
 
-import cn.asany.nuwa.app.bean.ClientSecret;
+import cn.asany.nuwa.app.domain.ClientSecret;
 import graphql.kickstart.tools.GraphQLResolver;
 import graphql.schema.DataFetchingEnvironment;
 import org.springframework.stereotype.Component;

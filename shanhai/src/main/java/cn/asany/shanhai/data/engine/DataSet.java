@@ -1,7 +1,7 @@
 package cn.asany.shanhai.data.engine;
 
-import cn.asany.shanhai.data.bean.toy.DataSetField;
-import cn.asany.shanhai.data.bean.toy.DataSetFilter;
+import cn.asany.shanhai.data.domain.toy.DataSetField;
+import cn.asany.shanhai.data.domain.toy.DataSetFilter;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

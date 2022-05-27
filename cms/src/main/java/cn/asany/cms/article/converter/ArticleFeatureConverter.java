@@ -1,6 +1,6 @@
 package cn.asany.cms.article.converter;
 
-import cn.asany.cms.article.bean.ArticleFeature;
+import cn.asany.cms.article.domain.ArticleFeature;
 import cn.asany.cms.article.graphql.input.ArticleFeatureInput;
 import org.mapstruct.Builder;
 import org.mapstruct.Mapper;

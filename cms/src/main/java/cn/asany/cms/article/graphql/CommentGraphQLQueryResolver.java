@@ -1,6 +1,6 @@
 package cn.asany.cms.article.graphql;
 
-import cn.asany.cms.article.bean.enums.CommentTargetType;
+import cn.asany.cms.article.domain.enums.CommentTargetType;
 import cn.asany.cms.article.graphql.input.CommentFilter;
 import cn.asany.cms.article.graphql.type.CommentConnection;
 import cn.asany.cms.article.service.CommentService;

@@ -1,8 +1,8 @@
 package cn.asany.storage.data.util;
 
 import cn.asany.base.utils.Hashids;
-import cn.asany.storage.data.bean.FileDetail;
-import cn.asany.storage.data.bean.Space;
+import cn.asany.storage.data.domain.FileDetail;
+import cn.asany.storage.data.domain.Space;
 import cn.asany.storage.data.service.FileService;
 import cn.asany.storage.data.service.SpaceService;
 import lombok.Builder;

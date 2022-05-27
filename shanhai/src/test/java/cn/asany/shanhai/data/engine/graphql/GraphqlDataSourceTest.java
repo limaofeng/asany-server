@@ -1,9 +1,7 @@
 package cn.asany.shanhai.data.engine.graphql;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import cn.asany.shanhai.TestApplication;
-import cn.asany.shanhai.data.bean.DataSetConfig;
+import cn.asany.shanhai.data.domain.DataSetConfig;
 import cn.asany.shanhai.data.engine.DataSet;
 import cn.asany.shanhai.data.engine.IDataSource;
 import cn.asany.shanhai.data.engine.IDataSourceLoader;

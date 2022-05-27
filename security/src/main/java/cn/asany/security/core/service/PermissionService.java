@@ -1,12 +1,12 @@
 package cn.asany.security.core.service;
 
-import cn.asany.security.core.bean.Permission;
-import cn.asany.security.core.bean.PermissionType;
-import cn.asany.security.core.bean.enums.PermissionGrantType;
-import cn.asany.security.core.bean.enums.ResourceType;
 import cn.asany.security.core.dao.GrantPermissionDao;
 import cn.asany.security.core.dao.PermissionDao;
 import cn.asany.security.core.dao.PermissionTypeDao;
+import cn.asany.security.core.domain.Permission;
+import cn.asany.security.core.domain.PermissionType;
+import cn.asany.security.core.domain.enums.PermissionGrantType;
+import cn.asany.security.core.domain.enums.ResourceType;
 import cn.asany.security.core.exception.ValidDataException;
 import cn.asany.security.core.service.dto.ImportPermission;
 import cn.asany.security.core.util.GrantPermissionUtils;

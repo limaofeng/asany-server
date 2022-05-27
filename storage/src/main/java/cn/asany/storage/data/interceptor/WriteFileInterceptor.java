@@ -1,6 +1,6 @@
 package cn.asany.storage.data.interceptor;
 
-import cn.asany.storage.data.bean.FileDetail;
+import cn.asany.storage.data.domain.FileDetail;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.aspectj.lang.JoinPoint;

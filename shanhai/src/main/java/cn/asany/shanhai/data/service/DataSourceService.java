@@ -1,7 +1,7 @@
 package cn.asany.shanhai.data.service;
 
-import cn.asany.shanhai.data.bean.DataSourceConfig;
 import cn.asany.shanhai.data.dao.DataSourceDao;
+import cn.asany.shanhai.data.domain.DataSourceConfig;
 import java.util.Arrays;
 import org.springframework.stereotype.Service;
 

@@ -1,6 +1,6 @@
 package cn.asany.shanhai.gateway.dao;
 
-import cn.asany.shanhai.gateway.bean.ServiceSchemaVersionPatch;
+import cn.asany.shanhai.gateway.domain.ServiceSchemaVersionPatch;
 import org.jfantasy.framework.dao.jpa.JpaRepository;
 import org.springframework.stereotype.Repository;
 

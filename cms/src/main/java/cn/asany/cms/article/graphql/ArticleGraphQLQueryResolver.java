@@ -1,9 +1,9 @@
 package cn.asany.cms.article.graphql;
 
-import cn.asany.cms.article.bean.Article;
-import cn.asany.cms.article.bean.ArticleChannel;
-import cn.asany.cms.article.bean.ArticleTag;
 import cn.asany.cms.article.converter.ArticleChannelConverter;
+import cn.asany.cms.article.domain.Article;
+import cn.asany.cms.article.domain.ArticleChannel;
+import cn.asany.cms.article.domain.ArticleTag;
 import cn.asany.cms.article.graphql.enums.ArticleChannelStarType;
 import cn.asany.cms.article.graphql.enums.ArticleStarType;
 import cn.asany.cms.article.graphql.input.ArticleChannelFilter;

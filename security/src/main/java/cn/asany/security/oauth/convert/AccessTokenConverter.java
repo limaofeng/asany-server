@@ -1,6 +1,6 @@
 package cn.asany.security.oauth.convert;
 
-import cn.asany.security.oauth.bean.AccessToken;
+import cn.asany.security.oauth.domain.AccessToken;
 import cn.asany.security.oauth.vo.PersonalAccessToken;
 import cn.asany.security.oauth.vo.SessionAccessToken;
 import java.util.List;

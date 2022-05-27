@@ -1,6 +1,6 @@
 package cn.asany.shanhai.data.dao;
 
-import cn.asany.shanhai.data.bean.DataSetConfig;
+import cn.asany.shanhai.data.domain.DataSetConfig;
 import org.jfantasy.framework.dao.jpa.JpaRepository;
 import org.springframework.stereotype.Repository;
 

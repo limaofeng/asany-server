@@ -1,12 +1,12 @@
 package cn.asany.security.core.service;
 
-import cn.asany.base.common.bean.enums.EmailStatus;
-import cn.asany.base.common.bean.enums.PhoneNumberStatus;
-import cn.asany.security.core.bean.Role;
-import cn.asany.security.core.bean.User;
-import cn.asany.security.core.bean.enums.UserType;
+import cn.asany.base.common.domain.enums.EmailStatus;
+import cn.asany.base.common.domain.enums.PhoneNumberStatus;
 import cn.asany.security.core.dao.GrantPermissionDao;
 import cn.asany.security.core.dao.UserDao;
+import cn.asany.security.core.domain.Role;
+import cn.asany.security.core.domain.User;
+import cn.asany.security.core.domain.enums.UserType;
 import cn.asany.security.core.exception.UserInvalidException;
 import cn.asany.security.core.exception.UserNotFoundException;
 import java.util.*;

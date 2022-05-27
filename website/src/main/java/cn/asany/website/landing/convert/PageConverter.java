@@ -1,8 +1,8 @@
 package cn.asany.website.landing.convert;
 
-import cn.asany.website.landing.bean.LandingPage;
-import cn.asany.website.landing.bean.LandingPoster;
-import cn.asany.website.landing.bean.LandingStore;
+import cn.asany.website.landing.domain.LandingPage;
+import cn.asany.website.landing.domain.LandingPoster;
+import cn.asany.website.landing.domain.LandingStore;
 import cn.asany.website.landing.graphql.input.LandingPageCreateInput;
 import cn.asany.website.landing.graphql.input.LandingPageUpdateInput;
 import cn.asany.website.landing.service.LandingService;

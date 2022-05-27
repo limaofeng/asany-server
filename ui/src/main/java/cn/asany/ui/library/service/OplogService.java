@@ -1,9 +1,9 @@
 package cn.asany.ui.library.service;
 
 import cn.asany.ui.library.OplogDataCollector;
-import cn.asany.ui.library.bean.Oplog;
-import cn.asany.ui.library.bean.enums.Operation;
 import cn.asany.ui.library.dao.OplogDao;
+import cn.asany.ui.library.domain.Oplog;
+import cn.asany.ui.library.domain.enums.Operation;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

@@ -1,6 +1,6 @@
 package cn.asany.shanhai.data.graphql;
 
-import cn.asany.shanhai.data.bean.DataSetConfig;
+import cn.asany.shanhai.data.domain.DataSetConfig;
 import cn.asany.shanhai.data.engine.IDataSource;
 import cn.asany.shanhai.data.engine.IDataSourceLoader;
 import cn.asany.shanhai.data.graphql.type.DataSetObject;

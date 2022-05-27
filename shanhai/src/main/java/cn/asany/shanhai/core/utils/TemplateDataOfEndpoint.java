@@ -1,7 +1,7 @@
 package cn.asany.shanhai.core.utils;
 
-import cn.asany.shanhai.core.bean.ModelEndpoint;
-import cn.asany.shanhai.core.bean.ModelEndpointReturnType;
+import cn.asany.shanhai.core.domain.ModelEndpoint;
+import cn.asany.shanhai.core.domain.ModelEndpointReturnType;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;

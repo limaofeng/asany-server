@@ -1,6 +1,6 @@
 package cn.asany.cms.learn.dao.listener;
 
-import cn.asany.cms.learn.bean.Course;
+import cn.asany.cms.learn.domain.Course;
 import cn.asany.cms.learn.event.CourseCreatedEvent;
 import org.hibernate.event.spi.EventType;
 import org.hibernate.event.spi.PostInsertEvent;

@@ -1,12 +1,12 @@
 package cn.asany.cardhop.contacts.graphql.resolver;
 
-import cn.asany.base.common.bean.Address;
-import cn.asany.base.common.bean.Email;
-import cn.asany.base.common.bean.Phone;
-import cn.asany.cardhop.contacts.bean.Contact;
-import cn.asany.cardhop.contacts.bean.ContactAddress;
-import cn.asany.cardhop.contacts.bean.ContactEmail;
-import cn.asany.cardhop.contacts.bean.ContactPhoneNumber;
+import cn.asany.base.common.domain.Address;
+import cn.asany.base.common.domain.Email;
+import cn.asany.base.common.domain.Phone;
+import cn.asany.cardhop.contacts.domain.Contact;
+import cn.asany.cardhop.contacts.domain.ContactAddress;
+import cn.asany.cardhop.contacts.domain.ContactEmail;
+import cn.asany.cardhop.contacts.domain.ContactPhoneNumber;
 import cn.asany.cardhop.contacts.utils.IdUtils;
 import graphql.kickstart.tools.GraphQLResolver;
 import graphql.schema.DataFetchingEnvironment;

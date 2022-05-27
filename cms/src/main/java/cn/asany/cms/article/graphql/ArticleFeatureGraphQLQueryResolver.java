@@ -1,7 +1,7 @@
 package cn.asany.cms.article.graphql;
 
-import cn.asany.cms.article.bean.ArticleFeature;
 import cn.asany.cms.article.converter.ArticleFeatureConverter;
+import cn.asany.cms.article.domain.ArticleFeature;
 import cn.asany.cms.article.graphql.input.ArticleFeatureFilter;
 import cn.asany.cms.article.graphql.input.ArticleFeatureInput;
 import cn.asany.cms.article.service.ArticleFeatureService;

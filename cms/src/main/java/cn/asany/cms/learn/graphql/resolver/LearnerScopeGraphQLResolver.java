@@ -1,7 +1,7 @@
 package cn.asany.cms.learn.graphql.resolver;
 
-import cn.asany.cms.learn.bean.LearnerScope;
 import cn.asany.cms.learn.dao.LearnerDao;
+import cn.asany.cms.learn.domain.LearnerScope;
 import cn.asany.cms.learn.service.LearnerService;
 import graphql.kickstart.tools.GraphQLResolver;
 import java.util.Date;

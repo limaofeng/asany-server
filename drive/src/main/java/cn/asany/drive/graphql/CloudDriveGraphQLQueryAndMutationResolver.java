@@ -1,7 +1,7 @@
 package cn.asany.drive.graphql;
 
 import cn.asany.base.utils.Hashids;
-import cn.asany.drive.bean.CloudDrive;
+import cn.asany.drive.domain.CloudDrive;
 import cn.asany.drive.service.CloudDriveService;
 import graphql.kickstart.tools.GraphQLMutationResolver;
 import graphql.kickstart.tools.GraphQLQueryResolver;

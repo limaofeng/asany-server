@@ -1,6 +1,6 @@
 package cn.asany.website.landing.graphql.type;
 
-import cn.asany.website.landing.bean.LandingStore;
+import cn.asany.website.landing.domain.LandingStore;
 import java.util.List;
 import lombok.*;
 import org.jfantasy.graphql.Edge;

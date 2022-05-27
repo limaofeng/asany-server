@@ -1,6 +1,6 @@
 package cn.asany.cms.article.converter;
 
-import cn.asany.cms.article.bean.*;
+import cn.asany.cms.article.domain.*;
 import cn.asany.cms.article.graphql.input.ArticleInput;
 import cn.asany.cms.article.graphql.input.ContentInput;
 import cn.asany.cms.article.service.ArticleFeatureService;

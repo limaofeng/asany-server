@@ -1,6 +1,6 @@
 package cn.asany.email.mailbox.dao;
 
-import cn.asany.email.mailbox.bean.JamesMailbox;
+import cn.asany.email.mailbox.domain.JamesMailbox;
 import org.jfantasy.framework.dao.jpa.JpaRepository;
 import org.springframework.stereotype.Repository;
 

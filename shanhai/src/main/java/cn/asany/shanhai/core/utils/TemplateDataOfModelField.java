@@ -1,8 +1,8 @@
 package cn.asany.shanhai.core.utils;
 
-import cn.asany.shanhai.core.bean.Model;
-import cn.asany.shanhai.core.bean.ModelField;
-import cn.asany.shanhai.core.bean.enums.ModelType;
+import cn.asany.shanhai.core.domain.Model;
+import cn.asany.shanhai.core.domain.ModelField;
+import cn.asany.shanhai.core.domain.enums.ModelType;
 import cn.asany.shanhai.core.support.model.FieldType;
 import cn.asany.shanhai.core.support.model.FieldTypeRegistry;
 import lombok.AllArgsConstructor;

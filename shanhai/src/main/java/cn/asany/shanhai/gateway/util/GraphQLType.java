@@ -1,6 +1,6 @@
 package cn.asany.shanhai.gateway.util;
 
-import cn.asany.shanhai.core.bean.enums.ModelType;
+import cn.asany.shanhai.core.domain.enums.ModelType;
 
 public enum GraphQLType {
   /** 标量 */

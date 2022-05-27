@@ -1,9 +1,9 @@
 package cn.asany.nuwa.template.service;
 
 import cn.asany.nuwa.TestApplication;
-import cn.asany.nuwa.app.bean.Routespace;
+import cn.asany.nuwa.app.domain.Routespace;
 import cn.asany.nuwa.app.service.RoutespaceService;
-import cn.asany.nuwa.template.bean.ApplicationTemplate;
+import cn.asany.nuwa.template.domain.ApplicationTemplate;
 import java.io.IOException;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;

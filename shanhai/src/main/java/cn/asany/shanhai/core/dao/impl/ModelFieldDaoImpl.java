@@ -1,7 +1,7 @@
 package cn.asany.shanhai.core.dao.impl;
 
-import cn.asany.shanhai.core.bean.ModelField;
 import cn.asany.shanhai.core.dao.ModelFieldDao;
+import cn.asany.shanhai.core.domain.ModelField;
 import java.util.Collections;
 import java.util.List;
 import javax.persistence.EntityManager;

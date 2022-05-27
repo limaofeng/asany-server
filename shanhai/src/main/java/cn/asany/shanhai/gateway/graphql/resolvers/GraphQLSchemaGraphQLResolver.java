@@ -1,9 +1,9 @@
 package cn.asany.shanhai.gateway.graphql.resolvers;
 
-import cn.asany.shanhai.core.bean.ModelField;
+import cn.asany.shanhai.core.domain.ModelField;
 import cn.asany.shanhai.core.service.ModelService;
-import cn.asany.shanhai.gateway.bean.ModelGroup;
-import cn.asany.shanhai.gateway.bean.ModelGroupItem;
+import cn.asany.shanhai.gateway.domain.ModelGroup;
+import cn.asany.shanhai.gateway.domain.ModelGroupItem;
 import cn.asany.shanhai.gateway.graphql.types.GraphQLSchema;
 import cn.asany.shanhai.gateway.service.ModelGroupService;
 import graphql.kickstart.tools.GraphQLResolver;

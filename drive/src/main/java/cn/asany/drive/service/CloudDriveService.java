@@ -1,14 +1,14 @@
 package cn.asany.drive.service;
 
 import cn.asany.base.utils.UUID;
-import cn.asany.drive.bean.CloudDrive;
-import cn.asany.drive.bean.CloudDriveQuota;
-import cn.asany.drive.bean.enums.CloudDriveType;
 import cn.asany.drive.dao.CloudDriveDao;
-import cn.asany.security.core.bean.User;
+import cn.asany.drive.domain.CloudDrive;
+import cn.asany.drive.domain.CloudDriveQuota;
+import cn.asany.drive.domain.enums.CloudDriveType;
 import cn.asany.security.core.dao.UserDao;
+import cn.asany.security.core.domain.User;
 import cn.asany.storage.api.Storage;
-import cn.asany.storage.data.bean.Space;
+import cn.asany.storage.data.domain.Space;
 import cn.asany.storage.data.service.FileService;
 import java.util.List;
 import java.util.Optional;

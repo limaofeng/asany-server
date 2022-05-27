@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @Configuration
-@EntityScan({"cn.asany.drive.bean"})
+@EntityScan({"cn.asany.drive.domain"})
 @ComponentScan({
   "cn.asany.drive.dao",
   "cn.asany.drive.graphql",

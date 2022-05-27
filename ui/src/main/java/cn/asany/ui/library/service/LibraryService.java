@@ -1,11 +1,11 @@
 package cn.asany.ui.library.service;
 
-import cn.asany.ui.library.bean.Library;
-import cn.asany.ui.library.bean.LibraryItem;
-import cn.asany.ui.library.bean.enums.LibraryType;
-import cn.asany.ui.library.bean.enums.Operation;
 import cn.asany.ui.library.dao.LibraryDao;
 import cn.asany.ui.library.dao.LibraryItemDao;
+import cn.asany.ui.library.domain.Library;
+import cn.asany.ui.library.domain.LibraryItem;
+import cn.asany.ui.library.domain.enums.LibraryType;
+import cn.asany.ui.library.domain.enums.Operation;
 import cn.asany.ui.resources.dao.IconDao;
 import java.util.ArrayList;
 import java.util.List;

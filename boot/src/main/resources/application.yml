@@ -40,8 +40,7 @@ spring:
         elideSetAutoCommits: true
         maintainTimeStats: false
   jpa:
-    generate-ddl: false
-    open-in-view: true
+    open-in-view: false
     hibernate:
       ddl-auto: validate
       use-new-id-generator-mappings: true
@@ -63,7 +62,7 @@ spring:
           use_second_level_cache: false
           region:
             factory_class: org.hibernate.cache.ehcache.EhCacheRegionFactory
-        dialect: org.hibernate.dialect.MySQL55Dialect
+        dialect: org.hibernate.dialect.MySQL8Dialect
         ejb:
           identifier_generator_strategy_provider: org.jfantasy.framework.dao.hibernate.spi.CustomIdentifierGeneratorStrategyProvider
   redis:

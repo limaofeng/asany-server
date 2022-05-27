@@ -2,7 +2,7 @@ package cn.asany.sunrise.calendar.util;
 
 import static java.util.regex.Pattern.compile;
 
-import cn.asany.sunrise.calendar.bean.CalendarEvent;
+import cn.asany.sunrise.calendar.domain.CalendarEvent;
 import java.awt.*;
 import java.io.IOException;
 import java.net.URL;
@@ -70,7 +70,7 @@ public class CalendarUtils {
   }
 
   public static List<CalendarEvent> parseEvents(
-      Calendar icalendar, cn.asany.sunrise.calendar.bean.Calendar calendar) {
+      Calendar icalendar, cn.asany.sunrise.calendar.domain.Calendar calendar) {
     List<CalendarEvent> events = new ArrayList<>();
     for (Object value : icalendar.getComponents(Component.VEVENT)) {
       VEvent event = (VEvent) value;

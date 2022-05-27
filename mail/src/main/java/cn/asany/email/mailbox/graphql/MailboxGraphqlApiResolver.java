@@ -1,7 +1,7 @@
 package cn.asany.email.mailbox.graphql;
 
-import cn.asany.email.mailbox.bean.JamesMailbox;
 import cn.asany.email.mailbox.component.JPAId;
+import cn.asany.email.mailbox.domain.JamesMailbox;
 import cn.asany.email.mailbox.service.MailboxService;
 import cn.asany.email.utils.JamesUtil;
 import graphql.kickstart.tools.GraphQLMutationResolver;

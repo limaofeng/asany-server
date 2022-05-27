@@ -1,12 +1,12 @@
 package cn.asany.sunrise.calendar.graphql;
 
-import cn.asany.sunrise.calendar.bean.Calendar;
-import cn.asany.sunrise.calendar.bean.CalendarAccount;
-import cn.asany.sunrise.calendar.bean.CalendarEvent;
-import cn.asany.sunrise.calendar.bean.CalendarSet;
-import cn.asany.sunrise.calendar.bean.toys.CalendarEventDateStat;
 import cn.asany.sunrise.calendar.convert.CalendarConverter;
 import cn.asany.sunrise.calendar.convert.CalendarSetConverter;
+import cn.asany.sunrise.calendar.domain.Calendar;
+import cn.asany.sunrise.calendar.domain.CalendarAccount;
+import cn.asany.sunrise.calendar.domain.CalendarEvent;
+import cn.asany.sunrise.calendar.domain.CalendarSet;
+import cn.asany.sunrise.calendar.domain.toys.CalendarEventDateStat;
 import cn.asany.sunrise.calendar.graphql.input.*;
 import cn.asany.sunrise.calendar.service.CalendarService;
 import graphql.kickstart.tools.GraphQLMutationResolver;

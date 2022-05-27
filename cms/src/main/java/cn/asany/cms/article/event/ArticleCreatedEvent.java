@@ -1,6 +1,6 @@
 package cn.asany.cms.article.event;
 
-import cn.asany.cms.article.bean.Article;
+import cn.asany.cms.article.domain.Article;
 import org.springframework.context.ApplicationEvent;
 
 /**

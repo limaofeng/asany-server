@@ -1,6 +1,6 @@
 package cn.asany.storage.data.dao;
 
-import cn.asany.storage.data.bean.FileDetail;
+import cn.asany.storage.data.domain.FileDetail;
 import org.jfantasy.framework.dao.jpa.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

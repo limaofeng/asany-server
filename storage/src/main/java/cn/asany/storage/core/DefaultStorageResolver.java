@@ -3,7 +3,7 @@ package cn.asany.storage.core;
 import cn.asany.storage.api.IStorageConfig;
 import cn.asany.storage.api.Storage;
 import cn.asany.storage.api.StorageBuilder;
-import cn.asany.storage.data.bean.StorageConfig;
+import cn.asany.storage.data.domain.StorageConfig;
 import cn.asany.storage.data.service.StorageService;
 import java.util.List;
 import java.util.Map;

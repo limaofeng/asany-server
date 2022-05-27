@@ -1,7 +1,7 @@
 package cn.asany.ui.resources.graphql.type;
 
-import cn.asany.ui.resources.bean.enums.ComponentType;
-import cn.asany.ui.resources.bean.toy.ComponentData;
+import cn.asany.ui.resources.domain.enums.ComponentType;
+import cn.asany.ui.resources.domain.toy.ComponentData;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;

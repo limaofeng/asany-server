@@ -1,8 +1,8 @@
 package cn.asany.storage.data.graphql;
 
 import cn.asany.storage.api.*;
-import cn.asany.storage.data.bean.MultipartUpload;
 import cn.asany.storage.data.convert.MultipartUploadOptionsConverter;
+import cn.asany.storage.data.domain.MultipartUpload;
 import cn.asany.storage.data.graphql.input.MultipartUploadInput;
 import cn.asany.storage.data.graphql.type.FileChecksum;
 import cn.asany.storage.data.service.MultipartUploadService;

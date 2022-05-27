@@ -1,7 +1,7 @@
 package cn.asany.organization.core.service.dto;
 
-import cn.asany.organization.core.bean.DepartmentType;
-import cn.asany.organization.core.bean.EmployeeStatus;
+import cn.asany.organization.core.domain.DepartmentType;
+import cn.asany.organization.core.domain.EmployeeStatus;
 import java.util.List;
 import lombok.Data;
 

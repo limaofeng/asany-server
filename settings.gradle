@@ -28,6 +28,8 @@ include ":shanhai",
         ":nuwa",
         ":ui",
         ":cms",
+        ":uptime",
+//        ":workflow",
         ":boot"
 
 // 基础
@@ -64,5 +66,7 @@ project(':weixin').projectDir = "$rootDir/weixin" as File
 project(':weixin-api').projectDir = "$rootDir/weixin-api" as File
 // open-api
 project(':openapi').projectDir = "$rootDir/openapi" as File
+// 站点健康
+project(':uptime').projectDir = "$rootDir/uptime" as File
 // 启动
 project(':boot').projectDir = "$rootDir/boot" as File

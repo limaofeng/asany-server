@@ -1,15 +1,15 @@
 package cn.asany.shanhai.core.service;
 
-import cn.asany.shanhai.core.bean.*;
-import cn.asany.shanhai.core.bean.enums.ModelRelationType;
-import cn.asany.shanhai.core.bean.enums.ModelStatus;
-import cn.asany.shanhai.core.bean.enums.ModelType;
 import cn.asany.shanhai.core.dao.*;
+import cn.asany.shanhai.core.domain.*;
+import cn.asany.shanhai.core.domain.enums.ModelRelationType;
+import cn.asany.shanhai.core.domain.enums.ModelStatus;
+import cn.asany.shanhai.core.domain.enums.ModelType;
 import cn.asany.shanhai.core.runners.InitModelDaoCommandLineRunner;
 import cn.asany.shanhai.core.support.model.FieldTypeRegistry;
 import cn.asany.shanhai.core.utils.ModelUtils;
 import cn.asany.shanhai.core.utils.TypeNotFoundException;
-import cn.asany.shanhai.gateway.bean.ModelGroupItem;
+import cn.asany.shanhai.gateway.domain.ModelGroupItem;
 import java.util.*;
 import java.util.stream.Collectors;
 import lombok.SneakyThrows;

@@ -1,6 +1,6 @@
 package cn.asany.nuwa.app.service.dto;
 
-import cn.asany.nuwa.app.bean.LayoutSettings;
+import cn.asany.nuwa.app.domain.LayoutSettings;
 import java.util.List;
 import lombok.Data;
 import lombok.NoArgsConstructor;
