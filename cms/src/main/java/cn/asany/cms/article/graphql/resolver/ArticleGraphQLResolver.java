@@ -3,6 +3,7 @@ package cn.asany.cms.article.graphql.resolver;
 import cn.asany.cms.article.converter.ArticleChannelConverter;
 import cn.asany.cms.article.domain.Article;
 import cn.asany.cms.article.domain.ArticleChannel;
+import cn.asany.cms.article.domain.ArticleChannelRelationship;
 import cn.asany.cms.article.domain.Content;
 import cn.asany.cms.article.domain.enums.ArticleCategory;
 import cn.asany.cms.article.domain.enums.CommentTargetType;
@@ -16,6 +17,7 @@ import cn.asany.security.core.domain.Permission;
 import graphql.kickstart.tools.GraphQLResolver;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
@@ -35,7 +37,9 @@ public class ArticleGraphQLResolver implements GraphQLResolver<Article> {
     if (article.getChannels() == null) {
       return new ArrayList<>();
     }
-    return article.getChannels();
+    return article.getChannels().stream()
+        .map(ArticleChannelRelationship::getChannel)
+        .collect(Collectors.toList());
   }
 
   public Content content(Article article, ContentFormat format) {

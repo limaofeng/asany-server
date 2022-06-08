@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.bean.menu.WxMenu;
 import me.chanjar.weixin.common.bean.menu.WxMenuButton;
 import me.chanjar.weixin.common.exception.WxErrorException;
@@ -22,15 +23,11 @@ import me.chanjar.weixin.cp.bean.messagebuilder.VideoBuilder;
 import me.chanjar.weixin.cp.bean.outxmlbuilder.NewsBuilder;
 import me.chanjar.weixin.cp.util.xml.XStreamTransformer;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.jfantasy.framework.jackson.JSON;
 import org.jfantasy.framework.util.common.StringUtil;
 
+@Slf4j
 public class WeixinCpService implements WeixinService {
-
-  private static final Log LOG = LogFactory.getLog(WeixinCpService.class);
-
   private final WxCpService wxCpService;
   private final WxCpConfigStorage wxCpConfigStorage;
   private final Jsapi jsapi;
@@ -74,7 +71,7 @@ public class WeixinCpService implements WeixinService {
     } else {
       throw new WeixinException("不可识别的加密类型");
     }
-    LOG.debug("inMessage=>" + JSON.serialize(inMessage));
+    log.debug("inMessage=>" + JSON.serialize(inMessage));
     if ("text".equals(inMessage.getMsgType())) {
       return MessageFactory.createTextMessage(
           inMessage.getMsgId(),
@@ -133,7 +130,7 @@ public class WeixinCpService implements WeixinService {
           inMessage.getLongitude(),
           inMessage.getPrecision());
     } else {
-      LOG.debug(inMessage);
+      log.debug(inMessage.toString());
       throw new WeixinException("无法处理的消息类型" + inMessage.getMsgType());
     }
   }

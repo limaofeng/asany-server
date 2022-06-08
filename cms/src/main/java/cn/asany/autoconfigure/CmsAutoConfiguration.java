@@ -1,6 +1,7 @@
 package cn.asany.autoconfigure;
 
 import cn.asany.cms.article.domain.HtmlContent;
+import cn.asany.cms.article.graphql.input.AcceptArticleChannel;
 import cn.asany.cms.module.CmsModule;
 import org.jfantasy.framework.dao.jpa.ComplexJpaRepository;
 import org.jfantasy.graphql.SchemaParserDictionaryBuilder;
@@ -37,6 +38,7 @@ public class CmsAutoConfiguration {
   @Bean("CMS.SchemaParserDictionaryBuilder")
   public SchemaParserDictionaryBuilder schemaDictionary() {
     return dictionary -> {
+      dictionary.add("AcceptArticleChannel", AcceptArticleChannel.class);
       dictionary.add("HtmlContent", HtmlContent.class);
     };
   }

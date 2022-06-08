@@ -28,7 +28,8 @@ public interface ArticleConverter {
     @Mapping(source = "channels", target = "channels", qualifiedByName = "parseChannels"),
     @Mapping(source = "tags", target = "tags", ignore = true),
     @Mapping(source = "features", target = "features", qualifiedByName = "parseFeature"),
-    @Mapping(target = "permissions", ignore = true)
+    @Mapping(target = "permissions", ignore = true),
+    @Mapping(target = "organization", ignore = true)
   })
   Article toArticle(ArticleInput input);
 
@@ -36,6 +37,7 @@ public interface ArticleConverter {
     @Mapping(source = "channels", target = "channels", qualifiedByName = "parseChannels"),
     @Mapping(source = "tags", target = "tags", ignore = true),
     @Mapping(target = "permissions", ignore = true),
+    @Mapping(target = "organization", ignore = true),
     @Mapping(source = "features", target = "features", qualifiedByName = "parseFeature"),
     @Mapping(source = "content", target = "content", qualifiedByName = "parseContent")
   })
@@ -60,12 +62,16 @@ public interface ArticleConverter {
   }
 
   @Named("parseChannels")
-  default List<ArticleChannel> parseChannels(List<Long> source) {
+  default List<ArticleChannelRelationship> parseChannels(List<Long> source) {
     if (source == null) {
       return null;
     }
     return source.stream()
-        .map(item -> ArticleChannel.builder().id(item).build())
+        .map(
+            item ->
+                ArticleChannelRelationship.builder()
+                    .channel(ArticleChannel.builder().id(item).build())
+                    .build())
         .collect(Collectors.toList());
   }
 

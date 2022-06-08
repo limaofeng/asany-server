@@ -1,5 +1,7 @@
 package cn.asany.cms;
 
+import cn.asany.autoconfigure.OrganizationAutoConfiguration;
+import cn.asany.autoconfigure.SecurityAutoConfiguration;
 import graphql.kickstart.autoconfigure.tools.GraphQLJavaToolsAutoConfiguration;
 import graphql.kickstart.autoconfigure.web.servlet.GraphQLWebAutoConfiguration;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +28,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @Configuration
 @ComponentScan({"cn.asany.openapi.service", "cn.asany.*.*.convert"})
 @EntityScan({
-  "cn.asany.**.domain",
+  "cn.asany.*.*.domain",
 })
 @EnableJpaRepositories(
     includeFilters = {
@@ -40,6 +42,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
     repositoryBaseClass = ComplexJpaRepository.class)
 @EnableAutoConfiguration(
     exclude = {
+      OrganizationAutoConfiguration.class,
+      SecurityAutoConfiguration.class,
       MongoAutoConfiguration.class,
       QuartzAutoConfiguration.class,
       WebMvcAutoConfiguration.class,

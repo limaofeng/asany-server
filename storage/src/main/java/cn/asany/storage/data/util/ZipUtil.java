@@ -8,16 +8,14 @@ import java.io.OutputStream;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.tools.zip.ZipEntry;
 import org.apache.tools.zip.ZipOutputStream;
 import org.jfantasy.framework.util.common.StreamUtil;
 import org.jfantasy.framework.util.web.WebUtil;
 
+@Slf4j
 public class ZipUtil {
-
-  private static final Log LOGGER = LogFactory.getLog(ZipUtil.class);
 
   /**
    * 压缩文件
@@ -80,7 +78,7 @@ public class ZipUtil {
       StreamUtil.copy(in, out);
       StreamUtil.closeQuietly(in);
     } catch (IOException e) {
-      LOGGER.error(e.getMessage(), e);
+      log.error(e.getMessage(), e);
     }
   }
 
@@ -106,7 +104,7 @@ public class ZipUtil {
         StreamUtil.copy(in, out);
         StreamUtil.closeQuietly(in);
       } catch (IOException e) {
-        LOGGER.error(e.getMessage(), e);
+        log.error(e.getMessage(), e);
       }
     }
     out.setEncoding(options.getEncoding());

@@ -76,32 +76,4 @@ public class StorageAutoConfiguration {
   public SchemaDirective fileFormatDirective() {
     return new SchemaDirective("fileFormat", new FileFormatDirective());
   }
-
-  //  @Bean
-  //  public FileFilter fileFilter() {
-  //    return new FileFilter();
-  //  }
-
-  //  @Bean
-  //  public FilterRegistrationBean uploadLimitFilter() {
-  //    FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean();
-  //    filterRegistrationBean.setFilter(new UploadLimitFilter());
-  //    filterRegistrationBean.setEnabled(true);
-  //    filterRegistrationBean.setOrder(400);
-  //    filterRegistrationBean.setDispatcherTypes(DispatcherType.REQUEST);
-  //    filterRegistrationBean.addUrlPatterns("/*");
-  //    return filterRegistrationBean;
-  //  }
-
-  //  @Bean
-  //  public FilterRegistrationBean fileFilterRegistrationBean() {
-  //    FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean();
-  //    filterRegistrationBean.setFilter(fileFilter());
-  //    filterRegistrationBean.setEnabled(true);
-  //    filterRegistrationBean.setOrder(300);
-  //    filterRegistrationBean.addInitParameter("targetFilterLifecycle", "true");
-  //    filterRegistrationBean.setDispatcherTypes(DispatcherType.REQUEST);
-  //    filterRegistrationBean.addUrlPatterns("/*");
-  //    return filterRegistrationBean;
-  //  }
 }

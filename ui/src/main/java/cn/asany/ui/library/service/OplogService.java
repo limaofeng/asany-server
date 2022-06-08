@@ -32,7 +32,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 public class OplogService implements InitializingBean {
-  private LinkedQueue<Oplog> queue = new LinkedQueue();
+  private final LinkedQueue<Oplog> queue = new LinkedQueue();
 
   private final OplogDao oplogDao;
   private final SchedulingTaskExecutor executor;

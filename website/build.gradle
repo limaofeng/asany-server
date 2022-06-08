@@ -1,10 +1,11 @@
 description = "网站"
 
 dependencies {
-    implementation project(":base")
-    implementation project(":openapi")
-    implementation project(":security")
-    implementation project(":storage-api")
+    compileOnly project(":base")
+    compileOnly project(":openapi")
+    compileOnly project(":security")
+    compileOnly project(":cms")
+    compileOnly project(":storage-api")
     testImplementation project(":storage")
     testImplementation "com.alibaba:easyexcel:${LIB_EASYEXCEL_VER}"
 }

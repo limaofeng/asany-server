@@ -3,12 +3,10 @@ package cn.asany.cms.article.graphql.input;
 import cn.asany.cms.article.domain.ArticleChannel;
 import cn.asany.cms.article.service.ArticleChannelService;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.List;
+import java.util.Optional;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.spring.SpringBeanUtils;
-import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.graphql.inputs.QueryFilter;
 
 /**
@@ -20,24 +18,20 @@ import org.jfantasy.graphql.inputs.QueryFilter;
 @EqualsAndHashCode(callSuper = true)
 public class ArticleChannelFilter extends QueryFilter<ArticleChannelFilter, ArticleChannel> {
 
-  private Boolean descendant = false;
-
   @JsonProperty("parent")
-  public void setParent(Long parent) {
-    this.builder.equal("parent.id", parent);
-  }
-
-  @Override
-  public List<PropertyFilter> build() {
+  public void setParent(AcceptArticleChannel acceptArticleChannel) {
     ArticleChannelService service = SpringBeanUtils.getBean(ArticleChannelService.class);
-    List<PropertyFilter> filters = builder.build();
-    PropertyFilter filter = ObjectUtil.find(filters, "propertyName", "parent.id");
-    if (this.descendant && filter != null) {
-      filters.remove(filter);
-      ArticleChannel channel = service.findOne(filter.getPropertyValue(Long.class));
-      builder.startsWith("path", channel.getPath());
-      builder.notEqual("id", channel.getId());
+    if (acceptArticleChannel.getSubColumns()) {
+      Optional<ArticleChannel> channelOptional =
+          service.findById(Long.valueOf(acceptArticleChannel.getId()));
+      if (channelOptional.isPresent()) {
+        ArticleChannel channel = channelOptional.get();
+        this.builder.startsWith("path", channel.getPath()).notEqual("id", channel.getId());
+      } else {
+        this.builder.equal("parent.id", acceptArticleChannel.getId());
+      }
+    } else {
+      this.builder.equal("parent.id", acceptArticleChannel.getId());
     }
-    return builder.build();
   }
 }

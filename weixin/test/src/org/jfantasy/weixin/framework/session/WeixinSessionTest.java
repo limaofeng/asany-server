@@ -1,7 +1,5 @@
 package cn.asany.weixin.framework.session;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.jfantasy.framework.jackson.JSON;
 import cn.asany.weixin.ApplicationTest;
 import cn.asany.weixin.framework.core.Openapi;

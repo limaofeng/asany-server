@@ -6,16 +6,14 @@ import cn.asany.weixin.framework.exception.WeixinException;
 import cn.asany.weixin.framework.factory.WeixinSessionUtils;
 import cn.asany.weixin.framework.message.content.*;
 import java.util.Date;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.jfantasy.framework.util.cglib.CglibUtil;
 import org.jfantasy.framework.util.common.ClassUtil;
 import org.jfantasy.framework.util.common.StringUtil;
 
 /** 微信消息工厂 */
+@Slf4j
 public class MessageFactory {
-
-  private static final Log LOG = LogFactory.getLog(MessageFactory.class);
 
   /**
    * 文本消息
@@ -79,7 +77,7 @@ public class MessageFactory {
                   return methodProxy.invokeSuper(o, objects);
                 }
               } catch (Throwable throwable) {
-                LOG.error(throwable.getMessage());
+                log.error(throwable.getMessage());
                 return null;
               }
             });

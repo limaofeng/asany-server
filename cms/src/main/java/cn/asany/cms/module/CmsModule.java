@@ -22,6 +22,6 @@ public class CmsModule implements IModule<CmsModuleProperties> {
 
   @Override
   public void load(CmsModuleProperties properties) {
-    this.articleChannelService.saveAll(channelConverter.toChannels(properties.getChannels()));
+    this.articleChannelService.saveAll(channelConverter.toChannels(properties.getChannels()), 0L);
   }
 }

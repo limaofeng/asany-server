@@ -30,7 +30,7 @@ public interface ArticleChannelConverter {
   List<ArticleChannel> toChannels(List<ArticleChannelImpObj> channels);
 
   @Mappings({
-    @Mapping(source = "posts", target = "articles"),
+    //    @Mapping(source = "posts", target = "articles"),
   })
   ArticleChannel toChannel(ArticleChannelImpObj channel);
 

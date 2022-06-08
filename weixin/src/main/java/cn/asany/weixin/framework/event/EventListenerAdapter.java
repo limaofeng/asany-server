@@ -4,25 +4,22 @@ import cn.asany.weixin.framework.message.EventMessage;
 import cn.asany.weixin.framework.message.content.Event;
 import cn.asany.weixin.framework.message.content.EventLocation;
 import cn.asany.weixin.framework.session.WeixinSession;
-import java.util.ArrayList;
 import java.util.List;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class EventListenerAdapter {
 
-  private static final Log LOG = LogFactory.getLog(EventListenerAdapter.class);
-
-  private List<WeixinEventListener> listeners;
-  private EventMessage.EventType eventType;
-  private List<EventListenerAdapter> adapters = new ArrayList<EventListenerAdapter>();
+  private final List<WeixinEventListener> listeners;
+  private final EventMessage.EventType eventType;
 
   public EventListenerAdapter(
       EventMessage.EventType eventType, List<WeixinEventListener> listeners) {
     this.eventType = eventType;
+    this.listeners = listeners;
   }
 
-  public void execute(WeixinSession session, Event content, EventMessage message) {
+  public void execute(WeixinSession session, Event content, EventMessage<?> message) {
     for (WeixinEventListener listener : listeners) {
       if (listener instanceof ClickEventListener && eventType == EventMessage.EventType.CLICK) {
         ((ClickEventListener) listener).onClick(session, content, message);
@@ -42,7 +39,7 @@ public class EventListenerAdapter {
           && eventType == EventMessage.EventType.VIEW) {
         ((ViewEventListener) listener).onView(session, content, message);
       } else {
-        LOG.error("监听器的与监听类型不匹配:" + eventType + "=" + listener);
+        log.error("监听器的与监听类型不匹配:" + eventType + "=" + listener);
       }
     }
   }

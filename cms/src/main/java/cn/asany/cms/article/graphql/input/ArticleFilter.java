@@ -16,8 +16,6 @@ import lombok.EqualsAndHashCode;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
 import org.jfantasy.framework.spring.SpringBeanUtils;
-import org.jfantasy.framework.util.regexp.RegexpConstant;
-import org.jfantasy.framework.util.regexp.RegexpUtil;
 import org.jfantasy.graphql.inputs.QueryFilter;
 
 /**
@@ -38,19 +36,19 @@ public class ArticleFilter extends QueryFilter<ArticleFilter, Article> {
     builder.in("tags.id", tags.toArray(new Long[0]));
   }
 
-  @JsonProperty("channel_startsWith")
-  public void setChannelStartsWith(String channel) {
-    ArticleChannelService channelService = SpringBeanUtils.getBean(ArticleChannelService.class);
-    Optional<ArticleChannel> channelOptional;
-    if (RegexpUtil.isMatch(channel, RegexpConstant.VALIDATOR_INTEGE)) {
-      channelOptional = channelService.get(Long.valueOf(channel));
+  public void setChannel(AcceptArticleChannel acceptArticleChannel) {
+    ArticleChannelService service = SpringBeanUtils.getBean(ArticleChannelService.class);
+    if (acceptArticleChannel.getSubColumns()) {
+      Optional<ArticleChannel> channelOptional = service.findById(acceptArticleChannel.getId());
+      if (channelOptional.isPresent()) {
+        ArticleChannel channel = channelOptional.get();
+        this.builder.startsWith("channels.path", channel.getPath()).notEqual("id", channel.getId());
+      } else {
+        this.builder.equal("channels.id", acceptArticleChannel.getId());
+      }
     } else {
-      channelOptional = channelService.findOneBySlug(channel);
+      this.builder.equal("channels.id", acceptArticleChannel.getId());
     }
-    if (!channelOptional.isPresent()) {
-      return;
-    }
-    builder.startsWith("channels.path", channelOptional.get().getPath());
   }
 
   public void setChannelCode(String channelCode) {

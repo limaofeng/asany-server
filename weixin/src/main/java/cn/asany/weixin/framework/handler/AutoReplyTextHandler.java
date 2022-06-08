@@ -6,13 +6,11 @@ import cn.asany.weixin.framework.message.WeixinMessage;
 import cn.asany.weixin.framework.session.WeixinSession;
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import lombok.extern.slf4j.Slf4j;
 
 /** 自动回复处理器 */
+@Slf4j
 public class AutoReplyTextHandler extends TextWeixinHandler {
-
-  private static final Log LOG = LogFactory.getLog(AutoReplyTextHandler.class);
 
   private List<AutoReplyHandler> handlers = new ArrayList<AutoReplyHandler>();
 
@@ -21,7 +19,7 @@ public class AutoReplyTextHandler extends TextWeixinHandler {
     String keyword = message.getContent();
     for (AutoReplyHandler handler : handlers) {
       if (handler.handle(keyword)) {
-        LOG.debug(keyword + " => " + handler);
+        log.debug(keyword + " => " + handler);
         return handler.autoReply(keyword);
       }
     }

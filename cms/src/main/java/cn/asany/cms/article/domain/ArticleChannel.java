@@ -1,22 +1,16 @@
 package cn.asany.cms.article.domain;
 
-import cn.asany.base.common.Ownership;
 import cn.asany.cms.article.domain.converter.MetaDataConverter;
 import cn.asany.organization.core.domain.Organization;
-import cn.asany.security.core.domain.User;
 import cn.asany.storage.api.FileObject;
 import cn.asany.storage.api.converter.FileObjectConverter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import javax.persistence.*;
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.ForeignKey;
-import javax.persistence.OrderBy;
-import javax.persistence.Table;
 import lombok.*;
-import org.hibernate.annotations.*;
 import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.framework.search.annotations.IndexEmbedBy;
 
@@ -36,7 +30,7 @@ import org.jfantasy.framework.search.annotations.IndexEmbedBy;
     uniqueConstraints =
         @UniqueConstraint(
             name = "UK_ARTICLE_CHANNEL_SLUG",
-            columnNames = {"OWNERSHIP_TYPE", "OWNERSHIP_ID", "SLUG"}))
+            columnNames = {"ORGANIZATION_ID", "SLUG"}))
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class ArticleChannel extends BaseBusEntity {
 
@@ -82,6 +76,12 @@ public class ArticleChannel extends BaseBusEntity {
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "PID", foreignKey = @ForeignKey(name = "FK_ARTICLE_CHANNEL_PARENT"))
   private ArticleChannel parent;
+  /** 存储模版 */
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(
+      name = "STORE_TEMPLATE_ID",
+      foreignKey = @ForeignKey(name = "FK_ARTICLE_CHANNEL_STORE_TEMPLATE"))
+  private ArticleStoreTemplate storeTemplate;
   /** 下级栏目 */
   @OneToMany(
       mappedBy = "parent",
@@ -90,21 +90,12 @@ public class ArticleChannel extends BaseBusEntity {
   @OrderBy("index ASC")
   @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
   private List<ArticleChannel> children;
-  /** 所有者 */
-  @Any(
-      metaColumn =
-          @Column(name = "OWNERSHIP_TYPE", length = 10, insertable = false, updatable = false),
-      fetch = FetchType.LAZY)
-  @AnyMetaDef(
-      idType = "long",
-      metaType = "string",
-      metaValues = {
-        @MetaValue(targetEntity = User.class, value = User.OWNERSHIP_KEY),
-        @MetaValue(targetEntity = Organization.class, value = Organization.OWNERSHIP_KEY)
-      })
-  @JoinColumn(name = "OWNERSHIP_ID", insertable = false, updatable = false)
-  private Ownership ownership;
-
-  @ManyToMany(targetEntity = Article.class, mappedBy = "channels", fetch = FetchType.LAZY)
-  private List<Article> articles;
+  /** 所属组织 */
+  @ManyToOne(targetEntity = Organization.class, fetch = FetchType.LAZY)
+  @JoinColumn(
+      name = "ORGANIZATION_ID",
+      nullable = false,
+      foreignKey = @ForeignKey(name = "FK_ARTICLE_CHANNEL_ORGANIZATION_ID"))
+  @ToString.Exclude
+  private Organization organization;
 }

@@ -12,7 +12,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 /** @author limaofeng */
 @Configuration
-@EntityScan("cn.asany.ui*.domain")
+@EntityScan("cn.asany.ui.*.domain")
 @ComponentScan({
   "cn.asany.ui.*.dao",
   "cn.asany.ui.*.convert",

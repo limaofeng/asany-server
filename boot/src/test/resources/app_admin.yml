@@ -6,45 +6,52 @@ clientSecret: 3c833cf785c71234d5024aca9668dd466f050453
 menus:
   - name: 仪表盘
     icon: Duotune/gen025
+  - name: 应用管理
+    icon: Duotune/abs027
+    path: /apps
   - name: 网站管理
+    icon: Duotune/abs027
+    path: /websites
+  - name: 活动页管理
     icon: Duotune/abs045
-    path: /website
-    component: cn.asany.ui.admin.website.Sidebar
+    path: /activities
+    component: cn.asany.ui.admin.activities.Sidebar
     children:
       - name: 活动管理
         type: SECTION
       - name: 活动管理
         icon: Bootstrap/phone
-        path: /website/landing/pages
+        path: /activities
         hideChildrenInMenu: true
         children:
           - name: 活动详情
-            path: /website/landing/pages/:id
+            path: /activities/pages/:id
       - name: 海报管理
         icon: Bootstrap/file-image
-        path: /website/landing/posters
+        path: /activities/posters
         hideChildrenInMenu: true
         children:
           - name: 海报详情
-            path: /website/landing/posters/:id
+            path: /activities/posters/:id
       - name: 门店管理
         icon: Bootstrap/shop
-        path: /website/landing/stores
+        path: /activities/stores
         hideChildrenInMenu: true
         children:
           - name: 门店详情
-            path: /website/landing/stores/:id
-  - name: 应用管理
-    icon: Duotune/abs027
-    path: /apps
+            path: /activities/stores/:id
   - name: 内容管理
     icon: Duotune/txt009
     path: /cms
     component: cn.asany.ui.admin.cms.ArticleSidebar
-#  - name: 自定义建模
-#    icon: Duotune/abs026
-#    path: /shanhai
-#    component: cn.asany.ui.admin.shanhai.MenuSidebar
+  - name: 服务监控
+    icon: Duotune/abs046
+    path: /uptime
+    component: cn.asany.ui.admin.uptime.UptimeSidebar
+  #  - name: 自定义建模
+  #    icon: Duotune/abs026
+  #    path: /shanhai
+  #    component: cn.asany.ui.admin.shanhai.MenuSidebar
   - name: 通讯录
     icon: Duotune/com005
     path: /contacts
@@ -274,6 +281,12 @@ routes:
       - path: /icon-libraries/:id
         component: cn.asany.ui.admin.icon.LibraryDetails
         hideMenu: true
+      - path: /uptime
+        routes:
+          - path: /uptime/monitors/:id
+            component: cn.asany.ui.admin.uptime.MonitorDetails
+          - path: /uptime
+            component: cn.asany.ui.admin.uptime.MonitorList
       - path: /settings
         routes:
           - path: /settings/profile
@@ -325,22 +338,42 @@ routes:
             component: cn.asany.ui.admin.organization.settings.Permissions
           - path: /organizations/:id/settings
             redirect: /organizations/:id/settings/profile
-      - path: /website
+      - path: /websites
+        hideMenu: true
         routes:
-          - path: /website/landing/pages/:id
-            component: cn.asany.ui.admin.website.landing.PageDetails
-          - path: /website/landing/pages
-            component: cn.asany.ui.admin.website.landing.PageList
-          - path: /website/landing/stores/:id
-            component: cn.asany.ui.admin.website.landing.StoreDetails
-          - path: /website/landing/stores
-            component: cn.asany.ui.admin.website.landing.StoreList
-          - path: /website/landing/posters/:id
-            component: cn.asany.ui.admin.website.landing.PosterDetails
-          - path: /website/landing/posters
-            component: cn.asany.ui.admin.website.landing.PosterList
-          - path: /website
-            redirect: /website/landing/pages
+          - path: /websites/:id
+            component: cn.asany.ui.admin.website.WebsiteManage
+            routes:
+              - path: /websites/:sid/channels/new
+                component: cn.asany.ui.admin.cms.ArticleChannelNew
+              - path: /websites/:sid/articles/new
+                component: cn.asany.ui.admin.cms.ArticleNew
+              - path: /websites/:sid/channels/:id
+                routes:
+                  - path: /websites/:sid/channels/:id/settings
+                    component: cn.asany.ui.admin.cms.ArticleChannelSettings
+                  - path: /websites/:sid/channels/:id
+                    component: cn.asany.ui.admin.cms.ArticleList
+              - path: /websites/:sid
+                component: cn.asany.ui.admin.website.WebsiteDashboard
+          - path: /websites
+            component: cn.asany.ui.admin.website.WebsiteList
+      - path: /activities
+        routes:
+          - path: /activities/pages/:id
+            component: cn.asany.ui.admin.activities.landing.PageDetails
+          - path: /activities/pages
+            component: cn.asany.ui.admin.activities.landing.PageList
+          - path: /activities/stores/:id
+            component: cn.asany.ui.admin.activities.landing.StoreDetails
+          - path: /activities/stores
+            component: cn.asany.ui.admin.activities.landing.StoreList
+          - path: /activities/posters/:id
+            component: cn.asany.ui.admin.activities.landing.PosterDetails
+          - path: /activities/posters
+            component: cn.asany.ui.admin.activities.landing.PosterList
+          - path: /activities
+            redirect: /activities/pages
       - path: /
         component: cn.asany.ui.admin.Home
 #modules:

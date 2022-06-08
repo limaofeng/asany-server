@@ -14,7 +14,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 /** @author limaofeng */
 @Configuration
-@EntityScan({"cn.asany.security*.domain"})
+@EntityScan({"cn.asany.security.*.domain"})
 @ComponentScan({
   "cn.asany.security.*.dao",
   "cn.asany.security.*.convert",

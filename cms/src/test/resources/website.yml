@@ -1,0 +1,28 @@
+channels:
+  - name: 首页
+    slug: /
+    icon: Duotune/gen001
+  - name: IT外包
+    slug: /it-outsourcing
+    icon: Duotune/lay004
+    children:
+      - slug: /it-outsourcing/ops
+        name: 运维服务
+      - slug: /it-outsourcing/develop
+        name: 软件开发
+      - slug: /it-outsourcing/special
+        name: 专项服务
+      - slug: /it-outsourcing/counsel
+        name: 咨询服务
+  - name: IT采购
+    slug: /it-procurement
+    icon: Duotune/lay004
+  - name: 弱电工程
+    slug: /weak-current-engineering
+    icon: Duotune/lay004
+  - name: 系统集成
+    slug: /system-integration
+    icon: Duotune/lay004
+  - name: 走进互升
+    slug: /about
+    icon: Duotune/abs049

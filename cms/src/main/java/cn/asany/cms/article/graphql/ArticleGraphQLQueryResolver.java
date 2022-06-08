@@ -100,7 +100,7 @@ public class ArticleGraphQLQueryResolver implements GraphQLQueryResolver {
    */
   public Optional<ArticleChannel> articleChannel(String id) {
     if (RegexpUtil.isMatch(id, RegexpConstant.VALIDATOR_INTEGE)) {
-      return channelService.get(id);
+      return channelService.findById(id);
     }
     return channelService.findOneBySlug(id);
   }

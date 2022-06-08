@@ -15,8 +15,7 @@ import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.context.ApplicationContext;
 
@@ -25,9 +24,8 @@ import org.springframework.context.ApplicationContext;
  *
  * @author limaofeng
  */
+@Slf4j
 public class WeixinSessionFactoryBean implements FactoryBean<WeixinSessionFactory> {
-
-  private static final Log LOG = LogFactory.getLog(WeixinSessionFactoryBean.class);
 
   private ApplicationContext applicationContext;
 
@@ -68,7 +66,7 @@ public class WeixinSessionFactoryBean implements FactoryBean<WeixinSessionFactor
 
     this.weixinSessionFactory = factory;
 
-    LOG.debug("\n初始化 WeiXinSessionFactory 耗时:" + (System.currentTimeMillis() - start) + "ms");
+    log.debug("\n初始化 WeiXinSessionFactory 耗时:" + (System.currentTimeMillis() - start) + "ms");
   }
 
   @Override

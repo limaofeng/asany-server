@@ -15,7 +15,7 @@ jar {
 
 tasks.publish.enabled = false
 
-tasks.withType(Test) { enabled = false }
+//tasks.withType(Test) { enabled = false }
 
 tasks.withType(PublishToMavenRepository).configureEach { it.enabled = false }
 

@@ -1,10 +1,4 @@
 spring:
-  jackson:
-    default-property-inclusion: non_null
-  sequence:
-    pool-size: 300
-  application:
-    name: server
   datasource:
     name: datasource
     url: jdbc:mysql://dev.local:3306/asany?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&rewriteBatchedStatements=true
@@ -14,3 +8,73 @@ spring:
     database: 0
     host: dev.local
     password: sOmE_sEcUrE_pAsS
+    jedis:
+      pool:
+        max-active: 8
+        max-wait: 300
+        max-idle: 100
+        min-idle: 100
+  main:
+    allow-bean-definition-overriding: true
+  jackson:
+    default-property-inclusion: non_null
+  jpa:
+    hibernate:
+      ddl-auto: update
+      use-new-id-generator-mappings: true
+      naming:
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyJpaCompliantImpl
+    properties:
+      hibernate:
+        open-in-view: true
+        jdbc:
+          time_zone: GMT+8
+        session_factory:
+          interceptor: org.jfantasy.framework.dao.hibernate.interceptors.BusEntityInterceptor
+        current_session_context_class: org.springframework.orm.hibernate5.SpringSessionContext
+        cache:
+          use_query_cache: false
+          use_second_level_cache: false
+          region:
+            factory_class: org.hibernate.cache.ehcache.EhCacheRegionFactory
+        dialect: org.hibernate.dialect.MySQL55Dialect
+        show_sql: true
+        ejb:
+          identifier_generator_strategy_provider: org.jfantasy.framework.dao.hibernate.spi.CustomIdentifierGeneratorStrategyProvider
+    generate-ddl: false
+    open-in-view: false
+  quartz:
+    properties:
+      org:
+        quartz:
+          scheduler:
+            instanceName: clusteredScheduler
+            instanceId: AUTO
+          jobStore:
+            class: org.quartz.impl.jdbcjobstore.JobStoreTX
+            driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate
+            tablePrefix: QRTZ_
+            isClustered: false
+            clusterCheckinInterval: 10000
+            useProperties: false
+          threadPool:
+            class: org.quartz.simpl.SimpleThreadPool
+            threadCount: 10
+            threadPriority: 5
+            threadsInheritContextClassLoaderOfInitializingThread: true
+    job-store-type: jdbc
+    jdbc:
+      initialize-schema: never
+
+graphql:
+  servlet:
+    exception-handlers-enabled: true
+    cors-enabled: true
+    cors:
+      allowed-origins: "*"
+      allowed-methods: GET, HEAD, POST
+      allowed-headers: Accept, Origin, Authorization, Content-Type, Last-Modified
+      allow-credentials: true
+      max-age: 3600
+  tools:
+    introspection-enabled: true

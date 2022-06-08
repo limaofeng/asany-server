@@ -7,7 +7,6 @@ import cn.asany.cms.article.domain.enums.ArticleStatus;
 import cn.asany.cms.article.domain.enums.ArticleType;
 import cn.asany.cms.permission.domain.Permission;
 import cn.asany.organization.core.domain.Organization;
-import cn.asany.security.core.domain.User;
 import cn.asany.storage.api.FileObject;
 import cn.asany.storage.api.converter.FileObjectConverter;
 import cn.asany.storage.api.converter.FileObjectsConverter;
@@ -22,7 +21,6 @@ import javax.persistence.ForeignKey;
 import javax.persistence.Table;
 import javax.validation.constraints.Null;
 import lombok.*;
-import net.bytebuddy.description.modifier.Ownership;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.*;
 import org.hibernate.annotations.Cache;
@@ -47,7 +45,10 @@ import org.jfantasy.framework.spring.validation.Operation;
 @Entity
 @Table(
     name = "CMS_ARTICLE",
-    uniqueConstraints = @UniqueConstraint(name = "UK_ARTICLE_SLUG", columnNames = "SLUG"))
+    uniqueConstraints =
+        @UniqueConstraint(
+            name = "UK_ARTICLE_SLUG",
+            columnNames = {"ORGANIZATION_ID", "SLUG"}))
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "target", "comments"})
 public class Article extends BaseBusEntity {
@@ -62,18 +63,11 @@ public class Article extends BaseBusEntity {
   @Column(name = "SLUG", length = 200)
   private String slug;
   /** 文章对应的 频道 / 栏目 */
-  @ManyToMany(targetEntity = ArticleChannel.class, fetch = FetchType.LAZY)
-  @JoinTable(
-      name = "CMS_ARTICLE_CHANNEL_ITEM",
-      joinColumns =
-          @JoinColumn(
-              name = "ARTICLE_ID",
-              foreignKey = @ForeignKey(name = "FK_CMS_ARTICLE_CHANNEL_ITEM_AID")),
-      inverseJoinColumns =
-          @JoinColumn(
-              name = "CHANNEL_ID",
-              foreignKey = @ForeignKey(name = "FK_CMS_ARTICLE_CHANNEL_ITEM_CID")))
-  private List<ArticleChannel> channels;
+  @OneToMany(
+      targetEntity = ArticleChannelRelationship.class,
+      mappedBy = "article",
+      fetch = FetchType.LAZY)
+  private List<ArticleChannelRelationship> channels;
   /** 类型 */
   @Enumerated(EnumType.STRING)
   @Column(name = "TYPE", length = 20)
@@ -162,19 +156,15 @@ public class Article extends BaseBusEntity {
       })
   @JoinColumn(name = "CONTENT_ID", insertable = false, updatable = false)
   private Content content;
-  /** 所有者 */
-  @Any(
-      metaColumn = @Column(name = "OWNERSHIP_TYPE", length = 10, updatable = false),
-      fetch = FetchType.LAZY)
-  @AnyMetaDef(
-      idType = "long",
-      metaType = "string",
-      metaValues = {
-        @MetaValue(targetEntity = User.class, value = User.OWNERSHIP_KEY),
-        @MetaValue(targetEntity = Organization.class, value = Organization.OWNERSHIP_KEY)
-      })
-  @JoinColumn(name = "OWNERSHIP_ID", updatable = false)
-  private Ownership ownership;
+  /** 所属组织 */
+  @ManyToOne(targetEntity = Organization.class, fetch = FetchType.LAZY)
+  @JoinColumn(
+      name = "ORGANIZATION_ID",
+      nullable = false,
+      foreignKey = @ForeignKey(name = "FK_ARTICLE_ORGANIZATION_ID"))
+  @ToString.Exclude
+  private Organization organization;
+
   /** 最后评论时间 */
   @Temporal(TemporalType.TIMESTAMP)
   @Column(name = "LAST_COMMENT_TIME")

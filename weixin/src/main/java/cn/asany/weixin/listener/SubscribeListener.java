@@ -8,14 +8,12 @@ import cn.asany.weixin.framework.message.content.Event;
 import cn.asany.weixin.framework.session.WeixinSession;
 import cn.asany.weixin.service.FansService;
 import java.util.concurrent.Executor;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.jfantasy.framework.spring.SpringBeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
+@Slf4j
 public class SubscribeListener implements SubscribeEventListener {
-
-  private static final Log LOG = LogFactory.getLog(SubscribeListener.class);
 
   @Autowired private FansService fansService;
 
@@ -30,7 +28,7 @@ public class SubscribeListener implements SubscribeEventListener {
             fansService.checkCreateMember(
                 session.getWeixinApp().getId(), message.getFromUserName());
           } catch (WeixinException e) {
-            LOG.error(e.getMessage(), e);
+            log.error(e.getMessage(), e);
           } finally {
             WeixinSessionUtils.closeSession();
           }

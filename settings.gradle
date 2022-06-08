@@ -11,7 +11,7 @@ pluginManagement {
     }
 }
 
-rootProject.name = 'shanhai'
+rootProject.name = 'sunmao'
 include ":shanhai",
         ":weixin-api",
         ":weixin",

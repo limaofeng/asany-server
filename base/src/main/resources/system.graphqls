@@ -93,7 +93,7 @@ input DictFilter {
   description: String
 }
 
-extend type Query {
+type Query {
   """
   查询数据字典分类
   """

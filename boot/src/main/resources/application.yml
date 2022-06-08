@@ -62,19 +62,16 @@ spring:
           use_second_level_cache: false
           region:
             factory_class: org.hibernate.cache.ehcache.EhCacheRegionFactory
-        dialect: org.hibernate.dialect.MySQL8Dialect
         ejb:
           identifier_generator_strategy_provider: org.jfantasy.framework.dao.hibernate.spi.CustomIdentifierGeneratorStrategyProvider
   redis:
-    jedis:
-      pool:
-        max-active: 8
-        max-wait: 300
-        max-idle: 100
-        min-idle: 100
-    timeout: 1000
-    database: 0
     port: 6379
+    timeout: 10000
+    lettuce:
+      cluster:
+        refresh:
+          adaptive: true
+          period: 60s
   quartz:
     job-store-type: jdbc
     wait-for-jobs-to-complete-on-shutdown: true

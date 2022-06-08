@@ -26,13 +26,13 @@ class ArticleChannelServiceTest {
 
   @Test
   void save() {
-    InputStream inputStream = ClassLoader.getSystemResourceAsStream("cms.yml");
+    InputStream inputStream = ClassLoader.getSystemResourceAsStream("website.yml");
     Yaml yaml = new Yaml();
     CmsSetup setup = yaml.loadAs(inputStream, CmsSetup.class);
 
     log.debug("Channels:" + setup.getChannels().size());
 
-    List<ArticleChannel> channels = this.articleChannelService.saveAll(setup.getChannels());
+    List<ArticleChannel> channels = this.articleChannelService.saveAll(setup.getChannels(), 638L);
 
     log.debug("Channels:" + channels.size());
   }

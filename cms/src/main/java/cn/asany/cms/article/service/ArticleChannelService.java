@@ -4,9 +4,6 @@ import cn.asany.cms.article.dao.ArticleChannelDao;
 import cn.asany.cms.article.dao.ArticleDao;
 import cn.asany.cms.article.domain.Article;
 import cn.asany.cms.article.domain.ArticleChannel;
-import cn.asany.cms.article.domain.enums.ArticleCategory;
-import cn.asany.cms.article.domain.enums.ArticleStatus;
-import cn.asany.cms.article.domain.enums.ArticleType;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -49,11 +46,11 @@ public class ArticleChannelService {
     return this.channelDao.findPage(pageable, filters);
   }
 
-  public Optional<ArticleChannel> get(Long id) {
+  public Optional<ArticleChannel> findById(Long id) {
     return channelDao.findById(id);
   }
 
-  public Optional<ArticleChannel> get(String code) {
+  public Optional<ArticleChannel> findById(String code) {
     return channelDao.findOne(Example.of(ArticleChannel.builder().slug(code).build()));
   }
 
@@ -83,7 +80,16 @@ public class ArticleChannelService {
    * @param channels 栏目
    * @return List<ArticleChannel>
    */
-  public List<ArticleChannel> saveAll(List<ArticleChannel> channels) {
+  public List<ArticleChannel> saveAll(List<ArticleChannel> channels, Long rootChannelId) {
+
+    ArticleChannel rootChannel = this.channelDao.getReferenceById(rootChannelId);
+
+    channels.forEach(
+        item -> {
+          item.setOrganization(rootChannel.getOrganization());
+          item.setParent(rootChannel);
+        });
+
     List<Article> articles = new ArrayList<>();
     channels =
         ObjectUtil.recursive(
@@ -92,31 +98,41 @@ public class ArticleChannelService {
               int index = context.getIndex();
               int level = context.getLevel();
 
-              // 暂存文章
-              if (item.getArticles() != null) {
-                articles.addAll(
-                    item.getArticles().stream()
-                        .peek(
-                            article -> {
-                              article.setChannels(new ArrayList<>());
-                              article.getChannels().add(item);
-                              article.setType(ArticleType.text);
-                              article.setCategory(ArticleCategory.news);
-                              article.setStatus(ArticleStatus.PUBLISHED);
-                            })
-                        .collect(Collectors.toList()));
+              if (context.getParent() != null) {
+                item.setOrganization(context.getParent().getOrganization());
               }
 
-              Optional<ArticleChannel> optional = this.channelDao.findOneBy("slug", item.getSlug());
+              // 暂存文章
+              //              if (item.getArticles() != null) {
+              //                articles.addAll(
+              //                    item.getArticles().stream()
+              //                        .peek(
+              //                            article -> {
+              //                              article.setChannels(new ArrayList<>());
+              //                              article.getChannels().add(item);
+              //                              article.setType(ArticleType.text);
+              //                              article.setCategory(ArticleCategory.news);
+              //                              article.setStatus(ArticleStatus.PUBLISHED);
+              //                            })
+              //                        .collect(Collectors.toList()));
+              //              }
+
+              Optional<ArticleChannel> optional =
+                  this.channelDao.findOne(
+                      PropertyFilter.builder()
+                          .equal("slug", item.getSlug())
+                          .startsWith("path", rootChannel.getPath())
+                          .build());
 
               if (optional.isPresent()) {
                 item.setId(optional.get().getId());
-                item.setArticles(optional.get().getArticles());
+                //                item.setArticles(optional.get().getArticles());
               } else {
                 this.channelDao.save(item);
               }
 
-              ArticleChannel parent = context.getParent();
+              ArticleChannel parent =
+                  ObjectUtil.defaultValue(context.getParent(), item.getParent());
               if (parent == null) {
                 item.setPath(item.getId() + ArticleChannel.SEPARATOR);
               } else {

@@ -6,6 +6,8 @@ package cn.asany.nuwa.app.domain.enums;
  * @author limaofeng
  */
 public enum MenuType {
+  /** 代理 */
+  PROXY,
   /** 章节 */
   SECTION,
   /** 分隔符 */

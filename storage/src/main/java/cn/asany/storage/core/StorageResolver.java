@@ -15,8 +15,8 @@ public interface StorageResolver {
   /**
    * 解析并构建 Storage
    *
-   * @param config
-   * @return
+   * @param config 配置
+   * @return Storage
    */
   Storage resolve(IStorageConfig config);
 }

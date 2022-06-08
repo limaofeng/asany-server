@@ -57,11 +57,9 @@ input ArticleFilter {
   # 栏目为空 (没有栏目的文章)
   channels_isEmpty: Boolean
   # 频道
-  channel: ID
+  channel: AcceptArticleChannel
   # 多个栏目
   channel_in: [ID]
-  # 包含所有的后代文章
-  channel_startsWith: ID
   # 复杂查询支持
   and: [ArticleFilter]
   # 复杂查询支持
@@ -412,6 +410,45 @@ input ArticleUpdateInput {
   # 元数据
   meta: MetaData
 }
+
+type ArticleStoreTemplateComponents {
+  """
+  详情页组件
+  """
+  view: String
+  """
+  新增页组件
+  """
+  added: String
+  """
+  编辑页组件
+  """
+  edit: String
+  """
+  列表页组件
+  """
+  list: String
+}
+
+"""
+文章存储模版
+"""
+type ArticleStoreTemplate {
+  id: ID!
+  """
+  名称
+  """
+  name: String!
+  """
+  排序码
+  """
+  index: Int
+  """
+  对应的组件
+  """
+  components: ArticleStoreTemplateComponents!
+}
+
 input ArticleTagUpdateInput {
   # 标签名称
   name: String!
@@ -438,14 +475,30 @@ input ArticleTagCreateInput {
   index: Int
 }
 
+input AcceptArticleChannel {
+  """
+  栏目
+  """
+  id: ID!
+  """
+  是否包含子栏目
+  """
+  subColumns: Boolean = false
+}
+
 input ArticleChannelFilter {
-  #名称
+  """
+  名称
+  """
   name: String
+  """
+  路径 匹配开始
+  """
   path_startsWith: String
-  # 父级
-  parent: ID
-  # 包含所有后代, 该设置只在 parent 不为 Null 时有效
-  descendant: Boolean = false
+  """
+  父栏目
+  """
+  parent: AcceptArticleChannel
 }
 
 input PermissionInput {
@@ -559,9 +612,13 @@ input BannerUpdateInput {
 }
 
 extend type Query {
-  # 单个文章
+  """
+  单个文章
+  """
   article(id: ID!): Article
-  # 全部文章
+  """
+  全部文章
+  """
   articles(
     filter: ArticleFilter
     first: Int = 0
@@ -569,7 +626,9 @@ extend type Query {
     pageSize: Int = 15
     orderBy: OrderBy = "unsorted"
   ): ArticleConnection
-  # 文章栏目
+  """
+  文章栏目
+  """
   articleChannels(
     filter: ArticleChannelFilter = {}
     orderBy: OrderBy = "unsorted"
@@ -580,10 +639,14 @@ extend type Query {
     filter: ArticleChannelFilter
     orderBy: OrderBy = "unsorted"
   ): [ArticleTag]
-  # 文章权限
-  # articlePermissions(category: ArticleCategory!): [Permission]
-  # 根据ID获取文章栏目
+  """
+  根据ID获取文章栏目
+  """
   articleChannel(id: ID!): ArticleChannel
+  """
+  查询文章存储模版
+  """
+  articleStoreTemplates: [ArticleStoreTemplate!]!
   # 已加星标的文章频道
   starredArticleChannels(
     uid: ID!

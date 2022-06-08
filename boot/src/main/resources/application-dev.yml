@@ -5,6 +5,8 @@ spring:
     pool-size: 10
   jpa:
     show-sql: true
+    hibernate:
+      ddl-auto: update
     properties:
       hibernate:
         generate_statistics: true
@@ -21,5 +23,3 @@ spring:
     host: dev.local
     port: 6379
     password: sOmE_sEcUrE_pAsS
-logging:
-  config: classpath:logback-dev.xml

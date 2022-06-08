@@ -5,19 +5,17 @@ import cn.asany.storage.api.FileItemSelector;
 import cn.asany.storage.api.FileObject;
 import cn.asany.storage.api.Storage;
 import java.io.*;
+import java.nio.file.Files;
 import java.util.List;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.net.ftp.FTPFile;
 import org.jfantasy.framework.error.IgnoreException;
 import org.jfantasy.framework.service.FTPService;
 import org.jfantasy.framework.util.regexp.RegexpUtil;
 
+@Slf4j
 public class FTPStorage implements Storage {
-
-  private static final Log LOGGER = LogFactory.getLog(FTPStorage.class);
-
-  private String id;
+  private final String id;
   protected FTPService ftpService;
 
   public FTPStorage(String id, FTPService ftpService) {
@@ -47,7 +45,7 @@ public class FTPStorage implements Storage {
 
   @Override
   public void writeFile(String absolutePath, File file) throws IOException {
-    writeFile(absolutePath, new FileInputStream(file));
+    writeFile(absolutePath, Files.newInputStream(file.toPath()));
   }
 
   @Override
@@ -125,7 +123,7 @@ public class FTPStorage implements Storage {
     try {
       this.ftpService.deleteRemoteFile(remotePath);
     } catch (IOException e) {
-      LOGGER.error(e.getMessage(), e);
+      log.error(e.getMessage(), e);
     }
   }
 }

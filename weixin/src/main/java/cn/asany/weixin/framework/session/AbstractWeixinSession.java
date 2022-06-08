@@ -10,15 +10,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.jfantasy.framework.error.IgnoreException;
 
 /** 微信 session 抽象实现 */
+@Slf4j
 public abstract class AbstractWeixinSession implements WeixinSession {
-
-  private final Log LOG = LogFactory.getLog(this.getClass());
-
   private final String id;
 
   private final WeixinApp weixinApp;
@@ -39,15 +36,12 @@ public abstract class AbstractWeixinSession implements WeixinSession {
   @Override
   public void sendImageMessage(final Image content, final String... toUsers) {
     EXECUTOR.execute(
-        new Runnable() {
-          @Override
-          public void run() {
-            try {
-              AbstractWeixinSession.this.weixinCoreHelper.sendImageMessage(
-                  AbstractWeixinSession.this, content, toUsers);
-            } catch (WeixinException e) {
-              LOG.error(e.getMessage(), e);
-            }
+        () -> {
+          try {
+            AbstractWeixinSession.this.weixinCoreHelper.sendImageMessage(
+                AbstractWeixinSession.this, content, toUsers);
+          } catch (WeixinException e) {
+            log.error(e.getMessage(), e);
           }
         });
   }
@@ -60,7 +54,7 @@ public abstract class AbstractWeixinSession implements WeixinSession {
             AbstractWeixinSession.this.weixinCoreHelper.sendImageMessage(
                 AbstractWeixinSession.this, content, toGroup);
           } catch (WeixinException e) {
-            LOG.error(e.getMessage(), e);
+            log.error(e.getMessage(), e);
           }
         });
   }
@@ -73,7 +67,7 @@ public abstract class AbstractWeixinSession implements WeixinSession {
             AbstractWeixinSession.this.weixinCoreHelper.sendVoiceMessage(
                 AbstractWeixinSession.this, content, toUsers);
           } catch (WeixinException e) {
-            LOG.error(e.getMessage(), e);
+            log.error(e.getMessage(), e);
           }
         });
   }
@@ -86,7 +80,7 @@ public abstract class AbstractWeixinSession implements WeixinSession {
             AbstractWeixinSession.this.weixinCoreHelper.sendVoiceMessage(
                 AbstractWeixinSession.this, content, toGroup);
           } catch (WeixinException e) {
-            LOG.error(e.getMessage(), e);
+            log.error(e.getMessage(), e);
           }
         });
   }
@@ -99,7 +93,7 @@ public abstract class AbstractWeixinSession implements WeixinSession {
             AbstractWeixinSession.this.weixinCoreHelper.sendVideoMessage(
                 AbstractWeixinSession.this, content, toUsers);
           } catch (WeixinException e) {
-            LOG.error(e.getMessage(), e);
+            log.error(e.getMessage(), e);
           }
         });
   }
@@ -112,7 +106,7 @@ public abstract class AbstractWeixinSession implements WeixinSession {
             AbstractWeixinSession.this.weixinCoreHelper.sendVideoMessage(
                 AbstractWeixinSession.this, content, toGroup);
           } catch (WeixinException e) {
-            LOG.error(e.getMessage(), e);
+            log.error(e.getMessage(), e);
           }
         });
   }
@@ -125,7 +119,7 @@ public abstract class AbstractWeixinSession implements WeixinSession {
             AbstractWeixinSession.this.weixinCoreHelper.sendMusicMessage(
                 AbstractWeixinSession.this, content, toUser);
           } catch (WeixinException e) {
-            LOG.error(e.getMessage(), e);
+            log.error(e.getMessage(), e);
           }
         });
   }
@@ -141,7 +135,7 @@ public abstract class AbstractWeixinSession implements WeixinSession {
             AbstractWeixinSession.this.weixinCoreHelper.sendNewsMessage(
                 AbstractWeixinSession.this, content, toUsers);
           } catch (WeixinException e) {
-            LOG.error(e.getMessage(), e);
+            log.error(e.getMessage(), e);
           }
         });
   }
@@ -154,7 +148,7 @@ public abstract class AbstractWeixinSession implements WeixinSession {
             AbstractWeixinSession.this.weixinCoreHelper.sendNewsMessage(
                 AbstractWeixinSession.this, content, toUser);
           } catch (WeixinException e) {
-            LOG.error(e.getMessage(), e);
+            log.error(e.getMessage(), e);
           }
         });
   }
@@ -162,15 +156,12 @@ public abstract class AbstractWeixinSession implements WeixinSession {
   @Override
   public void sendNewsMessage(final List<Article> content, final long toGroup) {
     EXECUTOR.execute(
-        new Runnable() {
-          @Override
-          public void run() {
-            try {
-              AbstractWeixinSession.this.weixinCoreHelper.sendNewsMessage(
-                  AbstractWeixinSession.this, content, toGroup);
-            } catch (WeixinException e) {
-              LOG.error(e.getMessage(), e);
-            }
+        () -> {
+          try {
+            AbstractWeixinSession.this.weixinCoreHelper.sendNewsMessage(
+                AbstractWeixinSession.this, content, toGroup);
+          } catch (WeixinException e) {
+            log.error(e.getMessage(), e);
           }
         });
   }
@@ -183,7 +174,7 @@ public abstract class AbstractWeixinSession implements WeixinSession {
             AbstractWeixinSession.this.weixinCoreHelper.sendTextMessage(
                 AbstractWeixinSession.this, content, toUsers);
           } catch (WeixinException e) {
-            LOG.error(e.getMessage(), e);
+            log.error(e.getMessage(), e);
           }
         });
   }
@@ -196,7 +187,7 @@ public abstract class AbstractWeixinSession implements WeixinSession {
             AbstractWeixinSession.this.weixinCoreHelper.sendTextMessage(
                 AbstractWeixinSession.this, content, toGroup);
           } catch (WeixinException e) {
-            LOG.error(e.getMessage(), e);
+            log.error(e.getMessage(), e);
           }
         });
   }
@@ -209,7 +200,7 @@ public abstract class AbstractWeixinSession implements WeixinSession {
             AbstractWeixinSession.this.weixinCoreHelper.sendTemplateMessage(
                 AbstractWeixinSession.this, content, toUser);
           } catch (WeixinException e) {
-            LOG.error(e.getMessage(), e);
+            log.error(e.getMessage(), e);
           }
         });
   }
@@ -223,7 +214,7 @@ public abstract class AbstractWeixinSession implements WeixinSession {
         return this.weixinCoreHelper.getUser(this, userId);
       }
     } catch (WeixinException e) {
-      LOG.error(e.getMessage(), e);
+      log.error(e.getMessage(), e);
       return null;
     }
   }
@@ -233,7 +224,7 @@ public abstract class AbstractWeixinSession implements WeixinSession {
     try {
       return this.weixinCoreHelper.getUsers(this);
     } catch (WeixinException e) {
-      LOG.error(e.getMessage(), e);
+      log.error(e.getMessage(), e);
       return Collections.emptyList();
     }
   }
@@ -243,7 +234,7 @@ public abstract class AbstractWeixinSession implements WeixinSession {
     try {
       this.weixinCoreHelper.refreshMenu(this, menus);
     } catch (WeixinException e) {
-      LOG.error(e.getMessage(), e);
+      log.error(e.getMessage(), e);
     }
   }
 
@@ -252,7 +243,7 @@ public abstract class AbstractWeixinSession implements WeixinSession {
     try {
       return this.weixinCoreHelper.getMenus(this);
     } catch (WeixinException e) {
-      LOG.error(e.getMessage(), e);
+      log.error(e.getMessage(), e);
       throw new IgnoreException(e.getMessage());
     }
   }
@@ -262,7 +253,7 @@ public abstract class AbstractWeixinSession implements WeixinSession {
     try {
       this.weixinCoreHelper.clearMenu(this);
     } catch (WeixinException e) {
-      LOG.error(e.getMessage(), e);
+      log.error(e.getMessage(), e);
     }
   }
 
@@ -275,7 +266,7 @@ public abstract class AbstractWeixinSession implements WeixinSession {
     try {
       return this.weixinCoreHelper.getJsapi(this);
     } catch (WeixinException e) {
-      LOG.error(e.getMessage(), e);
+      log.error(e.getMessage(), e);
       return null;
     }
   }
@@ -285,7 +276,7 @@ public abstract class AbstractWeixinSession implements WeixinSession {
     try {
       return this.weixinCoreHelper.getOpenapi(this);
     } catch (WeixinException e) {
-      LOG.error(e.getMessage(), e);
+      log.error(e.getMessage(), e);
       return null;
     }
   }

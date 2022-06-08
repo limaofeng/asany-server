@@ -16,7 +16,6 @@ import java.util.Optional;
 import java.util.Set;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.jfantasy.framework.dao.OrderBy;
 import org.jfantasy.framework.jackson.JSON;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,6 +23,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -62,7 +62,7 @@ class BannerServiceTest {
   @Test
   void findAll() {
     BannerFilter filter = new BannerFilter();
-    List<Banner> banners = this.service.findAll(filter.build(), OrderBy.unsorted());
+    List<Banner> banners = this.service.findAll(filter.build(), Sort.unsorted());
     assertNotNull(banners);
   }
 

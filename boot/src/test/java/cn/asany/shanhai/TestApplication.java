@@ -32,7 +32,7 @@ import org.springframework.web.client.RestTemplate;
 @Configuration
 @ComponentScan({"cn.asany.openapi.service", "cn.asany.*.*.convert"})
 @EntityScan({
-  "cn.asany.**.domain",
+  "cn.asany.*.*.domain",
 })
 @EnableCaching
 @EnableJpaRepositories(

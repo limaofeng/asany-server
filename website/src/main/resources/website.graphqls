@@ -1,0 +1,77 @@
+type Website implements BaseEntity {
+  id: ID!
+  """
+  名称
+  """
+  name: String!
+  """
+  图标
+  """
+  logo: File
+  """
+  描述
+  """
+  description: String
+  """
+  栏目
+  """
+  channel: ArticleChannel!
+  """
+  创建时间
+  """
+  createdAt: Date @dateFormat
+  """
+  修改时间
+  """
+  updatedAt: Date @dateFormat
+}
+
+input WebsiteCreateInput {
+  """
+  名称
+  """
+  name: String!
+  """
+  图标
+  """
+  logo: File
+  """
+  描述
+  """
+  description: String
+  """
+  文章栏目
+  """
+  channel: ID
+}
+
+input WebsiteFilter {
+  name: String
+}
+
+extend type Query {
+  """
+  网站列表
+  """
+  websites(
+    """
+    筛选条件
+    """
+    filter: WebsiteFilter = {}
+    """
+    排序
+    """
+    orderBy: OrderBy = "unsorted"
+  ): [Website!]!
+  """
+  网站详情
+  """
+  website(id: ID!): Website
+}
+
+extend type Mutation {
+  """
+  创建网站
+  """
+  createWebsite(input: WebsiteCreateInput!): Website
+}

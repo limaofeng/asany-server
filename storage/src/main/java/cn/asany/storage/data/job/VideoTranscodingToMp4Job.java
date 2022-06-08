@@ -4,20 +4,17 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.jfantasy.framework.util.common.StreamUtil;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
 
 @Deprecated
+@Slf4j
 public class VideoTranscodingToMp4Job implements Job {
 
-  private static final Log LOGGER = LogFactory.getLog(VideoTranscodingToMp4Job.class);
-
   @Override
-  public void execute(JobExecutionContext context) throws JobExecutionException {
+  public void execute(JobExecutionContext context) {
     String infile = "";
     String outfile = "";
     String mp4 = "ffmpeg -i " + infile + " -vcodec libx264 -profile:v Main " + outfile;
@@ -27,13 +24,13 @@ public class VideoTranscodingToMp4Job implements Job {
       BufferedReader br = new BufferedReader(new InputStreamReader(stderr));
       String line;
       while ((line = br.readLine()) != null) {
-        LOGGER.debug("Process exitValue:" + line);
+        log.debug("Process exitValue:" + line);
       }
       int exitVal = proc.waitFor();
       StreamUtil.closeQuietly(stderr);
-      LOGGER.debug("Process exitValue:" + exitVal);
+      log.debug("Process exitValue:" + exitVal);
     } catch (IOException | InterruptedException e) {
-      LOGGER.error(e.getMessage(), e);
+      log.error(e.getMessage(), e);
     }
   }
 }

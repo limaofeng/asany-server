@@ -29,7 +29,7 @@ import org.springframework.web.client.RestTemplate;
 @Configuration
 @ComponentScan("cn.asany.shanhai.*")
 @EntityScan({
-  "cn.asany.shanhai*.domain",
+  "cn.asany.shanhai.*.domain",
 })
 @EnableJpaRepositories(
     includeFilters = {
