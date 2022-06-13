@@ -1,6 +1,6 @@
 package cn.asany.website.data.domain;
 
-import cn.asany.cms.article.domain.ArticleChannel;
+import cn.asany.cms.article.domain.ArticleCategory;
 import cn.asany.organization.core.domain.Organization;
 import cn.asany.storage.api.FileObject;
 import cn.asany.storage.api.converter.FileObjectConverter;
@@ -37,13 +37,13 @@ public class Website extends BaseBusEntity {
   @Column(name = "DESCRIPTION", length = 500)
   private String description;
   /** 网站绑定的栏目 */
-  @ManyToOne(targetEntity = ArticleChannel.class, fetch = FetchType.LAZY)
+  @ManyToOne(targetEntity = ArticleCategory.class, fetch = FetchType.LAZY)
   @JoinColumn(
       name = "ARTICLE_CHANNEL_ID",
       nullable = false,
       foreignKey = @ForeignKey(name = "FK_WEBSITE_ARTICLE_CHANNEL_ID"))
   @ToString.Exclude
-  private ArticleChannel channel;
+  private ArticleCategory channel;
   /** 所属组织 */
   @ManyToOne(targetEntity = Organization.class, fetch = FetchType.LAZY)
   @JoinColumn(

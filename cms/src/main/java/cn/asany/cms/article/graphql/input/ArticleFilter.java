@@ -1,8 +1,8 @@
 package cn.asany.cms.article.graphql.input;
 
 import cn.asany.cms.article.domain.Article;
-import cn.asany.cms.article.domain.ArticleChannel;
-import cn.asany.cms.article.service.ArticleChannelService;
+import cn.asany.cms.article.domain.ArticleCategory;
+import cn.asany.cms.article.service.ArticleCategoryService;
 import cn.asany.cms.article.service.ArticleService;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.text.ParseException;
@@ -36,18 +36,19 @@ public class ArticleFilter extends QueryFilter<ArticleFilter, Article> {
     builder.in("tags.id", tags.toArray(new Long[0]));
   }
 
-  public void setChannel(AcceptArticleChannel acceptArticleChannel) {
-    ArticleChannelService service = SpringBeanUtils.getBean(ArticleChannelService.class);
-    if (acceptArticleChannel.getSubColumns()) {
-      Optional<ArticleChannel> channelOptional = service.findById(acceptArticleChannel.getId());
+  public void setCategory(AcceptArticleCategory acceptArticleCategory) {
+    ArticleCategoryService service = SpringBeanUtils.getBean(ArticleCategoryService.class);
+    if (acceptArticleCategory.getSubColumns()) {
+      Optional<ArticleCategory> channelOptional =
+          service.findById(Long.valueOf(acceptArticleCategory.getId()));
       if (channelOptional.isPresent()) {
-        ArticleChannel channel = channelOptional.get();
-        this.builder.startsWith("channels.path", channel.getPath()).notEqual("id", channel.getId());
+        ArticleCategory channel = channelOptional.get();
+        this.builder.startsWith("category.path", channel.getPath()).notEqual("id", channel.getId());
       } else {
-        this.builder.equal("channels.id", acceptArticleChannel.getId());
+        this.builder.equal("category.id", acceptArticleCategory.getId());
       }
     } else {
-      this.builder.equal("channels.id", acceptArticleChannel.getId());
+      this.builder.equal("category.id", acceptArticleCategory.getId());
     }
   }
 

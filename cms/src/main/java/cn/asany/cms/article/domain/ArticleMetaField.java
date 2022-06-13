@@ -1,0 +1,48 @@
+package cn.asany.cms.article.domain;
+
+import javax.persistence.*;
+import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
+import org.jfantasy.framework.dao.BaseBusEntity;
+
+@Setter
+@Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
+@Table(
+    name = "CMS_ARTICLE_META_FIELD",
+    uniqueConstraints =
+        @UniqueConstraint(
+            name = "UK_ARTICLE_META_FIELD",
+            columnNames = {"ARTICLE_ID", "NAMESPACE", "KEY"}))
+public class ArticleMetaField extends BaseBusEntity {
+  @Id
+  @Column(name = "ID", nullable = false, precision = 22)
+  @GeneratedValue(generator = "fantasy-sequence")
+  @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+  private Long id;
+  /** 字段 Key */
+  @Column(name = "KEY", length = 50)
+  private String key;
+  /** 字段类型 */
+  @Column(name = "TYPE", length = 50)
+  private String type;
+  /** 字段 namespace */
+  @Column(name = "NAMESPACE", length = 50)
+  private String namespace;
+  /** 字段 值 */
+  @Column(name = "`VALUE`", length = 250)
+  private String value;
+  /** 字段 描述 */
+  @Column(name = "DESCRIPTION", length = 200)
+  private String description;
+  /** 关联文章 */
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(
+      name = "ARTICLE_ID",
+      nullable = false,
+      foreignKey = @ForeignKey(name = "FK_CMS_ARTICLE_META_FIELD_ARTICLE_ID"))
+  private Article article;
+}

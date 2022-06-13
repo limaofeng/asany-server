@@ -1,33 +1,32 @@
 package cn.asany.cms.article.domain;
 
-import cn.asany.cms.article.domain.converter.MetaDataConverter;
-import cn.asany.cms.article.domain.enums.ArticleCategory;
-import cn.asany.cms.article.domain.enums.ArticleContentType;
+import cn.asany.cms.article.domain.enums.ArticleBodyType;
 import cn.asany.cms.article.domain.enums.ArticleStatus;
-import cn.asany.cms.article.domain.enums.ArticleType;
+import cn.asany.cms.body.domain.Content;
 import cn.asany.cms.permission.domain.Permission;
 import cn.asany.organization.core.domain.Organization;
 import cn.asany.storage.api.FileObject;
 import cn.asany.storage.api.converter.FileObjectConverter;
 import cn.asany.storage.api.converter.FileObjectsConverter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
-import javax.persistence.*;
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.ForeignKey;
-import javax.persistence.Table;
-import javax.validation.constraints.Null;
 import lombok.*;
 import org.hibernate.Hibernate;
-import org.hibernate.annotations.*;
 import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.*;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.framework.search.annotations.IndexProperty;
 import org.jfantasy.framework.search.annotations.Indexed;
 import org.jfantasy.framework.spring.validation.Operation;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
+import javax.persistence.Table;
+import javax.persistence.*;
+import javax.validation.constraints.Null;
+import java.util.Date;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * 文章表
@@ -63,15 +62,12 @@ public class Article extends BaseBusEntity {
   @Column(name = "SLUG", length = 200)
   private String slug;
   /** 文章对应的 频道 / 栏目 */
-  @OneToMany(
-      targetEntity = ArticleChannelRelationship.class,
-      mappedBy = "article",
-      fetch = FetchType.LAZY)
-  private List<ArticleChannelRelationship> channels;
-  /** 类型 */
-  @Enumerated(EnumType.STRING)
-  @Column(name = "TYPE", length = 20)
-  private ArticleType type;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(
+      name = "CATEGORY_ID",
+      nullable = false,
+      foreignKey = @ForeignKey(name = "FK_CMS_ARTICLE_CATEGORY"))
+  private ArticleCategory category;
   /** 状态 */
   @Enumerated(EnumType.STRING)
   @Column(name = "STATUS", length = 20, nullable = false)
@@ -84,10 +80,10 @@ public class Article extends BaseBusEntity {
   @IndexProperty(store = true)
   @Column(name = "SUMMARY", length = 500)
   private String summary;
-  /** 文章封面 */
-  @Column(name = "COVER_IMAGE", length = 500)
+  /** 文章图片 */
+  @Column(name = "IMAGE", columnDefinition = "JSON")
   @Convert(converter = FileObjectConverter.class)
-  private FileObject cover;
+  private FileObject image;
   /** 附件 */
   @Column(name = "ATTACHMENTS", columnDefinition = "JSON")
   @Convert(converter = FileObjectsConverter.class)
@@ -122,26 +118,21 @@ public class Article extends BaseBusEntity {
               name = "FEATURE_ID",
               foreignKey = @ForeignKey(name = "FK_ARTICLE_FEATURE_ITEM_FID")))
   private List<ArticleFeature> features;
-  /** SEO 优化字段 */
-  @Column(name = "META_DATA", length = 250)
-  @Convert(converter = MetaDataConverter.class)
-  private MetaData meta;
+  /** 文章对象的附加信息 */
+  @OneToMany(mappedBy = "article", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+  private List<ArticleMetaField> metafields;
   /** 发布日期 */
   @IndexProperty(store = true)
   @Temporal(TemporalType.TIMESTAMP)
-  @Column(name = "RELEASE_DATE")
+  @Column(name = "PUBLISHED_AT")
   private Date publishedAt;
-  /** 文章类别 */
-  @Enumerated(EnumType.STRING)
-  @Column(name = "CATEGORY", nullable = false, length = 25)
-  private ArticleCategory category;
   /** 正文类型 */
   @Enumerated(EnumType.STRING)
-  @Column(name = "CONTENT_TYPE", length = 25)
-  private ArticleContentType contentType;
+  @Column(name = "BODY_TYPE", length = 25)
+  private ArticleBodyType bodyType;
   /** 正文 ID */
-  @Column(name = "CONTENT_ID")
-  private Long contentId;
+  @Column(name = "BODY_ID")
+  private Long bodyId;
   /** 文章正文 */
   @Any(
       metaColumn =
@@ -151,11 +142,10 @@ public class Article extends BaseBusEntity {
       idType = "long",
       metaType = "string",
       metaValues = {
-        @MetaValue(targetEntity = HtmlContent.class, value = HtmlContent.TYPE_KEY),
-        @MetaValue(targetEntity = MarkdownContent.class, value = MarkdownContent.TYPE_KEY)
+        @MetaValue(targetEntity = Content.class, value = Content.TYPE_KEY)
       })
-  @JoinColumn(name = "CONTENT_ID", insertable = false, updatable = false)
-  private Content content;
+  @JoinColumn(name = "BODY_ID", insertable = false, updatable = false)
+  private ArticleBody body;
   /** 所属组织 */
   @ManyToOne(targetEntity = Organization.class, fetch = FetchType.LAZY)
   @JoinColumn(

@@ -1,13 +1,8 @@
 package cn.asany.cms.article.graphql.resolver;
 
-import cn.asany.cms.article.converter.ArticleChannelConverter;
 import cn.asany.cms.article.domain.Article;
-import cn.asany.cms.article.domain.ArticleChannel;
-import cn.asany.cms.article.domain.ArticleChannelRelationship;
-import cn.asany.cms.article.domain.Content;
-import cn.asany.cms.article.domain.enums.ArticleCategory;
-import cn.asany.cms.article.domain.enums.CommentTargetType;
-import cn.asany.cms.article.graphql.CommentGraphQLQueryResolver;
+import cn.asany.cms.article.domain.ArticleCategory;
+import cn.asany.cms.article.domain.ArticleBody;
 import cn.asany.cms.article.graphql.enums.ArticleStarType;
 import cn.asany.cms.article.graphql.input.CommentFilter;
 import cn.asany.cms.article.graphql.input.ContentFormat;
@@ -17,8 +12,6 @@ import cn.asany.security.core.domain.Permission;
 import graphql.kickstart.tools.GraphQLResolver;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
@@ -30,43 +23,29 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class ArticleGraphQLResolver implements GraphQLResolver<Article> {
-  @Autowired private CommentGraphQLQueryResolver resolver;
-  @Autowired private ArticleChannelConverter articleChannelConverter;
 
-  public List<ArticleChannel> channels(Article article) {
-    if (article.getChannels() == null) {
-      return new ArrayList<>();
-    }
-    return article.getChannels().stream()
-        .map(ArticleChannelRelationship::getChannel)
-        .collect(Collectors.toList());
+  private final ArticleCategoryGraphQLResolver articleCategoryGraphQLResolver;
+
+  public ArticleGraphQLResolver(ArticleCategoryGraphQLResolver articleCategoryGraphQLResolver) {
+    this.articleCategoryGraphQLResolver = articleCategoryGraphQLResolver;
   }
 
-  public Content content(Article article, ContentFormat format) {
-    //    if (article.getContent() == null
-    //        || article.getContent().getText() == null
-    //        || article.getContent().getType() == null) {
-    //      return null;
-    //    }
-    //    Content content = article.getContent();
-    //    switch (content.getType()) {
-    //      case file:
-    //        IContent iContent = ClassConverts.toContent(article.getType(), content.getType(),
-    // content);
-    //        return iContent;
-    //      case json:
-    //        if (article.getType() == ArticleType.picture) {
-    //          // 图片类型
-    //          return ClassConverts.toContent(article.getType(), content.getType(), content);
-    //        }
-    //      case html:
-    //        return ClassConverts.toContent(article.getType(), content.getType(), content);
-    //      case link:
-    //        return ClassConverts.toContent(article.getType(), content.getType(), content);
-    //      case markdown:
-    //        throw new ValidationException("暂不支持 markdown 格式");
-    //    }
-    return article.getContent();
+  public List<ArticleCategory> categories(Article article) {
+    if (article.getCategory() == null) {
+      return new ArrayList<>();
+    }
+    ArticleCategory category = article.getCategory();
+    List<ArticleCategory> categories = articleCategoryGraphQLResolver.parents(category);
+    categories.add(category);
+    return categories;
+  }
+
+  public String bodyHtml() {
+    return "";
+  }
+
+  public ArticleBody body(Article article) {
+    return article.getBody();
   }
 
   public Starrable starrable(final Article article, ArticleStarType starType) {
@@ -125,24 +104,26 @@ public class ArticleGraphQLResolver implements GraphQLResolver<Article> {
   public CommentConnection comments(
       Article article, CommentFilter filter, int page, int pageSize, Sort orderBy) {
     CommentConnection comments = new CommentConnection();
-    if (article.getCategory() == ArticleCategory.news) {
-      comments =
-          resolver.comments(
-              CommentTargetType.news, article.getId().toString(), filter, page, pageSize, orderBy);
-    } else if (article.getCategory() == ArticleCategory.circle) {
-      comments =
-          resolver.comments(
-              CommentTargetType.circle,
-              article.getId().toString(),
-              filter,
-              page,
-              pageSize,
-              orderBy);
-    } else if (article.getCategory() == ArticleCategory.blog) {
-      comments =
-          resolver.comments(
-              CommentTargetType.blog, article.getId().toString(), filter, page, pageSize, orderBy);
-    }
+    //    if (article.getCategory() == ArticleCategory.news) {
+    //      comments =
+    //          resolver.comments(
+    //              CommentTargetType.news, article.getId().toString(), filter, page, pageSize,
+    // orderBy);
+    //    } else if (article.getCategory() == ArticleCategory.circle) {
+    //      comments =
+    //          resolver.comments(
+    //              CommentTargetType.circle,
+    //              article.getId().toString(),
+    //              filter,
+    //              page,
+    //              pageSize,
+    //              orderBy);
+    //    } else if (article.getCategory() == ArticleCategory.blog) {
+    //      comments =
+    //          resolver.comments(
+    //              CommentTargetType.blog, article.getId().toString(), filter, page, pageSize,
+    // orderBy);
+    //    }
     return comments;
   }
 

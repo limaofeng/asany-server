@@ -15,7 +15,7 @@ type Website implements BaseEntity {
   """
   栏目
   """
-  channel: ArticleChannel!
+  channel: ArticleCategory!
   """
   创建时间
   """

@@ -10,10 +10,8 @@ public enum ArticleStatus {
   DRAFT,
   /** 发布 */
   PUBLISHED,
-  /** 待发布 */
+  /** 定时发布 */
   SCHEDULED,
-  /** 待审核 */
-  waitAudit,
-  /** 审核不通过 */
-  failureAudit
+  /** 已失效 */
+  INACTIVE,
 }

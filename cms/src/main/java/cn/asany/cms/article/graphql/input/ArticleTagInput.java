@@ -3,7 +3,7 @@ package cn.asany.cms.article.graphql.input;
 import cn.asany.storage.api.FileObject;
 import lombok.Data;
 
-/** @Description @Author ChenWenJie @Data 2020/10/22 11:39 上午 */
+/** 文章标签 */
 @Data
 public class ArticleTagInput {
   private String code;
@@ -13,4 +13,5 @@ public class ArticleTagInput {
   private String organization;
   private String description;
   private Integer sort;
+  private ArticleMetadataInput metadata;
 }

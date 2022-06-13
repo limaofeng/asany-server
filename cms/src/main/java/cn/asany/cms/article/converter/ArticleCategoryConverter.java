@@ -1,9 +1,10 @@
 package cn.asany.cms.article.converter;
 
 import cn.asany.cms.article.domain.Article;
-import cn.asany.cms.article.domain.ArticleChannel;
+import cn.asany.cms.article.domain.ArticleCategory;
+import cn.asany.cms.article.domain.ArticleStoreTemplate;
 import cn.asany.cms.article.domain.ArticleTag;
-import cn.asany.cms.article.graphql.input.ArticleChannelInput;
+import cn.asany.cms.article.graphql.input.ArticleCategoryInput;
 import cn.asany.cms.article.graphql.input.ArticleTagInput;
 import cn.asany.cms.module.dto.ArticleChannelImpObj;
 import cn.asany.cms.module.dto.ArticleImpObj;
@@ -24,18 +25,18 @@ import org.mapstruct.*;
     builder = @Builder,
     unmappedTargetPolicy = ReportingPolicy.IGNORE,
     nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
-public interface ArticleChannelConverter {
+public interface ArticleCategoryConverter {
 
-  @IterableMapping(elementTargetType = ArticleChannel.class)
-  List<ArticleChannel> toChannels(List<ArticleChannelImpObj> channels);
+  @IterableMapping(elementTargetType = ArticleCategory.class)
+  List<ArticleCategory> toChannels(List<ArticleChannelImpObj> channels);
 
   @Mappings({
     //    @Mapping(source = "posts", target = "articles"),
   })
-  ArticleChannel toChannel(ArticleChannelImpObj channel);
+  ArticleCategory toChannel(ArticleChannelImpObj channel);
 
   @Mappings({
-    @Mapping(source = "cover", target = "cover", qualifiedByName = "toCoverFromString"),
+    @Mapping(source = "image", target = "image", qualifiedByName = "toCoverFromString"),
   })
   Article toArticle(ArticleImpObj articleImpObj);
 
@@ -50,22 +51,31 @@ public interface ArticleChannelConverter {
     @Mapping(source = "slug", target = "slug"),
     @Mapping(target = "id", ignore = true),
     @Mapping(target = "path", ignore = true),
+    @Mapping(target = "storeTemplate", source = "storeTemplate", qualifiedByName = "storeTemplate"),
     @Mapping(target = "parent", source = "parent", qualifiedByName = "formatChannelParent"),
   })
-  ArticleChannel toChannel(ArticleChannelInput tag);
+  ArticleCategory toChannel(ArticleCategoryInput tag);
 
   @Mappings({
     @Mapping(target = "id", ignore = true),
     @Mapping(target = "path", ignore = true),
-    @Mapping(target = "meta", ignore = true),
+    @Mapping(target = "metadata", ignore = true),
   })
   ArticleTag toArticle(ArticleTagInput input);
 
   @Named("formatChannelParent")
-  default ArticleChannel formatChannelParent(Long source) {
+  default ArticleCategory formatChannelParent(Long source) {
     if (source == null) {
       return null;
     }
-    return ArticleChannel.builder().id(source).build();
+    return ArticleCategory.builder().id(source).build();
+  }
+
+  @Named("storeTemplate")
+  default ArticleStoreTemplate storeTemplate(String source) {
+    if (source == null) {
+      return null;
+    }
+    return ArticleStoreTemplate.builder().id(source).build();
   }
 }

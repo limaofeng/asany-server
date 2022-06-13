@@ -1,6 +1,5 @@
 package cn.asany.cms.article.domain;
 
-import cn.asany.cms.article.domain.converter.MetaDataConverter;
 import cn.asany.organization.core.domain.Organization;
 import cn.asany.storage.api.FileObject;
 import cn.asany.storage.api.converter.FileObjectConverter;
@@ -26,13 +25,13 @@ import org.jfantasy.framework.search.annotations.IndexEmbedBy;
 @AllArgsConstructor
 @Entity
 @Table(
-    name = "CMS_ARTICLE_CHANNEL",
+    name = "CMS_ARTICLE_CATEGORY",
     uniqueConstraints =
         @UniqueConstraint(
             name = "UK_ARTICLE_CHANNEL_SLUG",
             columnNames = {"ORGANIZATION_ID", "SLUG"}))
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class ArticleChannel extends BaseBusEntity {
+public class ArticleCategory extends BaseBusEntity {
 
   public static final String SEPARATOR = "/";
 
@@ -55,12 +54,18 @@ public class ArticleChannel extends BaseBusEntity {
   @Column(name = "ICON", length = 120)
   private String icon;
   /** 封面 */
-  @Column(name = "COVER", length = 500, columnDefinition = "JSON")
+  @Column(name = "IMAGE", length = 500, columnDefinition = "JSON")
   @Convert(converter = FileObjectConverter.class)
-  private FileObject cover;
+  private FileObject image;
   /** 描述 */
   @Column(name = "DESCRIPTION", length = 400)
   private String description;
+  /** 对应的文章 */
+  @OneToMany(
+      mappedBy = "category",
+      fetch = FetchType.LAZY,
+      cascade = {CascadeType.REMOVE})
+  private List<Article> articles;
   /** 排序字段 */
   @Column(name = "SORT")
   private Integer index;
@@ -68,14 +73,12 @@ public class ArticleChannel extends BaseBusEntity {
   @Column(name = "LEVEL")
   private Integer level;
   /** SEO 优化字段 */
-  @Column(name = "META_DATA", length = 250, columnDefinition = "JSON")
-  @Convert(converter = MetaDataConverter.class)
-  private MetaData meta;
+  @Embedded private ArticleMetadata metadata;
   /** 上级栏目 */
   @JsonProperty("parent_id")
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "PID", foreignKey = @ForeignKey(name = "FK_ARTICLE_CHANNEL_PARENT"))
-  private ArticleChannel parent;
+  private ArticleCategory parent;
   /** 存储模版 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(
@@ -89,7 +92,7 @@ public class ArticleChannel extends BaseBusEntity {
       cascade = {CascadeType.REMOVE})
   @OrderBy("index ASC")
   @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-  private List<ArticleChannel> children;
+  private List<ArticleCategory> children;
   /** 所属组织 */
   @ManyToOne(targetEntity = Organization.class, fetch = FetchType.LAZY)
   @JoinColumn(

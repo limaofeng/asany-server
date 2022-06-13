@@ -1,6 +1,6 @@
 package cn.asany.nuwa.app;
 
-import cn.asany.cms.article.service.ArticleChannelService;
+import cn.asany.cms.article.service.ArticleCategoryService;
 import cn.asany.cms.module.CmsModuleProperties;
 import cn.asany.nuwa.YamlUtils;
 import cn.asany.nuwa.app.domain.Application;
@@ -25,7 +25,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 class ApplicationServiceTest {
 
   @Autowired private ApplicationService applicationService;
-  @Autowired private ArticleChannelService channelService;
+  @Autowired private ArticleCategoryService channelService;
 
   @Test
   void createApplicationFromYaml() {

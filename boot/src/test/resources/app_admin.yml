@@ -344,15 +344,17 @@ routes:
           - path: /websites/:id
             component: cn.asany.ui.admin.website.WebsiteManage
             routes:
-              - path: /websites/:sid/channels/new
-                component: cn.asany.ui.admin.cms.ArticleChannelNew
-              - path: /websites/:sid/articles/new
-                component: cn.asany.ui.admin.cms.ArticleNew
-              - path: /websites/:sid/channels/:id
+              - path: /websites/:sid/cms
                 routes:
-                  - path: /websites/:sid/channels/:id/settings
-                    component: cn.asany.ui.admin.cms.ArticleChannelSettings
-                  - path: /websites/:sid/channels/:id
+                  - path: /websites/:sid/cms/categories/new
+                    component: cn.asany.ui.admin.cms.ArticleChannelNew
+                  - path: /websites/:sid/cms/categories/:id
+                    component: cn.asany.ui.admin.cms.ArticleChannelEdit
+                  - path: /websites/:sid/cms/categories/:cid/articles/new
+                    component: cn.asany.ui.admin.cms.ArticleNew
+                  - path: /websites/:sid/cms/categories/:cid/articles/:id
+                    component: cn.asany.ui.admin.cms.ArticleEdit
+                  - path: /websites/:sid/cms/categories/:id/articles
                     component: cn.asany.ui.admin.cms.ArticleList
               - path: /websites/:sid
                 component: cn.asany.ui.admin.website.WebsiteDashboard

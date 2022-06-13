@@ -1,9 +1,8 @@
 package cn.asany.cms.article.graphql.input;
 
-import cn.asany.cms.article.domain.MetaData;
-import cn.asany.cms.article.domain.enums.ArticleCategory;
 import cn.asany.cms.article.domain.enums.ArticleStatus;
 import cn.asany.cms.article.domain.enums.ArticleType;
+import cn.asany.cms.article.graphql.ArticleBodyInput;
 import cn.asany.storage.api.FileObject;
 import java.util.Date;
 import java.util.List;
@@ -22,10 +21,9 @@ public class ArticleInput {
   private ArticleType type;
   private String url;
   private ArticleStatus status;
-  private ContentInput content;
+  private ArticleBodyInput body;
   private String summary;
-  private FileObject cover;
-  private List<Long> channels;
+  private FileObject image;
   private List<Long> tags;
   private List<String> features;
   private String author;
@@ -34,9 +32,9 @@ public class ArticleInput {
   private List<FileObject> attachments;
   private List<PermissionInput> permissions;
   private List<String> access;
-  private ArticleCategory category;
+  private Long category;
   private Boolean validity;
   private Date validityStartDate;
   private Date validityEndDate;
-  private MetaData meta;
+  private List<ArticleMetafieldInput> metafields;
 }

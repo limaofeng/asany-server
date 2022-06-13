@@ -2,25 +2,24 @@ package cn.asany.cms.article.service;
 
 import cn.asany.cms.article.dao.ArticleDao;
 import cn.asany.cms.article.domain.Article;
-import cn.asany.cms.article.domain.Content;
-import cn.asany.cms.article.domain.HtmlContent;
+import cn.asany.cms.article.domain.ArticleBody;
 import cn.asany.cms.article.domain.enums.ArticleStatus;
 import cn.asany.cms.article.event.ArticleUpdateEvent;
 import cn.asany.cms.article.graphql.input.PermissionInput;
-import java.util.*;
+import cn.asany.cms.body.service.ContentService;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Hibernate;
-import org.htmlcleaner.TagNode;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.util.common.DateUtil;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.common.StringUtil;
-import org.jfantasy.framework.util.htmlcleaner.HtmlCleanerUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.*;
 
 /**
  * CMS service
@@ -132,12 +131,12 @@ public class ArticleService {
 
     saveContentAndSummary(article);
 
-    boolean needCleanUp = article.getChannels() != null && article.getChannels().isEmpty();
+    boolean needCleanUp = article.getCategory() != null;
 
     this.articleDao.update(article, merge);
 
-    if (needCleanUp && !article.getChannels().isEmpty()) {
-      article.getChannels().clear();
+    if (needCleanUp) {
+      article.setCategory(null);
     }
 
     applicationContext.publishEvent(ArticleUpdateEvent.newInstance(article));
@@ -152,37 +151,40 @@ public class ArticleService {
    * 设置文章摘要，如果文章存在摘要，则跳过
    *
    * @param article 文章
-   * @return 文章
    */
   private void saveContentAndSummary(Article article) {
-    Content content = article.getContent();
-    if (StringUtil.isBlank(article.getSummary()) && ObjectUtil.isNotNull(content)) {
-      if (content instanceof HtmlContent) {
-        TagNode node = HtmlCleanerUtil.htmlCleaner(((HtmlContent) content).getText());
-        String contentString = node.getText().toString().trim().replace("\n", "");
-        String summary = contentString.substring(0, Math.min(contentString.length(), 10));
-        article.setSummary(summary);
-
-        if (null != article.getId()) {
-          // 编辑
-          Article oldArticle = this.articleDao.getReferenceById(article.getId());
-          Content oldContent = oldArticle.getContent();
-          boolean exist = oldArticle.getContent() != null;
-          if (exist) {
-            ((HtmlContent) oldContent).setText(((HtmlContent) content).getText());
-            this.contentService.update(oldContent);
-          } else {
-            this.contentService.save(content);
-            article.setContentType(content.getType());
-            article.setContentId(content.getId());
-          }
-        } else {
-          // 保存
-          this.contentService.save(content);
-          article.setContentType(content.getType());
-          article.setContentId(content.getId());
-        }
-      }
+    ArticleBody body = article.getBody();
+    if (StringUtil.isBlank(article.getSummary()) && ObjectUtil.isNotNull(body)) {
+      String summary = body.generateSummary();
+      article.setSummary(summary);
+      //      if (body instanceof HtmlArticleBody) {
+      //        TagNode node = HtmlCleanerUtil.htmlCleaner(((HtmlArticleBody)
+      // articleBody).getText());
+      //        String contentString = node.getText().toString().trim().replace("\n", "");
+      //        String summary = contentString.substring(0, Math.min(contentString.length(), 10));
+      //        article.setSummary(summary);
+      //
+      //        if (null != article.getId()) {
+      //          // 编辑
+      //          Article oldArticle = this.articleDao.getReferenceById(article.getId());
+      //          ArticleBody oldArticleBody = oldArticle.getArticleBody();
+      //          boolean exist = oldArticle.getArticleBody() != null;
+      //          if (exist) {
+      //            ((HtmlArticleBody) oldArticleBody).setText(((HtmlArticleBody)
+      // articleBody).getText());
+      //            this.contentService.update(oldArticleBody);
+      //          } else {
+      //            this.contentService.save(articleBody);
+      //            article.setContentType(articleBody.getType());
+      //            article.setContentId(articleBody.getId());
+      //          }
+      //        } else {
+      //          // 保存
+      //          this.contentService.save(articleBody);
+      //          article.setContentType(articleBody.getType());
+      //          article.setContentId(articleBody.getId());
+      //        }
+      //      }
     }
   }
 
@@ -198,8 +200,7 @@ public class ArticleService {
       return null;
     }
     Article article = optional.get();
-    Hibernate.initialize(article.getCategory());
-    Hibernate.initialize(article.getContent());
+    Hibernate.initialize(article.getBody());
     return article;
   }
 

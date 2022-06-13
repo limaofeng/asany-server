@@ -1,10 +1,10 @@
 package cn.asany.cms.article.graphql.resolver;
 
 import cn.asany.cms.article.domain.Article;
-import cn.asany.cms.article.domain.ArticleChannel;
+import cn.asany.cms.article.domain.ArticleCategory;
 import cn.asany.cms.article.graphql.input.ArticleFilter;
 import cn.asany.cms.article.graphql.type.Starrable;
-import cn.asany.cms.article.service.ArticleChannelService;
+import cn.asany.cms.article.service.ArticleCategoryService;
 import cn.asany.cms.article.service.ArticleService;
 import cn.asany.cms.permission.domain.Permission;
 import graphql.kickstart.tools.GraphQLResolver;
@@ -28,18 +28,18 @@ import org.springframework.stereotype.Component;
  * @date 2019-08-15 09:53
  */
 @Component
-public class ArticleChannelGraphQLResolver implements GraphQLResolver<ArticleChannel> {
+public class ArticleCategoryGraphQLResolver implements GraphQLResolver<ArticleCategory> {
 
-  private final ArticleChannelService articleChannelService;
+  private final ArticleCategoryService articleCategoryService;
   private final ArticleService articleService;
 
-  public ArticleChannelGraphQLResolver(
-      ArticleChannelService articleChannelService, ArticleService articleService) {
-    this.articleChannelService = articleChannelService;
+  public ArticleCategoryGraphQLResolver(
+      ArticleCategoryService articleCategoryService, ArticleService articleService) {
+    this.articleCategoryService = articleCategoryService;
     this.articleService = articleService;
   }
 
-  public Starrable starrable(ArticleChannel channel) {
+  public Starrable starrable(ArticleCategory channel) {
     //        .id(channel.getId().toString() + "/" + startType)
     //                .starType(startType).galaxy(channel.getId().toString())
     //                .securityScopes(() -> {
@@ -56,35 +56,36 @@ public class ArticleChannelGraphQLResolver implements GraphQLResolver<ArticleCha
     return Starrable.builder().build();
   }
 
-  public String fullName(ArticleChannel channel) {
-    List<ArticleChannel> parents = this.parents(channel);
+  public String fullName(ArticleCategory category) {
+    List<ArticleCategory> parents = this.parents(category);
     if (parents.isEmpty()) {
-      return channel.getName();
+      return category.getName();
     }
-    return parents.stream().map(ArticleChannel::getName).collect(Collectors.joining("."))
-        + "."
-        + channel.getName();
+    return parents.stream().map(ArticleCategory::getName).collect(Collectors.joining("/"))
+        + "/"
+        + category.getName();
   }
 
-  public List<ArticleChannel> parents(ArticleChannel channel) {
+  public List<ArticleCategory> parents(ArticleCategory category) {
     List<Long> ids =
-        Arrays.stream(StringUtil.tokenizeToStringArray(channel.getPath(), ArticleChannel.SEPARATOR))
+        Arrays.stream(
+                StringUtil.tokenizeToStringArray(category.getPath(), ArticleCategory.SEPARATOR))
             .map(Long::valueOf)
-            .filter(item -> !item.equals(channel.getId()))
+            .filter(item -> !item.equals(category.getId()))
             .collect(Collectors.toList());
 
     if (ids.isEmpty()) {
       return Collections.emptyList();
     }
 
-    List<ArticleChannel> parents =
-        this.articleChannelService.findAll(PropertyFilter.builder().in("id", ids).build());
+    List<ArticleCategory> parents =
+        this.articleCategoryService.findAll(PropertyFilter.builder().in("id", ids).build());
 
     return ids.stream().map(id -> ObjectUtil.find(parents, "id", id)).collect(Collectors.toList());
   }
 
   public List<Article> articles(
-      ArticleChannel channel,
+      ArticleCategory category,
       /* 包含所有后代 */
       Boolean descendant,
       /* 筛选 */
@@ -107,9 +108,9 @@ public class ArticleChannelGraphQLResolver implements GraphQLResolver<ArticleCha
     PropertyFilterBuilder builder = PropertyFilter.builder();
 
     if (descendant) {
-      builder.startsWith("channels.path", channel.getPath());
+      builder.startsWith("category.path", category.getPath());
     } else {
-      builder.equal("channels.id", channel.getId());
+      builder.equal("category.id", category.getId());
     }
 
     if (filter != null) {
@@ -119,7 +120,7 @@ public class ArticleChannelGraphQLResolver implements GraphQLResolver<ArticleCha
     return this.articleService.findPage(pageable, builder.build()).getContent();
   }
 
-  public Permission permissions(ArticleChannel channel) {
+  public Permission permissions(ArticleCategory channel) {
     return Permission.builder()
         .resourceType("ArticleChannel")
         .id(String.valueOf(channel.getId()))

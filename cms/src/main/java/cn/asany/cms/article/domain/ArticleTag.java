@@ -1,6 +1,5 @@
 package cn.asany.cms.article.domain;
 
-import cn.asany.cms.article.domain.converter.MetaDataConverter;
 import cn.asany.organization.core.domain.Organization;
 import cn.asany.security.core.domain.User;
 import cn.asany.storage.api.FileObject;
@@ -53,9 +52,9 @@ public class ArticleTag extends BaseBusEntity {
   @Column(name = "NAME", nullable = false, length = 150)
   private String name;
   /** 封面 */
-  @Column(name = "COVER", length = 500, columnDefinition = "JSON")
+  @Column(name = "IMAGE", length = 500, columnDefinition = "JSON")
   @Convert(converter = FileObjectConverter.class)
-  private FileObject cover;
+  private FileObject image;
   /** 描述 */
   @Column(name = "DESCRIPTION", length = 400)
   private String description;
@@ -63,9 +62,7 @@ public class ArticleTag extends BaseBusEntity {
   @Column(name = "SORT")
   private Integer index;
   /** SEO 优化字段 */
-  @Column(name = "META_DATA", length = 250, columnDefinition = "JSON")
-  @Convert(converter = MetaDataConverter.class)
-  private MetaData meta;
+  @Embedded private ArticleMetadata metadata;
   /** 上级栏目 */
   @JsonProperty("parent_id")
   @ManyToOne(fetch = FetchType.LAZY)

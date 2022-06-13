@@ -1,7 +1,7 @@
 package cn.asany.cms.article.service;
 
 import cn.asany.cms.TestApplication;
-import cn.asany.cms.article.domain.ArticleChannel;
+import cn.asany.cms.article.domain.ArticleCategory;
 import cn.asany.cms.article.dto.CmsSetup;
 import java.io.InputStream;
 import java.util.List;
@@ -20,9 +20,9 @@ import org.yaml.snakeyaml.Yaml;
     classes = TestApplication.class,
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
-class ArticleChannelServiceTest {
+class ArticleCategoryServiceTest {
 
-  @Autowired private ArticleChannelService articleChannelService;
+  @Autowired private ArticleCategoryService articleCategoryService;
 
   @Test
   void save() {
@@ -32,7 +32,7 @@ class ArticleChannelServiceTest {
 
     log.debug("Channels:" + setup.getChannels().size());
 
-    List<ArticleChannel> channels = this.articleChannelService.saveAll(setup.getChannels(), 638L);
+    List<ArticleCategory> channels = this.articleCategoryService.saveAll(setup.getChannels(), 638L);
 
     log.debug("Channels:" + channels.size());
   }

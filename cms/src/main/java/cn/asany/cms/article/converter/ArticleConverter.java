@@ -1,11 +1,15 @@
 package cn.asany.cms.article.converter;
 
 import cn.asany.cms.article.domain.*;
+import cn.asany.cms.article.domain.enums.ArticleBodyType;
+import cn.asany.cms.article.domain.enums.ContentType;
+import cn.asany.cms.article.graphql.ArticleBodyInput;
 import cn.asany.cms.article.graphql.input.ArticleInput;
 import cn.asany.cms.article.graphql.input.ContentInput;
 import cn.asany.cms.article.service.ArticleFeatureService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.jfantasy.framework.spring.SpringBeanUtils;
 import org.mapstruct.*;
@@ -24,8 +28,8 @@ import org.mapstruct.*;
 public interface ArticleConverter {
 
   @Mappings({
-    @Mapping(source = "content", target = "content", qualifiedByName = "parseContent"),
-    @Mapping(source = "channels", target = "channels", qualifiedByName = "parseChannels"),
+    @Mapping(source = "body", target = "body", qualifiedByName = "parseArticleBody"),
+    @Mapping(source = "category", target = "category", qualifiedByName = "parseArticleCategory"),
     @Mapping(source = "tags", target = "tags", ignore = true),
     @Mapping(source = "features", target = "features", qualifiedByName = "parseFeature"),
     @Mapping(target = "permissions", ignore = true),
@@ -33,46 +37,29 @@ public interface ArticleConverter {
   })
   Article toArticle(ArticleInput input);
 
-  @Mappings({
-    @Mapping(source = "channels", target = "channels", qualifiedByName = "parseChannels"),
-    @Mapping(source = "tags", target = "tags", ignore = true),
-    @Mapping(target = "permissions", ignore = true),
-    @Mapping(target = "organization", ignore = true),
-    @Mapping(source = "features", target = "features", qualifiedByName = "parseFeature"),
-    @Mapping(source = "content", target = "content", qualifiedByName = "parseContent")
-  })
-  Article toArticleFile(ArticleInput input);
-
   @ObjectFactory
   default Article toUserAddressList(ArticleInput input, @TargetType Class<Article> type) {
     return new Article();
   }
 
-  @Named("parseContent")
-  default Content parseContent(ContentInput source) throws JsonProcessingException {
-    if (source == null) {
+  @Named("parseArticleBody")
+  default ArticleBody parseArticleBody(ArticleBodyInput bodyInput) throws JsonProcessingException {
+    if (bodyInput == null) {
       return null;
     }
-    switch (source.getType()) {
-      case HTML:
-        return HtmlContent.builder().text(source.getText()).build();
-      default:
-        throw new IllegalStateException("Unexpected value: " + source.getType());
+    if (bodyInput.getType() == ArticleBodyType.classic) {
+      return null;
+      //      return HtmlArticleBody.builder().text(source.getText()).build();
     }
+    throw new IllegalStateException("Unexpected value: " + bodyInput.getType());
   }
 
-  @Named("parseChannels")
-  default List<ArticleChannelRelationship> parseChannels(List<Long> source) {
+  @Named("parseArticleCategory")
+  default ArticleCategory parseArticleCategory(Long source) {
     if (source == null) {
       return null;
     }
-    return source.stream()
-        .map(
-            item ->
-                ArticleChannelRelationship.builder()
-                    .channel(ArticleChannel.builder().id(item).build())
-                    .build())
-        .collect(Collectors.toList());
+    return ArticleCategory.builder().id(source).build();
   }
 
   @Named("parseFeature")
@@ -83,9 +70,9 @@ public interface ArticleConverter {
     ArticleFeatureService articleFeatureService =
         SpringBeanUtils.getBeanByType(ArticleFeatureService.class);
     return source.stream()
-        .map(item -> articleFeatureService.findByCode(item))
-        .filter(item -> item.isPresent())
-        .map(item -> item.get())
+        .map(articleFeatureService::findByCode)
+        .filter(Optional::isPresent)
+        .map(Optional::get)
         .collect(Collectors.toList());
   }
 }

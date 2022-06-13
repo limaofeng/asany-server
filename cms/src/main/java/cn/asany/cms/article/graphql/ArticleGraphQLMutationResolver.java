@@ -1,14 +1,12 @@
 package cn.asany.cms.article.graphql;
 
-import cn.asany.cms.article.converter.ArticleChannelConverter;
+import cn.asany.cms.article.converter.ArticleCategoryConverter;
 import cn.asany.cms.article.converter.ArticleConverter;
 import cn.asany.cms.article.domain.Article;
-import cn.asany.cms.article.domain.ArticleChannel;
 import cn.asany.cms.article.domain.ArticleTag;
-import cn.asany.cms.article.graphql.input.ArticleChannelInput;
 import cn.asany.cms.article.graphql.input.ArticleInput;
 import cn.asany.cms.article.graphql.input.ArticleTagInput;
-import cn.asany.cms.article.service.ArticleChannelService;
+import cn.asany.cms.article.service.ArticleCategoryService;
 import cn.asany.cms.article.service.ArticleService;
 import cn.asany.cms.article.service.ArticleTagService;
 import graphql.kickstart.tools.GraphQLMutationResolver;
@@ -24,25 +22,25 @@ import org.springframework.stereotype.Component;
 @Component
 public class ArticleGraphQLMutationResolver implements GraphQLMutationResolver {
 
-  private final ArticleChannelConverter articleChannelConverter;
+  private final ArticleCategoryConverter articleCategoryConverter;
   private final ArticleConverter articleConverter;
   private final ArticleService articleService;
   private final ArticleTagService articleTagService;
-  private final ArticleChannelService articleChannelService;
+  private final ArticleCategoryService articleCategoryService;
   protected final Environment environment;
 
   public ArticleGraphQLMutationResolver(
-      ArticleChannelConverter articleChannelConverter,
+      ArticleCategoryConverter articleCategoryConverter,
       ArticleConverter articleConverter,
       ArticleService articleService,
       ArticleTagService articleTagService,
-      ArticleChannelService articleChannelService,
+      ArticleCategoryService articleCategoryService,
       Environment environment) {
-    this.articleChannelConverter = articleChannelConverter;
+    this.articleCategoryConverter = articleCategoryConverter;
     this.articleConverter = articleConverter;
     this.articleService = articleService;
     this.articleTagService = articleTagService;
-    this.articleChannelService = articleChannelService;
+    this.articleCategoryService = articleCategoryService;
     this.environment = environment;
   }
 
@@ -95,59 +93,13 @@ public class ArticleGraphQLMutationResolver implements GraphQLMutationResolver {
   }
 
   /**
-   * 新增栏目
-   *
-   * @param input
-   * @return
-   */
-  public ArticleChannel createArticleChannel(ArticleChannelInput input) {
-    ArticleChannel channel = articleChannelConverter.toChannel(input);
-    Long parent = input.getParent();
-    if (parent != null) {
-      ArticleChannel articleChannel = articleChannelService.findOne(parent);
-      channel.setParent(articleChannel);
-    }
-    channel = articleChannelService.save(channel);
-    // 保存权限
-    //    if (input.getPermissions() != null) {
-    //      channel1.setPermissions(
-    //          securityGrpcInvoke.updateGrantPermissions(
-    //              "ArticleChannel", channel1.getId(), input.getPermissions()));
-    //    }
-    return channel;
-  }
-
-  /**
-   * 更新栏目
-   *
-   * @param id
-   * @param merge
-   * @param input
-   * @return
-   */
-  public ArticleChannel updateArticleChannel(Long id, Boolean merge, ArticleChannelInput input) {
-    ArticleChannel channel = articleChannelConverter.toChannel(input);
-    return articleChannelService.update(id, merge, channel);
-  }
-
-  /**
-   * 删除栏目
-   *
-   * @param id
-   * @return
-   */
-  public Boolean deleteArticleChannel(Long id) {
-    return articleTagService.delete(id);
-  }
-
-  /**
    * 添加标签
    *
    * @param input
    * @return
    */
   public ArticleTag createArticleTag(ArticleTagInput input) {
-    ArticleTag articleTag = articleChannelConverter.toArticle(input);
+    ArticleTag articleTag = articleCategoryConverter.toArticle(input);
     return articleTagService.save(articleTag);
   }
   /**
@@ -159,7 +111,7 @@ public class ArticleGraphQLMutationResolver implements GraphQLMutationResolver {
    * @return
    */
   public ArticleTag updateArticleTag(Long id, Boolean merge, ArticleTagInput input) {
-    ArticleTag channel = articleChannelConverter.toArticle(input);
+    ArticleTag channel = articleCategoryConverter.toArticle(input);
     return articleTagService.update(id, merge, channel);
   }
 

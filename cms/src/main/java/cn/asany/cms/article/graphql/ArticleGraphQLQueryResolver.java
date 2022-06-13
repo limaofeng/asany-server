@@ -1,26 +1,23 @@
 package cn.asany.cms.article.graphql;
 
-import cn.asany.cms.article.converter.ArticleChannelConverter;
 import cn.asany.cms.article.domain.Article;
-import cn.asany.cms.article.domain.ArticleChannel;
+import cn.asany.cms.article.domain.ArticleCategory;
 import cn.asany.cms.article.domain.ArticleTag;
 import cn.asany.cms.article.graphql.enums.ArticleChannelStarType;
 import cn.asany.cms.article.graphql.enums.ArticleStarType;
-import cn.asany.cms.article.graphql.input.ArticleChannelFilter;
+import cn.asany.cms.article.graphql.input.ArticleCategoryFilter;
 import cn.asany.cms.article.graphql.input.ArticleFilter;
 import cn.asany.cms.article.graphql.type.ArticleConnection;
-import cn.asany.cms.article.service.ArticleChannelService;
+import cn.asany.cms.article.service.ArticleCategoryService;
 import cn.asany.cms.article.service.ArticleService;
 import cn.asany.cms.article.service.ArticleTagService;
 import cn.asany.cms.permission.specification.StarSpecification;
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import java.util.List;
-import java.util.Optional;
+import lombok.extern.slf4j.Slf4j;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
 import org.jfantasy.framework.util.common.ObjectUtil;
-import org.jfantasy.framework.util.regexp.RegexpConstant;
-import org.jfantasy.framework.util.regexp.RegexpUtil;
 import org.jfantasy.graphql.util.Kit;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -32,23 +29,21 @@ import org.springframework.stereotype.Component;
  * @version V1.0
  * @date 2019-04-01 15:17
  */
+@Slf4j
 @Component
 public class ArticleGraphQLQueryResolver implements GraphQLQueryResolver {
 
   private final ArticleService articleService;
   private final ArticleTagService articleTagService;
-  private final ArticleChannelService channelService;
-  private final ArticleChannelConverter articleChannelConverter;
+  private final ArticleCategoryService channelService;
 
   public ArticleGraphQLQueryResolver(
       ArticleService articleService,
       ArticleTagService articleTagService,
-      ArticleChannelService channelService,
-      ArticleChannelConverter articleChannelConverter) {
+      ArticleCategoryService channelService) {
     this.articleService = articleService;
     this.articleTagService = articleTagService;
     this.channelService = channelService;
-    this.articleChannelConverter = articleChannelConverter;
   }
 
   public Article article(Long id) {
@@ -75,40 +70,10 @@ public class ArticleGraphQLQueryResolver implements GraphQLQueryResolver {
         articleService.findPage(pageable, builder.build()), ArticleConnection.class);
   }
 
-  /**
-   * 查询所有栏目
-   *
-   * @return List<ArticleChannel>
-   */
-  public List<ArticleChannel> articleChannels(ArticleChannelFilter filter, Sort orderBy) {
-    if (orderBy != null) {
-      return channelService.findAllArticle(filter.build(), orderBy);
-    } else {
-      return channelService.findAll(filter.build());
-    }
-  }
-
-  private PropertyFilterBuilder propertyFilterBuilder(PropertyFilterBuilder builder) {
-    return builder;
-  }
-
-  /**
-   * 根据ID查询栏目
-   *
-   * @param id ID
-   * @return Optional<ArticleChannel>
-   */
-  public Optional<ArticleChannel> articleChannel(String id) {
-    if (RegexpUtil.isMatch(id, RegexpConstant.VALIDATOR_INTEGE)) {
-      return channelService.findById(id);
-    }
-    return channelService.findOneBySlug(id);
-  }
-
   public List<ArticleTag> articleTags(
-      String organization, ArticleChannelFilter filter, Sort orderBy) {
+      String organization, ArticleCategoryFilter filter, Sort orderBy) {
     PropertyFilterBuilder builder =
-        ObjectUtil.defaultValue(filter, new ArticleChannelFilter()).getBuilder();
+        ObjectUtil.defaultValue(filter, new ArticleCategoryFilter()).getBuilder();
     if (organization != null) {
       builder.equal("organization.id", organization);
     }
@@ -119,7 +84,7 @@ public class ArticleGraphQLQueryResolver implements GraphQLQueryResolver {
     }
   }
 
-  public List<ArticleChannel> starredArticleChannels(
+  public List<ArticleCategory> starredArticleCategories(
       Long employee, ArticleChannelStarType starType) {
     PropertyFilterBuilder builder = PropertyFilter.builder();
     builder.and(new StarSpecification(employee, starType.getValue()));

@@ -12,5 +12,5 @@ public class ArticleImpObj {
   private String slug;
   private String title;
   private String summary;
-  private String cover;
+  private String image;
 }
