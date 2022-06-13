@@ -1,11 +1,14 @@
 package cn.asany.cms.article.graphql;
 
 import cn.asany.cms.article.converter.ArticleCategoryConverter;
+import cn.asany.cms.article.converter.ArticleContext;
 import cn.asany.cms.article.converter.ArticleConverter;
 import cn.asany.cms.article.domain.Article;
+import cn.asany.cms.article.domain.ArticleCategory;
 import cn.asany.cms.article.domain.ArticleTag;
-import cn.asany.cms.article.graphql.input.ArticleInput;
+import cn.asany.cms.article.graphql.input.ArticleCreateInput;
 import cn.asany.cms.article.graphql.input.ArticleTagInput;
+import cn.asany.cms.article.graphql.input.ArticleUpdateInput;
 import cn.asany.cms.article.service.ArticleCategoryService;
 import cn.asany.cms.article.service.ArticleService;
 import cn.asany.cms.article.service.ArticleTagService;
@@ -50,21 +53,29 @@ public class ArticleGraphQLMutationResolver implements GraphQLMutationResolver {
    * @param input
    * @return
    */
-  public Article createArticle(ArticleInput input) {
-    return articleService.save(articleConverter.toArticle(input), input.getPermissions());
+  public Article createArticle(ArticleCreateInput input) {
+    return articleService.save(
+        articleConverter.toArticle(input, ArticleContext.builder().build()),
+        input.getPermissions());
   }
 
   /**
    * 修改文章
    *
-   * @param id
-   * @param merge
-   * @param input
-   * @return
+   * @param id ID
+   * @param merge 合并方式
+   * @param input 输入对象
+   * @return Article
    */
-  public Article updateArticle(Long id, Boolean merge, ArticleInput input) {
-    Article article = articleService.update(id, articleConverter.toArticle(input), merge);
-    return articleService.get(article.getId());
+  public Article updateArticle(Long id, Boolean merge, ArticleUpdateInput input) {
+    ArticleCategory category = this.articleCategoryService.getById(input.getCategory());
+
+    Article article =
+        articleConverter.toArticle(
+            input,
+            ArticleContext.builder().storeTemplate(category.getStoreTemplate().getId()).build());
+
+    return articleService.update(id, article, merge);
   }
 
   /**

@@ -28,7 +28,7 @@ import org.jfantasy.framework.search.annotations.IndexEmbedBy;
     name = "CMS_ARTICLE_CATEGORY",
     uniqueConstraints =
         @UniqueConstraint(
-            name = "UK_ARTICLE_CHANNEL_SLUG",
+            name = "UK_ARTICLE_CATEGORY_SLUG",
             columnNames = {"ORGANIZATION_ID", "SLUG"}))
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class ArticleCategory extends BaseBusEntity {
@@ -77,13 +77,13 @@ public class ArticleCategory extends BaseBusEntity {
   /** 上级栏目 */
   @JsonProperty("parent_id")
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "PID", foreignKey = @ForeignKey(name = "FK_ARTICLE_CHANNEL_PARENT"))
+  @JoinColumn(name = "PID", foreignKey = @ForeignKey(name = "FK_ARTICLE_CATEGORY_PARENT"))
   private ArticleCategory parent;
   /** 存储模版 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(
       name = "STORE_TEMPLATE_ID",
-      foreignKey = @ForeignKey(name = "FK_ARTICLE_CHANNEL_STORE_TEMPLATE"))
+      foreignKey = @ForeignKey(name = "FK_ARTICLE_CATEGORY_STORE_TEMPLATE"))
   private ArticleStoreTemplate storeTemplate;
   /** 下级栏目 */
   @OneToMany(
@@ -98,7 +98,7 @@ public class ArticleCategory extends BaseBusEntity {
   @JoinColumn(
       name = "ORGANIZATION_ID",
       nullable = false,
-      foreignKey = @ForeignKey(name = "FK_ARTICLE_CHANNEL_ORGANIZATION_ID"))
+      foreignKey = @ForeignKey(name = "FK_ARTICLE_CATEGORY_ORGANIZATION_ID"))
   @ToString.Exclude
   private Organization organization;
 }

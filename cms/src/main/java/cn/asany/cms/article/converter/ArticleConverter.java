@@ -1,18 +1,20 @@
 package cn.asany.cms.article.converter;
 
-import cn.asany.cms.article.domain.*;
-import cn.asany.cms.article.domain.enums.ArticleBodyType;
-import cn.asany.cms.article.domain.enums.ContentType;
-import cn.asany.cms.article.graphql.ArticleBodyInput;
-import cn.asany.cms.article.graphql.input.ArticleInput;
-import cn.asany.cms.article.graphql.input.ContentInput;
+import cn.asany.cms.article.domain.Article;
+import cn.asany.cms.article.domain.ArticleBody;
+import cn.asany.cms.article.domain.ArticleCategory;
+import cn.asany.cms.article.domain.ArticleFeature;
+import cn.asany.cms.article.graphql.input.ArticleCreateInput;
+import cn.asany.cms.article.graphql.input.ArticleUpdateInput;
 import cn.asany.cms.article.service.ArticleFeatureService;
+import cn.asany.cms.body.service.ArticleBodyService;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import org.jfantasy.framework.spring.SpringBeanUtils;
+import org.mapstruct.*;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import org.jfantasy.framework.spring.SpringBeanUtils;
-import org.mapstruct.*;
 
 /**
  * 文章转换
@@ -35,23 +37,31 @@ public interface ArticleConverter {
     @Mapping(target = "permissions", ignore = true),
     @Mapping(target = "organization", ignore = true)
   })
-  Article toArticle(ArticleInput input);
+  Article toArticle(ArticleCreateInput input, @Context ArticleContext context);
+
+  @Mappings({
+    @Mapping(source = "body", target = "body", qualifiedByName = "parseArticleBody"),
+    @Mapping(source = "category", target = "category", qualifiedByName = "parseArticleCategory"),
+    @Mapping(source = "tags", target = "tags", ignore = true),
+    @Mapping(source = "features", target = "features", qualifiedByName = "parseFeature"),
+    @Mapping(target = "permissions", ignore = true),
+    @Mapping(target = "organization", ignore = true)
+  })
+  Article toArticle(ArticleUpdateInput input, @Context ArticleContext context);
 
   @ObjectFactory
-  default Article toUserAddressList(ArticleInput input, @TargetType Class<Article> type) {
+  default Article toUserAddressList(ArticleCreateInput input, @TargetType Class<Article> type) {
     return new Article();
   }
 
   @Named("parseArticleBody")
-  default ArticleBody parseArticleBody(ArticleBodyInput bodyInput) throws JsonProcessingException {
+  default ArticleBody parseArticleBody(String bodyInput, @Context ArticleContext context)
+      throws JsonProcessingException {
     if (bodyInput == null) {
       return null;
     }
-    if (bodyInput.getType() == ArticleBodyType.classic) {
-      return null;
-      //      return HtmlArticleBody.builder().text(source.getText()).build();
-    }
-    throw new IllegalStateException("Unexpected value: " + bodyInput.getType());
+    ArticleBodyService bodyService = SpringBeanUtils.getBean(ArticleBodyService.class);
+    return bodyService.convert(bodyInput, context.getStoreTemplate());
   }
 
   @Named("parseArticleCategory")

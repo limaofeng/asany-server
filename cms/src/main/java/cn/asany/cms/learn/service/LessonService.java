@@ -1,7 +1,7 @@
 package cn.asany.cms.learn.service;
 
 import cn.asany.cms.article.domain.Article;
-import cn.asany.cms.article.graphql.input.ArticleInput;
+import cn.asany.cms.article.graphql.input.ArticleCreateInput;
 import cn.asany.cms.article.service.ArticleService;
 import cn.asany.cms.learn.dao.LessonDao;
 import cn.asany.cms.learn.dao.LessonRecordDao;
@@ -63,8 +63,8 @@ public class LessonService {
 
   @Transactional(rollbackFor = Exception.class)
   public Lesson createLesson(LessonInput input) {
-    ArticleInput articleInput = new ArticleInput();
-    BeanUtils.copyProperties(input, articleInput);
+    ArticleCreateInput articleCreateInput = new ArticleCreateInput();
+    BeanUtils.copyProperties(input, articleCreateInput);
     Article article = null; // articleService.save(articleInput);
     Lesson lesson = new Lesson();
     lesson.setCourse(Course.builder().id(input.getCourse()).build());
@@ -96,8 +96,8 @@ public class LessonService {
     if (lesson == null) {
       return null;
     }
-    ArticleInput articleInput = new ArticleInput();
-    BeanUtils.copyProperties(input, articleInput);
+    ArticleCreateInput articleCreateInput = new ArticleCreateInput();
+    BeanUtils.copyProperties(input, articleCreateInput);
     //    articleGraphQLMutationResolver.updateArticle(lesson.getArticle().getId(), merge,
     // articleInput);
     return lesson;

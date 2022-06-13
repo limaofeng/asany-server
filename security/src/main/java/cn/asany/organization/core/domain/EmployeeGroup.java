@@ -22,7 +22,7 @@ public class EmployeeGroup extends BaseBusEntity {
   private static final long serialVersionUID = 7898475330929818969L;
 
   @Id
-  @Column(name = "ID", nullable = false, precision = 22)
+  @Column(name = "ID", nullable = false)
   @GeneratedValue(generator = "fantasy-sequence")
   @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;

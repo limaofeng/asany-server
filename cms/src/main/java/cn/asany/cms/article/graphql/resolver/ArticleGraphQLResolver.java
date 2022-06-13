@@ -1,11 +1,10 @@
 package cn.asany.cms.article.graphql.resolver;
 
 import cn.asany.cms.article.domain.Article;
-import cn.asany.cms.article.domain.ArticleCategory;
 import cn.asany.cms.article.domain.ArticleBody;
+import cn.asany.cms.article.domain.ArticleCategory;
 import cn.asany.cms.article.graphql.enums.ArticleStarType;
 import cn.asany.cms.article.graphql.input.CommentFilter;
-import cn.asany.cms.article.graphql.input.ContentFormat;
 import cn.asany.cms.article.graphql.type.CommentConnection;
 import cn.asany.cms.article.graphql.type.Starrable;
 import cn.asany.security.core.domain.Permission;
@@ -40,7 +39,7 @@ public class ArticleGraphQLResolver implements GraphQLResolver<Article> {
     return categories;
   }
 
-  public String bodyHtml() {
+  public String bodyHtml(Article article) {
     return "";
   }
 

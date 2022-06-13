@@ -28,7 +28,7 @@ public class Subscriber extends BaseBusEntity {
   /** 订阅人ID */
   @Id
   //  @Null(groups = RESTful.POST.class)
-  @Column(name = "ID", nullable = false, precision = 22)
+  @Column(name = "ID", nullable = false)
   @GeneratedValue(strategy = GenerationType.TABLE, generator = "subscriber_gen")
   @TableGenerator(
       name = "subscriber_gen",

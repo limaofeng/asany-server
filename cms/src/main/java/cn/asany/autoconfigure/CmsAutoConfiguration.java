@@ -18,6 +18,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
  */
 @Configuration
 @EntityScan({
+  "cn.asany.cms.body.domain",
   "cn.asany.cms.article.domain",
   "cn.asany.cms.circle.domain",
   "cn.asany.cms.learn.domain",

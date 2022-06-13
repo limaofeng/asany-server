@@ -22,7 +22,7 @@ public class SpecialArticle extends BaseBusEntity {
 
   @Id
   //  @Null(groups = RESTful.POST.class)
-  @Column(name = "ID", nullable = false, precision = 22)
+  @Column(name = "ID", nullable = false)
   @GeneratedValue(strategy = GenerationType.TABLE, generator = "special_article_gen")
   @TableGenerator(
       name = "special_article_gen",

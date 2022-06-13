@@ -1,7 +1,5 @@
 package cn.asany.cms.article.domain;
 
-import cn.asany.cms.article.domain.enums.ArticleBodyType;
-
 import java.io.Serializable;
 
 /**
@@ -15,7 +13,5 @@ public interface ArticleBody extends Serializable {
 
   void setId(Long id);
 
-  ArticleBodyType type();
-
-    String generateSummary();
+  String generateSummary();
 }

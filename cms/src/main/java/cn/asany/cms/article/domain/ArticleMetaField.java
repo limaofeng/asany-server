@@ -16,15 +16,15 @@ import org.jfantasy.framework.dao.BaseBusEntity;
     uniqueConstraints =
         @UniqueConstraint(
             name = "UK_ARTICLE_META_FIELD",
-            columnNames = {"ARTICLE_ID", "NAMESPACE", "KEY"}))
+            columnNames = {"ARTICLE_ID", "NAMESPACE", "META_KEY"}))
 public class ArticleMetaField extends BaseBusEntity {
   @Id
-  @Column(name = "ID", nullable = false, precision = 22)
+  @Column(name = "ID", nullable = false)
   @GeneratedValue(generator = "fantasy-sequence")
   @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
   /** 字段 Key */
-  @Column(name = "KEY", length = 50)
+  @Column(name = "META_KEY", length = 50)
   private String key;
   /** 字段类型 */
   @Column(name = "TYPE", length = 50)
@@ -33,7 +33,7 @@ public class ArticleMetaField extends BaseBusEntity {
   @Column(name = "NAMESPACE", length = 50)
   private String namespace;
   /** 字段 值 */
-  @Column(name = "`VALUE`", length = 250)
+  @Column(name = "META_VALUE", length = 250)
   private String value;
   /** 字段 描述 */
   @Column(name = "DESCRIPTION", length = 200)

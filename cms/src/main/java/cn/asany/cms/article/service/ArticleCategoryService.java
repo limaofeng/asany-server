@@ -350,4 +350,8 @@ public class ArticleCategoryService {
   public Optional<ArticleCategory> findOneBySlug(String slug) {
     return this.channelDao.findOneBy("slug", slug);
   }
+
+  public ArticleCategory getById(Long id) {
+    return this.channelDao.getReferenceById(id);
+  }
 }

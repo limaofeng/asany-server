@@ -20,7 +20,7 @@ import org.jfantasy.framework.dao.BaseBusEntity;
 @Table(name = "CMS_ARTICLE_AUTHOR")
 public class ArticleAuthor extends BaseBusEntity {
   @Id
-  @Column(name = "ID", nullable = false, precision = 22)
+  @Column(name = "ID", nullable = false)
   @GeneratedValue(generator = "fantasy-sequence")
   @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;

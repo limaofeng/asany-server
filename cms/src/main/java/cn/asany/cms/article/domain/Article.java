@@ -9,24 +9,23 @@ import cn.asany.storage.api.FileObject;
 import cn.asany.storage.api.converter.FileObjectConverter;
 import cn.asany.storage.api.converter.FileObjectsConverter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.*;
-import org.hibernate.Hibernate;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.*;
-import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.search.annotations.IndexProperty;
-import org.jfantasy.framework.search.annotations.Indexed;
-import org.jfantasy.framework.spring.validation.Operation;
-
+import java.util.Date;
+import java.util.List;
+import java.util.Objects;
+import javax.persistence.*;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
 import javax.persistence.Table;
-import javax.persistence.*;
 import javax.validation.constraints.Null;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
+import lombok.*;
+import org.hibernate.Hibernate;
+import org.hibernate.annotations.*;
+import org.hibernate.annotations.Cache;
+import org.jfantasy.framework.dao.BaseBusEntity;
+import org.jfantasy.framework.search.annotations.IndexProperty;
+import org.jfantasy.framework.search.annotations.Indexed;
+import org.jfantasy.framework.spring.validation.Operation;
 
 /**
  * 文章表
@@ -54,7 +53,7 @@ public class Article extends BaseBusEntity {
 
   @Id
   @Null(groups = Operation.Create.class)
-  @Column(name = "ID", nullable = false, precision = 22)
+  @Column(name = "ID", nullable = false)
   @GeneratedValue(generator = "fantasy-sequence")
   @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
@@ -128,7 +127,7 @@ public class Article extends BaseBusEntity {
   private Date publishedAt;
   /** 正文类型 */
   @Enumerated(EnumType.STRING)
-  @Column(name = "BODY_TYPE", length = 25)
+  @Column(name = "STORE_TEMPLATE_ID", length = 25)
   private ArticleBodyType bodyType;
   /** 正文 ID */
   @Column(name = "BODY_ID")
@@ -136,16 +135,22 @@ public class Article extends BaseBusEntity {
   /** 文章正文 */
   @Any(
       metaColumn =
-          @Column(name = "CONTENT_TYPE", length = 25, insertable = false, updatable = false),
+          @Column(name = "STORE_TEMPLATE_ID", length = 20, insertable = false, updatable = false),
       fetch = FetchType.LAZY)
   @AnyMetaDef(
       idType = "long",
       metaType = "string",
-      metaValues = {
-        @MetaValue(targetEntity = Content.class, value = Content.TYPE_KEY)
-      })
+      metaValues = {@MetaValue(targetEntity = Content.class, value = Content.TYPE_KEY)})
   @JoinColumn(name = "BODY_ID", insertable = false, updatable = false)
   private ArticleBody body;
+  /** 存储模版 */
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(
+      name = "STORE_TEMPLATE_ID",
+      foreignKey = @ForeignKey(name = "FK_ARTICLE_STORE_TEMPLATE"),
+      insertable = false,
+      updatable = false)
+  private ArticleStoreTemplate storeTemplate;
   /** 所属组织 */
   @ManyToOne(targetEntity = Organization.class, fetch = FetchType.LAZY)
   @JoinColumn(

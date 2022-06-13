@@ -12,7 +12,7 @@
         </encoder>
     </appender>
 
-    <property name="LOG_PATH" value="${LOGFILE_PATH:/logs/asany}"/>
+    <property name="LOG_PATH" value="${LOGFILE_PATH:-/logs/asany}"/>
 
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${LOG_PATH}-all.log</file>

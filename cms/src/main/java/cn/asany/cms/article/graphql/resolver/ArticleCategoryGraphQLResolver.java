@@ -86,8 +86,6 @@ public class ArticleCategoryGraphQLResolver implements GraphQLResolver<ArticleCa
 
   public List<Article> articles(
       ArticleCategory category,
-      /* 包含所有后代 */
-      Boolean descendant,
       /* 筛选 */
       ArticleFilter filter,
       /* 跳过 */
@@ -106,12 +104,6 @@ public class ArticleCategoryGraphQLResolver implements GraphQLResolver<ArticleCa
     Pageable pageable = LimitPageRequest.of(skip, first, orderBy);
 
     PropertyFilterBuilder builder = PropertyFilter.builder();
-
-    if (descendant) {
-      builder.startsWith("category.path", category.getPath());
-    } else {
-      builder.equal("category.id", category.getId());
-    }
 
     if (filter != null) {
       builder.and(filter.getBuilder());

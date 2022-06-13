@@ -2,7 +2,6 @@ package cn.asany.cms.article.domain;
 
 import javax.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
 @Setter
