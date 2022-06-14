@@ -1,0 +1,215 @@
+package cn.asany.cms.article.graphql;
+
+import cn.asany.cms.article.converter.ArticleCategoryConverter;
+import cn.asany.cms.article.converter.ArticleContext;
+import cn.asany.cms.article.converter.ArticleConverter;
+import cn.asany.cms.article.domain.Article;
+import cn.asany.cms.article.domain.ArticleCategory;
+import cn.asany.cms.article.domain.ArticleTag;
+import cn.asany.cms.article.graphql.enums.ArticleChannelStarType;
+import cn.asany.cms.article.graphql.enums.ArticleStarType;
+import cn.asany.cms.article.graphql.input.*;
+import cn.asany.cms.article.graphql.type.ArticleConnection;
+import cn.asany.cms.article.service.ArticleCategoryService;
+import cn.asany.cms.article.service.ArticleService;
+import cn.asany.cms.article.service.ArticleTagService;
+import cn.asany.cms.permission.specification.StarSpecification;
+import cn.asany.organization.core.domain.Organization;
+import graphql.kickstart.tools.GraphQLMutationResolver;
+import graphql.kickstart.tools.GraphQLQueryResolver;
+import org.jfantasy.framework.dao.jpa.PropertyFilter;
+import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
+import org.jfantasy.framework.util.common.ObjectUtil;
+import org.jfantasy.graphql.util.Kit;
+import org.springframework.core.env.Environment;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Component;
+
+import java.util.List;
+
+/**
+ * 文章接口
+ *
+ * @author limaofeng
+ * @version V1.0
+ * @date 2019-06-26 17:06
+ */
+@Component
+public class ArticleGraphQLRootResolver implements GraphQLQueryResolver, GraphQLMutationResolver {
+
+  private final ArticleCategoryConverter articleCategoryConverter;
+  private final ArticleConverter articleConverter;
+  private final ArticleService articleService;
+  private final ArticleTagService articleTagService;
+  private final ArticleCategoryService articleCategoryService;
+  protected final Environment environment;
+
+  public ArticleGraphQLRootResolver(
+      ArticleCategoryConverter articleCategoryConverter,
+      ArticleConverter articleConverter,
+      ArticleService articleService,
+      ArticleTagService articleTagService,
+      ArticleCategoryService articleCategoryService,
+      Environment environment) {
+    this.articleCategoryConverter = articleCategoryConverter;
+    this.articleConverter = articleConverter;
+    this.articleService = articleService;
+    this.articleTagService = articleTagService;
+    this.articleCategoryService = articleCategoryService;
+    this.environment = environment;
+  }
+
+  public Article article(Long id) {
+    return articleService.get(id);
+  }
+
+  /**
+   * 查询所有文章
+   *
+   * @param filter 过滤
+   * @param page 页码
+   * @param pageSize 每页显示数据条数
+   * @param orderBy 排序
+   * @return ArticleConnection
+   */
+  public ArticleConnection articles(
+      ArticleFilter filter, int first, int page, int pageSize, Sort orderBy) {
+    PropertyFilterBuilder builder =
+        ObjectUtil.defaultValue(filter, new ArticleFilter()).getBuilder();
+
+    Pageable pageable = PageRequest.of(page - 1, pageSize, orderBy);
+
+    return Kit.connection(
+        articleService.findPage(pageable, builder.build()), ArticleConnection.class);
+  }
+
+  public List<ArticleTag> articleTags(
+      String organization, ArticleCategoryFilter filter, Sort orderBy) {
+    PropertyFilterBuilder builder =
+        ObjectUtil.defaultValue(filter, new ArticleCategoryFilter()).getBuilder();
+    if (organization != null) {
+      builder.equal("organization.id", organization);
+    }
+    if (orderBy != null) {
+      return articleTagService.findAllArticle(builder.build(), orderBy);
+    } else {
+      return articleTagService.findAll(builder.build());
+    }
+  }
+
+  public List<ArticleCategory> starredArticleCategories(
+      Long employee, ArticleChannelStarType starType) {
+    PropertyFilterBuilder builder = PropertyFilter.builder();
+    builder.and(new StarSpecification(employee, starType.getValue()));
+    return articleCategoryService.findAll(builder.build());
+  }
+
+  public ArticleConnection starredArticles(
+      Long employee,
+      ArticleStarType starType,
+      ArticleFilter filter,
+      int page,
+      int pageSize,
+      Sort orderBy) {
+    PropertyFilterBuilder builder =
+        ObjectUtil.defaultValue(filter, new ArticleFilter()).getBuilder();
+    builder.and(new StarSpecification(employee, starType.getValue()));
+    return Kit.connection(
+        articleService.findPage(PageRequest.of(page - 1, pageSize, orderBy), builder.build()),
+        ArticleConnection.class);
+  }
+
+  /**
+   * 保存文章
+   *
+   * @param input ArticleCreateInput
+   * @return Article
+   */
+  public Article createArticle(ArticleCreateInput input) {
+    Long organizationId = 36L;
+    // SpringSecurityUtils.getCurrentUser().getAttribute("organization_id");
+    ArticleCategory category = this.articleCategoryService.getById(input.getCategory());
+    String storeTemplateId = category.getStoreTemplate().getId();
+    ArticleContext articleContext = ArticleContext.builder().storeTemplate(storeTemplateId).build();
+    Article article = articleConverter.toArticle(input, articleContext);
+    article.setOrganization(Organization.builder().id(organizationId).build());
+    return articleService.save(article, input.getPermissions());
+  }
+
+  /**
+   * 修改文章
+   *
+   * @param id ID
+   * @param merge 合并方式
+   * @param input 输入对象
+   * @return Article
+   */
+  public Article updateArticle(Long id, Boolean merge, ArticleUpdateInput input) {
+    ArticleCategory category = this.articleCategoryService.getById(input.getCategory());
+
+    ArticleContext articleContext =
+        ArticleContext.builder().storeTemplate(category.getStoreTemplate().getId()).build();
+
+    return articleService.update(id, articleConverter.toArticle(input, articleContext), merge);
+  }
+
+  /**
+   * 删除文章
+   *
+   * @param id Long
+   * @return Boolean
+   */
+  public Boolean deleteArticle(Long id) {
+    return articleService.deleteArticle(id) == 1;
+  }
+
+  public Long deleteManyArticles(List<Long> ids) {
+    Long[] longs = new Long[ids.size()];
+    return articleService.deleteArticle(ids.toArray(longs));
+  }
+  /**
+   * 发布文章
+   *
+   * @param id
+   * @return
+   */
+  public Boolean publishArticle(Long id) {
+    articleService.publish(id);
+    return true;
+  }
+
+  /**
+   * 添加标签
+   *
+   * @param input
+   * @return
+   */
+  public ArticleTag createArticleTag(ArticleTagInput input) {
+    ArticleTag articleTag = articleCategoryConverter.toArticle(input);
+    return articleTagService.save(articleTag);
+  }
+  /**
+   * 更新标签
+   *
+   * @param id
+   * @param merge
+   * @param input
+   * @return
+   */
+  public ArticleTag updateArticleTag(Long id, Boolean merge, ArticleTagInput input) {
+    ArticleTag channel = articleCategoryConverter.toArticle(input);
+    return articleTagService.update(id, merge, channel);
+  }
+
+  /**
+   * 删除标签
+   *
+   * @param id
+   * @return
+   */
+  public Boolean removeArticleTag(Long id) {
+    return articleTagService.delete(id);
+  }
+}

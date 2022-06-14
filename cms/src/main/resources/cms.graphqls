@@ -423,6 +423,10 @@ input ArticleCreateInput {
   附件
   """
   attachments: [File]
+  """
+  附加信息
+  """
+  metafields: [ArticleMetafieldInput]
   # 有效期限 true 永久 false 短期
   validity: Boolean
   # 有效期限 开始时间

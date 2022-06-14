@@ -14,4 +14,11 @@ public interface ArticleBody extends Serializable {
   void setId(Long id);
 
   String generateSummary();
+
+  /**
+   * 返回 Body Type
+   *
+   * @return string
+   */
+  String bodyType();
 }

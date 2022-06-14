@@ -7,7 +7,10 @@ import javax.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.GenericGenerator;
+import org.htmlcleaner.TagNode;
 import org.jfantasy.framework.dao.BaseBusEntity;
+import org.jfantasy.framework.util.common.StringUtil;
+import org.jfantasy.framework.util.htmlcleaner.HtmlCleanerUtil;
 
 /**
  * 文本内容
@@ -42,7 +45,17 @@ public class Content extends BaseBusEntity implements ArticleBody {
 
   @Override
   public String generateSummary() {
-    return null;
+    if (type == ContentType.HTML) {
+      TagNode node = HtmlCleanerUtil.htmlCleaner(text);
+      String contentString = node.getText().toString().trim().replace("\n", "");
+      return StringUtil.ellipsis(contentString, 190, "");
+    }
+    return StringUtil.ellipsis(text, 20, "");
+  }
+
+  @Override
+  public String bodyType() {
+    return TYPE_KEY;
   }
 
   @Override

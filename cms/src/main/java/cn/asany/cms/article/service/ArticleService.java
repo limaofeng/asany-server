@@ -1,12 +1,16 @@
 package cn.asany.cms.article.service;
 
+import cn.asany.cms.article.dao.ArticleCategoryDao;
 import cn.asany.cms.article.dao.ArticleDao;
+import cn.asany.cms.article.dao.ArticleMetaFieldDao;
 import cn.asany.cms.article.domain.Article;
 import cn.asany.cms.article.domain.ArticleBody;
+import cn.asany.cms.article.domain.ArticleCategory;
+import cn.asany.cms.article.domain.enums.ArticleBodyType;
 import cn.asany.cms.article.domain.enums.ArticleStatus;
 import cn.asany.cms.article.event.ArticleUpdateEvent;
 import cn.asany.cms.article.graphql.input.PermissionInput;
-import cn.asany.cms.body.service.ContentService;
+import cn.asany.cms.body.service.ArticleBodyService;
 import java.util.*;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Hibernate;
@@ -34,7 +38,10 @@ public class ArticleService {
   private final ArticleFeatureService featureService;
   private final ArticleTagService tagService;
   private final ArticleDao articleDao;
-  private final ContentService contentService;
+  private final ArticleCategoryDao articleCategoryDao;
+  private final ArticleBodyService bodyService;
+
+  private final ArticleMetaFieldDao articleMetaFieldDao;
 
   @Autowired
   public ArticleService(
@@ -42,12 +49,16 @@ public class ArticleService {
       ApplicationContext applicationContext,
       ArticleFeatureService featureService,
       ArticleTagService tagService,
-      ContentService contentService) {
+      ArticleBodyService bodyService,
+      ArticleCategoryDao articleCategoryDao,
+      ArticleMetaFieldDao articleMetaFieldDao) {
     this.articleDao = articleDao;
     this.applicationContext = applicationContext;
     this.featureService = featureService;
     this.tagService = tagService;
-    this.contentService = contentService;
+    this.bodyService = bodyService;
+    this.articleCategoryDao = articleCategoryDao;
+    this.articleMetaFieldDao = articleMetaFieldDao;
   }
 
   public Optional<Article> findUniqueBySlug(String slug) {
@@ -87,6 +98,10 @@ public class ArticleService {
     if (StringUtil.isBlank(article.getSlug())) {
       article.setSlug(null);
     }
+
+    ArticleCategory category =
+        this.articleCategoryDao.getReferenceById(article.getCategory().getId());
+    article.setCategory(category);
 
     // 保存正文
     saveContentAndSummary(article);
@@ -156,35 +171,25 @@ public class ArticleService {
     if (StringUtil.isBlank(article.getSummary()) && ObjectUtil.isNotNull(body)) {
       String summary = body.generateSummary();
       article.setSummary(summary);
-      //      if (body instanceof HtmlArticleBody) {
-      //        TagNode node = HtmlCleanerUtil.htmlCleaner(((HtmlArticleBody)
-      // articleBody).getText());
-      //        String contentString = node.getText().toString().trim().replace("\n", "");
-      //        String summary = contentString.substring(0, Math.min(contentString.length(), 10));
-      //        article.setSummary(summary);
-      //
-      //        if (null != article.getId()) {
-      //          // 编辑
-      //          Article oldArticle = this.articleDao.getReferenceById(article.getId());
-      //          ArticleBody oldArticleBody = oldArticle.getArticleBody();
-      //          boolean exist = oldArticle.getArticleBody() != null;
-      //          if (exist) {
-      //            ((HtmlArticleBody) oldArticleBody).setText(((HtmlArticleBody)
-      // articleBody).getText());
-      //            this.contentService.update(oldArticleBody);
-      //          } else {
-      //            this.contentService.save(articleBody);
-      //            article.setContentType(articleBody.getType());
-      //            article.setContentId(articleBody.getId());
-      //          }
-      //        } else {
-      //          // 保存
-      //          this.contentService.save(articleBody);
-      //          article.setContentType(articleBody.getType());
-      //          article.setContentId(articleBody.getId());
-      //        }
-      //      }
     }
+    ArticleCategory category =
+        this.articleCategoryDao.getReferenceById(article.getCategory().getId());
+    if (null != article.getId()) {
+      // 编辑
+      Article oldArticle = this.articleDao.getReferenceById(article.getId());
+      if (StringUtil.isBlank(oldArticle.getBodyId())) {
+        this.bodyService.save(body);
+      } else if (category.getStoreTemplate().getId().equals(oldArticle.getBodyType().name())) {
+        this.bodyService.update(oldArticle.getBody().getId(), body);
+      } else {
+        this.bodyService.deleteById(oldArticle.getBodyId(), oldArticle.getBodyType());
+        this.bodyService.save(body);
+      }
+    } else {
+      this.bodyService.save(body);
+    }
+    article.setBodyId(body.getId());
+    article.setBodyType(ArticleBodyType.valueOf(body.bodyType()));
   }
 
   /**

@@ -5,10 +5,9 @@ import cn.asany.cms.article.domain.enums.ArticleStatus;
 import cn.asany.cms.article.domain.enums.ArticleType;
 import cn.asany.storage.api.FileObject;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import lombok.Data;
-
 import java.util.Date;
 import java.util.List;
+import lombok.Data;
 
 /**
  * 文章新增对象
