@@ -17,6 +17,7 @@ import cn.asany.cms.permission.specification.StarSpecification;
 import cn.asany.organization.core.domain.Organization;
 import graphql.kickstart.tools.GraphQLMutationResolver;
 import graphql.kickstart.tools.GraphQLQueryResolver;
+import java.util.List;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
 import org.jfantasy.framework.util.common.ObjectUtil;
@@ -26,8 +27,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 /**
  * 文章接口
@@ -130,11 +129,17 @@ public class ArticleGraphQLRootResolver implements GraphQLQueryResolver, GraphQL
   public Article createArticle(ArticleCreateInput input) {
     Long organizationId = 36L;
     // SpringSecurityUtils.getCurrentUser().getAttribute("organization_id");
+
     ArticleCategory category = this.articleCategoryService.getById(input.getCategory());
+
     String storeTemplateId = category.getStoreTemplate().getId();
     ArticleContext articleContext = ArticleContext.builder().storeTemplate(storeTemplateId).build();
+
     Article article = articleConverter.toArticle(input, articleContext);
+
     article.setOrganization(Organization.builder().id(organizationId).build());
+    article.setCategory(category);
+
     return articleService.save(article, input.getPermissions());
   }
 
@@ -152,7 +157,10 @@ public class ArticleGraphQLRootResolver implements GraphQLQueryResolver, GraphQL
     ArticleContext articleContext =
         ArticleContext.builder().storeTemplate(category.getStoreTemplate().getId()).build();
 
-    return articleService.update(id, articleConverter.toArticle(input, articleContext), merge);
+    Article article = articleConverter.toArticle(input, articleContext);
+    article.setCategory(category);
+
+    return articleService.update(id, article, merge);
   }
 
   /**
@@ -169,6 +177,7 @@ public class ArticleGraphQLRootResolver implements GraphQLQueryResolver, GraphQL
     Long[] longs = new Long[ids.size()];
     return articleService.deleteArticle(ids.toArray(longs));
   }
+
   /**
    * 发布文章
    *

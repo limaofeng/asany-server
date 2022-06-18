@@ -145,13 +145,30 @@ public class ArticleService {
 
     saveContentAndSummary(article);
 
-    boolean needCleanUp = article.getCategory() != null;
+    Article oldArticle = this.articleDao.getReferenceById(article.getId());
+
+    if (article.getStatus() == ArticleStatus.PUBLISHED
+        && article.getPublishedAt() == null
+        && oldArticle.getPublishedAt() == null) {
+      article.setPublishedAt(DateUtil.now());
+    }
+
+    boolean needCleanUp = article.getCategory() == null;
+    boolean unPublishForScheduled =
+        oldArticle.getStatus() == ArticleStatus.SCHEDULED
+            && article.getStatus() == ArticleStatus.DRAFT;
 
     this.articleDao.update(article, merge);
+
+    if (unPublishForScheduled) {
+      article.setPublishedAt(null);
+    }
 
     if (needCleanUp) {
       article.setCategory(null);
     }
+
+    this.articleDao.update(article);
 
     applicationContext.publishEvent(ArticleUpdateEvent.newInstance(article));
     return article;
@@ -244,6 +261,10 @@ public class ArticleService {
       Optional<Article> optional = this.articleDao.findById(id);
       if (!optional.isPresent()) {
         continue;
+      }
+      Article article = optional.get();
+      if (article.getBodyId() != null) {
+        this.bodyService.deleteById(article.getBodyId(), article.getBodyType());
       }
       articles.add(optional.get());
     }

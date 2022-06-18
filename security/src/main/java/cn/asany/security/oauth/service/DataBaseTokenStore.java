@@ -23,7 +23,6 @@ import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.common.StringUtil;
 import org.jfantasy.framework.util.web.WebUtil;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -52,7 +51,6 @@ public class DataBaseTokenStore extends AbstractTokenStore {
     return this.accessTokenDao.findOne(PropertyFilter.builder().equal("token", token).build());
   }
 
-  @Async
   @Override
   @Transactional
   public void storeAccessToken(OAuth2AccessToken token, Authentication authentication) {

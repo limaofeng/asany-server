@@ -45,6 +45,9 @@ public class Content extends BaseBusEntity implements ArticleBody {
 
   @Override
   public String generateSummary() {
+    if (StringUtil.isBlank(text)) {
+      return "";
+    }
     if (type == ContentType.HTML) {
       TagNode node = HtmlCleanerUtil.htmlCleaner(text);
       String contentString = node.getText().toString().trim().replace("\n", "");

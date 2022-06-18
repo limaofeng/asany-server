@@ -31,6 +31,12 @@ class FileServiceTest {
   }
 
   @Test
+  void createCmsStorageSpace() {
+    fileService.createStorageSpace(
+        UUID.getShortId(), "1", "/Applications/Website/1", Storage.DEFAULT_STORAGE_ID);
+  }
+
+  @Test
   void deleteStorageSpace() {
     fileService.deleteStorageSpace("757c1a816e9948afb7e60e1a7e7a067e");
   }
