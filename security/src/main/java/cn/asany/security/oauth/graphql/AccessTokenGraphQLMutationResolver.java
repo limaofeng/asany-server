@@ -1,30 +1,14 @@
 package cn.asany.security.oauth.graphql;
 
-import cn.asany.security.oauth.convert.AccessTokenConverter;
-import cn.asany.security.oauth.domain.AccessToken;
 import cn.asany.security.oauth.service.AccessTokenService;
 import cn.asany.security.oauth.service.TokenServiceUtils;
 import cn.asany.security.oauth.vo.PersonalAccessToken;
 import graphql.kickstart.tools.GraphQLMutationResolver;
-import org.jfantasy.framework.error.ValidationException;
 import org.jfantasy.framework.security.LoginUser;
-import org.jfantasy.framework.security.SecurityContextHolder;
 import org.jfantasy.framework.security.SpringSecurityUtils;
-import org.jfantasy.framework.security.authentication.Authentication;
-import org.jfantasy.framework.security.oauth2.DefaultTokenServices;
-import org.jfantasy.framework.security.oauth2.JwtTokenPayload;
-import org.jfantasy.framework.security.oauth2.core.OAuth2AccessToken;
-import org.jfantasy.framework.security.oauth2.core.OAuth2Authentication;
-import org.jfantasy.framework.security.oauth2.core.OAuth2AuthenticationDetails;
-import org.jfantasy.framework.security.oauth2.core.TokenType;
-import org.jfantasy.framework.security.oauth2.jwt.JwtUtils;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
-
-/**
- * @author limaofeng
- */
+/** @author limaofeng */
 @Component
 public class AccessTokenGraphQLMutationResolver implements GraphQLMutationResolver {
 

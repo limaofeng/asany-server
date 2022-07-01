@@ -6,6 +6,8 @@ import cn.asany.security.oauth.domain.AccessToken;
 import cn.asany.security.oauth.domain.AccessTokenClientDetails;
 import cn.asany.security.oauth.domain.ClientDevice;
 import eu.bitwalker.useragentutils.UserAgent;
+import java.util.Optional;
+import javax.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.jfantasy.framework.security.authentication.Authentication;
 import org.jfantasy.framework.security.oauth2.JwtTokenPayload;
@@ -19,9 +21,6 @@ import org.jfantasy.framework.util.web.WebUtil;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.Optional;
 
 /**
  * TokenStore

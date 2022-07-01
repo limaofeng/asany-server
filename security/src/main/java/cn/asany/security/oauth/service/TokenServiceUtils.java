@@ -3,6 +3,7 @@ package cn.asany.security.oauth.service;
 import cn.asany.security.oauth.convert.AccessTokenConverter;
 import cn.asany.security.oauth.domain.AccessToken;
 import cn.asany.security.oauth.vo.PersonalAccessToken;
+import java.util.Optional;
 import org.jfantasy.framework.error.ValidationException;
 import org.jfantasy.framework.security.SecurityContextHolder;
 import org.jfantasy.framework.security.authentication.Authentication;
@@ -14,8 +15,6 @@ import org.jfantasy.framework.security.oauth2.core.OAuth2AuthenticationDetails;
 import org.jfantasy.framework.security.oauth2.core.TokenType;
 import org.jfantasy.framework.security.oauth2.jwt.JwtUtils;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 public class TokenServiceUtils {

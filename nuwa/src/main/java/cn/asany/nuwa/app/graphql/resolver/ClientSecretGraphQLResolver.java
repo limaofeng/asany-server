@@ -1,13 +1,10 @@
 package cn.asany.nuwa.app.graphql.resolver;
 
 import cn.asany.nuwa.app.domain.ClientSecret;
-import cn.asany.security.oauth.domain.AccessToken;
 import cn.asany.security.oauth.service.AccessTokenService;
 import graphql.kickstart.tools.GraphQLResolver;
 import graphql.schema.DataFetchingEnvironment;
 import java.util.Date;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -18,7 +15,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class ClientSecretGraphQLResolver implements GraphQLResolver<ClientSecret> {
 
-  @Autowired private AccessTokenService accessTokenService;
+  private final AccessTokenService accessTokenService;
+
+  public ClientSecretGraphQLResolver(AccessTokenService accessTokenService) {
+    this.accessTokenService = accessTokenService;
+  }
 
   public String secret(ClientSecret clientSecret, DataFetchingEnvironment environment) {
     boolean isCreated =
