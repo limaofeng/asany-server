@@ -20,12 +20,12 @@ public class ArticleCategoryGraphQLRootResolver
 
   private final ArticleCategoryService channelService;
 
-  private final ArticleCategoryConverter channelConverter;
+  private final ArticleCategoryConverter categoryConverter;
 
   public ArticleCategoryGraphQLRootResolver(
-      ArticleCategoryService channelService, ArticleCategoryConverter channelConverter) {
+      ArticleCategoryService channelService, ArticleCategoryConverter categoryConverter) {
     this.channelService = channelService;
-    this.channelConverter = channelConverter;
+    this.categoryConverter = categoryConverter;
   }
 
   /**
@@ -61,7 +61,7 @@ public class ArticleCategoryGraphQLRootResolver
    * @return ArticleCategory
    */
   public ArticleCategory createArticleCategory(ArticleCategoryInput input) {
-    ArticleCategory channel = channelConverter.toChannel(input);
+    ArticleCategory channel = categoryConverter.toCategory(input);
     Long parent = input.getParent();
     if (parent != null) {
       ArticleCategory articleCategory = channelService.findOne(parent);
@@ -86,8 +86,8 @@ public class ArticleCategoryGraphQLRootResolver
    * @return ArticleCategory
    */
   public ArticleCategory updateArticleCategory(Long id, Boolean merge, ArticleCategoryInput input) {
-    ArticleCategory channel = channelConverter.toChannel(input);
-    return channelService.update(id, merge, channel);
+    ArticleCategory category = categoryConverter.toCategory(input);
+    return channelService.update(id, category, merge);
   }
 
   /**

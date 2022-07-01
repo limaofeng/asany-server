@@ -67,6 +67,9 @@ public class AccessToken extends BaseBusEntity {
   /** 应用 */
   @Column(name = "CLIENT_ID", length = 20, updatable = false, nullable = false)
   private String client;
+  /** 密钥 */
+  @Column(name = "CLIENT_SECRET", length = 40, updatable = false, nullable = false)
+  private String clientSecret;
   /** 客户详细信息 */
   @Embedded private AccessTokenClientDetails clientDetails;
   /** 用户 */

@@ -47,7 +47,7 @@ public class ApplicationRoute extends BaseBusEntity {
   private Routespace space;
   /** 路由类型 */
   @Enumerated(EnumType.STRING)
-  @Column(name = "TYPE")
+  @Column(name = "TYPE", nullable = false)
   private RouteType type;
   /** 层级 */
   @Column(name = "LEVEL")

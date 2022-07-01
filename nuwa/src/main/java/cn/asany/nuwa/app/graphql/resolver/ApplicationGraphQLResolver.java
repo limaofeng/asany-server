@@ -4,6 +4,7 @@ import cn.asany.nuwa.app.domain.Application;
 import cn.asany.nuwa.app.domain.ApplicationRoute;
 import cn.asany.nuwa.app.domain.ClientSecret;
 import cn.asany.nuwa.app.domain.Licence;
+import cn.asany.nuwa.app.graphql.input.ApplicationRouteFilter;
 import cn.asany.nuwa.app.service.ApplicationService;
 import cn.asany.nuwa.app.service.LicenceService;
 import graphql.execution.ExecutionStepInfo;
@@ -12,6 +13,7 @@ import graphql.schema.DataFetchingEnvironment;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.jfantasy.framework.security.LoginUser;
 import org.jfantasy.framework.security.SpringSecurityUtils;
 import org.springframework.stereotype.Component;
@@ -31,7 +33,9 @@ public class ApplicationGraphQLResolver implements GraphQLResolver<Application> 
 
   public Optional<ApplicationRoute> layoutRoute(
       Application application, String space, DataFetchingEnvironment environment) {
-    List<ApplicationRoute> routes = this.routes(application, space, environment);
+    List<ApplicationRoute> routes =
+        this.routes(
+            application, ApplicationRouteFilter.builder().space(space).build(), environment);
     return routes.stream()
         .filter(item -> "/".equals(item.getPath()) && item.getLevel() == 1)
         .findAny();
@@ -39,22 +43,39 @@ public class ApplicationGraphQLResolver implements GraphQLResolver<Application> 
 
   public Optional<ApplicationRoute> loginRoute(
       Application application, String space, DataFetchingEnvironment environment) {
-    List<ApplicationRoute> routes = this.routes(application, space, environment);
+    List<ApplicationRoute> routes =
+        this.routes(
+            application, ApplicationRouteFilter.builder().space(space).build(), environment);
     return routes.stream()
         .filter(item -> "/login".equals(item.getPath()) && item.getLevel() == 1)
         .findAny();
   }
 
   public List<ApplicationRoute> routes(
-      Application application, String space, DataFetchingEnvironment environment) {
+      Application application, ApplicationRouteFilter filter, DataFetchingEnvironment environment) {
     ExecutionStepInfo parent = environment.getExecutionStepInfo().getParent();
+    String space = filter.getSpace();
     if ("application".equals(parent.getFieldDefinition().getName())) {
-      return application.getRoutes().stream()
-          .filter(item -> space.equals(item.getSpace().getId()))
+      Stream<ApplicationRoute> stream =
+          application.getRoutes().stream().filter(item -> space.equals(item.getSpace().getId()));
+
+      if (filter.getEnabled() != null) {
+        stream = stream.filter(item -> filter.getEnabled().equals(item.getEnabled()));
+      }
+
+      return stream.collect(Collectors.toList());
+    }
+    List<ApplicationRoute> routes =
+        this.applicationService.findRouteAllByApplicationAndSpaceWithComponent(
+            application.getId(), space);
+
+    if (filter.getEnabled() != null) {
+      return routes.stream()
+          .filter(item -> filter.getEnabled().equals(item.getEnabled()))
           .collect(Collectors.toList());
     }
-    return this.applicationService.findRouteAllByApplicationAndSpaceWithComponent(
-        application.getId(), space);
+
+    return routes;
   }
 
   public Boolean dingtalkIntegration(Application application) {

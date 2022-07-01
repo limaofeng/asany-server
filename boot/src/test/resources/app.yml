@@ -7,86 +7,29 @@ menus:
   - name: 首页
     path: /
   - name: IT外包
-    component: cn.asany.ui.theme.canvas.component.MegaMenu
+    component:
+      template: cn.asany.ui.theme.canvas.component.MegaMenu
+      blocks: |
+        [{"key": "MegaMenu", "props": {"style": "multi-level", "dataSource": { "type": "cms.categories", "category": 672 } }}]
     path: /it-outsourcing
-    children:
-      - name: 运维服务
-        children:
-          - name: 驻场服务
-          - name: 应急服务
-          - name: 3A级远程服务
-          - name: 网络和服务器服务
-      - name: 软件开发
-        children:
-          - name: 网站建设
-          - name: APP开发
-          - name: 小程序开发
-      - name: 专项服务
-        children:
-          - name: 网站设计开发
-          - name: 打印机复印机租赁
-          - name: 企业邮箱
-      - name: 咨询服务
-        children:
-          - name: 信息安全评估
-          - name: IT流程梳理
-          - name: IT战略规划
-          - name: IT资产管理
   - name: IT采购
     path: /it-procurement
     component:
       template: cn.asany.ui.theme.canvas.component.MegaMenu
       blocks: |
-        [{"key": "MegaMenu", "props": {"style": "one-layer"}}]
-    children:
-      - name: 服务流程
-      - name: 产品选型
-      - name: 互升优势
-      - name: 品牌合作
+        [{"key": "MegaMenu", "props": {"style": "one-layer", "dataSource": { "type": "cms.articles", "category": 677 } }}]
   - name: 弱电工程
     path: /weak-current-engineering
     component:
       template: cn.asany.ui.theme.canvas.component.MegaMenu
       blocks: |
-        [{"key": "MegaMenu", "props": {"style": "one-layer"}}]
-    children:
-      - name: 综合布线
-      - name: 机房建设
-      - name: 门禁考勤
-      - name: 视频监控
-      - name: 电话交换机
-      - name: 视频会议
-      - name: 多媒体会议室
-      - name: 拼接屏
-      - name: 一卡通
-      - name: 电话会议
-      - name: 防盗报警系统
+        [{"key": "MegaMenu", "props": {"style": "one-layer", "dataSource": { "type": "cms.articles", "category": 678 } }}]
   - name: 系统集成
     path: /system-integration
     component:
       template: cn.asany.ui.theme.canvas.component.MegaMenu
       blocks: |
-        [{"key": "MegaMenu", "props": {"style": "one-layer"}}]
-    children:
-      - name: 网络改造
-      - name: 无线覆盖
-      - name: 病毒防护
-      - name: 访问控制
-      - name: 上网行为管理
-      - name: 服务器虚拟化
-      - name: 桌面虚拟化
-      - name: 服务器负载均衡
-      - name: 服务器托管
-      - name: VPN专用网
-      - name: 数据备份
-      - name: 数据文件共享
-      - name: 数据加密
-      - name: 邮件服务器
-      - name: 反垃圾邮件
-      - name: SQL高可用
-      - name: 服务器异地容灾
-      - name: 服务器状态监控
-      - name: 应用虚拟化
+        [{"key": "MegaMenu", "props": {"style": "one-layer", "dataSource": { "type": "cms.articles", "category": 679 }}}]
   - name: 走进互升
     path: /about
     children:
@@ -131,20 +74,20 @@ routes:
         name: 关于
         component:
           template: cn.asany.ui.theme.canvas.Page
-            blocks: |
-              [{"key": "page/hero", "props": {"component": "cn.asany.ui.theme.canvas.PageTitle"}}, {"key": "page/content", "props": {"items": [{"id": "02dd17d6-8f03-48c9-8569-6d3805b90377", "name": "关于我们", "component": "cn.asany.ui.theme.canvas.About"}, {"id": "9ba9a41c-3c06-4f9c-8715-9498e4c724b4", "name": "大事记", "component": "cn.asany.ui.theme.canvas.FeaturedBox23"}, {"id": "a0f25889-213b-4ffd-a03c-4a2ed13e8c47", "name": "资质荣誉", "component": "cn.asany.ui.theme.canvas.FeaturedBox19"}, {"id": "ea68da72-37a9-4915-b809-795b07284ba5", "name": " 团队（列表）", "component": "cn.asany.ui.theme.canvas.TeamListLayout"}]}}, {"key": "page/hero/PageTitle", "props": {"items": [{"url": "/", "name": "首页"}, {"name": "关于"}], "title": "关于", "backgroundOpacity": 10}}, {"key": "page/content/02dd17d6-8f03-48c9-8569-6d3805b90377", "props": {"title": "关于互升", "subtitle": "ABOUT US", "background": "white", "description": "<ul class=\"aboul colo6 list-paddingleft-2\">\n  <li>\n  <p>互升于2002年成立于上海，致力于为企业客户提供IT外包、IT采购、弱电工程、系统集成、网络安全、微软云（Azure、Office365）、阿里云、腾讯云、打印机租赁等“一站式”信息服务解决方案。</p>\n  </li>\n  <li>\n  <p>我们慧聚了一大批有着IT理想的年轻人，他们有的来自复旦、同济、交大等名校；有的来自IBM、HP、Dell、lenovo等知名公司；他们可以提供英语、日语等多语言支持。</p>\n  </li>\n  <li>\n  <p>我们拥有稳步增长的“伙伴式”服务客户，员工拥有CCIE、CISSP、MCSE、CIW、RHCE 、PMP、Itil、ITSS等丰富的认证资质，最重要的是，互升为员工提供了良好的职业发展空间。</p>\n  </li>\n  <li>\n  <p>我们是荣获“上海市质量金奖”的IT外包服务商，连续10年获得微软金牌合作伙伴资质，连续10年获得上海市高新技术企业认定，连续10年获得“守合同重信用单位”认定，连续10年获评“合同信用等级AAA级”，上海专精特新企业等资质。先后通过了ISO9001:2008、ISO20000、ISO27001质量体系认证，2017年成为Oracle金牌合作伙伴，阿里云城市服务商合作伙伴，网易企业服务核心合作伙伴。</p>\n  </li>\n  <li>\n  <p>我们拥有18+年行业经验、500+专职工程师、保持了18年无安全事件的行业纪录，1000+ 客户遍布金融、生物医疗、能源化工、服装纺织、房地产、创意设计、广告传媒、零售贸易、政府等数十个行业。</p>\n  </li>\n  <li>\n  <p>我们相继在北京、广州、深圳、杭州设立运营中心，在全国32个主要城市、纽约、香港、台北设立办事处，在实现技术能力全覆盖的同时，扩大地域覆盖能力。</p>\n  </li>\n  <li>\n  <p>我们践行服务承诺、严控服务质量，期待越来越多的客户体验互升的“精致化”信息服务！</p>\n  </li>\n</ul>"}}, {"key": "page/content/9ba9a41c-3c06-4f9c-8715-9498e4c724b4", "props": {"items": [], "title": "大事记", "picture": "https://media.slidesgo.com/storage/158442/responsive-images/0-timeline-infographics___media_library_original_1600_900.jpg", "background": "grey", "description": "BIG EVENTS"}}, {"key": "page/content/a0f25889-213b-4ffd-a03c-4a2ed13e8c47", "props": {"items": [{"image": "https://www.linemore.com/files/images/201912/1203032518370.png", "title": "上海市质量金奖"}, {"image": "https://www.linemore.com/files/images/202111/1405041567240.jpg", "title": "上海市质量标杆"}, {"image": "https://www.linemore.com/files/images/201912/1202580240240.png", "title": "上海高新技术企业"}, {"image": "https://www.linemore.com/files/images/201912/1202581099620.png", "title": "合同信用等级AAA级"}, {"image": "https://www.linemore.com/files/images/201912/1202581832430.png", "title": "上海市守重企业"}, {"image": "https://www.linemore.com/files/images/201912/1202582746490.png", "title": "劳动关系和谐示范单位"}, {"image": "https://www.linemore.com/files/images/201912/1202585302740.png", "title": "最佳IT桌面外包服务奖"}], "title": "资质荣誉", "background": "white", "qualifications": [{"image": "https://www.linemore.com/files/images/202006/2305144134620.png", "title": "微软金牌合作伙伴"}, {"image": "https://www.linemore.com/files/images/201912/1203143958990.png", "title": "复旦创业企业展评"}, {"image": "https://www.linemore.com/files/images/201912/1203242963680.png", "title": "“专精特新”企业"}, {"image": "https://www.linemore.com/files/images/201912/1203254466810.png", "title": "ISO27001安全认证"}, {"image": "https://www.linemore.com/files/images/201912/1203381451180.png", "title": "ISO9001体系认证"}, {"image": "https://www.linemore.com/files/images/201912/1203440477740.png", "title": "阿里云合作伙伴"}, {"image": "https://www.linemore.com/files/images/201912/1203475349620.png", "title": "世博铁路馆感谢信"}]}}, {"key": "page/content/ea68da72-37a9-4915-b809-795b07284ba5", "props": {"title": "互升团队", "subtitle": "HOTSOON TEAM", "background": "grey", "description": "描述"}}]
+          blocks: |
+            [{"key": "page/hero", "props": {"component": "cn.asany.ui.theme.canvas.PageTitle"}}, {"key": "page/content", "props": {"items": [{"id": "02dd17d6-8f03-48c9-8569-6d3805b90377", "name": "关于我们", "component": "cn.asany.ui.theme.canvas.About"}, {"id": "9ba9a41c-3c06-4f9c-8715-9498e4c724b4", "name": "大事记", "component": "cn.asany.ui.theme.canvas.FeaturedBox23"}, {"id": "a0f25889-213b-4ffd-a03c-4a2ed13e8c47", "name": "资质荣誉", "component": "cn.asany.ui.theme.canvas.FeaturedBox19"}, {"id": "ea68da72-37a9-4915-b809-795b07284ba5", "name": " 团队（列表）", "component": "cn.asany.ui.theme.canvas.TeamListLayout"}]}}, {"key": "page/hero/PageTitle", "props": {"items": [{"url": "/", "name": "首页"}, {"name": "关于"}], "title": "关于", "backgroundOpacity": 10}}, {"key": "page/content/02dd17d6-8f03-48c9-8569-6d3805b90377", "props": {"title": "关于互升", "subtitle": "ABOUT US", "background": "white", "description": "<ul class=\"aboul colo6 list-paddingleft-2\">\n  <li>\n  <p>互升于2002年成立于上海，致力于为企业客户提供IT外包、IT采购、弱电工程、系统集成、网络安全、微软云（Azure、Office365）、阿里云、腾讯云、打印机租赁等“一站式”信息服务解决方案。</p>\n  </li>\n  <li>\n  <p>我们慧聚了一大批有着IT理想的年轻人，他们有的来自复旦、同济、交大等名校；有的来自IBM、HP、Dell、lenovo等知名公司；他们可以提供英语、日语等多语言支持。</p>\n  </li>\n  <li>\n  <p>我们拥有稳步增长的“伙伴式”服务客户，员工拥有CCIE、CISSP、MCSE、CIW、RHCE 、PMP、Itil、ITSS等丰富的认证资质，最重要的是，互升为员工提供了良好的职业发展空间。</p>\n  </li>\n  <li>\n  <p>我们是荣获“上海市质量金奖”的IT外包服务商，连续10年获得微软金牌合作伙伴资质，连续10年获得上海市高新技术企业认定，连续10年获得“守合同重信用单位”认定，连续10年获评“合同信用等级AAA级”，上海专精特新企业等资质。先后通过了ISO9001:2008、ISO20000、ISO27001质量体系认证，2017年成为Oracle金牌合作伙伴，阿里云城市服务商合作伙伴，网易企业服务核心合作伙伴。</p>\n  </li>\n  <li>\n  <p>我们拥有18+年行业经验、500+专职工程师、保持了18年无安全事件的行业纪录，1000+ 客户遍布金融、生物医疗、能源化工、服装纺织、房地产、创意设计、广告传媒、零售贸易、政府等数十个行业。</p>\n  </li>\n  <li>\n  <p>我们相继在北京、广州、深圳、杭州设立运营中心，在全国32个主要城市、纽约、香港、台北设立办事处，在实现技术能力全覆盖的同时，扩大地域覆盖能力。</p>\n  </li>\n  <li>\n  <p>我们践行服务承诺、严控服务质量，期待越来越多的客户体验互升的“精致化”信息服务！</p>\n  </li>\n</ul>"}}, {"key": "page/content/9ba9a41c-3c06-4f9c-8715-9498e4c724b4", "props": {"items": [], "title": "大事记", "picture": "https://media.slidesgo.com/storage/158442/responsive-images/0-timeline-infographics___media_library_original_1600_900.jpg", "background": "grey", "description": "BIG EVENTS"}}, {"key": "page/content/a0f25889-213b-4ffd-a03c-4a2ed13e8c47", "props": {"items": [{"image": "https://www.linemore.com/files/images/201912/1203032518370.png", "title": "上海市质量金奖"}, {"image": "https://www.linemore.com/files/images/202111/1405041567240.jpg", "title": "上海市质量标杆"}, {"image": "https://www.linemore.com/files/images/201912/1202580240240.png", "title": "上海高新技术企业"}, {"image": "https://www.linemore.com/files/images/201912/1202581099620.png", "title": "合同信用等级AAA级"}, {"image": "https://www.linemore.com/files/images/201912/1202581832430.png", "title": "上海市守重企业"}, {"image": "https://www.linemore.com/files/images/201912/1202582746490.png", "title": "劳动关系和谐示范单位"}, {"image": "https://www.linemore.com/files/images/201912/1202585302740.png", "title": "最佳IT桌面外包服务奖"}], "title": "资质荣誉", "background": "white", "qualifications": [{"image": "https://www.linemore.com/files/images/202006/2305144134620.png", "title": "微软金牌合作伙伴"}, {"image": "https://www.linemore.com/files/images/201912/1203143958990.png", "title": "复旦创业企业展评"}, {"image": "https://www.linemore.com/files/images/201912/1203242963680.png", "title": "“专精特新”企业"}, {"image": "https://www.linemore.com/files/images/201912/1203254466810.png", "title": "ISO27001安全认证"}, {"image": "https://www.linemore.com/files/images/201912/1203381451180.png", "title": "ISO9001体系认证"}, {"image": "https://www.linemore.com/files/images/201912/1203440477740.png", "title": "阿里云合作伙伴"}, {"image": "https://www.linemore.com/files/images/201912/1203475349620.png", "title": "世博铁路馆感谢信"}]}}, {"key": "page/content/ea68da72-37a9-4915-b809-795b07284ba5", "props": {"title": "互升团队", "subtitle": "HOTSOON TEAM", "background": "grey", "description": "描述"}}]
       - path: /join
         name: 加入我们
         component:
           template: cn.asany.ui.theme.canvas.Page
-            blocks: |
-              []
+          blocks: |
+            []
       - path: /contract
         name: 联系我们
         component:
           template: cn.asany.ui.theme.canvas.Page
-            blocks: |
-              []
+          blocks: |
+            []
       - path: /
         name: 首页
         component:

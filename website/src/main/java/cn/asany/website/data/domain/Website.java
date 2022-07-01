@@ -1,6 +1,7 @@
 package cn.asany.website.data.domain;
 
 import cn.asany.cms.article.domain.ArticleCategory;
+import cn.asany.nuwa.app.domain.Application;
 import cn.asany.organization.core.domain.Organization;
 import cn.asany.storage.api.FileObject;
 import cn.asany.storage.api.converter.FileObjectConverter;
@@ -44,6 +45,11 @@ public class Website extends BaseBusEntity {
       foreignKey = @ForeignKey(name = "FK_WEBSITE_ARTICLE_CHANNEL_ID"))
   @ToString.Exclude
   private ArticleCategory channel;
+  /** 对应的应用 */
+  @ManyToOne(targetEntity = Application.class, fetch = FetchType.LAZY)
+  @JoinColumn(name = "APPLICATION_ID", foreignKey = @ForeignKey(name = "FK_WEBSITE_APPLICATION_ID"))
+  @ToString.Exclude
+  private Application application;
   /** 所属组织 */
   @ManyToOne(targetEntity = Organization.class, fetch = FetchType.LAZY)
   @JoinColumn(

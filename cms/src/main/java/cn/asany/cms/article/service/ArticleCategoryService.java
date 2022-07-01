@@ -4,6 +4,11 @@ import cn.asany.cms.article.dao.ArticleCategoryDao;
 import cn.asany.cms.article.dao.ArticleDao;
 import cn.asany.cms.article.domain.Article;
 import cn.asany.cms.article.domain.ArticleCategory;
+import cn.asany.cms.article.domain.PageComponent;
+import cn.asany.cms.article.event.ArticleCategoryPageUpdateEvent;
+import cn.asany.ui.resources.domain.Component;
+import cn.asany.ui.resources.domain.enums.ComponentScope;
+import cn.asany.ui.resources.service.ComponentService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -16,6 +21,7 @@ import org.jfantasy.framework.util.PinyinUtils;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.common.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -34,40 +40,44 @@ import org.springframework.transaction.annotation.Transactional;
 public class ArticleCategoryService {
 
   private final ArticleDao articleDao;
-  private final ArticleCategoryDao channelDao;
+  private final ArticleCategoryDao categoryDao;
+  private final ComponentService componentService;
+  private final ApplicationContext applicationContext;
 
   @Autowired
-  public ArticleCategoryService(ArticleCategoryDao channelDao, ArticleDao articleDao) {
-    this.channelDao = channelDao;
+  public ArticleCategoryService(
+      ApplicationContext applicationContext,
+      ArticleCategoryDao categoryDao,
+      ArticleDao articleDao,
+      ComponentService componentService) {
+    this.categoryDao = categoryDao;
     this.articleDao = articleDao;
+    this.componentService = componentService;
+    this.applicationContext = applicationContext;
   }
 
   public Page<ArticleCategory> findPage(Pageable pageable, List<PropertyFilter> filters) {
-    return this.channelDao.findPage(pageable, filters);
+    return this.categoryDao.findPage(pageable, filters);
   }
 
   public Optional<ArticleCategory> findById(Long id) {
-    return channelDao.findById(id);
+    return categoryDao.findById(id);
   }
 
   public Optional<ArticleCategory> findUniqueByName(String name) {
-    return channelDao.findOne(Example.of(ArticleCategory.builder().name(name).build()));
+    return categoryDao.findOne(Example.of(ArticleCategory.builder().name(name).build()));
   }
 
   public List<ArticleCategory> findAll(List<PropertyFilter> filters) {
-    return this.channelDao.findAll(filters);
+    return this.categoryDao.findAll(filters);
   }
 
   public List<ArticleCategory> findAllArticle(List<PropertyFilter> filters, Sort orderBy) {
-    return this.channelDao.findAll(filters, orderBy);
+    return this.categoryDao.findAll(filters, orderBy);
   }
 
   public List<ArticleCategory> findAll(ArticleCategory ArticleCategory, Sort orderBy) {
-    return this.channelDao.findAll(Example.of(ArticleCategory), orderBy);
-  }
-
-  public ArticleCategory update(ArticleCategory channel, boolean patch) {
-    return this.channelDao.update(channel, patch);
+    return this.categoryDao.findAll(Example.of(ArticleCategory), orderBy);
   }
 
   /**
@@ -78,7 +88,7 @@ public class ArticleCategoryService {
    */
   public List<ArticleCategory> saveAll(List<ArticleCategory> channels, Long rootChannelId) {
 
-    ArticleCategory rootChannel = this.channelDao.getReferenceById(rootChannelId);
+    ArticleCategory rootChannel = this.categoryDao.getReferenceById(rootChannelId);
 
     channels.forEach(
         item -> {
@@ -114,7 +124,7 @@ public class ArticleCategoryService {
               //              }
 
               Optional<ArticleCategory> optional =
-                  this.channelDao.findOne(
+                  this.categoryDao.findOne(
                       PropertyFilter.builder()
                           .equal("slug", item.getSlug())
                           .startsWith("path", rootChannel.getPath())
@@ -124,7 +134,7 @@ public class ArticleCategoryService {
                 item.setId(optional.get().getId());
                 //                item.setArticles(optional.get().getArticles());
               } else {
-                this.channelDao.save(item);
+                this.categoryDao.save(item);
               }
 
               ArticleCategory parent =
@@ -141,7 +151,7 @@ public class ArticleCategoryService {
               return item;
             });
     channels = ObjectUtil.flat(channels, "children");
-    this.channelDao.updateAllInBatch(channels);
+    this.categoryDao.updateAllInBatch(channels);
 
     this.articleDao.saveAll(articles);
     return channels;
@@ -150,7 +160,7 @@ public class ArticleCategoryService {
   public ArticleCategory save(String name) {
     ArticleCategory channel = new ArticleCategory();
     channel.setName(name);
-    channel = this.channelDao.save(channel);
+    channel = this.categoryDao.save(channel);
     channel.setPath(
         channel.getParent() == null
             ? channel.getId() + ArticleCategory.SEPARATOR
@@ -170,7 +180,7 @@ public class ArticleCategoryService {
     boolean isRoot = channel.getParent() == null;
 
     ArticleCategory parent =
-        isRoot ? null : this.channelDao.getReferenceById(channel.getParent().getId());
+        isRoot ? null : this.categoryDao.getReferenceById(channel.getParent().getId());
 
     if (StringUtil.isBlank(channel.getSlug())) {
       channel.setSlug(pinyin(channel.getName()));
@@ -182,7 +192,7 @@ public class ArticleCategoryService {
       channel.setLevel(parent.getLevel() + 1);
     }
 
-    channel = channelDao.save(channel);
+    channel = categoryDao.save(channel);
 
     List<ArticleCategory> _siblings = siblings(channel.getParent(), channel);
     if (_siblings.isEmpty()) {
@@ -200,7 +210,7 @@ public class ArticleCategoryService {
     } else {
       channel.setPath(parent.getPath() + channel.getId() + ArticleCategory.SEPARATOR);
     }
-    return this.channelDao.update(channel);
+    return this.categoryDao.update(channel);
   }
 
   /**
@@ -208,67 +218,129 @@ public class ArticleCategoryService {
    *
    * @param id ID
    * @param merge 合并
-   * @param channel 栏目
+   * @param category 栏目
    * @return ArticleChannel
    */
-  public ArticleCategory update(Long id, boolean merge, ArticleCategory channel) {
-    channel.setId(id);
-    ArticleCategory prev = this.channelDao.getReferenceById(id);
+  public ArticleCategory update(Long id, ArticleCategory category, boolean merge) {
+    category.setId(id);
+    ArticleCategory prev = this.categoryDao.getReferenceById(id);
 
     int sourceIndex = prev.getIndex();
-    Integer index = channel.getIndex();
+    Integer index = category.getIndex();
 
     ArticleCategory sourceParent = prev.getParent();
-    ArticleCategory parent = channel.getParent();
+    ArticleCategory parent = category.getParent();
 
     boolean notRoot = parent != null && !parent.getId().equals(0L);
     if (notRoot) {
-      parent = channelDao.getReferenceById(parent.getId());
+      parent = categoryDao.getReferenceById(parent.getId());
     }
 
     boolean _isChangeParent = isChangeParent(parent, sourceParent);
 
-    channel.setParent(sourceParent);
-    channel.setIndex(sourceIndex);
+    category.setParent(sourceParent);
+    category.setIndex(sourceIndex);
 
-    channel = channelDao.update(channel, merge);
+    if (savePage(category, prev)) {
+      applicationContext.publishEvent(
+          new ArticleCategoryPageUpdateEvent(category, category.getPage()));
+    }
+
+    category = categoryDao.update(category, merge);
 
     if (_isChangeParent) {
       boolean isRoot = parent.getId().equals(0L);
 
-      rearrange(siblings(sourceParent, channel), sourceIndex, Integer.MAX_VALUE, false);
+      rearrange(siblings(sourceParent, category), sourceIndex, Integer.MAX_VALUE, false);
 
-      List<ArticleCategory> _siblings = siblings(parent, channel);
+      List<ArticleCategory> _siblings = siblings(parent, category);
       int maxIndex = _siblings.get(_siblings.size() - 1).getIndex() + 1;
-      channel.setParent(isRoot ? null : parent);
-      channel.setLevel(isRoot ? 0 : parent.getLevel() + 1);
+      category.setParent(isRoot ? null : parent);
+      category.setLevel(isRoot ? 0 : parent.getLevel() + 1);
       if (isRoot) {
-        channel.setPath(channel.getId() + ArticleCategory.SEPARATOR);
+        category.setPath(category.getId() + ArticleCategory.SEPARATOR);
       } else {
-        channel.setPath(parent.getPath() + channel.getId() + ArticleCategory.SEPARATOR);
+        category.setPath(parent.getPath() + category.getId() + ArticleCategory.SEPARATOR);
       }
 
       if (_siblings.isEmpty()) {
-        channel.setIndex(0);
+        category.setIndex(0);
       } else if (index == null) {
-        channel.setIndex(maxIndex);
+        category.setIndex(maxIndex);
       } else {
         index = Math.min(maxIndex, index);
-        channel.setIndex(index);
+        category.setIndex(index);
         rearrange(_siblings, index, Integer.MAX_VALUE, true);
       }
     } else if (index != null && sourceIndex != index) {
-      List<ArticleCategory> _siblings = siblings(sourceParent, channel);
+      List<ArticleCategory> _siblings = siblings(sourceParent, category);
       int maxIndex = _siblings.get(_siblings.size() - 1).getIndex() + 1;
       index = Math.min(maxIndex, index);
 
       int startIndex = Math.min(sourceIndex, index);
       int endIndex = Math.max(sourceIndex, index);
 
-      channel.setIndex(index);
+      category.setIndex(index);
       rearrange(_siblings, startIndex, endIndex, sourceIndex > index);
     }
-    return this.channelDao.update(channel);
+
+    return this.categoryDao.update(category);
+  }
+
+  private boolean savePage(ArticleCategory category, ArticleCategory prev) {
+    PageComponent prevPage = prev.getPage();
+    PageComponent page = category.getPage();
+
+    if (page == null) {
+      return false;
+    }
+
+    boolean isUpdate = !prevPage.getEnabled().equals(page.getEnabled());
+
+    if (isUpdate) {
+      prevPage.setEnabled(page.getEnabled());
+      prevPage.getRoute().setEnabled(page.getEnabled());
+    }
+
+    if (!page.getEnabled()) {
+      if (prevPage.getRoute() != null) {
+        page.setRoute(prevPage.getRoute());
+        page.setComponent(prevPage.getComponent());
+      }
+      return isUpdate;
+    }
+    if (prevPage.getComponent() == null) {
+      Component newComponent = category.getPage().getComponent();
+      newComponent.setScope(ComponentScope.ROUTE);
+      newComponent.setName(category.getName());
+      page.setComponent(componentService.save(newComponent));
+      isUpdate = true;
+    } else {
+      if (!prevPage.getComponent().getName().equals(category.getName())) {
+        isUpdate = true;
+      }
+      prevPage.getComponent().setName(category.getName());
+      if (page.getComponent().getTemplate() != null
+          && !prevPage.getComponent().getTemplate().equals(page.getComponent().getTemplate())) {
+        isUpdate = true;
+        prevPage.getComponent().setTemplate(page.getComponent().getTemplate());
+      }
+      if (page.getComponent().getBlocks() != null) {
+        isUpdate = true;
+        prevPage.getComponent().setBlocks(page.getComponent().getBlocks());
+      }
+      page.setComponent(prevPage.getComponent());
+    }
+    if (prevPage.getRoute() != null) {
+      if (!prevPage.getRoute().getPath().equals(page.getRoute().getPath())) {
+        prevPage.getRoute().setPath(page.getRoute().getPath());
+        isUpdate = true;
+      }
+      page.setRoute(prevPage.getRoute());
+    } else if (page.getRoute() != null) {
+      isUpdate = true;
+    }
+    return isUpdate;
   }
 
   private boolean isChangeParent(ArticleCategory currentParent, ArticleCategory sourceParent) {
@@ -286,7 +358,7 @@ public class ArticleCategoryService {
     } else {
       builder.equal("parent.id", parent.getId());
     }
-    return ObjectUtil.sort(channelDao.findAll(builder.build()), "index", "asc");
+    return ObjectUtil.sort(categoryDao.findAll(builder.build()), "index", "asc");
   }
 
   /**
@@ -306,7 +378,7 @@ public class ArticleCategoryService {
     for (ArticleCategory item : neighbors) {
       item.setIndex(item.getIndex() + (back ? 1 : -1));
     }
-    this.channelDao.updateAllInBatch(neighbors);
+    this.categoryDao.updateAllInBatch(neighbors);
   }
 
   private String pinyin(String name) {
@@ -315,7 +387,7 @@ public class ArticleCategoryService {
 
   private String generateCode(Long channelId, String code, String name) {
     String slug = StringUtil.defaultValue(code, pinyin(name));
-    Optional<ArticleCategory> prev = channelDao.findOneBy("slug", slug);
+    Optional<ArticleCategory> prev = categoryDao.findOneBy("slug", slug);
     if (!prev.isPresent() || prev.get().getId().equals(channelId)) {
       return code;
     }
@@ -334,24 +406,24 @@ public class ArticleCategoryService {
     } else if (CollectionUtils.isNotEmpty(channel.getChildren())) {
       return false;
     }
-    this.channelDao.deleteById(id);
+    this.categoryDao.deleteById(id);
     return true;
   }
 
   public void deleteAll() {
     this.articleDao.deleteAll();
-    this.channelDao.deleteAll();
+    this.categoryDao.deleteAll();
   }
 
   public ArticleCategory findOne(Long id) {
-    return channelDao.findById(id).orElse(null);
+    return categoryDao.findById(id).orElse(null);
   }
 
   public Optional<ArticleCategory> findOneBySlug(String slug) {
-    return this.channelDao.findOneBy("slug", slug);
+    return this.categoryDao.findOneBy("slug", slug);
   }
 
   public ArticleCategory getById(Long id) {
-    return this.channelDao.getReferenceById(id);
+    return this.categoryDao.getReferenceById(id);
   }
 }

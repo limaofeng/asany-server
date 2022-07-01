@@ -7,28 +7,66 @@
 #    printer
 #}
 
-type ArticleMetadata {
-  image: File
-  url: String
-  title: String
-  description: String
+type PageComponent {
+  """
+  是否启用
+  """
+  enabled: Boolean!
+  """
+  路由
+  """
+  route: Route
+  """
+  组件
+  """
+  component: Component
+}
+
+input PageComponentInput {
+  enabled: Boolean
+  """
+  路径
+  """
+  path: String
+  """
+  页面模版
+  """
+  template: String
+  """
+  数据
+  """
+  blocks: [ComponentDataInput!]
 }
 
 input ArticleCategoryCreateInput {
-  # 栏目名称
+  """
+  栏目名称
+  """
   name: String!
-  # 地址
+  """
+  地址
+  """
   slug: String
-  # 栏目封面图
+  """
+  栏目封面图
+  """
   image: File
-  # 描述
+  """
+  描述
+  """
   description: String
-  # 上级栏目
+  """
+  上级栏目
+  """
   parent: ID
-  # 排序
+  """
+  排序
+  """
   index: Int
-  # 元数据
-  metadata: ArticleMetadataInput
+  """
+  附加信息
+  """
+  metafields: [ArticleMetafieldInput]
 }
 
 input FieldValueInput {
@@ -38,22 +76,42 @@ input FieldValueInput {
 }
 
 input ArticleCategoryUpdateInput {
-  # 栏目名称
+  """
+  栏目名称
+  """
   name: String
-  # 地址
+  """
+  地址
+  """
   slug: String
-  # 栏目封面图
+  """
+  栏目封面图
+  """
   image: File
-  # 描述
+  """
+  描述
+  """
   description: String
-  # 排序
+  """
+  排序
+  """
   index: Int
-  # 上级栏目
+  """
+  上级栏目
+  """
   parent: ID
-  # 授予权限
-  #    permissions: [PermissionInput]
-  # 元数据
-  metadata: ArticleMetadataInput
+  """
+  存储模版
+  """
+  storeTemplate: String
+  """
+  附加信息
+  """
+  metafields: [ArticleMetafieldInput]
+  """
+  分类页面
+  """
+  page: PageComponentInput
 }
 
 input ArticleFilter {
@@ -142,6 +200,24 @@ type Meta {
   description: String
 }
 
+type ArticleMetaField {
+  id: ID
+  key: String
+  type: String
+  namespace: String
+  value: String
+  description: String
+}
+
+type ArticleCategoryMetaField {
+  id: ID
+  key: String
+  type: String
+  namespace: String
+  value: String
+  description: String
+}
+
 type ArticleCategory {
   id: ID!
   """
@@ -187,7 +263,7 @@ type ArticleCategory {
   """
   元数据
   """
-  metadata: ArticleMetadata
+  metafields: [ArticleCategoryMetaField!]!
   """
   创建时间
   """
@@ -205,13 +281,17 @@ type ArticleCategory {
   """
   storeTemplate: ArticleStoreTemplate
   """
+  页面
+  """
+  page: PageComponent
+  """
   栏目文章
   """
   articles(
     """
     筛选
     """
-    filter: ArticleFilter
+    filter: ArticleFilter = {}
     # 跳过
     skip: Int = 0
     # 游标定位 之后
@@ -240,7 +320,6 @@ type ArticleTag {
   path: String
   # 排序
   index: Int
-  metadata: ArticleMetadata
   createdAt: Date
   updatedAt: Date
 }
@@ -313,14 +392,16 @@ type Article {
   特征
   """
   features: [ArticleFeature!]!
+  """
+  元数据
+  """
+  metafields: [ArticleMetaField!]!
   # 有效期限 true 永久 false 短期
   validity: Boolean
   # 有效期限 开始时间
   validityStartDate: Date
   # 有效期限 结束时间
   validityEndDate: Date
-  # 元数据
-  #    metadata: ArticleMetadata
   # 附件
   attachments: [File!]!
   # 统计计数
@@ -433,17 +514,8 @@ input ArticleCreateInput {
   validityStartDate: Date
   # 有效期限 结束时间
   validityEndDate: Date
-  # 元数据
-  #    metadata: ArticleMetadataInput
   # 作者
   authors: [ID]
-}
-
-input ArticleMetadataInput {
-  image: File
-  url: String
-  title: String
-  description: String
 }
 
 input ContentInput {

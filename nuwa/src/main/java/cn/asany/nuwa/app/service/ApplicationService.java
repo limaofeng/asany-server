@@ -398,4 +398,25 @@ public class ApplicationService implements ClientDetailsService {
   public Optional<ApplicationRoute> getRoute(Long id) {
     return this.applicationRouteDao.findById(id);
   }
+
+  public void addRoute(ApplicationRoute route) {
+    this.applicationRouteDao.save(route);
+    Cache cache = this.cacheManager.getCache(CACHE_KEY);
+    assert cache != null;
+    Long appId = route.getApplication().getId();
+    String clientId = route.getApplication().getClientId();
+    cache.evictIfPresent(ApplicationService.class + ".loadClientByClientId#" + clientId);
+    cache.evictIfPresent(ApplicationService.class + ".findDetailsByClientId#" + clientId);
+    cache.evictIfPresent(ApplicationService.class + ".findDetailsById#" + appId);
+  }
+
+  public void clearApplication(Application application) {
+    Cache cache = this.cacheManager.getCache(CACHE_KEY);
+    assert cache != null;
+    Long appId = application.getId();
+    String clientId = application.getClientId();
+    cache.evictIfPresent(ApplicationService.class + ".loadClientByClientId#" + clientId);
+    cache.evictIfPresent(ApplicationService.class + ".findDetailsByClientId#" + clientId);
+    cache.evictIfPresent(ApplicationService.class + ".findDetailsById#" + appId);
+  }
 }

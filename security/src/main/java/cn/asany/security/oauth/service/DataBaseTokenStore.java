@@ -2,22 +2,16 @@ package cn.asany.security.oauth.service;
 
 import cn.asany.openapi.apis.AmapOpenAPI;
 import cn.asany.openapi.service.OpenAPIService;
-import cn.asany.security.core.domain.User;
-import cn.asany.security.oauth.dao.AccessTokenDao;
 import cn.asany.security.oauth.domain.AccessToken;
 import cn.asany.security.oauth.domain.AccessTokenClientDetails;
 import cn.asany.security.oauth.domain.ClientDevice;
 import eu.bitwalker.useragentutils.UserAgent;
-import java.time.Instant;
-import java.util.Date;
-import java.util.Optional;
-import javax.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
-import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.security.authentication.Authentication;
 import org.jfantasy.framework.security.oauth2.JwtTokenPayload;
 import org.jfantasy.framework.security.oauth2.core.AbstractTokenStore;
 import org.jfantasy.framework.security.oauth2.core.OAuth2AccessToken;
+import org.jfantasy.framework.security.oauth2.core.OAuth2AuthenticationDetails;
 import org.jfantasy.framework.security.oauth2.jwt.JwtUtils;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.common.StringUtil;
@@ -25,6 +19,9 @@ import org.jfantasy.framework.util.web.WebUtil;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.Optional;
 
 /**
  * TokenStore
@@ -35,26 +32,23 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class DataBaseTokenStore extends AbstractTokenStore {
 
-  private final AccessTokenDao accessTokenDao;
+  private final AccessTokenService accessTokenService;
   private final OpenAPIService openAPIService;
 
   public DataBaseTokenStore(
       StringRedisTemplate redisTemplate,
-      AccessTokenDao accessTokenDao,
+      AccessTokenService accessTokenService,
       OpenAPIService openAPIService) {
     super(redisTemplate);
-    this.accessTokenDao = accessTokenDao;
+    this.accessTokenService = accessTokenService;
     this.openAPIService = openAPIService;
-  }
-
-  protected Optional<AccessToken> getAccessToken(String token) {
-    return this.accessTokenDao.findOne(PropertyFilter.builder().equal("token", token).build());
   }
 
   @Override
   @Transactional
   public void storeAccessToken(OAuth2AccessToken token, Authentication authentication) {
-    Optional<AccessToken> optionalAccessToken = getAccessToken(token.getTokenValue());
+    Optional<AccessToken> optionalAccessToken =
+        this.accessTokenService.getAccessToken(token.getTokenValue());
 
     HttpServletRequest request = ObjectUtil.getValue("details.request", authentication);
 
@@ -95,36 +89,22 @@ public class DataBaseTokenStore extends AbstractTokenStore {
       clientDetails.setLastIp(clientDetails.getIp());
       clientDetails.setLastLocation(clientDetails.getLocation());
 
-      this.accessTokenDao.save(
-          AccessToken.builder()
-              .name(ObjectUtil.defaultValue(authentication.getName(), payload::getName))
-              .token(token.getTokenValue())
-              .tokenType(token.getTokenType())
-              .issuedAt(Date.from(token.getIssuedAt()))
-              .expiresAt(token.getExpiresAt() != null ? Date.from(token.getExpiresAt()) : null)
-              .scopes(token.getScopes())
-              .refreshToken(token.getRefreshTokenValue())
-              .client(payload.getClientId())
-              .lastUsedTime(Date.from(Instant.now()))
-              .user(User.builder().id(payload.getUid()).build())
-              .clientDetails(clientDetails)
-              .build());
+      OAuth2AuthenticationDetails details =
+          (OAuth2AuthenticationDetails) authentication.getDetails();
+
+      AccessToken accessToken =
+          this.accessTokenService.createAccessToken(
+              ObjectUtil.defaultValue(authentication.getName(), payload::getName),
+              payload.getUid(),
+              payload.getClientId(),
+              details.getClientSecret(),
+              token,
+              clientDetails);
+      log.debug(String.format("accessToken(%d) 保存成功!", accessToken.getId()));
     } else {
       AccessToken accessToken = optionalAccessToken.get();
-      accessToken.setExpiresAt(
-          token.getExpiresAt() != null ? Date.from(token.getExpiresAt()) : null);
-
-      AccessTokenClientDetails _clientDetails = accessToken.getClientDetails();
-      if (_clientDetails == null) {
-        _clientDetails = new AccessTokenClientDetails();
-        _clientDetails.setDevice(clientDetails.getDevice());
-      }
-      _clientDetails.setLastIp(clientDetails.getIp());
-      _clientDetails.setLastLocation(clientDetails.getLocation());
-      accessToken.setClientDetails(_clientDetails);
-      accessToken.setLastUsedTime(Date.from(Instant.now()));
-
-      this.accessTokenDao.update(accessToken);
+      accessToken = this.accessTokenService.updateAccessToken(accessToken, token, clientDetails);
+      log.debug(String.format("accessToken(%d) 更新成功!", accessToken.getId()));
     }
 
     super.storeAccessToken(token, authentication);
@@ -132,8 +112,7 @@ public class DataBaseTokenStore extends AbstractTokenStore {
 
   @Override
   public void removeAccessToken(OAuth2AccessToken token) {
-    Optional<AccessToken> optionalAccessToken = getAccessToken(token.getTokenValue());
-    optionalAccessToken.ifPresent(this.accessTokenDao::delete);
+    this.accessTokenService.delete(token.getTokenValue());
     super.removeAccessToken(token);
   }
 }

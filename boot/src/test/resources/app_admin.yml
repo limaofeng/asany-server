@@ -201,20 +201,17 @@ routes:
         hideMenu: true
         routes:
           - path: /apps/:id/overview
-            component: cn.asany.ui.admin.app.Overview
-            hideMenu: true
+            component: cn.asany.ui.admin.app.settings.Overview
+          - path: /apps/:id/profile
+            component: cn.asany.ui.admin.app.settings.Profile
           - path: /apps/:id/menus
-            component: cn.asany.ui.admin.app.MenuTree
-            hideMenu: true
+            component: cn.asany.ui.admin.app.settings.MenuTree
           - path: /apps/:id/routes
-            component: cn.asany.ui.admin.app.RouteTree
-            hideMenu: true
-          - path: /apps/:id/settings
-            component: cn.asany.ui.admin.app.Settings
-            hideMenu: true
+            component: cn.asany.ui.admin.app.settings.RouteTree
+          - path: /apps/:id/api_keys
+            component: cn.asany.ui.admin.app.settings.ClientSecrets
           - path: /apps/:id
-            component: cn.asany.ui.admin.app.Overview
-            hideMenu: true
+            component: cn.asany.ui.admin.app.settings.Overview
       - path: /cms/my/drafts
         component: cn.asany.ui.admin.cms.MyDrafts
       - path: /cms/my/published
@@ -356,6 +353,10 @@ routes:
                     component: cn.asany.ui.admin.cms.ArticleEdit
                   - path: /websites/:sid/cms/categories/:id/articles
                     component: cn.asany.ui.admin.cms.ArticleList
+              - path: /websites/:sid/settings/general
+                component: cn.asany.ui.admin.website.settings.WebsiteGeneral
+              - path: /websites/:sid/settings/navigation
+                component: cn.asany.ui.admin.website.settings.WebsiteNavigation
               - path: /websites/:sid
                 component: cn.asany.ui.admin.website.WebsiteDashboard
           - path: /websites

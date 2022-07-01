@@ -72,8 +72,6 @@ public class ArticleCategory extends BaseBusEntity {
   /** 层级 */
   @Column(name = "LEVEL")
   private Integer level;
-  /** SEO 优化字段 */
-  @Embedded private ArticleMetadata metadata;
   /** 上级栏目 */
   @JsonProperty("parent_id")
   @ManyToOne(fetch = FetchType.LAZY)
@@ -85,6 +83,14 @@ public class ArticleCategory extends BaseBusEntity {
       name = "STORE_TEMPLATE_ID",
       foreignKey = @ForeignKey(name = "FK_ARTICLE_CATEGORY_STORE_TEMPLATE"))
   private ArticleStoreTemplate storeTemplate;
+  /** 栏目的附加信息 */
+  @OneToMany(mappedBy = "category", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+  private List<ArticleCategoryMetaField> metafields;
+  /** 定义栏目下文章的默认元数据 */
+  @OneToMany(mappedBy = "category", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+  private List<ArticleMetafieldDefinition> metafieldDefinitions;
+  /** 展示页 */
+  @Embedded private PageComponent page;
   /** 下级栏目 */
   @OneToMany(
       mappedBy = "parent",

@@ -11,6 +11,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.framework.security.core.GrantedAuthority;
 import org.jfantasy.framework.security.oauth2.core.ClientDetails;
+import org.jfantasy.framework.security.oauth2.core.ClientSecretType;
 
 /**
  * 应用信息
@@ -186,17 +187,9 @@ public class Application extends BaseBusEntity implements ClientDetails {
   }
 
   @Override
-  public String getClientSecret() {
-    Optional<ClientSecret> secret = getClientSecretsAlias().stream().findAny();
-    if (!secret.isPresent()) {
-      throw new RuntimeException("ClientSecret 未配置");
-    }
-    return secret.get().getSecret();
-  }
-
-  @Override
-  public Set<String> getClientSecrets() {
+  public Set<String> getClientSecrets(ClientSecretType type) {
     return getClientSecretsAlias().stream()
+        .filter(item -> item.getType() == type)
         .map(ClientSecret::getSecret)
         .collect(Collectors.toSet());
   }

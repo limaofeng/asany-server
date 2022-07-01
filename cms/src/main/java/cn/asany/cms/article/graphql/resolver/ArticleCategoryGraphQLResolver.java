@@ -2,6 +2,7 @@ package cn.asany.cms.article.graphql.resolver;
 
 import cn.asany.cms.article.domain.Article;
 import cn.asany.cms.article.domain.ArticleCategory;
+import cn.asany.cms.article.graphql.input.AcceptArticleCategory;
 import cn.asany.cms.article.graphql.input.ArticleFilter;
 import cn.asany.cms.article.graphql.type.Starrable;
 import cn.asany.cms.article.service.ArticleCategoryService;
@@ -108,6 +109,10 @@ public class ArticleCategoryGraphQLResolver implements GraphQLResolver<ArticleCa
     if (filter != null) {
       builder.and(filter.getBuilder());
     }
+
+    assert filter != null;
+    filter.setCategory(
+        AcceptArticleCategory.builder().id(category.getId().toString()).subColumns(false).build());
 
     return this.articleService.findPage(pageable, builder.build()).getContent();
   }

@@ -10,13 +10,11 @@ input ApplicationFilter {
 }
 
 input RouteFilter {
-  id_in: [String]
-  # 是否启用
+  space: ID = "web"
+  """
+  是否启用
+  """
   enabled: Boolean
-  # 应用ID
-  application: ID
-  # 类型
-  type: RouteType
 }
 
 input RouteCreateInput {
@@ -148,9 +146,34 @@ type Routespace {
   name: String
 }
 
+enum ClientSecretType {
+  SESSION
+  OAUTH
+  PERSONAL_ACCESS_TOKEN
+}
+
 type ClientSecret {
-  id: ID
-  secret: String
+  id: ID!
+  """
+  类型
+  """
+  type: ClientSecretType!
+  """
+  密钥
+  """
+  secret: String!
+  """
+  创建时间
+  """
+  createdAt: Date!
+  """
+  创建人
+  """
+  createdBy: ID
+  """
+  最后使用时间
+  """
+  lastUseTime: Date
 }
 
 type Menu {
@@ -208,8 +231,10 @@ type Licence {
 
 type Application {
   id: ID!
-  # 名称
+  # 名称 (英文)
   name: String!
+  # 名称 (中文)
+  title: String
   # 简介
   description: String
   # 应用 LOGO
@@ -219,7 +244,7 @@ type Application {
   # 是否启用
   enabled: Boolean
   # 路由
-  routes(space: ID = "web"): [Route!]!
+  routes(filter: RouteFilter = {}): [Route!]!
   # 菜单
   menus: [Menu!]!
   # 路由命名空间

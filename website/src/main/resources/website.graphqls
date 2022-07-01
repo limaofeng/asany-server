@@ -24,6 +24,10 @@ type Website implements BaseEntity {
   修改时间
   """
   updatedAt: Date @dateFormat
+  """
+  对应的应用
+  """
+  application: Application
 }
 
 input WebsiteCreateInput {

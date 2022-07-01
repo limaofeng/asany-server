@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class CmsModule implements IModule<CmsModuleProperties> {
 
-  @Autowired private ArticleCategoryConverter channelConverter;
+  @Autowired private ArticleCategoryConverter categoryConverter;
   @Autowired private ArticleCategoryService articleCategoryService;
 
   @Override
@@ -22,6 +22,6 @@ public class CmsModule implements IModule<CmsModuleProperties> {
 
   @Override
   public void load(CmsModuleProperties properties) {
-    this.articleCategoryService.saveAll(channelConverter.toChannels(properties.getChannels()), 0L);
+    this.articleCategoryService.saveAll(categoryConverter.toChannels(properties.getChannels()), 0L);
   }
 }

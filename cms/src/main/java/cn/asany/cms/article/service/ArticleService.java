@@ -174,10 +174,6 @@ public class ArticleService {
     return article;
   }
 
-  public Article update(Article article) {
-    return articleDao.update(article, true);
-  }
-
   /**
    * 设置文章摘要，如果文章存在摘要，则跳过
    *

@@ -8,6 +8,7 @@ import lombok.*;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
+import org.jfantasy.framework.security.oauth2.core.ClientSecretType;
 
 /**
  * 客户端凭证
@@ -30,6 +31,10 @@ public class ClientSecret extends BaseBusEntity {
   @GeneratedValue(generator = "fantasy-sequence")
   @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
+  /** 密钥类型 */
+  @Column(name = "TYPE", nullable = false, length = 20)
+  @Enumerated(EnumType.STRING)
+  private ClientSecretType type;
   /** 密钥 */
   @Column(name = "SECRET", length = 40, updatable = false)
   private String secret;
@@ -38,8 +43,8 @@ public class ClientSecret extends BaseBusEntity {
   private String client;
   /** 访问令牌 */
   @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-  @OrderBy(" createdAt desc ")
-  @JoinColumn(name = "CLIENT_ID", referencedColumnName = "CLIENT_ID", updatable = false)
+  @OrderBy("createdAt desc")
+  @JoinColumn(name = "CLIENT_SECRET", referencedColumnName = "SECRET", updatable = false)
   @ToString.Exclude
   private List<AccessToken> accessTokens;
 

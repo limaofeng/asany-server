@@ -1,27 +1,23 @@
 package cn.asany.security.oauth.service;
 
+import cn.asany.security.core.domain.User;
 import cn.asany.security.oauth.convert.AccessTokenConverter;
 import cn.asany.security.oauth.dao.AccessTokenDao;
 import cn.asany.security.oauth.domain.AccessToken;
+import cn.asany.security.oauth.domain.AccessTokenClientDetails;
 import cn.asany.security.oauth.vo.PersonalAccessToken;
 import cn.asany.security.oauth.vo.SessionAccessToken;
-import java.util.List;
-import java.util.Optional;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
-import org.jfantasy.framework.error.ValidationException;
-import org.jfantasy.framework.security.SecurityContextHolder;
-import org.jfantasy.framework.security.authentication.Authentication;
-import org.jfantasy.framework.security.oauth2.DefaultTokenServices;
-import org.jfantasy.framework.security.oauth2.JwtTokenPayload;
 import org.jfantasy.framework.security.oauth2.core.OAuth2AccessToken;
-import org.jfantasy.framework.security.oauth2.core.OAuth2Authentication;
-import org.jfantasy.framework.security.oauth2.core.OAuth2AuthenticationDetails;
 import org.jfantasy.framework.security.oauth2.core.TokenType;
-import org.jfantasy.framework.security.oauth2.jwt.JwtUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+
+import java.time.Instant;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * 访问令牌服务
@@ -32,34 +28,12 @@ import org.springframework.stereotype.Service;
 public class AccessTokenService {
 
   private final AccessTokenDao accessTokenDao;
-  private final DefaultTokenServices tokenServices;
   private final AccessTokenConverter accessTokenConverter;
 
   public AccessTokenService(
-      AccessTokenDao accessTokenDao,
-      @Autowired(required = false) DefaultTokenServices tokenServices,
-      AccessTokenConverter accessTokenConverter) {
+      AccessTokenDao accessTokenDao, AccessTokenConverter accessTokenConverter) {
     this.accessTokenDao = accessTokenDao;
-    this.tokenServices = tokenServices;
     this.accessTokenConverter = accessTokenConverter;
-  }
-
-  public PersonalAccessToken createPersonalAccessToken(String clientId, String name) {
-    OAuth2AuthenticationDetails oAuth2AuthenticationDetails = new OAuth2AuthenticationDetails();
-    oAuth2AuthenticationDetails.setClientId(clientId);
-    oAuth2AuthenticationDetails.setTokenType(TokenType.PERSONAL);
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    OAuth2Authentication oAuth2Authentication =
-        new OAuth2Authentication(authentication, oAuth2AuthenticationDetails);
-    oAuth2Authentication.setName(name);
-    OAuth2AccessToken accessToken = tokenServices.createAccessToken(oAuth2Authentication);
-    Optional<AccessToken> optionalAccessToken =
-        this.accessTokenDao.findOne(
-            PropertyFilter.builder().equal("token", accessToken.getTokenValue()).build());
-    if (!optionalAccessToken.isPresent()) {
-      throw new ValidationException("创建 Token 失败");
-    }
-    return accessTokenConverter.toPersonalAccessToken(optionalAccessToken.get());
   }
 
   public List<PersonalAccessToken> getPersonalAccessTokens(String clientId, Long uid) {
@@ -70,6 +44,74 @@ public class AccessTokenService {
             .equal("user.id", uid);
     List<AccessToken> accessTokens = this.accessTokenDao.findAll(builder.build());
     return accessTokenConverter.toPersonalAccessTokens(accessTokens);
+  }
+
+  /**
+   * 创建 AccessToken
+   *
+   * @param name 名称
+   * @param uid 用户ID
+   * @param clientId 客户端
+   * @param clientSecret 客户端密钥
+   * @param token 令牌
+   * @param clientDetails 请求详情
+   * @return AccessToken
+   */
+  public AccessToken createAccessToken(
+      String name,
+      Long uid,
+      String clientId,
+      String clientSecret,
+      OAuth2AccessToken token,
+      AccessTokenClientDetails clientDetails) {
+    return this.accessTokenDao.save(
+        AccessToken.builder()
+            .name(name)
+            .token(token.getTokenValue())
+            .tokenType(token.getTokenType())
+            .issuedAt(Date.from(token.getIssuedAt()))
+            .expiresAt(token.getExpiresAt() != null ? Date.from(token.getExpiresAt()) : null)
+            .scopes(token.getScopes())
+            .refreshToken(token.getRefreshTokenValue())
+            .client(clientId)
+            .clientSecret(clientSecret)
+            .lastUsedTime(Date.from(Instant.now()))
+            .user(User.builder().id(uid).build())
+            .clientDetails(clientDetails)
+            .build());
+  }
+
+  /**
+   * 更新 AccessToken
+   *
+   * @param accessToken 原 AccessToken
+   * @param token 令牌
+   * @param clientDetails 请求详情
+   * @return AccessToken
+   */
+  public AccessToken updateAccessToken(
+      AccessToken accessToken, OAuth2AccessToken token, AccessTokenClientDetails clientDetails) {
+    accessToken.setExpiresAt(token.getExpiresAt() != null ? Date.from(token.getExpiresAt()) : null);
+
+    AccessTokenClientDetails _clientDetails = accessToken.getClientDetails();
+    if (_clientDetails == null) {
+      _clientDetails = new AccessTokenClientDetails();
+      _clientDetails.setDevice(clientDetails.getDevice());
+    }
+    _clientDetails.setLastIp(clientDetails.getIp());
+    _clientDetails.setLastLocation(clientDetails.getLocation());
+    accessToken.setClientDetails(_clientDetails);
+    accessToken.setLastUsedTime(Date.from(Instant.now()));
+    this.accessTokenDao.update(accessToken);
+    return accessToken;
+  }
+
+  public Optional<AccessToken> getAccessToken(Long id) {
+    return this.accessTokenDao.findById(id);
+  }
+
+  public Optional<AccessToken> getAccessToken(String token) {
+    return this.accessTokenDao.findOne(PropertyFilter.builder().equal("token", token).build());
   }
 
   public SessionAccessToken getSessionById(Long id) {
@@ -88,36 +130,30 @@ public class AccessTokenService {
     return accessTokenConverter.toSessions(accessTokens);
   }
 
-  public boolean revokeToken(Long uid, String token) {
-    JwtTokenPayload payload = JwtUtils.payload(token);
-    OAuth2AccessToken accessToken = this.tokenServices.readAccessToken(token);
-    if (!uid.equals(payload.getUid())) {
-      return false;
+  /**
+   * 查询密钥最后使用时间
+   *
+   * @param client 客户端
+   * @param clientSecret 客户端密钥
+   * @return Date
+   */
+  public Date getLastUseTime(String client, String clientSecret) {
+    List<AccessToken> accessTokens =
+        this.accessTokenDao.findAll(
+            PropertyFilter.builder()
+                .equal("client", client)
+                .equal("clientSecret", clientSecret)
+                .build(),
+            1,
+            Sort.by("lastUsedTime").descending());
+    if (accessTokens.isEmpty()) {
+      return null;
     }
-    return this.tokenServices.revokeToken(accessToken.getTokenValue());
+    return accessTokens.get(0).getLastUsedTime();
   }
 
-  public boolean revokeSession(Long uid, Long id) {
-    PropertyFilterBuilder builder =
-        PropertyFilter.builder()
-            .equal("id", id)
-            .equal("user.id", uid)
-            .equal("tokenType", TokenType.SESSION);
-    Optional<AccessToken> optionalAccessToken = this.accessTokenDao.findOne(builder.build());
-    return optionalAccessToken
-        .filter(accessToken -> this.tokenServices.revokeToken(accessToken.getToken()))
-        .isPresent();
-  }
-
-  public boolean revokePersonalAccessToken(Long uid, Long id) {
-    PropertyFilterBuilder builder =
-        PropertyFilter.builder()
-            .equal("id", id)
-            .equal("user.id", uid)
-            .equal("tokenType", TokenType.PERSONAL);
-    Optional<AccessToken> optionalAccessToken = this.accessTokenDao.findOne(builder.build());
-    return optionalAccessToken
-        .filter(accessToken -> this.tokenServices.revokeToken(accessToken.getToken()))
-        .isPresent();
+  public void delete(String token) {
+    Optional<AccessToken> accessToken = getAccessToken(token);
+    accessToken.ifPresent(this.accessTokenDao::delete);
   }
 }
