@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.26](https://github.com/limaofeng/asany-server/compare/v0.1.25...v0.1.26) (2022-07-01)
+
+
+### Features
+
+* auth_access_token 保存 clientSecret 字段 ([aba9e7e](https://github.com/limaofeng/asany-server/commit/aba9e7e22b392e7eda9013f6ec1e1b2832070a3f))
+* dev 时, 显示更多的 sql 信息 ([589c459](https://github.com/limaofeng/asany-server/commit/589c459d20d95b1dc5eee3efea4e0f176d52c2f1))
+* 修改包名 bean 为 domain ([33f0c90](https://github.com/limaofeng/asany-server/commit/33f0c9050c4156a598b1f74e7d7c5f813086dfc2))
+* 修改包名 bean 为 domain ([417b792](https://github.com/limaofeng/asany-server/commit/417b792bbe11e75b47f2ea5ad3298c7bfc22e54b))
+* 内容管理模块重构 ([19d5685](https://github.com/limaofeng/asany-server/commit/19d5685942cd6bcbf4a6248d587a76178a0994c3))
+* 升级 Springboot 2.7 ([05688bb](https://github.com/limaofeng/asany-server/commit/05688bbd01ae453f94b1711f395011bfd2b17b2f))
+* 文章 body 逻辑 ([4b44604](https://github.com/limaofeng/asany-server/commit/4b44604c31395a48a416c8c5ed7404c1fcab95e6))
+* 调整文章接口, storeAccessToken 使用异步 ([4c0a6eb](https://github.com/limaofeng/asany-server/commit/4c0a6eb03cca8d8b81cc1a8faae2ca3008b9d547))
+* 重构网站模块 ([79b7ff4](https://github.com/limaofeng/asany-server/commit/79b7ff40077ab4c835734ba70eed8a388b7a7750))
+
+
+### Bug Fixes
+
+* 修复约束定义 ([f2bc036](https://github.com/limaofeng/asany-server/commit/f2bc03648b8ac406f61266fa10e91cbada336eb2))
+* 兼容 jfantasy 2.10.0 改动 ([f2e6112](https://github.com/limaofeng/asany-server/commit/f2e61127213eecd16a801a192e59cfab23a27030))
+* 解决文章状态修改时的BUG ([68d74c5](https://github.com/limaofeng/asany-server/commit/68d74c51ca3561e36e2222989537522bb83b25f7))
+
 ### [0.1.25](https://github.com/limaofeng/asany-server/compare/v0.1.24...v0.1.25) (2022-05-12)
 
 
