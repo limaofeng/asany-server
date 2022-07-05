@@ -29,4 +29,10 @@ public class ApplicationMenuCreateInput {
   private Long index;
   /** 应用 */
   private Long application;
+  /** 隐藏菜单 */
+  private Boolean hideInMenu;
+  /** 隐藏子菜单 */
+  private Boolean hideChildrenInMenu;
+  /** 不在面包屑中显示菜单 */
+  private Boolean hideInBreadcrumb;
 }

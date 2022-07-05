@@ -2,7 +2,9 @@ package cn.asany.nuwa.app.service;
 
 import cn.asany.nuwa.app.dao.ApplicationMenuDao;
 import cn.asany.nuwa.app.domain.ApplicationMenu;
+import java.awt.*;
 import java.util.*;
+import java.util.List;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
 import org.jfantasy.framework.util.common.ObjectUtil;
@@ -156,25 +158,24 @@ public class ApplicationMenuService {
       }
       menus.add(optional.get());
     }
-    Set<Long> parentIds = new HashSet<>();
-    menus.forEach(
-        item -> {
-          if (item.getParent() == null) {
-            parentIds.add(0L);
-          } else {
-            parentIds.add(item.getParent().getId());
-          }
-        });
     if (!menus.isEmpty()) {
       this.menuDao.deleteAllById(ObjectUtil.toFieldList(menus, "id", new ArrayList<>()));
     }
+    Set<String> parentIds = new HashSet<>();
     // 重新计算排序值
-    for (Long parentId : parentIds) {
+    for (ApplicationMenu menu : menus) {
+      if (!parentIds.add(
+          menu.getApplication().getId()
+              + "-"
+              + (menu.getParent() == null ? 0 : menu.getParent().getId()))) {
+        continue;
+      }
       PropertyFilterBuilder builder = PropertyFilter.builder();
-      if (Long.valueOf(0).equals(parentId)) {
+      if (menu.getParent() == null) {
         builder.isNull("parent");
+        builder.equal("application.id", menu.getApplication().getId());
       } else {
-        builder.equal("parent.id", parentId);
+        builder.equal("parent.id", menu.getParent().getId());
       }
       List<ApplicationMenu> siblings =
           this.menuDao.findAll(builder.build(), Sort.by("index").ascending());

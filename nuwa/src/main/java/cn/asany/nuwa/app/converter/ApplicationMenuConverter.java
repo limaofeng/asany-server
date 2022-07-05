@@ -1,5 +1,6 @@
 package cn.asany.nuwa.app.converter;
 
+import cn.asany.nuwa.app.domain.Application;
 import cn.asany.nuwa.app.domain.ApplicationMenu;
 import cn.asany.nuwa.app.graphql.input.ApplicationMenuCreateInput;
 import cn.asany.nuwa.app.graphql.input.ApplicationMenuUpdateInput;
@@ -24,8 +25,8 @@ public interface ApplicationMenuConverter {
    * @return 菜单
    */
   @Mappings({
-    @Mapping(target = "application.id", source = "application"),
-    @Mapping(target = "parent.id", source = "parentMenu")
+    @Mapping(target = "application", source = "application", qualifiedByName = "toApplication"),
+    @Mapping(target = "parent", source = "parentMenu", qualifiedByName = "toParentMenu")
   })
   ApplicationMenu toMenu(ApplicationMenuCreateInput input);
 
@@ -35,9 +36,22 @@ public interface ApplicationMenuConverter {
    * @param input 输入
    * @return 菜单
    */
-  @Mappings({
-    @Mapping(target = "application.id", source = "application"),
-    @Mapping(target = "parent.id", source = "parentMenu")
-  })
+  @Mappings({@Mapping(target = "parent", source = "parentMenu", qualifiedByName = "toParentMenu")})
   ApplicationMenu toMenu(ApplicationMenuUpdateInput input);
+
+  @Named("toApplication")
+  default Application toApplication(Long id) {
+    if (id == null) {
+      return null;
+    }
+    return Application.builder().id(id).build();
+  }
+
+  @Named("toParentMenu")
+  default ApplicationMenu toParentMenu(Long id) {
+    if (id == null) {
+      return null;
+    }
+    return ApplicationMenu.builder().id(id).build();
+  }
 }

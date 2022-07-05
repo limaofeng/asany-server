@@ -73,39 +73,93 @@ input NuwaComponentInput {
 }
 
 input MenuCreateInput {
-  # 名称
+  """
+  名称
+  """
   name: String!
-  # 对应的图标
+  """
+  对应的图标
+  """
   icon: String
-  # 菜单类型
+  """
+  菜单类型
+  """
   type: MenuType!
-  # 路径
+  """
+  路径
+  """
   path: String
-  # 需要提供的权限
+  """
+  权限
+  """
   authority: [String]
-  # 父路由
+  """
+  父菜单
+  """
   parentMenu: ID
-  # 默认位置
+  """
+  排序
+  """
   index: Int
-  # 应用
+  """
+  应用
+  """
   application: ID!
+  """
+  组件
+  """
+  component: ID
 }
 
 input MenuUpdateInput {
-  # 名称
-  name: String!
-  # 对应的图标
+  """
+  名称
+  """
+  name: String
+  """
+  对应的图标
+  """
   icon: String
-  # 菜单类型
+  """
+  菜单类型
+  """
   type: MenuType
-  # 路径
+  """
+  路径
+  """
   path: String
-  # 需要提供的权限
+  """
+  需要提供的权限
+  """
   authority: [String]
-  # 父路由
+  """
+  父路由
+  """
   parentMenu: ID
-  # 默认位置
+  """
+  默认位置
+  """
   index: Int
+  """
+  组件
+  """
+  component: ID
+  """
+  权限
+  """
+  authority: [String!]
+  """
+  隐藏菜单
+  """
+  hideInMenu: Boolean
+  """
+  隐藏子菜单
+  """
+  hideChildrenInMenu: Boolean
+  """
+  不在面包屑中显示菜单
+  """
+  hideInBreadcrumb: Boolean
 }
 
 type RouteComponentWrapper {
