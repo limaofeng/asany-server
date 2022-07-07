@@ -18,53 +18,113 @@ input RouteFilter {
 }
 
 input RouteCreateInput {
-  # 名称
+  """
+  名称
+  """
   name: String!
-  # 路径
+  """
+  是否启用
+  """
+  enabled: Boolean
+  """
+  路径
+  """
   path: String!
-  # 必须登录
+  """
+  必须登录
+  """
   authorized: Boolean
-  # 路由类型
+  """
+  路由类型
+  """
   type: RouteType
-  # 需要提供的权限
+  """
+  访问权限
+  """
   access: String
-  # 在面包屑中隐藏菜单
+  """
+  在面包屑中隐藏菜单
+  """
   hideInBreadcrumb: Boolean
-  # 重定向的路径
+  """
+  重定向的路径
+  """
   redirect: String
-  # 组件
-  component: NuwaComponentInput
-  # 对应的图标
+  """
+  组件
+  """
+  component: ID
+  """
+  应用
+  """
+  application: ID!
+  """
+  对应的图标
+  """
   icon: String
-  # 父路由
+  """
+  父路由
+  """
   parentRoute: ID
-  # 默认位置
+  """
+  排序
+  """
   index: Int
 }
 
 input RouteUpdateInput {
-  # 名称
+  """
+  名称
+  """
   name: String
-  # 是否启用
+  """
+  是否启用
+  """
   enabled: Boolean
-  # 路由类型
+  """
+  路由类型
+  """
   type: RouteType
-  # 路径
+  """
+  路径
+  """
   path: String
-  # 必须登录
+  """
+  必须登录
+  """
   authorized: Boolean
-  # 访问权限
+  """
+  访问权限
+  """
   access: String
-  # 在面包屑中隐藏菜单
+  """
+  在面包屑中隐藏菜单
+  """
   hideInBreadcrumb: Boolean
-  # 重定向的路径
+  """
+  重定向的路径
+  """
   redirect: String
-  # 组件
-  component: NuwaComponentInput
-  # 对应的图标
+  """
+  组件
+  """
+  component: ID
+  """
+  自定义面包屑组件
+  """
+  breadcrumb: ID
+  """
+  对应的图标
+  """
   icon: String
-  # 父路由
+  """
+  父路由
+  """
   parentRoute: ID
+  """
+  排序
+  """
+  index: Int
 }
 
 input NuwaComponentInput {
@@ -283,40 +343,84 @@ type Licence {
   ownership: Organization
 }
 
+type ApplicationDependency {
+  id: ID!
+  name: String
+  type: String
+  value: String
+  version: String
+}
+
 type Application {
   id: ID!
-  # 名称 (英文)
+  """
+  名称 (英文)
+  """
   name: String!
-  # 名称 (中文)
+  """
+  名称 (中文)
+  """
   title: String
-  # 简介
+  """
+  简介
+  """
   description: String
-  # 应用 LOGO
+  """
+  应用 LOGO
+  """
   logo: String
-  # 应用访问地址
+  """
+  应用访问地址
+  """
   url: String
-  # 是否启用
+  """
+  是否启用
+  """
   enabled: Boolean
-  # 路由
+  """
+  路由
+  """
   routes(filter: RouteFilter = {}): [Route!]!
-  # 菜单
+  """
+  菜单
+  """
   menus: [Menu!]!
-  # 路由命名空间
+  """
+  路由命名空间
+  """
   routespaces: [Routespace]
-  # 登录路由
+  """
+  登录路由
+  """
   loginRoute(space: ID = "web"): Route
-  # 布局路由
+  """
+  布局路由
+  """
   layoutRoute(space: ID = "web"): Route
-  # 集成钉钉
+  """
+  集成钉钉
+  """
   dingtalkIntegration: Boolean
-  # 客户端 ID
+  """
+  客户端 ID
+  """
   clientId: String!
-  # 客户端密钥
+  """
+  客户端密钥
+  """
   clientSecrets: [ClientSecret!]!
-  # 获取组织可用的许可证
+  """
+  获取组织可用的许可证
+  """
   licence: Licence
-  # 许可证
+  """
+  许可证
+  """
   licences: [Licence!]!
+  """
+  依赖
+  """
+  dependencies: [ApplicationDependency!]!
 }
 
 type ApplicationVariable {
@@ -358,52 +462,94 @@ type LayoutSettings {
 
 type Route {
   id: ID!
-  # 菜单名称
+  """
+  菜单名称
+  """
   name: String
-  # 是否启用
+  """
+  是否启用
+  """
   enabled: Boolean!
-  # 路由类型
+  """
+  路由类型
+  """
   type: RouteType!
-  # 树路径
+  """
+  访问路径
+  """
   path: String!
-  # 必须登录
+  """
+  必须登录
+  """
   authorized: Boolean
-  # 访问权限
+  """
+  访问权限
+  """
   access: String
-  # 布局设置
+  """
+  布局设置
+  """
   layout: LayoutSettings
-  # 在面包屑中隐藏菜单
+  """
+  在面包屑中隐藏菜单
+  """
   hideInBreadcrumb: Boolean
-  # 重定向
+  """
+  重定向
+  """
   redirect: String
-  # 组件
+  """
+  组件
+  """
   component: Component
-  # 对应的图标
+  """
+  自定义面包屑组件
+  """
+  breadcrumb: Component
+  """
+  对应的图标
+  """
   icon: String
-  # 序号
+  """
+  序号
+  """
   index: Int!
-  # 子路由
+  """
+  子路由
+  """
   routes: [Route]
-  # 父路由
+  """
+  父路由
+  """
   parent: Route
-  # 路由层级
+  """
+  路由层级
+  """
   level: Int!
-  # 路由对应的应用
+  """
+  路由对应的应用
+  """
   application: Application!
 }
 
 union StarValue = Application
 
 extend type Query {
-  # 所有的应用
+  """
+  所有的应用
+  """
   applications(filter: ApplicationFilter = {}): [Application!]!
-  # 查询单个应用的信息
+  """
+  查询单个应用的信息
+  """
   application(
     id: ID!
     idType: ApplicationIdType
     space: ID = "web"
   ): Application
-  # 查询路由
+  """
+  查询路由
+  """
   route(id: ID!): Route
 }
 
@@ -420,22 +566,36 @@ extend type Mutation {
   ): Application
   # 删除应用
   deleteApplication(id: ID!): Boolean
-  # 创建路由
+  """
+  创建路由
+  """
   createRoute(input: RouteCreateInput!): Route
-  # 更新路由信息
+  """
+  更新路由信息
+  """
   updateRoute(id: ID!, input: RouteUpdateInput!, merge: Boolean = true): Route
-  # 删除路由
+  """
+  删除路由
+  """
   deleteRoute(id: ID!): Boolean
-  # 移动路由
+  """
+  移动路由
+  """
   moveRoute(id: ID!, parentRoute: ID, location: Int!): Route
-  # 创建菜单
+  """
+  创建菜单
+  """
   createMenu(input: MenuCreateInput!): Menu
-  # 更新菜单
+  """
+  更新菜单
+  """
   updateMenu(id: ID!, input: MenuUpdateInput!, merge: Boolean = true): Menu
-  # 删除菜单
+  """
+  删除菜单
+  """
   deleteMenu(id: ID!): Boolean
-  # 批量删除菜单
-  deleteManyMenus(id: [ID]!): Int
-  # 移动菜单
+  """
+  移动菜单
+  """
   moveMenu(id: ID!, parentMenu: ID, location: Int!): Menu
 }

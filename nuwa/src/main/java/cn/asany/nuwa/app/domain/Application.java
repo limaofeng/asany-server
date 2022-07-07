@@ -42,7 +42,8 @@ import org.jfantasy.framework.security.oauth2.core.ClientSecretType;
     name = "Graph.Application.FetchDetails",
     attributeNodes = {
       @NamedAttributeNode(value = "menus", subgraph = "SubGraph.ApplicationMenu.FetchComponent"),
-      @NamedAttributeNode(value = "routes", subgraph = "SubGraph.ApplicationRoute.FetchComponent")
+      @NamedAttributeNode(value = "routes", subgraph = "SubGraph.ApplicationRoute.FetchComponent"),
+      @NamedAttributeNode(value = "dependencies")
     },
     subgraphs = {
       @NamedSubgraph(
@@ -56,7 +57,8 @@ import org.jfantasy.framework.security.oauth2.core.ClientSecretType;
           attributeNodes = {
             @NamedAttributeNode(value = "space"),
             @NamedAttributeNode(value = "parent"),
-            @NamedAttributeNode(value = "component")
+            @NamedAttributeNode(value = "component"),
+            @NamedAttributeNode(value = "breadcrumb")
           })
     })
 @NamedEntityGraph(
@@ -170,6 +172,14 @@ public class Application extends BaseBusEntity implements ClientDetails {
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "OWNERSHIP", foreignKey = @ForeignKey(name = "FK_APPLICATION_OWNERSHIP"))
   private Organization ownership;
+  /** 依赖 */
+  @OrderBy(" createdAt desc ")
+  @OneToMany(
+      mappedBy = "application",
+      cascade = {CascadeType.REMOVE},
+      fetch = FetchType.LAZY)
+  @ToString.Exclude
+  private List<ApplicationDependency> dependencies;
 
   @Override
   public Map<String, Object> getAdditionalInformation() {

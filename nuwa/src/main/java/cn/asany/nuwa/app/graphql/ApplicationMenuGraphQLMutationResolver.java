@@ -6,7 +6,6 @@ import cn.asany.nuwa.app.graphql.input.ApplicationMenuCreateInput;
 import cn.asany.nuwa.app.graphql.input.ApplicationMenuUpdateInput;
 import cn.asany.nuwa.app.service.ApplicationMenuService;
 import graphql.kickstart.tools.GraphQLMutationResolver;
-import java.util.List;
 import org.springframework.stereotype.Component;
 
 /**
@@ -39,12 +38,13 @@ public class ApplicationMenuGraphQLMutationResolver implements GraphQLMutationRe
     return Boolean.TRUE;
   }
 
-  public Long deleteManyMenus(List<Long> ids) {
-    Long[] longs = new Long[ids.size()];
-    return menuService.delete(ids.toArray(longs));
-  }
-
   public ApplicationMenu moveMenu(Long id, Long parentMenu, int location) {
-    return null;
+    return this.menuService.update(
+        id,
+        ApplicationMenu.builder()
+            .parent(parentMenu == null ? null : ApplicationMenu.builder().id(parentMenu).build())
+            .index(location)
+            .build(),
+        true);
   }
 }

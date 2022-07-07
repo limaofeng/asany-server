@@ -1,7 +1,6 @@
 package cn.asany.nuwa.app.graphql;
 
 import cn.asany.nuwa.app.domain.Application;
-import cn.asany.nuwa.app.domain.ApplicationRoute;
 import cn.asany.nuwa.app.graphql.input.ApplicationFilter;
 import cn.asany.nuwa.app.graphql.type.ApplicationIdType;
 import cn.asany.nuwa.app.service.ApplicationService;
@@ -48,9 +47,5 @@ public class ApplicationGraphQLQueryResolver implements GraphQLQueryResolver {
 
   public List<Application> applications(ApplicationFilter filter) {
     return applicationService.findAll(filter.build());
-  }
-
-  public Optional<ApplicationRoute> route(Long id) {
-    return applicationService.getRoute(id);
   }
 }

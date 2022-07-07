@@ -3,6 +3,7 @@ package cn.asany.nuwa.app.domain;
 import cn.asany.nuwa.app.domain.enums.RouteType;
 import cn.asany.ui.resources.domain.Component;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 import javax.persistence.*;
@@ -10,6 +11,7 @@ import lombok.*;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
+import org.jfantasy.framework.util.common.SortNode;
 
 /**
  * 路由
@@ -26,7 +28,7 @@ import org.jfantasy.framework.dao.BaseBusEntity;
 @NamedEntityGraph(
     name = "Graph.ApplicationRoute.FetchComponent",
     attributeNodes = {@NamedAttributeNode(value = "component")})
-public class ApplicationRoute extends BaseBusEntity {
+public class ApplicationRoute extends BaseBusEntity implements SortNode {
 
   @Id
   @Column(name = "ID")
@@ -94,6 +96,14 @@ public class ApplicationRoute extends BaseBusEntity {
   /** 在面包屑中隐藏菜单 */
   @Column(name = "HIDE_IN_BREADCRUMB")
   private Boolean hideInBreadcrumb;
+  /** 自定义面包屑展示风格 */
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(
+      name = "BREADCRUMB_ID",
+      foreignKey = @ForeignKey(name = "FK_APPLICATION_ROUTE_BREADCRUMB"))
+  @ToString.Exclude
+  private Component breadcrumb;
+
   /** 布局设置 */
   @Embedded
   @AttributeOverrides({
@@ -128,5 +138,14 @@ public class ApplicationRoute extends BaseBusEntity {
   @Override
   public int hashCode() {
     return getClass().hashCode();
+  }
+
+  @Override
+  @Transient
+  public Serializable getParentId() {
+    if (this.getParent() == null) {
+      return null;
+    }
+    return this.getParent().getId();
   }
 }

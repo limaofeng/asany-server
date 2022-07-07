@@ -3,6 +3,7 @@ package cn.asany.nuwa.app.domain;
 import cn.asany.nuwa.app.domain.enums.MenuType;
 import cn.asany.ui.resources.domain.Component;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -12,6 +13,7 @@ import org.hibernate.Hibernate;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.framework.dao.hibernate.converter.StringSetConverter;
+import org.jfantasy.framework.util.common.SortNode;
 
 /**
  * 菜单
@@ -26,7 +28,7 @@ import org.jfantasy.framework.dao.hibernate.converter.StringSetConverter;
 @AllArgsConstructor
 @Entity
 @Table(name = "NUWA_APPLICATION_MENU")
-public class ApplicationMenu extends BaseBusEntity {
+public class ApplicationMenu extends BaseBusEntity implements SortNode {
 
   @Id
   @Column(name = "ID")
@@ -123,5 +125,11 @@ public class ApplicationMenu extends BaseBusEntity {
   @Override
   public int hashCode() {
     return getClass().hashCode();
+  }
+
+  @Transient
+  @Override
+  public Serializable getParentId() {
+    return this.parent != null ? this.parent.getId() : null;
   }
 }

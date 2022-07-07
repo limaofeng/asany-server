@@ -410,6 +410,10 @@ public class ApplicationService implements ClientDetailsService {
     cache.evictIfPresent(ApplicationService.class + ".findDetailsById#" + appId);
   }
 
+  public void clearAppCache(Long appId) {
+    clearApplication(this.applicationDao.getReferenceById(appId));
+  }
+
   public void clearApplication(Application application) {
     Cache cache = this.cacheManager.getCache(CACHE_KEY);
     assert cache != null;

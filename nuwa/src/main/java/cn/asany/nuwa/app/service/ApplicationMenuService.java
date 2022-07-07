@@ -2,13 +2,13 @@ package cn.asany.nuwa.app.service;
 
 import cn.asany.nuwa.app.dao.ApplicationMenuDao;
 import cn.asany.nuwa.app.domain.ApplicationMenu;
-import java.awt.*;
-import java.util.*;
+import java.io.Serializable;
 import java.util.List;
+import java.util.Optional;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
 import org.jfantasy.framework.util.common.ObjectUtil;
-import org.jfantasy.framework.util.ognl.OgnlUtil;
+import org.jfantasy.framework.util.common.SortNodeLoader;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -21,9 +21,11 @@ import org.springframework.stereotype.Service;
 public class ApplicationMenuService {
 
   private final ApplicationMenuDao menuDao;
+  private final ApplicationService applicationService;
 
-  public ApplicationMenuService(ApplicationMenuDao menuDao) {
+  public ApplicationMenuService(ApplicationMenuDao menuDao, ApplicationService applicationService) {
     this.menuDao = menuDao;
+    this.applicationService = applicationService;
   }
 
   public List<ApplicationMenu> findAll(Long appId) {
@@ -35,156 +37,60 @@ public class ApplicationMenuService {
   }
 
   public ApplicationMenu create(ApplicationMenu menu) {
-    OgnlUtil ognlUtil = OgnlUtil.getInstance();
-    Long parentId = ognlUtil.getValue("parent.id", menu);
+    ObjectUtil.resort(menu, sortNodeLoader, this.menuDao::update);
 
-    // 计算 Index
-    int index = menu.getIndex();
-    List<ApplicationMenu> siblings = siblings(menu);
-    if (index >= siblings.size()) {
-      menu.setIndex(siblings.size());
-    } else {
-      for (ApplicationMenu item : siblings.subList(index, siblings.size())) {
-        item.setIndex(item.getIndex() + 1);
-        this.menuDao.update(item);
-      }
-    }
-    // 计算 Level
-    menu.setLevel(parentId == null ? 1 : this.menuDao.getReferenceById(parentId).getLevel() + 1);
     return this.menuDao.save(menu);
   }
 
   public ApplicationMenu update(Long id, ApplicationMenu menu, Boolean merge) {
-    OgnlUtil ognlUtil = OgnlUtil.getInstance();
-
     menu.setId(id);
 
-    ApplicationMenu beforeMenu = this.menuDao.getReferenceById(id);
+    ApplicationMenu old = this.menuDao.getReferenceById(id);
+    menu.setApplication(old.getApplication());
 
-    if (hasModifyIndex(menu, beforeMenu)) {
-      // 计算 Index
-      List<ApplicationMenu> siblings = siblings(beforeMenu);
+    ObjectUtil.resort(menu, sortNodeLoader, this.menuDao::update);
 
-      if (menu.getIndex() >= siblings.size()) {
-        menu.setIndex(siblings.size() - 1);
-      }
+    applicationService.clearAppCache(menu.getApplication().getId());
 
-      int oldIndex = ognlUtil.getValue("index", beforeMenu);
-      int newIndex = ognlUtil.getValue("index", menu);
-
-      int startIndex = Math.min(oldIndex, newIndex);
-      int endIndex = Math.max(oldIndex, newIndex);
-
-      for (ApplicationMenu item : siblings.subList(startIndex, endIndex + 1)) {
-        if (item.getId().equals(menu.getId())) {
-          continue;
-        }
-        item.setIndex(item.getIndex() + (oldIndex > newIndex ? 1 : -1));
-        this.menuDao.update(item);
-      }
-    } else if (hasModifyParent(menu, beforeMenu)) {
-      Long parentId = ognlUtil.getValue("parent.id", menu);
-      Long beforeParentId = ognlUtil.getValue("parent.id", beforeMenu);
-      // 移入
-      locomotion(beforeMenu.getApplication().getId(), parentId, menu, true);
-      // 移出
-      locomotion(beforeMenu.getApplication().getId(), beforeParentId, beforeMenu, false);
-
-      menu.setLevel(parentId == null ? 1 : this.menuDao.getReferenceById(parentId).getLevel() + 1);
-    }
     return this.menuDao.update(menu, merge);
   }
 
-  private void locomotion(Long appId, Long parentId, ApplicationMenu menu, boolean join) {
-    List<ApplicationMenu> siblings = siblings(appId, parentId);
-    for (ApplicationMenu item : siblings.subList(menu.getIndex(), siblings.size())) {
-      if (item.getId().equals(menu.getId())) {
-        continue;
-      }
-      item.setIndex(item.getIndex() + (join ? 1 : -1));
-      this.menuDao.update(item);
+  public void delete(Long id) {
+    Optional<ApplicationMenu> optional = this.menuDao.findById(id);
+    if (!optional.isPresent()) {
+      return;
     }
+    this.menuDao.deleteById(id);
+
+    ApplicationMenu menu = optional.get();
+    ObjectUtil.resort(menu, sortNodeLoader, this.menuDao::update);
+
+    applicationService.clearAppCache(menu.getApplication().getId());
   }
 
-  private boolean hasModifyParent(ApplicationMenu menu, ApplicationMenu beforeMenu) {
-    OgnlUtil ognlUtil = OgnlUtil.getInstance();
+  private final SortNodeLoader<ApplicationMenu> sortNodeLoader =
+      new ApplicationMenuService.MenuSortNodeLoader();
 
-    Long oldParentId = ognlUtil.getValue("parent.id", beforeMenu);
-    Long newParentId = ognlUtil.getValue("parent.id", menu);
-
-    if (newParentId == null && oldParentId != null) {
-      return true;
-    }
-    if (newParentId != null && oldParentId == null) {
-      return true;
-    }
-    return !Objects.equals(newParentId, oldParentId);
-  }
-
-  private boolean hasModifyIndex(ApplicationMenu menu, ApplicationMenu beforeMenu) {
-    OgnlUtil ognlUtil = OgnlUtil.getInstance();
-    if (hasModifyParent(menu, beforeMenu)) {
-      return false;
-    }
-
-    int oldIndex = ognlUtil.getValue("index", beforeMenu);
-    int newIndex = ognlUtil.getValue("index", menu);
-
-    return oldIndex != newIndex;
-  }
-
-  private List<ApplicationMenu> siblings(ApplicationMenu menu) {
-    return siblings(
-        menu.getApplication().getId(), menu.getParent() != null ? menu.getParent().getId() : null);
-  }
-
-  private List<ApplicationMenu> siblings(Long appId, Long parentId) {
-    PropertyFilterBuilder builder = PropertyFilter.builder();
-    builder.equal("application.id", appId);
-    if (parentId != null) {
-      builder.equal("parent.id", parentId);
-    } else {
-      builder.isNull("parent");
-    }
-    return this.menuDao.findAll(builder.build(), Sort.by("index").ascending());
-  }
-
-  public long delete(Long... ids) {
-    Set<ApplicationMenu> menus = new HashSet<>();
-    for (Long id : ids) {
-      Optional<ApplicationMenu> optional = this.menuDao.findById(id);
-      if (!optional.isPresent()) {
-        continue;
-      }
-      menus.add(optional.get());
-    }
-    if (!menus.isEmpty()) {
-      this.menuDao.deleteAllById(ObjectUtil.toFieldList(menus, "id", new ArrayList<>()));
-    }
-    Set<String> parentIds = new HashSet<>();
-    // 重新计算排序值
-    for (ApplicationMenu menu : menus) {
-      if (!parentIds.add(
-          menu.getApplication().getId()
-              + "-"
-              + (menu.getParent() == null ? 0 : menu.getParent().getId()))) {
-        continue;
-      }
+  private class MenuSortNodeLoader implements SortNodeLoader<ApplicationMenu> {
+    @Override
+    public List<ApplicationMenu> getAll(Serializable parentId, ApplicationMenu route) {
       PropertyFilterBuilder builder = PropertyFilter.builder();
-      if (menu.getParent() == null) {
+      if (route.getParent() == null) {
         builder.isNull("parent");
-        builder.equal("application.id", menu.getApplication().getId());
+        builder.equal("application.id", route.getApplication().getId());
       } else {
-        builder.equal("parent.id", menu.getParent().getId());
+        builder.equal("parent.id", parentId);
       }
-      List<ApplicationMenu> siblings =
-          this.menuDao.findAll(builder.build(), Sort.by("index").ascending());
-      int i = 0;
-      for (ApplicationMenu item : siblings) {
-        item.setIndex(i++);
-        this.menuDao.update(item);
-      }
+      return ApplicationMenuService.this.menuDao.findAll(
+          builder.build(), Sort.by("index").ascending());
     }
-    return menus.size();
+
+    @Override
+    public ApplicationMenu load(Serializable id) {
+      if (id == null) {
+        return null;
+      }
+      return ApplicationMenuService.this.menuDao.findById((Long) id).orElse(null);
+    }
   }
 }
