@@ -20,6 +20,11 @@ public class LibraryDaoImpl extends ComplexJpaRepository<Library, Long> implemen
   }
 
   @Override
+  public Optional<Library> findByIdWithComponent(Long id) {
+    return this.findById(id);
+  }
+
+  @Override
   public List<Library> findAllWithIcon(List<PropertyFilter> filters) {
     return this.findAll(filters);
   }

@@ -33,6 +33,19 @@ import org.jfantasy.framework.dao.BaseBusEntity;
             @NamedAttributeNode(value = "icon")
           }),
     })
+@NamedEntityGraph(
+    name = "Graph.Library.FetchComponent",
+    attributeNodes = {
+      @NamedAttributeNode(value = "items", subgraph = "SubGraph.LibraryItem.FetchComponentResource")
+    },
+    subgraphs = {
+      @NamedSubgraph(
+          name = "SubGraph.LibraryItem.FetchComponentResource",
+          attributeNodes = {
+            @NamedAttributeNode(value = "tags"),
+            @NamedAttributeNode(value = "component")
+          }),
+    })
 @Entity
 @Table(
     name = "UI_LIBRARY",

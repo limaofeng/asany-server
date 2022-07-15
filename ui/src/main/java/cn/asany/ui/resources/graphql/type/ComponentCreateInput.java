@@ -11,9 +11,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ComponentCreateInput {
-  private String code;
   private String name;
+  private String title;
+  private String description;
   private ComponentType type;
   private String template;
   private List<ComponentData> blocks;
+  private List<String> tags;
+  private Long libraryId;
 }

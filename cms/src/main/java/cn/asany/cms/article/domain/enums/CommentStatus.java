@@ -1,8 +1,10 @@
 package cn.asany.cms.article.domain.enums;
 
 /**
+ * 评论状态
+ *
  * @author limaofeng
- * @version V1.0 @Description: TODO
+ * @version V1.0
  * @date 2019/8/27 9:34 上午
  */
 public enum CommentStatus {

@@ -35,7 +35,7 @@ public interface ApplicationConverter {
    * 路由转换
    *
    * @param routes List<ApplicationTemplateRoute>
-   * @param routespace Routespace
+   * @param routespace route space
    * @return ApplicationRoute
    */
   @IterableMapping(elementTargetType = ApplicationRoute.class)

@@ -6,20 +6,21 @@ import cn.asany.ui.resources.UIResource;
 import cn.asany.ui.resources.domain.Component;
 import cn.asany.ui.resources.domain.Icon;
 import java.util.List;
+import java.util.Objects;
 import javax.persistence.*;
 import lombok.*;
+import org.hibernate.Hibernate;
 import org.hibernate.annotations.Any;
 import org.hibernate.annotations.AnyMetaDef;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.MetaValue;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
-@Data
+@Getter
+@Setter
+@RequiredArgsConstructor
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = false, of = "id")
-@ToString(exclude = {"resource", "icon", "library"})
 @EntityListeners(value = {OplogListener.class})
 @NamedEntityGraph(
     name = "Graph.LibraryItem.FetchIcon",
@@ -38,6 +39,7 @@ public class LibraryItem extends BaseBusEntity implements OplogDataCollector {
       name = "LIBRARY_ID",
       foreignKey = @ForeignKey(name = "FK_LIBRARY_ITEM_LID"),
       nullable = false)
+  @ToString.Exclude
   private Library library;
 
   /** 标签 */
@@ -72,15 +74,23 @@ public class LibraryItem extends BaseBusEntity implements OplogDataCollector {
   private UIResource resource;
 
   /** 用于级联加载 */
-  @ManyToOne(
-      fetch = FetchType.LAZY,
-      cascade = {CascadeType.REMOVE})
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(
       name = "RESOURCE_ID",
       foreignKey = @ForeignKey(name = "NONE", value = ConstraintMode.NO_CONSTRAINT),
       insertable = false,
       updatable = false)
+  @ToString.Exclude
   private Icon icon;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(
+      name = "RESOURCE_ID",
+      foreignKey = @ForeignKey(name = "NONE", value = ConstraintMode.NO_CONSTRAINT),
+      insertable = false,
+      updatable = false)
+  @ToString.Exclude
+  private Component component;
 
   public <T extends UIResource> T getResource(Class<T> resourceClass) {
     return (T) this.resource;
@@ -105,5 +115,18 @@ public class LibraryItem extends BaseBusEntity implements OplogDataCollector {
   @Override
   public Object getPrimarykey() {
     return this.resourceId;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+    LibraryItem item = (LibraryItem) o;
+    return id != null && Objects.equals(id, item.id);
+  }
+
+  @Override
+  public int hashCode() {
+    return getClass().hashCode();
   }
 }

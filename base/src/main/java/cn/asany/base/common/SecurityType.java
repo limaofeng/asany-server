@@ -1,8 +1,10 @@
 package cn.asany.base.common;
 
 /**
+ * 权限类型
+ *
  * @author limaofeng
- * @version V1.0 @Description: TODO
+ * @version V1.0
  * @date 2019-06-12 09:12
  */
 public enum SecurityType {

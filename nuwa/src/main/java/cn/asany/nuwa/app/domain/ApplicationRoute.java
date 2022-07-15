@@ -29,7 +29,6 @@ import org.jfantasy.framework.util.common.SortNode;
     name = "Graph.ApplicationRoute.FetchComponent",
     attributeNodes = {@NamedAttributeNode(value = "component")})
 public class ApplicationRoute extends BaseBusEntity implements SortNode {
-
   @Id
   @Column(name = "ID")
   @GeneratedValue(generator = "fantasy-sequence")

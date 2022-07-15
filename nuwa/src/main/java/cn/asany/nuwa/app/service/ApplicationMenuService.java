@@ -32,6 +32,10 @@ public class ApplicationMenuService {
     return this.menuDao.findAll(PropertyFilter.builder().equal("application", appId).build());
   }
 
+  public List<ApplicationMenu> findAll(List<PropertyFilter> filters) {
+    return this.menuDao.findAll(filters);
+  }
+
   public ApplicationMenu get(Long id) {
     return this.menuDao.getReferenceById(id);
   }

@@ -4,7 +4,7 @@ spring:
   sequence:
     pool-size: 10
   jpa:
-    show-sql: true
+    show-sql: false
     hibernate:
       ddl-auto: update
     properties:

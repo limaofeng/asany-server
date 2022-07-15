@@ -42,36 +42,78 @@ type IconLibrary implements Library {
   total: Int!
 }
 
+type ComponentLibrary implements Library {
+  id: ID!
+  """
+  名称
+  """
+  name: String
+  """
+  描述
+  """
+  description: String
+  """
+  图标
+  """
+  components: [Component!]!
+  """
+  数量
+  """
+  total: Int!
+}
+
 input OwnershipInput {
   id: ID!
   type: String!
 }
 
 input IconInput {
-  # 名称
+  """
+  名称
+  """
   name: String
-  # 编码
+  """
+  编码
+  """
   unicode: String
-  # 标签
+  """
+  标签
+  """
   tags: [String]
-  # 描述
+  """
+  描述
+  """
   description: String
-  # 正文
+  """
+  正文
+  """
   content: String!
 }
 
 input IconUpdateInput {
-  # 名称
+  """
+  名称
+  """
   name: String
-  # 编码
+  """
+  编码
+  """
   unicode: String
-  # 标签
+  """
+  标签
+  """
   tags: [String]
-  # 描述
+  """
+  描述
+  """
   description: String
-  # 正文
+  """
+  正文
+  """
   content: String
-  # 库 ID
+  """
+  库 ID
+  """
   libraryId: ID!
 }
 
@@ -141,11 +183,42 @@ enum ComponentType {
 }
 
 input ComponentCreateInput {
-  code: String!
-  name: String!
-  type: ComponentType!
+  """
+  引用名称
+  """
+  name: String
+  """
+  显示名称
+  """
+  title: String!
+  """
+  描述
+  """
+  description: String
+  """
+  类型
+  """
+  type: ComponentType
+  """
+  模版
+  """
   template: String!
-  blocks: [ComponentDataInput]!
+  """
+  封面
+  """
+  image: File
+  """
+  配置数据
+  """
+  blocks: [ComponentDataInput!]
+  """
+  标签
+  """
+  tags: [String!]
+  """
+  库 ID
+  """
+  libraryId: ID!
 }
 
 input ComponentDataInput {
@@ -154,9 +227,38 @@ input ComponentDataInput {
 }
 
 input ComponentUpdateInput {
+  """
+  引用名称
+  """
   name: String
+  """
+  显示名称
+  """
+  title: String
+  """
+  描述
+  """
+  description: String
+  """
+  封面
+  """
+  image: File
+  """
+  模版
+  """
   template: String
+  """
+  配置数据
+  """
   blocks: [ComponentDataInput]
+  """
+  标签
+  """
+  tags: [String!]
+  """
+  库 ID
+  """
+  libraryId: ID!
 }
 
 enum ComponentScope {
@@ -170,33 +272,73 @@ enum ComponentScope {
 
 type Component {
   id: ID!
-  # 使用范围
+  """
+  使用范围
+  """
   scope: ComponentScope
-  # 组件类型
+  """
+  组件类型
+  """
   type: ComponentType
-  # 名称
-  code: String
-  # 名称
+  """
+  引用名称
+  """
   name: String
-  # 组件模版
+  """
+  显示名称
+  """
+  title: String
+  """
+  封面
+  """
+  image: File
+  """
+  描述
+  """
+  description: String
+  """
+  组件模版
+  """
   template: String!
-  # 组件数据
-  blocks: [ComponentData]!
+  """
+  组件数据
+  """
+  blocks: [ComponentData!]!
+  """
+  标签
+  """
+  tags: [String!]!
+  """
+  创建日期
+  """
+  createdAt: Date
+  """
+  库 ID
+  """
+  libraryId: ID!
 }
 
 input ComponentFilter {
-  code: String
   name: String
+  title: String
 }
 
 type ComponentConnection {
-  # 总数据条数
+  """
+  总数据条数
+  """
   totalCount: Int
-  # 每页显示条数
+  """
+  每页显示条数
+  """
   pageSize: Int
-  # 总页数
+  """
+  总页数
+  """
   totalPage: Int
-  # 当前页
+  """
+  当前页
+  """
   currentPage: Int
   edges: [ComponentEdge]
 }
@@ -212,34 +354,54 @@ type ComponentData {
 }
 
 extend type Query {
-  # 库
+  """
+  库
+  """
   libraries(
     type: LibraryType!
     ownership: OwnershipInput = { type: "PERSONAL", id: "me" }
   ): [Library!]!
-  # 图标库
+  """
+  图标库
+  """
   iconLibraries(
-    filter: IconLibraryFilter
+    filter: IconLibraryFilter = {}
     ownership: OwnershipInput = { type: "PERSONAL", id: "me" }
   ): [IconLibrary!]!
-  # 图标库
+  """
+  图标库
+  """
   iconLibrary(id: ID!): IconLibrary
-  # 查询图标
-  icons(filter: IconFilter): [Icon!]!
-  # 查询日志
-  oplogs(filter: OplogFilter): [Oplog!]!
-  # 查询组件 单个
+  """
+  组件库
+  """
+  componentLibrary(id: ID!): ComponentLibrary
+  """
+  查询图标
+  """
+  icons(filter: IconFilter = {}): [Icon!]!
+  """
+  查询日志
+  """
+  oplogs(filter: OplogFilter = {}): [Oplog!]!
+  """
+  查询组件 单个
+  """
   component(id: ID!): Component
-  # 查询组件 列表
+  """
+  查询组件 列表
+  """
   components(
-    filter: ComponentFilter
+    filter: ComponentFilter = {}
     page: Int = 1
     pageSize: Int = 15
     orderBy: OrderBy = "unsorted"
   ): [Component]
-  # 查询组件 分页
+  """
+  查询组件 分页
+  """
   componentsConnection(
-    filter: ComponentFilter
+    filter: ComponentFilter = {}
     page: Int = 1
     pageSize: Int = 15
     orderBy: OrderBy = "unsorted"
@@ -247,28 +409,48 @@ extend type Query {
 }
 
 extend type Mutation {
-  # 导入图标
+  """
+  导入图标
+  """
   importIcons(library: ID!, icons: [IconInput]!): [Icon!]!
-  # 添加图标
+  """
+  添加图标
+  """
   createIcon(input: IconCreateInput!): Icon
-  # 更新图标
+  """
+  更新图标
+  """
   updateIcon(id: ID!, input: IconUpdateInput!): Icon
-  # 删除图标
+  """
+  删除图标
+  """
   deleteIcon(id: ID!): Boolean
-  # 添加库
+  """
+  添加库
+  """
   createLibrary(input: LibraryCreateInput!): Library
-  # 更新库
+  """
+  更新库
+  """
   updateLibrary(id: ID!, input: LibraryUpdateInput!): Library
-  # 删除库
+  """
+  删除库
+  """
   deleteLibrary(id: ID!): Boolean
-  # 创建组件
+  """
+  创建组件
+  """
   createComponent(input: ComponentCreateInput!): Component
-  # 更新组件信息
+  """
+  更新组件信息
+  """
   updateComponent(
     id: ID!
     input: ComponentUpdateInput!
     merge: Boolean = true
   ): Component
-  # 删除组件
+  """
+  删除组件
+  """
   deleteComponent(id: ID!): Boolean
 }

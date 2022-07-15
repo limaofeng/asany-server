@@ -193,12 +193,6 @@ enum MailboxFlagsUpdateMode {
   REPLACE
 }
 
-enum UpdateMode {
-  ADD
-  REMOVE
-  REPLACE
-}
-
 """
 邮箱信息新增对象
 """

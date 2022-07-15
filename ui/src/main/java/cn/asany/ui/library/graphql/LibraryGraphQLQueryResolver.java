@@ -5,6 +5,7 @@ import cn.asany.ui.library.convert.LibraryConverter;
 import cn.asany.ui.library.domain.Library;
 import cn.asany.ui.library.domain.enums.LibraryType;
 import cn.asany.ui.library.graphql.input.IconLibraryFilter;
+import cn.asany.ui.library.graphql.type.ComponentLibrary;
 import cn.asany.ui.library.graphql.type.ILibrary;
 import cn.asany.ui.library.graphql.type.IconLibrary;
 import cn.asany.ui.library.service.LibraryService;
@@ -13,7 +14,6 @@ import graphql.schema.DataFetchingEnvironment;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import org.jfantasy.framework.util.common.ObjectUtil;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -43,7 +43,6 @@ public class LibraryGraphQLQueryResolver implements GraphQLQueryResolver {
 
   public List<IconLibrary> iconLibraries(
       IconLibraryFilter filter, OwnershipInput ownership, DataFetchingEnvironment environment) {
-    filter = ObjectUtil.defaultValue(filter, () -> new IconLibraryFilter());
     boolean with = environment.getSelectionSet().contains("icons");
     List<Library> libraries =
         libraryService.libraries(filter.getBuilder(), LibraryType.ICONS, with);
@@ -51,5 +50,10 @@ public class LibraryGraphQLQueryResolver implements GraphQLQueryResolver {
       return libraryConverter.toLibraries(libraries);
     }
     return libraryConverter.toIconLibraries(libraries);
+  }
+
+  public ComponentLibrary componentLibrary(Long id) {
+    Optional<Library> library = libraryService.findByIdWithComponent(id);
+    return library.map(this.libraryConverter::toComponentLibrary).orElse(null);
   }
 }

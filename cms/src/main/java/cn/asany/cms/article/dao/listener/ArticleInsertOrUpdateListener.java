@@ -9,8 +9,10 @@ import org.jfantasy.framework.dao.hibernate.listener.AbstractChangedListener;
 import org.springframework.stereotype.Component;
 
 /**
+ * 文章新增修改拦截
+ *
  * @author limaofeng
- * @version V1.0 @Description: TODO
+ * @version V1.0
  * @date 2019/11/27 11:41 上午
  */
 @Component

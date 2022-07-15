@@ -7,13 +7,16 @@ import cn.asany.ui.library.domain.LibraryItem;
 import cn.asany.ui.library.domain.enums.LibraryType;
 import cn.asany.ui.library.domain.enums.Operation;
 import cn.asany.ui.resources.dao.IconDao;
+import cn.asany.ui.resources.domain.Component;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 库 服务
@@ -53,6 +56,10 @@ public class LibraryService {
     return this.libraryDao.findById(id);
   }
 
+  public Optional<Library> findByIdWithComponent(Long id) {
+    return this.libraryDao.findByIdWithComponent(id);
+  }
+
   public Optional<Library> findByIdWithIcon(Long id) {
     return this.libraryDao.findByIdWithIcon(id);
   }
@@ -88,5 +95,17 @@ public class LibraryService {
 
   public Long getResourceTotal(Long id) {
     return this.libraryItemDao.count(PropertyFilter.builder().equal("library.id", id).build());
+  }
+
+  @Transactional
+  public void addComponent(Long libraryId, Component component, String... tags) {
+    LibraryItem item =
+        LibraryItem.builder()
+            .library(Library.builder().id(libraryId).build())
+            .resourceType("COMPONENT")
+            .resourceId(component.getId())
+            .tags(Arrays.asList(tags))
+            .build();
+    this.libraryItemDao.save(item);
   }
 }

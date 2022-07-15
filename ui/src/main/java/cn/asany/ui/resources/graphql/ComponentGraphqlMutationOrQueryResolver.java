@@ -37,11 +37,12 @@ public class ComponentGraphqlMutationOrQueryResolver
   }
 
   public Component createComponent(ComponentCreateInput input) {
-    return componentService.save(componentConverter.toComponent(input));
+    return componentService.save(componentConverter.toComponent(input), input.getLibraryId());
   }
 
   public Component updateComponent(Long id, ComponentUpdateInput input, Boolean merge) {
-    return componentService.update(id, componentConverter.toComponent(input), merge);
+    return componentService.update(
+        id, componentConverter.toComponent(input), input.getLibraryId(), merge);
   }
 
   public Boolean deleteComponent(Long id) {

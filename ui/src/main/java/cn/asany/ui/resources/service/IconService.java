@@ -38,8 +38,7 @@ public class IconService {
 
   public Set<Icon> findAllByTag(Long libraryId, String tag) {
     return this.libraryConverter.toIcons(
-        this.libraryItemDao.findAllByTagWithIcon(libraryId, tag).stream()
-            .collect(Collectors.toSet()));
+        new HashSet<>(this.libraryItemDao.findAllByTagWithIcon(libraryId, tag)));
   }
 
   public void delete(Long id) {

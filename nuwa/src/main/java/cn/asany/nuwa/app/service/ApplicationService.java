@@ -31,6 +31,7 @@ import org.jfantasy.framework.util.common.StringUtil;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,10 +45,10 @@ import org.springframework.transaction.annotation.Transactional;
 public class ApplicationService implements ClientDetailsService {
 
   public static final String NONCE_CHARS = "abcdef0123456789";
-
   public static final String CACHE_KEY = "NUWA";
 
   private final ApplicationDao applicationDao;
+  private final ApplicationDependencyDao applicationDependencyDao;
   private final ClientSecretDao clientSecretDao;
   private final ApplicationRouteDao applicationRouteDao;
   private final ApplicationMenuDao applicationMenuDao;
@@ -61,6 +62,7 @@ public class ApplicationService implements ClientDetailsService {
   public ApplicationService(
       CacheManager cacheManager,
       ApplicationDao applicationDao,
+      ApplicationDependencyDao applicationDependencyDao,
       ClientSecretDao clientSecretDao,
       ComponentDao componentDao,
       RoutespaceDao routespaceDao,
@@ -77,6 +79,7 @@ public class ApplicationService implements ClientDetailsService {
     this.applicationRouteDao = applicationRouteDao;
     this.applicationMenuDao = applicationMenuDao;
     this.applicationTemplateDao = applicationTemplateDao;
+    this.applicationDependencyDao = applicationDependencyDao;
     this.moduleLoader = moduleLoader;
     this.cacheManager = cacheManager;
   }
@@ -119,6 +122,14 @@ public class ApplicationService implements ClientDetailsService {
       return this.applicationDao.findOneWithMenusByClientId(id);
     }
     return this.applicationDao.findOneBy("clientId", id);
+  }
+
+  @Transactional(readOnly = true)
+  @Cacheable(key = "targetClass  + '.' +  methodName + '#' + #p0", value = CACHE_KEY)
+  public List<ApplicationDependency> findDependencies(Long id) {
+    return this.applicationDependencyDao.findAll(
+        PropertyFilter.builder().equal("application.id", id).build(),
+        Sort.by("createdAt").ascending());
   }
 
   @Transactional(rollbackFor = RuntimeException.class)

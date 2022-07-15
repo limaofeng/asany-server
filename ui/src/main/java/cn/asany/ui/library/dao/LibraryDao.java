@@ -14,6 +14,9 @@ public interface LibraryDao extends JpaRepository<Library, Long> {
   @EntityGraph(value = "Graph.Library.FetchIcon", type = EntityGraph.EntityGraphType.FETCH)
   Optional<Library> findByIdWithIcon(Long id);
 
+  @EntityGraph(value = "Graph.Library.FetchComponent", type = EntityGraph.EntityGraphType.FETCH)
+  Optional<Library> findByIdWithComponent(Long id);
+
   @EntityGraph(value = "Graph.Library.FetchIcon", type = EntityGraph.EntityGraphType.FETCH)
   List<Library> findAllWithIcon(List<PropertyFilter> filters);
 }

@@ -6,11 +6,14 @@ import cn.asany.ui.library.domain.enums.LibraryType;
 import cn.asany.ui.library.graphql.input.IconInput;
 import cn.asany.ui.library.graphql.input.LibraryCreateInput;
 import cn.asany.ui.library.graphql.input.LibraryUpdateInput;
+import cn.asany.ui.library.graphql.type.ComponentLibrary;
 import cn.asany.ui.library.graphql.type.ILibrary;
 import cn.asany.ui.library.graphql.type.IconLibrary;
+import cn.asany.ui.resources.domain.Component;
 import cn.asany.ui.resources.domain.Icon;
 import java.util.*;
 import java.util.stream.Collectors;
+import org.jfantasy.framework.util.common.ObjectUtil;
 import org.mapstruct.*;
 
 @Mapper(
@@ -62,6 +65,28 @@ public interface LibraryConverter {
               return icon;
             })
         .collect(Collectors.toSet());
+  }
+
+  @Mappings(
+      value = @Mapping(source = "items", target = "components", qualifiedByName = "toComponents"))
+  ComponentLibrary toComponentLibrary(Library library);
+
+  @Named("toComponents")
+  default List<Component> toComponents(Set<LibraryItem> items) {
+    if (items == null) {
+      return Collections.emptyList();
+    }
+    return ObjectUtil.sort(
+        items.stream()
+            .map(
+                item -> {
+                  Component component = item.getResource(Component.class);
+                  component.setTags(item.getTags());
+                  return component;
+                })
+            .collect(Collectors.toList()),
+        "id",
+        "desc");
   }
 
   Icon toIcon(IconInput input);

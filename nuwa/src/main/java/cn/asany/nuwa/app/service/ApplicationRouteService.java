@@ -85,6 +85,10 @@ public class ApplicationRouteService {
 
   private final SortNodeLoader<ApplicationRoute> sortNodeLoader = new RouteSortNodeLoader();
 
+  public List<ApplicationRoute> findAll(List<PropertyFilter> filters) {
+    return this.routeDao.findAll(filters);
+  }
+
   private class RouteSortNodeLoader implements SortNodeLoader<ApplicationRoute> {
     @Override
     public List<ApplicationRoute> getAll(Serializable parentId, ApplicationRoute route) {

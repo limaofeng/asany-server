@@ -1,12 +1,13 @@
 package cn.asany.nuwa.app.graphql.resolver;
 
-import cn.asany.nuwa.app.domain.Application;
-import cn.asany.nuwa.app.domain.ApplicationRoute;
-import cn.asany.nuwa.app.domain.ClientSecret;
-import cn.asany.nuwa.app.domain.Licence;
+import cn.asany.nuwa.app.domain.*;
 import cn.asany.nuwa.app.graphql.input.ApplicationRouteFilter;
 import cn.asany.nuwa.app.service.ApplicationService;
 import cn.asany.nuwa.app.service.LicenceService;
+import cn.asany.ui.library.convert.LibraryConverter;
+import cn.asany.ui.library.domain.Library;
+import cn.asany.ui.library.graphql.type.ComponentLibrary;
+import cn.asany.ui.library.service.LibraryService;
 import graphql.execution.ExecutionStepInfo;
 import graphql.kickstart.tools.GraphQLResolver;
 import graphql.schema.DataFetchingEnvironment;
@@ -23,12 +24,19 @@ import org.springframework.stereotype.Component;
 public class ApplicationGraphQLResolver implements GraphQLResolver<Application> {
 
   private final LicenceService licenceService;
+  private final LibraryService libraryService;
   private final ApplicationService applicationService;
+  private final LibraryConverter libraryConverter;
 
   public ApplicationGraphQLResolver(
-      ApplicationService applicationService, LicenceService licenceService) {
+      ApplicationService applicationService,
+      LibraryService libraryService,
+      LicenceService licenceService,
+      LibraryConverter libraryConverter) {
     this.applicationService = applicationService;
     this.licenceService = licenceService;
+    this.libraryService = libraryService;
+    this.libraryConverter = libraryConverter;
   }
 
   public Optional<ApplicationRoute> layoutRoute(
@@ -92,6 +100,24 @@ public class ApplicationGraphQLResolver implements GraphQLResolver<Application> 
       return Optional.empty();
     }
     return this.licenceService.findOneByActive(application.getId(), orgId);
+  }
+
+  public List<ApplicationDependency> dependencies(Application application) {
+    return this.applicationService.findDependencies(application.getId());
+  }
+
+  public Optional<ComponentLibrary> componentLibrary(Application application) {
+    List<ApplicationDependency> dependencies = this.dependencies(application);
+    Optional<String> libraryId =
+        dependencies.stream()
+            .filter(item -> item.getName().equals("component.library"))
+            .findFirst()
+            .map(ApplicationDependency::getValue);
+    if (!libraryId.isPresent()) {
+      return Optional.empty();
+    }
+    Optional<Library> library = libraryService.findById(Long.valueOf(libraryId.get()));
+    return library.map(this.libraryConverter::toComponentLibrary);
   }
 
   public List<Licence> licences(Application application) {

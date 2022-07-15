@@ -43,22 +43,19 @@ import org.jfantasy.framework.security.oauth2.core.ClientSecretType;
     attributeNodes = {
       @NamedAttributeNode(value = "menus", subgraph = "SubGraph.ApplicationMenu.FetchComponent"),
       @NamedAttributeNode(value = "routes", subgraph = "SubGraph.ApplicationRoute.FetchComponent"),
-      @NamedAttributeNode(value = "dependencies")
     },
     subgraphs = {
       @NamedSubgraph(
           name = "SubGraph.ApplicationMenu.FetchComponent",
           attributeNodes = {
             @NamedAttributeNode(value = "parent"),
-            @NamedAttributeNode(value = "component")
+            //            @NamedAttributeNode(value = "component")
           }),
       @NamedSubgraph(
           name = "SubGraph.ApplicationRoute.FetchComponent",
           attributeNodes = {
             @NamedAttributeNode(value = "space"),
             @NamedAttributeNode(value = "parent"),
-            @NamedAttributeNode(value = "component"),
-            @NamedAttributeNode(value = "breadcrumb")
           })
     })
 @NamedEntityGraph(
@@ -72,7 +69,6 @@ import org.jfantasy.framework.security.oauth2.core.ClientSecretType;
           attributeNodes = {
             @NamedAttributeNode(value = "space"),
             @NamedAttributeNode(value = "parent"),
-            @NamedAttributeNode(value = "component")
           })
     })
 @NamedEntityGraph(
@@ -85,7 +81,6 @@ import org.jfantasy.framework.security.oauth2.core.ClientSecretType;
           name = "SubGraph.ApplicationMenu.FetchComponent",
           attributeNodes = {
             @NamedAttributeNode(value = "parent"),
-            @NamedAttributeNode(value = "component")
           }),
     })
 @Entity

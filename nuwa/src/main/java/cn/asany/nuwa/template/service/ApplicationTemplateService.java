@@ -114,9 +114,9 @@ public class ApplicationTemplateService {
     if (component == null) {
       return Optional.empty();
     }
-    if (component.getCode() != null) {
+    if (component.getName() != null) {
       return this.componentDao.findOne(
-          PropertyFilter.builder().equal("code", component.getCode()).build());
+          PropertyFilter.builder().equal("name", component.getName()).build());
     }
     if (component.getScope() != ComponentScope.ROUTE) {
       component.setScope(ComponentScope.ROUTE);
