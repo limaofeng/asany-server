@@ -58,7 +58,7 @@ public class UserService implements UserDetailsService {
     this.roleService = roleService;
   }
 
-  @Autowired
+  @Autowired(required = false)
   public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
     this.passwordEncoder = passwordEncoder;
   }

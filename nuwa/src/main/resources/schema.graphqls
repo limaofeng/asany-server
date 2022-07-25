@@ -70,6 +70,10 @@ input RouteCreateInput {
   排序
   """
   index: Int
+  """
+  布局设置
+  """
+  layout: LayoutSettingsInput
 }
 
 input RouteUpdateInput {
@@ -125,6 +129,10 @@ input RouteUpdateInput {
   排序
   """
   index: Int
+  """
+  布局设置
+  """
+  layout: LayoutSettingsInput
 }
 
 input NuwaComponentInput {
@@ -452,11 +460,28 @@ enum MenuType {
   SEPARATOR
 }
 
-# 布局设置
+"""
+布局设置
+"""
 type LayoutSettings {
-  # 全屏幕模式，不展示布局框架
+  """
+  全屏幕模式，不展示布局框架
+  """
   pure: Boolean
-  # 隐藏菜单栏
+  """
+  隐藏菜单栏
+  """
+  hideMenu: Boolean
+}
+
+input LayoutSettingsInput {
+  """
+  全屏幕模式，不展示布局框架
+  """
+  pure: Boolean
+  """
+  隐藏菜单栏
+  """
   hideMenu: Boolean
 }
 

@@ -81,10 +81,15 @@ spring:
     properties:
       org:
         quartz:
+          dataSource:
+            qzDS:
+              provider: hikaricp
+              maxConnections: 10
           scheduler:
             instanceName: scheduler
             instanceId: AUTO
           jobStore:
+            dataSource: qzDS
             class: org.springframework.scheduling.quartz.LocalDataSourceJobStore
             driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate
             tablePrefix: QRTZ_

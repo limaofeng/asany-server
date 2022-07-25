@@ -31,4 +31,6 @@ public class ApplicationRouteUpdateInput {
   private Integer index;
   /** 父路由 */
   private Long parentRoute;
+  /** 布局设置 */
+  private LayoutSettingsInput layout;
 }

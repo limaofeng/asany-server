@@ -1,7 +1,7 @@
 package cn.asany.cms;
 
+import cn.asany.autoconfigure.AsanySecurityAutoConfiguration;
 import cn.asany.autoconfigure.OrganizationAutoConfiguration;
-import cn.asany.autoconfigure.SecurityAutoConfiguration;
 import graphql.kickstart.autoconfigure.tools.GraphQLJavaToolsAutoConfiguration;
 import graphql.kickstart.autoconfigure.web.servlet.GraphQLWebAutoConfiguration;
 import lombok.extern.slf4j.Slf4j;
@@ -43,7 +43,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EnableAutoConfiguration(
     exclude = {
       OrganizationAutoConfiguration.class,
-      SecurityAutoConfiguration.class,
+      AsanySecurityAutoConfiguration.class,
       MongoAutoConfiguration.class,
       QuartzAutoConfiguration.class,
       WebMvcAutoConfiguration.class,

@@ -12,7 +12,7 @@ spring:
         generate_statistics: false
   datasource:
     name: datasource
-    url: jdbc:mysql://dev.local:3306/asany?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&rewriteBatchedStatements=true
+    url: jdbc:mysql://dev.local:3306/asany?nullCatalogMeansCurrent=true&autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&rewriteBatchedStatements=true
     username: root
     password: yV2jJxvNs8BD
     hikari:
@@ -23,3 +23,42 @@ spring:
     host: dev.local
     port: 6379
     password: sOmE_sEcUrE_pAsS
+  quartz:
+    properties:
+      org:
+        quartz:
+          dataSource:
+            qzDS:
+              URL:  jdbc:mysql://dev.local:3306/asany?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&rewriteBatchedStatements=true
+              driver: com.mysql.cj.jdbc.Driver
+              user: root
+              password: yV2jJxvNs8BD
+flowable:
+  async-executor-activate: false
+  database-schema-update: true
+  app:
+    deploy-resources: true
+  deploymentName: '"SpringBootAutoDeployment"'
+  form:
+    deploy-resources: true
+    deployment-name: SpringBootAutoDeployment
+    enabled: true
+    resource-location: classpath*:/forms/
+    resource-suffixes: '**.json'
+    servlet:
+      load-on-startup: -1
+      name: Flowable Form Rest API
+      path: /form-api
+  idm:
+    enabled: true
+    password-encoder: spring_bcrypt
+  jpa-enabled: true
+  modeler:
+    app:
+      rest-enabled: true
+  rest:
+    app:
+      authentication-mode: verify-privilege
+mybatis:
+  configuration:
+    log-impl: org.apache.ibatis.logging.log4j2.Log4j2Impl

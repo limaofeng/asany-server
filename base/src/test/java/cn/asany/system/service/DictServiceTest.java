@@ -117,6 +117,8 @@ class DictServiceTest {
 
     log.debug("删除 " + rows + " 条记录");
 
-    dictService.saveAll(dicts);
+    List<Dict> all = dictService.saveAll(dicts);
+
+    log.debug("保存 " + all.size() + " 条记录");
   }
 }

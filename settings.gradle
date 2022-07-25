@@ -17,6 +17,7 @@ include ":shanhai",
         ":weixin",
         ":openapi",
         ":base",
+        ":flowable",
         ":contacts",
         ":sunrise",
         ":mail",
@@ -29,7 +30,6 @@ include ":shanhai",
         ":ui",
         ":cms",
         ":uptime",
-//        ":workflow",
         ":boot"
 
 // 基础
@@ -41,7 +41,7 @@ project(':shanhai').projectDir = "$rootDir/shanhai" as File
 // 组织 / 员工 / 安全 / 登录 / 授权
 project(':security').projectDir = "$rootDir/security" as File
 // 工作流
-//project(':workflow').projectDir = "$rootDir/workflow" as File
+project(':flowable').projectDir = "$rootDir/flowable" as File
 // 存储服务接口
 project(':storage-api').projectDir = "$rootDir/storage-api" as File
 // 存储服务

@@ -258,7 +258,7 @@ input ComponentUpdateInput {
   """
   库 ID
   """
-  libraryId: ID!
+  libraryId: ID
 }
 
 enum ComponentScope {

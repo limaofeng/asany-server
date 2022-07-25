@@ -71,11 +71,16 @@ public class EmployeeService {
   @Autowired private DepartmentDao departmentDao;
   //    @Autowired
   //    private UserService userService;
-  @Autowired private PasswordEncoder passwordEncoder;
+  private PasswordEncoder passwordEncoder;
   @Autowired private PositionService positionService;
   @Autowired private OrganizationService organizationService;
   @Autowired private EmployeeIdentityDao employeeIdentityDao;
   @Autowired private EmployeeStatusDao employeeStatusDao;
+
+  @Autowired(required = false)
+  public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
+    this.passwordEncoder = passwordEncoder;
+  }
 
   public Page<Employee> findPage(Pageable pageable, List<PropertyFilter> filters) {
     return employeeDao.findPage(pageable, filters);

@@ -27,7 +27,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EnableJpaRepositories(
     basePackages = "cn.asany.security.*.dao",
     repositoryBaseClass = ComplexJpaRepository.class)
-public class SecurityAutoConfiguration {
+public class AsanySecurityAutoConfiguration {
 
   @Bean
   public PasswordEncoder passwordEncoder(Environment environment) {

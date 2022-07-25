@@ -36,7 +36,6 @@ import org.jfantasy.framework.util.common.ClassUtil;
 public class Component extends BaseBusEntity implements UIResource {
 
   public static final String RESOURCE_NAME = "COMPONENT";
-
   public static final String METADATA_LIBRARY_ID = "library";
 
   @Id

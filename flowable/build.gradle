@@ -1,0 +1,13 @@
+description = "工作流"
+
+apply plugin: 'java-library'
+
+dependencies {
+    implementation "org.flowable:flowable-spring-boot-starter:$LIB_FLOWABLE_VER"
+    implementation("org.flowable:flowable-ui-common:$LIB_FLOWABLE_VER") {
+        exclude group: "org.springframework.boot"
+    }
+    implementation "org.flowable:flowable-ui-modeler-conf:$LIB_FLOWABLE_VER"
+    implementation "org.flowable:flowable-ui-modeler-logic:$LIB_FLOWABLE_VER"
+    implementation "org.flowable:flowable-ui-modeler-rest:$LIB_FLOWABLE_VER"
+}

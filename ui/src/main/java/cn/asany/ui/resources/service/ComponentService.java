@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -61,6 +62,7 @@ public class ComponentService {
     return _component;
   }
 
+  @CacheEvict(key = "targetClass  + '.findById#' + #p0", value = CACHE_KEY)
   public Component update(Long id, Component component, Long libraryId, Boolean merge) {
     component.setId(id);
     List<String> tags = component.getTags();

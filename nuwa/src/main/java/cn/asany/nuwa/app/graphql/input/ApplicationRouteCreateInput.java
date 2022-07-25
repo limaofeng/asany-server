@@ -31,4 +31,6 @@ public class ApplicationRouteCreateInput {
   private Long parentRoute;
   /** 应用 */
   private Long application;
+  /** 布局设置 */
+  private LayoutSettingsInput layout;
 }

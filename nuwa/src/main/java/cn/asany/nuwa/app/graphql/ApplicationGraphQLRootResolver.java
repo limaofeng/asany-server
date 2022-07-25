@@ -4,27 +4,38 @@ import cn.asany.nuwa.YamlUtils;
 import cn.asany.nuwa.app.converter.ApplicationConverter;
 import cn.asany.nuwa.app.domain.Application;
 import cn.asany.nuwa.app.graphql.input.ApplicationCreateInput;
+import cn.asany.nuwa.app.graphql.input.ApplicationFilter;
+import cn.asany.nuwa.app.graphql.type.ApplicationIdType;
 import cn.asany.nuwa.app.service.ApplicationService;
 import cn.asany.nuwa.app.service.dto.NativeApplication;
 import graphql.kickstart.tools.GraphQLMutationResolver;
+import graphql.kickstart.tools.GraphQLQueryResolver;
+import graphql.schema.DataFetchingEnvironment;
 import java.io.IOException;
+import java.util.List;
+import java.util.Optional;
 import javax.servlet.http.Part;
 import lombok.extern.slf4j.Slf4j;
+import org.jfantasy.framework.util.common.ObjectUtil;
+import org.jfantasy.framework.util.regexp.RegexpConstant;
+import org.jfantasy.framework.util.regexp.RegexpUtil;
+import org.jfantasy.graphql.util.GraphqlUtil;
 import org.springframework.stereotype.Component;
 
 /**
- * 应用 Mutation
+ * 应用
  *
  * @author limaofeng
  */
 @Slf4j
 @Component
-public class ApplicationGraphQLMutationResolver implements GraphQLMutationResolver {
+public class ApplicationGraphQLRootResolver
+    implements GraphQLQueryResolver, GraphQLMutationResolver {
 
   private final ApplicationService applicationService;
   public final ApplicationConverter applicationConverter;
 
-  public ApplicationGraphQLMutationResolver(
+  public ApplicationGraphQLRootResolver(
       ApplicationService applicationService, ApplicationConverter applicationConverter) {
     this.applicationService = applicationService;
     this.applicationConverter = applicationConverter;
@@ -51,5 +62,26 @@ public class ApplicationGraphQLMutationResolver implements GraphQLMutationResolv
   public Boolean deleteApplication(Long id) {
     this.applicationService.deleteApplication(id);
     return Boolean.TRUE;
+  }
+
+  private static ApplicationIdType getDefaultApplicationIdType(String id) {
+    return RegexpUtil.isMatch(id, RegexpConstant.VALIDATOR_INTEGE)
+        ? ApplicationIdType.ID
+        : ApplicationIdType.CLIENT_ID;
+  }
+
+  public Optional<Application> application(
+      String id, ApplicationIdType idType, String space, DataFetchingEnvironment environment) {
+    idType = ObjectUtil.defaultValue(idType, () -> getDefaultApplicationIdType(id));
+    boolean hasFetchRoutes = GraphqlUtil.hasFetchFields(environment, "routes");
+    boolean hasFetchMenus = GraphqlUtil.hasFetchFields(environment, "menus");
+    if (ApplicationIdType.CLIENT_ID.equals(idType)) {
+      return applicationService.findDetailsByClientId(id, hasFetchRoutes, hasFetchMenus);
+    }
+    return applicationService.findDetailsById(Long.valueOf(id), hasFetchRoutes, hasFetchMenus);
+  }
+
+  public List<Application> applications(ApplicationFilter filter) {
+    return applicationService.findAll(filter.build());
   }
 }
