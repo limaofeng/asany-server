@@ -5,11 +5,8 @@ package cn.asany.workflow.field.domain.enums;
  *
  * @author limaofeng
  * @version V1.0
- * @date 2019-05-23 20:37
+ * @date 2022/7/28 9:12 9:12
  */
 public enum FieldCategory {
-  /** 自定义 */
-  CUSTOM,
-  /** 预设 */
-  PRESET
+    custom, preset
 }

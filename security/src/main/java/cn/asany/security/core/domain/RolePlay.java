@@ -9,7 +9,7 @@ import org.jfantasy.framework.dao.BaseBusEntity;
  * 业务角色
  *
  * @author limaofeng
- * @date 11:35 2021-09-20
+ * @date 2022/7/28 9:12 9:12
  */
 @Data
 @EqualsAndHashCode(callSuper = false)

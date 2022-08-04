@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
  * 文章
  *
  * @author limaofeng
- * @date 2019-06-26 17:26
+ * @date 2022/7/28 9:12 9:12
  */
 @Component
 public class ArticleGraphQLResolver implements GraphQLResolver<Article> {

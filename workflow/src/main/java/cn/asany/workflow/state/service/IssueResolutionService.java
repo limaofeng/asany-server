@@ -1,12 +1,12 @@
 package cn.asany.workflow.state.service;
 
 import java.util.List;
-import net.whir.hos.issue.attribute.bean.IssueResolution;
-import net.whir.hos.issue.attribute.dao.IssueResolutionDao;
+import cn.asany.pm.attribute.bean.IssueResolution;
+import cn.asany.pm.attribute.dao.IssueResolutionDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-/** @Author: fengmeng @Date: 2019/5/22 20:12 */
+/** @author limaofeng@msn.com @date 2022/7/28 9:12 9:12
 @Service
 public class IssueResolutionService {
 

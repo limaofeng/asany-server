@@ -1,0 +1,391 @@
+"""
+解决结果
+"""
+type IssueResolution {
+  """
+  ID
+  """
+  id: ID!
+  """
+  解决结果名称
+  """
+  name: String
+  """
+  解决结果描述
+  """
+  description: String
+  """
+  排序
+  """
+  index: Int
+}
+
+enum IssueStatusCategory {
+  TODO
+  IN_PROGRESS
+  DONE
+}
+
+"""
+状态
+"""
+type IssueStatus {
+  """
+  主键
+  """
+  id: ID!
+  """
+  名称
+  """
+  name: String
+  """
+  描述
+  """
+  description: String
+  """
+  排序
+  """
+  index: Int
+  """
+  阶段
+  """
+  category: IssueStatusCategory
+}
+
+"""
+任务类型
+"""
+type IssueType {
+  """
+  主键
+  """
+  id: ID
+  """
+  名称
+  """
+  name: String
+  """
+  描述
+  """
+  description: String
+}
+
+"""
+任务优先级
+"""
+type IssuePriority {
+  id: ID
+  """
+  图标
+  """
+  icon: String
+  """
+  名称
+  """
+  name: String
+  """
+  描述
+  """
+  description: String
+  """
+  排序
+  """
+  index: Int
+}
+
+type ProjectMember {
+  id: ID!
+  name: String
+}
+
+"""
+任务主表
+"""
+type Issue {
+  """
+  ID
+  """
+  id: ID
+  """
+  项目
+  """
+  project: Project!
+  """
+  解决结果
+  """
+  resolution: IssueResolution
+  """
+  状态
+  """
+  status: IssueStatus
+  """
+  类型
+  """
+  type: IssueType
+  """
+  概要
+  """
+  name: String
+  """
+  描述
+  """
+  description: String
+  """
+  进度
+  """
+  progress: Int
+  """
+  优先级
+  """
+  priority: IssuePriority
+  # 任务对应的当前操作
+  #    operations(user: ID): [IssueOperation]
+  """
+  发起人
+  """
+  reporter: ProjectMember
+  """
+  经办人
+  """
+  assignee: ProjectMember
+  """
+  附件
+  """
+  attachments: [File!]!
+  """
+  注释
+  """
+  comments: [IssueComment!]!
+  """
+  日志列表
+  """
+  worklogs: [IssueWorklog!]!
+  """
+  时间追踪
+  """
+  timeTrack: IssueTimeTrack
+  #    """可分配用户"""
+  #    assignableUsers: [ProjectMember]
+  """
+  截止时间
+  """
+  dueDate: Date @dateFormat
+}
+
+# 问题对应的操作
+#type IssueOperation {
+#    # 操作 ID
+#    id: ID
+#    # 操作名称
+#    name: String
+#    # 该操作是否有某个权限
+#    grants: Boolean
+#    # 操作对应的界面
+#    screen: IssueScreen
+#}
+
+type IssueTimeTrack {
+  #预计时长
+  estimated: Int
+  #剩余时长
+  remaining: Int
+
+  #记录时长
+  logged: Int
+}
+
+#任务条件筛选
+input IssueFilter {
+  #所属项目
+  projectId_eq: ID
+  # 任务状态
+  status_in: [ID]
+  #任务优先级
+  priority_in: [ID]
+  #任务类型
+  type_eq: String
+  #分配方式
+  style_eq: String
+  # 经办人
+  manager_eq: String
+  #概要模糊
+  summary_contains: String
+  #描述概要模糊
+  descriptionOrSummary_contains: String
+  # 发起人部门查询
+  reporter_departments_in: String
+  #发起人查询
+  reporter_eq: String
+}
+#任务更新参数
+input IssueUpdateInput {
+  # 项目id(预留)
+  project: ID
+  # 问题类型
+  type: ID
+  # 概要
+  summary: String
+  # 描述
+  description: String
+  # 任务优先级
+  priority: ID
+  #进度
+  progress: Int
+  # 发起人
+  reporter: ID
+  # 经办人
+  assignee: ID
+  #附件
+  attachments: [File]
+}
+"""
+任务新增对象
+"""
+input IssueCreateInput {
+  """
+  概要
+  """
+  name: String!
+  """
+  描述
+  """
+  description: String
+  """
+  项目ID
+  """
+  project: ID!
+  """
+  问题类型
+  """
+  type: ID!
+  """
+  任务优先级
+  """
+  priority: ID!
+  """
+  发起人/报告人
+  """
+  reporter: ID!
+  """
+  附件
+  """
+  attachments: [File]
+  """
+  截止时间
+  """
+  dueDate: Date
+}
+
+#任务日志
+input IssueWorkLogInput {
+  #用户ID
+  uid: ID!
+  #日志内容
+  content: String!
+  #附件
+  attachments: [File]
+}
+
+#任务注释
+input IssueCommentInput {
+  #用户ID
+  uid: ID
+  # 注释
+  content: String
+  #附件
+  attachments: [File]
+}
+
+#分页查询任务
+type IssueConnection {
+  # 总数据条数
+  totalCount: Int
+  # 每页显示条数
+  pageSize: Int
+  # 总页数
+  totalPage: Int
+  # 当前页
+  currentPage: Int
+  edges: [IssueEdge]
+  pageInfo: PageInfo
+}
+#分页查询任务
+type IssueEdge {
+  cursor: String
+  node: Issue
+}
+
+#任务注释
+type IssueComment {
+  # ID
+  id: ID
+  # 任务id
+  issue: Issue
+  #注释内容
+  content: String
+  #注释时间
+  contentDate: Date @dateFormat
+  #附件
+  attachments: [File]
+}
+
+#任务日志
+type IssueWorklog {
+  #ID
+  id: ID
+  # 任务
+  issue: Issue
+  #日志内容
+  content: String
+  #填写时间
+  logTime: Date @dateFormat
+  #附件
+  attachments: [File]
+}
+
+input IssueFieldValue {
+  name: String
+  value: String
+}
+
+extend type Project {
+  issues(
+    filter: IssueFilter = {}
+    size: Int = 10
+    orderBy: OrderBy = "unsorted"
+  ): [Issue!]!
+}
+
+extend type Query {
+  issue(id: ID!): Issue
+  #分页查询任务
+  issues(
+    filter: IssueFilter = {}
+    page: Int = 1
+    pageSize: Int = 15
+    orderBy: OrderBy = "unsorted"
+  ): IssueConnection
+}
+
+extend type Mutation {
+  # 创建任务
+  createIssue(input: IssueCreateInput!): Issue
+  # 更新任务
+  updateIssue(id: ID!, input: IssueUpdateInput!, merge: Boolean = true): Issue
+  #  # 保存字段的值
+  #  issueAction(issue: ID!, action: ID!, values: [IssueFieldValue]): Issue
+  #  # 关注任务
+  #  watchIssue(issue: ID!, uid: ID!): Boolean
+  #  # 取消关注
+  #  unwatchIssue(issueFollow: ID!): Boolean
+  #  #开始任务
+  #  startIssue(issue: ID!): Boolean
+  #  #暂停任务
+  #  pauseIssue(issue: ID!, content: String!): Boolean
+  #  #新增任务结果
+  #  resolutionIssue(issue: ID!, resolutionId: ID!): Boolean
+  #  # 增加任务日志
+  #  createIssueWorkLog(issue: ID!, input: IssueWorkLogInput!): IssueWorklog
+  #  #增加任务注释
+  #  createIssueComment(issue: ID!, input: IssueCommentInput!): IssueComment
+}

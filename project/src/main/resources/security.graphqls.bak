@@ -1,0 +1,58 @@
+extend type Query {
+    # 查询全部权限方案
+    issuePermissionSchemes: [IssuePermissionScheme]
+    # 查询某个权限方案的列表
+    issuePermissionScheme(id: ID!):IssuePermissionScheme
+}
+
+extend type Mutation {
+    # 给某个权限授予给某一类的某个人
+    grantIssuePermission(scheme: ID!,permission: ID!,securityType: IssueSecurityType!,value: String!): IssueGrantPermission
+    # 在权限列表中，删除某个用户拥有的某个权限
+    removeIssueGrantPermission(id: ID!): Boolean
+}
+
+enum IssueSecurityType {
+    # 报告人
+    reporter,
+    # 用户
+    user,
+    # 主管
+    director,
+    # 部门
+    department
+}
+
+# 权限方案
+type IssuePermissionScheme{
+    # 主键id
+    id: ID
+    # 名称
+    name: String
+    # 描述
+    description: String
+    # 权限
+    grants: [IssueGrantPermission]
+}
+
+type IssueGrantPermission{
+    id: ID
+    # 权限
+    permission: IssuePermission
+    # 人类型
+    securityType: IssueSecurityType
+    # 对应的用户或者其他
+    value: String
+}
+
+# 权限
+type IssuePermission{
+    # 主键
+    id: ID
+    # 名称
+    name: String
+    # 描述
+    description: String
+    # 类型
+    type: String
+}

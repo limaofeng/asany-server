@@ -26,7 +26,7 @@ import org.springframework.web.client.RestTemplate;
 /**
  * @author limaofeng
  * @version V1.0 @Description: 测试程序入口
- * @date 2019/2/13 4:04 PM
+ * @date 2022/7/28 9:12 9:12
  */
 @Slf4j
 @Configuration

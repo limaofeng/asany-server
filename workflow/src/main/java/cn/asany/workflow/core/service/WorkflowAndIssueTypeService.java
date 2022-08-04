@@ -2,21 +2,21 @@ package cn.asany.workflow.core.service;
 
 import java.util.ArrayList;
 import java.util.List;
-import net.whir.hos.issue.type.bean.IssueType;
-import net.whir.hos.issue.type.dao.IssueTypeDao;
-import net.whir.hos.issue.workflow.bean.IssueWorkflow;
-import net.whir.hos.issue.workflow.bean.IssueWorkflowScheme;
-import net.whir.hos.issue.workflow.bean.WorkflowAndIssueType;
-import net.whir.hos.issue.workflow.dao.IssueWorkflowDao;
-import net.whir.hos.issue.workflow.dao.IssueWorkflowSchemeDao;
-import net.whir.hos.issue.workflow.dao.WorkflowAndIssueTypeDao;
+import cn.asany.pm.type.bean.IssueType;
+import cn.asany.pm.type.dao.IssueTypeDao;
+import cn.asany.pm.workflow.bean.IssueWorkflow;
+import cn.asany.pm.workflow.bean.IssueWorkflowScheme;
+import cn.asany.pm.workflow.bean.WorkflowAndIssueType;
+import cn.asany.pm.workflow.dao.IssueWorkflowDao;
+import cn.asany.pm.workflow.dao.IssueWorkflowSchemeDao;
+import cn.asany.pm.workflow.dao.WorkflowAndIssueTypeDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * @author penghanying @ClassName: WorkflowAndIssueTypeService @Description: (这里用一句话描述这个类的作用)
- * @date 2019/5/23
+ * @author limaofeng@msn.com @ClassName: WorkflowAndIssueTypeService @Description: (这里用一句话描述这个类的作用)
+ * @date 2022/7/28 9:12
  */
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -36,8 +36,8 @@ public class WorkflowAndIssueTypeService {
    * @param scheme 工作流方案的id
    * @param workflow 工作流的id
    * @param issueTypes 任务类型id
-   * @author penghanying
-   * @date 2019/5/23
+   * @author limaofeng@msn.com
+   * @date 2022/7/28 9:12
    */
   public WorkflowAndIssueType createIssueWorkflowSchemeItem(
       Long scheme, Long workflow, List<Long> issueTypes) {
@@ -70,8 +70,8 @@ public class WorkflowAndIssueTypeService {
    *
    * @param id 主键id
    * @param issueTypes 任务类型id
-   * @author penghanying
-   * @date 2019/5/23
+   * @author limaofeng@msn.com
+   * @date 2022/7/28 9:12
    */
   public WorkflowAndIssueType updateIssueWorkflowSchemeItem(
       Long id, Boolean merge, List<Long> issueTypes) {
@@ -94,8 +94,8 @@ public class WorkflowAndIssueTypeService {
   /**
    * @ClassName: WorkflowAndIssueTypeService @Description: 删除工作流方案设置的流程选择的问题类型
    *
-   * @author penghanying
-   * @date 2019/5/24
+   * @author limaofeng@msn.com
+   * @date 2022/7/28 9:12
    */
   public Boolean removeIssueWorkflowSchemeItem(Long id) {
     workflowAndIssueTypeDao.deleteById(id);

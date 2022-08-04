@@ -1,21 +1,21 @@
 package cn.asany.workflow.screen.service;
 
 import java.util.List;
-import net.whir.hos.issue.screen.bean.FieldToScreen;
-import net.whir.hos.issue.screen.bean.IssueScreen;
-import net.whir.hos.issue.screen.bean.IssueScreenTabPane;
-import net.whir.hos.issue.screen.dao.FieldToScreenDao;
-import net.whir.hos.issue.screen.dao.IssueScreenDao;
-import net.whir.hos.issue.screen.dao.IssueScreenTabPaneDao;
+import cn.asany.pm.screen.bean.FieldToScreen;
+import cn.asany.pm.screen.bean.IssueScreen;
+import cn.asany.pm.screen.bean.IssueScreenTabPane;
+import cn.asany.pm.screen.dao.FieldToScreenDao;
+import cn.asany.pm.screen.dao.IssueScreenDao;
+import cn.asany.pm.screen.dao.IssueScreenTabPaneDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * @author penghanying @ClassName: IssueScreenTabPaneService @Description:
+ * @author limaofeng@msn.com @ClassName: IssueScreenTabPaneService @Description:
  *     页面中添加tabpane(这里用一句话描述这个类的作用)
- * @date 2019/5/23
+ * @date 2022/7/28 9:12
  */
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -32,8 +32,8 @@ public class IssueScreenTabPaneService {
    *
    * @param screenId 页面id
    * @param name 名称
-   * @author penghanying
-   * @date 2019/5/23
+   * @author limaofeng@msn.com
+   * @date 2022/7/28 9:12
    */
   public IssueScreenTabPane createIssueScreenTabPane(Long screenId, String name) {
     IssueScreenTabPane issueScreenTabPane = new IssueScreenTabPane();
@@ -53,8 +53,8 @@ public class IssueScreenTabPaneService {
   /**
    * @ClassName: IssueScreenTabPaneService @Description: 根据页面id，查询域
    *
-   * @author penghanying
-   * @date 2019/5/23
+   * @author limaofeng@msn.com
+   * @date 2022/7/28 9:12
    */
   public List<IssueScreenTabPane> getTabPane(Long id) {
     return issueScreenTabPaneDao.findAll(
@@ -67,8 +67,8 @@ public class IssueScreenTabPaneService {
   /**
    * @ClassName: IssueScreenTabPaneService @Description: 删除TabPane
    *
-   * @author penghanying
-   * @date 2019/5/24
+   * @author limaofeng@msn.com
+   * @date 2022/7/28 9:12
    */
   public Boolean removeIssueScreenTabPane(Long id) {
     // 根据TabPane的id，查找全部字段

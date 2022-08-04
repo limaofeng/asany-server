@@ -18,7 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 /**
  * @author limaofeng
  * @version V1.0
- * @date 2020/3/7 7:44 下午
+ * @date 2022/7/28 9:12 9:12
  */
 @Slf4j
 public class FileCoercing implements Coercing<FileObject, Object> {

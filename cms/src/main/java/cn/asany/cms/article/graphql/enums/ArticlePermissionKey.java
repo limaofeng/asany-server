@@ -3,7 +3,7 @@ package cn.asany.cms.article.graphql.enums;
 /**
  * @author limaofeng
  * @version V1.0 @Description: TODO
- * @date 2019-08-19 13:50
+ * @date 2022/7/28 9:12 9:12
  */
 public enum ArticlePermissionKey {
   /** 点击数 */

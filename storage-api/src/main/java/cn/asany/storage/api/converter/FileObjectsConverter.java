@@ -12,7 +12,7 @@ import org.jfantasy.framework.util.common.StringUtil;
  *
  * @author limaofeng
  * @version V1.0
- * @date 2019-04-09 18:17
+ * @date 2022/7/28 9:12 9:12
  */
 public class FileObjectsConverter implements AttributeConverter<List<FileObject>, String> {
 

@@ -1,20 +1,25 @@
 package cn.asany.workflow.field.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import java.util.List;
-import javax.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.hibernate.Hibernate;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
+import javax.persistence.*;
+import java.util.List;
+import java.util.Objects;
+
 /**
+ * 字段配置
+ *
  * @author limaofeng
- * @version V1.0 @Description: TODO
- * @date 2019-05-22 14:01
+ * @version V1.0
+ * @date 2022/7/28 9:12 9:12
  */
-@Data
+@Getter
+@Setter
+@ToString
+@RequiredArgsConstructor
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -24,12 +29,12 @@ import org.jfantasy.framework.dao.BaseBusEntity;
 public class FieldConfiguration extends BaseBusEntity {
   @Id
   @Column(name = "ID", nullable = false, updatable = false, precision = 22)
-  @GeneratedValue(generator = "gd_field_configuration_gen")
+  @GeneratedValue(generator = "field_configuration_gen")
   @TableGenerator(
-      name = "gd_field_configuration_gen",
+      name = "field_configuration_gen",
       table = "sys_sequence",
       pkColumnName = "gen_name",
-      pkColumnValue = "gd_field_configuration:id",
+      pkColumnValue = "field_configuration:id",
       valueColumnName = "gen_value")
   private Long id;
 
@@ -43,5 +48,19 @@ public class FieldConfiguration extends BaseBusEntity {
       mappedBy = "fieldConfiguration",
       fetch = FetchType.LAZY,
       cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
+  @ToString.Exclude
   private List<FieldConfigurationItem> fields;
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+    FieldConfiguration that = (FieldConfiguration) o;
+    return id != null && Objects.equals(id, that.id);
+  }
+
+  @Override
+  public int hashCode() {
+    return getClass().hashCode();
+  }
 }

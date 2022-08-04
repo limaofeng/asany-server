@@ -3,7 +3,7 @@ package cn.asany.cms.article.graphql.input;
 /**
  * @author limaofeng
  * @version V1.0 @Description: TODO
- * @date 2019-06-26 17:29
+ * @date 2022/7/28 9:12 9:12
  */
 public enum ContentFormat {
   html

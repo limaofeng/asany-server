@@ -4,7 +4,7 @@ package cn.asany.workflow.field.domain.enums;
  * 字段类型
  *
  * @author limaofeng
- * @date 2019-05-22 14:06
+ * @date 2022/7/28 9:12 9:12
  */
 public enum FieldType {
   /** 文本 */

@@ -1,0 +1,35 @@
+enum Platform {
+  iOS
+  Android
+  Windows
+  OSX
+  Web
+  Linux
+  Admin
+}
+
+enum OnlineStatus {
+  online
+  offline
+}
+
+type DetailPlatformStatus {
+  platform: Platform!
+  status: OnlineStatus!
+}
+
+type OnlineStatusDetails {
+  status: OnlineStatus!
+  detailPlatformStatus: [DetailPlatformStatus!]!
+}
+
+extend type CurrentUser {
+  """
+  在线状态
+  """
+  onlineStatus: OnlineStatusDetails!
+  """
+  OpenIM Token
+  """
+  imToken(platform: Platform!): String!
+}

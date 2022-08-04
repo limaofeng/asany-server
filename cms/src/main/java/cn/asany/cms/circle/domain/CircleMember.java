@@ -7,7 +7,7 @@ import org.jfantasy.framework.dao.BaseBusEntity;
 
 /**
  * @author admin
- * @date 2017/7/17
+ * @date 2022/7/28 9:12
  */
 @Getter
 @Setter

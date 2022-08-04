@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 
 /**
  * @author liumeng @Description: (这里用一句话描述这个类的作用)
- * @date 15:40 2020-04-23
+ * @date 2022/7/28 9:12 9:12
  */
 @Repository
 public interface RoleSpaceDao extends JpaRepository<RoleSpace, String> {}

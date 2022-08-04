@@ -1,11 +1,16 @@
 package cn.asany.workflow.field.graphql;
 
 import com.coxautodev.graphql.tools.GraphQLMutationResolver;
-import net.whir.hos.issue.field.service.IssueFieldConfigurationServce;
+import cn.asany.pm.field.service.IssueFieldConfigurationServce;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-/** @Author: fengmeng @Date: 2019/5/13 18:25 */
+/**
+ * 字段配置
+ *
+ * @author limaofeng@msn.com
+ * @date 2022/7/28 9:12 9:12
+ */
 @Component
 public class IssueFieldConfigurationGraphQLMutationResolver implements GraphQLMutationResolver {
 

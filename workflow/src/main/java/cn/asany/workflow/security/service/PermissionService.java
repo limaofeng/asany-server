@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
  * 权限 Service
  *
  * @author limaofeng
- * @date 2019/5/31
+ * @date 2022/7/28 9:12
  */
 @Service("issuePermissionsService")
 @Transactional(rollbackFor = Exception.class)
@@ -46,8 +46,8 @@ public class PermissionService {
   /**
    * @ClassName: PermissionsService @Description: 在权限列表中，删除某个用户拥有的某个权限
    *
-   * @author penghanying
-   * @date 2019/5/31
+   * @author limaofeng@msn.com
+   * @date 2022/7/28 9:12
    */
   public Boolean removeGrantPermission(Long id) {
     grantPermissionDao.deleteById(id);
@@ -57,8 +57,8 @@ public class PermissionService {
   /**
    * @ClassName: PermissionsService @Description: 查询全部权限方案
    *
-   * @author penghanying
-   * @date 2019/5/31
+   * @author limaofeng@msn.com
+   * @date 2022/7/28 9:12
    */
   public List<PermissionScheme> permissionSchemes() {
     return permissionSchemeDao.findAll();
@@ -67,8 +67,8 @@ public class PermissionService {
   /**
    * @ClassName: PermissionsService @Description: 查询某个权限方案的列表
    *
-   * @author penghanying
-   * @date 2019/5/31
+   * @author limaofeng@msn.com
+   * @date 2022/7/28 9:12
    */
   public PermissionScheme permissionScheme(Long id) {
     return permissionSchemeDao.findById(id).orElse(null);
@@ -77,8 +77,8 @@ public class PermissionService {
   /**
    * @ClassName: PermissionsService @Description: 根据权限模板的id，查询全部权限
    *
-   * @author penghanying
-   * @date 2019/6/4
+   * @author limaofeng@msn.com
+   * @date 2022/7/28 9:12
    */
   public List<GrantPermission> getGrantPermissions(Long scheme, String permission) {
     // 通过权限的code，查询权限的id

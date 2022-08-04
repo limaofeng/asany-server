@@ -1,21 +1,25 @@
 package cn.asany.workflow.field.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import javax.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.hibernate.Hibernate;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
+import javax.persistence.*;
+import java.util.Objects;
+
 /**
+ * 字段项配置
+ *
  * @author limaofeng
- * @version V1.0 @Description: TODO
- * @date 2019-05-22 14:08
+ * @version V1.0
+ * @date 2022/7/28 9:12 9:12
  */
-@Data
+@Getter
+@Setter
+@ToString
+@RequiredArgsConstructor
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Table(name = "FSM_FIELD_CONFIGURATION_ITEM")
@@ -23,12 +27,12 @@ import org.jfantasy.framework.dao.BaseBusEntity;
 public class FieldConfigurationItem extends BaseBusEntity {
   @Id
   @Column(name = "ID", nullable = false, updatable = false, precision = 22)
-  @GeneratedValue(generator = "gd_field_configuration_item_gen")
+  @GeneratedValue(generator = "field_configuration_item_gen")
   @TableGenerator(
-      name = "gd_field_configuration_item_gen",
+      name = "field_configuration_item_gen",
       table = "sys_sequence",
       pkColumnName = "gen_name",
-      pkColumnValue = "gd_field_configuration_item:id",
+      pkColumnValue = "field_configuration_item:id",
       valueColumnName = "gen_value")
   private Long id;
 
@@ -36,6 +40,7 @@ public class FieldConfigurationItem extends BaseBusEntity {
   @JoinColumn(
       name = "FIELD_ID",
       foreignKey = @ForeignKey(name = "FK_FIELD_CONFIGURATION_ITEM_FIELD_ID"))
+  @ToString.Exclude
   private Field field;
 
   @Column(name = "REQUIRED")
@@ -48,5 +53,19 @@ public class FieldConfigurationItem extends BaseBusEntity {
   @JoinColumn(
       name = "CONFIG_ID",
       foreignKey = @ForeignKey(name = "FK_FIELD_CONFIGURATION_ITEM_CONFIG_ID"))
+  @ToString.Exclude
   private FieldConfiguration fieldConfiguration;
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+    FieldConfigurationItem that = (FieldConfigurationItem) o;
+    return id != null && Objects.equals(id, that.id);
+  }
+
+  @Override
+  public int hashCode() {
+    return getClass().hashCode();
+  }
 }

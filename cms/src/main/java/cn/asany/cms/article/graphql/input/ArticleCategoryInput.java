@@ -10,7 +10,7 @@ import lombok.Data;
  *
  * @author limaofeng
  * @version V1.0
- * @date 2019-06-27 13:56
+ * @date 2022/7/28 9:12 9:12
  */
 @Data
 public class ArticleCategoryInput {

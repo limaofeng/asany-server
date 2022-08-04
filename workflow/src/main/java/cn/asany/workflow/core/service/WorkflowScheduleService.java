@@ -1,15 +1,15 @@
 package cn.asany.workflow.core.service;
 
 import java.util.List;
-import net.whir.hos.issue.workflow.bean.WorkflowSchedule;
-import net.whir.hos.issue.workflow.dao.WorkflowScheduleDao;
+import cn.asany.pm.workflow.bean.WorkflowSchedule;
+import cn.asany.pm.workflow.dao.WorkflowScheduleDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * @author penghanying @ClassName: WorkflowScheduleService @Description: (这里用一句话描述这个类的作用)
- * @date 2019/5/26
+ * @author limaofeng@msn.com @ClassName: WorkflowScheduleService @Description: (这里用一句话描述这个类的作用)
+ * @date 2022/7/28 9:12
  */
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -20,8 +20,8 @@ public class WorkflowScheduleService {
   /**
    * @ClassName: WorkflowScheduleService @Description: 记录每一次操作的数据
    *
-   * @author penghanying
-   * @date 2019/5/26
+   * @author limaofeng@msn.com
+   * @date 2022/7/28 9:12
    */
   public WorkflowSchedule saveWorkflowSchedule(WorkflowSchedule workflowSchedule) {
     return workflowScheduleDao.save(workflowSchedule);
@@ -32,8 +32,8 @@ public class WorkflowScheduleService {
    *
    * @param type 问题类型id
    * @param project 项目的id
-   * @author penghanying
-   * @date 2019/5/31
+   * @author limaofeng@msn.com
+   * @date 2022/7/28 9:12
    */
   public List<WorkflowSchedule> issueOperateLog(Long issue, Long project) {
     return workflowScheduleDao.findAll(

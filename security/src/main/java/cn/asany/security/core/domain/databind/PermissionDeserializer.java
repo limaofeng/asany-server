@@ -8,8 +8,8 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import java.io.IOException;
 
 /**
- * @author penghanying @ClassName: PermissionDeserializer @Description: (这里用一句话描述这个类的作用)
- * @date 2019/5/31
+ * @author limaofeng@msn.com @ClassName: PermissionDeserializer @Description: (这里用一句话描述这个类的作用)
+ * @date 2022/7/28 9:12
  */
 public class PermissionDeserializer extends JsonDeserializer<Permission> {
   @Override

@@ -6,7 +6,7 @@ import org.springframework.context.ApplicationEvent;
 /**
  * @author limaofeng
  * @version V1.0 @Description: TODO
- * @date 2019/11/27 11:46 上午
+ * @date 2022/7/28 9:12 9:12
  */
 public class CourseCreatedEvent extends ApplicationEvent {
 

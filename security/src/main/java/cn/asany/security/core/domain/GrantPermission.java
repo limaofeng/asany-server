@@ -11,6 +11,7 @@ import java.util.Objects;
 import javax.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
+import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
 /**
@@ -18,7 +19,7 @@ import org.jfantasy.framework.dao.BaseBusEntity;
  *
  * @author limaofeng
  * @version V1.0
- * @date 2019-06-11 20:10
+ * @date 2022/7/28 9:12 9:12
  */
 @Getter
 @Setter
@@ -33,13 +34,8 @@ public class GrantPermission extends BaseBusEntity {
 
   @Id
   @Column(name = "ID", nullable = false, updatable = false, precision = 22)
-  @GeneratedValue(generator = "auth_grant_permission_gen")
-  @TableGenerator(
-      name = "auth_grant_permission_gen",
-      table = "sys_sequence",
-      pkColumnName = "gen_name",
-      pkColumnValue = "auth_grant_permission:id",
-      valueColumnName = "gen_value")
+  @GeneratedValue(generator = "fantasy-sequence")
+  @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
   //  /** 授权类型 */
   //  @Enumerated(EnumType.STRING)

@@ -1,0 +1,60 @@
+extend type Query{
+    # 查询全部页面
+    screens: [IssueScreen]
+    # 查询某个页面分配的全部字段
+    screen(id: ID):IssueScreen
+}
+
+extend type Mutation {
+    # 添加页面
+    createIssueScreen(input: IssueScreenInput):IssueScreen
+    # 修改页面
+    updateIssueScreen(id: ID!, merge: Boolean = true,input: IssueScreenInput):IssueScreen
+    # 删除页面
+    removeIssueScreen(id: ID!):Boolean
+    # 为页面添加 TabPane
+    createIssueScreenTabPane(screen: ID!, name: String!): IssueScreenTabPane
+    # 删除TabPane
+    removeIssueScreenTabPane(id:ID!): Boolean
+    # 将字段添加到界面
+    createIssueScreenField(screen: ID!, field: ID!): Boolean
+    # 将字段添加到界面中的TabPane
+    createIssueScreenTabPaneField(screen: ID!, tabPane: ID!, field: ID!): Boolean
+    # 删除已分配到界面的字段
+    removeIssueScreenField(screen: ID!, field: ID!):Boolean
+    # 删除已分配到TabPane的字段
+    removeIssueScreenTabPaneField(screen: ID!, tabPane: ID!, field: ID!):Boolean
+}
+
+# 页面
+type IssueScreen{
+    # 主键id
+    id: ID
+    # 名称
+    name: String
+    # 标题
+    title: String
+    # 描述
+    description: String
+    # 域
+    tabs: [IssueScreenTabPane]
+}
+
+# 域
+type IssueScreenTabPane {
+    id: ID
+    # 名称
+    name: String
+    # Tab 里的字段
+    fields: [IssueFieldConfigurationItem]
+}
+
+# 页面
+input IssueScreenInput{
+    # 名称
+    name: String!
+    # 标题
+    title: String
+    # 描述
+    description: String
+}

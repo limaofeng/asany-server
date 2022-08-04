@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
  * 文章特征
  *
  * @author ChenWenJie
- * @date 2020/10/22 11:21 上午
+ * @date 2022/7/28 9:12 9:12
  */
 @Component
 public class ArticleFeatureGraphQLQueryResolver

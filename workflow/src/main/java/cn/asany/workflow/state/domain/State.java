@@ -13,7 +13,7 @@ import org.jfantasy.framework.dao.BaseBusEntity;
  * 流程状态
  *
  * @author limaofeng
- * @date 2019/5/7
+ * @date 2022/7/28 9:12
  */
 @Data
 @Builder

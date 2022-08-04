@@ -13,7 +13,7 @@ import org.jfantasy.graphql.util.Kit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-/** @Author: fengmeng @Date: 2019/5/13 18:25 */
+/** @author limaofeng@msn.com @date 2022/7/28 9:12 9:12
 @Component
 public class StateGraphQLQueryResolver implements GraphQLQueryResolver {
   @Autowired private StateService stateService;

@@ -4,7 +4,7 @@ package cn.asany.security.core.graphql.enums;
  * 角色分配对象Enum
  *
  * @author gy
- * @date 2020/6/15
+ * @date 2022/7/28 9:12
  */
 public enum RoleAssignEntityTypeEnum {
   /** 部门 */

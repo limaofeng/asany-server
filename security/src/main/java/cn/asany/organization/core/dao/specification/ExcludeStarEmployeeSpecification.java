@@ -10,7 +10,7 @@ import org.springframework.data.jpa.domain.Specification;
 /**
  * @author limaofeng
  * @version V1.0 @Description: TODO
- * @date 2019-08-20 14:04
+ * @date 2022/7/28 9:12 9:12
  */
 public class ExcludeStarEmployeeSpecification implements Specification<Employee> {
 

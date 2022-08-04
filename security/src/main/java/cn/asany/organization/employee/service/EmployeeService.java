@@ -43,7 +43,7 @@ import org.springframework.transaction.annotation.Transactional;
  *
  * @author limaofeng
  * @version V1.0
- * @date 2019-03-11 14:49
+ * @date 2022/7/28 9:12 9:12
  */
 @Service
 @Slf4j
@@ -77,7 +77,7 @@ public class EmployeeService {
   @Autowired private EmployeeIdentityDao employeeIdentityDao;
   @Autowired private EmployeeStatusDao employeeStatusDao;
 
-  @Autowired(required = false)
+  @Autowired
   public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
     this.passwordEncoder = passwordEncoder;
   }

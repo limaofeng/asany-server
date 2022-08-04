@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * @author penghanying @ClassName: WorkflowGraphQLMutationResolver @Description: (这里用一句话描述这个类的作用)
- * @date 2019/5/23
+ * @author limaofeng@msn.com @ClassName: WorkflowGraphQLMutationResolver @Description: (这里用一句话描述这个类的作用)
+ * @date 2022/7/28 9:12
  */
 @Component
 public class WorkflowGraphQLMutationResolver implements GraphQLMutationResolver {
@@ -34,8 +34,8 @@ public class WorkflowGraphQLMutationResolver implements GraphQLMutationResolver 
   /**
    * @ClassName: IussTaskGraphQLMutationResolver @Description: 添加状态
    *
-   * @author penghanying
-   * @date 2019/5/23
+   * @author limaofeng@msn.com
+   * @date 2022/7/28 9:12
    */
   public IssueStatus createIssueStatus(IssueStatus issueState) {
     return issueStateService.createIssueState(issueState);
@@ -44,8 +44,8 @@ public class WorkflowGraphQLMutationResolver implements GraphQLMutationResolver 
   /**
    * @ClassName: IussTaskGraphQLMutationResolver @Description: 修改状态
    *
-   * @author penghanying
-   * @date 2019/5/23
+   * @author limaofeng@msn.com
+   * @date 2022/7/28 9:12
    */
   public IssueStatus updateIssueStatus(Long id, Boolean merge, IssueStatus issueState) {
     return issueStateService.updateIssueState(id, merge, issueState);
@@ -54,8 +54,8 @@ public class WorkflowGraphQLMutationResolver implements GraphQLMutationResolver 
   /**
    * @ClassName: IussTaskGraphQLMutationResolver @Description: 删除状态
    *
-   * @author penghanying
-   * @date 2019/5/23
+   * @author limaofeng@msn.com
+   * @date 2022/7/28 9:12
    */
   public Boolean removeIssueStatus(Long id) {
     return issueStateService.removeIssueStatus(id);
@@ -64,8 +64,8 @@ public class WorkflowGraphQLMutationResolver implements GraphQLMutationResolver 
   /**
    * @ClassName: IussTaskGraphQLMutationResolver @Description: 创建工作流
    *
-   * @author penghanying
-   * @date 2019/5/23
+   * @author limaofeng@msn.com
+   * @date 2022/7/28 9:12
    */
   public IssueWorkflow createIssueWorkflow(IssueWorkflow issueWorkflow) {
     return issueWorkflowService.createIssueWorkflow(issueWorkflow);
@@ -74,8 +74,8 @@ public class WorkflowGraphQLMutationResolver implements GraphQLMutationResolver 
   /**
    * @ClassName: IussTaskGraphQLMutationResolver @Description: 修改工作流
    *
-   * @author penghanying
-   * @date 2019/5/23
+   * @author limaofeng@msn.com
+   * @date 2022/7/28 9:12
    */
   public IssueWorkflow updateIssueWorkflow(Long id, Boolean merge, IssueWorkflow issueWorkflow) {
     return issueWorkflowService.updateIssueWorkflow(id, merge, issueWorkflow);
@@ -84,8 +84,8 @@ public class WorkflowGraphQLMutationResolver implements GraphQLMutationResolver 
   /**
    * @ClassName: IussTaskGraphQLMutationResolver @Description: 删除工作流
    *
-   * @author penghanying
-   * @date 2019/5/23
+   * @author limaofeng@msn.com
+   * @date 2022/7/28 9:12
    */
   public Boolean removeIssueWorkflow(Long id) {
     return issueWorkflowService.removeIssueWorkflow(id);
@@ -97,8 +97,8 @@ public class WorkflowGraphQLMutationResolver implements GraphQLMutationResolver 
    * @param workflow 流程的id
    * @param name 步骤的名称
    * @param linkedStatus 状态的id
-   * @author penghanying
-   * @date 2019/5/23
+   * @author limaofeng@msn.com
+   * @date 2022/7/28 9:12
    */
   public IssueWorkflowStep createIssueWorkflowStep(Long workflow, String name, Long linkedStatus) {
     return issueWorkflowStepService.createIssueWorkflowStep(workflow, name, linkedStatus);
@@ -107,8 +107,8 @@ public class WorkflowGraphQLMutationResolver implements GraphQLMutationResolver 
   /**
    * @ClassName: IussTaskGraphQLMutationResolver @Description: 修改步骤
    *
-   * @author penghanying
-   * @date 2019/5/23
+   * @author limaofeng@msn.com
+   * @date 2022/7/28 9:12
    */
   public IssueWorkflowStep updateIssueWorkflowStep(Long id, Boolean merge, String name) {
     return issueWorkflowStepService.updateIssueWorkflowStep(id, merge, name);
@@ -117,8 +117,8 @@ public class WorkflowGraphQLMutationResolver implements GraphQLMutationResolver 
   /**
    * @ClassName: IussTaskGraphQLMutationResolver @Description: 删除步骤
    *
-   * @author penghanying
-   * @date 2019/5/23
+   * @author limaofeng@msn.com
+   * @date 2022/7/28 9:12
    */
   public Boolean removeIssueWorkflowStep(Long id) {
     return issueWorkflowStepService.removeIssueWorkflowStep(id);
@@ -127,8 +127,8 @@ public class WorkflowGraphQLMutationResolver implements GraphQLMutationResolver 
   /**
    * @ClassName: IussTaskGraphQLMutationResolver @Description: 添加步骤操作
    *
-   * @author penghanying
-   * @date 2019/5/23
+   * @author limaofeng@msn.com
+   * @date 2022/7/28 9:12
    */
   public IssueWorkflowStep createIssueWorkflowStepTransition(
       Long step, IssueWorkflowStepTransition issueWorkflowStepTransition) {
@@ -139,8 +139,8 @@ public class WorkflowGraphQLMutationResolver implements GraphQLMutationResolver 
   /**
    * @ClassName: IussTaskGraphQLMutationResolver @Description: 修改步骤操作
    *
-   * @author penghanying
-   * @date 2019/5/23
+   * @author limaofeng@msn.com
+   * @date 2022/7/28 9:12
    */
   public IssueWorkflowStep updateIssueWorkflowStepTransition(
       Long id, Boolean merge, IssueWorkflowStepTransition issueWorkflowStepTransition) {
@@ -151,8 +151,8 @@ public class WorkflowGraphQLMutationResolver implements GraphQLMutationResolver 
   /**
    * @ClassName: IussTaskGraphQLMutationResolver @Description: 删除步骤操作
    *
-   * @author penghanying
-   * @date 2019/5/23
+   * @author limaofeng@msn.com
+   * @date 2022/7/28 9:12
    */
   public Boolean removeIssueWorkflowStepTransition(Long id) {
     return issueWorkflowStepTransitionService.removeIssueWorkflowStepTransition(id);
@@ -161,8 +161,8 @@ public class WorkflowGraphQLMutationResolver implements GraphQLMutationResolver 
   /**
    * @ClassName: IussTaskGraphQLMutationResolver @Description: 创建工作流方案
    *
-   * @author penghanying
-   * @date 2019/5/23
+   * @author limaofeng@msn.com
+   * @date 2022/7/28 9:12
    */
   public IssueWorkflowScheme createIssueWorkflowScheme(IssueWorkflowScheme issueWorkflowScheme) {
     return issueWorkflowSchemeService.createIssueWorkflowScheme(issueWorkflowScheme);
@@ -171,8 +171,8 @@ public class WorkflowGraphQLMutationResolver implements GraphQLMutationResolver 
   /**
    * @ClassName: IussTaskGraphQLMutationResolver @Description: 编辑工作流方案
    *
-   * @author penghanying
-   * @date 2019/5/23
+   * @author limaofeng@msn.com
+   * @date 2022/7/28 9:12
    */
   public IssueWorkflowScheme updateIssueWorkflowScheme(
       Long id, Boolean merge, IssueWorkflowScheme issueWorkflowScheme) {
@@ -185,8 +185,8 @@ public class WorkflowGraphQLMutationResolver implements GraphQLMutationResolver 
    * @param scheme 工作流方案的id
    * @param workflow 工作流的id
    * @param issueTypes 任务类型id
-   * @author penghanying
-   * @date 2019/5/23
+   * @author limaofeng@msn.com
+   * @date 2022/7/28 9:12
    */
   public WorkflowAndIssueType createIssueWorkflowSchemeItem(
       Long scheme, Long workflow, List<Long> issueTypes) {
@@ -198,8 +198,8 @@ public class WorkflowGraphQLMutationResolver implements GraphQLMutationResolver 
    *
    * @param id 主键id
    * @param issueTypes 任务类型id
-   * @author penghanying
-   * @date 2019/5/23
+   * @author limaofeng@msn.com
+   * @date 2022/7/28 9:12
    */
   public WorkflowAndIssueType updateIssueWorkflowSchemeItem(
       Long id, Boolean merge, List<Long> issueTypes) {
@@ -209,8 +209,8 @@ public class WorkflowGraphQLMutationResolver implements GraphQLMutationResolver 
   /**
    * @ClassName: WorkflowGraphQLMutationResolver @Description: 删除工作流方案设置的流程选择的问题类型
    *
-   * @author penghanying
-   * @date 2019/5/24
+   * @author limaofeng@msn.com
+   * @date 2022/7/28 9:12
    */
   public Boolean removeIssueWorkflowSchemeItem(Long id) {
     return workflowAndIssueTypeService.removeIssueWorkflowSchemeItem(id);
@@ -219,8 +219,8 @@ public class WorkflowGraphQLMutationResolver implements GraphQLMutationResolver 
   /**
    * @ClassName: WorkflowGraphQLMutationResolver @Description: 删除工作流方案
    *
-   * @author penghanying
-   * @date 2019/5/24
+   * @author limaofeng@msn.com
+   * @date 2022/7/28 9:12
    */
   public Boolean removeWorkflowScheme(Long id) {
     return issueWorkflowSchemeService.removeWorkflowScheme(id);
@@ -229,8 +229,8 @@ public class WorkflowGraphQLMutationResolver implements GraphQLMutationResolver 
   /**
    * @ClassName: WorkflowGraphQLMutationResolver @Description: 记录每一次操作的数据
    *
-   * @author penghanying
-   * @date 2019/5/26
+   * @author limaofeng@msn.com
+   * @date 2022/7/28 9:12
    */
   public WorkflowSchedule saveWorkflowSchedule(WorkflowSchedule workflowSchedule) {
     return workflowScheduleService.saveWorkflowSchedule(workflowSchedule);

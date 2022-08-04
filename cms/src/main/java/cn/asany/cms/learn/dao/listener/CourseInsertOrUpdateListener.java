@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 /**
  * @author limaofeng
  * @version V1.0 @Description: TODO
- * @date 2019/11/27 11:41 上午
+ * @date 2022/7/28 9:12 9:12
  */
 @Component
 public class CourseInsertOrUpdateListener extends AbstractChangedListener<Course> {

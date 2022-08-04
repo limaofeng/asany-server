@@ -1,18 +1,18 @@
 package cn.asany.workflow.field.service;
 
-import net.whir.hos.issue.field.bean.*;
-import net.whir.hos.issue.field.bean.enums.FieldCategory;
-import net.whir.hos.issue.field.dao.IssueFieldConfigurationDao;
-import net.whir.hos.issue.field.dao.IssueFieldConfigurationSchemeDao;
-import net.whir.hos.issue.field.dao.IssueFieldDao;
-import net.whir.hos.issue.field.dao.IssueFieldValueDao;
-import net.whir.hos.issue.field.graphql.model.IssueFieldValueInput;
-import net.whir.hos.issue.main.bean.Issue;
-import net.whir.hos.issue.screen.bean.FieldToScreen;
-import net.whir.hos.issue.screen.dao.FieldToScreenDao;
-import net.whir.hos.issue.workflow.bean.WorkflowSchedule;
-import net.whir.hos.issue.workflow.dao.IssueWorkflowStepTransitionDao;
-import net.whir.hos.issue.workflow.dao.WorkflowScheduleDao;
+import cn.asany.pm.field.bean.*;
+import cn.asany.pm.field.bean.enums.FieldCategory;
+import cn.asany.pm.field.dao.IssueFieldConfigurationDao;
+import cn.asany.pm.field.dao.IssueFieldConfigurationSchemeDao;
+import cn.asany.pm.field.dao.IssueFieldDao;
+import cn.asany.pm.field.dao.IssueFieldValueDao;
+import cn.asany.pm.field.graphql.model.IssueFieldValueInput;
+import cn.asany.pm.issue.bean.Issue;
+import cn.asany.pm.screen.bean.FieldToScreen;
+import cn.asany.pm.screen.dao.FieldToScreenDao;
+import cn.asany.pm.workflow.bean.WorkflowSchedule;
+import cn.asany.pm.workflow.dao.IssueWorkflowStepTransitionDao;
+import cn.asany.pm.workflow.dao.WorkflowScheduleDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
@@ -24,7 +24,7 @@ import java.util.Optional;
  * @author limaofeng
  * @version V1.0
  * @Description: TODO
- * @date 2019-05-24 17:25
+ * @date 2022/7/28 9:12 9:12
  */
 @Service
 public class IssueFieldConfigurationServce {
@@ -73,8 +73,8 @@ public class IssueFieldConfigurationServce {
      * @Description: 保存自定义字段值
      * @param  issue 对应的问题
      *
-     * @author penghanying
-     * @date 2019/5/29
+     * @author limaofeng@msn.com
+     * @date 2022/7/28 9:12
      *
      */
     public Boolean issueProject(Issue issue,Long action, List<IssueFieldValueInput> values){
@@ -101,8 +101,8 @@ public class IssueFieldConfigurationServce {
     /**
      * @ClassName: IssueFieldConfigurationServce
      * @Description: TODO
-     * @author penghanying
-     * @date 2019/5/29
+     * @author limaofeng@msn.com
+     * @date 2022/7/28 9:12
      *
      */
     public Boolean saveFieldValue(Issue issue, List<IssueFieldValueInput> values){

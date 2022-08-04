@@ -13,7 +13,7 @@ import org.jfantasy.framework.dao.BaseBusEntity;
  * 权限条件
  *
  * @author limaofeng
- * @date 2019/6/11
+ * @date 2022/7/28 9:12
  */
 @Data
 @Builder
@@ -27,12 +27,12 @@ public class WorkflowStepTransitionCondition extends BaseBusEntity {
   /** 主键ID */
   @Id
   @Column(name = "ID", length = 22)
-  @GeneratedValue(generator = "gd_issue_permission_condition_gen")
+  @GeneratedValue(generator = "issue_permission_condition_gen")
   @TableGenerator(
-      name = "gd_issue_permission_condition_gen",
+      name = "issue_permission_condition_gen",
       table = "sys_sequence",
       pkColumnName = "gen_name",
-      pkColumnValue = "gd_issue_permission_condition:id",
+      pkColumnValue = "issue_permission_condition:id",
       valueColumnName = "gen_value")
   private Long id;
 

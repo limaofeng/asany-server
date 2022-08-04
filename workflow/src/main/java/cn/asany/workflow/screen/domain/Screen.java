@@ -13,8 +13,8 @@ import org.jfantasy.framework.dao.BaseBusEntity;
 /**
  * 页面(这里用一句话描述这个类的作用)
  *
- * @author penghanying
- * @date 2019/5/21
+ * @author limaofeng@msn.com
+ * @date 2022/7/28 9:12
  */
 @Data
 @Builder

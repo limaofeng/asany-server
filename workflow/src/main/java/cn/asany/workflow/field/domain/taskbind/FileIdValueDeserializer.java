@@ -5,7 +5,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import java.io.IOException;
-import net.whir.hos.issue.field.bean.IssueField;
+import cn.asany.pm.field.bean.IssueField;
 
 public class FileIdValueDeserializer extends JsonDeserializer<IssueField> {
   @Override

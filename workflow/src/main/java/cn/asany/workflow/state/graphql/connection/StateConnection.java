@@ -13,7 +13,7 @@ import org.jfantasy.graphql.types.BaseConnection;
  * State 分页
  *
  * @author: limaofeng
- * @date: 2019/6/11 18:00
+ * @date 2022/7/28 9:12 9:12
  */
 @Data
 public class StateConnection extends BaseConnection<StateConnection.StateEdge, State> {

@@ -57,10 +57,12 @@ public class DataBaseTokenStore extends AbstractTokenStore {
       String ip = WebUtil.getRealIpAddress(request);
       AmapOpenAPI.IpResult ipResult = null;
 
-      try {
-        ipResult = openAPIService.getDefaultAmap().ip(ip);
-      } catch (Exception e) {
-        log.error(e.getMessage(), e);
+      if (ip != null) {
+        try {
+          ipResult = openAPIService.getDefaultAmap().ip(ip);
+        } catch (Exception e) {
+          log.error(e.getMessage(), e);
+        }
       }
 
       UserAgent userAgent = WebUtil.parseUserAgent(request);

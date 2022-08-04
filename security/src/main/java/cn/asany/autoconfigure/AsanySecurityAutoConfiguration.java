@@ -1,10 +1,12 @@
 package cn.asany.autoconfigure;
 
+import org.jfantasy.autoconfigure.OAuth2SecurityAutoConfiguration;
 import org.jfantasy.framework.dao.jpa.ComplexJpaRepository;
 import org.jfantasy.framework.security.crypto.password.DESPasswordEncoder;
 import org.jfantasy.framework.security.crypto.password.MD5PasswordEncoder;
 import org.jfantasy.framework.security.crypto.password.PasswordEncoder;
 import org.jfantasy.framework.security.crypto.password.PlaintextPasswordEncoder;
+import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -27,9 +29,10 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EnableJpaRepositories(
     basePackages = "cn.asany.security.*.dao",
     repositoryBaseClass = ComplexJpaRepository.class)
+@AutoConfigureBefore({OAuth2SecurityAutoConfiguration.class})
 public class AsanySecurityAutoConfiguration {
 
-  @Bean
+  @Bean("asany.PasswordEncoder")
   public PasswordEncoder passwordEncoder(Environment environment) {
     String encoder = environment.getProperty("PASSWORD_ENCODER", "plaintext");
     switch (encoder) {

@@ -16,7 +16,7 @@ import org.springframework.data.jpa.domain.Specification;
 /**
  * @author limaofeng
  * @version V1.0 @Description: TODO
- * @date 2019/9/25 12:00 下午
+ * @date 2022/7/28 9:12 9:12
  */
 public class GrantPermissionSpecification implements Specification {
   private List<String> resources;

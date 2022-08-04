@@ -13,9 +13,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * @author penghanying @ClassName: IssueWorkflowSchemeService @Description:
+ * @author limaofeng@msn.com @ClassName: IssueWorkflowSchemeService @Description:
  *     工作流方案的service(这里用一句话描述这个类的作用)
- * @date 2019/5/23
+ * @date 2022/7/28 9:12
  */
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -30,8 +30,8 @@ public class WorkflowSchemeService {
   /**
    * @ClassName: IssueWorkflowSchemeService @Description: 查询全部工作流方案
    *
-   * @author penghanying
-   * @date 2019/5/23
+   * @author limaofeng@msn.com
+   * @date 2022/7/28 9:12
    */
   public List<WorkflowScheme> issueWorkflowSchemes() {
     return issueWorkflowSchemeDao.findAll();
@@ -40,8 +40,8 @@ public class WorkflowSchemeService {
   /**
    * @ClassName: IssueWorkflowSchemeService @Description: 查询一个工作流方案
    *
-   * @author penghanying
-   * @date 2019/5/23
+   * @author limaofeng@msn.com
+   * @date 2022/7/28 9:12
    */
   public IssueWorkflowScheme issueWorkflowScheme(Long id) {
     return issueWorkflowSchemeDao.findById(id).orElse(null);
@@ -50,8 +50,8 @@ public class WorkflowSchemeService {
   /**
    * @ClassName: IssueWorkflowSchemeService @Description: 创建工作流方案
    *
-   * @author penghanying
-   * @date 2019/5/24
+   * @author limaofeng@msn.com
+   * @date 2022/7/28 9:12
    */
   public IssueWorkflowScheme createIssueWorkflowScheme(IssueWorkflowScheme issueWorkflowScheme) {
     return issueWorkflowSchemeDao.save(issueWorkflowScheme);
@@ -60,8 +60,8 @@ public class WorkflowSchemeService {
   /**
    * @ClassName: IssueWorkflowSchemeService @Description: 编辑工作流方案
    *
-   * @author penghanying
-   * @date 2019/5/24
+   * @author limaofeng@msn.com
+   * @date 2022/7/28 9:12
    */
   public IssueWorkflowScheme updateIssueWorkflowScheme(
       Long id, Boolean merge, IssueWorkflowScheme issueWorkflowScheme) {
@@ -72,8 +72,8 @@ public class WorkflowSchemeService {
   /**
    * @ClassName: IssueWorkflowSchemeService @Description: 删除工作流方案
    *
-   * @author penghanying
-   * @date 2019/5/24
+   * @author limaofeng@msn.com
+   * @date 2022/7/28 9:12
    */
   public Boolean removeWorkflowScheme(Long id) {
     // 根据工作流方案id，删除工作流与任务类型的中间表
@@ -94,8 +94,8 @@ public class WorkflowSchemeService {
   /**
    * @ClassName: IssueWorkflowSchemeService @Description: 根据工作流方案id，查询该工作流方案中全部的状态
    *
-   * @author penghanying
-   * @date 2019/5/30
+   * @author limaofeng@msn.com
+   * @date 2022/7/28 9:12
    */
   public List<IssueStatus> findStatueAll(IssueWorkflowScheme workflowScheme) {
     // 根据工作流方案，获取问题工作流

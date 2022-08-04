@@ -1,0 +1,156 @@
+extend type Query{
+    # 查询全部工作流
+    issueWorkflows: [IssueWorkflow]
+    # 查询一个工作流
+    issueWorkflow(id: ID!): IssueWorkflow
+    # 查询全部工作流方案
+    issueWorkflowSchemes: [IssueWorkflowScheme]
+    # 查询一个工作流方案
+    issueWorkflowScheme(id: ID): IssueWorkflowScheme
+
+    # 根据问题id,操作id,查询状态
+    issueWorkflowStatus(workflow: ID!,type:ID!,tran:ID!):IssueStatus
+    # 查询初始化状态 方案的id，问题类型的id
+    issueInitializateStatus(scheme: ID!, type: ID!):IssueStatus
+    # 根据问题id,项目id，查询所有操作记录
+    issueOperateLog(issue: ID!,project: ID!): [WorkflowSchedule]
+}
+
+extend type Mutation {
+    # 添加状态
+    createIssueStatus(input: IssueStateInput!): IssueStatus
+    # 修改状态
+    updateIssueStatus(id: ID!, merge: Boolean = true, input: IssueStateInput!):IssueStatus
+    # 删除状态
+    removeIssueStatus(id: ID!):Boolean
+
+    # 创建工作流
+    createIssueWorkflow(input: IssueWorkflowInput): IssueWorkflow
+    # 修改工作流
+    updateIssueWorkflow(id: ID!, merge: Boolean = true, input: IssueWorkflowInput): IssueWorkflow
+    # 删除工作流
+    removeIssueWorkflow(id: ID!):Boolean
+
+    # 添加步骤
+    createIssueWorkflowStep(workflow: ID!, name: String!, linkedStatus: ID!): IssueWorkflowStep
+    # 修改步骤
+    updateIssueWorkflowStep(id: ID!, merge: Boolean = true, name: String):IssueWorkflowStep
+    # 删除步骤
+    removeIssueWorkflowStep(id: ID): Boolean
+
+    # 添加步骤操作
+    createIssueWorkflowStepTransition(step: ID!,input: IssueWorkflowStepTransitionCreateInput): IssueWorkflowStep
+    # 修改步骤操作
+    updateIssueWorkflowStepTransition(id: ID!,merge: Boolean = true,input: IssueWorkflowStepTransitionCreateInput): IssueWorkflowStep
+    # 删除步骤操作
+    removeIssueWorkflowStepTransition(id: ID!): Boolean
+
+    # 创建工作流方案
+    createIssueWorkflowScheme(input: IssueWorkflowSchemeCreateInput!):IssueWorkflowScheme
+    # 编辑工作流方案
+    updateIssueWorkflowScheme(id: ID!, merge: Boolean = true,  input: IssueWorkflowSchemeCreateInput):IssueWorkflowScheme
+    # 将工作流添加到方案中
+    createIssueWorkflowSchemeItem(scheme: ID, workflow: ID, issueTypes: [ID]): IssueWorkflowSchemeItem
+    # 修改工作流方案设置的流程选择的问题类型
+    updateIssueWorkflowSchemeItem(id: ID!,merge: Boolean = true, issueTypes: [ID]!): IssueWorkflowSchemeItem
+    # 删除工作流方案设置的流程选择的问题类型
+    removeIssueWorkflowSchemeItem(id: ID!): Boolean
+    # 删除工作流方案
+    removeWorkflowScheme(id: ID!):Boolean
+}
+
+type WorkflowSchedule{
+    # 主键
+    id: ID
+    # 操作名称
+    transition: IssueWorkflowStepTransition
+    # 经办人
+    assignee: Employee
+    # 创建时间
+    createdAt: Date
+}
+
+# 工作流
+type IssueWorkflow{
+    # 主键
+    id: ID
+    # 名称
+    name: String
+    # 描述
+    description: String
+    # 步骤
+    steps: [IssueWorkflowStep]
+}
+
+# 工作流步骤
+type IssueWorkflowStep{
+    # 主键
+    id: ID
+    # 名称
+    name: String
+    # 状态
+    state: IssueStatus
+    # 跳转到下一个步骤
+    transitions: [IssueWorkflowStepTransition]
+}
+
+# 跳转到下一个步骤
+type IssueWorkflowStepTransition {
+    id: ID
+    # 名称
+    name: String
+    # 描述
+    description: String
+    # 下一个步骤
+    destination: IssueWorkflowStep
+    # 界面
+    view: IssueScreen
+}
+
+# 工作流方案
+type IssueWorkflowScheme{
+    # 主键
+    id: ID
+    # 名称
+    name: String
+    # 介绍
+    description: String
+    # 工作流
+    workflows: [IssueWorkflowSchemeItem]
+}
+
+type IssueWorkflowSchemeItem {
+    id: ID
+    workflow: IssueWorkflow
+    issueTypes: [IssueType]
+}
+
+# 创建工作流
+input IssueWorkflowInput{
+    # 名称
+    name: String!
+    # 描述
+    description: String
+}
+
+# 编辑工作流方案
+input IssueWorkflowSchemeCreateInput{
+    # 方案名称
+    name: String!
+    # 方案描述
+    description: String!
+}
+
+# 工作流步骤操作
+input IssueWorkflowStepTransitionCreateInput {
+    # 操作名称
+    name: String!
+    # 描述
+    description: String
+    # 目标步骤
+    destination: ID!
+    # 对应的界面
+    view: ID!
+}
+
+

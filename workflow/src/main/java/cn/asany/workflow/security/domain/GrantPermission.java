@@ -10,8 +10,8 @@ import lombok.NoArgsConstructor;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
 /**
- * @author penghanying @ClassName: PermissionToRole @Description: 将权限分配给某一类人(这里用一句话描述这个类的作用)
- * @date 2019/5/31
+ * @author limaofeng@msn.com @ClassName: PermissionToRole @Description: 将权限分配给某一类人(这里用一句话描述这个类的作用)
+ * @date 2022/7/28 9:12
  */
 @Data
 @Builder

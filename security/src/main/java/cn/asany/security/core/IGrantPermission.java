@@ -6,7 +6,7 @@ import cn.asany.security.core.domain.Permission;
 /**
  * @author limaofeng
  * @version V1.0 @Description: TODO
- * @date 2019-06-27 10:09
+ * @date 2022/7/28 9:12 9:12
  */
 public interface IGrantPermission {
   /**

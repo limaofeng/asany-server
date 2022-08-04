@@ -13,7 +13,7 @@ import org.mapstruct.ReportingPolicy;
  *
  * @author limaofeng
  * @version V1.0
- * @date 2019-08-15 09:50
+ * @date 2022/7/28 9:12 9:12
  */
 @Mapper(
     componentModel = "spring",

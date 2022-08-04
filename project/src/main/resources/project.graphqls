@@ -1,0 +1,99 @@
+type Project {
+  id: ID!
+  """
+  Logo
+  """
+  logo: File
+  """
+  名称
+  """
+  name: String!
+  """
+  描述
+  """
+  description: String
+  # 创建问题时的默认优先级
+  #    defaultPriority: IssuePriority
+  # 可用的优先级
+  #    priorities: [IssuePriority]
+  # 创建问题时的默认类型
+  #    defaultIssueType: IssueType
+  # 可用的问题类型
+  #    issueTypes: [IssueType]
+  # 工作流方案
+  #    workflowScheme: IssueWorkflowScheme
+  # 问题类型方案
+  #    issueTypeScheme: IssueTypeScheme
+  # 字段配置方案
+  #    fieldConfigurationScheme: IssueFieldConfigurationScheme
+  #解决结果列表
+  #    resolutions:[IssueResolution]
+  #项目所有可选状态
+  #    statuses:[IssueStatus]
+  # 权限方案
+  #    permissionScheme: IssuePermissionScheme
+  #派单规则
+  #    issueAllocationRules:[IssueAllocationRule]
+  #问题类型
+  #    issueTypeCategories:[IssueTypeCategory]
+  #自动评价规则
+  #    issueAppraisalRules:[IssueAppraisalRule]
+  #    #范围方案
+  #    issueRangeScheme:IssueRangeScheme
+  #    #积分规则
+  #    issueIntegralRuleModels: [IssueIntegralRuleModel]
+}
+
+"""
+项目分页
+"""
+type ProjectConnection {
+  # 总数据条数
+  totalCount: Int!
+  # 每页显示条数
+  pageSize: Int!
+  # 总页数
+  totalPage: Int!
+  # 当前页
+  currentPage: Int!
+  edges: [ProjectEdge!]!
+  pageInfo: PageInfo!
+}
+
+"""
+项目
+"""
+type ProjectEdge {
+  cursor: String!
+  node: Project!
+}
+
+input ProjectCreateInput {
+  logo: File
+  name: String!
+  description: String
+}
+
+input ProjectFilter {
+  name: String
+}
+
+extend type Query {
+  """
+  单个项目查询接口
+  """
+  project(id: ID!): Project
+  """
+  项目查询
+  """
+  projects(
+    filter: ProjectFilter = {}
+    page: Int = 1
+    pageSize: Int = 15
+    orderBy: OrderBy = "unsorted"
+  ): ProjectConnection!
+}
+
+extend type Mutation {
+  createProject(input: ProjectCreateInput): Project
+}

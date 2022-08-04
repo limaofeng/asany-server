@@ -1,0 +1,30 @@
+{
+  "groups": [
+    {
+      "name": "openim",
+      "description": "OpenIM 配置.",
+      "type": "cn.asany.autoconfigure.properties.OpenIMProperties",
+      "sourceType": "cn.asany.autoconfigure.properties.OpenIMProperties"
+    }
+  ],
+  "properties": [
+    {
+      "name": "openim.url",
+      "type": "java.lang.String",
+      "description": "OPEN-IM 接口地址.",
+      "sourceType": "cn.asany.autoconfigure.properties.OpenIMProperties"
+    },
+    {
+      "name": "openim.secret",
+      "type": "java.lang.String",
+      "description": "密钥.",
+      "sourceType": "cn.asany.autoconfigure.properties.OpenIMProperties"
+    },
+    {
+      "name": "openim.admin.user",
+      "type": "java.lang.String",
+      "description": "管理员账号.",
+      "sourceType": "cn.asany.autoconfigure.properties.OpenIMProperties"
+    }
+  ]
+}

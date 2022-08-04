@@ -13,7 +13,7 @@ import org.springframework.data.jpa.domain.Specification;
 /**
  * @author limaofeng
  * @version V1.0 @Description: TODO
- * @date 2019/9/25 6:01 下午
+ * @date 2022/7/28 9:12 9:12
  */
 public class StarSpecification implements Specification {
   private Long stargazer;

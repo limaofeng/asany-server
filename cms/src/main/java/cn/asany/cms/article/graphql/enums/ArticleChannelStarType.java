@@ -5,7 +5,7 @@ package cn.asany.cms.article.graphql.enums;
  *
  * @author limaofeng
  * @version V1.0
- * @date 2019-08-19 11:23
+ * @date 2022/7/28 9:12 9:12
  */
 public enum ArticleChannelStarType {
   /** 关注 */

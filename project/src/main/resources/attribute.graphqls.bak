@@ -1,0 +1,58 @@
+enum IssueStatusCategory {
+    todo,inProgress,done
+}
+extend type Query{
+    #分页查询状态
+    issueStatuses(filter: IssueStatusFilter, page: Int = 1, pageSize: Int = 15, orderBy: OrderBy): IssueStatusConnection
+}
+# 状态
+type IssueStatus {
+    # 主键
+    id: ID!
+    # 名称
+    name: String
+    # 描述
+    description: String
+    #排序
+    sort:Int
+    # 阶段
+    category: IssueStatusCategory
+    # 是否启用
+    enabled: Boolean
+}
+input IssueStatusFilter{
+    #名称模糊查询
+    nameContains:String
+}
+#分页查询状态
+type IssueStatusConnection{
+    # 总数据条数
+    totalCount: Int
+    # 每页显示条数
+    pageSize: Int
+    # 总页数
+    totalPage: Int
+    # 当前页
+    currentPage: Int
+    edges: [IssueStatusEdge]
+    pageInfo: PageInfo
+}
+
+type IssueStatusEdge{
+    cursor: String
+    node: IssueStatus
+}
+
+# 状态
+input IssueStateInput {
+    # 名称
+    name: String!
+    # 描述
+    description: String
+    # 阶段
+    category: IssueStatusCategory
+    #排序
+    sort:Int
+    # 是否启用
+    enabled: Boolean!
+}

@@ -1,0 +1,49 @@
+extend type Query{
+    issueFieldConfigurations: [IssueFieldConfiguration]
+    issueFieldConfiguration(id: ID!): IssueFieldConfiguration
+    issueFieldConfigurationSchemes: [IssueFieldConfigurationScheme]
+    issueFieldConfigurationScheme(id: ID!): IssueFieldConfigurationScheme
+}
+
+enum FieldType {
+    text,employee,solve,number
+}
+
+# 字段配置方案
+type IssueFieldConfigurationScheme {
+    id: ID
+    # 名称
+    name: String
+    # 字段配置信息
+    fieldConfigurations: [IssueTypeWithFieldConfiguration]
+}
+
+type IssueTypeWithFieldConfiguration {
+    type: IssueType
+    fieldConfiguration: IssueFieldConfiguration
+}
+
+type IssueFieldConfiguration {
+    id: ID
+    # 名称
+    name: String
+    fields: [IssueFieldConfigurationItem]
+}
+
+# 字段配置
+type IssueFieldConfigurationItem {
+    id: ID
+    # 名称
+    name: String
+    # 中文名称
+    label: String
+    # 字段类型
+    type: FieldType
+    # 排序
+    order: Int
+    # 是否必填
+    required: Boolean
+    # 渲染器
+    renderer: String
+}
+

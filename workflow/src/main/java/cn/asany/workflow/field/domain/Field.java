@@ -1,21 +1,23 @@
 package cn.asany.workflow.field.domain;
 
-import cn.asany.workflow.field.domain.enums.FieldCategory;
-import cn.asany.workflow.field.domain.enums.FieldType;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import javax.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.hibernate.Hibernate;
+import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
+
+import javax.persistence.*;
+import java.util.Objects;
 
 /**
  * @author limaofeng
- * @version V1.0 @Description: TODO
- * @date 2019-05-22 14:01
+ * @version V1.0
+ * @date 2022/7/28 9:12 9:12
  */
-@Data
+@Getter
+@Setter
+@ToString
+@RequiredArgsConstructor
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -24,7 +26,9 @@ import org.jfantasy.framework.dao.BaseBusEntity;
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Field extends BaseBusEntity {
   @Id
-  @Column(name = "ID", nullable = false, updatable = false, precision = 22)
+  @Column(name = "ID", nullable = false, updatable = false)
+  @GeneratedValue(generator = "fantasy-sequence")
+  @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
 
   @Column(name = "NAME", length = 50, nullable = false)
@@ -34,7 +38,9 @@ public class Field extends BaseBusEntity {
   private String label;
 
   @Enumerated(EnumType.STRING)
-  @Column(name = "TYPE", length = 20, nullable = false)
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "TYPE", foreignKey = @ForeignKey(name = "FK_ISSUE_FIELD_TYPE_ID"))
+  @ToString.Exclude
   private FieldType type;
 
   @Enumerated(EnumType.STRING)
@@ -43,4 +49,17 @@ public class Field extends BaseBusEntity {
 
   @Column(name = "RENDERER", length = 20)
   private String renderer;
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+    Field field = (Field) o;
+    return id != null && Objects.equals(id, field.id);
+  }
+
+  @Override
+  public int hashCode() {
+    return getClass().hashCode();
+  }
 }

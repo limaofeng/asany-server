@@ -12,7 +12,7 @@ import org.jfantasy.graphql.types.BaseConnection;
  *
  * @author limaofeng
  * @version V1.0
- * @date 2019-06-26 17:17
+ * @date 2022/7/28 9:12 9:12
  */
 @Data
 @EqualsAndHashCode(callSuper = true)

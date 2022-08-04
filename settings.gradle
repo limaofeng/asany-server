@@ -29,6 +29,8 @@ include ":shanhai",
         ":nuwa",
         ":ui",
         ":cms",
+        ":im",
+        ":project",
         ":uptime",
         ":boot"
 
@@ -68,5 +70,9 @@ project(':weixin-api').projectDir = "$rootDir/weixin-api" as File
 project(':openapi').projectDir = "$rootDir/openapi" as File
 // 站点健康
 project(':uptime').projectDir = "$rootDir/uptime" as File
+// 即时通讯
+project(':im').projectDir = "$rootDir/im" as File
+// 项目管理
+project(':project').projectDir = "$rootDir/project" as File
 // 启动
 project(':boot').projectDir = "$rootDir/boot" as File

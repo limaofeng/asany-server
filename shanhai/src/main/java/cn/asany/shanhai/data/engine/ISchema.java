@@ -4,7 +4,7 @@ import cn.asany.shanhai.data.domain.DataSetConfig;
 
 /**
  * @author limaofeng
- * @date 2019-03-28 17:32
+ * @date 2022/7/28 9:12 9:12
  */
 public interface ISchema<T, PK> {
   /**

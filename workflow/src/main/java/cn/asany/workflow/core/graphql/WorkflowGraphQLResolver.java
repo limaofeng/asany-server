@@ -1,15 +1,15 @@
 package cn.asany.workflow.core.graphql;
 
 import com.coxautodev.graphql.tools.GraphQLResolver;
-import net.whir.hos.issue.workflow.bean.WorkflowSchedule;
+import cn.asany.pm.workflow.bean.WorkflowSchedule;
 import net.whir.hos.organization.bean.Employee;
 import net.whir.hos.organization.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * @author penghanying @ClassName: WorkflowGraphQLResolver @Description: (这里用一句话描述这个类的作用)
- * @date 2019/5/31
+ * @author limaofeng@msn.com @ClassName: WorkflowGraphQLResolver @Description: (这里用一句话描述这个类的作用)
+ * @date 2022/7/28 9:12
  */
 @Component
 public class WorkflowGraphQLResolver implements GraphQLResolver<WorkflowSchedule> {

@@ -4,19 +4,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
-import net.whir.hos.issue.main.bean.Issue;
-import net.whir.hos.issue.security.bean.Permission;
-import net.whir.hos.issue.security.dao.PermissionDao;
-import net.whir.hos.issue.workflow.bean.*;
-import net.whir.hos.issue.workflow.dao.*;
+import cn.asany.pm.issue.bean.Issue;
+import cn.asany.pm.security.bean.Permission;
+import cn.asany.pm.security.dao.PermissionDao;
+import cn.asany.pm.workflow.bean.*;
+import cn.asany.pm.workflow.dao.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * @author penghanying @ClassName: IssueWorkflowService @Description: 工作流的service(这里用一句话描述这个类的作用)
- * @date 2019/5/23
+ * @author limaofeng@msn.com @ClassName: IssueWorkflowService @Description: 工作流的service(这里用一句话描述这个类的作用)
+ * @date 2022/7/28 9:12
  */
 @Service
 @Slf4j
@@ -40,8 +40,8 @@ public class IssueWorkflowService {
   /**
    * @ClassName: IssueWorkflowService @Description: 查询全部工作流
    *
-   * @author penghanying
-   * @date 2019/5/23
+   * @author limaofeng@msn.com
+   * @date 2022/7/28 9:12
    */
   public List<IssueWorkflow> issueWorkflows() {
     return issueWorkflowDao.findAll();
@@ -50,8 +50,8 @@ public class IssueWorkflowService {
   /**
    * @ClassName: IssueWorkflowService @Description: 查询一个工作流
    *
-   * @author penghanying
-   * @date 2019/5/23
+   * @author limaofeng@msn.com
+   * @date 2022/7/28 9:12
    */
   public IssueWorkflow issueWorkflow(Long id) {
     return issueWorkflowDao.findById(id).orElse(null);
@@ -60,8 +60,8 @@ public class IssueWorkflowService {
   /**
    * @ClassName: IssueWorkflowService @Description: 创建工作流
    *
-   * @author penghanying
-   * @date 2019/5/24
+   * @author limaofeng@msn.com
+   * @date 2022/7/28 9:12
    */
   public IssueWorkflow createIssueWorkflow(IssueWorkflow issueWorkflow) {
     return issueWorkflowDao.save(issueWorkflow);
@@ -70,8 +70,8 @@ public class IssueWorkflowService {
   /**
    * @ClassName: IssueWorkflowService @Description: 修改工作流
    *
-   * @author penghanying
-   * @date 2019/5/24
+   * @author limaofeng@msn.com
+   * @date 2022/7/28 9:12
    */
   public IssueWorkflow updateIssueWorkflow(Long id, Boolean merge, IssueWorkflow issueWorkflow) {
     issueWorkflow.setId(id);
@@ -81,8 +81,8 @@ public class IssueWorkflowService {
   /**
    * @ClassName: IssueWorkflowService @Description: 删除工作流
    *
-   * @author penghanying
-   * @date 2019/5/24
+   * @author limaofeng@msn.com
+   * @date 2022/7/28 9:12
    */
   public Boolean removeIssueWorkflow(Long id) {
     // 根据工作流id，删除工作流与任务类型的中间表
@@ -150,8 +150,8 @@ public class IssueWorkflowService {
   /**
    * @ClassName: IssueWorkflowService @Description: 通过操作的id，查询权限
    *
-   * @author penghanying
-   * @date 2019/6/11
+   * @author limaofeng@msn.com
+   * @date 2022/7/28 9:12
    */
   public List<Permission> getGrants(Long id) {
     List<IssueWorkflowStepTransitionCondition> conditionDaoAll =

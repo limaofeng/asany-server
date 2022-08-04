@@ -1,6 +1,11 @@
 package cn.asany.security.auth.graphql.types;
 
-/** @Author: fengmeng @Date: 2019/5/10 14:25 */
+/**
+ * 登录方式
+ *
+ * @author limaofeng@msn.com
+ * @date 2022/7/28 9:12 9:12
+ */
 public enum LoginType {
   /** 密码登录 */
   password,

@@ -1,0 +1,47 @@
+extend type Mutation {
+    #增加优先级类型
+    createIssuePriority(input:IssuePriorityInput):IssuePriority
+    #更新优先级
+    updateIssuePriority(id: ID!, merge: Boolean = true, input:IssuePriorityInput!):IssuePriority
+    #删除优先级
+    removeIssuePriority(id:ID!):Boolean
+}
+extend type Query {
+    #分页查询优先级
+    issuePrioritys(filter: IssuePriorityFilter, page: Int = 1, pageSize: Int = 15, orderBy: OrderBy): IssuePriorityConnection
+}
+
+#优先级
+input  IssuePriorityInput{
+    # 任务优先级icon
+    icon:String
+    # 优先级名称
+    name:String !
+    #优先级排序
+    sort:Int
+    # 是否启用
+    enabled: Boolean !
+    #描述
+    description:String
+}
+#分页查询优先级
+type IssuePriorityConnection {
+    # 总数据条数
+    totalCount: Int
+    # 每页显示条数
+    pageSize: Int
+    # 总页数
+    totalPage: Int
+    # 当前页
+    currentPage: Int
+    edges: [IssuePriorityEdge]
+    pageInfo: PageInfo
+}
+type IssuePriorityEdge{
+    cursor: String
+    node: IssuePriority
+}
+input IssuePriorityFilter{
+    #名称模糊查询
+    nameContains:String
+}

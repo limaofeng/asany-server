@@ -4,20 +4,20 @@ import cn.asany.workflow.core.domain.Workflow;
 import cn.asany.workflow.core.domain.WorkflowScheme;
 import com.coxautodev.graphql.tools.GraphQLQueryResolver;
 import java.util.List;
-import net.whir.hos.issue.attribute.bean.IssueStatus;
-import net.whir.hos.issue.workflow.bean.IssueWorkflow;
-import net.whir.hos.issue.workflow.bean.IssueWorkflowScheme;
-import net.whir.hos.issue.workflow.bean.WorkflowSchedule;
-import net.whir.hos.issue.workflow.service.IssueWorkflowSchemeService;
-import net.whir.hos.issue.workflow.service.IssueWorkflowService;
-import net.whir.hos.issue.workflow.service.IssueWorkflowStepTransitionService;
-import net.whir.hos.issue.workflow.service.WorkflowScheduleService;
+import cn.asany.pm.attribute.bean.IssueStatus;
+import cn.asany.pm.workflow.bean.IssueWorkflow;
+import cn.asany.pm.workflow.bean.IssueWorkflowScheme;
+import cn.asany.pm.workflow.bean.WorkflowSchedule;
+import cn.asany.pm.workflow.service.IssueWorkflowSchemeService;
+import cn.asany.pm.workflow.service.IssueWorkflowService;
+import cn.asany.pm.workflow.service.IssueWorkflowStepTransitionService;
+import cn.asany.pm.workflow.service.WorkflowScheduleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * @author penghanying @ClassName: WorkflowGraphQLQueryResolver @Description: (这里用一句话描述这个类的作用)
- * @date 2019/5/23
+ * @author limaofeng@msn.com @ClassName: WorkflowGraphQLQueryResolver @Description: (这里用一句话描述这个类的作用)
+ * @date 2022/7/28 9:12
  */
 @Component
 public class WorkflowGraphQLQueryResolver implements GraphQLQueryResolver {
@@ -34,8 +34,8 @@ public class WorkflowGraphQLQueryResolver implements GraphQLQueryResolver {
   /**
    * @ClassName: IssueTaskGraphQLQueryResolver @Description: 查询全部工作流
    *
-   * @author penghanying
-   * @date 2019/5/23
+   * @author limaofeng@msn.com
+   * @date 2022/7/28 9:12
    */
   public List<IssueWorkflow> issueWorkflows() {
     return issueWorkflowService.issueWorkflows();
@@ -44,8 +44,8 @@ public class WorkflowGraphQLQueryResolver implements GraphQLQueryResolver {
   /**
    * @ClassName: IssueTaskGraphQLQueryResolver @Description: 查询一个工作流
    *
-   * @author penghanying
-   * @date 2019/5/23
+   * @author limaofeng@msn.com
+   * @date 2022/7/28 9:12
    */
   public Workflow issueWorkflow(Long id) {
     return issueWorkflowService.issueWorkflow(id);
@@ -54,8 +54,8 @@ public class WorkflowGraphQLQueryResolver implements GraphQLQueryResolver {
   /**
    * @ClassName: IssueTaskGraphQLQueryResolver @Description: 查询全部工作流方案
    *
-   * @author penghanying
-   * @date 2019/5/23
+   * @author limaofeng@msn.com
+   * @date 2022/7/28 9:12
    */
   public List<WorkflowScheme> issueWorkflowSchemes() {
     return issueWorkflowSchemeService.issueWorkflowSchemes();
@@ -64,8 +64,8 @@ public class WorkflowGraphQLQueryResolver implements GraphQLQueryResolver {
   /**
    * @ClassName: IssueTaskGraphQLQueryResolver @Description: 查询一个工作流方案
    *
-   * @author penghanying
-   * @date 2019/5/23
+   * @author limaofeng@msn.com
+   * @date 2022/7/28 9:12
    */
   public IssueWorkflowScheme issueWorkflowScheme(Long id) {
     return issueWorkflowSchemeService.issueWorkflowScheme(id);
@@ -76,8 +76,8 @@ public class WorkflowGraphQLQueryResolver implements GraphQLQueryResolver {
    *
    * @param type 问题id
    * @param tran 操作的id
-   * @author penghanying
-   * @date 2019/5/24
+   * @author limaofeng@msn.com
+   * @date 2022/7/28 9:12
    */
   public IssueStatus issueWorkflowStatus(Long workflow, Long type, Long tran) {
     return issueWorkflowStepTransitionService.issueWorkflowStatus(workflow, type, tran);
@@ -86,8 +86,8 @@ public class WorkflowGraphQLQueryResolver implements GraphQLQueryResolver {
   /**
    * @ClassName: WorkflowGraphQLQueryResolver @Description: 查询初始化状态 方案的id，问题类型的id
    *
-   * @author penghanying
-   * @date 2019/5/24
+   * @author limaofeng@msn.com
+   * @date 2022/7/28 9:12
    */
   public IssueStatus issueInitializateStatus(Long scheme, Long type) {
     return issueWorkflowStepTransitionService.issueInitializateStatus(scheme, type);
@@ -98,8 +98,8 @@ public class WorkflowGraphQLQueryResolver implements GraphQLQueryResolver {
    *
    * @param
    * @param project 项目的id
-   * @author penghanying
-   * @date 2019/5/31
+   * @author limaofeng@msn.com
+   * @date 2022/7/28 9:12
    */
   public List<WorkflowSchedule> issueOperateLog(Long issue, Long project) {
     return workflowScheduleService.issueOperateLog(issue, project);

@@ -2,24 +2,24 @@ package cn.asany.workflow.screen.service;
 
 import java.util.ArrayList;
 import java.util.List;
-import net.whir.hos.issue.field.bean.IssueField;
-import net.whir.hos.issue.field.bean.IssueFieldConfigurationItem;
-import net.whir.hos.issue.field.dao.IssueFieldConfigurationItemDao;
-import net.whir.hos.issue.field.dao.IssueFieldDao;
-import net.whir.hos.issue.screen.bean.FieldToScreen;
-import net.whir.hos.issue.screen.bean.IssueScreen;
-import net.whir.hos.issue.screen.bean.IssueScreenTabPane;
-import net.whir.hos.issue.screen.dao.FieldToScreenDao;
-import net.whir.hos.issue.screen.dao.IssueScreenDao;
-import net.whir.hos.issue.screen.dao.IssueScreenTabPaneDao;
+import cn.asany.pm.field.bean.IssueField;
+import cn.asany.pm.field.bean.IssueFieldConfigurationItem;
+import cn.asany.pm.field.dao.IssueFieldConfigurationItemDao;
+import cn.asany.pm.field.dao.IssueFieldDao;
+import cn.asany.pm.screen.bean.FieldToScreen;
+import cn.asany.pm.screen.bean.IssueScreen;
+import cn.asany.pm.screen.bean.IssueScreenTabPane;
+import cn.asany.pm.screen.dao.FieldToScreenDao;
+import cn.asany.pm.screen.dao.IssueScreenDao;
+import cn.asany.pm.screen.dao.IssueScreenTabPaneDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * @author penghanying @ClassName: FieldToScreenService @Description: 将字段添加至页面(这里用一句话描述这个类的作用)
- * @date 2019/5/23
+ * @author limaofeng@msn.com @ClassName: FieldToScreenService @Description: 将字段添加至页面(这里用一句话描述这个类的作用)
+ * @date 2022/7/28 9:12
  */
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -39,8 +39,8 @@ public class FieldToScreenService {
    *
    * @param screen 页面id
    * @param field 字段id
-   * @author penghanying
-   * @date 2019/5/23
+   * @author limaofeng@msn.com
+   * @date 2022/7/28 9:12
    */
   public Boolean createIssueScreenField(Long screen, Long field) {
     FieldToScreen fieldToScreen = this.setFieldToScreen(screen, null, field);
@@ -54,8 +54,8 @@ public class FieldToScreenService {
   /**
    * @ClassName: FieldToScreenService @Description: 删除已分配到界面的字段
    *
-   * @author penghanying
-   * @date 2019/5/23
+   * @author limaofeng@msn.com
+   * @date 2022/7/28 9:12
    */
   public Boolean removeIssueScreenField(Long screen, Long field) {
     List<FieldToScreen> all =
@@ -78,8 +78,8 @@ public class FieldToScreenService {
   /**
    * @ClassName: FieldToScreenService @Description: 根据页面id，查询该页面拥有的字段
    *
-   * @author penghanying
-   * @date 2019/5/23
+   * @author limaofeng@msn.com
+   * @date 2022/7/28 9:12
    */
   public List<IssueField> getIssueFields(Long id) {
     // 根据页面id，查询该页面拥有的字段
@@ -102,8 +102,8 @@ public class FieldToScreenService {
   /**
    * @ClassName: FieldToScreenService @Description: 根据TabPane的id，查询该TabPane拥有的字段
    *
-   * @author penghanying
-   * @date 2019/5/23
+   * @author limaofeng@msn.com
+   * @date 2022/7/28 9:12
    */
   public List<FieldToScreen> getTabPaneFields(Long id) {
     return fieldToScreenDao.findAll(
@@ -117,8 +117,8 @@ public class FieldToScreenService {
    * @param screen 页面id
    * @param tabPane tabPane的id
    * @param field 字段的id
-   * @author penghanying
-   * @date 2019/5/24
+   * @author limaofeng@msn.com
+   * @date 2022/7/28 9:12
    */
   public Boolean createIssueScreenTabPaneField(Long screen, Long tabPane, Long field) {
     FieldToScreen fieldToScreen = this.setFieldToScreen(screen, tabPane, field);
@@ -159,8 +159,8 @@ public class FieldToScreenService {
   /**
    * @ClassName: FieldToScreenService @Description: 删除已分配到TabPane的字段
    *
-   * @author penghanying
-   * @date 2019/5/24
+   * @author limaofeng@msn.com
+   * @date 2022/7/28 9:12
    */
   public Boolean removeIssueScreenTabPaneField(Long screen, Long tabPane, Long field) {
     List<FieldToScreen> all =

@@ -2,16 +2,16 @@ package cn.asany.workflow.core.service;
 
 import java.util.List;
 import java.util.Optional;
-import net.whir.hos.issue.attribute.bean.IssueStatus;
-import net.whir.hos.issue.workflow.bean.*;
-import net.whir.hos.issue.workflow.dao.*;
+import cn.asany.pm.attribute.bean.IssueStatus;
+import cn.asany.pm.workflow.bean.*;
+import cn.asany.pm.workflow.dao.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * @author penghanying @ClassName: IssueWorkflowStepTransitionService @Description: (这里用一句话描述这个类的作用)
- * @date 2019/5/23
+ * @author limaofeng@msn.com @ClassName: IssueWorkflowStepTransitionService @Description: (这里用一句话描述这个类的作用)
+ * @date 2022/7/28 9:12
  */
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -30,8 +30,8 @@ public class IssueWorkflowStepTransitionService {
   /**
    * @ClassName: IssueWorkflowStepTransitionService @Description: 添加步骤操作
    *
-   * @author penghanying
-   * @date 2019/5/23
+   * @author limaofeng@msn.com
+   * @date 2022/7/28 9:12
    */
   public IssueWorkflowStep createIssueWorkflowStepTransition(
       Long step, IssueWorkflowStepTransition issueWorkflowStepTransition) {
@@ -44,8 +44,8 @@ public class IssueWorkflowStepTransitionService {
   /**
    * @ClassName: IssueWorkflowStepTransitionService @Description: 修改步骤操作
    *
-   * @author penghanying
-   * @date 2019/5/23
+   * @author limaofeng@msn.com
+   * @date 2022/7/28 9:12
    */
   public IssueWorkflowStep updateIssueWorkflowStepTransition(
       Long id, Boolean merge, IssueWorkflowStepTransition issueWorkflowStepTransition) {
@@ -58,8 +58,8 @@ public class IssueWorkflowStepTransitionService {
   /**
    * @ClassName: IssueWorkflowStepTransitionService @Description: 删除步骤操作
    *
-   * @author penghanying
-   * @date 2019/5/23
+   * @author limaofeng@msn.com
+   * @date 2022/7/28 9:12
    */
   public Boolean removeIssueWorkflowStepTransition(Long id) {
     issueWorkflowStepTransitionDao.deleteById(id);
@@ -69,8 +69,8 @@ public class IssueWorkflowStepTransitionService {
   /**
    * @ClassName: IssueWorkflowStepTransitionService @Description: 根据工作流方案id, 问题id, 操作id, 查询状态
    *
-   * @author penghanying
-   * @date 2019/5/24
+   * @author limaofeng@msn.com
+   * @date 2022/7/28 9:12
    */
   public IssueStatus issueWorkflowStatus(Long scheme, Long issueType, Long tran) {
     // 根据问题类型的id,查询流程id
@@ -112,8 +112,8 @@ public class IssueWorkflowStepTransitionService {
   /**
    * @ClassName: IssueWorkflowStepTransitionService @Description: 查询初始化状态 方案的id，问题类型的id
    *
-   * @author penghanying
-   * @date 2019/5/24
+   * @author limaofeng@msn.com
+   * @date 2022/7/28 9:12
    */
   public IssueStatus issueInitializateStatus(Long scheme, Long issueType) {
     // 根据方案的id,查询流程id

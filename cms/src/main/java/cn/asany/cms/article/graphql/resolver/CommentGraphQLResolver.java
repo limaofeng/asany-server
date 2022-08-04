@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 /**
  * @author limaofeng
  * @version V1.0
- * @date 2019-08-15 09:53
+ * @date 2022/7/28 9:12 9:12
  */
 @Component
 public class CommentGraphQLResolver implements GraphQLResolver<Comment> {

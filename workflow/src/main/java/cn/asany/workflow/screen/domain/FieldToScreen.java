@@ -14,7 +14,7 @@ import org.jfantasy.framework.dao.BaseBusEntity;
  * 将字段分配给页面
  *
  * @author limaofeng
- * @date 2019/5/22
+ * @date 2022/7/28 9:12
  */
 @Data
 @Builder

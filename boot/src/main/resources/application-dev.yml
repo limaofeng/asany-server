@@ -29,10 +29,17 @@ spring:
         quartz:
           dataSource:
             qzDS:
-              URL:  jdbc:mysql://dev.local:3306/asany?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&rewriteBatchedStatements=true
+              URL: jdbc:mysql://dev.local:3306/asany?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&rewriteBatchedStatements=true
               driver: com.mysql.cj.jdbc.Driver
               user: root
               password: yV2jJxvNs8BD
+
+openim:
+  url: http://47.103.119.188:10002
+  secret: tuoyun
+  admin:
+    user: openIMAdmin
+
 flowable:
   async-executor-activate: false
   database-schema-update: true
@@ -59,6 +66,7 @@ flowable:
   rest:
     app:
       authentication-mode: verify-privilege
+
 mybatis:
   configuration:
     log-impl: org.apache.ibatis.logging.log4j2.Log4j2Impl

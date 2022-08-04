@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 /**
  * @author limaofeng
  * @version V1.0 @Description: TODO
- * @date 2019-04-12 14:26
+ * @date 2022/7/28 9:12 9:12
  */
 @Repository
 public interface EmployeePositionDao extends JpaRepository<EmployeePosition, Long> {

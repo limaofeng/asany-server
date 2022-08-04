@@ -26,7 +26,7 @@ import org.springframework.stereotype.Component;
  * 文章栏目 解析器
  *
  * @author limaofeng
- * @date 2019-08-15 09:53
+ * @date 2022/7/28 9:12 9:12
  */
 @Component
 public class ArticleCategoryGraphQLResolver implements GraphQLResolver<ArticleCategory> {

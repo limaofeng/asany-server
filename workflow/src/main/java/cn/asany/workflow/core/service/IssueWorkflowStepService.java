@@ -1,18 +1,18 @@
 package cn.asany.workflow.core.service;
 
-import net.whir.hos.issue.attribute.bean.IssueStatus;
-import net.whir.hos.issue.attribute.dao.IssueStatusDao;
-import net.whir.hos.issue.workflow.bean.IssueWorkflow;
-import net.whir.hos.issue.workflow.bean.IssueWorkflowStep;
-import net.whir.hos.issue.workflow.dao.IssueWorkflowDao;
-import net.whir.hos.issue.workflow.dao.IssueWorkflowStepDao;
+import cn.asany.pm.attribute.bean.IssueStatus;
+import cn.asany.pm.attribute.dao.IssueStatusDao;
+import cn.asany.pm.workflow.bean.IssueWorkflow;
+import cn.asany.pm.workflow.bean.IssueWorkflowStep;
+import cn.asany.pm.workflow.dao.IssueWorkflowDao;
+import cn.asany.pm.workflow.dao.IssueWorkflowStepDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * @author penghanying @ClassName: IssueWorkflowStepService @Description: 流程的步骤(这里用一句话描述这个类的作用)
- * @date 2019/5/23
+ * @author limaofeng@msn.com @ClassName: IssueWorkflowStepService @Description: 流程的步骤(这里用一句话描述这个类的作用)
+ * @date 2022/7/28 9:12
  */
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -30,8 +30,8 @@ public class IssueWorkflowStepService {
    * @param workflow 流程的id
    * @param name 步骤的名称
    * @param linkedStatus 状态的id
-   * @author penghanying
-   * @date 2019/5/23
+   * @author limaofeng@msn.com
+   * @date 2022/7/28 9:12
    */
   public IssueWorkflowStep createIssueWorkflowStep(Long workflow, String name, Long linkedStatus) {
     IssueWorkflowStep issueWorkflowStep = new IssueWorkflowStep();
@@ -52,8 +52,8 @@ public class IssueWorkflowStepService {
   /**
    * @ClassName: IssueWorkflowStepService @Description: 修改步骤
    *
-   * @author penghanying
-   * @date 2019/5/23
+   * @author limaofeng@msn.com
+   * @date 2022/7/28 9:12
    */
   public IssueWorkflowStep updateIssueWorkflowStep(Long id, Boolean merge, String name) {
     // 根据步骤id，查询步骤
@@ -68,8 +68,8 @@ public class IssueWorkflowStepService {
   /**
    * @ClassName: IssueWorkflowStepService @Description: 删除步骤
    *
-   * @author penghanying
-   * @date 2019/5/23
+   * @author limaofeng@msn.com
+   * @date 2022/7/28 9:12
    */
   public Boolean removeIssueWorkflowStep(Long id) {
     workflowStepDao.deleteById(id);

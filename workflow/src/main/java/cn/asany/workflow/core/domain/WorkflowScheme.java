@@ -10,27 +10,27 @@ import lombok.NoArgsConstructor;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
 /**
- * @author penghanying @ClassName: WorkflowScheme @Description: 工作流方案(这里用一句话描述这个类的作用)
- * @date 2019/5/22
+ * @author limaofeng@msn.com @ClassName: WorkflowScheme @Description: 工作流方案(这里用一句话描述这个类的作用)
+ * @date 2022/7/28 9:12
  */
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "GD_ISSUE_WORKFLOW_SCHEME")
+@Table(name = "ISSUE_WORKFLOW_SCHEME")
 @JsonIgnoreProperties({"hibernateLazyInitializer"})
 public class WorkflowScheme extends BaseBusEntity {
 
   /** 主键ID */
   @Id
   @Column(name = "ID", length = 22)
-  @GeneratedValue(generator = "gd_issue_workflow_scheme_gen")
+  @GeneratedValue(generator = "issue_workflow_scheme_gen")
   @TableGenerator(
-      name = "gd_issue_workflow_scheme_gen",
+      name = "issue_workflow_scheme_gen",
       table = "sys_sequence",
       pkColumnName = "gen_name",
-      pkColumnValue = "gd_issue_workflow_scheme:id",
+      pkColumnValue = "issue_workflow_scheme:id",
       valueColumnName = "gen_value")
   private Long id;
 

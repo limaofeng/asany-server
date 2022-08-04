@@ -8,7 +8,7 @@ import org.jfantasy.graphql.inputs.QueryFilter;
  * 状态筛选
  *
  * @author: limaofeng
- * @date: 2019/6/11 18:00
+ * @date 2022/7/28 9:12 9:12
  */
 @Data
 public class StateFilter extends QueryFilter<StateFilter, State> {}

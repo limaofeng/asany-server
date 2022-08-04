@@ -19,7 +19,7 @@ import org.jfantasy.framework.dao.BaseBusEntity;
  *
  * @author limaofeng
  * @version V1.0
- * @date 2019-04-04 20:00
+ * @date 2022/7/28 9:12 9:12
  */
 @Getter
 @Setter

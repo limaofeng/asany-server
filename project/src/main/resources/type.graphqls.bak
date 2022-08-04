@@ -1,0 +1,87 @@
+extend type Query{
+    # 查询全部任务类型
+    issueTypes:[IssueType]
+    # 查询全部任务类型方案
+    issueTypeSchemes: [IssueTypeScheme]
+}
+
+extend type Mutation {
+    # 创建任务类型分类
+    createIssueType(schemId:ID!,categoryId:ID,input: IssueTypeInput!):IssueType
+    # 修改任务类型分类
+    updateIssueType(id: ID!, merge: Boolean = true, input: IssueTypeInput):IssueType
+    # 删除任务类型分类
+    removeIssueType(id: ID!):Boolean
+
+#    # 创建任务类型方案
+#    createIssueTypeScheme(input: IssueTypeSchemeInput!): IssueTypeScheme
+#    # 编辑任务类型方案
+#    updateIssueTypeScheme(id: ID!, merge: Boolean = true, input: IssueTypeSchemeUpdateInput!): IssueTypeScheme
+#    # 刪除任务类型方案
+#    removeIssueTypeScheme(id: ID!):Boolean
+
+    #新增任务类型
+    createIssueTypeCategory(schemId:ID!, input:IssueTypeCategoryInput):IssueTypeCategory
+    #更新任务类型
+    updateIssueTypeCategory(id:ID!,merge: Boolean = true, input:IssueTypeCategoryInput):Boolean
+    #删除任务类型
+    removeIssueTypeCategory(id:ID):Boolean
+}
+
+# 任务类型
+type IssueType{
+    # 主键
+    id: ID
+    # 名称
+    name: String
+    # 描述
+    description: String
+}
+
+type IssueTypeCategory{
+    #ID
+    id:ID
+    #任务类型名称
+    name:String
+    # 描述
+    description: String
+    #父节点
+    parent:IssueTypeCategory
+    #字节点
+    children:[IssueTypeCategory]
+    #任务分类
+    issueTypes:[IssueType]
+}
+
+input IssueTypeCategoryInput{
+    parent:ID
+    #任务类型名称
+    name:String
+    # 任务类型描述
+    description: String
+}
+# 任务类型方案
+type IssueTypeScheme {
+    # 主键
+    id: ID
+    # 名称
+    name: String
+    # 描述
+    description: String
+    # 默认问题类型
+    defaultType: IssueType
+    # 任务类型
+    types: [IssueType]
+
+    issueTypeCategories:[IssueTypeCategory]
+}
+
+# 创建任务类型
+input IssueTypeInput{
+    # 名称
+    name: String!
+    # 描述
+    description: String
+    # 父对象ID
+    parent: ID
+}

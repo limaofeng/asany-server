@@ -13,7 +13,7 @@ import org.springframework.data.jpa.domain.Specification;
  *
  * @author limaofeng
  * @version V1.0
- * @date 2019-08-20 14:10
+ * @date 2022/7/28 9:12 9:12
  */
 @Slf4j
 public class SecurityScopeEmployeeSpecification<T> implements Specification<T> {

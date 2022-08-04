@@ -2,16 +2,16 @@ package cn.asany.workflow.screen.graphql.resolvers;
 
 import com.coxautodev.graphql.tools.GraphQLResolver;
 import java.util.List;
-import net.whir.hos.issue.field.bean.IssueFieldConfigurationItem;
-import net.whir.hos.issue.screen.bean.IssueScreenTabPane;
-import net.whir.hos.issue.screen.service.FieldToScreenService;
+import cn.asany.pm.field.bean.IssueFieldConfigurationItem;
+import cn.asany.pm.screen.bean.IssueScreenTabPane;
+import cn.asany.pm.screen.service.FieldToScreenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
  * @author limaofeng
  * @version V1.0 @Description: TODO
- * @date 2019-05-23 21:50
+ * @date 2022/7/28 9:12 9:12
  */
 @Component
 public class IssueScreenTabPaneGraphQLResolver implements GraphQLResolver<IssueScreenTabPane> {

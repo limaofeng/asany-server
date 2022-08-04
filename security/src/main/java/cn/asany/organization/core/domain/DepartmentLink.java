@@ -10,7 +10,7 @@ import org.jfantasy.framework.dao.BaseBusEntity;
 /**
  * @author limaofeng
  * @version V1.0 @Description: 部门关联表
- * @date 2019-05-27 12:56
+ * @date 2022/7/28 9:12 9:12
  */
 @Data
 @EqualsAndHashCode(callSuper = false)

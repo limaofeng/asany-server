@@ -10,27 +10,27 @@ import lombok.NoArgsConstructor;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
 /**
- * @author penghanying @ClassName: PermissionScheme @Description: 权限方案(这里用一句话描述这个类的作用)
- * @date 2019/5/30
+ * @author limaofeng@msn.com @ClassName: PermissionScheme @Description: 权限方案(这里用一句话描述这个类的作用)
+ * @date 2022/7/28 9:12
  */
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity(name = "IssuePermissionScheme")
-@Table(name = "GD_PERMISSION_SCHEME")
+@Table(name = "PERMISSION_SCHEME")
 @JsonIgnoreProperties({"hibernateLazyInitializer"})
 public class PermissionScheme extends BaseBusEntity {
 
   /** 主键ID */
   @Id
   @Column(name = "ID", length = 22)
-  @GeneratedValue(generator = "gd_permission_scheme_gen")
+  @GeneratedValue(generator = "permission_scheme_gen")
   @TableGenerator(
-      name = "gd_permission_scheme_gen",
+      name = "permission_scheme_gen",
       table = "sys_sequence",
       pkColumnName = "gen_name",
-      pkColumnValue = "gd_permission_scheme:id",
+      pkColumnValue = "permission_scheme:id",
       valueColumnName = "gen_value")
   private Long id;
 

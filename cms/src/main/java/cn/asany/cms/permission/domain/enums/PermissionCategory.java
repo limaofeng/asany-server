@@ -3,7 +3,7 @@ package cn.asany.cms.permission.domain.enums;
 /**
  * @author limaofeng
  * @version V1.0 @Description: TODO
- * @date 2019-06-12 09:24
+ * @date 2022/7/28 9:12 9:12
  */
 public enum PermissionCategory {
   /** 通用权限，不用与具体资源挂钩 */

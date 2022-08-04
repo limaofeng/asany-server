@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * @Author: fengmeng
- * @Date: 2019/5/14 13:53
+ * @author limaofeng@msn.com
+ * @date 2022/7/28 9:12 9:12
  */
 @Component
 public class StateGraphQLMutationResolver implements GraphQLMutationResolver {

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
  *
  * @author limaofeng
  * @version V1.0
- * @date 2019-04-24 17:00
+ * @date 2022/7/28 9:12 9:12
  */
 @Repository
 public interface OrganizationDao extends JpaRepository<Organization, Long> {}

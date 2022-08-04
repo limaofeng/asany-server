@@ -1,0 +1,144 @@
+extend type Mutation {
+    #新增派单规则
+    careateIssueAllocationRule(input:IssueAllocationRuleInput!):IssueAllocationRule
+    #更新派单规则
+    updateIssueAllocationRule(ruleId:ID,input:IssueAllocationRuleInput!):Boolean
+    #删除派单规则
+    removeIssueAllocationRule(ruleId:ID!):Boolean
+    #排序
+    issueAllocationRuleSort(id:ID!,now:ID!):Boolean
+    #修改消息提醒规则
+    updateIssueMessageRule(ruleId:ID!,merge:Boolean = true,input:IssueMessageRuleInput!):Boolean
+    #修改自动评价规则
+    updateIssueAppraisalRule(ruleId:ID!,merge:Boolean = true,input:IssueAppraisalRuleInput):Boolean
+
+}
+extend type Query {
+    #获取所有指定类型的自动派单规则条件
+    issueAllocationRule(code:IssueAllocationRuleEnum!):[IssueCondition]
+    #所有消息规则
+    issueMessageRules:[IssueMessageRule]
+    #所有的自动评价规则
+    issueAppraisalRules:[IssueAppraisalRule]
+    #所有的评价详情
+    issueAppraisalRuleInfos:[IssueAppraisalRuleInfo]
+}
+
+input IssueMessageRuleInput{
+    #消息规则名称
+    name:String
+    #信息规则描述
+    description:String
+    #消息规则内容
+    content:String
+    #是否开启
+    enabled:Boolean
+    #是否循环提醒
+    messageLoop:Boolean
+    #循环提醒间隔时长
+    time:ID
+    #提醒人类型
+    messageRuleEum:MessageRuleEum
+}
+
+type IssueMessageRule{
+    #信息规则ID
+    id:ID
+    #消息规则名称
+    name:String
+    #信息规则描述
+    description:String
+    #消息规则内容
+    content:String
+    #是否开启
+    enabled:Boolean
+    #是否循环提醒
+    messageLoop:Boolean
+    #循环提醒间隔时长
+    time:ID
+    #提醒人类型
+    messageRuleEum:MessageRuleEum
+}
+type IssueAllocationRule{
+    id:ID
+    #规则条件
+    issueCondition:String
+    #分级类别
+    code:IssueAllocationRuleEnum
+    #规则描述
+    description:String
+    #规则优先级
+    priority:Int
+    #是否启用
+    enabled:Boolean
+    #选择人员类型
+    selectionScope: String
+    #规则
+    contion:IssueCondition
+
+}
+input IssueAllocationRuleInput{
+    #规则条件
+    issueCondition:ID !
+    #分级类别
+    code:IssueAllocationRuleEnum !
+    #规则描述
+    description:String !
+    #是否启用
+    enabled:Boolean !
+    #选择人员类型
+    selectionScope: String!
+}
+
+type IssueCondition{
+    #规则对应 ID
+    id:ID
+    #规则名称
+    name:String
+}
+enum IssueAllocationRuleEnum{
+    #发起人部门
+    Department,
+    #工单类型
+    Type,
+    #工单所属项目
+    Project
+}
+enum MessageRuleEum{
+    #发起人
+    reporter,
+    #处理人
+    assignee,
+    #服务值班人员
+    Watchman
+}
+input  IssueAppraisalRuleInput{
+    #状态ID
+    issueStatus:ID
+    #间隔时长
+    times:Int
+    #提醒内容详情
+    appraisalRuleInfo:ID
+    #是否启用
+    enabled:Boolean
+}
+#自动评价规则
+type IssueAppraisalRule{
+     id:ID
+    #对应状态
+    issueStatus:IssueStatus
+    #时长（分钟）
+    times:ID
+    #评价内容详情
+    appraisalRuleInfo:IssueAppraisalRuleInfo
+    #是否启用
+    enabled:Boolean
+}
+#自动评价详情
+type IssueAppraisalRuleInfo{
+    id:ID
+    #描述
+    description:String
+    #排序
+    sort:String
+}

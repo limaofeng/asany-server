@@ -33,4 +33,6 @@ public class ApplicationMenuUpdateInput {
   private Boolean hideChildrenInMenu;
   /** 不在面包屑中显示菜单 */
   private Boolean hideInBreadcrumb;
+  /** 组件 */
+  private Long component;
 }

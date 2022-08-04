@@ -33,7 +33,7 @@ import org.springframework.stereotype.Component;
  *
  * @author limaofeng
  * @version V1.0
- * @date 2019-06-26 17:06
+ * @date 2022/7/28 9:12 9:12
  */
 @Component
 public class ArticleGraphQLRootResolver implements GraphQLQueryResolver, GraphQLMutationResolver {

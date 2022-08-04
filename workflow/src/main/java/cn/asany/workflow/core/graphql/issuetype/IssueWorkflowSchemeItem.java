@@ -2,12 +2,12 @@ package cn.asany.workflow.core.graphql.issuetype;
 
 import java.util.List;
 import lombok.Data;
-import net.whir.hos.issue.type.bean.IssueType;
-import net.whir.hos.issue.workflow.bean.IssueWorkflow;
+import cn.asany.pm.type.bean.IssueType;
+import cn.asany.pm.workflow.bean.IssueWorkflow;
 
 /**
- * @author penghanying @ClassName: IssueWorkflowSchemeItem @Description: (这里用一句话描述这个类的作用)
- * @date 2019/5/23
+ * @author limaofeng@msn.com @ClassName: IssueWorkflowSchemeItem @Description: (这里用一句话描述这个类的作用)
+ * @date 2022/7/28 9:12
  */
 @Data
 @Deprecated
