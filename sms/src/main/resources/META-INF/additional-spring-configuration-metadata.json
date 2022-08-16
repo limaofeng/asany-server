@@ -1,0 +1,24 @@
+{
+  "groups": [
+    {
+      "name": "sms",
+      "description": "短信服务配置.",
+      "type": "cn.asany.autoconfigure.properties.SmsProperties",
+      "sourceType": "cn.asany.autoconfigure.properties.SmsProperties"
+    }
+  ],
+  "properties": [
+    {
+      "name": "sms.provider.aliyun.accessKeyId",
+      "type": "java.lang.String",
+      "description": "访问ID.",
+      "sourceType": "cn.asany.autoconfigure.properties.AliyunProvider"
+    },
+    {
+      "name": "sms.provider.aliyun.accessKeySecret",
+      "type": "java.lang.String",
+      "description": "访问密钥.",
+      "sourceType": "cn.asany.autoconfigure.properties.AliyunProvider"
+    }
+  ]
+}

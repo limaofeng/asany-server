@@ -10,6 +10,8 @@ import cn.asany.im.error.OpenIMServerAPIException;
 import cn.asany.im.user.service.vo.*;
 import cn.asany.security.core.domain.User;
 import cn.asany.security.core.domain.enums.Sex;
+import java.util.List;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,9 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-
-import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @ExtendWith(SpringExtension.class)

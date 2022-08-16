@@ -31,6 +31,7 @@ dependencies {
     implementation project(":mail")
     implementation project(":nuwa")
     implementation project(":cms")
+    implementation project(":sms")
     implementation project(":drive")
     implementation project(":sunrise")
     implementation project(":contacts")

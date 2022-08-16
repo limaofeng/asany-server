@@ -1,0 +1,11 @@
+description = "短信服务"
+
+dependencies {
+    implementation project(":base")
+    implementation project(":storage-api")
+    implementation 'com.aliyun:dysmsapi20170525:2.0.18'
+    implementation "org.springframework.boot:spring-boot-starter-data-redis"
+    compileOnly "org.springframework:spring-context"
+    compileOnly "org.springframework.boot:spring-boot-autoconfigure"
+    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+}

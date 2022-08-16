@@ -2,10 +2,8 @@ package cn.asany.im.user.service.vo;
 
 import cn.asany.im.auth.graphql.type.OnlineStatus;
 import cn.asany.im.auth.graphql.type.Platform;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

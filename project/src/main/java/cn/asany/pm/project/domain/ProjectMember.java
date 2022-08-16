@@ -41,7 +41,7 @@ public class ProjectMember extends BaseBusEntity {
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(
       name = "EMPLOYEE_ID",
-      foreignKey = @ForeignKey(name = "ORG_EMPLOYEE_EMAIL_EID"),
+      foreignKey = @ForeignKey(name = "FK_PROJECT_MEMBER_EMPLOYEE_ID"),
       updatable = false)
   private Employee employee;
 

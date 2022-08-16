@@ -70,3 +70,9 @@ flowable:
 mybatis:
   configuration:
     log-impl: org.apache.ibatis.logging.log4j2.Log4j2Impl
+
+sms:
+  provider:
+    aliyun:
+      accessKeyId: ${ALIYUN_ACCESSKEY_ID}
+      accessKeySecret: ${ALIYUN_ACCESSKEY_SECRET}

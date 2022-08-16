@@ -1,0 +1,46 @@
+extend type Mutation {
+  """
+  发送验证码
+  """
+  sendCaptcha(
+    """
+    配置ID
+    """
+    configId: String = "default"
+    """
+    标识当前请求（确保唯一性）可以使用: 手机号 + 功能标识 <br/>
+    如：
+    登录: 15921884771:LOGIN
+    找回密码: 15921884771:RESET_PASSWORD,
+    注册: SIGNUP,
+    变更手机号码 - 验证旧手机:  15921884771:RESET_PHONE_OLD_PHONE,
+    变更手机号码 - 验证新手机: 15921884771:RESET_PHONE_NEW_PHONE
+    """
+    sessionId: String!
+    """
+    手机号码
+    """
+    phone: String!
+    """
+    强制重新发送
+    """
+    force: Boolean = false
+  ): String
+  """
+  验证验证码是否有效
+  """
+  validCaptcha(
+    """
+    配置ID
+    """
+    configId: String = "default"
+    """
+    标识当前请求
+    """
+    sessionId: String!
+    """
+    输入的验证码
+    """
+    code: String!
+  ): Boolean
+}

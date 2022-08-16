@@ -33,3 +33,14 @@ extend type CurrentUser {
   """
   imToken(platform: Platform!): String!
 }
+
+extend type User {
+  """
+  在线状态
+  """
+  onlineStatus: OnlineStatusDetails!
+  """
+  OpenIM Token
+  """
+  imToken(platform: Platform!): String!
+}

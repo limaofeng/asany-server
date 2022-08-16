@@ -456,7 +456,33 @@ extend type Mutation {
     绑定第三方平台信息
     """
     options: LoginOptions
-  ): LoginUser
+  ): LoginUser!
+
+  """
+  注册
+  """
+  register(
+    """
+    昵称
+    """
+    nickName: String
+    """
+    头像
+    """
+    avatar: File
+    """
+    电话号码
+    """
+    phoneNumber: String
+    """
+    密码
+    """
+    password: String
+    """
+    短信验证码
+    """
+    smsCode: String
+  ): LoginUser!
   """
   退出登录
   """

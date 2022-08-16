@@ -1,9 +1,13 @@
 package cn.asany.security.core.graphql;
 
+import cn.asany.base.common.domain.Phone;
+import cn.asany.base.common.domain.enums.PhoneNumberStatus;
 import cn.asany.security.core.convert.UserConverter;
 import cn.asany.security.core.domain.User;
+import cn.asany.security.core.domain.enums.UserType;
 import cn.asany.security.core.graphql.input.UserUpdateInput;
 import cn.asany.security.core.service.UserService;
+import cn.asany.storage.api.FileObject;
 import graphql.kickstart.tools.GraphQLMutationResolver;
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import org.jfantasy.framework.security.LoginUser;
@@ -22,6 +26,30 @@ public class UserGraphQLQueryAndMutationResolver
   public UserGraphQLQueryAndMutationResolver(UserService userService, UserConverter userConverter) {
     this.userService = userService;
     this.userConverter = userConverter;
+  }
+
+  /**
+   * @param nickName 昵称
+   * @param avatar 头像
+   * @param phoneNumber 电话号码
+   * @param password 密码
+   * @param smsCode 短信验证码
+   * @return User
+   */
+  public LoginUser register(
+      String nickName, FileObject avatar, String phoneNumber, String password, String smsCode) {
+
+    User user =
+        User.builder()
+            .nickName(nickName)
+            .avatar(avatar)
+            .userType(UserType.USER)
+            .username(phoneNumber)
+            .password(password)
+            .phone(Phone.builder().number(phoneNumber).status(PhoneNumberStatus.VERIFIED).build())
+            .build();
+
+    return this.userService.register(user);
   }
 
   public User user(Long id) {

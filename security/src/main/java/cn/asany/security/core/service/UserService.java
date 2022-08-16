@@ -1,5 +1,6 @@
 package cn.asany.security.core.service;
 
+import cn.asany.base.common.domain.Phone;
 import cn.asany.base.common.domain.enums.EmailStatus;
 import cn.asany.base.common.domain.enums.PhoneNumberStatus;
 import cn.asany.security.core.dao.GrantPermissionDao;
@@ -262,10 +263,27 @@ public class UserService implements UserDetailsService {
     return null;
   }
 
+  /**
+   * 用户注册
+   *
+   * @param user 用户对象
+   */
+  public LoginUser register(User user) {
+    user = this.userDao.save(user);
+    return buildLoginUser(user);
+  }
+
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
     Optional<User> optional =
         this.userDao.findOne(Example.of(User.builder().username(username).build()));
+
+    if (!optional.isPresent()) {
+      optional =
+          this.userDao.findOne(
+              Example.of(User.builder().phone(Phone.builder().number(username).build()).build()));
+    }
+
     // 用户不存在
     if (!optional.isPresent()) {
       throw new UsernameNotFoundException(
