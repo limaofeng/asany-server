@@ -32,7 +32,16 @@ import org.jfantasy.framework.spring.validation.Use;
 @Builder
 @AllArgsConstructor
 @Entity
-@Table(name = "AUTH_USER")
+@Table(
+    name = "AUTH_USER",
+    uniqueConstraints = {
+      @UniqueConstraint(
+          name = "UK_AUTH_USER_PHONE",
+          columnNames = {"USER_TYPE", "PHONE_NUMBER"}),
+      @UniqueConstraint(
+          name = "UK_AUTH_USER_USERNAME",
+          columnNames = {"USERNAME"})
+    })
 @JsonIgnoreProperties({
   "hibernateLazyInitializer",
   "handler",
@@ -61,7 +70,7 @@ public class User extends BaseBusEntity implements Ownership {
   @Use(
       value = UsernameCannotRepeatValidator.class,
       groups = {Operation.Create.class})
-  @Column(name = "USERNAME", length = 20, updatable = false, nullable = false, unique = true)
+  @Column(name = "USERNAME", length = 20, updatable = false, nullable = false)
   private String username;
   /** 登录密码 */
   @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)

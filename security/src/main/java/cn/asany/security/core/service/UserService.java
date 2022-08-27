@@ -269,7 +269,10 @@ public class UserService implements UserDetailsService {
    * @param user 用户对象
    */
   public LoginUser register(User user) {
-    user = this.userDao.save(user);
+    if (StringUtil.isBlank(user.getUsername())) {
+      user.setUsername(user.getPhone().getNumber());
+    }
+    user = this.save(user);
     return buildLoginUser(user);
   }
 
@@ -314,6 +317,10 @@ public class UserService implements UserDetailsService {
 
     if (user.getEmail() != null && user.getEmail().getStatus() == EmailStatus.VERIFIED) {
       builder.phone(user.getEmail().getAddress());
+    }
+
+    if (user.getAvatar() != null) {
+      builder.avatar(user.getAvatar().getPath());
     }
 
     LoginUser loginUser = builder.build();

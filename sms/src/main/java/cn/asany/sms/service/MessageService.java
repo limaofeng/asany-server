@@ -8,12 +8,11 @@ import cn.asany.sms.domain.ShortMessage;
 import cn.asany.sms.domain.Template;
 import cn.asany.sms.domain.enums.MessageStatus;
 import cn.asany.sms.utils.TemplateContentUtil;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.error.ValidationException;
 import org.jfantasy.framework.jackson.JSON;
+import org.jfantasy.framework.util.common.DateUtil;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -92,13 +91,12 @@ public class MessageService {
   }
 
   @Transactional
-  public List<ShortMessage> findList(String phone, Long template, String time)
-      throws ParseException {
+  public List<ShortMessage> findList(String phone, Long template, String time) {
     return this.messageDao.findAll(
         PropertyFilter.builder()
             .equal("phones", phone)
             .equal("template.id", template)
-            .greaterThan("createdAt", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(time))
+            .greaterThan("createdAt", DateUtil.parse(time, "yyyy-MM-dd HH:mm:ss"))
             .build(),
         Sort.by("createdAt").descending());
   }

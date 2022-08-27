@@ -465,23 +465,23 @@ extend type Mutation {
     """
     昵称
     """
-    nickName: String
+    nickName: String!
     """
     头像
     """
-    avatar: File
+    avatar: File!
     """
     电话号码
     """
-    phoneNumber: String
+    phoneNumber: String!
     """
     密码
     """
-    password: String
+    password: String!
     """
     短信验证码
     """
-    smsCode: String
+    smsCode: String!
   ): LoginUser!
   """
   退出登录

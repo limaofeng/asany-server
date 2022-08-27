@@ -15,6 +15,7 @@ import java.util.Date;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.jfantasy.framework.jackson.JSON;
+import org.jfantasy.framework.util.common.StringUtil;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 
@@ -51,6 +52,9 @@ public class AuthService {
       throws OpenIMServerAPIException {
     String url = this.url + "/auth/user_register";
     try {
+      if (StringUtil.isBlank(request.getSecret())) {
+        request.setSecret(secret);
+      }
       HttpResponse<UserRegisterResponseBody> response =
           Unirest.post(url).body(JSON.serialize(request)).asObject(UserRegisterResponseBody.class);
       return OpenIMUtils.getData(response.getBody());

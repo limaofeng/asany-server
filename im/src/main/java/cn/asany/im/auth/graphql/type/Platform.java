@@ -4,7 +4,7 @@ import lombok.Getter;
 
 @Getter
 public enum Platform {
-  iOS(1),
+  IOS(1),
   Android(2),
   Windows(3),
   OSX(4),

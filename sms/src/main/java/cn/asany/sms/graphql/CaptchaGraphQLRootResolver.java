@@ -1,7 +1,6 @@
 package cn.asany.sms.graphql;
 
-import cn.asany.sms.service.CaptchaService;
-import cn.asany.sms.service.ValidationCaptchaService;
+import cn.asany.base.sms.CaptchaService;
 import graphql.kickstart.tools.GraphQLMutationResolver;
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import java.text.ParseException;
@@ -18,21 +17,18 @@ import org.springframework.stereotype.Component;
 public class CaptchaGraphQLRootResolver implements GraphQLMutationResolver, GraphQLQueryResolver {
 
   private final CaptchaService captchaService;
-  private final ValidationCaptchaService validationCaptchaService;
 
-  public CaptchaGraphQLRootResolver(
-      CaptchaService captchaService, ValidationCaptchaService validationCaptchaService) {
+  public CaptchaGraphQLRootResolver(CaptchaService captchaService) {
     this.captchaService = captchaService;
-    this.validationCaptchaService = validationCaptchaService;
   }
 
   /** 发送验证码 */
   public String sendCaptcha(String configId, String sessionId, String phone, boolean force)
       throws ParseException {
-    return this.validationCaptchaService.getChallengeForID(configId, sessionId, phone, force);
+    return this.captchaService.getChallengeForID(configId, sessionId, phone, force);
   }
 
   public Boolean validCaptcha(String configId, String sessionId, String code) {
-    return this.validationCaptchaService.validateResponseForID(configId, sessionId, code);
+    return this.captchaService.validateResponseForID(configId, sessionId, code);
   }
 }

@@ -57,7 +57,7 @@ public class SmsAutoConfiguration {
   }
 
   @Bean
-  public ShortMessageSendService shortMessageSendService(@Autowired  Client client) {
+  public ShortMessageSendService shortMessageSendService(@Autowired Client client) {
     return new AliyunShortMessageSendService(client);
   }
 }

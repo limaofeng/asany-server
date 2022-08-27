@@ -1,63 +1,65 @@
 package cn.asany.sms.service;
 
+import cn.asany.base.sms.CaptchaService;
+import cn.asany.sms.dao.CaptchaConfigDao;
 import cn.asany.sms.dao.CaptchaDao;
 import cn.asany.sms.domain.Captcha;
 import cn.asany.sms.domain.CaptchaConfig;
-import cn.asany.sms.domain.ShortMessage;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.regex.Pattern;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.error.IgnoreException;
 import org.jfantasy.framework.error.ValidationException;
 import org.jfantasy.framework.util.common.DateUtil;
 import org.jfantasy.framework.util.regexp.RegexpUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-import java.util.regex.Pattern;
-
-/**
- * 短信服务类
- *
- * <p>
- *
- * <p>短信验证码功能要求:<br>
- * 1.可以配置短信码的长度。<br>
- * 2.可以配置短信模板。<br>
- * 3.可以配置短信过期时间。（短信重复发送时，将重发上次生成的验证码）<br>
- * 4.可以配置短信验证的过期时间。<br>
- * 5.线程定时清理无效的验证码。<br>
- * 6.验证后成功清除原验证码。<br>
- * 7.可以配置验证失败次数。（次数耗尽清除验证码）<br>
- *
- * @author 李茂峰
- * @version 1.0
- * @since 2013-7-4 上午10:27:34
- */
 @Slf4j
 @Service
 @Transactional
-public class ValidationCaptchaService {
+public class SmsCaptchaService implements CaptchaService {
+
+  private static final Log logger = LogFactory.getLog(SmsCaptchaService.class);
 
   private static final Pattern VALIDATOR_MOBILE =
       RegexpUtil.getPattern("^(13|14|15|17|18)[0-9]{9}$");
 
   private final CaptchaDao captchaDao;
+  private final CaptchaConfigDao captchaConfigDao;
   private final MessageService messageService;
-  private final CaptchaService captchaConfigService;
+
+  private final ConcurrentMap<String, RandomWordGenerator> wordGeneratorCache =
+      new ConcurrentHashMap<>();
 
   @Autowired
-  public ValidationCaptchaService(
-      CaptchaDao captchaDao, MessageService messageService, CaptchaService captchaConfigService) {
+  public SmsCaptchaService(
+      MessageService messageService, CaptchaConfigDao captchaConfigDao, CaptchaDao captchaDao) {
+    this.captchaConfigDao = captchaConfigDao;
     this.captchaDao = captchaDao;
     this.messageService = messageService;
-    this.captchaConfigService = captchaConfigService;
+  }
+
+  RandomWordGenerator getWordGenerator(String randomWord) {
+    if (!wordGeneratorCache.containsKey(randomWord)) {
+      if (logger.isDebugEnabled()) {
+        logger.debug("缓存验证码生成器:" + randomWord);
+      }
+      wordGeneratorCache.put(randomWord, new RandomWordGenerator(randomWord));
+    }
+    return wordGeneratorCache.get(randomWord);
+  }
+
+  protected RandomWordGenerator removeWordGenerator(String randomWord) {
+    return wordGeneratorCache.remove(randomWord);
   }
 
   /**
@@ -69,7 +71,7 @@ public class ValidationCaptchaService {
    * @return {boolean}
    */
   public boolean validateResponseForID(String configId, String id, String code) {
-    CaptchaConfig config = this.captchaConfigService.get(configId);
+    CaptchaConfig config = this.getConfig(configId);
     // 配置信息不存在
     if (config == null) {
       if (log.isDebugEnabled()) {
@@ -109,15 +111,14 @@ public class ValidationCaptchaService {
    * @param force 强制发送
    * @return String
    */
-  public String getChallengeForID(String configId, String id, String phone, boolean force)
-      throws ParseException {
+  public String getChallengeForID(String configId, String id, String phone, boolean force) {
     if (!RegexpUtil.isMatch(phone, VALIDATOR_MOBILE)) {
       if (log.isDebugEnabled()) {
         log.debug("发送的手机号码格式不对:" + phone);
       }
       throw new IgnoreException("发送的手机号码格式不对:" + phone);
     }
-    CaptchaConfig config = this.captchaConfigService.get(configId);
+    CaptchaConfig config = this.getConfig(configId);
     if (config == null) {
       if (log.isDebugEnabled()) {
         log.debug("configId:" + configId + "\t 对应的配置信息没有找到!");
@@ -125,24 +126,25 @@ public class ValidationCaptchaService {
       throw new ValidationException("短信验证设置[id=" + configId + "]不存在!");
     }
 
-    if (!force) {
-      Date now = new Date();
-      Date date = new Date(new Date().getTime() - (1000 * 60 * 60 * 24));
-      // 短信验证码 ：使用同一个签名，对同一个手机号码发送短信验证码，1条/分钟，5条/小时，累计10条/天
-      List<ShortMessage> shortMessages =
-          this.messageService.findList(
-              phone,
-              config.getTemplate().getId(),
-              new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date));
-
-      int size = shortMessages.size();
-      Date[] time = new Date[size];
-      for (int i = 0; i < size; i++) {
-        time[i] = new Date();
-        time[i] = shortMessages.get(i).getCreatedAt();
-      }
-      checkSmsSend(time, now);
-    }
+    //    TODO: 限制规则
+    //    if (!force) {
+    //      Date now = new Date();
+    //      Date date = new Date(new Date().getTime() - (1000 * 60 * 60 * 24));
+    //      // 短信验证码 ：使用同一个签名，对同一个手机号码发送短信验证码，1条/分钟，5条/小时，累计10条/天
+    //      List<ShortMessage> shortMessages =
+    //          this.messageService.findList(
+    //              phone,
+    //              config.getTemplate().getId(),
+    //              new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date));
+    //
+    //      int size = shortMessages.size();
+    //      Date[] time = new Date[size];
+    //      for (int i = 0; i < size; i++) {
+    //        time[i] = new Date();
+    //        time[i] = shortMessages.get(i).getCreatedAt();
+    //      }
+    //      checkSmsSend(time, now);
+    //    }
 
     Optional<Captcha> captchaOptional =
         captchaDao.findOne(
@@ -158,9 +160,7 @@ public class ValidationCaptchaService {
       boolean retryTimesExceeded = captcha.getRetry() >= config.getRetry();
       if (overdue || retryTimesExceeded || force) {
         captcha.setValue(
-            captchaConfigService
-                .getWordGenerator(config.getRandomWord())
-                .getWord(config.getWordLength()));
+            this.getWordGenerator(config.getRandomWord()).getWord(config.getWordLength()));
         captcha.setRetry(0);
       }
     } else {
@@ -170,9 +170,7 @@ public class ValidationCaptchaService {
       captcha.setSessionId(id);
       captcha.setConfig(config);
       captcha.setValue(
-          captchaConfigService
-              .getWordGenerator(config.getRandomWord())
-              .getWord(config.getWordLength()));
+          this.getWordGenerator(config.getRandomWord()).getWord(config.getWordLength()));
     }
     captchaDao.save(captcha);
     this.messageService.save(captcha);
@@ -199,5 +197,41 @@ public class ValidationCaptchaService {
       log.error("200101验证码每分钟发送次数超限");
       throw new ValidationException("200101", "验证码每分钟发送次数超限");
     }
+  }
+
+  public Page<Captcha> findCaptchaPage(Pageable page, List<PropertyFilter> filters) {
+    return this.captchaDao.findPage(page, filters);
+  }
+
+  public CaptchaConfig getConfig(String configId) {
+    return captchaConfigDao.findById(configId).orElse(null);
+  }
+
+  /**
+   * 获取所有短信配置
+   *
+   * @return pager
+   */
+  public Page<CaptchaConfig> findPage(Pageable page, List<PropertyFilter> filters) {
+    return this.captchaConfigDao.findPage(page, filters);
+  }
+
+  /**
+   * 保存短信配置
+   *
+   * @param captchaConfig 配置
+   * @return 配置
+   */
+  public CaptchaConfig save(CaptchaConfig captchaConfig) {
+    return this.captchaConfigDao.save(captchaConfig);
+  }
+
+  /**
+   * 删除配置
+   *
+   * @param ids 配置ID
+   */
+  public void delete(String... ids) {
+    this.captchaConfigDao.deleteAllByIdInBatch(Arrays.asList(ids));
   }
 }

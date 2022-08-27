@@ -21,7 +21,7 @@ public class LocalFileObject extends AbstractFileObject {
   private File file;
   private LocalStorage storage;
 
-  LocalFileObject(LocalStorage storage, File file) {
+  public LocalFileObject(LocalStorage storage, File file) {
     super(
         file.getAbsolutePath()
             .substring(
@@ -31,7 +31,7 @@ public class LocalFileObject extends AbstractFileObject {
     this.storage = storage;
   }
 
-  LocalFileObject(LocalStorage storage, final File file, FileObjectMetadata metadata) {
+  public LocalFileObject(LocalStorage storage, final File file, FileObjectMetadata metadata) {
     super(
         file.getAbsolutePath()
             .substring(

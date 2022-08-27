@@ -109,7 +109,7 @@ graphql:
     cors:
       allowed-origin-patterns: "*"
       allowed-methods: GET, HEAD, POST
-      allowed-headers: Accept, Origin, Authorization, Content-Type, Last-Modified
+      allowed-headers: Accept, Origin, Authorization, Content-Type, Last-Modified, X-Request-ID, X-Client-ID
       allow-credentials: true
       max-age: 3600
   tools:

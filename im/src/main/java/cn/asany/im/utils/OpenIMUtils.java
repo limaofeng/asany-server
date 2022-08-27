@@ -30,7 +30,7 @@ public class OpenIMUtils {
     if (onlineStatusDataList.isEmpty()) {
       return OnlineStatusDetails.builder()
           .status(OnlineStatus.offline)
-          .platformStatus(Platform.iOS, OnlineStatus.online)
+          .platformStatus(Platform.IOS, OnlineStatus.online)
           .build();
     }
 

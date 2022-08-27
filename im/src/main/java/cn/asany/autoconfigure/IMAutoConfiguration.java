@@ -17,6 +17,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 @EntityScan({"cn.asany.im.*.domain"})
 @ComponentScan({
   "cn.asany.im.*.service",
+  "cn.asany.im.*.listener",
   "cn.asany.im.*.graphql",
 })
 @EnableConfigurationProperties({OpenIMProperties.class})

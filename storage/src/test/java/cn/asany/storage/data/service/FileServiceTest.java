@@ -25,6 +25,15 @@ class FileServiceTest {
   @Autowired private FileService fileService;
 
   @Test
+  void createDefaultAvatarsStorageSpace() {
+    fileService.createStorageSpace(
+        UUID.getShortId(),
+        "用户默认图片",
+        "/System/Library/UserManagement/DefaultAvatars/",
+        Storage.DEFAULT_STORAGE_ID);
+  }
+
+  @Test
   void createStorageSpace() {
     fileService.createStorageSpace(
         UUID.getShortId(), "门店", "/modules/landing/", Storage.DEFAULT_STORAGE_ID);

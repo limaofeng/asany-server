@@ -7,6 +7,7 @@ import cn.asany.security.auth.event.LoginSuccessEvent;
 import cn.asany.security.auth.event.LogoutSuccessEvent;
 import cn.asany.security.auth.graphql.types.LoginOptions;
 import cn.asany.security.auth.graphql.types.LoginType;
+import cn.asany.security.auth.utils.AuthUtils;
 import graphql.kickstart.tools.GraphQLMutationResolver;
 import graphql.schema.DataFetchingEnvironment;
 import lombok.extern.slf4j.Slf4j;
@@ -19,8 +20,6 @@ import org.jfantasy.framework.security.authentication.BadCredentialsException;
 import org.jfantasy.framework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.jfantasy.framework.security.oauth2.core.OAuth2AccessToken;
 import org.jfantasy.framework.security.oauth2.core.OAuth2Authentication;
-import org.jfantasy.framework.security.oauth2.core.OAuth2AuthenticationDetails;
-import org.jfantasy.framework.security.oauth2.core.TokenType;
 import org.jfantasy.framework.security.oauth2.core.token.AuthorizationServerTokenServices;
 import org.jfantasy.framework.security.oauth2.core.token.ConsumerTokenServices;
 import org.jfantasy.framework.security.oauth2.server.authentication.BearerTokenAuthentication;
@@ -89,13 +88,11 @@ public class LoginGraphQLMutationResolver implements GraphQLMutationResolver {
       throw new BadCredentialsException("Bad credentials");
     }
     LoginUser loginUser = (LoginUser) authentication.getPrincipal();
-    OAuth2AuthenticationDetails oAuth2AuthenticationDetails = new OAuth2AuthenticationDetails();
-    oAuth2AuthenticationDetails.setClientId(clientId);
-    oAuth2AuthenticationDetails.setTokenType(TokenType.SESSION);
-    oAuth2AuthenticationDetails.setRequest(context.getRequest());
-    OAuth2Authentication oAuth2Authentication =
-        new OAuth2Authentication(authentication, oAuth2AuthenticationDetails);
-    OAuth2AccessToken accessToken = tokenServices.createAccessToken(oAuth2Authentication);
+
+    OAuth2Authentication auth2 =
+        AuthUtils.buildOAuth2(clientId, context.getRequest(), authentication);
+
+    OAuth2AccessToken accessToken = tokenServices.createAccessToken(auth2);
     loginUser.setAttribute("token", accessToken);
     publisher.publishEvent(new LoginSuccessEvent(authentication));
     return loginUser;
