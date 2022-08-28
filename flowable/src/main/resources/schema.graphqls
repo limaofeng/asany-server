@@ -1,3 +1,8 @@
 extend type Query {
-  processDefinitions: Int
+    processDefinitions: Int
+}
+
+extend type Mutation {
+    # 导入流程模型
+    importProcessModel(file: Upload!): Int
 }

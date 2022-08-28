@@ -4,9 +4,9 @@ import cn.asany.storage.api.FileObject;
 import cn.asany.storage.api.FileObjectMetadata;
 import cn.asany.storage.api.UploadFileObject;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 import javax.servlet.http.Part;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.catalina.core.ApplicationPart;
@@ -15,6 +15,7 @@ import org.jfantasy.framework.error.IgnoreException;
 import org.jfantasy.framework.util.common.ClassUtil;
 import org.jfantasy.framework.util.common.StreamUtil;
 import org.jfantasy.framework.util.common.file.FileUtil;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -29,6 +30,11 @@ public class UploadUtils {
   public static FileObject partToObject(MultipartFile file) {
     ApplicationPart part = ClassUtil.getValue(file, "part");
     return partToObject(part);
+  }
+
+  public static MultipartFile partToMultipartFile(Part part) throws IOException {
+    return new MockMultipartFile(
+        part.getName(), part.getSubmittedFileName(), part.getContentType(), part.getInputStream());
   }
 
   public static FileObject fileToObject(File file) {
@@ -57,7 +63,7 @@ public class UploadUtils {
   public static String md5(File file) {
     InputStream input = null;
     try {
-      input = new FileInputStream(file);
+      input = Files.newInputStream(file.toPath());
       return DigestUtils.md5DigestAsHex(input);
     } catch (IOException e) {
       log.error(e.getMessage());
