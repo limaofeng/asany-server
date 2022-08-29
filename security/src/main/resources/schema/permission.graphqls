@@ -91,7 +91,7 @@ extend type Query {
   查询权限 (分页)
   """
   permissionsConnection(
-    filter: PermissionFilter
+    filter: PermissionFilter = {}
     page: Int = 1
     pageSize: Int = 15
     orderBy: OrderBy = "unsorted"

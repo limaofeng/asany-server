@@ -20,8 +20,10 @@ import org.flowable.ui.modeler.rest.app.EditorUsersResource;
 import org.flowable.ui.modeler.rest.app.StencilSetResource;
 import org.flowable.ui.modeler.security.RemoteIdmAuthenticationProvider;
 import org.jfantasy.framework.dao.mybatis.ConfigurationPropertiesCustomizer;
+import org.jfantasy.framework.dao.mybatis.sqlmapper.SqlMapper;
 import org.jfantasy.framework.spring.config.MyBatisConfig;
 import org.jfantasy.framework.util.common.ClassUtil;
+import org.mybatis.spring.annotation.MapperScan;
 import org.mybatis.spring.boot.autoconfigure.MybatisAutoConfiguration;
 import org.mybatis.spring.boot.autoconfigure.MybatisProperties;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
@@ -31,11 +33,13 @@ import org.springframework.context.annotation.ComponentScan.Filter;
 
 @Slf4j
 @Configuration
+@MapperScan(markerInterface = SqlMapper.class, basePackages = "cn.asany.flowable.core.dao")
 @AutoConfigureBefore(MybatisAutoConfiguration.class)
 @EnableConfigurationProperties({MybatisProperties.class, FlowableModelerAppProperties.class})
 @ComponentScan( //
     basePackages = { //
       "cn.asany.flowable.core.graphql",
+      "cn.asany.flowable.core.dao",
       "cn.asany.flowable.core.service",
       "org.flowable.ui.modeler.conf", //
       "org.flowable.ui.modeler.repository", //
