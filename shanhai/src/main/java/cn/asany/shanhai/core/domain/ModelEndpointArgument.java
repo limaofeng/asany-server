@@ -4,6 +4,11 @@ import javax.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
+/**
+ * 参数
+ *
+ * @author limaofeng
+ */
 @Data
 @Builder
 @NoArgsConstructor

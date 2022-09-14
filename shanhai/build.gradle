@@ -13,6 +13,7 @@ hibernate {
 }
 
 dependencies {
+    implementation project(":storage-api")
     implementation "com.hankcs:hanlp:${LIB_HANLP_VER}"
     compileOnly "org.projectlombok:lombok:${LIB_LOMBOK_VER}"
     annotationProcessor "org.projectlombok:lombok:$LIB_LOMBOK_VER"

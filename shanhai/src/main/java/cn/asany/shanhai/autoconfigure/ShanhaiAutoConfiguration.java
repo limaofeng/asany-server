@@ -19,6 +19,7 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 /** @author limaofeng */
@@ -31,6 +32,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @ComponentScan({
   "cn.asany.shanhai.core.support.model.types",
   "cn.asany.shanhai.core.support.model.features",
+  "cn.asany.shanhai.core.convert",
   "cn.asany.shanhai.core.runners",
   "cn.asany.shanhai.core.utils",
   "cn.asany.shanhai.core.rest",
@@ -53,6 +55,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
     },
     repositoryBaseClass = ComplexJpaRepository.class)
 @Slf4j
+@Import(CustomFieldTypeConfig.class)
 public class ShanhaiAutoConfiguration {
 
   private HibernateMappingHelper hibernateMappingHelper;

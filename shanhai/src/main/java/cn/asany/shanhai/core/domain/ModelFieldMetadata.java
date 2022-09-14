@@ -3,24 +3,30 @@ package cn.asany.shanhai.core.domain;
 import cn.asany.shanhai.core.domain.converter.MatchTypeConverter;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import java.io.Serializable;
+import java.util.Objects;
 import javax.persistence.*;
 import lombok.*;
+import org.hibernate.Hibernate;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 
-@Data
+/**
+ * 字段元数据
+ *
+ * @author limaofeng
+ */
+@Getter
+@Setter
+@RequiredArgsConstructor
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = false, of = "id")
-@ToString(of = "id")
 @Entity
 @Table(name = "SH_MODEL_FIELD_METADATA")
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class ModelFieldMetadata implements Serializable {
   @Id
-  @Column(name = "FIELD_ID", nullable = false, updatable = false, precision = 22, scale = 0)
+  @Column(name = "FIELD_ID", nullable = false, updatable = false)
   @GenericGenerator(
       name = "ModelFieldMetadataPkGenerator",
       strategy = "foreign",
@@ -30,7 +36,9 @@ public class ModelFieldMetadata implements Serializable {
   /** 数据库中的列表名称 */
   @Column(name = "DATABASE_COLUMN_NAME", length = 100)
   private String databaseColumnName;
-
+  /** 字段类型简 */
+  @Column(name = "FIELD_TYPE_BREVITY_CODE", length = 100)
+  private String fieldType;
   /** 是否唯一 */
   @Column(name = "IS_UNIQUE", length = 1)
   private Boolean unique;
@@ -52,5 +60,23 @@ public class ModelFieldMetadata implements Serializable {
       fetch = FetchType.LAZY,
       cascade = {CascadeType.ALL})
   @PrimaryKeyJoinColumn
+  @ToString.Exclude
   private ModelField field;
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) {
+      return false;
+    }
+    ModelFieldMetadata that = (ModelFieldMetadata) o;
+    return id != null && Objects.equals(id, that.id);
+  }
+
+  @Override
+  public int hashCode() {
+    return getClass().hashCode();
+  }
 }

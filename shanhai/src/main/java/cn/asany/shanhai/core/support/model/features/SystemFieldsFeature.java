@@ -8,16 +8,24 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.Data;
 import org.jfantasy.framework.dao.BaseBusEntity;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * 系统字段
+ *
+ * @author limaofeng
+ */
 @Data
 @Component
 public class SystemFieldsFeature implements IModelFeature {
   public static final String ID = "system-fields";
   private String id = ID;
 
-  @Autowired private ModelService modelService;
+  private final ModelService modelService;
+
+  public SystemFieldsFeature(ModelService modelService) {
+    this.modelService = modelService;
+  }
 
   @Override
   public List<ModelField> fields() {

@@ -3,10 +3,16 @@ package cn.asany.shanhai.core.support.model;
 import cn.asany.shanhai.core.domain.Model;
 import cn.asany.shanhai.core.domain.ModelFieldMetadata;
 import cn.asany.shanhai.core.domain.enums.ModelType;
+import cn.asany.shanhai.core.support.model.types.FieldTypeFamily;
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 import org.jfantasy.framework.dao.jpa.PropertyFilter.MatchType;
 
+/**
+ * 字段类型
+ *
+ * @author limaofeng
+ */
 @Converter
 public interface FieldType<JAVA, DB> extends AttributeConverter<JAVA, DB> {
   /** 查询 */
@@ -29,26 +35,34 @@ public interface FieldType<JAVA, DB> extends AttributeConverter<JAVA, DB> {
 
   String getId();
 
+  default int getIndex() {
+    return 0;
+  }
+
   /**
    * 类型名称
    *
-   * @return
+   * @return String
    */
   String getName();
+
+  String getDescription();
+
+  FieldTypeFamily getFamily();
 
   /**
    * 对应的 Java Class
    *
-   * @return
+   * @return String
    */
   String getJavaType(ModelFieldMetadata metadata);
 
   /**
    * 对应的 GraphQL 类型
    *
-   * @return
+   * @return String
    */
-  String getGraphQLType(ModelFieldMetadata metadata);
+  String getGraphQLType();
 
   default String getHibernateType(ModelFieldMetadata metadata) {
     return getJavaType(metadata);
@@ -57,7 +71,7 @@ public interface FieldType<JAVA, DB> extends AttributeConverter<JAVA, DB> {
   /**
    * 获取字段设置信息
    *
-   * @return
+   * @return DatabaseColumn
    */
   default DatabaseColumn getColumn(ModelFieldMetadata metadata) {
     return DatabaseColumn.builder()

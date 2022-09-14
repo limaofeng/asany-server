@@ -6,6 +6,11 @@ import lombok.Data;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.springframework.stereotype.Component;
 
+/**
+ * 字符串类型
+ *
+ * @author limaofeng
+ */
 @Data
 @Component
 public class StringField implements FieldType {
@@ -14,13 +19,28 @@ public class StringField implements FieldType {
   private String javaType = java.lang.String.class.getName();
   private String graphQLType = "String";
 
+  private String description;
+
+  private FieldTypeFamily family;
+
+  private int index;
+
+  public StringField() {}
+
+  public StringField(FieldTypeFamily family, String id, String name, String description) {
+    this.id = id;
+    this.name = name;
+    this.family = family;
+    this.description = description;
+  }
+
   @Override
   public String getJavaType(ModelFieldMetadata metadata) {
     return this.javaType;
   }
 
   @Override
-  public String getGraphQLType(ModelFieldMetadata metadata) {
+  public String getGraphQLType() {
     return graphQLType;
   }
 

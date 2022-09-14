@@ -7,6 +7,11 @@ import cn.asany.shanhai.core.support.model.features.*;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * 实体特征
+ *
+ * @author limaofeng
+ */
 public interface IModelFeature {
   String LOGICAL_DELETION = LogicalDeletionFeature.ID;
   String SYSTEM_FIELDS = SystemFieldsFeature.ID;

@@ -23,8 +23,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * 模型服务
+ *
+ * @author limaofeng
+ */
 @Slf4j
 @Service
 public class ModelService {
@@ -63,7 +69,7 @@ public class ModelService {
     return modelDao.findPage(pageable, filters);
   }
 
-  @Transactional
+  @Transactional(isolation = Isolation.READ_COMMITTED)
   public Model save(Model model) {
     ModelUtils modelUtils = ModelUtils.getInstance();
     return save(model, modelUtils);
@@ -74,12 +80,18 @@ public class ModelService {
     // 检查 Model Metadata 设置
     modelUtils.initialize(model);
 
+    Set<ModelField> fields = model.getFields();
+    Set<ModelEndpoint> endpoints = model.getEndpoints();
+    Set<ModelFeature> features = model.getFeatures();
+
     if (model.getType() == ModelType.SCALAR) {
       return modelUtils.saveWithCache(model);
     }
 
+    modelUtils.saveWithCache(model);
+
     // 检查 ModelField Metadata 设置
-    Iterator<ModelField> iterator = model.getFields().iterator();
+    Iterator<ModelField> iterator = fields.iterator();
     while (iterator.hasNext()) {
       ModelField field = iterator.next();
       try {
@@ -94,7 +106,7 @@ public class ModelService {
     }
 
     // 检查设置 Endpoint
-    for (ModelEndpoint endpoint : model.getEndpoints()) {
+    for (ModelEndpoint endpoint : endpoints) {
       modelUtils.install(model, endpoint);
     }
 
@@ -109,18 +121,37 @@ public class ModelService {
       model.getFields().add(modelUtils.install(model, idField));
     }
 
+    features =
+        features.stream()
+            .map(
+                f ->
+                    modelFeatureService
+                        .get(f.getId())
+                        .orElseThrow(
+                            () ->
+                                new ValidationException(
+                                    "0000000", String.format("模型特征[%s]不存在", f.getId()))))
+            .collect(Collectors.toSet());
+    model.setFeatures(features);
+
     // 特征处理
-    for (ModelFeature feature : model.getFeatures()) {
-      Optional<ModelFeature> optionalModelFeature = modelFeatureService.get(feature.getId());
-      if (!optionalModelFeature.isPresent()) {
-        throw new ValidationException("0000000", String.format("模型特征[%s]不存在", feature.getId()));
-      }
+    for (ModelFeature feature : features) {
+      modelUtils.preinstall(model, feature);
+    }
+    for (ModelFeature feature : features) {
       modelUtils.install(model, feature);
+    }
+    for (ModelFeature feature : features) {
+      modelUtils.postinstall(model, feature);
     }
 
     // 检查 ModelRelation 设置
-    for (ModelRelation relation : model.getRelations()) {
-      relation.setModel(model);
+    if (model.getRelations() != null) {
+      for (ModelRelation relation : model.getRelations()) {
+        if (relation.getModel() != model) {
+          relation.setModel(model);
+        }
+      }
     }
 
     return modelUtils.saveWithCache(model);
@@ -175,8 +206,14 @@ public class ModelService {
 
     long x_start = System.currentTimeMillis();
 
-    Model Query = modelUtils.getModelByCode("Query").get();
-    Model Mutation = modelUtils.getModelByCode("Mutation").get();
+    Model Query =
+        modelUtils
+            .getModelByCode("Query")
+            .orElseThrow(() -> new ValidationException("Model Query 未找到"));
+    Model Mutation =
+        modelUtils
+            .getModelByCode("Mutation")
+            .orElseThrow(() -> new ValidationException("Model Mutation 未找到"));
 
     this.modelDao.saveAllInBatch(context.saves);
     this.modelFieldDao.saveAllInBatch(
@@ -302,20 +339,14 @@ public class ModelService {
       log.debug("删除" + model.getCode());
       return;
     }
-    for (ModelEndpoint endpoint : model.getEndpoints()) {
-      this.modelEndpointDao.delete(endpoint);
-    }
+    this.modelEndpointDao.deleteAll(model.getEndpoints());
     List<Model> types =
         model.getRelations().stream()
             .filter(item -> item.getType() == ModelRelationType.SUBJECTION)
             .map(ModelRelation::getInverse)
             .collect(Collectors.toList());
-    for (ModelRelation relation : model.getRelations()) {
-      this.modelRelationDao.delete(relation);
-    }
-    for (Model type : types) {
-      this.modelDao.delete(type);
-    }
+    this.modelRelationDao.deleteAll(model.getRelations());
+    this.modelDao.deleteAll(types);
     this.modelDao.delete(model);
   }
 
@@ -446,5 +477,20 @@ public class ModelService {
     PropertyFilterBuilder builder = PropertyFilter.builder();
     builder.equal("code", code);
     return this.modelFieldDao.findOne(builder.build());
+  }
+
+  @Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class)
+  public void addField(Long modelId, ModelField field) {
+    ModelUtils modelUtils = ModelUtils.getInstance();
+    Model model = this.modelDao.getReferenceById(modelId);
+    modelUtils.install(model, field);
+    this.modelDao.save(model);
+
+    Set<ModelFeature> features = model.getFeatures();
+
+    // 特征处理
+    for (ModelFeature feature : features) {
+      modelUtils.reinstall(model, feature);
+    }
   }
 }

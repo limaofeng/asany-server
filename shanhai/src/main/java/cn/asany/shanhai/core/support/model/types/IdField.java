@@ -7,6 +7,11 @@ import lombok.Data;
 import org.jfantasy.framework.dao.jpa.PropertyFilter.MatchType;
 import org.springframework.stereotype.Component;
 
+/**
+ * 主键
+ *
+ * @author limaofeng
+ */
 @Data
 @Component
 public class IdField implements FieldType {
@@ -15,13 +20,17 @@ public class IdField implements FieldType {
   private String javaType = Long.class.getName();
   private String graphQLType = "ID";
 
+  private String description;
+
+  private FieldTypeFamily family;
+
   @Override
   public String getJavaType(ModelFieldMetadata metadata) {
     return this.javaType;
   }
 
   @Override
-  public String getGraphQLType(ModelFieldMetadata metadata) {
+  public String getGraphQLType() {
     return graphQLType;
   }
 

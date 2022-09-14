@@ -1,20 +1,73 @@
+input ModelMetadataInput {
+  databaseTableName: String
+}
+
 input ModelCreateInput {
-  # 编码
+  """
+  编码
+  """
   code: String
-  # 名称
+  """
+  名称
+  """
   name: String
-  # 字段
-  fields: [ModelFieldCreateInput]
-  # 特征
+  """
+  描述
+  """
+  description: String
+  """
+  字段
+  """
+  fields: [ModelFieldInput]
+  """
+  元数据
+  """
+  metadata: ModelMetadataInput
+  """
+  特征
+  """
   features: [String]
 }
 
-input ModelFieldCreateInput {
-  # 编码
+input ModelUpdateInput {
+  """
+  编码
+  """
   code: String
-  # 名称
+  """
+  名称
+  """
   name: String
-  # 类型
+  """
+  描述
+  """
+  description: String
+  """
+  字段
+  """
+  fields: [ModelFieldInput]
+  """
+  元数据
+  """
+  metadata: ModelMetadataInput
+  """
+  特征
+  """
+  features: [String]
+}
+
+input ModelFieldInput {
+  """
+  编码
+  """
+  code: String
+  """
+  名称
+  """
+  name: String
+  """
+  类型
+  """
   type: String
 }
 
@@ -49,67 +102,158 @@ type ModelEdge {
   node: Model
 }
 
+type ModuleConnection {
+  """
+  总数据条数
+  """
+  totalCount: Int!
+  """
+  每页显示条数
+  """
+  pageSize: Int!
+  """
+  总页数
+  """
+  totalPage: Int!
+  """
+  当前页
+  """
+  currentPage: Int!
+  edges: [ModuleEdge!]!
+}
+type ModuleEdge {
+  cursor: String!
+  node: Module!
+}
+
 enum ModelType {
-  # 输入对象
+  """
+  输入对象
+  """
   INPUT_OBJECT
-  # 标量
+  """
+  标量
+  """
   SCALAR
-  # 类型
+  """
+  类型
+  """
   OBJECT
-  # 实体
+  """
+  实体
+  """
   ENTITY
-  # 枚举
+  """
+  枚举
+  """
   ENUM
-  # 联合
+  """
+  联合
+  """
   UNION
-  # 接口
+  """
+  接口
+  """
   INTERFACE
 }
 
 type Model {
-  id: ID
-  # 编码
-  code: String
-  # 名称
-  name: String
-  # 类型
-  type: ModelType
-  # 描述
+  id: ID!
+  """
+  编码
+  """
+  code: String!
+  """
+  名称
+  """
+  name: String!
+  """
+  类型
+  """
+  type: ModelType!
+  """
+  描述
+  """
   description: String
-  # 字段
-  fields: [ModelField]
-  # 创建人
-  createdBy: String
-  # 修改人
-  updatedBy: String
-  # 创建时间
-  createdAt: Date
-  # 修改时间
-  updatedAt: Date
+  """
+  字段
+  """
+  fields: [ModelField!]!
+  """
+  创建人
+  """
+  createdBy: String!
+  """
+  修改人
+  """
+  updatedBy: String!
+  """
+  创建时间
+  """
+  createdAt: Date!
+  """
+  修改时间
+  """
+  updatedAt: Date!
+}
+
+type ModelFieldMetadata {
+  """
+  配置模型时，选择的字段类型
+  """
+  fieldType: String
 }
 
 type ModelField {
-  id: ID
-  # 编码
-  code: String
-  # 名称
-  name: String
-  # 描述
+  id: ID!
+  """
+  编码
+  """
+  code: String!
+  """
+  名称
+  """
+  name: String!
+  """
+  描述
+  """
   description: String
-  # 类型
-  type: Model
-  # 必填
+  """
+  类型
+  """
+  type: Model!
+  """
+  字段类型
+  """
+  fieldType: ModelFiledType!
+  """
+  必填
+  """
   required: Boolean
-  # 是否主键
+  """
+  是否主键
+  """
   primaryKey: Boolean
-  # 是否唯一
+  """
+  是否唯一
+  """
   unique: Boolean
-  # 存储值为列表
+  """
+  存储值为列表
+  """
   list: Boolean
-  # 是否为系统字段
+  """
+  是否为系统字段
+  """
   system: Boolean
-  # 所属实体
-  model: Model
+  """
+  元数据
+  """
+  metadata: ModelFieldMetadata!
+  """
+  所属实体
+  """
+  model: Model!
 }
 
 enum ServiceIdType {
@@ -234,20 +378,87 @@ type DataSet {
   result: [JSON]
 }
 
+type Module {
+  id: ID
+  """
+  编码
+  """
+  code: String
+  """
+  名称
+  """
+  name: String
+  """
+  描述
+  """
+  description: String
+}
+
+input ModuleFilter {
+  id: ID
+  name: String
+}
+
+enum ModelFiledTypeFamily {
+  STRING
+  TEXT
+  INTEGER
+  FLOAT
+  BOOLEAN
+  DATE
+  DATE_TIME
+  JSON
+  ASSET
+  COLOR
+  LOCATION
+  ENUMERATION
+  RELATION
+}
+
+type ModelFiledType {
+  id: String!
+  name: String!
+  description: String
+  family: ModelFiledTypeFamily
+  graphQLType: String!
+}
+
 extend type Query {
-  # 用户列表
-  models(
-    filter: ModelFilter
-    first: Int = 1
-    offset: Int = 15
-    orderBy: OrderBy = "unsorted"
-  ): [Model]
-  modelsConnection(
-    filter: ModelFilter
+  """
+  查询单个模块
+  """
+  module(id: ID!): Module
+  """
+  查询全部模块
+  """
+  modules(
+    filter: ModuleFilter = {}
     page: Int = 1
     pageSize: Int = 15
     orderBy: OrderBy = "unsorted"
-  ): ModelConnection
+  ): [Module!]!
+  """
+  查询全部模块（分页）
+  """
+  modulesConnection(
+    filter: ModuleFilter = {}
+    page: Int = 1
+    pageSize: Int = 15
+    orderBy: OrderBy = "unsorted"
+  ): ModuleConnection!
+  # 用户列表
+  models(
+    filter: ModelFilter = {}
+    offset: Int = 0
+    limit: Int = 15
+    orderBy: OrderBy = "unsorted"
+  ): [Model!]!
+  modelsConnection(
+    filter: ModelFilter = {}
+    page: Int = 1
+    pageSize: Int = 15
+    orderBy: OrderBy = "unsorted"
+  ): ModelConnection!
   # 查询单个模型
   model(id: ID, idType: ModelIdType = id): Model
   # 查询单个接口
@@ -255,13 +466,17 @@ extend type Query {
   # 查询单个服务
   service(id: ID!, idType: ServiceIdType = ID): Service
   # 服务
-  services: [Service]
+  services: [Service!]!
   # 消费者
-  consumers: [Consumer]
+  consumers: [Consumer!]!
   #  GraphQL 架构图
   schema(id: ID!): GraphQLSchema
   # 查询数据集
   dataset(id: ID!, params: JSON): DataSet
+  """
+  查询模型支持的字段类型
+  """
+  modelFiledTypes: [ModelFiledType!]!
 }
 
 extend type Mutation {
@@ -272,7 +487,7 @@ extend type Mutation {
   """
   修改实体
   """
-  updateModel(id: ID!, input: ModelCreateInput!): Model
+  updateModel(id: ID!, input: ModelUpdateInput!): Model
   """
   删除实体
   """

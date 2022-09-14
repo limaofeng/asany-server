@@ -7,7 +7,6 @@ import cn.asany.shanhai.core.support.model.FieldType;
 import cn.asany.shanhai.core.support.model.IModelFeature;
 import java.util.ArrayList;
 import java.util.Optional;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.junit.jupiter.api.AfterEach;
@@ -16,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -29,10 +29,9 @@ class ModelServiceTest {
 
   @Autowired private ModelService modelService;
 
-  @SneakyThrows
   @BeforeEach
   void setUp() {
-    modelService.clear();
+    //    modelService.clear();
   }
 
   @AfterEach
@@ -40,7 +39,7 @@ class ModelServiceTest {
 
   @Test
   public void contextLoads() {
-    modelService.findPager(new Pager<>(), new ArrayList<>());
+    modelService.findPage(PageRequest.of(0, 5), new ArrayList<>());
   }
 
   private Model testEmployee() {
@@ -48,10 +47,18 @@ class ModelServiceTest {
         Model.builder()
             .code("Employee")
             .name("员工")
-            .field("name", "名称", FieldType.String)
             .features(IModelFeature.MASTER_MODEL, IModelFeature.SYSTEM_FIELDS)
             .build();
     return modelService.save(model);
+  }
+
+  @Test
+  public void testCreateModelField() {
+    Optional<Model> modelOptional = this.modelService.findByCode("Employee");
+    assert modelOptional.isPresent();
+    Model model = modelOptional.get();
+    this.modelService.addField(
+        model.getId(), ModelField.builder().code("name").name("名称").type("String").build());
   }
 
   @Test

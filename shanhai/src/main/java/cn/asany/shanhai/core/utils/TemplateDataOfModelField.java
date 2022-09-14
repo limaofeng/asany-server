@@ -52,7 +52,7 @@ public class TemplateDataOfModelField {
     if (modelType.getType() == ModelType.SCALAR) {
       FieldTypeRegistry registry = SpringBeanUtils.getBeanByType(FieldTypeRegistry.class);
       FieldType type = registry.getType(modelType.getCode());
-      graphQLType = type == null ? graphQLType : type.getGraphQLType(this.field.getMetadata());
+      graphQLType = type == null ? graphQLType : type.getGraphQLType();
     }
     Boolean isList = this.field.getList();
     return isList ? "[" + graphQLType + "]" : graphQLType;

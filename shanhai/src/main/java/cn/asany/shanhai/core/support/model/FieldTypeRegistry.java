@@ -5,6 +5,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * 字段类型注册表
+ *
+ * @author limaofeng
+ */
 public class FieldTypeRegistry {
 
   private final Map<String, FieldType<?, ?>> caches = new ConcurrentHashMap<>();

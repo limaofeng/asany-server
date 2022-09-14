@@ -6,6 +6,11 @@ import java.math.BigDecimal;
 import lombok.Data;
 import org.springframework.stereotype.Component;
 
+/**
+ * 浮点型
+ *
+ * @author limaofeng
+ */
 @Data
 @Component
 public class FloatField implements FieldType<BigDecimal, BigDecimal> {
@@ -14,13 +19,26 @@ public class FloatField implements FieldType<BigDecimal, BigDecimal> {
   private String javaType = BigDecimal.class.getName();
   private String graphQLType = "Float";
 
+  private String description;
+
+  private FieldTypeFamily family;
+
+  public FloatField() {}
+
+  public FloatField(FieldTypeFamily family, String id, String name, String description) {
+    this.id = id;
+    this.name = name;
+    this.family = family;
+    this.description = description;
+  }
+
   @Override
   public java.lang.String getJavaType(ModelFieldMetadata metadata) {
     return this.getJavaType();
   }
 
   @Override
-  public java.lang.String getGraphQLType(ModelFieldMetadata metadata) {
+  public java.lang.String getGraphQLType() {
     return this.graphQLType;
   }
 }

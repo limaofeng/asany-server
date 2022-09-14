@@ -5,22 +5,25 @@ import cn.asany.shanhai.core.support.graphql.resolvers.DelegateDataFetcher;
 import cn.asany.shanhai.core.utils.ModelUtils;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 import javax.persistence.*;
 import lombok.*;
+import org.hibernate.Hibernate;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.spring.SpringBeanUtils;
 
-@Data
+/**
+ * 实体接口
+ *
+ * @author limaofeng
+ */
+@Getter
+@Setter
+@RequiredArgsConstructor
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(
-    callSuper = false,
-    of = {"id", "code"})
-@ToString(of = "id")
 @Entity
 @Table(
     name = "SH_MODEL_ENDPOINT",
@@ -55,23 +58,27 @@ public class ModelEndpoint extends BaseBusEntity {
       name = "MODEL_ID",
       foreignKey = @ForeignKey(name = "FK_MODEL_ENDPOINT_MID"),
       nullable = false)
+  @ToString.Exclude
   private Model model;
   /** 参数 */
   @OneToMany(
       mappedBy = "endpoint",
       cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE},
       fetch = FetchType.LAZY)
-  private List<ModelEndpointArgument> arguments;
+  @ToString.Exclude
+  private Set<ModelEndpointArgument> arguments;
   /** 返回类型 */
   @OneToOne(
       fetch = FetchType.LAZY,
       cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
   @PrimaryKeyJoinColumn
+  @ToString.Exclude
   private ModelEndpointReturnType returnType;
 
   /** 委派 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "DELEGATE_ID", foreignKey = @ForeignKey(name = "FK_MODEL_ENDPOINT_DID"))
+  @ToString.Exclude
   private ModelDelegate delegate;
 
   public static class ModelEndpointBuilder {
@@ -113,7 +120,7 @@ public class ModelEndpoint extends BaseBusEntity {
 
     public ModelEndpointBuilder argument(String name, String type) {
       if (this.arguments == null) {
-        this.arguments = new ArrayList<>();
+        this.arguments = new HashSet<>();
       }
       this.arguments.add(ModelEndpointArgument.builder().name(name).type(type).build());
       return this;
@@ -121,7 +128,7 @@ public class ModelEndpoint extends BaseBusEntity {
 
     public ModelEndpointBuilder argument(String name, Model type, String description) {
       if (this.arguments == null) {
-        this.arguments = new ArrayList<>();
+        this.arguments = new HashSet<>();
       }
       this.arguments.add(
           ModelEndpointArgument.builder().name(name).type(type).description(description).build());
@@ -130,7 +137,7 @@ public class ModelEndpoint extends BaseBusEntity {
 
     public ModelEndpointBuilder argument(String name, String type, Boolean required) {
       if (this.arguments == null) {
-        this.arguments = new ArrayList<>();
+        this.arguments = new HashSet<>();
       }
       this.arguments.add(
           ModelEndpointArgument.builder().name(name).required(required).type(type).build());
@@ -139,7 +146,7 @@ public class ModelEndpoint extends BaseBusEntity {
 
     public ModelEndpointBuilder argument(String name, String type, String description) {
       if (this.arguments == null) {
-        this.arguments = new ArrayList<>();
+        this.arguments = new HashSet<>();
       }
       this.arguments.add(
           ModelEndpointArgument.builder().name(name).description(description).type(type).build());
@@ -149,7 +156,7 @@ public class ModelEndpoint extends BaseBusEntity {
     public ModelEndpointBuilder argument(
         String name, String type, String description, Object defaultValue) {
       if (this.arguments == null) {
-        this.arguments = new ArrayList<>();
+        this.arguments = new HashSet<>();
       }
       this.arguments.add(
           ModelEndpointArgument.builder().name(name).description(description).type(type).build());
@@ -159,7 +166,7 @@ public class ModelEndpoint extends BaseBusEntity {
     public ModelEndpointBuilder argument(
         String name, Model type, String description, Object defaultValue) {
       if (this.arguments == null) {
-        this.arguments = new ArrayList<>();
+        this.arguments = new HashSet<>();
       }
       this.arguments.add(
           ModelEndpointArgument.builder().name(name).description(description).type(type).build());
@@ -169,7 +176,7 @@ public class ModelEndpoint extends BaseBusEntity {
     public ModelEndpointBuilder argument(
         String name, String type, Boolean required, String description, Object defaultValue) {
       if (this.arguments == null) {
-        this.arguments = new ArrayList<>();
+        this.arguments = new HashSet<>();
       }
       this.arguments.add(
           ModelEndpointArgument.builder()
@@ -182,9 +189,41 @@ public class ModelEndpoint extends BaseBusEntity {
     }
 
     public ModelEndpointBuilder delegate(Class<? extends DelegateDataFetcher> resolverClass) {
-      ModelUtils modelUtils = SpringBeanUtils.getBeanByType(ModelUtils.class);
+      ModelUtils modelUtils = ModelUtils.getInstance();
       this.delegate = modelUtils.getDelegate(resolverClass);
       return this;
     }
+  }
+
+  @Override
+  public String toString() {
+    return getClass().getSimpleName()
+        + "("
+        + "id = "
+        + id
+        + ", "
+        + "code = "
+        + code
+        + ", "
+        + "name = "
+        + name
+        + ")";
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) {
+      return false;
+    }
+    ModelEndpoint that = (ModelEndpoint) o;
+    return id != null && Objects.equals(id, that.id);
+  }
+
+  @Override
+  public int hashCode() {
+    return getClass().hashCode();
   }
 }

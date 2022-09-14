@@ -1,16 +1,19 @@
 package cn.asany.shanhai.core.graphql;
 
+import cn.asany.shanhai.core.convert.ModelConverter;
 import cn.asany.shanhai.core.domain.Model;
 import cn.asany.shanhai.core.domain.ModelField;
 import cn.asany.shanhai.core.graphql.enums.EndpointIdType;
 import cn.asany.shanhai.core.graphql.enums.ModelIdType;
+import cn.asany.shanhai.core.graphql.inputs.ModelCreateInput;
 import cn.asany.shanhai.core.graphql.inputs.ModelFilter;
+import cn.asany.shanhai.core.graphql.inputs.ModelUpdateInput;
 import cn.asany.shanhai.core.graphql.types.ModelConnection;
 import cn.asany.shanhai.core.service.ModelService;
+import graphql.kickstart.tools.GraphQLMutationResolver;
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import java.util.List;
 import java.util.Optional;
-import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.graphql.util.Kit;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -23,24 +26,39 @@ import org.springframework.stereotype.Component;
  * @author limaofeng
  */
 @Component
-public class ModelGraphQLQueryResolver implements GraphQLQueryResolver {
+public class ModelGraphQLRootResolver implements GraphQLMutationResolver, GraphQLQueryResolver {
 
   private final ModelService modelService;
+  private final ModelConverter modelConverter;
 
-  public ModelGraphQLQueryResolver(ModelService modelService) {
+  public ModelGraphQLRootResolver(ModelService modelService, ModelConverter modelConverter) {
     this.modelService = modelService;
+    this.modelConverter = modelConverter;
   }
 
-  public List<Model> models(ModelFilter filter, int first, int offset, Sort orderBy) {
-    Pageable pageable = PageRequest.of(offset, first, orderBy);
-    filter = ObjectUtil.defaultValue(filter, new ModelFilter());
+  public Model createModel(ModelCreateInput input) {
+    Model model = this.modelConverter.toModel(input);
+    return modelService.save(model);
+  }
+
+  public Model updateModel(Long id, ModelUpdateInput input) {
+    Model model = this.modelConverter.toModel(input);
+    model.setId(id);
+    return modelService.update(model);
+  }
+
+  public int deleteModel(Long[] ids) {
+    return modelService.delete(ids);
+  }
+
+  public List<Model> models(ModelFilter filter, int offset, int limit, Sort orderBy) {
+    Pageable pageable = PageRequest.of(offset / limit, limit, orderBy);
     return modelService.findPage(pageable, filter.build()).getContent();
   }
 
   public ModelConnection modelsConnection(
       ModelFilter filter, int page, int pageSize, Sort orderBy) {
     Pageable pageable = PageRequest.of(page - 1, pageSize, orderBy);
-    filter = ObjectUtil.defaultValue(filter, new ModelFilter());
     return Kit.connection(modelService.findPage(pageable, filter.build()), ModelConnection.class);
   }
 

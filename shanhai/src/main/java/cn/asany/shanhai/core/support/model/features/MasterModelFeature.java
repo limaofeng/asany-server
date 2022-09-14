@@ -19,7 +19,6 @@ import lombok.Data;
 import org.jfantasy.framework.dao.jpa.PropertyFilter.MatchType;
 import org.jfantasy.framework.util.common.StringUtil;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Data
@@ -28,9 +27,13 @@ public class MasterModelFeature implements IModelFeature, InitializingBean {
   public static final String ID = "master";
   private String id = ID;
 
-  @Autowired private FieldTypeRegistry fieldTypeRegistry;
+  private final FieldTypeRegistry fieldTypeRegistry;
 
   private List<RuleAndReplacement> plurals = new ArrayList<>();
+
+  public MasterModelFeature(FieldTypeRegistry fieldTypeRegistry) {
+    this.fieldTypeRegistry = fieldTypeRegistry;
+  }
 
   @Override
   public List<ModelEndpoint> getEndpoints(Model model) {

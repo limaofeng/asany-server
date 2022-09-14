@@ -26,7 +26,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.jfantasy.framework.error.ValidationException;
+import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.spring.SpringBeanUtils;
 import org.jfantasy.framework.util.PinyinUtils;
 import org.jfantasy.framework.util.common.ClassUtil;
@@ -36,6 +36,8 @@ import org.jfantasy.framework.util.ognl.OgnlUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Component
@@ -53,7 +55,7 @@ public class ModelUtils {
   private static final ThreadLocal<ModelUtilCache> HOLDER = new ThreadLocal<>();
   private static final ThreadLocal<ModelLazySaveContext> LAZY = new ThreadLocal<>();
 
-  private OgnlUtil ognlUtil = OgnlUtil.getInstance();
+  private final OgnlUtil ognlUtil = OgnlUtil.getInstance();
 
   public static ModelUtils getInstance() {
     return SpringBeanUtils.getBeanByType(ModelUtils.class);
@@ -115,12 +117,12 @@ public class ModelUtils {
             () ->
                 StringUtil.upperCaseFirst(
                     StringUtil.camelCase(PinyinUtils.getAll(model.getName())))));
-    model.setFields((ObjectUtil.defaultValue(model.getFields(), Collections.emptySet())));
-    model.setFeatures(ObjectUtil.defaultValue(model.getFeatures(), Collections.emptySet()));
-    model.setEndpoints(ObjectUtil.defaultValue(model.getEndpoints(), Collections.emptySet()));
-    model.setRelations(ObjectUtil.defaultValue(model.getRelations(), Collections.emptySet()));
-    model.setImplementz(ObjectUtil.defaultValue(model.getImplementz(), Collections.emptySet()));
-    model.setMemberTypes(ObjectUtil.defaultValue(model.getMemberTypes(), Collections.emptySet()));
+    model.setFields((ObjectUtil.defaultValue(model.getFields(), new HashSet<>())));
+    model.setFeatures(ObjectUtil.defaultValue(model.getFeatures(), new HashSet<>()));
+    model.setEndpoints(ObjectUtil.defaultValue(model.getEndpoints(), new HashSet<>()));
+    model.setRelations(ObjectUtil.defaultValue(model.getRelations(), new HashSet<>()));
+    model.setImplementz(ObjectUtil.defaultValue(model.getImplementz(), new HashSet<>()));
+    model.setMemberTypes(ObjectUtil.defaultValue(model.getMemberTypes(), new HashSet<>()));
 
     if (StringUtil.isNotBlank(model.getName()) && StringUtil.length(model.getName()) > 100) {
       if (StringUtil.isBlank(model.getDescription())) {
@@ -259,19 +261,10 @@ public class ModelUtils {
   public Optional<Model> getModelById(Long id) {
     ModelUtilCache cache = this.cache();
     if (this.isLazySave()) {
-      return cache.getModelById(id, () -> Optional.empty());
+      return cache.getModelById(id, Optional::empty);
     }
     return cache.getModelById(id, () -> this.modelDao.findById(id));
   }
-
-  //    public Model getModelByCode(Model model, String code) {
-  //        if (model.getCode().equals(code)) {
-  //            return model;
-  //        }
-  //        Optional<Model> modelType = model.getRelations().stream().map(item ->
-  // item.getInverse()).filter(item -> item.getCode().equals(code)).findAny();
-  //        return modelType.orElseGet(() -> this.getModelByCode(code).get());
-  //    }
 
   public ModelField generatePrimaryKeyField() {
     return ModelField.builder()
@@ -289,29 +282,39 @@ public class ModelUtils {
         .collect(Collectors.toList());
   }
 
-  @SneakyThrows
-  public void install(Model model, ModelFeature modelFeature) {
-    Optional<ModelFeature> optionalModelFeature = modelFeatureService.get(modelFeature.getId());
-    if (!optionalModelFeature.isPresent()) {
-      throw new ValidationException("0000000", String.format("模型特征[%s]不存在", modelFeature.getId()));
-    }
+  public void preinstall(Model model, ModelFeature modelFeature) {
     IModelFeature feature = modelFeatureRegistry.get(modelFeature.getId());
     Set<ModelField> fields = model.getFields();
     // 设置 Field
     for (ModelField field : feature.fields()) {
       fields.add(this.install(model, field));
     }
+  }
+
+  @SneakyThrows
+  public void install(Model model, ModelFeature modelFeature) {
+    IModelFeature feature = modelFeatureRegistry.get(modelFeature.getId());
 
     for (Model type : feature.getTypes(model)) {
       Optional<Model> optional = this.getModelByCode(type.getCode());
       if (optional.isPresent()) {
-        model.connect(optional.get(), getModelConnectType(type.getType()));
+        type.setId(optional.get().getId());
+        model.connect(modelService.save(type, this), getModelConnectType(type.getType()));
       } else {
+        if (this.isLazySave()) {
+          this.cache().putModel(type);
+        }
         model.connect(modelService.save(type, this), getModelConnectType(type.getType()));
       }
     }
+  }
 
-    for (ModelEndpoint endpoint : feature.getEndpoints(model)) {
+  @SneakyThrows
+  public void postinstall(Model model, ModelFeature modelFeature) {
+    IModelFeature feature = modelFeatureRegistry.get(modelFeature.getId());
+
+    List<ModelEndpoint> endpoints = feature.getEndpoints(model);
+    for (ModelEndpoint endpoint : endpoints) {
       this.install(model, endpoint);
     }
   }
@@ -355,9 +358,6 @@ public class ModelUtils {
         model.connect(modelService.save(type, this), getModelConnectType(type.getType()));
       }
     }
-
-    // 设置 Endpoint
-    // model.getEndpoints().addAll(feature.getEndpoints(model));
   }
 
   public void uninstall(Model model, ModelFeature modelFeature) {
@@ -370,10 +370,12 @@ public class ModelUtils {
   }
 
   public void install(Model model, ModelEndpoint endpoint) {
-    for (ModelEndpointArgument argument :
-        ObjectUtil.defaultValue(
-            endpoint.getArguments(), Collections.<ModelEndpointArgument>emptyList())) {
-      argument.setEndpoint(endpoint);
+    Set<ModelEndpointArgument> arguments =
+        ObjectUtil.defaultValue(endpoint.getArguments(), Collections.emptySet());
+    for (ModelEndpointArgument argument : arguments) {
+      if (argument.getEndpoint() == null) {
+        argument.setEndpoint(endpoint);
+      }
       if (argument.getType().getId() != null) {
         continue;
       }
@@ -432,7 +434,13 @@ public class ModelUtils {
     }
     prevFeatures.addAll(newFeatures);
     for (ModelFeature feature : newFeatures) {
+      this.preinstall(model, feature);
+    }
+    for (ModelFeature feature : newFeatures) {
       this.install(model, feature);
+    }
+    for (ModelFeature feature : newFeatures) {
+      this.postinstall(model, feature);
     }
   }
 
@@ -497,6 +505,7 @@ public class ModelUtils {
     }
   }
 
+  @Transactional(readOnly = true, propagation = Propagation.REQUIRES_NEW)
   public ModelDelegate getDelegate(Class<? extends DelegateDataFetcher> resolverClass) {
     if (BaseDataFetcher.class.isAssignableFrom(resolverClass)) {
       Optional<ModelDelegate> optional =
@@ -517,7 +526,7 @@ public class ModelUtils {
   }
 
   public void clear() {
-    this.HOLDER.remove();
+    HOLDER.remove();
   }
 
   public ModelUtilCache newCache(List<Model> types) {
@@ -540,7 +549,14 @@ public class ModelUtils {
   public ModelUtilCache cache() {
     ModelUtilCache cache = HOLDER.get();
     if (cache == null) {
-      HOLDER.set(new ModelUtilCache());
+      List<Model> types =
+          this.modelDao.findAll(
+              PropertyFilter.builder()
+                  .or(
+                      PropertyFilter.builder().equal("type", ModelType.SCALAR),
+                      PropertyFilter.builder().in("code", "Query", "Mutation"))
+                  .build());
+      HOLDER.set(new ModelUtilCache(types));
       return HOLDER.get();
     }
     return HOLDER.get();
@@ -580,8 +596,8 @@ public class ModelUtils {
   public static class ModelUtilCache {
     private List<Model> models = new ArrayList<>();
     private final List<ModelField> fields = new ArrayList<>();
-    private Map<Long, Model> modelsById = new HashMap<>();
-    private Map<String, Model> modelsByCode = new HashMap<>();
+    private final Map<Long, Model> modelsById = new HashMap<>();
+    private final Map<String, Model> modelsByCode = new HashMap<>();
 
     public ModelUtilCache() {}
 
@@ -593,6 +609,10 @@ public class ModelUtils {
 
     public boolean containsModel(Long id) {
       return modelsById.containsKey(id);
+    }
+
+    public boolean containsModel(String code) {
+      return modelsByCode.containsKey(code);
     }
 
     public Optional<Model> getModelById(Long id, Supplier<Optional<Model>> override) {
@@ -619,8 +639,10 @@ public class ModelUtils {
       return Optional.empty();
     }
 
-    private void putModel(Model model) {
-      this.modelsById.put(model.getId(), model);
+    public void putModel(Model model) {
+      if (model.getId() != null) {
+        this.modelsById.put(model.getId(), model);
+      }
       this.modelsByCode.put(model.getCode(), model);
     }
   }

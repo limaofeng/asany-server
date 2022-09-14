@@ -14,19 +14,19 @@ import org.springframework.stereotype.Component;
  */
 @Data
 @Component
-public class DateField implements FieldType<Date, Timestamp> {
-  private String id = "Date";
-  private String name = "日期";
-  private String javaType = Date.class.getName();
-  private String graphQLType = "Date";
+public class JSONField implements FieldType<Date, Timestamp> {
+  private String id = "JSON";
+  private String name = "JSON";
+  private String javaType = String.class.getName();
+  private String graphQLType = "JSON";
 
   private String description;
 
   private FieldTypeFamily family;
 
-  public DateField() {}
+  public JSONField() {}
 
-  public DateField(FieldTypeFamily family, String id, String name, String description) {
+  public JSONField(FieldTypeFamily family, String id, String name, String description) {
     this.id = id;
     this.name = name;
     this.family = family;
