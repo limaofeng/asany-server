@@ -9,3 +9,25 @@ spring:
     host: ${REDIS_HOST}
     password: ${REDIS_PASSWORD}
     port: 6379
+  quartz:
+    properties:
+      org:
+        quartz:
+          dataSource:
+            qzDS:
+              URL: jdbc:mysql://${DATABASE_HOST}/${DATABASE_INSTANCE_NAME}?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&rewriteBatchedStatements=true
+              driver: com.mysql.cj.jdbc.Driver
+              user: ${DATABASE_USERNAME}
+              password: ${DATABASE_PASSWORD}
+
+openim:
+  url: ${OPENIM_SERVER}
+  secret: ${OPENIM_SECRET}
+  admin:
+    user: ${OPENIM_ADMIN}
+
+sms:
+  provider:
+    aliyun:
+      accessKeyId: ${ALIYUN_ACCESSKEY_ID}
+      accessKeySecret: ${ALIYUN_ACCESSKEY_SECRET}
