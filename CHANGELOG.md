@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.30](https://github.com/limaofeng/asany-server/compare/v0.1.29...v0.1.30) (2022-09-14)
+
+
+### Features
+
+* 流程模型查询接口 ([84d2549](https://github.com/limaofeng/asany-server/commit/84d2549370a8ff4ed18988f9935e46ae7adc556a))
+* 添加导入流程模型接口 ([1594b0e](https://github.com/limaofeng/asany-server/commit/1594b0ec09e2718325d8ff0e56b8dab9645d6d93))
+* 添加项目管理与时事通信模块 ([07895bb](https://github.com/limaofeng/asany-server/commit/07895bbe50c96c31bb38b69937f0f64a9cdbb970))
+* 短信模块 ([f8683b2](https://github.com/limaofeng/asany-server/commit/f8683b289f41e41edde33fe44d951ea2aad902f5))
+* 集成 flowable 框架 ([065ebf5](https://github.com/limaofeng/asany-server/commit/065ebf5cab8f9c11ea76b905c099faab5ea19979))
+* 验证码发送以及验证，IM集成优化 ([a105948](https://github.com/limaofeng/asany-server/commit/a105948f63609cf3a686158723ada07c942168bf))
+
 ### [0.1.29](https://github.com/limaofeng/asany-server/compare/v0.1.28...v0.1.29) (2022-07-15)
 
 
