@@ -7,8 +7,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class ProcessModelGraphQLResolver implements GraphQLResolver<ProcessModel> {
 
-    public String editorJson(ProcessModel processModel) {
-        return processModel.getModelEditorJson();
-    }
-
+  public String editorJson(ProcessModel processModel) {
+    return processModel.getModelEditorJson();
+  }
 }

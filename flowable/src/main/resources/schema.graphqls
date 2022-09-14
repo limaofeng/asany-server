@@ -1,70 +1,70 @@
 type ProcessModel {
-    id: ID!
-    name: String
-    key: String
-    description: String
-    created: Date
-    lastUpdated: Date
-    createdBy: String
-    lastUpdatedBy: String
-    version: Int
-    editorJson: String
-    comment: String
-    modelType: Int
-    tenantId: Int
+  id: ID!
+  name: String
+  key: String
+  description: String
+  created: Date
+  lastUpdated: Date
+  createdBy: String
+  lastUpdatedBy: String
+  version: Int
+  editorJson: String
+  comment: String
+  modelType: Int
+  tenantId: Int
 }
 
 type ProcessModelConnection {
-    # 总数据条数
-    totalCount: Int!
-    # 每页显示条数
-    pageSize: Int!
-    # 总页数
-    totalPage: Int!
-    # 当前页
-    currentPage: Int!
-    edges: [ProcessModelEdge!]!
-    pageInfo: PageInfo!
+  # 总数据条数
+  totalCount: Int!
+  # 每页显示条数
+  pageSize: Int!
+  # 总页数
+  totalPage: Int!
+  # 当前页
+  currentPage: Int!
+  edges: [ProcessModelEdge!]!
+  pageInfo: PageInfo!
 }
 
 type ProcessModelEdge {
-    cursor: String!
-    node: ProcessModel!
+  cursor: String!
+  node: ProcessModel!
 }
 
 input ProcessModelFilter {
-    name_contains: String
-    """
-    所有者
-    查询当前用户的模型时，传入 self
-    """
-    user: String
+  name_contains: String
+  """
+  所有者
+  查询当前用户的模型时，传入 self
+  """
+  user: String
 }
 
 extend type Query {
-    """
-    流程模型
-    """
-    processModel(id: ID!): ProcessModel
-    """
-    流程模型(分页)
-    """
-    processModels(
-        filter: ProcessModelFilter = {}
-        page: Int = 1
-        pageSize: Int = 15
-        orderBy: OrderBy = "unsorted"
-    ): ProcessModelConnection!
-    processDefinitions: Int
+  """
+  流程模型
+  """
+  processModel(id: ID!): ProcessModel
+  """
+  流程模型(分页)
+  """
+  processModels(
+    filter: ProcessModelFilter = {}
+    page: Int = 1
+    pageSize: Int = 15
+    orderBy: OrderBy = "unsorted"
+  ): ProcessModelConnection!
+  processDefinitions: Int
 }
 
 extend type Mutation {
-    """
-    导入流程模型
-    """
-    importProcessModel(file: Upload!): ProcessModel!
-    """
-    删除流程模型
-    """
-    deleteProcessModel(id: ID!): Boolean!
+  """
+  导入流程模型
+  """
+  importProcessModel(file: Upload!): ProcessModel!
+  """
+  删除流程模型
+  """
+  deleteProcessModel(id: ID!): Boolean!
 }

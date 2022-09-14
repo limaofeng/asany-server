@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProcessModelFilter {
-    private String nameContains;
-    private String user;
+  private String nameContains;
+  private String user;
 }
