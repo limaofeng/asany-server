@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.32](https://github.com/limaofeng/asany-server/compare/v0.1.31...v0.1.32) (2022-09-14)
+
+
+### Features
+
+* 添加自定义模块相关接口 ([a0a3b8b](https://github.com/limaofeng/asany-server/commit/a0a3b8b084440086a5f0dbec24c630c2feca24be))
+
+
+### Bug Fixes
+
+* 流程模型查询接口优化 ([a1bbda2](https://github.com/limaofeng/asany-server/commit/a1bbda2931eee8a3fba1354e3f24dcb7282fc7eb))
+* 解决 flowable / sms / openim 配置问题 ([82c27a2](https://github.com/limaofeng/asany-server/commit/82c27a2984dd98beb141ece23e35e765f41c4844))
+
 ### [0.1.31](https://github.com/limaofeng/asany-server/compare/v0.1.30...v0.1.31) (2022-09-14)
 
 ### [0.1.30](https://github.com/limaofeng/asany-server/compare/v0.1.29...v0.1.30) (2022-09-14)
