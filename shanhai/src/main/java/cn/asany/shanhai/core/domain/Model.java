@@ -226,7 +226,8 @@ public class Model extends BaseBusEntity implements ModelGroupResource {
       ModelField.ModelFieldBuilder fieldBuilder =
           ModelField.builder().id(id).code(code).name(name).type(type);
       for (GraphQLFieldArgument argument : arguments) {
-        fieldBuilder.argument(argument.getId(), argument.getType(), argument.getDescription());
+        fieldBuilder =
+            fieldBuilder.argument(argument.getId(), argument.getType(), argument.getDescription());
       }
       this.fields.add(fieldBuilder.build());
       return this;

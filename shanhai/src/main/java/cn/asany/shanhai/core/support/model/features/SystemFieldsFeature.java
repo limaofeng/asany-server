@@ -35,6 +35,7 @@ public class SystemFieldsFeature implements IModelFeature {
             .code(BaseBusEntity.FIELD_CREATED_BY)
             .name("创建人")
             .system(true)
+            .sort(2)
             .metadata(true, false)
             .type(FieldType.Int)
             .build());
@@ -43,6 +44,7 @@ public class SystemFieldsFeature implements IModelFeature {
             .code(BaseBusEntity.FIELD_CREATED_AT)
             .name("创建时间")
             .system(true)
+            .sort(1)
             .metadata(true, false)
             .type(FieldType.Date)
             .build());
@@ -51,6 +53,7 @@ public class SystemFieldsFeature implements IModelFeature {
             .code(BaseBusEntity.FIELD_UPDATED_BY)
             .name("修改人")
             .system(true)
+            .sort(4)
             .type(FieldType.Int)
             .build());
     fields.add(
@@ -58,6 +61,7 @@ public class SystemFieldsFeature implements IModelFeature {
             .code(BaseBusEntity.FIELD_UPDATED_AT)
             .name("修改时间")
             .system(true)
+            .sort(3)
             .type(FieldType.Date)
             .build());
     return fields;

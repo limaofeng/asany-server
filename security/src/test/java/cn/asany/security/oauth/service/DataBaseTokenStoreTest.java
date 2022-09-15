@@ -1,9 +1,8 @@
 package cn.asany.security.oauth.service;
 
 import cn.asany.TestApplication;
-import cn.asany.security.oauth.domain.AccessToken;
-import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
+import org.jfantasy.framework.security.oauth2.core.OAuth2AccessToken;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +24,7 @@ class DataBaseTokenStoreTest {
   void storeAccessToken() {
     String token =
         "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1aWQiOjEsIm5vbmNlIjoidURuMERCaWRIWlpBYms3aFduektoVVZ4NkdSV2IxR3kiLCJuYW1lIjpudWxsLCJ0b2tlbl90eXBlIjoiU0VTU0lPTiIsImNsaWVudF9pZCI6IjYwNjg0ODUzMzJjNWZjODUzYTY1IiwiZXhwaXJlc19hdCI6IjIwMjEtMTItMDZUMTQ6MzM6MjQuMDM4WiJ9.R_0EyXc4wjfL6l-TSrmvKWoGQDJp3q0m-ntC9YOu8Lk";
-    Optional<AccessToken> accessToken = tokenStore.getAccessToken(token);
-    assert accessToken.isPresent();
+    OAuth2AccessToken accessToken = tokenStore.readAccessToken(token);
+    assert accessToken != null;
   }
 }

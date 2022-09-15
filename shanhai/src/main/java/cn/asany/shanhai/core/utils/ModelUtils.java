@@ -271,6 +271,7 @@ public class ModelUtils {
         .code(FieldType.ID.getCode().toLowerCase())
         .name(FieldType.ID.getCode())
         .type(FieldType.ID)
+        .sort(0)
         .system(true)
         .primaryKey(true)
         .build();

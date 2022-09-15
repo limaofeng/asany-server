@@ -6,7 +6,6 @@ import cn.asany.shanhai.core.domain.enums.ModelRelationType;
 import cn.asany.shanhai.core.domain.enums.ModelStatus;
 import cn.asany.shanhai.core.domain.enums.ModelType;
 import cn.asany.shanhai.core.runners.InitModelDaoCommandLineRunner;
-import cn.asany.shanhai.core.support.model.FieldTypeRegistry;
 import cn.asany.shanhai.core.utils.ModelUtils;
 import cn.asany.shanhai.core.utils.TypeNotFoundException;
 import cn.asany.shanhai.gateway.domain.ModelGroupItem;
@@ -39,7 +38,6 @@ public class ModelService {
   private final ModelEndpointDao modelEndpointDao;
   private final ModelRelationDao modelRelationDao;
   private final ModelFeatureService modelFeatureService;
-  private final FieldTypeRegistry fieldTypeRegistry;
   private final ModelMetadataDao modelMetadataDao;
   private final ModelFieldMetadataDao modelFieldMetadataDao;
   private final ModelFieldArgumentDao modelFieldArgumentDao;
@@ -50,7 +48,6 @@ public class ModelService {
       ModelEndpointDao modelEndpointDao,
       ModelRelationDao modelRelationDao,
       ModelFeatureService modelFeatureService,
-      FieldTypeRegistry fieldTypeRegistry,
       ModelFieldArgumentDao modelFieldArgumentDao,
       ModelMetadataDao modelMetadataDao,
       ModelFieldMetadataDao modelFieldMetadataDao) {
@@ -59,7 +56,6 @@ public class ModelService {
     this.modelEndpointDao = modelEndpointDao;
     this.modelRelationDao = modelRelationDao;
     this.modelFeatureService = modelFeatureService;
-    this.fieldTypeRegistry = fieldTypeRegistry;
     this.modelFieldArgumentDao = modelFieldArgumentDao;
     this.modelMetadataDao = modelMetadataDao;
     this.modelFieldMetadataDao = modelFieldMetadataDao;

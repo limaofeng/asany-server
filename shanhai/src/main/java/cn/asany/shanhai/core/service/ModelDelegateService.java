@@ -4,7 +4,6 @@ import cn.asany.shanhai.core.dao.ModelDelegateDao;
 import cn.asany.shanhai.core.dao.ModelEndpointDao;
 import cn.asany.shanhai.core.domain.ModelDelegate;
 import java.util.Optional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,8 +12,14 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class ModelDelegateService {
 
-  @Autowired private ModelEndpointDao modelEndpointDao;
-  @Autowired private ModelDelegateDao modelDelegateDao;
+  private final ModelEndpointDao modelEndpointDao;
+  private final ModelDelegateDao modelDelegateDao;
+
+  public ModelDelegateService(
+      ModelEndpointDao modelEndpointDao, ModelDelegateDao modelDelegateDao) {
+    this.modelEndpointDao = modelEndpointDao;
+    this.modelDelegateDao = modelDelegateDao;
+  }
 
   public ModelDelegate save(ModelDelegate delegate) {
     Optional<ModelDelegate> optional = modelDelegateDao.findOne(Example.of(delegate));
