@@ -95,7 +95,6 @@ public class ModelField extends BaseBusEntity implements ModelGroupResource {
   /** 元数据 */
   @OneToOne(
       mappedBy = "field",
-      fetch = FetchType.LAZY,
       cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
   private ModelFieldMetadata metadata;
   /** 委派 */

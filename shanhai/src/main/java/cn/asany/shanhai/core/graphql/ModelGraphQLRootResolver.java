@@ -6,6 +6,7 @@ import cn.asany.shanhai.core.domain.ModelField;
 import cn.asany.shanhai.core.graphql.enums.EndpointIdType;
 import cn.asany.shanhai.core.graphql.enums.ModelIdType;
 import cn.asany.shanhai.core.graphql.inputs.ModelCreateInput;
+import cn.asany.shanhai.core.graphql.inputs.ModelFieldInput;
 import cn.asany.shanhai.core.graphql.inputs.ModelFilter;
 import cn.asany.shanhai.core.graphql.inputs.ModelUpdateInput;
 import cn.asany.shanhai.core.graphql.types.ModelConnection;
@@ -74,5 +75,10 @@ public class ModelGraphQLRootResolver implements GraphQLMutationResolver, GraphQ
       return modelService.findEndpointById(Long.valueOf(id));
     }
     return modelService.findEndpointByCode(id);
+  }
+
+  public ModelField addModelField(Long id, ModelFieldInput input) {
+    ModelField field = this.modelConverter.toField(input);
+    return modelService.addField(id, field);
   }
 }

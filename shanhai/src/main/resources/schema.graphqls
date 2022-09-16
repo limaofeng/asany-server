@@ -69,6 +69,22 @@ input ModelFieldInput {
   类型
   """
   type: String
+  """
+  必填
+  """
+  required: Boolean
+  """
+  是否唯一
+  """
+  unique: Boolean
+  """
+  是否为集合
+  """
+  list: Boolean
+  """
+  默认值
+  """
+  defaultValue: String
 }
 
 input ModelFilter {
@@ -484,6 +500,19 @@ extend type Mutation {
   新增实体
   """
   createModel(input: ModelCreateInput!): Model
+  """
+  添加实体字段
+  """
+  addModelField(
+    """
+    模型ID
+    """
+    modelId: ID!
+    """
+    模型字段
+    """
+    input: ModelFieldInput!
+  ): ModelField
   """
   修改实体
   """

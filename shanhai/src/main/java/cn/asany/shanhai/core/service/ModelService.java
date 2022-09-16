@@ -476,17 +476,16 @@ public class ModelService {
   }
 
   @Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class)
-  public void addField(Long modelId, ModelField field) {
+  public ModelField addField(Long modelId, ModelField field) {
     ModelUtils modelUtils = ModelUtils.getInstance();
     Model model = this.modelDao.getReferenceById(modelId);
-    modelUtils.install(model, field);
+    ModelField newField = modelUtils.install(model, field);
     this.modelDao.save(model);
-
     Set<ModelFeature> features = model.getFeatures();
-
     // 特征处理
     for (ModelFeature feature : features) {
       modelUtils.reinstall(model, feature);
     }
+    return newField;
   }
 }
