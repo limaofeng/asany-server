@@ -40,6 +40,12 @@ class FileServiceTest {
   }
 
   @Test
+  void createModulesStorageSpace() {
+    fileService.createStorageSpace(
+        UUID.getShortId(), "Modules", "/Applications/Modules", Storage.DEFAULT_STORAGE_ID);
+  }
+
+  @Test
   void createCmsStorageSpace() {
     fileService.createStorageSpace(
         UUID.getShortId(), "1", "/Applications/Website/1", Storage.DEFAULT_STORAGE_ID);

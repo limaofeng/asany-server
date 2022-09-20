@@ -29,6 +29,40 @@ input ModelCreateInput {
   features: [String]
 }
 
+input ModuleCreateInput {
+  """
+  编码
+  """
+  code: String
+  """
+  名称
+  """
+  name: String
+  """
+  描述
+  """
+  description: String
+}
+
+input ModuleUpdateInput {
+  """
+  编码
+  """
+  code: String
+  """
+  名称
+  """
+  name: String
+  """
+  图片
+  """
+  picture: File
+  """
+  描述
+  """
+  description: String
+}
+
 input ModelUpdateInput {
   """
   编码
@@ -395,7 +429,7 @@ type DataSet {
 }
 
 type Module {
-  id: ID
+  id: ID!
   """
   编码
   """
@@ -403,7 +437,11 @@ type Module {
   """
   名称
   """
-  name: String
+  name: String!
+  """
+  图片
+  """
+  picture: File
   """
   描述
   """
@@ -412,6 +450,7 @@ type Module {
 
 input ModuleFilter {
   id: ID
+  code: String
   name: String
 }
 
@@ -449,8 +488,8 @@ extend type Query {
   """
   modules(
     filter: ModuleFilter = {}
-    page: Int = 1
-    pageSize: Int = 15
+    offset: Int = 0
+    limit: Int = 15
     orderBy: OrderBy = "unsorted"
   ): [Module!]!
   """
@@ -462,32 +501,53 @@ extend type Query {
     pageSize: Int = 15
     orderBy: OrderBy = "unsorted"
   ): ModuleConnection!
-  # 用户列表
+  """
+  查询模型 (集合)
+  """
   models(
+    module: ID!
     filter: ModelFilter = {}
     offset: Int = 0
     limit: Int = 15
     orderBy: OrderBy = "unsorted"
   ): [Model!]!
+  """
+  查询模型（分页）
+  """
   modelsConnection(
+    module: ID!
     filter: ModelFilter = {}
     page: Int = 1
     pageSize: Int = 15
     orderBy: OrderBy = "unsorted"
   ): ModelConnection!
-  # 查询单个模型
+  """
+  查询单个模型
+  """
   model(id: ID, idType: ModelIdType = id): Model
-  # 查询单个接口
+  """
+  查询单个接口
+  """
   endpoint(id: ID, idType: EndpointIdType = id): ModelField
-  # 查询单个服务
+  """
+  查询单个服务
+  """
   service(id: ID!, idType: ServiceIdType = ID): Service
-  # 服务
+  """
+  服务 (集合)
+  """
   services: [Service!]!
-  # 消费者
+  """
+  消费者
+  """
   consumers: [Consumer!]!
-  #  GraphQL 架构图
+  """
+  GraphQL 架构图
+  """
   schema(id: ID!): GraphQLSchema
-  # 查询数据集
+  """
+  查询数据集
+  """
   dataset(id: ID!, params: JSON): DataSet
   """
   查询模型支持的字段类型
@@ -496,6 +556,26 @@ extend type Query {
 }
 
 extend type Mutation {
+  """
+  新增模块
+  """
+  createModule(input: ModuleCreateInput!): Module
+  """
+  新增模块
+  """
+  updateModule(
+    id: ID!
+    merge: Boolean = true
+    input: ModuleUpdateInput!
+  ): Module
+  """
+  删除模块
+  """
+  deleteModule(id: ID!): Boolean
+  """
+  批量删除模块
+  """
+  deleteManyModules(ids: [ID!]!): Int
   """
   新增实体
   """

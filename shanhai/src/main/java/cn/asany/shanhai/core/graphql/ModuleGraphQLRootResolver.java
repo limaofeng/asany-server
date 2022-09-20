@@ -1,7 +1,10 @@
 package cn.asany.shanhai.core.graphql;
 
+import cn.asany.shanhai.core.convert.ModuleConverter;
 import cn.asany.shanhai.core.domain.Module;
+import cn.asany.shanhai.core.graphql.inputs.ModuleCreateInput;
 import cn.asany.shanhai.core.graphql.inputs.ModuleFilter;
+import cn.asany.shanhai.core.graphql.inputs.ModuleUpdateInput;
 import cn.asany.shanhai.core.graphql.types.ModuleConnection;
 import cn.asany.shanhai.core.service.ModuleService;
 import graphql.kickstart.tools.GraphQLMutationResolver;
@@ -19,13 +22,15 @@ public class ModuleGraphQLRootResolver implements GraphQLMutationResolver, Graph
 
   private final ModuleService moduleService;
 
-  public ModuleGraphQLRootResolver(ModuleService moduleService) {
+  private final ModuleConverter moduleConverter;
+
+  public ModuleGraphQLRootResolver(ModuleService moduleService, ModuleConverter moduleConverter) {
     this.moduleService = moduleService;
+    this.moduleConverter = moduleConverter;
   }
 
-  public List<Module> modules(ModuleFilter filter, int first, int offset, Sort orderBy) {
-    Pageable pageable = PageRequest.of(offset, first, orderBy);
-    return moduleService.findPage(pageable, filter.build()).getContent();
+  public List<Module> modules(ModuleFilter filter, int offset, int limit, Sort orderBy) {
+    return moduleService.findAll(filter.build(), offset, limit, orderBy);
   }
 
   public ModuleConnection modulesConnection(
@@ -36,5 +41,22 @@ public class ModuleGraphQLRootResolver implements GraphQLMutationResolver, Graph
 
   public Optional<Module> module(Long id) {
     return moduleService.findById(id);
+  }
+
+  public Module createModule(ModuleCreateInput input) {
+    return moduleService.save(moduleConverter.toModule(input));
+  }
+
+  public Module updateModule(Long id, Boolean merge, ModuleUpdateInput input) {
+    return moduleService.update(id, moduleConverter.toModule(input), merge);
+  }
+
+  public Boolean deleteModule(Long id) {
+    this.moduleService.delete(id);
+    return Boolean.TRUE;
+  }
+
+  public int deleteManyModules(Long[] ids) {
+    return this.moduleService.delete(ids);
   }
 }

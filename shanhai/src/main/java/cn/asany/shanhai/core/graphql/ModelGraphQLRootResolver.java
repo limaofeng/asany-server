@@ -52,15 +52,19 @@ public class ModelGraphQLRootResolver implements GraphQLMutationResolver, GraphQ
     return modelService.delete(ids);
   }
 
-  public List<Model> models(ModelFilter filter, int offset, int limit, Sort orderBy) {
+  public List<Model> models(Long module, ModelFilter filter, int offset, int limit, Sort orderBy) {
     Pageable pageable = PageRequest.of(offset / limit, limit, orderBy);
-    return modelService.findPage(pageable, filter.build()).getContent();
+    return modelService
+        .findPage(pageable, filter.getBuilder().equal("module.id", module).build())
+        .getContent();
   }
 
   public ModelConnection modelsConnection(
-      ModelFilter filter, int page, int pageSize, Sort orderBy) {
+      Long module, ModelFilter filter, int page, int pageSize, Sort orderBy) {
     Pageable pageable = PageRequest.of(page - 1, pageSize, orderBy);
-    return Kit.connection(modelService.findPage(pageable, filter.build()), ModelConnection.class);
+    return Kit.connection(
+        modelService.findPage(pageable, filter.getBuilder().equal("module.id", module).build()),
+        ModelConnection.class);
   }
 
   public Optional<Model> model(String id, ModelIdType idType) {

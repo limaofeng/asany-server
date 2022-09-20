@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -24,5 +25,25 @@ public class ModuleService {
 
   public Optional<Module> findById(Long id) {
     return this.moduleDao.findById(id);
+  }
+
+  public List<Module> findAll(List<PropertyFilter> filters, int offset, int limit, Sort sort) {
+    return this.moduleDao.findAll(filters, offset, limit, sort);
+  }
+
+  public Module save(Module module) {
+    return this.moduleDao.save(module);
+  }
+
+  public Module update(Long id, Module module, boolean merge) {
+    module.setId(id);
+    return this.moduleDao.update(module, merge);
+  }
+
+  public int delete(Long... ids) {
+    for (Long id : ids) {
+      this.moduleDao.deleteById(id);
+    }
+    return ids.length;
   }
 }

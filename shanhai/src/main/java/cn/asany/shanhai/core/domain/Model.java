@@ -145,6 +145,11 @@ public class Model extends BaseBusEntity implements ModelGroupResource {
   @JoinColumn(name = "SERVICE_ID", foreignKey = @ForeignKey(name = "FK_MODEL_SID"))
   @ToString.Exclude
   private Service service;
+  /** 模块 */
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "MODULE_ID", foreignKey = @ForeignKey(name = "FK_MODEL_MODULE_ID"))
+  @ToString.Exclude
+  private Module module;
 
   @Transient
   public void connect(Model model, ModelConnectType connectType) {
