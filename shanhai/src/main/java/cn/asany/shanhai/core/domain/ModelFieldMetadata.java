@@ -36,9 +36,6 @@ public class ModelFieldMetadata implements Serializable {
   /** 数据库中的列表名称 */
   @Column(name = "DATABASE_COLUMN_NAME", length = 100)
   private String databaseColumnName;
-  /** 字段类型简 */
-  @Column(name = "FIELD_TYPE_BREVITY_CODE", length = 100)
-  private String fieldType;
   /** 是否唯一 */
   @Column(name = "IS_UNIQUE", length = 1)
   private Boolean unique;
@@ -50,6 +47,10 @@ public class ModelFieldMetadata implements Serializable {
   @Builder.Default
   @Column(name = "UPDATABLE", length = 1)
   private Boolean updatable = true;
+  /** 可排序 */
+  @Builder.Default
+  @Column(name = "SORTABLE", length = 1)
+  private Boolean sortable = true;
 
   /** 字段支持的筛选方式 */
   @Column(name = "FILTERS", columnDefinition = "JSON")

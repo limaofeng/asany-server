@@ -27,6 +27,14 @@ public class MasterModelFeature implements IModelFeature, InitializingBean {
   public static final String ID = "master";
   private String id = ID;
 
+  public static final String SUFFIX_INPUT_WHERE = "WhereInput";
+  public static final String SUFFIX_INPUT_CREATE = "CreateInput";
+  public static final String SUFFIX_INPUT_UPDATE = "UpdateInput";
+
+  public static final String SUFFIX_ENUM_ORDER_BY = "OrderBy";
+
+  public static final String SUFFIX_TYPE_CONNECTION = "Connection";
+
   private final FieldTypeRegistry fieldTypeRegistry;
 
   private List<RuleAndReplacement> plurals = new ArrayList<>();
@@ -65,7 +73,7 @@ public class MasterModelFeature implements IModelFeature, InitializingBean {
                     .code(item.getCode())
                     .name(item.getName())
                     .list(item.getList())
-                    .type(item.getType())
+                    .type(item.getRealType().getCode())
                     .build())
         .collect(Collectors.toSet());
   }
@@ -75,23 +83,23 @@ public class MasterModelFeature implements IModelFeature, InitializingBean {
   }
 
   private static String getCreateInputTypeName(Model model) {
-    return model.getCode() + "CreateInput";
+    return model.getCode() + SUFFIX_INPUT_CREATE;
   }
 
   private static String getUpdateInputTypeName(Model model) {
-    return model.getCode() + "UpdateInput";
+    return model.getCode() + SUFFIX_INPUT_UPDATE;
   }
 
   private static String getWhereInputTypeName(Model model) {
-    return model.getCode() + "WhereInput";
+    return model.getCode() + SUFFIX_INPUT_WHERE;
   }
 
   private static String getOrderByTypeName(Model model) {
-    return model.getCode() + "OrderBy";
+    return model.getCode() + SUFFIX_ENUM_ORDER_BY;
   }
 
   private static String getConnectionTypeName(Model model) {
-    return model.getCode() + "Connection";
+    return model.getCode() + SUFFIX_TYPE_CONNECTION;
   }
 
   private Set<ModelField> buildWhereFields(Model model) {
@@ -121,13 +129,14 @@ public class MasterModelFeature implements IModelFeature, InitializingBean {
         model.getFields().stream()
             .filter(item -> !item.getSystem() && !item.getPrimaryKey())
             .collect(Collectors.toList())) {
-      if (field.getType().getType() == ModelType.SCALAR) {
+      if (field.getRealType().getType() == ModelType.SCALAR) {
         for (MatchType matchType : field.getMetadata().getFilters()) {
           String fieldName =
               matchType == MatchType.EQ
                   ? field.getCode()
                   : field.getCode() + "_" + matchType.getSlug();
-          fields.add(ModelField.builder().code(fieldName).type(field.getType()).build());
+          fields.add(
+              ModelField.builder().code(fieldName).type(field.getRealType().getCode()).build());
         }
       }
     }
@@ -139,7 +148,7 @@ public class MasterModelFeature implements IModelFeature, InitializingBean {
     fields.add(
         ModelField.builder()
             .code("node")
-            .type(model)
+            .type(model.getCode())
             .required(true)
             .name("The item at the end of the edge.")
             .build());
@@ -159,15 +168,22 @@ public class MasterModelFeature implements IModelFeature, InitializingBean {
         model.getFields().stream()
             .filter(item -> !item.getPrimaryKey())
             .collect(Collectors.toList())) {
+
+      if (!field.getMetadata().getSortable()) {
+        continue;
+      }
+
       fields.add(
           ModelField.builder()
               .code(field.getCode() + "_ASC")
               .name(field.getName() + " 升序")
+              .type(field.getRealType().getCode())
               .build());
       fields.add(
           ModelField.builder()
               .code(field.getCode() + "_DESC")
               .name(field.getName() + " 降序")
+              .type(field.getRealType().getCode())
               .build());
     }
     return fields;
@@ -287,9 +303,9 @@ public class MasterModelFeature implements IModelFeature, InitializingBean {
             .type(ModelEndpointType.MUTATION)
             .code("update" + StringUtil.upperCaseFirst(model.getCode()))
             .name("修改" + model.getName())
-            .argument("id", FieldType.ID.getCode(), true)
+            .argument("id", FieldType.ID, true)
             .argument("input", getUpdateInputTypeName(model), true)
-            .argument("merge", FieldType.Boolean.getCode(), "启用合并模式", true)
+            .argument("merge", FieldType.Boolean, "启用合并模式", true)
             .returnType(model)
             .model(model)
             .delegate(BaseMutationUpdateDataFetcher.class)
@@ -304,7 +320,7 @@ public class MasterModelFeature implements IModelFeature, InitializingBean {
             .type(ModelEndpointType.MUTATION)
             .code("delete" + StringUtil.upperCaseFirst(model.getCode()))
             .name("删除" + model.getName())
-            .argument("id", FieldType.ID.getCode(), true)
+            .argument("id", FieldType.ID, true)
             .returnType(model)
             .model(model)
             .delegate(BaseMutationDeleteDataFetcher.class)
@@ -319,7 +335,7 @@ public class MasterModelFeature implements IModelFeature, InitializingBean {
             .type(ModelEndpointType.QUERY)
             .code(StringUtil.lowerCaseFirst(model.getCode()))
             .name("获取" + model.getName())
-            .argument("id", FieldType.ID.getCode(), true)
+            .argument("id", FieldType.ID, true)
             .returnType(model)
             .model(model)
             .delegate(BaseQueryGetDataFetcher.class)

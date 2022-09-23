@@ -6,10 +6,12 @@ import cn.asany.shanhai.core.domain.ModelField;
 import cn.asany.shanhai.core.graphql.inputs.ModelCreateInput;
 import cn.asany.shanhai.core.graphql.inputs.ModelFieldInput;
 import cn.asany.shanhai.core.graphql.inputs.ModelUpdateInput;
+import cn.asany.shanhai.core.support.model.FieldTypeRegistry;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.mapstruct.*;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * 项目 转换器
@@ -21,7 +23,9 @@ import org.mapstruct.*;
     builder = @Builder(disableBuilder = true),
     unmappedTargetPolicy = ReportingPolicy.IGNORE,
     nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
-public interface ModelConverter {
+public abstract class ModelConverter {
+
+  @Autowired private FieldTypeRegistry fieldTypeRegistry;
 
   /**
    * 将 ModelCreateInput 转换为 Model
@@ -33,10 +37,10 @@ public interface ModelConverter {
     @Mapping(source = "fields", target = "fields", qualifiedByName = "toFields"),
     @Mapping(source = "features", target = "features", qualifiedByName = "toFeatures"),
   })
-  Model toModel(ModelCreateInput input);
+  public abstract Model toModel(ModelCreateInput input);
 
   @Named("toFields")
-  default Set<ModelField> toFields(Set<ModelFieldInput> fields) {
+  Set<ModelField> toFields(Set<ModelFieldInput> fields) {
     if (fields == null) {
       return new HashSet<>();
     }
@@ -44,17 +48,13 @@ public interface ModelConverter {
   }
 
   @Mappings({
-    @Mapping(source = "type", target = "type", qualifiedByName = "toModelType"),
+    @Mapping(source = "type", target = "type"),
+    @Mapping(source = "databaseColumnName", target = "metadata.databaseColumnName"),
   })
-  ModelField toField(ModelFieldInput input);
-
-  @Named("toModelType")
-  default Model toFields(String type) {
-    return Model.builder().code(type).build();
-  }
+  public abstract ModelField toField(ModelFieldInput input);
 
   @Named("toFeatures")
-  default Set<ModelFeature> toFeatures(Set<String> features) {
+  Set<ModelFeature> toFeatures(Set<String> features) {
     return features.stream()
         .map(item -> ModelFeature.builder().id(item).build())
         .collect(Collectors.toSet());
@@ -70,5 +70,5 @@ public interface ModelConverter {
     @Mapping(source = "fields", target = "fields", qualifiedByName = "toFields"),
     @Mapping(source = "features", target = "features", qualifiedByName = "toFeatures"),
   })
-  Model toModel(ModelUpdateInput input);
+  public abstract Model toModel(ModelUpdateInput input);
 }

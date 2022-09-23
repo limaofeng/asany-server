@@ -147,7 +147,10 @@ public class Model extends BaseBusEntity implements ModelGroupResource {
   private Service service;
   /** 模块 */
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "MODULE_ID", foreignKey = @ForeignKey(name = "FK_MODEL_MODULE_ID"))
+  @JoinColumn(
+      name = "MODULE_ID",
+      updatable = false,
+      foreignKey = @ForeignKey(name = "FK_MODEL_MODULE_ID"))
   @ToString.Exclude
   private Module module;
 
@@ -215,7 +218,7 @@ public class Model extends BaseBusEntity implements ModelGroupResource {
       return this;
     }
 
-    public ModelBuilder field(Long id, String code, String name, Model type) {
+    public ModelBuilder field(Long id, String code, String name, String type) {
       if (this.fields == null) {
         this.fields = new HashSet<>();
       }
@@ -229,7 +232,7 @@ public class Model extends BaseBusEntity implements ModelGroupResource {
         this.fields = new HashSet<>();
       }
       ModelField.ModelFieldBuilder fieldBuilder =
-          ModelField.builder().id(id).code(code).name(name).type(type);
+          ModelField.builder().id(id).code(code).name(name).type(type.getCode()).realType(type);
       for (GraphQLFieldArgument argument : arguments) {
         fieldBuilder =
             fieldBuilder.argument(argument.getId(), argument.getType(), argument.getDescription());
@@ -257,6 +260,11 @@ public class Model extends BaseBusEntity implements ModelGroupResource {
       return this;
     }
 
+    public ModelBuilder module(Long moduleId) {
+      this.module = Module.builder().id(moduleId).build();
+      return this;
+    }
+
     public ModelBuilder field(String code, String name, String type) {
       if (this.fields == null) {
         this.fields = new HashSet<>();
@@ -269,7 +277,8 @@ public class Model extends BaseBusEntity implements ModelGroupResource {
       if (this.fields == null) {
         this.fields = new HashSet<>();
       }
-      this.fields.add(ModelField.builder().code(code).name(name).type(type).build());
+      this.fields.add(
+          ModelField.builder().code(code).name(name).type(type.getCode()).realType(type).build());
       return this;
     }
 

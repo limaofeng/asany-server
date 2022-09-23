@@ -53,12 +53,68 @@ class ModelServiceTest {
   }
 
   @Test
+  public void testAccount() {
+    Model model =
+        Model.builder()
+            .code("Account")
+            .name("账户")
+            .module(0L)
+            .field("code", "编码", "single_line_text")
+            .field("name", "名称", "single_line_text")
+            .features(IModelFeature.MASTER_MODEL, IModelFeature.SYSTEM_FIELDS)
+            .build();
+    modelService.save(model);
+  }
+
+  @Test
+  public void deleteAccount() {
+    Optional<Model> optionalAccount = this.modelService.findByCode("Account");
+    if (!optionalAccount.isPresent()) {
+      return;
+    }
+    modelService.delete(optionalAccount.get().getId());
+  }
+
+  @Test
+  public void testCreateAccountField() {
+    Optional<Model> modelOptional = this.modelService.findByCode("Account");
+    assert modelOptional.isPresent();
+    Model model = modelOptional.get();
+    this.modelService.addField(
+        model.getId(),
+        ModelField.builder()
+            .code("balance")
+            .name("余额")
+            .type("float")
+            .metadata("F_BALANCE")
+            .build());
+  }
+
+  @Test
+  public void deleteAccountField() {
+    Optional<Model> optionalAccount = this.modelService.findByCode("Account");
+    if (!optionalAccount.isPresent()) {
+      return;
+    }
+    modelService.removeField(optionalAccount.get().getId(), 10512L);
+  }
+
+  @Test
   public void testCreateModelField() {
     Optional<Model> modelOptional = this.modelService.findByCode("Employee");
     assert modelOptional.isPresent();
     Model model = modelOptional.get();
     this.modelService.addField(
         model.getId(), ModelField.builder().code("name").name("名称").type("String").build());
+  }
+
+  @Test
+  public void deleteEmployee() {
+    Optional<Model> optionalAccount = this.modelService.findByCode("Employee");
+    if (!optionalAccount.isPresent()) {
+      return;
+    }
+    modelService.delete(optionalAccount.get().getId());
   }
 
   @Test
@@ -79,8 +135,8 @@ class ModelServiceTest {
     Model model =
         Model.builder()
             .id(original.getId())
-            .code("Employee")
-            .name("员工")
+            .code("Account")
+            .name("账户")
             .field(nameField.getId(), "name", "名称", FieldType.String)
             .field("age", "年龄", FieldType.Int)
             .features(IModelFeature.MASTER_MODEL)

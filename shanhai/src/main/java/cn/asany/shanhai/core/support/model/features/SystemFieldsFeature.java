@@ -36,7 +36,7 @@ public class SystemFieldsFeature implements IModelFeature {
             .name("创建人")
             .system(true)
             .sort(2)
-            .metadata(true, false)
+            .metadata(true, false, false)
             .type(FieldType.Int)
             .build());
     fields.add(
@@ -54,6 +54,7 @@ public class SystemFieldsFeature implements IModelFeature {
             .name("修改人")
             .system(true)
             .sort(4)
+            .metadata(true, false, false)
             .type(FieldType.Int)
             .build());
     fields.add(

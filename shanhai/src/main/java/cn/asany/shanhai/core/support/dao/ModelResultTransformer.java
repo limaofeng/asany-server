@@ -17,14 +17,14 @@ import org.jfantasy.framework.util.ognl.OgnlUtil;
 public class ModelResultTransformer implements ResultTransformer {
 
   private Collection<ModelField> fields;
-  private OgnlUtil ognlUtil;
-  private Map<String, AttributeConverter> converterMap = new ConcurrentHashMap<>();
+  private final OgnlUtil ognlUtil;
+  private final Map<String, AttributeConverter> converterMap = new ConcurrentHashMap<>();
 
   public ModelResultTransformer(Collection<ModelField> fields) {
     FieldTypeRegistry registry = SpringBeanUtils.getBeanByType(FieldTypeRegistry.class);
     this.fields = fields;
     for (ModelField field : fields) {
-      AttributeConverter<?, ?> type = registry.getType(field.getType().getCode());
+      AttributeConverter<?, ?> type = registry.getType(field.getType());
       converterMap.put(field.getCode(), type);
     }
     ognlUtil = OgnlUtil.getInstance();

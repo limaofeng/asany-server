@@ -119,6 +119,10 @@ input ModelFieldInput {
   默认值
   """
   defaultValue: String
+  """
+  数据库字段名
+  """
+  databaseColumnName: String
 }
 
 input ModelFilter {
@@ -133,6 +137,13 @@ input ModelFilter {
   AND: [ModelFilter]
   OR: [ModelFilter]
   NOT: [ModelFilter]
+}
+
+input ModelFieldFilter {
+  code: String
+  code_contains: String
+  name: String
+  name_contains: String
 }
 
 type ModelConnection {
@@ -249,9 +260,9 @@ type Model {
 
 type ModelFieldMetadata {
   """
-  配置模型时，选择的字段类型
+  数据库字段名
   """
-  fieldType: String
+  databaseColumnName: String
 }
 
 type ModelField {
@@ -271,11 +282,7 @@ type ModelField {
   """
   类型
   """
-  type: Model!
-  """
-  字段类型
-  """
-  fieldType: ModelFiledType!
+  type: ModelFiledType!
   """
   必填
   """
@@ -441,7 +448,7 @@ type Module {
   """
   图片
   """
-  picture: File
+  picture: File @fileFormat
   """
   描述
   """
@@ -526,6 +533,16 @@ extend type Query {
   """
   model(id: ID, idType: ModelIdType = id): Model
   """
+  查询模型的字段
+  """
+  modelFields(
+    model: ID!
+    filter: ModelFieldFilter = {}
+    offset: Int = 0
+    limit: Int = 15
+    orderBy: OrderBy = "sort_asc"
+  ): [ModelField!]!
+  """
   查询单个接口
   """
   endpoint(id: ID, idType: EndpointIdType = id): ModelField
@@ -593,6 +610,36 @@ extend type Mutation {
     """
     input: ModelFieldInput!
   ): ModelField
+  """
+  更新实体字段
+  """
+  updateModelField(
+    """
+    实体 ID
+    """
+    modelId: ID!
+    """
+    字段 ID
+    """
+    fieldId: ID!
+    """
+    模型字段
+    """
+    input: ModelFieldInput!
+  ): ModelField
+  """
+  删除实体字段
+  """
+  removeModelField(
+    """
+    实体 ID
+    """
+    modelId: ID!
+    """
+    字段 ID
+    """
+    fieldId: ID!
+  ): Boolean
   """
   修改实体
   """

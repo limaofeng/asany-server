@@ -21,17 +21,17 @@ public interface FieldType<JAVA, DB> extends AttributeConverter<JAVA, DB> {
   Model Mutation =
       Model.builder().type(ModelType.OBJECT).id(2L).code("Mutation").name("Mutation").build();
   /** ID */
-  Model ID = Model.builder().type(ModelType.SCALAR).id(3L).code("ID").name("ID").build();
+  String ID = "ID";
   /** 整数型 */
-  Model Int = Model.builder().type(ModelType.SCALAR).id(4L).code("Int").name("整数型").build();
+  String Int = "Int";
   /** 浮点型 */
-  Model Float = Model.builder().type(ModelType.SCALAR).id(5L).code("Float").name("浮点型").build();
+  String Float = "Float";
   /** 字符串 */
-  Model String = Model.builder().type(ModelType.SCALAR).id(6L).code("String").name("字符串").build();
+  String String = "String";
   /** 布尔型 */
-  Model Boolean = Model.builder().type(ModelType.SCALAR).id(7L).code("Boolean").name("布尔型").build();
+  String Boolean = "Boolean";
   /** 日期 */
-  Model Date = Model.builder().type(ModelType.SCALAR).id(8L).code("Date").name("日期").build();
+  String Date = "Date";
 
   String getId();
 

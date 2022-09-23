@@ -66,12 +66,19 @@ public class ModelUtils {
   public static final Set<Model> DEFAULT_SCALARS = new HashSet<>();
 
   static {
-    DEFAULT_SCALARS.add(FieldType.ID);
-    DEFAULT_SCALARS.add(FieldType.Int);
-    DEFAULT_SCALARS.add(FieldType.Float);
-    DEFAULT_SCALARS.add(FieldType.String);
-    DEFAULT_SCALARS.add(FieldType.Boolean);
-    DEFAULT_SCALARS.add(FieldType.Date);
+    Model ID = Model.builder().type(ModelType.SCALAR).id(3L).code("ID").name("ID").build();
+    Model Int = Model.builder().type(ModelType.SCALAR).id(4L).code("Int").name("整数型").build();
+    Model Float = Model.builder().type(ModelType.SCALAR).id(5L).code("Float").name("浮点型").build();
+    Model String = Model.builder().type(ModelType.SCALAR).id(6L).code("String").name("字符串").build();
+    Model Boolean =
+        Model.builder().type(ModelType.SCALAR).id(7L).code("Boolean").name("布尔型").build();
+    Model Date = Model.builder().type(ModelType.SCALAR).id(8L).code("Date").name("日期").build();
+    DEFAULT_SCALARS.add(ID);
+    DEFAULT_SCALARS.add(Int);
+    DEFAULT_SCALARS.add(Float);
+    DEFAULT_SCALARS.add(String);
+    DEFAULT_SCALARS.add(Boolean);
+    DEFAULT_SCALARS.add(Date);
     DEFAULT_TYPES.addAll(DEFAULT_SCALARS);
     DEFAULT_TYPES.add(FieldType.Query);
     DEFAULT_TYPES.add(FieldType.Mutation);
@@ -174,6 +181,10 @@ public class ModelUtils {
     if (!ObjectUtil.exists(model.getFields(), "code", field.getCode())) {
       field.setModel(model);
     }
+    if (field.getSort() == null) {
+      Set<ModelField> nonSystemFields = ObjectUtil.filter(model.getFields(), "system", false);
+      field.setSort(ObjectUtil.indexOf(nonSystemFields, "code", field.getCode()));
+    }
     field.setPrimaryKey(ObjectUtil.defaultValue(field.getPrimaryKey(), Boolean.FALSE));
     field.setCode(
         ObjectUtil.defaultValue(
@@ -193,18 +204,18 @@ public class ModelUtils {
       return field;
     }
 
-    if (field.getType().getId() == null) {
-      Optional<Model> type = getModelByCode(field.getType().getCode());
-      if (!type.isPresent()) {
-        throw new TypeNotFoundException(field.getType().getCode());
-      }
-      field.setType(type.get());
-    }
+    FieldType fieldType = fieldTypeRegistry.getType(field.getType());
 
+    Optional<Model> realType = getModelByCode(fieldType.getGraphQLType());
+    field.setRealType(realType.orElseThrow(() -> new TypeNotFoundException(field.getType())));
+
+    if (field.getArguments() == null) {
+      field.setArguments(new HashSet<>());
+    }
     for (ModelFieldArgument argument : field.getArguments()) {
       Optional<Model> type = getModelByCode(argument.getType().getCode());
       if (!type.isPresent()) {
-        throw new TypeNotFoundException(field.getType().getCode());
+        throw new TypeNotFoundException(field.getType());
       }
       argument.setType(type.get());
     }
@@ -222,8 +233,8 @@ public class ModelUtils {
       metadata.setDatabaseColumnName(StringUtil.snakeCase(field.getCode()).toUpperCase());
     }
 
-    if (metadata.getFilters() == null && field.getType().getType() == ModelType.SCALAR) {
-      metadata.setFilters(fieldTypeRegistry.getType(field.getType().getCode()).filters());
+    if (metadata.getFilters() == null && field.getRealType().getType() == ModelType.SCALAR) {
+      metadata.setFilters(fieldTypeRegistry.getType(field.getType()).filters());
     }
 
     metadata.setField(field);
@@ -268,10 +279,12 @@ public class ModelUtils {
 
   public ModelField generatePrimaryKeyField() {
     return ModelField.builder()
-        .code(FieldType.ID.getCode().toLowerCase())
-        .name(FieldType.ID.getCode())
+        .code(FieldType.ID.toLowerCase())
+        .name(FieldType.ID)
         .type(FieldType.ID)
         .sort(0)
+        .required(true)
+        .unique(true)
         .system(true)
         .primaryKey(true)
         .build();

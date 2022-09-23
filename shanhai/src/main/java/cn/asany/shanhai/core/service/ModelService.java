@@ -6,6 +6,8 @@ import cn.asany.shanhai.core.domain.enums.ModelRelationType;
 import cn.asany.shanhai.core.domain.enums.ModelStatus;
 import cn.asany.shanhai.core.domain.enums.ModelType;
 import cn.asany.shanhai.core.runners.InitModelDaoCommandLineRunner;
+import cn.asany.shanhai.core.support.model.features.MasterModelFeature;
+import cn.asany.shanhai.core.utils.DuplicateFieldException;
 import cn.asany.shanhai.core.utils.ModelUtils;
 import cn.asany.shanhai.core.utils.TypeNotFoundException;
 import cn.asany.shanhai.gateway.domain.ModelGroupItem;
@@ -280,8 +282,21 @@ public class ModelService {
     return ids.length;
   }
 
+  @Transactional
   public void delete(Long id) {
-    this.modelDao.delete(this.modelDao.getReferenceById(id));
+    Model model = this.modelDao.getReferenceById(id);
+
+    Set<ModelEndpoint> endpoints = model.getEndpoints();
+    this.modelEndpointDao.deleteAll(endpoints);
+
+    Set<ModelRelation> relations = model.getRelations();
+    for (ModelRelation relation : relations) {
+      Model inverse = relation.getInverse();
+      this.modelRelationDao.delete(relation);
+      this.modelDao.delete(inverse);
+    }
+
+    this.modelDao.delete(model);
   }
 
   private void aggregate(
@@ -479,6 +494,18 @@ public class ModelService {
   public ModelField addField(Long modelId, ModelField field) {
     ModelUtils modelUtils = ModelUtils.getInstance();
     Model model = this.modelDao.getReferenceById(modelId);
+    if (ObjectUtil.exists(model.getFields(), "code", field.getCode())) {
+      throw new DuplicateFieldException("code", field.getCode());
+    }
+    if (ObjectUtil.exists(model.getFields(), "name", field.getName())) {
+      throw new DuplicateFieldException("name", field.getCode());
+    }
+    String databaseColumnName =
+        field.getMetadata() == null ? null : field.getMetadata().getDatabaseColumnName();
+    if (databaseColumnName != null
+        && ObjectUtil.exists(model.getFields(), "DatabaseColumnName", databaseColumnName)) {
+      throw new DuplicateFieldException("name", databaseColumnName);
+    }
     ModelField newField = modelUtils.install(model, field);
     this.modelDao.save(model);
     Set<ModelFeature> features = model.getFeatures();
@@ -487,5 +514,54 @@ public class ModelService {
       modelUtils.reinstall(model, feature);
     }
     return newField;
+  }
+
+  @Transactional(readOnly = true)
+  public List<ModelField> listModelFields(
+      List<PropertyFilter> filters, int offset, int limit, Sort sort) {
+    return this.modelFieldDao.findAll(filters, offset, limit, sort);
+  }
+
+  @Transactional
+  public ModelField updateField(Long id, Long fieldId, ModelField field) {
+    return null;
+  }
+
+  @Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class)
+  public void removeField(Long id, Long fieldId) {
+    Model model = this.modelDao.getReferenceById(id);
+    ModelField field = ObjectUtil.remove(model.getFields(), "id", fieldId);
+    Set<ModelRelation> relations = model.getRelations();
+    List<ModelField> allDeleteFields = new ArrayList<>();
+    for (ModelRelation relation : relations) {
+      Model inverse = relation.getInverse();
+      boolean isWhereType = inverse.getCode().endsWith(MasterModelFeature.SUFFIX_INPUT_WHERE);
+      boolean isUpdateType = inverse.getCode().endsWith(MasterModelFeature.SUFFIX_INPUT_UPDATE);
+      boolean isCreateType = inverse.getCode().endsWith(MasterModelFeature.SUFFIX_INPUT_CREATE);
+      if (inverse.getType() == ModelType.INPUT_OBJECT) {
+        if (isWhereType) {
+          allDeleteFields.addAll(
+              inverse.getFields().stream()
+                  .filter(
+                      item ->
+                          item.getCode().startsWith(field.getCode() + "_")
+                              || item.getCode().equals(field.getCode()))
+                  .collect(Collectors.toList()));
+        } else if (isUpdateType || isCreateType) {
+          allDeleteFields.addAll(
+              inverse.getFields().stream()
+                  .filter(item -> item.getCode().equals(field.getCode()))
+                  .collect(Collectors.toList()));
+        }
+      } else if (inverse.getType() == ModelType.ENUM) {
+        allDeleteFields.addAll(
+            inverse.getFields().stream()
+                .filter(item -> item.getCode().startsWith(field.getCode() + "_"))
+                .collect(Collectors.toList()));
+      }
+      allDeleteFields.forEach(inverse.getFields()::remove);
+    }
+    allDeleteFields.add(field);
+    this.modelFieldDao.deleteAll(allDeleteFields);
   }
 }

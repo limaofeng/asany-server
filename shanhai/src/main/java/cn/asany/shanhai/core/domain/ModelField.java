@@ -2,9 +2,11 @@ package cn.asany.shanhai.core.domain;
 
 import cn.asany.shanhai.gateway.domain.ModelGroupResource;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import javax.persistence.*;
 import lombok.*;
+import org.hibernate.Hibernate;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.LazyToOne;
 import org.hibernate.annotations.LazyToOneOption;
@@ -16,14 +18,12 @@ import org.jfantasy.framework.jackson.JSON;
  *
  * @author limaofeng
  */
-@Data
+@Getter
+@Setter
+@ToString
+@RequiredArgsConstructor
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(
-    callSuper = false,
-    of = {"id", "code"})
-@ToString(of = "id")
 @Entity
 @NamedEntityGraph(
     name = "Graph.ModelField.FetchModelAndType",
@@ -66,20 +66,24 @@ public class ModelField extends BaseBusEntity implements ModelGroupResource {
   @Column(name = "IS_PRIMARY_KEY", length = 10, nullable = false)
   private Boolean primaryKey = false;
   /** 字段类型 */
+  @Column(name = "TYPE", length = 50, nullable = false)
+  private String type;
+  /** 关联的具体字段类型 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "TYPE_ID", foreignKey = @ForeignKey(name = "FK_MODEL_FIELD_TID"))
-  private Model type;
+  @ToString.Exclude
+  private Model realType;
   /** 是否唯一 */
   @Builder.Default
   @Column(name = "IS_UNIQUE", length = 1)
   private Boolean unique = false;
   /** 存储值为列表，而不是单个值 */
   @Builder.Default
-  @Column(name = "IS_LIST", length = 1)
+  @Column(name = "IS_LIST", length = 1, updatable = false)
   private Boolean list = false;
   /** 是否系统字段 */
   @Builder.Default
-  @Column(name = "IS_SYSTEM", length = 1)
+  @Column(name = "IS_SYSTEM", updatable = false, length = 1)
   private Boolean system = false;
   /** 序号 */
   @Column(name = "SORT")
@@ -91,6 +95,7 @@ public class ModelField extends BaseBusEntity implements ModelGroupResource {
       foreignKey = @ForeignKey(name = "FK_MODEL_FIELD_MODEL_ID"),
       nullable = false)
   @LazyToOne(LazyToOneOption.NO_PROXY)
+  @ToString.Exclude
   private Model model;
   /** 元数据 */
   @OneToOne(
@@ -100,12 +105,14 @@ public class ModelField extends BaseBusEntity implements ModelGroupResource {
   /** 委派 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "DELEGATE_ID", foreignKey = @ForeignKey(name = "FK_MODEL_FIELD_DID"))
+  @ToString.Exclude
   private ModelDelegate delegate;
   /** 参数 */
   @OneToMany(
       mappedBy = "field",
       cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE},
       fetch = FetchType.LAZY)
+  @ToString.Exclude
   private Set<ModelFieldArgument> arguments;
 
   public static class ModelFieldBuilder {
@@ -120,18 +127,23 @@ public class ModelField extends BaseBusEntity implements ModelGroupResource {
       return this;
     }
 
+    public ModelFieldBuilder metadata(boolean insertable, boolean updatable, boolean sortable) {
+      this.metadata =
+          ModelFieldMetadata.builder()
+              .insertable(insertable)
+              .updatable(updatable)
+              .sortable(sortable)
+              .build();
+      return this;
+    }
+
     public ModelFieldBuilder metadata(String columnName) {
       this.metadata = ModelFieldMetadata.builder().databaseColumnName(columnName).build();
       return this;
     }
 
-    public ModelFieldBuilder type(String id) {
-      this.type = Model.builder().code(id).build();
-      return this;
-    }
-
-    public ModelFieldBuilder type(Model type) {
-      this.type = type;
+    public ModelFieldBuilder realType(Model type) {
+      this.realType = type;
       return this;
     }
 
@@ -215,5 +227,18 @@ public class ModelField extends BaseBusEntity implements ModelGroupResource {
               .build());
       return this;
     }
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+    ModelField field = (ModelField) o;
+    return id != null && Objects.equals(id, field.id);
+  }
+
+  @Override
+  public int hashCode() {
+    return getClass().hashCode();
   }
 }

@@ -5,10 +5,7 @@ import cn.asany.shanhai.core.domain.Model;
 import cn.asany.shanhai.core.domain.ModelField;
 import cn.asany.shanhai.core.graphql.enums.EndpointIdType;
 import cn.asany.shanhai.core.graphql.enums.ModelIdType;
-import cn.asany.shanhai.core.graphql.inputs.ModelCreateInput;
-import cn.asany.shanhai.core.graphql.inputs.ModelFieldInput;
-import cn.asany.shanhai.core.graphql.inputs.ModelFilter;
-import cn.asany.shanhai.core.graphql.inputs.ModelUpdateInput;
+import cn.asany.shanhai.core.graphql.inputs.*;
 import cn.asany.shanhai.core.graphql.types.ModelConnection;
 import cn.asany.shanhai.core.service.ModelService;
 import graphql.kickstart.tools.GraphQLMutationResolver;
@@ -81,8 +78,24 @@ public class ModelGraphQLRootResolver implements GraphQLMutationResolver, GraphQ
     return modelService.findEndpointByCode(id);
   }
 
-  public ModelField addModelField(Long id, ModelFieldInput input) {
+  public ModelField addModelField(Long modelId, ModelFieldInput input) {
     ModelField field = this.modelConverter.toField(input);
-    return modelService.addField(id, field);
+    return modelService.addField(modelId, field);
+  }
+
+  public ModelField updateModelField(Long modelId, Long fieldId, ModelFieldInput input) {
+    ModelField field = this.modelConverter.toField(input);
+    return modelService.updateField(modelId, fieldId, field);
+  }
+
+  public Boolean removeModelField(Long modelId, Long fieldId) {
+    modelService.removeField(modelId, fieldId);
+    return Boolean.TRUE;
+  }
+
+  public List<ModelField> modelFields(
+      Long model, ModelFieldFilter filter, int offset, int limit, Sort sort) {
+    return modelService.listModelFields(
+        filter.getBuilder().equal("model.id", model).build(), offset, limit, sort);
   }
 }

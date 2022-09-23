@@ -5,6 +5,7 @@ import cn.asany.shanhai.core.domain.ModelField;
 import cn.asany.shanhai.core.domain.enums.ModelType;
 import cn.asany.shanhai.core.support.model.FieldType;
 import cn.asany.shanhai.core.support.model.FieldTypeRegistry;
+import java.util.Optional;
 import lombok.AllArgsConstructor;
 import org.jfantasy.framework.spring.SpringBeanUtils;
 import org.jfantasy.framework.util.common.ObjectUtil;
@@ -27,7 +28,7 @@ public class TemplateDataOfModelField {
 
   public String getJavaType() {
     FieldTypeRegistry registry = SpringBeanUtils.getBeanByType(FieldTypeRegistry.class);
-    FieldType type = registry.getType(this.field.getType().getCode());
+    FieldType type = registry.getType(this.field.getType());
     return type.getJavaType(this.field.getMetadata());
   }
 
@@ -41,13 +42,15 @@ public class TemplateDataOfModelField {
 
   public String getHibernateType() {
     FieldTypeRegistry registry = SpringBeanUtils.getBeanByType(FieldTypeRegistry.class);
-    FieldType type = registry.getType(this.field.getType().getCode());
+    FieldType type = registry.getType(this.field.getType());
     return type.getHibernateType(this.field.getMetadata());
   }
 
   public String getGraphQLType() {
     ModelUtils modelUtils = ModelUtils.getInstance();
-    Model modelType = modelUtils.getModelById(this.field.getType().getId()).get();
+    Optional<Model> modelOptional = modelUtils.getModelById(this.field.getRealType().getId());
+    Model modelType =
+        modelOptional.orElseThrow(() -> new TypeNotFoundException(this.field.getCode()));
     String graphQLType = modelType.getCode();
     if (modelType.getType() == ModelType.SCALAR) {
       FieldTypeRegistry registry = SpringBeanUtils.getBeanByType(FieldTypeRegistry.class);
