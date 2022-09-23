@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.33](https://github.com/limaofeng/asany-server/compare/v0.1.32...v0.1.33) (2022-09-23)
+
+
+### Features
+
+* 实体字段删除 ([0975cde](https://github.com/limaofeng/asany-server/commit/0975cde4b2bc4f8a01472fd033a33e2a24113d0d))
+* 添加更新模块与删除模块接口 ([26210ae](https://github.com/limaofeng/asany-server/commit/26210ae34467882cd477ed21e08bc9002375cde9))
+
+
+### Bug Fixes
+
+* 个人网盘中的 space 不进行加密 ([9771380](https://github.com/limaofeng/asany-server/commit/977138097532e9fb65fed06bbf68e999aaa146a8))
+* 接口模型字段 Input 对象添加额外字段 ([f766892](https://github.com/limaofeng/asany-server/commit/f766892f69a9252c9b0c29548bf80ad18e75939a))
+* 文件对象返回带 token 的 url 地址 ([b675b7e](https://github.com/limaofeng/asany-server/commit/b675b7ef43e7e0e09e3e1e7575ac42b52c35c95f))
+* 自定义模块，默认字段添加默认排序 ([8822be6](https://github.com/limaofeng/asany-server/commit/8822be61a1f2d3011a602a71013ff18dfa050878))
+
 ### [0.1.32](https://github.com/limaofeng/asany-server/compare/v0.1.31...v0.1.32) (2022-09-14)
 
 
