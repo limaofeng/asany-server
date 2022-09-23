@@ -45,6 +45,14 @@ public class UploadUtils {
         FileObjectMetadata.builder().contentLength(file.length()).contentType(mimeType).build());
   }
 
+  public static FileObject fileToObject(String name, File file) {
+    String mimeType = FileUtil.getMimeType(file);
+    return new UploadFileObject(
+        name,
+        file,
+        FileObjectMetadata.builder().contentLength(file.length()).contentType(mimeType).build());
+  }
+
   public static FileObject partToObject(Part part) {
     if (!(part instanceof ApplicationPart)) {
       throw new RuntimeException("Part 类型不匹配: " + part.getClass());
