@@ -154,7 +154,7 @@ public class StorageService {
 
       List<FileObject> alreadyExisted =
           this.fileDetailDao.findAll(filterBuilder.build()).stream()
-              .map((item) -> item.toFileObject())
+              .map(FileDetail::toFileObject)
               .collect(Collectors.toList());
 
       CompareResults<FileObject> results =

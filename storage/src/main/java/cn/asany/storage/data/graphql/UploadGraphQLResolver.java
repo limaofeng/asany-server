@@ -32,13 +32,7 @@ public class UploadGraphQLResolver implements GraphQLMutationResolver, GraphQLQu
   }
 
   public FileObject upload(Part part, UploadOptions options) throws IOException {
-    String space = options.getSpace();
     FileObject object = UploadUtils.partToObject(part);
-
-    String key = StringUtil.defaultValue(options.getFolder(), () -> IdUtils.toKey("space", space));
-
-    IdUtils.FileKey fileKey = IdUtils.parseKey(key);
-
     return uploadService.upload(object, options);
   }
 

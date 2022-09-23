@@ -7,9 +7,9 @@ import cn.asany.storage.data.domain.Thumbnail;
 import cn.asany.storage.data.service.FileService;
 import cn.asany.storage.data.service.ThumbnailService;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
@@ -54,7 +54,7 @@ public class GenerateThumbnailJob implements Job {
 
       String thumbnailPath = null;
       if (fileDetail.getMimeType().startsWith("image/")) {
-        storage.readFile(fileDetail.getStorePath(), new FileOutputStream(temp));
+        storage.readFile(fileDetail.getStorePath(), Files.newOutputStream(temp.toPath()));
 
         thumbnailPath = ImageUtil.resize(sourcePath, size);
         temps.add(new File(thumbnailPath));
@@ -62,7 +62,7 @@ public class GenerateThumbnailJob implements Job {
 
         InputStream input =
             storage.readFile(fileDetail.getStorePath(), new long[] {0, 1024 * 1024 * 30});
-        StreamUtil.copyThenClose(input, new FileOutputStream(temp));
+        StreamUtil.copyThenClose(input, Files.newOutputStream(temp.toPath()));
 
         long length = FFmpegUtil.duration(sourcePath);
         log.debug(" 视频长度: " + length);
@@ -93,7 +93,8 @@ public class GenerateThumbnailJob implements Job {
 
       assert thumbnailPath != null;
       Thumbnail thumbnail =
-          thumbnailService.save(size, fileDetail.getId(), new File(thumbnailPath));
+          thumbnailService.save(
+              size, fileDetail.getId(), fileDetail.getName(), new File(thumbnailPath));
 
       context.setResult(thumbnail.getId());
 

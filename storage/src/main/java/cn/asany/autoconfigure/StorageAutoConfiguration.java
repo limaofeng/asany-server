@@ -8,12 +8,14 @@ import cn.asany.storage.core.engine.minio.MinIOStorageConfig;
 import cn.asany.storage.core.engine.oss.OSSStorageConfig;
 import cn.asany.storage.data.graphql.directive.FileFormatDirective;
 import cn.asany.storage.data.graphql.scalar.FileCoercing;
+import cn.asany.storage.data.service.AuthTokenService;
 import graphql.kickstart.autoconfigure.tools.SchemaDirective;
 import graphql.kickstart.servlet.apollo.ApolloScalars;
 import graphql.schema.GraphQLScalarType;
 import java.util.List;
 import org.jfantasy.framework.dao.jpa.ComplexJpaRepository;
 import org.jfantasy.graphql.SchemaParserDictionaryBuilder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -73,7 +75,9 @@ public class StorageAutoConfiguration {
   }
 
   @Bean
-  public SchemaDirective fileFormatDirective() {
-    return new SchemaDirective("fileFormat", new FileFormatDirective());
+  public SchemaDirective fileFormatDirective(
+      @Autowired AuthTokenService authTokenService, StorageResolver storageResolver) {
+    return new SchemaDirective(
+        "fileFormat", new FileFormatDirective(authTokenService, storageResolver));
   }
 }

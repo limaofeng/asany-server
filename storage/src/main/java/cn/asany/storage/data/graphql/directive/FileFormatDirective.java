@@ -1,18 +1,29 @@
 package cn.asany.storage.data.graphql.directive;
 
 import cn.asany.storage.api.FileObject;
+import cn.asany.storage.api.Storage;
+import cn.asany.storage.core.StorageResolver;
+import cn.asany.storage.data.domain.FileDetail;
+import cn.asany.storage.data.service.AuthToken;
+import cn.asany.storage.data.service.AuthTokenService;
+import cn.asany.storage.data.util.IdUtils;
 import graphql.schema.*;
 import graphql.schema.idl.SchemaDirectiveWiring;
 import graphql.schema.idl.SchemaDirectiveWiringEnvironment;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import javax.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.net.util.Base64;
-import org.jfantasy.framework.util.common.StringUtil;
+import org.jfantasy.framework.security.LoginUser;
+import org.jfantasy.framework.security.SpringSecurityUtils;
+import org.jfantasy.framework.security.authentication.Authentication;
+import org.jfantasy.framework.security.oauth2.core.OAuth2AccessToken;
+import org.jfantasy.framework.util.common.StreamUtil;
 import org.jfantasy.framework.util.ognl.OgnlUtil;
+import org.jfantasy.framework.util.web.WebUtil;
+import org.jfantasy.graphql.context.GraphQLContextHolder;
 
 /**
  * 文件对象格式指令
@@ -21,6 +32,7 @@ import org.jfantasy.framework.util.ognl.OgnlUtil;
  */
 @Slf4j
 public class FileFormatDirective implements SchemaDirectiveWiring {
+
   private static final String DIRECTIVE_NAME = "FileFormat";
   private static final String FORMAT_NAME = "format";
   private static final String FORMAT_BASE64 = "base64";
@@ -42,6 +54,14 @@ public class FileFormatDirective implements SchemaDirectiveWiring {
                   .value(FORMAT_ID, FORMAT_ID, "只返回 ID")
                   .build())
           .description("文件自定在格式");
+
+  private final AuthTokenService authTokenService;
+  private final StorageResolver storageResolver;
+
+  public FileFormatDirective(AuthTokenService authTokenService, StorageResolver storageResolver) {
+    this.authTokenService = authTokenService;
+    this.storageResolver = storageResolver;
+  }
 
   @Override
   public GraphQLFieldDefinition onField(
@@ -66,14 +86,32 @@ public class FileFormatDirective implements SchemaDirectiveWiring {
     return field.transform(builder -> builder.argument(FORMAT_ARGUMENT));
   }
 
+  private String getTokenValue(String path) {
+    Authentication authentication = SpringSecurityUtils.getAuthentication();
+    if (authentication != null && authentication.isAuthenticated()) {
+      OAuth2AccessToken credentials = (OAuth2AccessToken) authentication.getCredentials();
+      LoginUser user = (LoginUser) authentication.getPrincipal();
+      String token =
+          this.authTokenService.storeToken(
+              AuthToken.builder()
+                  .path(path)
+                  .user(user.getUid())
+                  .personalToken(credentials.getTokenValue())
+                  .build());
+      return "?token=" + token;
+    }
+    return "";
+  }
+
   private String buildFileObject(FileObject fileObject, String format) {
     String path = fileObject.getPath();
     if (FORMAT_BASE64.equals(format)) {
-      return getImageBase64ByFileObject(fileObject, path);
+      return getImageBase64ByFileObject(fileObject);
     }
     if (FORMAT_URL.equals(format)) {
-      String url = OgnlUtil.getInstance().getValue("url", fileObject);
-      return StringUtil.defaultValue(url, path);
+      String id = OgnlUtil.getInstance().getValue("id", fileObject);
+      HttpServletRequest request = GraphQLContextHolder.getContext().getRequest();
+      return WebUtil.getFullUrl(request, "/preview/" + id + getTokenValue(fileObject.getPath()));
     }
     if (FORMAT_ID.equals(format)) {
       return OgnlUtil.getInstance().getValue("id", fileObject);
@@ -82,7 +120,7 @@ public class FileFormatDirective implements SchemaDirectiveWiring {
   }
 
   /** 通过FileObject获取图片base64位编码 */
-  public static String getImageBase64ByFileObject(FileObject fileObject, String url) {
+  public String getImageBase64ByFileObject(FileObject fileObject) {
     if (fileObject.getSize() > (1024 * 1014 * 5L)) {
       return null;
     }
@@ -90,7 +128,7 @@ public class FileFormatDirective implements SchemaDirectiveWiring {
       return null;
     }
     try {
-      return "data:" + fileObject.getMimeType() + ";base64," + imageToBase64ByOnline(url);
+      return "data:" + fileObject.getMimeType() + ";base64," + imageToBase64ByOnline(fileObject);
     } catch (IOException e) {
       log.error(e.getMessage());
       return null;
@@ -100,27 +138,20 @@ public class FileFormatDirective implements SchemaDirectiveWiring {
   /**
    * 在线图片转换成base64字符串
    *
-   * @param imgUrl 图片线上路径
+   * @param file 图片线上路径
    * @author limaofeng
    * @return String
    */
-  public static String imageToBase64ByOnline(String imgUrl) throws IOException {
-    ByteArrayOutputStream data = new ByteArrayOutputStream();
-    // 创建URL
-    URL url = new URL(imgUrl);
-    byte[] by = new byte[1024];
+  public String imageToBase64ByOnline(FileObject file) throws IOException {
+    String id = OgnlUtil.getInstance().getValue("id", file);
+    IdUtils.FileKey fileKey = IdUtils.parseKey(id);
+    FileDetail fileDetail = fileKey.getFile();
+    Storage storage = storageResolver.resolve(fileDetail.getStorageConfig().getId());
     // 创建链接
-    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-    conn.setRequestMethod("GET");
-    conn.setConnectTimeout(5000);
-    InputStream is = conn.getInputStream();
+    InputStream is = storage.readFile(fileDetail.getStorePath());
+    ByteArrayOutputStream data = new ByteArrayOutputStream();
     // 将内容读取内存中
-    int len;
-    while ((len = is.read(by)) != -1) {
-      data.write(by, 0, len);
-    }
-    // 关闭流
-    is.close();
+    StreamUtil.copyThenClose(is, data);
     // 对字节数组Base64编码
     return new String(Base64.encodeBase64(data.toByteArray()));
   }

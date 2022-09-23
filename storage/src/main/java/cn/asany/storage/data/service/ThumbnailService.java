@@ -31,7 +31,7 @@ public class ThumbnailService {
   private static final String THUMBNAIL_CACHE_KEY = "thumbnail";
   private static final String TRIGGER_KEY_THUMBNAIL_GROUP = "thumbnail";
   public static final JobKey JOBKEY_GENERATE_THUMBNAIL = JobKey.jobKey("generate", "thumbnail");
-  public static final String THUMBNAIL_STORAGE_SPACE_KEY = "thumbnail";
+  public static final String THUMBNAIL_STORAGE_SPACE_KEY = "wg1NcUDz";
 
   private final ThumbnailDao thumbnailDao;
   private final SchedulerUtil schedulerUtil;
@@ -66,8 +66,8 @@ public class ThumbnailService {
   @Transactional
   @SneakyThrows
   @CachePut(key = "targetClass + '.findBySize#' + #p0 + ',' + #p1", value = THUMBNAIL_CACHE_KEY)
-  public Thumbnail save(String size, Long source, File file) {
-    FileObject object = UploadUtils.fileToObject(file);
+  public Thumbnail save(String size, Long source, String name, File file) {
+    FileObject object = UploadUtils.fileToObject(name, file);
 
     UploadOptions uploadOptions =
         UploadOptions.builder().space(THUMBNAIL_STORAGE_SPACE_KEY).build();
@@ -91,7 +91,7 @@ public class ThumbnailService {
     TriggerKey taskId = generateTaskId(source, size);
     Future<Long> thumbnailFuture = waitForComplete(taskId);
     if (schedulerUtil.getTriggerState(taskId) == Trigger.TriggerState.COMPLETE) {
-      schedulerUtil.removeTrigdger(taskId);
+      schedulerUtil.removeTrigger(taskId);
     }
     if (!schedulerUtil.checkExists(taskId)) {
       Map<String, String> data = new HashMap<>();

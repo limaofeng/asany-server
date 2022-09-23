@@ -5,6 +5,7 @@ dependencies {
     implementation "io.minio:minio:${LIB_MINIO_VER}"
     implementation "com.aliyun.oss:aliyun-sdk-oss:${LIB_ALIYUN_SDK_OSS_VER}"
     compileOnly "org.projectlombok:lombok:${LIB_LOMBOK_VER}"
+    compileOnly "org.springframework.boot:spring-boot-starter-data-redis"
     annotationProcessor "org.projectlombok:lombok:$LIB_LOMBOK_VER"
     testCompileOnly "org.projectlombok:lombok:${LIB_LOMBOK_VER}"
     testAnnotationProcessor "org.projectlombok:lombok:$LIB_LOMBOK_VER"

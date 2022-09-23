@@ -13,6 +13,7 @@ import graphql.schema.CoercingSerializeException;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.jfantasy.framework.error.ValidationException;
+import org.jfantasy.framework.util.common.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -27,6 +28,13 @@ public class FileCoercing implements Coercing<FileObject, Object> {
 
   @Override
   public Object serialize(@NotNull Object input) throws CoercingSerializeException {
+    if (!(input instanceof SimpleFileObject)) {
+      return input;
+    }
+    SimpleFileObject fileObject = ((SimpleFileObject) input);
+    if (StringUtil.isBlank(fileObject.getUrl())) {
+      fileObject.setUrl("/preview/" + fileObject.getId());
+    }
     return input;
   }
 
