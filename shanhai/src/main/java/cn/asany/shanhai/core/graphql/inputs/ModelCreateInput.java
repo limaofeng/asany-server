@@ -13,8 +13,10 @@ public class ModelCreateInput {
   private String description;
   /** 字段 */
   private Set<ModelFieldInput> fields;
-  /** 元数据 */
-  private ModelMetadataInput metadata;
+  /** 数据库表名 */
+  private String databaseTableName;
   /** 特征 */
   private Set<String> features;
+  /** 所属模块 */
+  private Long module;
 }

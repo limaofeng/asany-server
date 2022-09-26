@@ -8,7 +8,6 @@ import cn.asany.shanhai.core.domain.*;
 import cn.asany.shanhai.core.domain.enums.ModelConnectType;
 import cn.asany.shanhai.core.domain.enums.ModelDelegateType;
 import cn.asany.shanhai.core.domain.enums.ModelType;
-import cn.asany.shanhai.core.service.ModelFeatureService;
 import cn.asany.shanhai.core.service.ModelService;
 import cn.asany.shanhai.core.support.graphql.resolvers.BaseDataFetcher;
 import cn.asany.shanhai.core.support.graphql.resolvers.DelegateDataFetcher;
@@ -22,6 +21,8 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import javax.persistence.Column;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
@@ -33,7 +34,6 @@ import org.jfantasy.framework.util.common.ClassUtil;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.common.StringUtil;
 import org.jfantasy.framework.util.ognl.OgnlUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
@@ -42,20 +42,35 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 @Component
 public class ModelUtils {
-
-  @Autowired private ModelService modelService;
-  @Autowired private ModelFeatureService modelFeatureService;
-  @Autowired private ModelFeatureRegistry modelFeatureRegistry;
-  @Autowired private FieldTypeRegistry fieldTypeRegistry;
-  @Autowired private ModelFieldDao modelFieldDao;
-  @Autowired private ModelDao modelDao;
-  @Autowired private ModelDelegateDao modelDelegateDao;
-  @Autowired private ModelEndpointDao modelEndpointDao;
+  private final ModelService modelService;
+  private final ModelFeatureRegistry modelFeatureRegistry;
+  private final FieldTypeRegistry fieldTypeRegistry;
+  private final ModelFieldDao modelFieldDao;
+  private final ModelDao modelDao;
+  private final ModelDelegateDao modelDelegateDao;
+  private final ModelEndpointDao modelEndpointDao;
 
   private static final ThreadLocal<ModelUtilCache> HOLDER = new ThreadLocal<>();
   private static final ThreadLocal<ModelLazySaveContext> LAZY = new ThreadLocal<>();
 
   private final OgnlUtil ognlUtil = OgnlUtil.getInstance();
+
+  public ModelUtils(
+      ModelService modelService,
+      ModelFeatureRegistry modelFeatureRegistry,
+      FieldTypeRegistry fieldTypeRegistry,
+      ModelFieldDao modelFieldDao,
+      ModelDao modelDao,
+      ModelDelegateDao modelDelegateDao,
+      ModelEndpointDao modelEndpointDao) {
+    this.modelService = modelService;
+    this.modelFeatureRegistry = modelFeatureRegistry;
+    this.fieldTypeRegistry = fieldTypeRegistry;
+    this.modelFieldDao = modelFieldDao;
+    this.modelDao = modelDao;
+    this.modelDelegateDao = modelDelegateDao;
+    this.modelEndpointDao = modelEndpointDao;
+  }
 
   public static ModelUtils getInstance() {
     return SpringBeanUtils.getBeanByType(ModelUtils.class);
@@ -393,12 +408,16 @@ public class ModelUtils {
       if (argument.getType().getId() != null) {
         continue;
       }
-      argument.setType(this.getModelByCode(argument.getType().getCode()).get());
+      argument.setType(
+          this.getModelByCode(argument.getType().getCode())
+              .orElseThrow(() -> new TypeNotFoundException(argument.getType().getCode())));
     }
     ModelEndpointReturnType returnType = endpoint.getReturnType();
     returnType.setEndpoint(endpoint);
     if (returnType.getType().getId() == null) {
-      returnType.setType(this.getModelByCode(returnType.getType().getCode()).get());
+      returnType.setType(
+          this.getModelByCode(returnType.getType().getCode())
+              .orElseThrow(() -> new TypeNotFoundException(returnType.getType().getCode())));
     }
     endpoint.setModel(model);
     modelEndpointDao.save(endpoint);
@@ -410,7 +429,7 @@ public class ModelUtils {
   @SneakyThrows
   public void mergeFields(Model model, Set<ModelField> nextFields) {
     Set<ModelField> prevFields = model.getFields();
-    DiffObject diffObject =
+    DiffObject<ModelField> diffObject =
         diff(
             prevFields.stream().filter(item -> !item.getSystem()).collect(Collectors.toList()),
             nextFields,
@@ -434,7 +453,7 @@ public class ModelUtils {
 
   public void mergeFeatures(Model model, Set<ModelFeature> nextFeatures) {
     Set<ModelFeature> prevFeatures = model.getFeatures();
-    DiffObject diffObject =
+    DiffObject<ModelFeature> diffObject =
         diff(prevFeatures, nextFeatures, (prev, next) -> prev.equals(next) ? 0 : -1);
     List<ModelFeature> newFeatures = diffObject.getAppendItems();
     List<ModelFeature> oldFeatures = diffObject.getModifiedItems();
@@ -459,7 +478,7 @@ public class ModelUtils {
   }
 
   public <T> DiffObject diff(Collection<T> prev, Collection<T> next, Comparator<T> comparator) {
-    DiffObject diffObject = new DiffObject();
+    DiffObject<T> diffObject = new DiffObject<>();
     List<T> olds = new ArrayList<>(prev);
     for (T obj : next) {
       if (exists(olds, item -> comparator.compare(item, obj) != -1)) {
@@ -503,7 +522,8 @@ public class ModelUtils {
     return false;
   }
 
-  private <T> void merge(T dest, T... sources) {
+  @SafeVarargs
+  private final <T> void merge(T dest, T... sources) {
     Class entityClass = ClassUtil.getRealClass(dest);
     for (T source : sources) {
       mergeColumn(entityClass, dest, source);
@@ -512,9 +532,22 @@ public class ModelUtils {
 
   private <T> void mergeColumn(Class entityClass, T dest, T source) {
     for (Field field : ClassUtil.getDeclaredFields(entityClass, Column.class)) {
+      if (field.getAnnotation(Id.class) != null) {
+        continue;
+      }
       Object value = ognlUtil.getValue(field.getName(), source);
       if (value != null) {
         ClassUtil.setValue(dest, field.getName(), value);
+      }
+    }
+    for (Field field : ClassUtil.getDeclaredFields(entityClass, OneToOne.class)) {
+      if (StringUtil.isBlank(field.getAnnotation(OneToOne.class).mappedBy())) {
+        continue;
+      }
+      Object target = ognlUtil.getValue(field.getName(), dest);
+      Object value = ognlUtil.getValue(field.getName(), source);
+      if (value != null) {
+        merge(target, value);
       }
     }
   }

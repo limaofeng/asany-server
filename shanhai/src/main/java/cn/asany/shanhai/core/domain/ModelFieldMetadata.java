@@ -57,9 +57,7 @@ public class ModelFieldMetadata implements Serializable {
   @Convert(converter = MatchTypeConverter.class)
   private PropertyFilter.MatchType[] filters;
 
-  @OneToOne(
-      fetch = FetchType.LAZY,
-      cascade = {CascadeType.ALL})
+  @OneToOne(fetch = FetchType.LAZY)
   @PrimaryKeyJoinColumn
   @ToString.Exclude
   private ModelField field;

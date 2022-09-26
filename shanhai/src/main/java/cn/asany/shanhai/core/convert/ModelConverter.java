@@ -34,6 +34,8 @@ public abstract class ModelConverter {
    * @return Model
    */
   @Mappings({
+    @Mapping(source = "databaseTableName", target = "metadata.databaseTableName"),
+    @Mapping(source = "module", target = "module.id"),
     @Mapping(source = "fields", target = "fields", qualifiedByName = "toFields"),
     @Mapping(source = "features", target = "features", qualifiedByName = "toFeatures"),
   })
@@ -67,6 +69,7 @@ public abstract class ModelConverter {
    * @return Model
    */
   @Mappings({
+    @Mapping(source = "databaseTableName", target = "metadata.databaseTableName"),
     @Mapping(source = "fields", target = "fields", qualifiedByName = "toFields"),
     @Mapping(source = "features", target = "features", qualifiedByName = "toFeatures"),
   })

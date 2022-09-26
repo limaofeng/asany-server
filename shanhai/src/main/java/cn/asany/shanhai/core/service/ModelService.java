@@ -67,6 +67,10 @@ public class ModelService {
     return modelDao.findPage(pageable, filters);
   }
 
+  public List<Model> findAll(List<PropertyFilter> filters, int offset, int limit, Sort orderBy) {
+    return modelDao.findAll(filters, offset, limit, orderBy);
+  }
+
   @Transactional(isolation = Isolation.READ_COMMITTED)
   public Model save(Model model) {
     ModelUtils modelUtils = ModelUtils.getInstance();
@@ -507,6 +511,7 @@ public class ModelService {
       throw new DuplicateFieldException("name", databaseColumnName);
     }
     ModelField newField = modelUtils.install(model, field);
+    this.modelFieldDao.save(newField);
     this.modelDao.save(model);
     Set<ModelFeature> features = model.getFeatures();
     // 特征处理
@@ -516,15 +521,48 @@ public class ModelService {
     return newField;
   }
 
+  @Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class)
+  public ModelField updateField(Long id, Long fieldId, ModelField field) {
+    ModelUtils modelUtils = ModelUtils.getInstance();
+    field.setId(fieldId);
+    Model model = this.modelDao.getReferenceById(id);
+    ModelField source =
+        model.getFields().stream()
+            .filter(f -> fieldId.equals(f.getId()))
+            .findAny()
+            .orElseThrow(() -> new ValidationException("修改的字段[ID=" + id + "." + fieldId + "]不存在"));
+    if (ObjectUtil.exists(model.getFields(), "code", field.getCode())
+        && !source.getCode().equals(field.getCode())) {
+      throw new DuplicateFieldException("code", field.getCode());
+    }
+    if (ObjectUtil.exists(model.getFields(), "name", field.getName())
+        && !source.getName().equals(field.getName())) {
+      throw new DuplicateFieldException("name", field.getCode());
+    }
+    String databaseColumnName =
+        field.getMetadata() == null ? null : field.getMetadata().getDatabaseColumnName();
+    if (databaseColumnName != null
+        && ObjectUtil.exists(model.getFields(), "DatabaseColumnName", databaseColumnName)
+        && !source
+            .getMetadata()
+            .getDatabaseColumnName()
+            .equals(field.getMetadata().getDatabaseColumnName())) {
+      throw new DuplicateFieldException("name", databaseColumnName);
+    }
+    modelUtils.reinstall(model, field);
+    this.modelDao.save(model);
+    Set<ModelFeature> features = model.getFeatures();
+    // 特征处理
+    for (ModelFeature feature : features) {
+      modelUtils.reinstall(model, feature);
+    }
+    return source;
+  }
+
   @Transactional(readOnly = true)
   public List<ModelField> listModelFields(
       List<PropertyFilter> filters, int offset, int limit, Sort sort) {
     return this.modelFieldDao.findAll(filters, offset, limit, sort);
-  }
-
-  @Transactional
-  public ModelField updateField(Long id, Long fieldId, ModelField field) {
-    return null;
   }
 
   @Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class)

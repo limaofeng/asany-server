@@ -50,10 +50,8 @@ public class ModelGraphQLRootResolver implements GraphQLMutationResolver, GraphQ
   }
 
   public List<Model> models(Long module, ModelFilter filter, int offset, int limit, Sort orderBy) {
-    Pageable pageable = PageRequest.of(offset / limit, limit, orderBy);
-    return modelService
-        .findPage(pageable, filter.getBuilder().equal("module.id", module).build())
-        .getContent();
+    return modelService.findAll(
+        filter.getBuilder().equal("module.id", module).build(), offset, limit, orderBy);
   }
 
   public ModelConnection modelsConnection(

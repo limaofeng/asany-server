@@ -109,6 +109,23 @@ class ModelServiceTest {
   }
 
   @Test
+  void testUpdateModelField() {
+    Optional<Model> modelOptional = this.modelService.findByCode("Employee");
+    assert modelOptional.isPresent();
+    Model model = modelOptional.get();
+
+    Optional<ModelField> fieldOptional =
+        model.getFields().stream().filter(f -> f.getCode().equals("code")).findAny();
+    assert fieldOptional.isPresent();
+    ModelField field = fieldOptional.get();
+
+    this.modelService.updateField(
+        model.getId(),
+        field.getId(),
+        ModelField.builder().code("name").name("名称").type("String").build());
+  }
+
+  @Test
   public void deleteEmployee() {
     Optional<Model> optionalAccount = this.modelService.findByCode("Employee");
     if (!optionalAccount.isPresent()) {

@@ -12,4 +12,9 @@ import org.jfantasy.graphql.inputs.QueryFilter;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class ModelFilter extends QueryFilter<ModelFilter, Model> {}
+public class ModelFilter extends QueryFilter<ModelFilter, Model> {
+
+  private void setDatabaseTableName(String value) {
+    this.builder.equal("metadata.databaseTableName", value);
+  }
+}
