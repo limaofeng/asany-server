@@ -19,7 +19,7 @@ public class ModelRepository {
   protected Model model;
   protected String entityName;
   protected ModelResultTransformer resultTransformer;
-  private OgnlUtil ognlUtil = OgnlUtil.getInstance();
+  private final OgnlUtil ognlUtil = OgnlUtil.getInstance();
 
   public ModelRepository(Model model) {
     this.model = model;

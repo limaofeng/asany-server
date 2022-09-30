@@ -3,6 +3,7 @@ package cn.asany.shanhai.core.support.model;
 import cn.asany.shanhai.core.domain.Model;
 import cn.asany.shanhai.core.domain.ModelEndpoint;
 import cn.asany.shanhai.core.domain.ModelField;
+import cn.asany.shanhai.core.domain.ModelRelation;
 import cn.asany.shanhai.core.support.model.features.*;
 import java.util.Collections;
 import java.util.List;
@@ -25,7 +26,7 @@ public interface IModelFeature {
     return Collections.emptyList();
   }
 
-  default List<Model> getTypes(Model model) {
+  default List<ModelRelation> getTypes(Model model) {
     return Collections.emptyList();
   }
 

@@ -1,6 +1,6 @@
 package cn.asany.shanhai.core.domain;
 
-import cn.asany.shanhai.core.domain.enums.ModelConnectType;
+import cn.asany.shanhai.core.domain.enums.ModelRelationType;
 import cn.asany.shanhai.core.domain.enums.ModelStatus;
 import cn.asany.shanhai.core.domain.enums.ModelType;
 import cn.asany.shanhai.gateway.domain.ModelGroupResource;
@@ -16,7 +16,6 @@ import javax.persistence.ForeignKey;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import lombok.*;
-import org.hibernate.Hibernate;
 import org.hibernate.annotations.*;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.framework.dao.hibernate.converter.StringArrayConverter;
@@ -26,11 +25,15 @@ import org.jfantasy.framework.dao.hibernate.converter.StringArrayConverter;
 @RequiredArgsConstructor
 @Builder
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper = false, of = "id")
 @NamedEntityGraph(
     name = "Graph.Model.FetchMetadataAndFields",
     attributeNodes = {
+      @NamedAttributeNode(value = "module", subgraph = "SubGraph.Module.FetchAttributes"),
       @NamedAttributeNode(value = "metadata"),
-      @NamedAttributeNode(value = "fields", subgraph = "SubGraph.ModelField.FetchAttributes")
+      @NamedAttributeNode(value = "fields", subgraph = "SubGraph.ModelField.FetchAttributes"),
+      @NamedAttributeNode(value = "endpoints", subgraph = "SubGraph.ModelEndpoint.FetchAttributes"),
+      @NamedAttributeNode(value = "relations")
     },
     subgraphs = {
       @NamedSubgraph(
@@ -39,13 +42,31 @@ import org.jfantasy.framework.dao.hibernate.converter.StringArrayConverter;
             @NamedAttributeNode(value = "metadata"),
             @NamedAttributeNode(value = "delegate"),
             @NamedAttributeNode(value = "arguments")
-          })
+          }),
+      @NamedSubgraph(
+          name = "SubGraph.ModelEndpoint.FetchAttributes",
+          attributeNodes = {
+            @NamedAttributeNode(value = "delegate"),
+            @NamedAttributeNode(value = "arguments"),
+            @NamedAttributeNode(value = "returnType")
+          }),
+      @NamedSubgraph(
+          name = "SubGraph.Module.FetchAttributes",
+          attributeNodes = {
+            @NamedAttributeNode(value = "name"),
+            @NamedAttributeNode(value = "code"),
+          }),
     })
 @NamedEntityGraph(
     name = "Model.Graph",
     attributeNodes = {@NamedAttributeNode("fields")})
 @Entity
-@Table(name = "SH_MODEL")
+@Table(
+    name = "SH_MODEL",
+    uniqueConstraints =
+        @UniqueConstraint(
+            name = "UK_MODEL_CODE",
+            columnNames = {"MODULE_ID", "CODE"}))
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class Model extends BaseBusEntity implements ModelGroupResource {
   @Id
@@ -54,7 +75,7 @@ public class Model extends BaseBusEntity implements ModelGroupResource {
   @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
   /** 编码 用于 HQL 名称及 API 名称 */
-  @Column(name = "CODE", length = 50, unique = true)
+  @Column(name = "CODE", length = 50)
   private String code;
   /** 类型 */
   @Enumerated(EnumType.STRING)
@@ -155,7 +176,7 @@ public class Model extends BaseBusEntity implements ModelGroupResource {
   private Module module;
 
   @Transient
-  public void connect(Model model, ModelConnectType connectType) {
+  public void connect(Model model, ModelRelationType type, String relation) {
     if (this.relations == null) {
       this.relations = new HashSet<>();
     }
@@ -164,19 +185,14 @@ public class Model extends BaseBusEntity implements ModelGroupResource {
             .filter(
                 item ->
                     item.getInverse().getCode().equals(model.getCode())
-                        && item.getRelation().equals(connectType.relation)
-                        && item.getType().equals(connectType.type))
+                        && item.getRelation().equals(relation)
+                        && item.getType().equals(type))
             .findAny();
     if (optional.isPresent()) {
       return;
     }
     this.relations.add(
-        ModelRelation.builder()
-            .type(connectType.type)
-            .relation(connectType.relation)
-            .inverse(model)
-            .model(this)
-            .build());
+        ModelRelation.builder().type(type).relation(relation).inverse(model).model(this).build());
   }
 
   public static class ModelBuilder {
@@ -294,18 +310,5 @@ public class Model extends BaseBusEntity implements ModelGroupResource {
       this.fields.addAll(Arrays.asList(fields));
       return this;
     }
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-    Model model = (Model) o;
-    return id != null && Objects.equals(id, model.id);
-  }
-
-  @Override
-  public int hashCode() {
-    return getClass().hashCode();
   }
 }

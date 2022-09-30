@@ -41,12 +41,12 @@ public class ModelGraphQLRootResolver implements GraphQLMutationResolver, GraphQ
 
   public Model updateModel(Long id, ModelUpdateInput input) {
     Model model = this.modelConverter.toModel(input);
-    model.setId(id);
-    return modelService.update(model);
+    return modelService.update(id, model);
   }
 
-  public int deleteModel(Long[] ids) {
-    return modelService.delete(ids);
+  public Boolean deleteModel(Long id) {
+    modelService.delete(id);
+    return Boolean.TRUE;
   }
 
   public List<Model> models(Long module, ModelFilter filter, int offset, int limit, Sort orderBy) {
@@ -64,7 +64,7 @@ public class ModelGraphQLRootResolver implements GraphQLMutationResolver, GraphQ
 
   public Optional<Model> model(String id, ModelIdType idType) {
     if (idType == ModelIdType.id) {
-      return modelService.get(Long.valueOf(id));
+      return modelService.findById(Long.valueOf(id));
     }
     return modelService.findByCode(id);
   }

@@ -34,7 +34,7 @@ public class TemplateDataOfModel {
   public List<TemplateDataOfModelField> getFields() {
     ModelUtils modelUtils = SpringBeanUtils.getBeanByType(ModelUtils.class);
     return modelUtils.getFields(model).stream()
-        .map(item -> new TemplateDataOfModelField(item))
+        .map(TemplateDataOfModelField::new)
         .collect(Collectors.toList());
   }
 

@@ -27,7 +27,7 @@ public class ModelRelation extends BaseBusEntity {
   @Column(name = "TYPE", length = 20)
   private ModelRelationType type;
   /** 关系类型 SUBJECTION INPUT / SLAVE */
-  @Column(name = "RELATION", length = 20)
+  @Column(name = "RELATION", length = 100)
   private String relation;
   /** 当前实体 */
   @ManyToOne(fetch = FetchType.LAZY)

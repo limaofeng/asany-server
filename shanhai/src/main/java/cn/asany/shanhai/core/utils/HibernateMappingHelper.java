@@ -18,7 +18,7 @@ public class HibernateMappingHelper implements InitializingBean {
   /**
    * 生成 Hibernate Mapping XML
    *
-   * @param model
+   * @param model 实体
    */
   @SneakyThrows
   public String generateXML(Model model) {

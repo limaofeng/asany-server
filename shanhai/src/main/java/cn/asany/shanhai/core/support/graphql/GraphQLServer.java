@@ -108,7 +108,9 @@ public class GraphQLServer implements InitializingBean {
     modelEndpointMap.put(model.getId(), endpointIds);
     for (ModelEndpoint endpoint : model.getEndpoints()) {
       endpointIds.add(endpoint.getId());
-      if (endpoint.getType() == ModelEndpointType.QUERY) {
+      if (ModelEndpointType.LIST == endpoint.getType()
+          || endpoint.getType() == ModelEndpointType.GET
+          || endpoint.getType() == ModelEndpointType.CONNECTION) {
         queries.put(endpoint.getId(), endpoint);
       } else {
         mutations.put(endpoint.getId(), endpoint);

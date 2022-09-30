@@ -3,10 +3,11 @@ package cn.asany.shanhai.core.support.graphql;
 import graphql.schema.DataFetcher;
 import graphql.schema.DataFetchingEnvironment;
 
-public class ModelDataFetcher implements DataFetcher<Object> {
-  private final DelegateHandler delegate;
+public class ModelEndpointDataFetcher implements DataFetcher<Object> {
 
-  public ModelDataFetcher(DelegateHandler delegate) {
+  private DelegateHandler delegate;
+
+  public ModelEndpointDataFetcher(DelegateHandler delegate) {
     this.delegate = delegate;
   }
 

@@ -24,12 +24,15 @@ public class ModelFieldArgument {
   @Column(name = "NAME", length = 100, nullable = false)
   private String name;
   /** 类型 */
+  @Column(name = "TYPE", length = 50, nullable = false)
+  private String type;
+  /** 类型 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(
       name = "TYPE_ID",
       foreignKey = @ForeignKey(name = "FK_MODEL_FIELD_ARGUMENT_TID"),
       nullable = false)
-  private Model type;
+  private Model realType;
   /** 是否必填 */
   @Builder.Default
   @Column(name = "IS_REQUIRED")
@@ -52,12 +55,14 @@ public class ModelFieldArgument {
   public static class ModelFieldArgumentBuilder {
 
     public ModelFieldArgumentBuilder type(String type) {
-      this.type = Model.builder().code(type).build();
+      this.type = type;
+      this.realType = Model.builder().code(type).build();
       return this;
     }
 
     public ModelFieldArgumentBuilder type(Model type) {
-      this.type = type;
+      this.type = type.getCode();
+      this.realType = type;
       return this;
     }
   }

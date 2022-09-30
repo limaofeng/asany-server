@@ -739,18 +739,18 @@ type Job {
 }
 
 #用户签名照片部门公章
-type AutographPng {
-  #Id
-  id: ID
-  #描述信息
-  description: String
-  #是否启用 0禁用 1 启用
-  enabled: Boolean
-  #签名附件
-  autographFile: File
-  #签名类型
-  type: AutographEnum
-}
+#type AutographPng {
+#  #Id
+#  id: ID
+#  #描述信息
+#  description: String
+#  #是否启用 0禁用 1 启用
+#  enabled: Boolean
+#  #签名附件
+#  autographFile: File
+#  #签名类型
+#  type: AutographEnum
+#}
 # 部门类型
 type DepartmentType {
   # 部门类型ID
@@ -767,12 +767,12 @@ type DepartmentType {
   andPost: Int
 }
 
-enum AutographEnum {
-  #人员签名
-  employee
-  #部门公章
-  department
-}
+#enum AutographEnum {
+#  #人员签名
+#  employee
+#  #部门公章
+#  department
+#}
 
 type EmployeeAddress {
   id: ID

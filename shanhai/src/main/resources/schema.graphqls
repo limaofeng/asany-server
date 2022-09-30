@@ -33,11 +33,11 @@ input ModuleCreateInput {
   """
   编码
   """
-  code: String
+  code: String!
   """
   名称
   """
-  name: String
+  name: String!
   """
   描述
   """
@@ -76,10 +76,6 @@ input ModelUpdateInput {
   描述
   """
   description: String
-  """
-  字段
-  """
-  fields: [ModelFieldInput]
   """
   数据库表名
   """
@@ -223,6 +219,10 @@ enum ModelType {
   INTERFACE
 }
 
+type ModelMetadata {
+  databaseTableName: String
+}
+
 type Model {
   id: ID!
   """
@@ -261,6 +261,10 @@ type Model {
   修改时间
   """
   updatedAt: Date!
+  """
+  元数据
+  """
+  metadata: ModelMetadata
 }
 
 type ModelFieldMetadata {
@@ -445,7 +449,7 @@ type Module {
   """
   编码
   """
-  code: String
+  code: String!
   """
   名称
   """
@@ -652,5 +656,5 @@ extend type Mutation {
   """
   删除实体
   """
-  deleteModel(id: [ID]!): Int
+  deleteModel(id: ID!): Boolean
 }

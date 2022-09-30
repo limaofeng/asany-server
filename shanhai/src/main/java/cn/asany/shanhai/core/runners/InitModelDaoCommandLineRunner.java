@@ -10,7 +10,6 @@ import graphql.GraphQL;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.context.annotation.Profile;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -19,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author limaofeng
  */
 // @Component
-@Profile("!test")
+// @Profile("!test")
 @Slf4j
 public class InitModelDaoCommandLineRunner implements CommandLineRunner {
 

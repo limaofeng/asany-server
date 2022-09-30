@@ -142,6 +142,9 @@ graphql:
       max-age: 3600
   tools:
     introspection-enabled: true
+    schema-parser-options:
+      allow-unimplemented-resolvers: true
+
 
 management:
   health:

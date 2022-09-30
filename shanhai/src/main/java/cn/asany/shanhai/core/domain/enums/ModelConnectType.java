@@ -1,14 +1,10 @@
 package cn.asany.shanhai.core.domain.enums;
 
 public enum ModelConnectType {
-  INPUT(ModelRelationType.SUBJECTION, "INPUT"),
-  TYPE(ModelRelationType.SUBJECTION, "TYPE");
-
-  public ModelRelationType type;
-  public String relation;
-
-  ModelConnectType(ModelRelationType type, String relation) {
-    this.type = type;
-    this.relation = relation;
-  }
+  GRAPHQL_INPUT_CREATE,
+  GRAPHQL_INPUT_UPDATE,
+  GRAPHQL_INPUT_WHERE,
+  GRAPHQL_ENUM_ORDER_BY,
+  GRAPHQL_OBJECT_EDGE,
+  GRAPHQL_OBJECT_CONNECTION,
 }

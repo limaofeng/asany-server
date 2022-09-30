@@ -39,17 +39,17 @@ public class ModelService {
   private final ModelFieldDao modelFieldDao;
   private final ModelEndpointDao modelEndpointDao;
   private final ModelRelationDao modelRelationDao;
-  private final ModelFeatureService modelFeatureService;
   private final ModelMetadataDao modelMetadataDao;
   private final ModelFieldMetadataDao modelFieldMetadataDao;
   private final ModelFieldArgumentDao modelFieldArgumentDao;
+  private final ModelFeatureDao modelFeatureDao;
 
   public ModelService(
       ModelDao modelDao,
       ModelFieldDao modelFieldDao,
       ModelEndpointDao modelEndpointDao,
       ModelRelationDao modelRelationDao,
-      ModelFeatureService modelFeatureService,
+      ModelFeatureDao modelFeatureDao,
       ModelFieldArgumentDao modelFieldArgumentDao,
       ModelMetadataDao modelMetadataDao,
       ModelFieldMetadataDao modelFieldMetadataDao) {
@@ -57,7 +57,7 @@ public class ModelService {
     this.modelFieldDao = modelFieldDao;
     this.modelEndpointDao = modelEndpointDao;
     this.modelRelationDao = modelRelationDao;
-    this.modelFeatureService = modelFeatureService;
+    this.modelFeatureDao = modelFeatureDao;
     this.modelFieldArgumentDao = modelFieldArgumentDao;
     this.modelMetadataDao = modelMetadataDao;
     this.modelFieldMetadataDao = modelFieldMetadataDao;
@@ -127,8 +127,8 @@ public class ModelService {
         features.stream()
             .map(
                 f ->
-                    modelFeatureService
-                        .get(f.getId())
+                    modelFeatureDao
+                        .findById(f.getId())
                         .orElseThrow(
                             () ->
                                 new ValidationException(
@@ -141,7 +141,7 @@ public class ModelService {
       modelUtils.preinstall(model, feature);
     }
     for (ModelFeature feature : features) {
-      modelUtils.install(model, feature);
+      modelUtils.install(model, feature, this);
     }
     for (ModelFeature feature : features) {
       modelUtils.postinstall(model, feature);
@@ -235,9 +235,38 @@ public class ModelService {
     modelUtils.disableLazySave();
   }
 
+  @Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class)
+  public Model update(Long id, Model input) {
+    Model model = this.modelDao.getReferenceById(id);
+
+    boolean codeChanged = !input.getCode().equals(model.getCode());
+    boolean nameChanged = !input.getName().equals(model.getName());
+
+    model.setCode(input.getCode());
+    model.setName(input.getName());
+    model.setDescription(input.getDescription());
+    model.getMetadata().setDatabaseTableName(input.getMetadata().getDatabaseTableName());
+
+    if (codeChanged || nameChanged) {
+      Set<ModelFeature> features = model.getFeatures();
+      ModelUtils modelUtils = ModelUtils.getInstance();
+      for (ModelFeature feature : features) {
+        modelUtils.preinstall(model, feature);
+      }
+      for (ModelFeature feature : features) {
+        modelUtils.reinstall(model, feature, this);
+      }
+      for (ModelFeature feature : features) {
+        modelUtils.postinstall(model, feature);
+      }
+    }
+
+    return model;
+  }
+
   public Model update(Model model) {
+    this.modelDao.getEntityManager().detach(model);
     ModelUtils modelUtils = ModelUtils.getInstance();
-    modelUtils.initialize(model);
 
     if (ObjectUtil.isNull(model.getId()) && StringUtil.isBlank(model.getCode())) {
       throw new ValidationException("Model 的 [ ID, CODE ] 不能同时为空");
@@ -261,7 +290,7 @@ public class ModelService {
     }
 
     // 合并特征
-    modelUtils.mergeFeatures(original, model.getFeatures());
+    modelUtils.mergeFeatures(original, model.getFeatures(), this);
 
     return this.modelDao.update(original);
   }
@@ -275,7 +304,11 @@ public class ModelService {
     this.modelDao.update(model);
   }
 
-  public Optional<Model> get(Long id) {
+  public Model getById(Long id) {
+    return this.modelDao.getReferenceById(id);
+  }
+
+  public Optional<Model> findById(Long id) {
     return this.modelDao.findById(id);
   }
 
@@ -413,6 +446,7 @@ public class ModelService {
     return this.modelDao.findAll();
   }
 
+  @Transactional(readOnly = true)
   public List<Model> findAll(ModelType... types) {
     return this.modelDao.findAllByTypesWithMetadataAndFields(types);
   }
@@ -516,7 +550,7 @@ public class ModelService {
     Set<ModelFeature> features = model.getFeatures();
     // 特征处理
     for (ModelFeature feature : features) {
-      modelUtils.reinstall(model, feature);
+      modelUtils.reinstall(model, feature, this);
     }
     return newField;
   }
@@ -554,7 +588,7 @@ public class ModelService {
     Set<ModelFeature> features = model.getFeatures();
     // 特征处理
     for (ModelFeature feature : features) {
-      modelUtils.reinstall(model, feature);
+      modelUtils.reinstall(model, feature, this);
     }
     return source;
   }

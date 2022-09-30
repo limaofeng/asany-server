@@ -5,7 +5,6 @@ import cn.asany.shanhai.core.dao.ModelDelegateDao;
 import cn.asany.shanhai.core.dao.ModelEndpointDao;
 import cn.asany.shanhai.core.dao.ModelFieldDao;
 import cn.asany.shanhai.core.domain.*;
-import cn.asany.shanhai.core.domain.enums.ModelConnectType;
 import cn.asany.shanhai.core.domain.enums.ModelDelegateType;
 import cn.asany.shanhai.core.domain.enums.ModelType;
 import cn.asany.shanhai.core.service.ModelService;
@@ -42,7 +41,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 @Component
 public class ModelUtils {
-  private final ModelService modelService;
   private final ModelFeatureRegistry modelFeatureRegistry;
   private final FieldTypeRegistry fieldTypeRegistry;
   private final ModelFieldDao modelFieldDao;
@@ -63,7 +61,6 @@ public class ModelUtils {
       ModelDao modelDao,
       ModelDelegateDao modelDelegateDao,
       ModelEndpointDao modelEndpointDao) {
-    this.modelService = modelService;
     this.modelFeatureRegistry = modelFeatureRegistry;
     this.fieldTypeRegistry = fieldTypeRegistry;
     this.modelFieldDao = modelFieldDao;
@@ -74,6 +71,10 @@ public class ModelUtils {
 
   public static ModelUtils getInstance() {
     return SpringBeanUtils.getBeanByType(ModelUtils.class);
+  }
+
+  public ModelFeatureRegistry getModelFeatureRegistry() {
+    return modelFeatureRegistry;
   }
 
   public static final Set<Model> DEFAULT_TYPES = new HashSet<>();
@@ -134,11 +135,9 @@ public class ModelUtils {
   public void initialize(Model model) {
     model.setType(ObjectUtil.defaultValue(model.getType(), ModelType.ENTITY));
     model.setCode(
-        ObjectUtil.defaultValue(
-            model.getCode(),
-            () ->
-                StringUtil.upperCaseFirst(
-                    StringUtil.camelCase(PinyinUtils.getAll(model.getName())))));
+        StringUtil.upperCaseFirst(
+            ObjectUtil.defaultValue(
+                model.getCode(), () -> StringUtil.camelCase(PinyinUtils.getAll(model.getName())))));
     model.setFields((ObjectUtil.defaultValue(model.getFields(), new HashSet<>())));
     model.setFeatures(ObjectUtil.defaultValue(model.getFeatures(), new HashSet<>()));
     model.setEndpoints(ObjectUtil.defaultValue(model.getEndpoints(), new HashSet<>()));
@@ -228,11 +227,11 @@ public class ModelUtils {
       field.setArguments(new HashSet<>());
     }
     for (ModelFieldArgument argument : field.getArguments()) {
-      Optional<Model> type = getModelByCode(argument.getType().getCode());
+      Optional<Model> type = getModelByCode(argument.getType());
       if (!type.isPresent()) {
         throw new TypeNotFoundException(field.getType());
       }
-      argument.setType(type.get());
+      argument.setRealType(type.get());
     }
 
     if (model.getType() != ModelType.ENTITY) {
@@ -316,24 +315,29 @@ public class ModelUtils {
     Set<ModelField> fields = model.getFields();
     // 设置 Field
     for (ModelField field : feature.fields()) {
+      if (ObjectUtil.exists(fields, "code", field.getCode())) {
+        continue;
+      }
       fields.add(this.install(model, field));
     }
   }
 
   @SneakyThrows
-  public void install(Model model, ModelFeature modelFeature) {
+  public void install(Model model, ModelFeature modelFeature, ModelService modelService) {
     IModelFeature feature = modelFeatureRegistry.get(modelFeature.getId());
 
-    for (Model type : feature.getTypes(model)) {
+    for (ModelRelation relation : feature.getTypes(model)) {
+      Model type = relation.getInverse();
+
       Optional<Model> optional = this.getModelByCode(type.getCode());
       if (optional.isPresent()) {
         type.setId(optional.get().getId());
-        model.connect(modelService.save(type, this), getModelConnectType(type.getType()));
+        model.connect(modelService.save(type, this), relation.getType(), relation.getRelation());
       } else {
         if (this.isLazySave()) {
           this.cache().putModel(type);
         }
-        model.connect(modelService.save(type, this), getModelConnectType(type.getType()));
+        model.connect(modelService.save(type, this), relation.getType(), relation.getRelation());
       }
     }
   }
@@ -348,43 +352,31 @@ public class ModelUtils {
     }
   }
 
-  private ModelConnectType getModelConnectType(ModelType type) {
-    if (ModelType.INPUT_OBJECT == type) {
-      return ModelConnectType.INPUT;
-    } else if (ModelType.OBJECT == type || ModelType.ENUM == type) {
-      return ModelConnectType.TYPE;
-    }
-    return null;
-  }
-
   @SneakyThrows
-  public void reinstall(Model model, ModelFeature modelFeature) {
+  public void reinstall(Model model, ModelFeature modelFeature, ModelService modelService) {
     IModelFeature feature = modelFeatureRegistry.get(modelFeature.getId());
-    Set<ModelField> fields = model.getFields();
-    // 设置 Field
-    for (ModelField field : feature.fields()) {
-      if (ObjectUtil.exists(fields, "code", field.getCode())) {
-        continue;
-      }
-      fields.add(this.install(model, field));
-    }
 
-    for (Model type : feature.getTypes(model)) {
-      Optional<Model> optional = this.getModelByCode(type.getCode());
+    for (ModelRelation relation : feature.getTypes(model)) {
+      Model type = relation.getInverse();
+      boolean isContains = this.modelDao.getEntityManager().contains(type);
+      Optional<Model> optional =
+          isContains ? Optional.of(type) : this.getModelByCode(type.getCode());
       // 如果之前存在对象，查询填充 ID 字段
       if (optional.isPresent()) {
         Model oldType = optional.get();
-        type.setId(oldType.getId());
-        for (ModelField field : type.getFields()) {
-          ModelField oldField = ObjectUtil.find(oldType.getFields(), "code", field.getCode());
-          if (oldField == null) {
-            continue;
+        if (!isContains) {
+          type.setId(oldType.getId());
+          for (ModelField field : type.getFields()) {
+            ModelField oldField = ObjectUtil.find(oldType.getFields(), "code", field.getCode());
+            if (oldField == null || oldField.getId() == null) {
+              continue;
+            }
+            field.setId(oldField.getId());
           }
-          field.setId(oldField.getId());
         }
-        model.connect(modelService.update(type), getModelConnectType(type.getType()));
+        model.connect(modelService.update(type), relation.getType(), relation.getRelation());
       } else {
-        model.connect(modelService.save(type, this), getModelConnectType(type.getType()));
+        model.connect(modelService.save(type, this), relation.getType(), relation.getRelation());
       }
     }
   }
@@ -405,12 +397,12 @@ public class ModelUtils {
       if (argument.getEndpoint() == null) {
         argument.setEndpoint(endpoint);
       }
-      if (argument.getType().getId() != null) {
+      if (argument.getRealType() != null && argument.getRealType().getId() != null) {
         continue;
       }
-      argument.setType(
-          this.getModelByCode(argument.getType().getCode())
-              .orElseThrow(() -> new TypeNotFoundException(argument.getType().getCode())));
+      argument.setRealType(
+          this.getModelByCode(argument.getType())
+              .orElseThrow(() -> new TypeNotFoundException(argument.getType())));
     }
     ModelEndpointReturnType returnType = endpoint.getReturnType();
     returnType.setEndpoint(endpoint);
@@ -433,7 +425,7 @@ public class ModelUtils {
         diff(
             prevFields.stream().filter(item -> !item.getSystem()).collect(Collectors.toList()),
             nextFields,
-            (prev, next) -> prev.equals(next) ? 0 : -1);
+            (prev, next) -> prev.equals(next) && prev.getId() != null ? 0 : -1);
 
     List<ModelField> newFields = diffObject.getAppendItems();
     List<ModelField> oldFields = diffObject.getModifiedItems();
@@ -451,7 +443,8 @@ public class ModelUtils {
     }
   }
 
-  public void mergeFeatures(Model model, Set<ModelFeature> nextFeatures) {
+  public void mergeFeatures(
+      Model model, Set<ModelFeature> nextFeatures, ModelService modelService) {
     Set<ModelFeature> prevFeatures = model.getFeatures();
     DiffObject<ModelFeature> diffObject =
         diff(prevFeatures, nextFeatures, (prev, next) -> prev.equals(next) ? 0 : -1);
@@ -463,14 +456,14 @@ public class ModelUtils {
       this.uninstall(model, feature);
     }
     for (ModelFeature feature : oldFeatures) {
-      this.reinstall(model, feature);
+      this.reinstall(model, feature, modelService);
     }
     prevFeatures.addAll(newFeatures);
     for (ModelFeature feature : newFeatures) {
       this.preinstall(model, feature);
     }
     for (ModelFeature feature : newFeatures) {
-      this.install(model, feature);
+      this.install(model, feature, modelService);
     }
     for (ModelFeature feature : newFeatures) {
       this.postinstall(model, feature);

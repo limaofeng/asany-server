@@ -3,7 +3,10 @@ package cn.asany.shanhai.core.support.model.features;
 import cn.asany.shanhai.core.domain.Model;
 import cn.asany.shanhai.core.domain.ModelEndpoint;
 import cn.asany.shanhai.core.domain.ModelField;
+import cn.asany.shanhai.core.domain.ModelRelation;
+import cn.asany.shanhai.core.domain.enums.ModelConnectType;
 import cn.asany.shanhai.core.domain.enums.ModelEndpointType;
+import cn.asany.shanhai.core.domain.enums.ModelRelationType;
 import cn.asany.shanhai.core.domain.enums.ModelType;
 import cn.asany.shanhai.core.support.graphql.resolvers.base.*;
 import cn.asany.shanhai.core.support.model.FieldType;
@@ -33,7 +36,15 @@ public class MasterModelFeature implements IModelFeature, InitializingBean {
 
   public static final String SUFFIX_ENUM_ORDER_BY = "OrderBy";
 
+  public static final String SUFFIX_TYPE_EDGE = "Edge";
+
   public static final String SUFFIX_TYPE_CONNECTION = "Connection";
+
+  public static final String ENDPOINT_PREFIX_CREATE = "create";
+
+  public static final String ENDPOINT_PREFIX_UPDATE = "update";
+
+  public static final String ENDPOINT_PREFIX_DELETE = "delete";
 
   private final FieldTypeRegistry fieldTypeRegistry;
 
@@ -53,10 +64,6 @@ public class MasterModelFeature implements IModelFeature, InitializingBean {
     endpoints.add(buildFindAllEndpoint(model));
     endpoints.add(buildFindPaginationEndpoint(model));
     return endpoints;
-  }
-
-  private Set<ModelField> cloneObjectFields(Set<ModelField> fields) {
-    return cloneModelFields(fields, item -> true);
   }
 
   private Set<ModelField> cloneInputFields(Set<ModelField> fields) {
@@ -109,21 +116,21 @@ public class MasterModelFeature implements IModelFeature, InitializingBean {
             .code("AND")
             .type(getWhereInputTypeName(model))
             .list(true)
-            .name("Logical AND on all given filters.")
+            .name("逻辑与.")
             .build());
     fields.add(
         ModelField.builder()
             .code("OR")
             .type(getWhereInputTypeName(model))
             .list(true)
-            .name("Logical OR on all given filters.")
+            .name("逻辑或.")
             .build());
     fields.add(
         ModelField.builder()
             .code("NOT")
             .type(getWhereInputTypeName(model))
             .list(true)
-            .name("Logical NOT on all given filters combined by AND.")
+            .name("对所有由 AND 组合的给定过滤器进行逻辑非.")
             .build());
     for (ModelField field :
         model.getFields().stream()
@@ -150,14 +157,14 @@ public class MasterModelFeature implements IModelFeature, InitializingBean {
             .code("node")
             .type(model.getCode())
             .required(true)
-            .name("The item at the end of the edge.")
+            .name("数据节点.")
             .build());
     fields.add(
         ModelField.builder()
             .code("cursor")
             .type(FieldType.String)
             .required(true)
-            .name("A cursor for use in pagination.")
+            .name("分页游标.")
             .build());
     return fields;
   }
@@ -230,44 +237,185 @@ public class MasterModelFeature implements IModelFeature, InitializingBean {
     return fields;
   }
 
+  private void initFields(Model type, Set<ModelField> fields) {
+    type.setFields(
+        fields.stream()
+            .peek(
+                f -> {
+                  Optional<ModelField> fieldOptional =
+                      type.getFields().stream()
+                          .filter(f1 -> f.getCode().equals(f1.getCode()))
+                          .findFirst();
+                  fieldOptional.ifPresent(modelField -> f.setId(modelField.getId()));
+                })
+            .collect(Collectors.toSet()));
+  }
+
   @Override
-  public List<Model> getTypes(Model model) {
-    Model inputTypeOfCreate =
-        this.buildType(
-            ModelType.INPUT_OBJECT,
-            getCreateInputTypeName(model),
-            model.getName() + "录入对象",
-            cloneInputFields(model.getFields()));
-    Model inputTypeOfUpdate =
-        this.buildType(
-            ModelType.INPUT_OBJECT,
-            getUpdateInputTypeName(model),
-            model.getName() + "更新对象",
-            cloneInputFields(model.getFields()));
-    Model inputTypeOfFilter =
-        this.buildType(
-            ModelType.INPUT_OBJECT,
-            getWhereInputTypeName(model),
-            model.getName() + "过滤器",
-            buildWhereFields(model));
-    Model inputTypeOfOrderBy =
-        this.buildType(
-            ModelType.ENUM,
-            getOrderByTypeName(model),
-            model.getName() + "排序",
-            buildOrderByFields(model));
-    Model typeOfEdge =
-        this.buildType(
-            ModelType.OBJECT,
-            getEdgeTypeName(model),
-            model.getName() + " A connection to a list of items.",
-            buildEdgeFields(model));
-    Model typeOfConnection =
-        this.buildType(
-            ModelType.OBJECT,
-            getConnectionTypeName(model),
-            model.getName() + " 分页对象",
-            buildConnectionFields(model));
+  public List<ModelRelation> getTypes(Model model) {
+    Set<ModelRelation> allRelations = model.getRelations();
+
+    ModelRelation inputTypeOfCreate =
+        allRelations.stream()
+            .filter(item -> item.getRelation().equals(ModelConnectType.GRAPHQL_INPUT_CREATE.name()))
+            .findFirst()
+            .map(
+                item -> {
+                  Model type = item.getInverse();
+                  type.setCode(getCreateInputTypeName(model));
+                  type.setName(model.getName() + "录入对象");
+                  initFields(type, cloneInputFields(model.getFields()));
+                  return item;
+                })
+            .orElseGet(
+                () -> {
+                  Model type =
+                      this.buildType(
+                          ModelType.INPUT_OBJECT,
+                          getCreateInputTypeName(model),
+                          model.getName() + "录入对象",
+                          cloneInputFields(model.getFields()));
+                  return ModelRelation.builder()
+                      .type(ModelRelationType.SUBJECTION)
+                      .relation(ModelConnectType.GRAPHQL_INPUT_CREATE.name())
+                      .inverse(type)
+                      .build();
+                });
+
+    ModelRelation inputTypeOfUpdate =
+        allRelations.stream()
+            .filter(item -> item.getRelation().equals(ModelConnectType.GRAPHQL_INPUT_UPDATE.name()))
+            .findFirst()
+            .map(
+                item -> {
+                  Model type = item.getInverse();
+                  type.setCode(getUpdateInputTypeName(model));
+                  type.setName(model.getName() + "更新对象");
+                  initFields(type, cloneInputFields(model.getFields()));
+                  return item;
+                })
+            .orElseGet(
+                () -> {
+                  Model type =
+                      this.buildType(
+                          ModelType.INPUT_OBJECT,
+                          getUpdateInputTypeName(model),
+                          model.getName() + "更新对象",
+                          cloneInputFields(model.getFields()));
+                  return ModelRelation.builder()
+                      .type(ModelRelationType.SUBJECTION)
+                      .relation(ModelConnectType.GRAPHQL_INPUT_UPDATE.name())
+                      .inverse(type)
+                      .build();
+                });
+
+    ModelRelation inputTypeOfFilter =
+        allRelations.stream()
+            .filter(item -> item.getRelation().equals(ModelConnectType.GRAPHQL_INPUT_WHERE.name()))
+            .findFirst()
+            .map(
+                item -> {
+                  Model type = item.getInverse();
+                  type.setCode(getWhereInputTypeName(model));
+                  type.setName(model.getName() + "过滤器");
+                  initFields(type, buildWhereFields(model));
+                  return item;
+                })
+            .orElseGet(
+                () -> {
+                  Model type =
+                      this.buildType(
+                          ModelType.INPUT_OBJECT,
+                          getWhereInputTypeName(model),
+                          model.getName() + "过滤器",
+                          buildWhereFields(model));
+                  return ModelRelation.builder()
+                      .type(ModelRelationType.SUBJECTION)
+                      .relation(ModelConnectType.GRAPHQL_INPUT_WHERE.name())
+                      .inverse(type)
+                      .build();
+                });
+    ModelRelation inputTypeOfOrderBy =
+        allRelations.stream()
+            .filter(
+                item -> item.getRelation().equals(ModelConnectType.GRAPHQL_ENUM_ORDER_BY.name()))
+            .findFirst()
+            .map(
+                item -> {
+                  Model type = item.getInverse();
+                  type.setCode(getOrderByTypeName(model));
+                  type.setName(model.getName() + "排序");
+                  initFields(type, buildOrderByFields(model));
+                  return item;
+                })
+            .orElseGet(
+                () -> {
+                  Model type =
+                      this.buildType(
+                          ModelType.ENUM,
+                          getOrderByTypeName(model),
+                          model.getName() + "排序",
+                          buildOrderByFields(model));
+                  return ModelRelation.builder()
+                      .type(ModelRelationType.SUBJECTION)
+                      .relation(ModelConnectType.GRAPHQL_ENUM_ORDER_BY.name())
+                      .inverse(type)
+                      .build();
+                });
+    ModelRelation typeOfEdge =
+        allRelations.stream()
+            .filter(item -> item.getRelation().equals(ModelConnectType.GRAPHQL_OBJECT_EDGE.name()))
+            .findFirst()
+            .map(
+                item -> {
+                  Model type = item.getInverse();
+                  type.setCode(getEdgeTypeName(model));
+                  type.setName(model.getName() + "数据集.");
+                  initFields(type, buildEdgeFields(model));
+                  return item;
+                })
+            .orElseGet(
+                () -> {
+                  Model type =
+                      this.buildType(
+                          ModelType.OBJECT,
+                          getEdgeTypeName(model),
+                          model.getName() + " 数据集.",
+                          buildEdgeFields(model));
+                  return ModelRelation.builder()
+                      .type(ModelRelationType.SUBJECTION)
+                      .relation(ModelConnectType.GRAPHQL_OBJECT_EDGE.name())
+                      .inverse(type)
+                      .build();
+                });
+    ModelRelation typeOfConnection =
+        allRelations.stream()
+            .filter(
+                item ->
+                    item.getRelation().equals(ModelConnectType.GRAPHQL_OBJECT_CONNECTION.name()))
+            .findFirst()
+            .map(
+                item -> {
+                  Model type = item.getInverse();
+                  type.setCode(getConnectionTypeName(model));
+                  type.setName(model.getName() + "分页对象.");
+                  initFields(type, buildConnectionFields(model));
+                  return item;
+                })
+            .orElseGet(
+                () -> {
+                  Model type =
+                      this.buildType(
+                          ModelType.OBJECT,
+                          getConnectionTypeName(model),
+                          model.getName() + " 分页对象",
+                          buildConnectionFields(model));
+                  return ModelRelation.builder()
+                      .type(ModelRelationType.SUBJECTION)
+                      .relation(ModelConnectType.GRAPHQL_OBJECT_CONNECTION.name())
+                      .inverse(type)
+                      .build();
+                });
     return new ArrayList<>(
         Arrays.asList(
             inputTypeOfCreate,
@@ -279,104 +427,205 @@ public class MasterModelFeature implements IModelFeature, InitializingBean {
   }
 
   private static String getEdgeTypeName(Model model) {
-    return model.getCode() + "Edge";
+    return model.getCode() + SUFFIX_TYPE_EDGE;
   }
 
   private ModelEndpoint buildCreateEndpoint(Model model) {
-    ModelEndpoint endpoint =
-        ModelEndpoint.builder()
-            .type(ModelEndpointType.MUTATION)
-            .code("create" + StringUtil.upperCaseFirst(model.getCode()))
-            .name("新增" + model.getName())
-            .argument("input", getCreateInputTypeName(model), true)
-            .returnType(model)
-            .model(model)
-            .delegate(BaseMutationCreateDataFetcher.class)
-            .build();
-    endpoint.getReturnType().setEndpoint(endpoint);
-    return endpoint;
+    String code = ENDPOINT_PREFIX_CREATE + StringUtil.upperCaseFirst(model.getCode());
+    String name = "新增" + model.getName();
+    return model.getEndpoints().stream()
+        .filter(item -> item.getType() == ModelEndpointType.CREATE)
+        .findFirst()
+        .map(
+            item -> {
+              item.setCode(code);
+              item.setName(name);
+              item.getArguments().stream()
+                  .filter(a -> "input".equals(a.getName()))
+                  .findAny()
+                  .map(
+                      (a) -> {
+                        a.setType(getCreateInputTypeName(model));
+                        return a;
+                      });
+              return item;
+            })
+        .orElseGet(
+            () -> {
+              ModelEndpoint endpoint =
+                  ModelEndpoint.builder()
+                      .type(ModelEndpointType.CREATE)
+                      .code(code)
+                      .name(name)
+                      .argument("input", getCreateInputTypeName(model), true)
+                      .returnType(model)
+                      .model(model)
+                      .delegate(BaseMutationCreateDataFetcher.class)
+                      .build();
+              endpoint.getReturnType().setEndpoint(endpoint);
+              return endpoint;
+            });
   }
 
   private ModelEndpoint buildUpdateEndpoint(Model model) {
-    ModelEndpoint endpoint =
-        ModelEndpoint.builder()
-            .type(ModelEndpointType.MUTATION)
-            .code("update" + StringUtil.upperCaseFirst(model.getCode()))
-            .name("修改" + model.getName())
-            .argument("id", FieldType.ID, true)
-            .argument("input", getUpdateInputTypeName(model), true)
-            .argument("merge", FieldType.Boolean, "启用合并模式", true)
-            .returnType(model)
-            .model(model)
-            .delegate(BaseMutationUpdateDataFetcher.class)
-            .build();
-    endpoint.getReturnType().setEndpoint(endpoint);
-    return endpoint;
+    String code = ENDPOINT_PREFIX_UPDATE + StringUtil.upperCaseFirst(model.getCode());
+    String name = "修改" + model.getName();
+    return model.getEndpoints().stream()
+        .filter(item -> item.getType() == ModelEndpointType.UPDATE)
+        .findFirst()
+        .map(
+            item -> {
+              item.setCode(code);
+              item.setName(name);
+              item.getArguments().stream()
+                  .filter(a -> "input".equals(a.getName()))
+                  .findAny()
+                  .map(
+                      (a) -> {
+                        a.setType(getUpdateInputTypeName(model));
+                        return a;
+                      });
+              return item;
+            })
+        .orElseGet(
+            () -> {
+              ModelEndpoint endpoint =
+                  ModelEndpoint.builder()
+                      .type(ModelEndpointType.UPDATE)
+                      .code(code)
+                      .name(name)
+                      .argument("id", FieldType.ID, true)
+                      .argument("input", getUpdateInputTypeName(model), true)
+                      .argument("merge", FieldType.Boolean, "启用合并模式", true)
+                      .returnType(model)
+                      .model(model)
+                      .delegate(BaseMutationUpdateDataFetcher.class)
+                      .build();
+              endpoint.getReturnType().setEndpoint(endpoint);
+              return endpoint;
+            });
   }
 
   private ModelEndpoint buildDeleteEndpoint(Model model) {
-    ModelEndpoint endpoint =
-        ModelEndpoint.builder()
-            .type(ModelEndpointType.MUTATION)
-            .code("delete" + StringUtil.upperCaseFirst(model.getCode()))
-            .name("删除" + model.getName())
-            .argument("id", FieldType.ID, true)
-            .returnType(model)
-            .model(model)
-            .delegate(BaseMutationDeleteDataFetcher.class)
-            .build();
-    endpoint.getReturnType().setEndpoint(endpoint);
-    return endpoint;
+    String code = ENDPOINT_PREFIX_DELETE + StringUtil.upperCaseFirst(model.getCode());
+    String name = "删除" + model.getName();
+    return model.getEndpoints().stream()
+        .filter(item -> item.getType() == ModelEndpointType.DELETE)
+        .findFirst()
+        .map(
+            item -> {
+              item.setCode(code);
+              item.setName(name);
+              return item;
+            })
+        .orElseGet(
+            () -> {
+              ModelEndpoint endpoint =
+                  ModelEndpoint.builder()
+                      .type(ModelEndpointType.DELETE)
+                      .code(code)
+                      .name(name)
+                      .argument("id", FieldType.ID, true)
+                      .returnType(model)
+                      .model(model)
+                      .delegate(BaseMutationDeleteDataFetcher.class)
+                      .build();
+              endpoint.getReturnType().setEndpoint(endpoint);
+              return endpoint;
+            });
   }
 
   private ModelEndpoint buildGetEndpoint(Model model) {
-    ModelEndpoint endpoint =
-        ModelEndpoint.builder()
-            .type(ModelEndpointType.QUERY)
-            .code(StringUtil.lowerCaseFirst(model.getCode()))
-            .name("获取" + model.getName())
-            .argument("id", FieldType.ID, true)
-            .returnType(model)
-            .model(model)
-            .delegate(BaseQueryGetDataFetcher.class)
-            .build();
-    endpoint.getReturnType().setEndpoint(endpoint);
-    return endpoint;
+    String code = StringUtil.lowerCaseFirst(model.getCode());
+    String name = "获取" + model.getName();
+    return model.getEndpoints().stream()
+        .filter(item -> item.getType() == ModelEndpointType.GET)
+        .findFirst()
+        .map(
+            item -> {
+              item.setCode(code);
+              item.setName(name);
+              return item;
+            })
+        .orElseGet(
+            () -> {
+              ModelEndpoint endpoint =
+                  ModelEndpoint.builder()
+                      .type(ModelEndpointType.GET)
+                      .code(code)
+                      .name(name)
+                      .argument("id", FieldType.ID, true)
+                      .returnType(model)
+                      .model(model)
+                      .delegate(BaseQueryGetDataFetcher.class)
+                      .build();
+              endpoint.getReturnType().setEndpoint(endpoint);
+              return endpoint;
+            });
   }
 
   private ModelEndpoint buildFindAllEndpoint(Model model) {
-    ModelEndpoint endpoint =
-        ModelEndpoint.builder()
-            .type(ModelEndpointType.QUERY)
-            .code(StringUtil.lowerCaseFirst(this.pluralize(model.getCode())))
-            .name("查询" + model.getName())
-            .argument("where", getWhereInputTypeName(model))
-            .argument("first", FieldType.Int, "开始位置")
-            .argument("offset", FieldType.Int, "偏移量")
-            .argument("orderBy", getOrderByTypeName(model), "排序")
-            .returnType(true, model)
-            .model(model)
-            .delegate(BaseQueryFindAllDataFetcher.class)
-            .build();
-    endpoint.getReturnType().setEndpoint(endpoint);
-    return endpoint;
+    String code = StringUtil.lowerCaseFirst(this.pluralize(model.getCode()));
+    String name = "查询" + model.getName();
+    return model.getEndpoints().stream()
+        .filter(item -> item.getType() == ModelEndpointType.LIST)
+        .findFirst()
+        .map(
+            item -> {
+              item.setCode(code);
+              item.setName(name);
+              return item;
+            })
+        .orElseGet(
+            () -> {
+              ModelEndpoint endpoint =
+                  ModelEndpoint.builder()
+                      .type(ModelEndpointType.LIST)
+                      .code(code)
+                      .name(name)
+                      .argument("where", getWhereInputTypeName(model))
+                      .argument("first", FieldType.Int, "开始位置")
+                      .argument("offset", FieldType.Int, "偏移量")
+                      .argument("orderBy", getOrderByTypeName(model), "排序")
+                      .returnType(true, model)
+                      .model(model)
+                      .delegate(BaseQueryFindAllDataFetcher.class)
+                      .build();
+              endpoint.getReturnType().setEndpoint(endpoint);
+              return endpoint;
+            });
   }
 
   private ModelEndpoint buildFindPaginationEndpoint(Model model) {
-    ModelEndpoint endpoint =
-        ModelEndpoint.builder()
-            .type(ModelEndpointType.QUERY)
-            .code(StringUtil.lowerCaseFirst(this.pluralize(model.getCode())) + "Connection")
-            .name(model.getName() + "分页查询")
-            .argument("where", getWhereInputTypeName(model))
-            .argument("page", FieldType.Int, "页码", 1)
-            .argument("pageSize", FieldType.Int, "每页展示条数", 15)
-            .argument("orderBy", getOrderByTypeName(model), "排序")
-            .returnType(getConnectionTypeName(model))
-            .model(model)
-            .build();
-    endpoint.getReturnType().setEndpoint(endpoint);
-    return endpoint;
+    String code = StringUtil.lowerCaseFirst(this.pluralize(model.getCode())) + "Connection";
+    String name = model.getName() + "分页查询";
+    return model.getEndpoints().stream()
+        .filter(item -> item.getType() == ModelEndpointType.CONNECTION)
+        .findFirst()
+        .map(
+            item -> {
+              item.setCode(code);
+              item.setName(name);
+              return item;
+            })
+        .orElseGet(
+            () -> {
+              ModelEndpoint endpoint =
+                  ModelEndpoint.builder()
+                      .type(ModelEndpointType.CONNECTION)
+                      .code(code)
+                      .name(model.getName() + "分页查询")
+                      .argument("where", getWhereInputTypeName(model))
+                      .argument("page", FieldType.Int, "页码", 1)
+                      .argument("pageSize", FieldType.Int, "每页展示条数", 15)
+                      .argument("orderBy", getOrderByTypeName(model), "排序")
+                      .returnType(getConnectionTypeName(model))
+                      .delegate(BaseQueryConnectionDataFetcher.class)
+                      .model(model)
+                      .build();
+              endpoint.getReturnType().setEndpoint(endpoint);
+              return endpoint;
+            });
   }
 
   public String pluralize(String word) {

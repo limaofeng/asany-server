@@ -1,8 +1,10 @@
 package cn.asany.shanhai.autoconfigure;
 
 import cn.asany.shanhai.core.support.dao.ModelSessionFactory;
+import cn.asany.shanhai.core.support.graphql.DynamicGraphQLSchemaProvider;
 import cn.asany.shanhai.core.support.graphql.GraphQLServer;
 import cn.asany.shanhai.core.support.graphql.ModelDelegateFactory;
+import cn.asany.shanhai.core.support.graphql.config.CustomMissingResolverDataFetcher;
 import cn.asany.shanhai.core.support.model.FieldType;
 import cn.asany.shanhai.core.support.model.FieldTypeRegistry;
 import cn.asany.shanhai.core.support.model.IModelFeature;
@@ -12,10 +14,22 @@ import cn.asany.shanhai.data.engine.DefaultDataSourceLoader;
 import cn.asany.shanhai.data.engine.IDataSourceBuilder;
 import cn.asany.shanhai.data.engine.IDataSourceLoader;
 import cn.asany.shanhai.data.engine.IDataSourceOptions;
+import graphql.kickstart.autoconfigure.tools.SchemaDirective;
+import graphql.kickstart.autoconfigure.tools.SchemaStringProvider;
+import graphql.kickstart.servlet.config.GraphQLSchemaServletProvider;
+import graphql.kickstart.tools.*;
+import graphql.kickstart.tools.proxy.ProxyHandler;
+import graphql.schema.GraphQLScalarType;
+import graphql.schema.idl.SchemaDirectiveWiring;
+import graphql.schema.visibility.GraphqlFieldVisibility;
+import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.jfantasy.framework.dao.jpa.ComplexJpaRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -100,6 +114,69 @@ public class ShanhaiAutoConfiguration {
     IDataSourceLoader factory = new DefaultDataSourceLoader();
     builders.forEach(value -> factory.addBuilder(value.type(), value));
     return factory;
+  }
+
+  @Bean
+  @ConfigurationProperties("graphql.tools.schema-parser-options")
+  public SchemaParserOptions.Builder CustomOptionsBuilder(
+      @Autowired(required = false) PerFieldObjectMapperProvider perFieldObjectMapperProvider,
+      @Autowired(required = false) List<SchemaParserOptions.GenericWrapper> genericWrappers,
+      @Autowired(required = false) ObjectMapperConfigurer objectMapperConfigurer,
+      @Autowired(required = false) List<ProxyHandler> proxyHandlers,
+      @Autowired(required = false) CoroutineContextProvider coroutineContextProvider,
+      @Autowired(required = false) List<TypeDefinitionFactory> typeDefinitionFactories,
+      @Autowired(required = false) GraphqlFieldVisibility fieldVisibility) {
+    SchemaParserOptions.Builder optionsBuilder = SchemaParserOptions.newOptions();
+
+    if (perFieldObjectMapperProvider != null) {
+      optionsBuilder.objectMapperProvider(perFieldObjectMapperProvider);
+    } else {
+      optionsBuilder.objectMapperConfigurer(objectMapperConfigurer);
+    }
+
+    Optional.ofNullable(genericWrappers).ifPresent(optionsBuilder::genericWrappers);
+
+    if (proxyHandlers != null) {
+      proxyHandlers.forEach(optionsBuilder::addProxyHandler);
+    }
+
+    Optional.ofNullable(coroutineContextProvider)
+        .ifPresent(optionsBuilder::coroutineContextProvider);
+
+    if (typeDefinitionFactories != null) {
+      typeDefinitionFactories.forEach(optionsBuilder::typeDefinitionFactory);
+    }
+
+    Optional.ofNullable(fieldVisibility).ifPresent(optionsBuilder::fieldVisibility);
+
+    optionsBuilder.allowUnimplementedResolvers(true);
+    optionsBuilder.includeUnusedTypes(true);
+
+    optionsBuilder.missingResolverDataFetcher(new CustomMissingResolverDataFetcher());
+
+    return optionsBuilder;
+  }
+
+  @Bean
+  public GraphQLSchemaServletProvider graphQLSchemaProvider(
+      SchemaParser schemaParser,
+      List<GraphQLResolver<?>> resolvers,
+      SchemaStringProvider schemaStringProvider,
+      SchemaParserOptions.Builder optionsBuilder,
+      @Autowired(required = false) SchemaParserDictionary dictionary,
+      @Autowired(required = false) GraphQLScalarType[] scalars,
+      @Autowired(required = false) List<SchemaDirective> directives,
+      @Autowired(required = false) List<SchemaDirectiveWiring> directiveWiring)
+      throws IOException {
+    return new DynamicGraphQLSchemaProvider(
+        schemaParser,
+        resolvers,
+        schemaStringProvider,
+        optionsBuilder,
+        dictionary,
+        scalars,
+        directives,
+        directiveWiring);
   }
 
   public String fromNow(long time) {

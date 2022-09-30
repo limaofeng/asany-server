@@ -16,7 +16,7 @@ public class TemplateDataOfEndpointArgument {
   }
 
   public String getType() {
-    return argument.getType().getCode();
+    return argument.getType();
   }
 
   public Boolean getRequired() {

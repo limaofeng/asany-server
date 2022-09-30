@@ -1,6 +1,10 @@
 package cn.asany.shanhai.core.domain.enums;
 
 public enum ModelEndpointType {
-  QUERY,
-  MUTATION
+  CREATE,
+  UPDATE,
+  DELETE,
+  GET,
+  LIST,
+  CONNECTION,
 }
