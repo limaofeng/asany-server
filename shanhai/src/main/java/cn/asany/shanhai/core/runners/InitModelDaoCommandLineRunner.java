@@ -1,13 +1,8 @@
 package cn.asany.shanhai.core.runners;
 
-import cn.asany.shanhai.core.domain.Model;
-import cn.asany.shanhai.core.domain.enums.ModelType;
 import cn.asany.shanhai.core.service.ModelService;
-import cn.asany.shanhai.core.support.dao.ModelRepository;
 import cn.asany.shanhai.core.support.dao.ModelSessionFactory;
 import cn.asany.shanhai.core.support.graphql.GraphQLServer;
-import graphql.GraphQL;
-import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,30 +42,30 @@ public class InitModelDaoCommandLineRunner implements CommandLineRunner {
   @Override
   @Transactional(readOnly = true)
   public void run(String... args) {
-    try {
-      long start = System.currentTimeMillis();
-      List<Model> types =
-          modelService.findAll(
-              ModelType.SCALAR, ModelType.OBJECT, ModelType.INPUT_OBJECT, ModelType.ENUM);
-      System.out.println("耗时:" + fromNow(start));
-      start = System.currentTimeMillis();
-      List<Model> models = modelService.findAll(ModelType.ENTITY);
-      System.out.println("耗时:" + fromNow(start));
-      graphQLServer.setTypes(types);
-
-      for (Model model : models) {
-        ModelRepository repository = modelSessionFactory.buildModelRepository(model);
-
-        graphQLServer.addModel(model, repository);
-      }
-
-      GraphQL server = graphQLServer.buildServer();
-
-      log.debug("Scheme:" + server);
-
-      modelSessionFactory.update();
-    } catch (Exception e) {
-      log.error(e.getMessage());
-    }
+    //    try {
+    //      long start = System.currentTimeMillis();
+    //      List<Model> types =
+    //          modelService.findAll(
+    //              ModelType.SCALAR, ModelType.OBJECT, ModelType.INPUT_OBJECT, ModelType.ENUM);
+    //      System.out.println("耗时:" + fromNow(start));
+    //      start = System.currentTimeMillis();
+    //      List<Model> models = modelService.findAll(ModelType.ENTITY);
+    //      System.out.println("耗时:" + fromNow(start));
+    //      graphQLServer.setTypes(types);
+    //
+    //      for (Model model : models) {
+    //        ModelRepository repository = modelSessionFactory.buildModelRepository(model);
+    //
+    //        graphQLServer.addModel(model, repository);
+    //      }
+    //
+    //      GraphQL server = graphQLServer.buildServer();
+    //
+    //      log.debug("Scheme:" + server);
+    //
+    //      modelSessionFactory.update();
+    //    } catch (Exception e) {
+    //      log.error(e.getMessage());
+    //    }
   }
 }

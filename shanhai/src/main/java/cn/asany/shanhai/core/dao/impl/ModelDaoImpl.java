@@ -2,7 +2,6 @@ package cn.asany.shanhai.core.dao.impl;
 
 import cn.asany.shanhai.core.dao.ModelDao;
 import cn.asany.shanhai.core.domain.Model;
-import cn.asany.shanhai.core.domain.enums.ModelType;
 import java.util.List;
 import javax.persistence.EntityManager;
 import org.jfantasy.framework.dao.jpa.ComplexJpaRepository;
@@ -22,8 +21,8 @@ public class ModelDaoImpl extends ComplexJpaRepository<Model, Long> implements M
   }
 
   @Override
-  public List<Model> findAllByTypesWithMetadataAndFields(ModelType... types) {
-    return super.findAll(PropertyFilter.builder().in("type", types).build());
+  public Model getDetails(Long id) {
+    return super.findById(id).orElse(null);
   }
 
   @Override

@@ -1,10 +1,9 @@
 package cn.asany.shanhai.autoconfigure;
 
-import cn.asany.shanhai.core.domain.Model;
-import cn.asany.shanhai.core.domain.ModelRelation;
 import cn.asany.shanhai.core.support.ModelParser;
 import cn.asany.shanhai.core.support.graphql.ModelEndpointDataFetcherFactory;
 import cn.asany.shanhai.core.support.graphql.config.CustomTypeDefinitionFactory;
+import java.util.Map;
 import org.jfantasy.framework.util.asm.AsmUtil;
 import org.jfantasy.graphql.SchemaParserDictionaryBuilder;
 import org.springframework.context.annotation.Bean;
@@ -26,14 +25,8 @@ public class ModelAutoConfiguration {
   @Bean("CustomTypeDefinition.SchemaParserDictionaryBuilder")
   public SchemaParserDictionaryBuilder customSchemaDictionary(ModelParser modelParser) {
     return dictionary -> {
-      for (Model model : modelParser.getModels()) {
-        String classname = model.getModule().getCode().concat(".").concat(model.getCode());
-        dictionary.add(model.getCode(), AsmUtil.makeClass(classname));
-
-        for (ModelRelation relation : model.getRelations()) {
-          Model type = relation.getInverse();
-
-        }
+      for (Map.Entry<String, Class<?>> entry : modelParser.getBeanClassMap().entrySet()) {
+        dictionary.add(entry.getKey(), entry.getValue());
       }
     };
   }

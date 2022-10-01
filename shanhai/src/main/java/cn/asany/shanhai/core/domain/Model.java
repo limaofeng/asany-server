@@ -29,8 +29,8 @@ import org.jfantasy.framework.dao.hibernate.converter.StringArrayConverter;
 @NamedEntityGraph(
     name = "Graph.Model.FetchMetadataAndFields",
     attributeNodes = {
-      @NamedAttributeNode(value = "module", subgraph = "SubGraph.Module.FetchAttributes"),
       @NamedAttributeNode(value = "metadata"),
+      @NamedAttributeNode(value = "module", subgraph = "SubGraph.Module.FetchAttributes"),
       @NamedAttributeNode(value = "fields", subgraph = "SubGraph.ModelField.FetchAttributes"),
       @NamedAttributeNode(value = "endpoints", subgraph = "SubGraph.ModelEndpoint.FetchAttributes"),
       @NamedAttributeNode(value = "relations")
@@ -155,11 +155,8 @@ public class Model extends BaseBusEntity implements ModelGroupResource {
   private Set<ModelEndpoint> endpoints;
   /** 元数据 */
   @OneToOne(
-      fetch = FetchType.LAZY,
-      cascade = {CascadeType.ALL})
-  @LazyToOne(LazyToOneOption.NO_PROXY)
-  @PrimaryKeyJoinColumn(name = "ID", referencedColumnName = "MODEL_ID")
-  @ToString.Exclude
+      mappedBy = "model",
+      cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
   private ModelMetadata metadata;
   /** 服务 */
   @ManyToOne(fetch = FetchType.LAZY)

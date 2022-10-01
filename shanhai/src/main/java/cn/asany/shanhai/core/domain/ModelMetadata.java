@@ -5,8 +5,6 @@ import java.io.Serializable;
 import javax.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.LazyToOne;
-import org.hibernate.annotations.LazyToOneOption;
 import org.hibernate.annotations.Parameter;
 
 @Data
@@ -14,7 +12,6 @@ import org.hibernate.annotations.Parameter;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false, of = "id")
-@ToString(of = "id")
 @Entity
 @Table(name = "SH_MODEL_METADATA")
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
@@ -36,7 +33,8 @@ public class ModelMetadata implements Serializable {
   @Column(name = "HIBERNATE_MAPPING", columnDefinition = "Text")
   private String hbm;
 
-  @LazyToOne(LazyToOneOption.NO_PROXY)
-  @OneToOne(fetch = FetchType.LAZY, targetEntity = Model.class, mappedBy = "metadata")
+  @OneToOne(fetch = FetchType.LAZY)
+  @PrimaryKeyJoinColumn
+  @ToString.Exclude
   private Model model;
 }

@@ -163,14 +163,14 @@ public class ModelService {
     ModelUtils modelUtils = ModelUtils.getInstance();
     modelUtils.clear();
 
-    List<Model> types =
-        this.modelDao.findAllByTypesWithMetadataAndFields(
-            ModelType.OBJECT,
-            ModelType.SCALAR,
-            ModelType.INPUT_OBJECT,
-            ModelType.ENUM,
-            ModelType.INTERFACE,
-            ModelType.UNION);
+    List<Model> types = new ArrayList<>();
+    //        this.modelDao.findAllByTypesWithMetadataAndFields(
+    //            ModelType.OBJECT,
+    //            ModelType.SCALAR,
+    //            ModelType.INPUT_OBJECT,
+    //            ModelType.ENUM,
+    //            ModelType.INTERFACE,
+    //            ModelType.UNION);
     modelUtils.newCache(types);
     modelUtils.enableLazySave();
 
@@ -442,13 +442,14 @@ public class ModelService {
     System.out.println("....");
   }
 
-  public List<Model> findAll() {
-    return this.modelDao.findAll();
+  @Transactional(readOnly = true)
+  public List<Model> findEntityModels() {
+    return this.modelDao.findAll(PropertyFilter.builder().equal("type", ModelType.ENTITY).build());
   }
 
   @Transactional(readOnly = true)
-  public List<Model> findAll(ModelType... types) {
-    return this.modelDao.findAllByTypesWithMetadataAndFields(types);
+  public Model getDetails(Long id) {
+    return this.modelDao.getDetails(id);
   }
 
   @Transactional

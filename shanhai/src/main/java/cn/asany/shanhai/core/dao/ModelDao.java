@@ -1,7 +1,6 @@
 package cn.asany.shanhai.core.dao;
 
 import cn.asany.shanhai.core.domain.Model;
-import cn.asany.shanhai.core.domain.enums.ModelType;
 import java.util.List;
 import org.jfantasy.framework.dao.jpa.JpaRepository;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
@@ -22,7 +21,7 @@ public interface ModelDao extends JpaRepository<Model, Long> {
   @EntityGraph(
       value = "Graph.Model.FetchMetadataAndFields",
       type = EntityGraph.EntityGraphType.FETCH)
-  List<Model> findAllByTypesWithMetadataAndFields(ModelType... types);
+  Model getDetails(Long id);
 
   @EntityGraph(
       value = "Graph.Model.FetchMetadataAndFields",
