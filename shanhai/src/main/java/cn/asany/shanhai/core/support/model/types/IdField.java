@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
  */
 @Data
 @Component
-public class IdField implements FieldType {
+public class IdField implements FieldType<Long, Long> {
   private String id = "ID";
   private String name = "ID";
   private String javaType = Long.class.getName();

@@ -5,6 +5,7 @@ import cn.asany.shanhai.core.domain.*;
 import cn.asany.shanhai.core.domain.enums.ModelRelationType;
 import cn.asany.shanhai.core.domain.enums.ModelStatus;
 import cn.asany.shanhai.core.domain.enums.ModelType;
+import cn.asany.shanhai.core.event.CreateModelFieldEvent;
 import cn.asany.shanhai.core.runners.InitModelDaoCommandLineRunner;
 import cn.asany.shanhai.core.support.model.features.MasterModelFeature;
 import cn.asany.shanhai.core.utils.DuplicateFieldException;
@@ -20,6 +21,7 @@ import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
 import org.jfantasy.framework.error.ValidationException;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.common.StringUtil;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -44,6 +46,8 @@ public class ModelService {
   private final ModelFieldArgumentDao modelFieldArgumentDao;
   private final ModelFeatureDao modelFeatureDao;
 
+  private final ApplicationEventPublisher publisher;
+
   public ModelService(
       ModelDao modelDao,
       ModelFieldDao modelFieldDao,
@@ -52,7 +56,8 @@ public class ModelService {
       ModelFeatureDao modelFeatureDao,
       ModelFieldArgumentDao modelFieldArgumentDao,
       ModelMetadataDao modelMetadataDao,
-      ModelFieldMetadataDao modelFieldMetadataDao) {
+      ModelFieldMetadataDao modelFieldMetadataDao,
+      ApplicationEventPublisher publisher) {
     this.modelDao = modelDao;
     this.modelFieldDao = modelFieldDao;
     this.modelEndpointDao = modelEndpointDao;
@@ -61,6 +66,7 @@ public class ModelService {
     this.modelFieldArgumentDao = modelFieldArgumentDao;
     this.modelMetadataDao = modelMetadataDao;
     this.modelFieldMetadataDao = modelFieldMetadataDao;
+    this.publisher = publisher;
   }
 
   public Page<Model> findPage(Pageable pageable, List<PropertyFilter> filters) {
@@ -553,6 +559,7 @@ public class ModelService {
     for (ModelFeature feature : features) {
       modelUtils.reinstall(model, feature, this);
     }
+    publisher.publishEvent(new CreateModelFieldEvent(modelId, newField));
     return newField;
   }
 

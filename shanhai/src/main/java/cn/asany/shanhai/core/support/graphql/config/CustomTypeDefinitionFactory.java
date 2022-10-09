@@ -1,9 +1,8 @@
 package cn.asany.shanhai.core.support.graphql.config;
 
-import cn.asany.shanhai.core.domain.*;
 import cn.asany.shanhai.core.support.ModelParser;
 import graphql.kickstart.tools.TypeDefinitionFactory;
-import graphql.language.*;
+import graphql.language.Definition;
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
 

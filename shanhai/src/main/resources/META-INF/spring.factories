@@ -1,3 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-cn.asany.shanhai.autoconfigure.ShanhaiAutoConfiguration,\
-cn.asany.shanhai.autoconfigure.ModelAutoConfiguration
+cn.asany.shanhai.autoconfigure.ShanhaiAutoConfiguration

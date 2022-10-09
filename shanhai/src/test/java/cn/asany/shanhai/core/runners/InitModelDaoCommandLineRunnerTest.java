@@ -2,7 +2,6 @@ package cn.asany.shanhai.core.runners;
 
 import cn.asany.shanhai.TestApplication;
 import cn.asany.shanhai.core.domain.Model;
-import cn.asany.shanhai.core.domain.enums.ModelType;
 import cn.asany.shanhai.core.service.ModelService;
 import cn.asany.shanhai.core.support.dao.ManualTransactionManager;
 import cn.asany.shanhai.core.support.dao.ModelRepository;
@@ -37,7 +36,7 @@ class InitModelDaoCommandLineRunnerTest {
   @Test
   @Transactional
   void run() {
-    List<Model> models = modelService.findAll(ModelType.ENTITY);
+    List<Model> models = modelService.findEntityModels();
     for (Model model : models) {
       sessionFactory.buildModelRepository(model);
     }
@@ -53,7 +52,7 @@ class InitModelDaoCommandLineRunnerTest {
         PropertyFilter.builder().equal("name", "王武ds11").isNull("createdAt"),
         PropertyFilter.builder().startsWith("name", "12312"));
 
-    List result = modelJpaRepository.findAll(builder.build());
+    List<Object> result = modelJpaRepository.findAll(builder.build());
     System.out.println("resultList: " + result);
 
     transactionManager.unbindSession();

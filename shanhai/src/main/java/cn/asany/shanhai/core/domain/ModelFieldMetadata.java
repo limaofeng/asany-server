@@ -62,6 +62,8 @@ public class ModelFieldMetadata implements Serializable {
   @ToString.Exclude
   private ModelField field;
 
+  private transient String javaTypeClassName;
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {

@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
  */
 @Data
 @Component
-public class IntField implements FieldType {
+public class IntField implements FieldType<Long, Object> {
   private String id = "Int";
   private String name = "整数型";
   private String javaType = Long.class.getName();

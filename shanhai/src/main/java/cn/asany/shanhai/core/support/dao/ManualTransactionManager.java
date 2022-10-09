@@ -17,9 +17,9 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
 @Slf4j
 public class ManualTransactionManager {
 
-  private static ThreadLocal<SessionFactory> holder = new ThreadLocal<>();
+  private static final ThreadLocal<SessionFactory> holder = new ThreadLocal<>();
 
-  private ModelSessionFactory sessionFactory;
+  private final ModelSessionFactory sessionFactory;
 
   public ManualTransactionManager(ModelSessionFactory sessionFactory) {
     this.sessionFactory = sessionFactory;
@@ -60,7 +60,7 @@ public class ManualTransactionManager {
     transaction.rollback();
   }
 
-  public void bindSession() {
+  public boolean bindSession() {
     SessionFactory sessionFactory = this.buildCurrentSessionFactory();
     int retryCount = 0;
     while (sessionFactory == null && ++retryCount <= 3) {
@@ -75,9 +75,13 @@ public class ManualTransactionManager {
       throw new ValidationException("Build SessionFactory Failure");
     }
     Session session = sessionFactory.openSession();
-    SessionHolder sessionHolder = new SessionHolder(session);
-    TransactionSynchronizationManager.bindResource(sessionFactory, sessionHolder);
-    sessionHolder.setSynchronizedWithTransaction(true);
+    if (!TransactionSynchronizationManager.hasResource(sessionFactory)) {
+      SessionHolder sessionHolder = new SessionHolder(session);
+      TransactionSynchronizationManager.bindResource(sessionFactory, sessionHolder);
+      sessionHolder.setSynchronizedWithTransaction(true);
+      return true;
+    }
+    return false;
   }
 
   public void beginTransaction() {

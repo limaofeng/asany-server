@@ -1,7 +1,6 @@
 package cn.asany.shanhai.core.support.dao;
 
 import cn.asany.shanhai.core.domain.ModelField;
-import cn.asany.shanhai.core.support.model.FieldType;
 import cn.asany.shanhai.core.support.model.FieldTypeRegistry;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -16,12 +15,14 @@ import org.jfantasy.framework.util.ognl.OgnlUtil;
 
 public class ModelResultTransformer implements ResultTransformer {
 
+  private final Class<?> entityClass;
   private Collection<ModelField> fields;
   private final OgnlUtil ognlUtil;
-  private final Map<String, AttributeConverter> converterMap = new ConcurrentHashMap<>();
+  private final Map<String, AttributeConverter<?, ?>> converterMap = new ConcurrentHashMap<>();
 
-  public ModelResultTransformer(Collection<ModelField> fields) {
+  public ModelResultTransformer(Class<?> entityClass, Collection<ModelField> fields) {
     FieldTypeRegistry registry = SpringBeanUtils.getBeanByType(FieldTypeRegistry.class);
+    this.entityClass = entityClass;
     this.fields = fields;
     for (ModelField field : fields) {
       AttributeConverter<?, ?> type = registry.getType(field.getType());
@@ -35,13 +36,14 @@ public class ModelResultTransformer implements ResultTransformer {
     return tuple[tuple.length - 1];
   }
 
-  public Object convertToEntity(Object entity) {
-    for (Map.Entry<String, AttributeConverter> converterEntry : converterMap.entrySet()) {
+  public Object convertToEntity(Object object) {
+    Object entity = ClassUtil.newInstance(this.entityClass);
+    for (Map.Entry<String, AttributeConverter<?, ?>> converterEntry : converterMap.entrySet()) {
       String key = converterEntry.getKey();
-      AttributeConverter converter = converterEntry.getValue();
-      Object value = ognlUtil.getValue(key, entity);
-      Class toType = ClassUtil.getInterfaceGenricType(converter.getClass(), FieldType.class);
-      if (value == null || toType.isAssignableFrom(value.getClass())) {
+      AttributeConverter<Object, Object> converter =
+          (AttributeConverter<Object, Object>) converterEntry.getValue();
+      Object value = ognlUtil.getValue(key, object);
+      if (value == null) {
         continue;
       }
       ognlUtil.setValue(key, entity, converter.convertToEntityAttribute(value));
@@ -50,7 +52,7 @@ public class ModelResultTransformer implements ResultTransformer {
   }
 
   @Override
-  public List transformList(List list) {
+  public List<Object> transformList(List list) {
     List<Object> result = new ArrayList<Object>(list.size());
     for (Object entity : list) {
       result.add(convertToEntity(entity));

@@ -101,7 +101,7 @@ spring:
 
 flowable:
   async-executor-activate: false
-  database-schema-update: true
+  database-schema-update: false
   app:
     deploy-resources: true
   deploymentName: '"SpringBootAutoDeployment"'
@@ -142,9 +142,6 @@ graphql:
       max-age: 3600
   tools:
     introspection-enabled: true
-    schema-parser-options:
-      allow-unimplemented-resolvers: true
-
 
 management:
   health:

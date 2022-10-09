@@ -337,6 +337,7 @@ public class ModelUtils {
         if (this.isLazySave()) {
           this.cache().putModel(type);
         }
+        type.setModule(model.getModule());
         model.connect(modelService.save(type, this), relation.getType(), relation.getRelation());
       }
     }

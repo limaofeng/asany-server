@@ -1,43 +1,39 @@
 package cn.asany.shanhai.autoconfigure;
 
+import cn.asany.shanhai.core.support.dao.ManualTransactionManager;
 import cn.asany.shanhai.core.support.dao.ModelSessionFactory;
-import cn.asany.shanhai.core.support.graphql.DynamicGraphQLSchemaProvider;
-import cn.asany.shanhai.core.support.graphql.GraphQLServer;
 import cn.asany.shanhai.core.support.graphql.ModelDelegateFactory;
-import cn.asany.shanhai.core.support.graphql.config.CustomMissingResolverDataFetcher;
+import cn.asany.shanhai.core.support.graphql.execution.OpenModelSessionAsyncMutationExecutionStrategy;
+import cn.asany.shanhai.core.support.graphql.execution.OpenModelSessionAsyncQueryExecutionStrategy;
 import cn.asany.shanhai.core.support.model.FieldType;
 import cn.asany.shanhai.core.support.model.FieldTypeRegistry;
 import cn.asany.shanhai.core.support.model.IModelFeature;
 import cn.asany.shanhai.core.support.model.ModelFeatureRegistry;
-import cn.asany.shanhai.core.utils.HibernateMappingHelper;
 import cn.asany.shanhai.data.engine.DefaultDataSourceLoader;
 import cn.asany.shanhai.data.engine.IDataSourceBuilder;
 import cn.asany.shanhai.data.engine.IDataSourceLoader;
 import cn.asany.shanhai.data.engine.IDataSourceOptions;
-import graphql.kickstart.autoconfigure.tools.SchemaDirective;
-import graphql.kickstart.autoconfigure.tools.SchemaStringProvider;
-import graphql.kickstart.servlet.config.GraphQLSchemaServletProvider;
-import graphql.kickstart.tools.*;
-import graphql.kickstart.tools.proxy.ProxyHandler;
-import graphql.schema.GraphQLScalarType;
-import graphql.schema.idl.SchemaDirectiveWiring;
-import graphql.schema.visibility.GraphqlFieldVisibility;
-import java.io.IOException;
+import graphql.execution.ExecutionStrategy;
+import graphql.kickstart.autoconfigure.web.servlet.GraphQLWebAutoConfiguration;
 import java.util.List;
-import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
+import org.jfantasy.autoconfigure.GraphQLAutoConfiguration;
 import org.jfantasy.framework.dao.jpa.ComplexJpaRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
-/** @author limaofeng */
+/**
+ * 自动配置
+ *
+ * @author limaofeng
+ */
 @Configuration
+@AutoConfigureBefore(GraphQLAutoConfiguration.class)
 @EntityScan({
   "cn.asany.shanhai.core.domain",
   "cn.asany.shanhai.data.domain",
@@ -51,6 +47,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
   "cn.asany.shanhai.core.utils",
   "cn.asany.shanhai.core.rest",
   "cn.asany.shanhai.core.dao",
+  "cn.asany.shanhai.core.listener",
   "cn.asany.shanhai.core.service",
   "cn.asany.shanhai.core.graphql",
   "cn.asany.shanhai.data.engine",
@@ -69,19 +66,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
     },
     repositoryBaseClass = ComplexJpaRepository.class)
 @Slf4j
-@Import(CustomFieldTypeConfig.class)
+@Import({CustomFieldTypeConfig.class, ModelAutoConfiguration.class})
 public class ShanhaiAutoConfiguration {
-
-  private HibernateMappingHelper hibernateMappingHelper;
-
-  private ModelSessionFactory modelSessionFactory;
-
-  private GraphQLServer graphQLServer;
-
-  @Bean
-  public GraphQLServer buildGraphQLServer() {
-    return this.graphQLServer = new GraphQLServer();
-  }
 
   @Bean
   public ModelDelegateFactory buildModelDelegateFactory() {
@@ -97,8 +83,12 @@ public class ShanhaiAutoConfiguration {
 
   @Bean
   public ModelSessionFactory buildRuntimeSessionFactory() {
-    ModelSessionFactory sessionFactory = new ModelSessionFactory();
-    return this.modelSessionFactory = sessionFactory;
+    return new ModelSessionFactory();
+  }
+
+  @Bean
+  public ManualTransactionManager manualTransactionManager() {
+    return new ManualTransactionManager(buildRuntimeSessionFactory());
   }
 
   @Bean
@@ -116,75 +106,13 @@ public class ShanhaiAutoConfiguration {
     return factory;
   }
 
-  @Bean
-  @ConfigurationProperties("graphql.tools.schema-parser-options")
-  public SchemaParserOptions.Builder CustomOptionsBuilder(
-      @Autowired(required = false) PerFieldObjectMapperProvider perFieldObjectMapperProvider,
-      @Autowired(required = false) List<SchemaParserOptions.GenericWrapper> genericWrappers,
-      @Autowired(required = false) ObjectMapperConfigurer objectMapperConfigurer,
-      @Autowired(required = false) List<ProxyHandler> proxyHandlers,
-      @Autowired(required = false) CoroutineContextProvider coroutineContextProvider,
-      @Autowired(required = false) List<TypeDefinitionFactory> typeDefinitionFactories,
-      @Autowired(required = false) GraphqlFieldVisibility fieldVisibility) {
-    SchemaParserOptions.Builder optionsBuilder = SchemaParserOptions.newOptions();
-
-    if (perFieldObjectMapperProvider != null) {
-      optionsBuilder.objectMapperProvider(perFieldObjectMapperProvider);
-    } else {
-      optionsBuilder.objectMapperConfigurer(objectMapperConfigurer);
-    }
-
-    Optional.ofNullable(genericWrappers).ifPresent(optionsBuilder::genericWrappers);
-
-    if (proxyHandlers != null) {
-      proxyHandlers.forEach(optionsBuilder::addProxyHandler);
-    }
-
-    Optional.ofNullable(coroutineContextProvider)
-        .ifPresent(optionsBuilder::coroutineContextProvider);
-
-    if (typeDefinitionFactories != null) {
-      typeDefinitionFactories.forEach(optionsBuilder::typeDefinitionFactory);
-    }
-
-    Optional.ofNullable(fieldVisibility).ifPresent(optionsBuilder::fieldVisibility);
-
-    optionsBuilder.allowUnimplementedResolvers(true);
-    optionsBuilder.includeUnusedTypes(true);
-
-    optionsBuilder.missingResolverDataFetcher(new CustomMissingResolverDataFetcher());
-
-    return optionsBuilder;
+  @Bean(GraphQLWebAutoConfiguration.QUERY_EXECUTION_STRATEGY)
+  public ExecutionStrategy queryExecutionStrategy(ManualTransactionManager transactionManager) {
+    return new OpenModelSessionAsyncQueryExecutionStrategy(transactionManager);
   }
 
-  @Bean
-  public GraphQLSchemaServletProvider graphQLSchemaProvider(
-      SchemaParser schemaParser,
-      List<GraphQLResolver<?>> resolvers,
-      SchemaStringProvider schemaStringProvider,
-      SchemaParserOptions.Builder optionsBuilder,
-      @Autowired(required = false) SchemaParserDictionary dictionary,
-      @Autowired(required = false) GraphQLScalarType[] scalars,
-      @Autowired(required = false) List<SchemaDirective> directives,
-      @Autowired(required = false) List<SchemaDirectiveWiring> directiveWiring)
-      throws IOException {
-    return new DynamicGraphQLSchemaProvider(
-        schemaParser,
-        resolvers,
-        schemaStringProvider,
-        optionsBuilder,
-        dictionary,
-        scalars,
-        directives,
-        directiveWiring);
-  }
-
-  public String fromNow(long time) {
-    long times = System.currentTimeMillis() - time;
-    if (times < 1000) {
-      return times + "ms";
-    }
-    times = times / 1000;
-    return times + "s";
+  @Bean(GraphQLWebAutoConfiguration.MUTATION_EXECUTION_STRATEGY)
+  public ExecutionStrategy mutationExecutionStrategy() {
+    return new OpenModelSessionAsyncMutationExecutionStrategy();
   }
 }

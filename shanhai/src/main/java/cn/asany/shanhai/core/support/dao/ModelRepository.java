@@ -16,15 +16,17 @@ import org.jfantasy.framework.util.ognl.OgnlUtil;
 import org.springframework.util.Assert;
 
 public class ModelRepository {
-  protected Model model;
-  protected String entityName;
+  private final Class<?> entityClass;
+  protected final Model model;
+  protected final String entityName;
   protected ModelResultTransformer resultTransformer;
   private final OgnlUtil ognlUtil = OgnlUtil.getInstance();
 
-  public ModelRepository(Model model) {
+  public ModelRepository(Model model, Class<?> entityClass) {
     this.model = model;
+    this.entityClass = entityClass;
     this.entityName = model.getCode();
-    this.resultTransformer = new ModelResultTransformer(model.getFields());
+    this.resultTransformer = new ModelResultTransformer(entityClass, model.getFields());
   }
 
   protected SessionFactory getSessionFactory() {
@@ -80,6 +82,7 @@ public class ModelRepository {
     //            createAlias(criteria, alias, orderBy);
     //        }
     criteria.setCacheable(true);
+    criteria.setResultTransformer(this.resultTransformer);
     return criteria;
   }
 
@@ -94,11 +97,12 @@ public class ModelRepository {
     //            createAlias(criteria, alias, orderBy);
     //        }
     criteria.setCacheable(true);
+    criteria.setResultTransformer(this.resultTransformer);
     return criteria;
   }
 
-  public List<Object> findAll() {
-    Criteria criteria = distinct(createCriteria(new Criterion[0]));
+  public <T> List<T> findAll() {
+    Criteria criteria = distinct(createCriteria());
     return criteria.list();
   }
 

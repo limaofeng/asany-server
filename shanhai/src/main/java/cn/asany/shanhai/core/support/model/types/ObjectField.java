@@ -11,10 +11,13 @@ public class ObjectField implements FieldType {
   private String name;
   private String description;
 
-  public ObjectField(String id, String name, String description) {
+  private String javaType;
+
+  public ObjectField(String id, String name, String description, String javaType) {
     this.id = id;
     this.name = name;
     this.description = description;
+    this.javaType = javaType;
   }
 
   @Override
@@ -24,7 +27,7 @@ public class ObjectField implements FieldType {
 
   @Override
   public String getJavaType(ModelFieldMetadata metadata) {
-    return this.id;
+    return this.javaType;
   }
 
   @Override

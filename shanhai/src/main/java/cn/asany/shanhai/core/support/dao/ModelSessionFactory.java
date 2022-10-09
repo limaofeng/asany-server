@@ -7,6 +7,7 @@ import java.util.EnumSet;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.persistence.EntityManagerFactory;
+import lombok.SneakyThrows;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -16,6 +17,7 @@ import org.hibernate.boot.internal.SessionFactoryOptionsBuilder;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.tool.hbm2ddl.SchemaExport;
 import org.hibernate.tool.schema.TargetType;
+import org.jfantasy.framework.util.FantasyClassLoader;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -31,8 +33,8 @@ public class ModelSessionFactory implements InitializingBean, ModelRepositoryFac
   private MetadataSources metadataSources;
   private HibernateMappingHelper hibernateMappingHelper;
 
-  private Map<Long, String> repositoryEntityNameMap = new ConcurrentHashMap<>();
-  private Map<String, ModelRepository> repositoryMap = new ConcurrentHashMap<>();
+  private final Map<Long, String> repositoryEntityNameMap = new ConcurrentHashMap<>();
+  private final Map<String, ModelRepository> repositoryMap = new ConcurrentHashMap<>();
 
   @Override
   public void afterPropertiesSet() throws Exception {
@@ -77,12 +79,15 @@ public class ModelSessionFactory implements InitializingBean, ModelRepositoryFac
     return this.repositoryMap.get(entityName);
   }
 
+  @SneakyThrows
   public ModelRepository buildModelRepository(Model model) {
     ModelRepository repository;
+    String entityClassName = model.getModule().getCode().concat(".").concat(model.getCode());
     String xml = hibernateMappingHelper.generateXML(model);
     this.addMetadataSource(xml);
     repositoryEntityNameMap.put(model.getId(), model.getCode());
-    repositoryMap.put(model.getCode(), repository = new ModelRepository(model));
+    Class<?> entityClass = FantasyClassLoader.getClassLoader().loadClass(entityClassName);
+    repositoryMap.put(model.getCode(), repository = new ModelRepository(model, entityClass));
     return repository;
   }
 }
