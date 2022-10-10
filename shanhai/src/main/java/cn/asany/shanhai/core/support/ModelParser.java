@@ -1,6 +1,11 @@
 package cn.asany.shanhai.core.support;
 
-import cn.asany.shanhai.core.domain.*;
+import static java.util.Objects.nonNull;
+
+import cn.asany.shanhai.core.domain.Model;
+import cn.asany.shanhai.core.domain.ModelEndpoint;
+import cn.asany.shanhai.core.domain.ModelField;
+import cn.asany.shanhai.core.domain.ModelRelation;
 import cn.asany.shanhai.core.domain.enums.ModelConnectType;
 import cn.asany.shanhai.core.domain.enums.ModelEndpointType;
 import cn.asany.shanhai.core.domain.enums.ModelRelationType;
@@ -10,7 +15,6 @@ import cn.asany.shanhai.core.support.dao.ModelRepository;
 import cn.asany.shanhai.core.support.dao.ModelSessionFactory;
 import cn.asany.shanhai.core.support.graphql.ModelDelegateFactory;
 import cn.asany.shanhai.core.support.graphql.config.CustomTypeDefinitionFactory;
-import cn.asany.shanhai.core.support.model.FieldType;
 import cn.asany.shanhai.core.support.model.FieldTypeRegistry;
 import cn.asany.shanhai.core.support.tools.DynamicClassGenerator;
 import cn.asany.shanhai.core.utils.GraphQLTypeUtils;
@@ -22,13 +26,6 @@ import graphql.language.*;
 import graphql.schema.DataFetcher;
 import graphql.schema.GraphQLScalarType;
 import graphql.schema.idl.SchemaDirectiveWiring;
-import lombok.*;
-import org.jfantasy.framework.util.FantasyClassLoader;
-import org.jfantasy.framework.util.asm.AsmUtil;
-import org.jfantasy.framework.util.asm.Property;
-import org.jfantasy.framework.util.common.ObjectUtil;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -36,8 +33,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
-
-import static java.util.Objects.nonNull;
+import lombok.*;
+import org.jfantasy.framework.util.asm.AsmUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class ModelParser {
 
@@ -50,11 +48,9 @@ public class ModelParser {
   @Autowired private DynamicClassGenerator dynamicClassGenerator;
   private final Map<Long, ModelResource> modelResourceMap = new ConcurrentHashMap<>();
 
-  private final Map<String, Definition<?>> definitionMap = new ConcurrentHashMap<>();
-
-  private final Map<String, GraphQLResolver<?>> queryResolverMap = new ConcurrentHashMap<>();
-
   private final Map<Long, ModelMediator> allModels = new ConcurrentHashMap<>();
+
+  private Definition<?> queryDefinition;
 
   private final List<GraphQLResolver<?>> resolvers;
   private final SchemaStringProvider schemaStringProvider;
@@ -114,8 +110,7 @@ public class ModelParser {
       m.getQueryDefinitions().values().forEach(queryBuilder::fieldDefinition);
     }
 
-    // 添加接口定义
-    definitionMap.put("Query", queryBuilder.build());
+    queryDefinition = queryBuilder.build();
   }
 
   public void updateModel(Long id) {
@@ -176,48 +171,6 @@ public class ModelParser {
     modelSessionFactory.update();
   }
 
-  private FieldDefinition buildEndpoint(ModelEndpoint endpoint) {
-    ModelEndpointReturnType returnType = endpoint.getReturnType();
-    FieldDefinition.Builder fieldBuilder =
-        FieldDefinition.newFieldDefinition()
-            .name(endpoint.getCode())
-            .type(
-                getType(
-                    returnType.getType().getCode(),
-                    returnType.getRequired(),
-                    returnType.getList(),
-                    fieldTypeRegistry))
-            .description(GraphQLTypeUtils.toDescription(endpoint));
-    for (ModelEndpointArgument argument :
-        ObjectUtil.sort(endpoint.getArguments(), "index", "asc")) {
-      fieldBuilder.inputValueDefinition(
-          InputValueDefinition.newInputValueDefinition()
-              .name(argument.getName())
-              .description(GraphQLTypeUtils.toDescription(argument))
-              .defaultValue(GraphQLTypeUtils.toDefaultValue(argument))
-              .type(
-                  getType(
-                      argument.getType(),
-                      argument.getRequired(),
-                      argument.getList(),
-                      fieldTypeRegistry))
-              .build());
-    }
-    return fieldBuilder.build();
-  }
-
-  @SneakyThrows
-  private GraphQLResolver<?> makeQueryResolver(ModelRepository repository, Model model) {
-    String namespace = model.getModule().getCode();
-
-    ModelEndpoint endpoint = ObjectUtil.find(model.getEndpoints(), "type", ModelEndpointType.LIST);
-
-    Class<GraphQLResolver<?>> resolverClass =
-        dynamicClassGenerator.makeQueryResolver(namespace, model.getCode(), endpoint.getCode());
-
-    return resolverClass.getConstructor(ModelRepository.class).newInstance(repository);
-  }
-
   private GraphQLResolver<?> makeMutationResolver(Model model) {
     return null;
   }
@@ -232,114 +185,31 @@ public class ModelParser {
     return subTypeBuilder.build();
   }
 
-  public Type<?> getType(
-      String typeStr, boolean unique, boolean list, FieldTypeRegistry fieldTypeRegistry) {
-    FieldType<?, ?> fieldType = fieldTypeRegistry.getType(typeStr);
-
-    Type<?> type = new TypeName(fieldType.getGraphQLType());
-
-    type = unique ? NonNullType.newNonNullType(type).build() : type;
-
-    if (list) {
-      type = ListType.newListType(type).build();
-      type = unique ? NonNullType.newNonNullType(type).build() : type;
-    }
-
-    return type;
-  }
-
   public List<Definition<?>> getDefinitions() {
-    return new ArrayList<>(definitionMap.values());
+    List<Definition<?>> allDefinitions =
+        allModels.values().stream()
+            .reduce(
+                new ArrayList<>(),
+                (acc, _item) -> {
+                  acc.addAll(_item.getTypeDefinitions().values());
+                  return acc;
+                },
+                (acc, bcc) -> {
+                  acc.addAll(bcc);
+                  return acc;
+                });
+    allDefinitions.add(queryDefinition);
+    return allDefinitions;
   }
 
   public DataFetcher<Object> getDataFetcher(String key) {
     return null;
   }
 
-  public Class<?> makeBeanClass(String namespace, Model model) {
-    String classname = namespace.concat(".").concat(model.getCode());
-    return AsmUtil.makeClass(
-        classname,
-        model.getFields().stream()
-            .map(
-                item -> {
-                  Property.PropertyBuilder builder = Property.builder().name(item.getCode());
-                  if (item.getRealType() == model) {
-                    if (item.getList()) {
-                      builder
-                          .descriptor("Ljava/util/List;")
-                          .signature("Ljava/util/List<L" + classname.replace(".", "/") + ";>;");
-                    } else {
-                      builder.descriptor("L" + classname.replace(".", "/") + ";");
-                    }
-                  } else {
-                    ModelFieldMetadata metadata =
-                        item.getMetadata() == null
-                            ? ModelFieldMetadata.builder().build()
-                            : item.getMetadata();
-                    metadata.setField(item);
-                    String javaType =
-                        fieldTypeRegistry.getType(item.getType()).getJavaType(metadata);
-                    try {
-                      Class<?> javaTypeClass =
-                          FantasyClassLoader.getClassLoader().loadClass(javaType);
-                      if (item.getList()) {
-                        builder.type(List.class).genericTypes(new Class[] {javaTypeClass});
-                      } else {
-                        builder.type(javaTypeClass);
-                      }
-                    } catch (ClassNotFoundException e) {
-                      throw new RuntimeException(e);
-                    }
-                  }
-                  return builder.build();
-                })
-            .toArray(Property[]::new));
-  }
-
   private Class<?> makeEnumClass(String namespace, Model type) {
     String classname = namespace.concat(".").concat(type.getCode());
     return AsmUtil.makeEnum(
         classname, type.getFields().stream().map(ModelField::getCode).toArray(String[]::new));
-  }
-
-  private Definition<?> makeObjectTypeDefinition(Model type) {
-    ObjectTypeDefinition.Builder subTypeBuilder =
-        ObjectTypeDefinition.newObjectTypeDefinition().name(type.getCode());
-    for (ModelField field : type.getFields()) {
-      subTypeBuilder.fieldDefinition(
-          new FieldDefinition(
-              field.getCode(),
-              getType(field.getType(), field.getUnique(), field.getList(), fieldTypeRegistry)));
-    }
-
-    return subTypeBuilder.build();
-  }
-
-  private Definition<?> makeInputTypeDefinition(Model model) {
-    InputObjectTypeDefinition.Builder inputBuilder =
-        InputObjectTypeDefinition.newInputObjectDefinition().name(model.getCode());
-
-    if (model.getFields().isEmpty()) {
-      inputBuilder.inputValueDefinition(
-          InputValueDefinition.newInputValueDefinition()
-              .name("_")
-              .description(new Description("未配置如何输入字段", new SourceLocation(0, 0), true))
-              .type(new TypeName("String"))
-              .build());
-    } else {
-      for (ModelField field : model.getFields()) {
-        inputBuilder.inputValueDefinition(
-            InputValueDefinition.newInputValueDefinition()
-                .name(field.getCode())
-                .description(GraphQLTypeUtils.toDescription(field))
-                .type(
-                    getType(
-                        field.getType(), field.getRequired(), field.getList(), fieldTypeRegistry))
-                .build());
-      }
-    }
-    return inputBuilder.build();
   }
 
   public List<GraphQLResolver<?>> getResolvers() {
@@ -401,16 +271,16 @@ public class ModelParser {
   }
 
   public class ModelMediator {
-    private Long id;
+    private final Long id;
     private String code;
     private Model model;
 
     @Getter private final Map<String, FieldDefinition> queryDefinitions = new ConcurrentHashMap<>();
 
-    private final Map<String, Definition<?>> typeDefinitions = new ConcurrentHashMap<>();
+    @Getter private final Map<String, Definition<?>> typeDefinitions = new ConcurrentHashMap<>();
     @Getter private GraphQLResolver<?> queryResolver;
 
-    private Map<String, Class<?>> dictionary = new ConcurrentHashMap<>();
+    private final Map<String, Class<?>> dictionary = new ConcurrentHashMap<>();
 
     public ModelMediator(Long id) {
       this.id = id;
@@ -429,7 +299,7 @@ public class ModelParser {
           model.getId(), ModelResource.builder().model(model).repository(modelRepository).build());
 
       // 生成主对象
-      typeDefinitions.put(model.getCode(), ModelParser.this.makeObjectTypeDefinition(model));
+      typeDefinitions.put(model.getCode(), GraphQLTypeUtils.makeObjectTypeDefinition(model));
       dictionary.put(model.getCode(), entityClass);
 
       // 检测依赖对象
@@ -445,9 +315,10 @@ public class ModelParser {
         if (ModelConnectType.GRAPHQL_OBJECT_EDGE.name().equals(relation.getRelation())
             || ModelConnectType.GRAPHQL_OBJECT_CONNECTION.name().equals(relation.getRelation())) {
           // 生成的分页相关对象
-          typeDefinitions.put(type.getCode(), ModelParser.this.makeObjectTypeDefinition(type));
+          typeDefinitions.put(type.getCode(), GraphQLTypeUtils.makeObjectTypeDefinition(type));
           dictionary.put(
-              type.getCode(), ModelParser.this.makeBeanClass(model.getModule().getCode(), type));
+              type.getCode(),
+              dynamicClassGenerator.makeBeanClass(model.getModule().getCode(), type));
 
         } else if (ModelConnectType.GRAPHQL_ENUM_ORDER_BY.name().equals(relation.getRelation())) {
           // 生成排序枚举
@@ -458,9 +329,10 @@ public class ModelParser {
             || ModelConnectType.GRAPHQL_INPUT_UPDATE.name().equals(relation.getRelation())
             || ModelConnectType.GRAPHQL_INPUT_WHERE.name().equals(relation.getRelation())) {
           // 生成输入对象
-          typeDefinitions.put(type.getCode(), ModelParser.this.makeInputTypeDefinition(type));
+          typeDefinitions.put(type.getCode(), GraphQLTypeUtils.makeInputTypeDefinition(type));
           dictionary.put(
-              type.getCode(), ModelParser.this.makeBeanClass(model.getModule().getCode(), type));
+              type.getCode(),
+              dynamicClassGenerator.makeBeanClass(model.getModule().getCode(), type));
         }
       }
 
@@ -468,14 +340,14 @@ public class ModelParser {
           ModelParser.this.modelEndpointService.listEndpoints(model.getId());
       model.setEndpoints(new HashSet<>(endpoints));
 
-      this.queryResolver = ModelParser.this.makeQueryResolver(modelRepository, model);
+      this.queryResolver = GraphQLTypeUtils.makeQueryResolver(modelRepository, model);
 
       for (ModelEndpoint endpoint : endpoints) {
         // 生成接口的定义
         if (ModelEndpointType.LIST == endpoint.getType()
         /*|| endpoint.getType() == ModelEndpointType.GET
         || endpoint.getType() == ModelEndpointType.CONNECTION*/ ) {
-          FieldDefinition fieldDefinition = ModelParser.this.buildEndpoint(endpoint);
+          FieldDefinition fieldDefinition = GraphQLTypeUtils.makeQueryFieldDefinition(endpoint);
           queryDefinitions.put(endpoint.getCode(), fieldDefinition);
         } else {
 
@@ -497,6 +369,7 @@ public class ModelParser {
     }
 
     public void uninstall() {
+      modelSessionFactory.unbuildModelRepository(model.getCode());
       JdbcUtil.dropTable(model.getMetadata().getDatabaseTableName());
     }
 

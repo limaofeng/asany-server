@@ -3,9 +3,11 @@ package cn.asany.shanhai.core.support.tools;
 import static org.objectweb.asm.Opcodes.*;
 
 import cn.asany.shanhai.core.domain.Model;
+import cn.asany.shanhai.core.domain.ModelFieldMetadata;
 import cn.asany.shanhai.core.support.model.FieldTypeRegistry;
 import graphql.kickstart.tools.GraphQLResolver;
 import java.io.File;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.framework.error.IgnoreException;
@@ -198,6 +200,47 @@ public class DynamicClassGenerator {
                       .name(item.getCode())
                       .type(ClassUtil.forName(javaType))
                       .build();
+                })
+            .toArray(Property[]::new));
+  }
+
+  public Class<?> makeBeanClass(String namespace, Model model) {
+    String classname = namespace.concat(".").concat(model.getCode());
+    return AsmUtil.makeClass(
+        classname,
+        model.getFields().stream()
+            .map(
+                item -> {
+                  Property.PropertyBuilder builder = Property.builder().name(item.getCode());
+                  if (item.getRealType() == model) {
+                    if (item.getList()) {
+                      builder
+                          .descriptor("Ljava/util/List;")
+                          .signature("Ljava/util/List<L" + classname.replace(".", "/") + ";>;");
+                    } else {
+                      builder.descriptor("L" + classname.replace(".", "/") + ";");
+                    }
+                  } else {
+                    ModelFieldMetadata metadata =
+                        item.getMetadata() == null
+                            ? ModelFieldMetadata.builder().build()
+                            : item.getMetadata();
+                    metadata.setField(item);
+                    String javaType =
+                        fieldTypeRegistry.getType(item.getType()).getJavaType(metadata);
+                    try {
+                      Class<?> javaTypeClass =
+                          FantasyClassLoader.getClassLoader().loadClass(javaType);
+                      if (item.getList()) {
+                        builder.type(List.class).genericTypes(new Class[] {javaTypeClass});
+                      } else {
+                        builder.type(javaTypeClass);
+                      }
+                    } catch (ClassNotFoundException e) {
+                      throw new RuntimeException(e);
+                    }
+                  }
+                  return builder.build();
                 })
             .toArray(Property[]::new));
   }

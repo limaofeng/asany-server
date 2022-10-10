@@ -1,8 +1,6 @@
 package cn.asany.shanhai.core.listener;
 
 import cn.asany.shanhai.core.domain.Model;
-import cn.asany.shanhai.core.event.DeleteModelFieldEvent;
-import cn.asany.shanhai.core.event.DeleteModelFieldEvent.DeleteModelFieldSource;
 import cn.asany.shanhai.core.event.UpdateModelEvent;
 import cn.asany.shanhai.core.support.ModelParser;
 import cn.asany.shanhai.core.support.graphql.DynamicGraphQLSchemaProvider;

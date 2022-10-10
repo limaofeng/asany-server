@@ -1,11 +1,10 @@
 package cn.asany.shanhai.core.utils;
 
+import java.sql.*;
+import javax.sql.DataSource;
 import lombok.SneakyThrows;
 import org.jfantasy.framework.error.ValidationException;
 import org.jfantasy.framework.spring.SpringBeanUtils;
-
-import javax.sql.DataSource;
-import java.sql.*;
 
 public class JdbcUtil {
 
@@ -70,7 +69,8 @@ public class JdbcUtil {
     try {
       connection = dataSource.getConnection();
       stmt = connection.createStatement();
-      stmt.executeUpdate(String.format("alter table %s rename to %s", tableName, newTableName.toLowerCase()));
+      stmt.executeUpdate(
+          String.format("alter table %s rename to %s", tableName, newTableName.toLowerCase()));
     } catch (SQLException e) {
       throw new RuntimeException(e);
     } finally {
@@ -79,7 +79,19 @@ public class JdbcUtil {
     }
   }
 
-    public static void dropTable(String tableName) {
-
+  public static void dropTable(String tableName) {
+    DataSource dataSource = SpringBeanUtils.getBeanByType(DataSource.class);
+    Connection connection = null;
+    Statement stmt = null;
+    try {
+      connection = dataSource.getConnection();
+      stmt = connection.createStatement();
+      stmt.executeUpdate(String.format("drop table %s;", tableName));
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    } finally {
+      org.jfantasy.framework.dao.util.JdbcUtil.closeStatement(stmt);
+      org.jfantasy.framework.dao.util.JdbcUtil.closeConnection(connection);
     }
+  }
 }

@@ -33,7 +33,6 @@ public class ModelSessionFactory implements InitializingBean, ModelRepositoryFac
   private MetadataSources metadataSources;
   private HibernateMappingHelper hibernateMappingHelper;
 
-  private final Map<Long, String> repositoryEntityNameMap = new ConcurrentHashMap<>();
   private final Map<String, ModelRepository> repositoryMap = new ConcurrentHashMap<>();
 
   @Override
@@ -89,9 +88,12 @@ public class ModelSessionFactory implements InitializingBean, ModelRepositoryFac
     String entityClassName = model.getModule().getCode().concat(".").concat(model.getCode());
     String xml = hibernateMappingHelper.generateXML(model);
     this.addMetadataSource(xml);
-    repositoryEntityNameMap.put(model.getId(), model.getCode());
     Class<?> entityClass = FantasyClassLoader.getClassLoader().loadClass(entityClassName);
     repositoryMap.put(model.getCode(), repository = new ModelRepository(model, entityClass));
     return repository;
+  }
+
+  public void unbuildModelRepository(String code) {
+    this.repositoryMap.remove(code);
   }
 }

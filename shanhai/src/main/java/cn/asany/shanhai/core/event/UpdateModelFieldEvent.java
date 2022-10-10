@@ -13,7 +13,7 @@ public class UpdateModelFieldEvent extends ApplicationEvent {
 
   @Data
   @AllArgsConstructor
- public static class UpdateModelFieldEventSource {
+  public static class UpdateModelFieldEventSource {
     private Long modelId;
     private ModelField field;
   }

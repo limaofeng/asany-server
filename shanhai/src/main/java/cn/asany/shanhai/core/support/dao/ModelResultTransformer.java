@@ -8,11 +8,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.persistence.AttributeConverter;
-
 import lombok.SneakyThrows;
 import org.hibernate.transform.ResultTransformer;
 import org.jfantasy.framework.spring.SpringBeanUtils;
-import org.jfantasy.framework.util.common.ClassUtil;
 import org.jfantasy.framework.util.ognl.OgnlUtil;
 
 public class ModelResultTransformer implements ResultTransformer {
