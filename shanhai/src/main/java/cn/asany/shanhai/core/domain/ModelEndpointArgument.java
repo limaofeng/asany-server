@@ -46,9 +46,15 @@ public class ModelEndpointArgument {
   @Builder.Default
   @Column(name = "IS_LIST", length = 1, updatable = false)
   private Boolean list = false;
+  /** 排序 */
+  @Column(name = "SORT", nullable = false)
+  private Integer index;
   /** 描述 */
   @Column(name = "DESCRIPTION", length = 200)
   private String description;
+  /** 默认值 */
+  @Column(name = "DEFAULT_VALUE", length = 200)
+  private String defaultValue;
   /** 接口 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(

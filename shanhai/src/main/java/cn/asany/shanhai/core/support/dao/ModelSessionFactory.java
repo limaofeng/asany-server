@@ -60,6 +60,10 @@ public class ModelSessionFactory implements InitializingBean, ModelRepositoryFac
     SessionFactoryOptionsBuilder sessionFactoryOptions =
         (SessionFactoryOptionsBuilder) sessionFactory.getSessionFactoryOptions();
     sessionFactoryOptions.applyInterceptor(new SystemFieldFillInterceptor());
+
+    StandardServiceRegistry serviceRegistry =
+        sessionFactory.getSessionFactoryOptions().getServiceRegistry();
+    this.metadataSources = new MetadataSources(serviceRegistry);
   }
 
   public Session openSession() throws HibernateException {

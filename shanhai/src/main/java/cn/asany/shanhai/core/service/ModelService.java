@@ -5,10 +5,11 @@ import cn.asany.shanhai.core.domain.*;
 import cn.asany.shanhai.core.domain.enums.ModelRelationType;
 import cn.asany.shanhai.core.domain.enums.ModelStatus;
 import cn.asany.shanhai.core.domain.enums.ModelType;
-import cn.asany.shanhai.core.event.CreateModelFieldEvent;
+import cn.asany.shanhai.core.event.*;
 import cn.asany.shanhai.core.runners.InitModelDaoCommandLineRunner;
 import cn.asany.shanhai.core.support.model.features.MasterModelFeature;
 import cn.asany.shanhai.core.utils.DuplicateFieldException;
+import cn.asany.shanhai.core.utils.JdbcUtil;
 import cn.asany.shanhai.core.utils.ModelUtils;
 import cn.asany.shanhai.core.utils.TypeNotFoundException;
 import cn.asany.shanhai.gateway.domain.ModelGroupItem;
@@ -38,6 +39,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class ModelService {
   private final ModelDao modelDao;
+  private final ModuleDao moduleDao;
   private final ModelFieldDao modelFieldDao;
   private final ModelEndpointDao modelEndpointDao;
   private final ModelRelationDao modelRelationDao;
@@ -50,6 +52,7 @@ public class ModelService {
 
   public ModelService(
       ModelDao modelDao,
+      ModuleDao moduleDao,
       ModelFieldDao modelFieldDao,
       ModelEndpointDao modelEndpointDao,
       ModelRelationDao modelRelationDao,
@@ -59,6 +62,7 @@ public class ModelService {
       ModelFieldMetadataDao modelFieldMetadataDao,
       ApplicationEventPublisher publisher) {
     this.modelDao = modelDao;
+    this.moduleDao = moduleDao;
     this.modelFieldDao = modelFieldDao;
     this.modelEndpointDao = modelEndpointDao;
     this.modelRelationDao = modelRelationDao;
@@ -79,8 +83,11 @@ public class ModelService {
 
   @Transactional(isolation = Isolation.READ_COMMITTED)
   public Model save(Model model) {
+    model.setModule(this.moduleDao.getReferenceById(model.getModule().getId()));
     ModelUtils modelUtils = ModelUtils.getInstance();
-    return save(model, modelUtils);
+    model = save(model, modelUtils);
+    publisher.publishEvent(new CreateModelEvent(model));
+    return model;
   }
 
   @SneakyThrows
@@ -245,13 +252,16 @@ public class ModelService {
   public Model update(Long id, Model input) {
     Model model = this.modelDao.getReferenceById(id);
 
+    String tableName = model.getMetadata().getDatabaseTableName();
+    String newTableName = input.getMetadata().getDatabaseTableName();
+
     boolean codeChanged = !input.getCode().equals(model.getCode());
     boolean nameChanged = !input.getName().equals(model.getName());
 
     model.setCode(input.getCode());
     model.setName(input.getName());
     model.setDescription(input.getDescription());
-    model.getMetadata().setDatabaseTableName(input.getMetadata().getDatabaseTableName());
+    model.getMetadata().setDatabaseTableName(newTableName);
 
     if (codeChanged || nameChanged) {
       Set<ModelFeature> features = model.getFeatures();
@@ -267,6 +277,11 @@ public class ModelService {
       }
     }
 
+    if (!tableName.equals(newTableName)) {
+      JdbcUtil.renameTable(tableName, newTableName);
+    }
+
+    publisher.publishEvent(new UpdateModelEvent(model));
     return model;
   }
 
@@ -340,6 +355,7 @@ public class ModelService {
     }
 
     this.modelDao.delete(model);
+    this.publisher.publishEvent(new DeleteModelEvent(model));
   }
 
   private void aggregate(
@@ -573,6 +589,10 @@ public class ModelService {
             .filter(f -> fieldId.equals(f.getId()))
             .findAny()
             .orElseThrow(() -> new ValidationException("修改的字段[ID=" + id + "." + fieldId + "]不存在"));
+
+    String oldColumnName = source.getMetadata().getDatabaseColumnName();
+    String newColumnName = field.getMetadata().getDatabaseColumnName();
+
     if (ObjectUtil.exists(model.getFields(), "code", field.getCode())
         && !source.getCode().equals(field.getCode())) {
       throw new DuplicateFieldException("code", field.getCode());
@@ -598,6 +618,13 @@ public class ModelService {
     for (ModelFeature feature : features) {
       modelUtils.reinstall(model, feature, this);
     }
+
+    if (!oldColumnName.equals(newColumnName)) {
+      JdbcUtil.renameColumn(
+          model.getMetadata().getDatabaseTableName(), oldColumnName, newColumnName);
+    }
+
+    publisher.publishEvent(new UpdateModelFieldEvent(model.getId(), field));
     return source;
   }
 
@@ -643,5 +670,6 @@ public class ModelService {
     }
     allDeleteFields.add(field);
     this.modelFieldDao.deleteAll(allDeleteFields);
+    this.publisher.publishEvent(new DeleteModelFieldEvent(id, field));
   }
 }

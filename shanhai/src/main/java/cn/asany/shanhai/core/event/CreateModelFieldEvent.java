@@ -6,9 +6,6 @@ import lombok.Data;
 import org.springframework.context.ApplicationEvent;
 
 public class CreateModelFieldEvent extends ApplicationEvent {
-  public CreateModelFieldEvent(Object source) {
-    super(source);
-  }
 
   public CreateModelFieldEvent(Long modelId, ModelField field) {
     super(new CreateModelFieldSource(modelId, field));

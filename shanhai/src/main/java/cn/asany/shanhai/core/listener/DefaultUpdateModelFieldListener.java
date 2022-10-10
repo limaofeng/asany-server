@@ -1,7 +1,7 @@
 package cn.asany.shanhai.core.listener;
 
-import cn.asany.shanhai.core.event.DeleteModelFieldEvent;
-import cn.asany.shanhai.core.event.DeleteModelFieldEvent.DeleteModelFieldSource;
+import cn.asany.shanhai.core.event.UpdateModelFieldEvent.UpdateModelFieldEventSource;
+import cn.asany.shanhai.core.event.UpdateModelFieldEvent;
 import cn.asany.shanhai.core.support.ModelParser;
 import cn.asany.shanhai.core.support.graphql.DynamicGraphQLSchemaProvider;
 import lombok.SneakyThrows;
@@ -10,7 +10,7 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
 @Component
-public class DefaultDeleteModelFieldListener implements ApplicationListener<DeleteModelFieldEvent> {
+public class DefaultUpdateModelFieldListener implements ApplicationListener<UpdateModelFieldEvent> {
 
   @Autowired private ModelParser modelParser;
 
@@ -19,9 +19,9 @@ public class DefaultDeleteModelFieldListener implements ApplicationListener<Dele
 
   @SneakyThrows
   @Override
-  public void onApplicationEvent(DeleteModelFieldEvent event) {
-    DeleteModelFieldSource source = (DeleteModelFieldSource) event.getSource();
-    modelParser.deleteModelField(source.getModelId(), source.getField());
+  public void onApplicationEvent(UpdateModelFieldEvent event) {
+    UpdateModelFieldEventSource source = (UpdateModelFieldEventSource) event.getSource();
+    modelParser.updateModelField(source.getModelId(), source.getField());
     schemaProvider.updateSchema();
   }
 }

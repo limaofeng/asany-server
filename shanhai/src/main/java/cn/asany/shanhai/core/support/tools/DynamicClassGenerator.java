@@ -99,20 +99,24 @@ public class DynamicClassGenerator {
       methodVisitor.visitEnd();
     }
     {
-      String OrderByClass = namespace + ".CnAsanyTestAccountOrderBy";
+      String OrderByClass = namespace + "." + entityName + "OrderBy";
 
       methodVisitor =
           classWriter.visitMethod(
               ACC_PUBLIC,
-              "cnAsanyTestAccounts",
+              nameOfList,
               "(L"
                   + _namespace
-                  + "/CnAsanyTestAccountWhereInput;IIL"
+                  + "/"
+                  + entityName
+                  + "WhereInput;IIL"
                   + OrderByClass.replace(".", "/")
                   + ";Lgraphql/schema/DataFetchingEnvironment;)Ljava/util/List;",
               "(L"
                   + _namespace
-                  + "/CnAsanyTestAccountWhereInput;IIL"
+                  + "/"
+                  + entityName
+                  + "WhereInput;IIL"
                   + OrderByClass.replace(".", "/")
                   + ";Lgraphql/schema/DataFetchingEnvironment;)Ljava/util/List<L"
                   + _namespace

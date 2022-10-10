@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.persistence.AttributeConverter;
+
+import lombok.SneakyThrows;
 import org.hibernate.transform.ResultTransformer;
 import org.jfantasy.framework.spring.SpringBeanUtils;
 import org.jfantasy.framework.util.common.ClassUtil;
@@ -36,8 +38,9 @@ public class ModelResultTransformer implements ResultTransformer {
     return tuple[tuple.length - 1];
   }
 
+  @SneakyThrows
   public Object convertToEntity(Object object) {
-    Object entity = ClassUtil.newInstance(this.entityClass);
+    Object entity = this.entityClass.newInstance();
     for (Map.Entry<String, AttributeConverter<?, ?>> converterEntry : converterMap.entrySet()) {
       String key = converterEntry.getKey();
       AttributeConverter<Object, Object> converter =

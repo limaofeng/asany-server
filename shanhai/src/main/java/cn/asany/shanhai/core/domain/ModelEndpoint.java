@@ -13,6 +13,7 @@ import lombok.*;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
+import org.jfantasy.framework.jackson.JSON;
 
 /**
  * 实体接口
@@ -75,7 +76,6 @@ public class ModelEndpoint extends BaseBusEntity {
   @PrimaryKeyJoinColumn
   @ToString.Exclude
   private ModelEndpointReturnType returnType;
-
   /** 委派 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "DELEGATE_ID", foreignKey = @ForeignKey(name = "FK_MODEL_ENDPOINT_DID"))
@@ -123,7 +123,12 @@ public class ModelEndpoint extends BaseBusEntity {
       if (this.arguments == null) {
         this.arguments = new HashSet<>();
       }
-      this.arguments.add(ModelEndpointArgument.builder().name(name).type(type).build());
+      this.arguments.add(
+          ModelEndpointArgument.builder()
+              .name(name)
+              .type(type)
+              .index(this.arguments.size())
+              .build());
       return this;
     }
 
@@ -132,7 +137,12 @@ public class ModelEndpoint extends BaseBusEntity {
         this.arguments = new HashSet<>();
       }
       this.arguments.add(
-          ModelEndpointArgument.builder().name(name).type(type).description(description).build());
+          ModelEndpointArgument.builder()
+              .name(name)
+              .type(type)
+              .index(this.arguments.size())
+              .description(description)
+              .build());
       return this;
     }
 
@@ -141,7 +151,12 @@ public class ModelEndpoint extends BaseBusEntity {
         this.arguments = new HashSet<>();
       }
       this.arguments.add(
-          ModelEndpointArgument.builder().name(name).required(required).type(type).build());
+          ModelEndpointArgument.builder()
+              .name(name)
+              .index(this.arguments.size())
+              .required(required)
+              .type(type)
+              .build());
       return this;
     }
 
@@ -150,7 +165,12 @@ public class ModelEndpoint extends BaseBusEntity {
         this.arguments = new HashSet<>();
       }
       this.arguments.add(
-          ModelEndpointArgument.builder().name(name).description(description).type(type).build());
+          ModelEndpointArgument.builder()
+              .name(name)
+              .index(this.arguments.size())
+              .description(description)
+              .type(type)
+              .build());
       return this;
     }
 
@@ -160,7 +180,13 @@ public class ModelEndpoint extends BaseBusEntity {
         this.arguments = new HashSet<>();
       }
       this.arguments.add(
-          ModelEndpointArgument.builder().name(name).description(description).type(type).build());
+          ModelEndpointArgument.builder()
+              .index(this.arguments.size())
+              .name(name)
+              .description(description)
+              .defaultValue(String.valueOf(defaultValue))
+              .type(type)
+              .build());
       return this;
     }
 
@@ -170,7 +196,13 @@ public class ModelEndpoint extends BaseBusEntity {
         this.arguments = new HashSet<>();
       }
       this.arguments.add(
-          ModelEndpointArgument.builder().name(name).description(description).type(type).build());
+          ModelEndpointArgument.builder()
+              .name(name)
+              .index(this.arguments.size())
+              .description(description)
+              .defaultValue(String.valueOf(defaultValue))
+              .type(type)
+              .build());
       return this;
     }
 
@@ -184,6 +216,7 @@ public class ModelEndpoint extends BaseBusEntity {
               .name(name)
               .required(required)
               .description(description)
+              .index(this.arguments.size())
               .type(type)
               .build());
       return this;

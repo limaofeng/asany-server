@@ -17,7 +17,7 @@ include ":shanhai",
         ":weixin",
         ":openapi",
         ":base",
-        ":flowable",
+//        ":flowable",
         ":contacts",
         ":sunrise",
         ":mail",
@@ -33,7 +33,7 @@ include ":shanhai",
         ":im",
         ":sms",
         ":project",
-        ":uptime",
+//        ":uptime",
         ":boot"
 
 // 基础
@@ -45,7 +45,7 @@ project(':shanhai').projectDir = "$rootDir/shanhai" as File
 // 组织 / 员工 / 安全 / 登录 / 授权
 project(':security').projectDir = "$rootDir/security" as File
 // 工作流
-project(':flowable').projectDir = "$rootDir/flowable" as File
+//project(':flowable').projectDir = "$rootDir/flowable" as File
 // 存储服务接口
 project(':storage-api').projectDir = "$rootDir/storage-api" as File
 // 存储服务
@@ -73,7 +73,7 @@ project(':sms').projectDir = "$rootDir/sms" as File
 // open-api
 project(':openapi').projectDir = "$rootDir/openapi" as File
 // 站点健康
-project(':uptime').projectDir = "$rootDir/uptime" as File
+//project(':uptime').projectDir = "$rootDir/uptime" as File
 // 即时通讯
 project(':im').projectDir = "$rootDir/im" as File
 // 项目管理
