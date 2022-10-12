@@ -3,8 +3,10 @@ package cn.asany.shanhai.core.utils;
 import cn.asany.shanhai.core.domain.*;
 import cn.asany.shanhai.core.domain.enums.ModelEndpointType;
 import cn.asany.shanhai.core.support.dao.ModelRepository;
+import cn.asany.shanhai.core.support.model.CustomModelService;
 import cn.asany.shanhai.core.support.model.FieldType;
 import cn.asany.shanhai.core.support.model.FieldTypeRegistry;
+import cn.asany.shanhai.core.support.test.DefaultCustomModelService;
 import cn.asany.shanhai.core.support.tools.DynamicClassGenerator;
 import graphql.kickstart.tools.GraphQLResolver;
 import graphql.language.*;
@@ -34,6 +36,9 @@ public class GraphQLTypeUtils {
   }
 
   public static Value<?> toDefaultValue(ModelEndpointArgument argument) {
+    if (argument.getType().endsWith("WhereInput")) {
+      return ObjectValue.newObjectValue().build();
+    }
     if (StringUtil.isBlank(argument.getDefaultValue())) {
       return null;
     }
@@ -92,23 +97,22 @@ public class GraphQLTypeUtils {
           new FieldDefinition(
               field.getCode(),
               getType(
-                  field.getType(), field.getUnique(), field.getList(), getFieldTypeRegistry())));
+                  field.getType(), field.getRequired(), field.getList(), getFieldTypeRegistry())));
     }
-
     return subTypeBuilder.build();
   }
 
   public static Type<?> getType(
-      String typeStr, boolean unique, boolean list, FieldTypeRegistry fieldTypeRegistry) {
+      String typeStr, boolean required, boolean list, FieldTypeRegistry fieldTypeRegistry) {
     FieldType<?, ?> fieldType = fieldTypeRegistry.getType(typeStr);
 
     Type<?> type = new TypeName(fieldType.getGraphQLType());
 
-    type = unique ? NonNullType.newNonNullType(type).build() : type;
+    type = required ? NonNullType.newNonNullType(type).build() : type;
 
     if (list) {
       type = ListType.newListType(type).build();
-      type = unique ? NonNullType.newNonNullType(type).build() : type;
+      type = required ? NonNullType.newNonNullType(type).build() : type;
     }
 
     return type;
@@ -144,6 +148,10 @@ public class GraphQLTypeUtils {
   }
 
   public static FieldDefinition makeQueryFieldDefinition(ModelEndpoint endpoint) {
+    return makeFieldDefinition(endpoint);
+  }
+
+  private static FieldDefinition makeFieldDefinition(ModelEndpoint endpoint) {
     ModelEndpointReturnType returnType = endpoint.getReturnType();
     FieldDefinition.Builder fieldBuilder =
         FieldDefinition.newFieldDefinition()
@@ -173,16 +181,65 @@ public class GraphQLTypeUtils {
     return fieldBuilder.build();
   }
 
+  public static FieldDefinition makeMutationFieldDefinition(ModelEndpoint endpoint) {
+    return makeFieldDefinition(endpoint);
+  }
+
   @SneakyThrows
   public static GraphQLResolver<?> makeQueryResolver(ModelRepository repository, Model model) {
     String namespace = model.getModule().getCode();
 
-    ModelEndpoint endpoint = ObjectUtil.find(model.getEndpoints(), "type", ModelEndpointType.LIST);
+    ModelEndpoint listName = ObjectUtil.find(model.getEndpoints(), "type", ModelEndpointType.LIST);
+    ModelEndpoint connectionName =
+        ObjectUtil.find(model.getEndpoints(), "type", ModelEndpointType.CONNECTION);
+    ModelEndpoint getName = ObjectUtil.find(model.getEndpoints(), "type", ModelEndpointType.GET);
 
     Class<GraphQLResolver<?>> resolverClass =
         getDynamicClassGenerator()
-            .makeQueryResolver(namespace, model.getCode(), endpoint.getCode());
+            .makeQueryResolver(
+                namespace,
+                model.getCode(),
+                getName.getCode(),
+                listName.getCode(),
+                connectionName.getCode());
 
-    return resolverClass.getConstructor(ModelRepository.class).newInstance(repository);
+    return resolverClass
+        .getConstructor(CustomModelService.class)
+        .newInstance(new DefaultCustomModelService(repository));
+  }
+
+  @SneakyThrows
+  public static GraphQLResolver<?> makeMutationResolver(ModelRepository repository, Model model) {
+    String namespace = model.getModule().getCode();
+
+    ModelEndpoint create = ObjectUtil.find(model.getEndpoints(), "type", ModelEndpointType.CREATE);
+    ModelEndpoint update = ObjectUtil.find(model.getEndpoints(), "type", ModelEndpointType.UPDATE);
+    ModelEndpoint delete = ObjectUtil.find(model.getEndpoints(), "type", ModelEndpointType.DELETE);
+    ModelEndpoint deleteMany =
+        ObjectUtil.find(model.getEndpoints(), "type", ModelEndpointType.DELETE_MANY);
+
+    Class<GraphQLResolver<?>> resolverClass =
+        getDynamicClassGenerator()
+            .makeMutationResolver(
+                namespace,
+                model.getCode(),
+                create.getCode(),
+                update.getCode(),
+                delete.getCode(),
+                "deleteMany");
+
+    return resolverClass
+        .getConstructor(CustomModelService.class)
+        .newInstance(new DefaultCustomModelService(repository));
+  }
+
+  public static Definition<?> makeEnumTypeDefinition(Model type) {
+    EnumTypeDefinition.Builder subTypeBuilder =
+        EnumTypeDefinition.newEnumTypeDefinition().name(type.getCode());
+    for (ModelField field : type.getFields()) {
+      subTypeBuilder.enumValueDefinition(
+          EnumValueDefinition.newEnumValueDefinition().name(field.getCode()).build());
+    }
+    return subTypeBuilder.build();
   }
 }

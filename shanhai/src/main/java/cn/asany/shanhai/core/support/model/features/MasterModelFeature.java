@@ -46,6 +46,8 @@ public class MasterModelFeature implements IModelFeature, InitializingBean {
 
   public static final String ENDPOINT_PREFIX_DELETE = "delete";
 
+  public static final String ENDPOINT_PREFIX_DELETE_MANY = "deleteMany";
+
   private final FieldTypeRegistry fieldTypeRegistry;
 
   private List<RuleAndReplacement> plurals = new ArrayList<>();
@@ -60,6 +62,7 @@ public class MasterModelFeature implements IModelFeature, InitializingBean {
     endpoints.add(buildCreateEndpoint(model));
     endpoints.add(buildUpdateEndpoint(model));
     endpoints.add(buildDeleteEndpoint(model));
+    //        endpoints.add(buildDeleteManyEndpoint(model));
     endpoints.add(buildGetEndpoint(model));
     endpoints.add(buildFindAllEndpoint(model));
     endpoints.add(buildFindPaginationEndpoint(model));
@@ -507,6 +510,35 @@ public class MasterModelFeature implements IModelFeature, InitializingBean {
   }
 
   private ModelEndpoint buildDeleteEndpoint(Model model) {
+    String code = ENDPOINT_PREFIX_DELETE_MANY + StringUtil.upperCaseFirst(model.getCode());
+    String name = "删除" + model.getName();
+    return model.getEndpoints().stream()
+        .filter(item -> item.getType() == ModelEndpointType.DELETE)
+        .findFirst()
+        .map(
+            item -> {
+              item.setCode(code);
+              item.setName(name);
+              return item;
+            })
+        .orElseGet(
+            () -> {
+              ModelEndpoint endpoint =
+                  ModelEndpoint.builder()
+                      .type(ModelEndpointType.DELETE)
+                      .code(code)
+                      .name(name)
+                      .argument("id", FieldType.ID, true)
+                      .returnType(model)
+                      .model(model)
+                      .delegate(BaseMutationDeleteDataFetcher.class)
+                      .build();
+              endpoint.getReturnType().setEndpoint(endpoint);
+              return endpoint;
+            });
+  }
+
+  private ModelEndpoint buildDeleteManyEndpoint(Model model) {
     String code = ENDPOINT_PREFIX_DELETE + StringUtil.upperCaseFirst(model.getCode());
     String name = "删除" + model.getName();
     return model.getEndpoints().stream()

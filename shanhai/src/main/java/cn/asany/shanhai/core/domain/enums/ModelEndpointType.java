@@ -4,6 +4,7 @@ public enum ModelEndpointType {
   CREATE,
   UPDATE,
   DELETE,
+  DELETE_MANY,
   GET,
   LIST,
   CONNECTION,

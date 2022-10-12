@@ -24,3 +24,4 @@ build
 ### Graphql Plugin
 .graphqlconfig
 schema.graphql
+/shanhai/src/main/java/cn/asany/shanhai/core/support/test/

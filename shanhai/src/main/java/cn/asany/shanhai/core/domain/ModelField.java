@@ -93,6 +93,7 @@ public class ModelField extends BaseBusEntity implements ModelGroupResource {
   @JoinColumn(
       name = "MODEL_ID",
       foreignKey = @ForeignKey(name = "FK_MODEL_FIELD_MODEL_ID"),
+      updatable = false,
       nullable = false)
   @LazyToOne(LazyToOneOption.NO_PROXY)
   @ToString.Exclude

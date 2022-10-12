@@ -587,17 +587,21 @@ public class ModelUtils {
     return newCache(newTypes);
   }
 
+  private List<Model> defaultTypes;
+
   public ModelUtilCache cache() {
     ModelUtilCache cache = HOLDER.get();
     if (cache == null) {
-      List<Model> types =
-          this.modelDao.findAll(
-              PropertyFilter.builder()
-                  .or(
-                      PropertyFilter.builder().equal("type", ModelType.SCALAR),
-                      PropertyFilter.builder().in("code", "Query", "Mutation"))
-                  .build());
-      HOLDER.set(new ModelUtilCache(types));
+      if (defaultTypes == null) {
+        defaultTypes =
+            this.modelDao.findAll(
+                PropertyFilter.builder()
+                    .or(
+                        PropertyFilter.builder().equal("type", ModelType.SCALAR),
+                        PropertyFilter.builder().in("code", "Query", "Mutation"))
+                    .build());
+      }
+      HOLDER.set(new ModelUtilCache(defaultTypes));
       return HOLDER.get();
     }
     return HOLDER.get();

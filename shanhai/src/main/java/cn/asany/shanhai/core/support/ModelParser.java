@@ -13,7 +13,6 @@ import cn.asany.shanhai.core.service.ModelEndpointService;
 import cn.asany.shanhai.core.service.ModelService;
 import cn.asany.shanhai.core.support.dao.ModelRepository;
 import cn.asany.shanhai.core.support.dao.ModelSessionFactory;
-import cn.asany.shanhai.core.support.graphql.ModelDelegateFactory;
 import cn.asany.shanhai.core.support.graphql.config.CustomTypeDefinitionFactory;
 import cn.asany.shanhai.core.support.model.FieldTypeRegistry;
 import cn.asany.shanhai.core.support.tools.DynamicClassGenerator;
@@ -22,8 +21,9 @@ import cn.asany.shanhai.core.utils.JdbcUtil;
 import graphql.kickstart.autoconfigure.tools.SchemaDirective;
 import graphql.kickstart.autoconfigure.tools.SchemaStringProvider;
 import graphql.kickstart.tools.*;
-import graphql.language.*;
-import graphql.schema.DataFetcher;
+import graphql.language.Definition;
+import graphql.language.FieldDefinition;
+import graphql.language.ObjectTypeExtensionDefinition;
 import graphql.schema.GraphQLScalarType;
 import graphql.schema.idl.SchemaDirectiveWiring;
 import java.io.IOException;
@@ -34,7 +34,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import lombok.*;
-import org.jfantasy.framework.util.asm.AsmUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class ModelParser {
@@ -43,14 +42,13 @@ public class ModelParser {
   @Autowired private ModelService modelService;
   @Autowired private ModelEndpointService modelEndpointService;
   @Autowired private ModelSessionFactory modelSessionFactory;
-  @Autowired private ModelDelegateFactory delegateFactory;
-
   @Autowired private DynamicClassGenerator dynamicClassGenerator;
   private final Map<Long, ModelResource> modelResourceMap = new ConcurrentHashMap<>();
 
   private final Map<Long, ModelMediator> allModels = new ConcurrentHashMap<>();
 
   private Definition<?> queryDefinition;
+  private Definition<?> mutationDefinition;
 
   private final List<GraphQLResolver<?>> resolvers;
   private final SchemaStringProvider schemaStringProvider;
@@ -96,6 +94,7 @@ public class ModelParser {
     }
 
     this.refreshQueryDefinition();
+    this.refreshMutationDefinition();
 
     this.schemaParser = this.buildSchemaParser();
 
@@ -113,12 +112,26 @@ public class ModelParser {
     queryDefinition = queryBuilder.build();
   }
 
+  private void refreshMutationDefinition() {
+    ObjectTypeExtensionDefinition.Builder queryBuilder =
+        ObjectTypeExtensionDefinition.newObjectTypeExtensionDefinition().name("Mutation");
+
+    for (ModelMediator m : allModels.values()) {
+      m.getMutationDefinitions().values().forEach(queryBuilder::fieldDefinition);
+    }
+
+    mutationDefinition = queryBuilder.build();
+  }
+
   public void updateModel(Long id) {
-    //    ObjectUtil.remove(allModels, "id", id);
-    //
-    //    allModels.add(this.buildModel(id));
-    //
-    //    modelSessionFactory.update();
+    ModelMediator mediator = new ModelMediator(id);
+
+    mediator.reinstall();
+
+    this.refreshQueryDefinition();
+    this.refreshMutationDefinition();
+
+    modelSessionFactory.update();
   }
 
   public void createModel(Model model) {
@@ -129,6 +142,7 @@ public class ModelParser {
     mediator.install();
 
     this.refreshQueryDefinition();
+    this.refreshMutationDefinition();
 
     modelSessionFactory.update();
   }
@@ -138,6 +152,7 @@ public class ModelParser {
     mediator.uninstall();
 
     this.refreshQueryDefinition();
+    this.refreshMutationDefinition();
 
     modelSessionFactory.update();
   }
@@ -147,6 +162,9 @@ public class ModelParser {
 
     mediator.reinstall();
 
+    this.refreshQueryDefinition();
+    this.refreshMutationDefinition();
+
     modelSessionFactory.update();
   }
 
@@ -154,6 +172,9 @@ public class ModelParser {
     ModelMediator mediator = allModels.get(modelId);
 
     mediator.reinstall();
+
+    this.refreshQueryDefinition();
+    this.refreshMutationDefinition();
 
     modelSessionFactory.update();
   }
@@ -168,21 +189,10 @@ public class ModelParser {
 
     JdbcUtil.dropColumn(tableName, columnName);
 
+    this.refreshQueryDefinition();
+    this.refreshMutationDefinition();
+
     modelSessionFactory.update();
-  }
-
-  private GraphQLResolver<?> makeMutationResolver(Model model) {
-    return null;
-  }
-
-  private Definition<?> makeEnumTypeDefinition(Model type) {
-    EnumTypeDefinition.Builder subTypeBuilder =
-        EnumTypeDefinition.newEnumTypeDefinition().name(type.getCode());
-    for (ModelField field : type.getFields()) {
-      subTypeBuilder.enumValueDefinition(
-          EnumValueDefinition.newEnumValueDefinition().name(field.getCode()).build());
-    }
-    return subTypeBuilder.build();
   }
 
   public List<Definition<?>> getDefinitions() {
@@ -199,23 +209,22 @@ public class ModelParser {
                   return acc;
                 });
     allDefinitions.add(queryDefinition);
+    allDefinitions.add(mutationDefinition);
     return allDefinitions;
-  }
-
-  public DataFetcher<Object> getDataFetcher(String key) {
-    return null;
-  }
-
-  private Class<?> makeEnumClass(String namespace, Model type) {
-    String classname = namespace.concat(".").concat(type.getCode());
-    return AsmUtil.makeEnum(
-        classname, type.getFields().stream().map(ModelField::getCode).toArray(String[]::new));
   }
 
   public List<GraphQLResolver<?>> getResolvers() {
     return this.allModels.values().stream()
-        .map(item -> item.queryResolver)
-        .collect(Collectors.toList());
+        .reduce(
+            new ArrayList<>(),
+            (list, item) -> {
+              list.addAll(item.getResolvers());
+              return list;
+            },
+            (ay, by) -> {
+              ay.addAll(by);
+              return ay;
+            });
   }
 
   public SchemaParser getSchemaParser() {
@@ -274,12 +283,14 @@ public class ModelParser {
     private final Long id;
     private String code;
     private Model model;
-
     @Getter private final Map<String, FieldDefinition> queryDefinitions = new ConcurrentHashMap<>();
+
+    @Getter
+    private final Map<String, FieldDefinition> mutationDefinitions = new ConcurrentHashMap<>();
 
     @Getter private final Map<String, Definition<?>> typeDefinitions = new ConcurrentHashMap<>();
     @Getter private GraphQLResolver<?> queryResolver;
-
+    @Getter private GraphQLResolver<?> mutationResolver;
     private final Map<String, Class<?>> dictionary = new ConcurrentHashMap<>();
 
     public ModelMediator(Long id) {
@@ -312,22 +323,37 @@ public class ModelParser {
         Model type = relation.getInverse();
         type.setModule(model.getModule());
 
-        if (ModelConnectType.GRAPHQL_OBJECT_EDGE.name().equals(relation.getRelation())
-            || ModelConnectType.GRAPHQL_OBJECT_CONNECTION.name().equals(relation.getRelation())) {
-          // 生成的分页相关对象
-          typeDefinitions.put(type.getCode(), GraphQLTypeUtils.makeObjectTypeDefinition(type));
-          dictionary.put(
-              type.getCode(),
-              dynamicClassGenerator.makeBeanClass(model.getModule().getCode(), type));
+        boolean isEdgeType =
+            ModelConnectType.GRAPHQL_OBJECT_EDGE.name().equals(relation.getRelation());
+        boolean isConnectionType =
+            ModelConnectType.GRAPHQL_OBJECT_CONNECTION.name().equals(relation.getRelation());
 
+        boolean isWhereType =
+            ModelConnectType.GRAPHQL_INPUT_WHERE.name().equals(relation.getRelation());
+
+        if (isWhereType) {
+          typeDefinitions.put(type.getCode(), GraphQLTypeUtils.makeInputTypeDefinition(type));
+          dynamicClassGenerator.makeWhereClass(model.getModule().getCode(), entityClass, type);
+        } else if (isEdgeType || isConnectionType) {
+          typeDefinitions.put(type.getCode(), GraphQLTypeUtils.makeObjectTypeDefinition(type));
+          if (isEdgeType) {
+            Class<?> edgeType =
+                dynamicClassGenerator.makeEdgeClass(model.getModule().getCode(), entityClass, type);
+            dictionary.put(type.getCode(), edgeType);
+          } else {
+            Class<?> connectionType =
+                dynamicClassGenerator.makeConnectionClass(
+                    model.getModule().getCode(), entityClass, type);
+            dictionary.put(type.getCode(), connectionType);
+          }
         } else if (ModelConnectType.GRAPHQL_ENUM_ORDER_BY.name().equals(relation.getRelation())) {
           // 生成排序枚举
-          typeDefinitions.put(type.getCode(), ModelParser.this.makeEnumTypeDefinition(type));
+          typeDefinitions.put(type.getCode(), GraphQLTypeUtils.makeEnumTypeDefinition(type));
           dictionary.put(
-              type.getCode(), ModelParser.this.makeEnumClass(model.getModule().getCode(), type));
+              type.getCode(),
+              dynamicClassGenerator.makeEnumClass(model.getModule().getCode(), type));
         } else if (ModelConnectType.GRAPHQL_INPUT_CREATE.name().equals(relation.getRelation())
-            || ModelConnectType.GRAPHQL_INPUT_UPDATE.name().equals(relation.getRelation())
-            || ModelConnectType.GRAPHQL_INPUT_WHERE.name().equals(relation.getRelation())) {
+            || ModelConnectType.GRAPHQL_INPUT_UPDATE.name().equals(relation.getRelation())) {
           // 生成输入对象
           typeDefinitions.put(type.getCode(), GraphQLTypeUtils.makeInputTypeDefinition(type));
           dictionary.put(
@@ -340,25 +366,20 @@ public class ModelParser {
           ModelParser.this.modelEndpointService.listEndpoints(model.getId());
       model.setEndpoints(new HashSet<>(endpoints));
 
-      this.queryResolver = GraphQLTypeUtils.makeQueryResolver(modelRepository, model);
-
       for (ModelEndpoint endpoint : endpoints) {
-        // 生成接口的定义
         if (ModelEndpointType.LIST == endpoint.getType()
-        /*|| endpoint.getType() == ModelEndpointType.GET
-        || endpoint.getType() == ModelEndpointType.CONNECTION*/ ) {
+            || endpoint.getType() == ModelEndpointType.GET
+            || endpoint.getType() == ModelEndpointType.CONNECTION) {
           FieldDefinition fieldDefinition = GraphQLTypeUtils.makeQueryFieldDefinition(endpoint);
           queryDefinitions.put(endpoint.getCode(), fieldDefinition);
         } else {
-
+          FieldDefinition fieldDefinition = GraphQLTypeUtils.makeMutationFieldDefinition(endpoint);
+          mutationDefinitions.put(endpoint.getCode(), fieldDefinition);
         }
-        // 生成接口的 DataFetcher
-        //      dataFetcherMap.put(
-        //          model.getCode() + "." + endpoint.getCode(),
-        //          new ModelDataFetcher(
-        //              delegateFactory.build(model, endpoint, modelRepository,
-        // endpoint.getDelegate())));
       }
+
+      this.queryResolver = GraphQLTypeUtils.makeQueryResolver(modelRepository, model);
+      this.mutationResolver = GraphQLTypeUtils.makeMutationResolver(modelRepository, model);
     }
 
     public void reinstall() {
@@ -383,6 +404,13 @@ public class ModelParser {
 
     public Model getModel() {
       return model;
+    }
+
+    public List<GraphQLResolver<?>> getResolvers() {
+      List<GraphQLResolver<?>> resolvers = new ArrayList<>();
+      resolvers.add(this.mutationResolver);
+      resolvers.add(this.queryResolver);
+      return resolvers;
     }
   }
 }

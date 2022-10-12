@@ -21,6 +21,6 @@ public class BaseMutationUpdateDataFetcher implements MutationUpdateDataFetcher 
 
   @Override
   public Object update(Long id, Object input) {
-    return this.repository.update(id, input);
+    return this.repository.update(id, input, false);
   }
 }

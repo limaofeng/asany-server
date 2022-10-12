@@ -14,6 +14,6 @@ public class ModelEndpointDataFetcherFactory implements DataFetcherFactory<Objec
 
   @Override
   public DataFetcher<Object> get(DataFetcherFactoryEnvironment environment) {
-    return modelParser.getDataFetcher("");
+    return null; // modelParser.getDataFetcher("");
   }
 }
