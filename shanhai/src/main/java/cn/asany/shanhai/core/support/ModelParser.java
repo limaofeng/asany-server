@@ -34,6 +34,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import lombok.*;
+import org.jfantasy.framework.dao.mybatis.keygen.util.DataBaseKeyGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class ModelParser {
@@ -148,8 +149,10 @@ public class ModelParser {
   }
 
   public void deleteModel(Model model) {
-    ModelMediator mediator = allModels.remove(model.getId());
+    ModelMediator mediator = allModels.get(model.getId());
     mediator.uninstall();
+
+    allModels.remove(model.getId());
 
     this.refreshQueryDefinition();
     this.refreshMutationDefinition();
@@ -392,6 +395,8 @@ public class ModelParser {
     public void uninstall() {
       modelSessionFactory.unbuildModelRepository(model.getCode());
       JdbcUtil.dropTable(model.getMetadata().getDatabaseTableName());
+      DataBaseKeyGenerator.getInstance()
+          .reset(model.getMetadata().getDatabaseTableName().toLowerCase() + ":id");
     }
 
     public Long getId() {
