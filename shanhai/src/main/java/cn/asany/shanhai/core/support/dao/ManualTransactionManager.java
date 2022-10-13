@@ -2,12 +2,8 @@ package cn.asany.shanhai.core.support.dao;
 
 import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 import org.jfantasy.framework.error.ValidationException;
-import org.springframework.orm.hibernate5.SessionHolder;
-import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 /**
  * 手动事务管理器
@@ -34,33 +30,7 @@ public class ManualTransactionManager {
     return holder.get();
   }
 
-  public void commitTransaction() {
-    SessionFactory sessionFactory = getCurrentSessionFactory();
-    Session session = sessionFactory.getCurrentSession();
-    Transaction transaction = session.getTransaction();
-    if (transaction == null) {
-      return;
-    }
-    try {
-      if (!transaction.isActive()) {
-        return;
-      }
-      transaction.commit();
-    } catch (Exception exception) {
-      commitTransaction();
-      throw exception;
-    }
-  }
-
-  public void rollbackTransaction() {
-    SessionFactory sessionFactory = getCurrentSessionFactory();
-    Session session = sessionFactory.getCurrentSession();
-    Transaction transaction = session.getTransaction();
-    session.clear();
-    transaction.rollback();
-  }
-
-  public boolean bindSession() {
+  public TransactionStatus getTransaction() {
     SessionFactory sessionFactory = this.buildCurrentSessionFactory();
     int retryCount = 0;
     while (sessionFactory == null && ++retryCount <= 3) {
@@ -74,30 +44,10 @@ public class ManualTransactionManager {
     if (sessionFactory == null) {
       throw new ValidationException("Build SessionFactory Failure");
     }
-    Session session = sessionFactory.openSession();
-    if (!TransactionSynchronizationManager.hasResource(sessionFactory)) {
-      SessionHolder sessionHolder = new SessionHolder(session);
-      TransactionSynchronizationManager.bindResource(sessionFactory, sessionHolder);
-      sessionHolder.setSynchronizedWithTransaction(true);
-      return true;
-    }
-    return false;
-  }
-
-  public void beginTransaction() {
-    SessionFactory sessionFactory = getCurrentSessionFactory();
-    Session session = sessionFactory.getCurrentSession();
-    session.beginTransaction();
+    return TransactionStatus.builder().sessionFactory(sessionFactory).build();
   }
 
   public static SessionFactory getCurrentSessionFactory() {
     return holder.get();
-  }
-
-  public void unbindSession() {
-    SessionFactory sessionFactory = getCurrentSessionFactory();
-    Session session = sessionFactory.getCurrentSession();
-    TransactionSynchronizationManager.unbindResource(sessionFactory);
-    session.close();
   }
 }

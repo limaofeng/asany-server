@@ -6,7 +6,6 @@ import cn.asany.shanhai.core.domain.enums.ModelRelationType;
 import cn.asany.shanhai.core.domain.enums.ModelStatus;
 import cn.asany.shanhai.core.domain.enums.ModelType;
 import cn.asany.shanhai.core.event.*;
-import cn.asany.shanhai.core.runners.InitModelDaoCommandLineRunner;
 import cn.asany.shanhai.core.support.model.features.MasterModelFeature;
 import cn.asany.shanhai.core.utils.DuplicateFieldException;
 import cn.asany.shanhai.core.utils.JdbcUtil;
@@ -176,18 +175,8 @@ public class ModelService {
     ModelUtils modelUtils = ModelUtils.getInstance();
     modelUtils.clear();
 
-    List<Model> types = new ArrayList<>();
-    //        this.modelDao.findAllByTypesWithMetadataAndFields(
-    //            ModelType.OBJECT,
-    //            ModelType.SCALAR,
-    //            ModelType.INPUT_OBJECT,
-    //            ModelType.ENUM,
-    //            ModelType.INTERFACE,
-    //            ModelType.UNION);
-    modelUtils.newCache(types);
     modelUtils.enableLazySave();
 
-    long start = System.currentTimeMillis();
     // 去掉默认类型
     models =
         models.stream()
@@ -214,12 +203,7 @@ public class ModelService {
       }
     }
 
-    String x = InitModelDaoCommandLineRunner.fromNow(start);
-    System.out.println("总耗时: " + x);
-
     ModelUtils.ModelLazySaveContext context = modelUtils.getModelLazySaveContext();
-
-    long x_start = System.currentTimeMillis();
 
     Model Query =
         modelUtils
@@ -241,8 +225,6 @@ public class ModelService {
         mutations.stream()
             .map(item -> modelUtils.install(Mutation, item))
             .collect(Collectors.toList()));
-    String ss = InitModelDaoCommandLineRunner.fromNow(x_start);
-    System.out.println("批量保存耗时: " + ss);
 
     modelUtils.clear();
     modelUtils.disableLazySave();

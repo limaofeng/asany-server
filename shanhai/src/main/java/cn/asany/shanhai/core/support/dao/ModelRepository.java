@@ -3,9 +3,9 @@ package cn.asany.shanhai.core.support.dao;
 import cn.asany.shanhai.core.domain.Model;
 import java.lang.reflect.Array;
 import java.util.*;
+import lombok.Getter;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.criterion.*;
 import org.hibernate.internal.CriteriaImpl;
 import org.hibernate.transform.ResultTransformer;
@@ -15,25 +15,26 @@ import org.jfantasy.framework.dao.hibernate.util.ReflectionUtils;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.dao.jpa.PropertyFilter.MatchType;
 import org.jfantasy.framework.error.IgnoreException;
+import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.ognl.OgnlUtil;
 import org.springframework.util.Assert;
 
 public class ModelRepository {
-  private final Class<?> entityClass;
+  @Getter private final Class<?> entityClass;
   protected final Model model;
   protected final String entityName;
-  protected ModelResultTransformer resultTransformer;
+  private final ModelSessionFactory sessionFactory;
   private final OgnlUtil ognlUtil = OgnlUtil.getInstance();
 
-  public ModelRepository(Model model, Class<?> entityClass) {
+  public ModelRepository(Model model, ModelSessionFactory sessionFactory, Class<?> entityClass) {
     this.model = model;
     this.entityClass = entityClass;
     this.entityName = model.getCode();
-    this.resultTransformer = new ModelResultTransformer(entityClass, model.getFields());
+    this.sessionFactory = sessionFactory;
   }
 
-  protected SessionFactory getSessionFactory() {
-    return ManualTransactionManager.getCurrentSessionFactory();
+  protected ModelSessionFactory getSessionFactory() {
+    return this.sessionFactory;
   }
 
   protected Session getSession() {
@@ -42,7 +43,6 @@ public class ModelRepository {
 
   public <T> T findById(Long id) {
     Criteria criteria = createCriteria(Restrictions.eq("id", id));
-    criteria.setResultTransformer(this.resultTransformer);
     return (T) criteria.uniqueResult();
   }
 
@@ -65,50 +65,28 @@ public class ModelRepository {
     return findById((Long) pk);
   }
 
-  public List findBy(String propertyName, Object value) {
+  public <T> List<T> findBy(String propertyName, Object value) {
     Assert.hasText(propertyName, "propertyName不能为空");
     return find(Restrictions.eq(propertyName, value));
   }
 
-  public List find(Criterion... criterions) {
+  public <T> List<T> find(Criterion... criterions) {
     return distinct(createCriteria(criterions)).list();
   }
 
   protected Criteria distinct(Criteria criteria) {
     criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
-    criteria.setResultTransformer(this.resultTransformer);
     return criteria;
   }
 
   protected Criteria createCriteria(Criterion... criterions) {
     Criteria criteria = getSession().createCriteria(this.entityName);
-    Set<String> alias = new HashSet<String>();
     for (Criterion c : criterions) {
-      //            changePropertyName(criteria, alias, c);
       criteria.add(c);
     }
-    //        for (String orderBy : orderBys) {
-    //            createAlias(criteria, alias, orderBy);
-    //        }
     criteria.setCacheable(true);
-    criteria.setResultTransformer(this.resultTransformer);
     return criteria;
   }
-
-  //  protected Criteria createCriteria(Criterion[] criterions, String... orderBys) {
-  //    Criteria criteria = getSession().createCriteria(this.entityName);
-  //    Set<String> alias = new HashSet<String>();
-  //    for (Criterion c : criterions) {
-  //      //            changePropertyName(criteria, alias, c);
-  //      criteria.add(c);
-  //    }
-  //    //        for (String orderBy : orderBys) {
-  //    //            createAlias(criteria, alias, orderBy);
-  //    //        }
-  //    criteria.setCacheable(true);
-  //    criteria.setResultTransformer(this.resultTransformer);
-  //    return criteria;
-  //  }
 
   public <T> List<T> findAll() {
     Criteria criteria = distinct(createCriteria());
@@ -145,13 +123,13 @@ public class ModelRepository {
     return page;
   }
 
-  protected <T> Criteria setPageParameter(Criteria c, Page<T> page) {
+  protected <T> void setPageParameter(Criteria c, Page<T> page) {
     c.setFirstResult((page.getCurrentPage() - 1) * page.getPageSize());
     c.setMaxResults(page.getPageSize());
-    return setOrderBy(c, page.getOrderBy());
+    setOrderBy(c, page.getOrderBy());
   }
 
-  protected Criteria setOrderBy(Criteria c, OrderBy orderBy) {
+  protected void setOrderBy(Criteria c, OrderBy orderBy) {
     if (orderBy.isOrderBySeted()) {
       for (OrderBy order : orderBy.getOrders()) {
         if (order.getDirection() == OrderBy.Direction.ASC) {
@@ -161,26 +139,24 @@ public class ModelRepository {
         }
       }
     }
-    return c;
   }
 
   protected int countCriteriaResult(Criteria c) {
     if (!(c instanceof CriteriaImpl)) {
       throw new IgnoreException(" Criteria 不能 cast CriteriaImpl");
     }
-    CriteriaImpl impl = CriteriaImpl.class.cast(c);
+    CriteriaImpl impl = (CriteriaImpl) c;
     Projection projection = impl.getProjection();
     ResultTransformer transformer = impl.getResultTransformer();
-    List<CriteriaImpl.OrderEntry> orderEntries = null;
+    List<CriteriaImpl.OrderEntry> orderEntries;
     try {
-      orderEntries =
-          (List<CriteriaImpl.OrderEntry>) ReflectionUtils.getFieldValue(impl, "orderEntries");
+      orderEntries = ReflectionUtils.getFieldValue(impl, "orderEntries");
       ReflectionUtils.setFieldValue(impl, "orderEntries", new ArrayList<CriteriaImpl.OrderEntry>());
     } catch (Exception e) {
       throw new IgnoreException("不可能抛出的异常:" + e.getMessage(), e);
     }
     int totalCount =
-        Integer.valueOf(c.setProjection(Projections.rowCount()).uniqueResult().toString());
+        Integer.parseInt(c.setProjection(Projections.rowCount()).uniqueResult().toString());
     c.setProjection(projection);
     if (projection == null) {
       c.setResultTransformer(CriteriaSpecification.ROOT_ENTITY);
@@ -202,10 +178,12 @@ public class ModelRepository {
     if (source == null) {
       return null;
     }
-    for (Map.Entry<String, Object> entry : ((Map<String, Object>) input).entrySet()) {
-      ognlUtil.setValue(entry.getKey(), source, entry.getValue());
+    if (merge) {
+      source = ObjectUtil.merge(source, input);
+      getSession().update(entityName, source);
+    } else {
+      getSession().update(entityName, input);
     }
-    getSession().update(entityName, source);
     return source;
   }
 
@@ -221,7 +199,7 @@ public class ModelRepository {
       }
       criterionList.add(criterion);
     }
-    return criterionList.toArray(new Criterion[criterionList.size()]);
+    return criterionList.toArray(new Criterion[0]);
   }
 
   private Criterion conjunction(MatchType matchType, Criterion[] criteria) {

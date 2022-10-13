@@ -13,6 +13,10 @@ import org.jfantasy.framework.spring.SpringBeanUtils;
 public class TemplateDataOfModel {
   private Model model;
 
+  public String getClassName() {
+    return model.getModule().getCode() + "." + model.getCode();
+  }
+
   public String getCode() {
     return model.getCode();
   }

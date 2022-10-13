@@ -32,6 +32,7 @@ import org.jfantasy.framework.util.PinyinUtils;
 import org.jfantasy.framework.util.common.ClassUtil;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.common.StringUtil;
+import org.jfantasy.framework.util.common.toys.CompareResults;
 import org.jfantasy.framework.util.ognl.OgnlUtil;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Component;
@@ -218,7 +219,7 @@ public class ModelUtils {
       return field;
     }
 
-    FieldType fieldType = fieldTypeRegistry.getType(field.getType());
+    FieldType<?, ?> fieldType = fieldTypeRegistry.getType(field.getType());
 
     Optional<Model> realType = getModelByCode(fieldType.getGraphQLType());
     field.setRealType(realType.orElseThrow(() -> new TypeNotFoundException(field.getType())));
@@ -422,15 +423,15 @@ public class ModelUtils {
   @SneakyThrows
   public void mergeFields(Model model, Set<ModelField> nextFields) {
     Set<ModelField> prevFields = model.getFields();
-    DiffObject<ModelField> diffObject =
-        diff(
+    CompareResults<ModelField> diffObject =
+        ObjectUtil.compare(
             prevFields.stream().filter(item -> !item.getSystem()).collect(Collectors.toList()),
             nextFields,
             (prev, next) -> prev.equals(next) && prev.getId() != null ? 0 : -1);
 
-    List<ModelField> newFields = diffObject.getAppendItems();
-    List<ModelField> oldFields = diffObject.getModifiedItems();
-    List<ModelField> removeFields = diffObject.getDeletedItems();
+    List<ModelField> newFields = diffObject.getExceptB();
+    List<ModelField> oldFields = diffObject.getIntersect();
+    List<ModelField> removeFields = diffObject.getExceptA();
 
     for (ModelField field : removeFields) {
       this.uninstall(model, field);
@@ -447,11 +448,11 @@ public class ModelUtils {
   public void mergeFeatures(
       Model model, Set<ModelFeature> nextFeatures, ModelService modelService) {
     Set<ModelFeature> prevFeatures = model.getFeatures();
-    DiffObject<ModelFeature> diffObject =
-        diff(prevFeatures, nextFeatures, (prev, next) -> prev.equals(next) ? 0 : -1);
-    List<ModelFeature> newFeatures = diffObject.getAppendItems();
-    List<ModelFeature> oldFeatures = diffObject.getModifiedItems();
-    List<ModelFeature> removeFeatures = diffObject.getDeletedItems();
+    CompareResults<ModelFeature> diffObject =
+        ObjectUtil.compare(prevFeatures, nextFeatures, (prev, next) -> prev.equals(next) ? 0 : -1);
+    List<ModelFeature> newFeatures = diffObject.getExceptB();
+    List<ModelFeature> oldFeatures = diffObject.getIntersect();
+    List<ModelFeature> removeFeatures = diffObject.getExceptA();
 
     for (ModelFeature feature : removeFeatures) {
       this.uninstall(model, feature);
@@ -469,21 +470,6 @@ public class ModelUtils {
     for (ModelFeature feature : newFeatures) {
       this.postinstall(model, feature);
     }
-  }
-
-  public <T> DiffObject diff(Collection<T> prev, Collection<T> next, Comparator<T> comparator) {
-    DiffObject<T> diffObject = new DiffObject<>();
-    List<T> olds = new ArrayList<>(prev);
-    for (T obj : next) {
-      if (exists(olds, item -> comparator.compare(item, obj) != -1)) {
-        remove(olds, item -> comparator.compare(item, obj) != -1);
-        diffObject.modifiedItems.add(obj);
-      } else {
-        diffObject.appendItems.add(obj);
-      }
-    }
-    diffObject.setDeletedItems(olds);
-    return diffObject;
   }
 
   public static <T> T remove(List<T> orig, Predicate<T> selector) {
@@ -524,7 +510,7 @@ public class ModelUtils {
     }
   }
 
-  private <T> void mergeColumn(Class entityClass, T dest, T source) {
+  private <T> void mergeColumn(Class<?> entityClass, T dest, T source) {
     for (Field field : ClassUtil.getDeclaredFields(entityClass, Column.class)) {
       if (field.getAnnotation(Id.class) != null) {
         continue;

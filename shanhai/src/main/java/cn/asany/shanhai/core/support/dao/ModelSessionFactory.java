@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.persistence.EntityManagerFactory;
 import lombok.SneakyThrows;
-import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.Metadata;
@@ -65,16 +64,8 @@ public class ModelSessionFactory implements InitializingBean, ModelRepositoryFac
     this.metadataSources = new MetadataSources(serviceRegistry);
   }
 
-  public Session openSession() throws HibernateException {
-    return sessionFactory.openSession();
-  }
-
   public Session getCurrentSession() {
     return sessionFactory.getCurrentSession();
-  }
-
-  public SessionFactory real() {
-    return this.sessionFactory;
   }
 
   @Override
@@ -89,11 +80,15 @@ public class ModelSessionFactory implements InitializingBean, ModelRepositoryFac
     String xml = hibernateMappingHelper.generateXML(model);
     this.addMetadataSource(xml);
     Class<?> entityClass = FantasyClassLoader.getClassLoader().loadClass(entityClassName);
-    repositoryMap.put(model.getCode(), repository = new ModelRepository(model, entityClass));
+    repositoryMap.put(model.getCode(), repository = new ModelRepository(model, this, entityClass));
     return repository;
   }
 
   public void unbuildModelRepository(String code) {
     this.repositoryMap.remove(code);
+  }
+
+  public SessionFactory real() {
+    return this.sessionFactory;
   }
 }

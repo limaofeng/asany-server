@@ -171,12 +171,10 @@ public class DictService {
    * @param dataDictionary 数据字典项
    */
   public Dict save(Dict dataDictionary) throws PinyinException {
-    if (dataDictionary.getCode() != null) {
-      return this.dictDao.save(dataDictionary);
-    } else {
+    if (dataDictionary.getCode() == null) {
       dataDictionary.setCode(PinyinUtils.getAll(dataDictionary.getName()));
-      return this.dictDao.save(dataDictionary);
     }
+    return this.dictDao.save(dataDictionary);
   }
 
   public Dict updates(String id, Dict dataDictionary) {

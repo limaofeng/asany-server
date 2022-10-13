@@ -1,10 +1,10 @@
 package cn.asany.shanhai.autoconfigure;
 
+import cn.asany.shanhai.core.support.dao.CustomClassLoaderService;
 import cn.asany.shanhai.core.support.dao.ManualTransactionManager;
 import cn.asany.shanhai.core.support.dao.ModelSessionFactory;
 import cn.asany.shanhai.core.support.graphql.ModelDelegateFactory;
-import cn.asany.shanhai.core.support.graphql.execution.OpenModelSessionAsyncMutationExecutionStrategy;
-import cn.asany.shanhai.core.support.graphql.execution.OpenModelSessionAsyncQueryExecutionStrategy;
+import cn.asany.shanhai.core.support.graphql.execution.ModelTransactionInstrumentation;
 import cn.asany.shanhai.core.support.model.FieldType;
 import cn.asany.shanhai.core.support.model.FieldTypeRegistry;
 import cn.asany.shanhai.core.support.model.IModelFeature;
@@ -13,8 +13,6 @@ import cn.asany.shanhai.data.engine.DefaultDataSourceLoader;
 import cn.asany.shanhai.data.engine.IDataSourceBuilder;
 import cn.asany.shanhai.data.engine.IDataSourceLoader;
 import cn.asany.shanhai.data.engine.IDataSourceOptions;
-import graphql.execution.ExecutionStrategy;
-import graphql.kickstart.autoconfigure.web.servlet.GraphQLWebAutoConfiguration;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.jfantasy.autoconfigure.GraphQLAutoConfiguration;
@@ -45,7 +43,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
   "cn.asany.shanhai.core.convert",
   "cn.asany.shanhai.core.runners",
   "cn.asany.shanhai.core.utils",
-  "cn.asany.shanhai.core.rest",
   "cn.asany.shanhai.core.dao",
   "cn.asany.shanhai.core.listener",
   "cn.asany.shanhai.core.service",
@@ -92,6 +89,11 @@ public class ShanhaiAutoConfiguration {
   }
 
   @Bean
+  public ModelTransactionInstrumentation transactionInstrumentation() {
+    return new ModelTransactionInstrumentation(manualTransactionManager());
+  }
+
+  @Bean
   public ModelFeatureRegistry buildModelFeatureRegistry(List<IModelFeature> features) {
     ModelFeatureRegistry registry = new ModelFeatureRegistry();
     features.forEach(registry::add);
@@ -106,13 +108,8 @@ public class ShanhaiAutoConfiguration {
     return factory;
   }
 
-  @Bean(GraphQLWebAutoConfiguration.QUERY_EXECUTION_STRATEGY)
-  public ExecutionStrategy queryExecutionStrategy(ManualTransactionManager transactionManager) {
-    return new OpenModelSessionAsyncQueryExecutionStrategy(transactionManager);
-  }
-
-  @Bean(GraphQLWebAutoConfiguration.MUTATION_EXECUTION_STRATEGY)
-  public ExecutionStrategy mutationExecutionStrategy() {
-    return new OpenModelSessionAsyncMutationExecutionStrategy();
+  @Bean
+  public CustomClassLoaderService customClassLoaderService() {
+    return new CustomClassLoaderService();
   }
 }

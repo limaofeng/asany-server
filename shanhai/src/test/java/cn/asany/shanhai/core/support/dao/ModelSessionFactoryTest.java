@@ -1,11 +1,7 @@
 package cn.asany.shanhai.core.support.dao;
 
 import cn.asany.shanhai.TestApplication;
-import cn.asany.shanhai.core.domain.Model;
 import cn.asany.shanhai.core.service.ModelService;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,25 +24,26 @@ class ModelSessionFactoryTest {
   @Test
   @Transactional
   void buildRepository() {
-    Optional<Model> optional = modelService.findByCode("Employee");
-
-    Model model = optional.get();
-
-    modelSessionFactory.buildModelRepository(model);
-    modelSessionFactory.update();
-
-    ModelRepository repository = modelSessionFactory.buildModelRepository(model);
-
-    ManualTransactionManager transactionManager = new ManualTransactionManager(modelSessionFactory);
-    transactionManager.bindSession();
-
-    transactionManager.beginTransaction();
-
-    Map<String, Object> employee = new HashMap<>();
-    employee.put("name", "张三");
-
-    repository.save(employee);
-
-    transactionManager.commitTransaction();
+    //    Optional<Model> optional = modelService.findByCode("Employee");
+    //
+    //    Model model = optional.get();
+    //
+    //    modelSessionFactory.buildModelRepository(model);
+    //    modelSessionFactory.update();
+    //
+    //    ModelRepository repository = modelSessionFactory.buildModelRepository(model);
+    //
+    //    ManualTransactionManager transactionManager = new
+    // ManualTransactionManager(modelSessionFactory);
+    //    transactionManager.bindSession();
+    //
+    //    transactionManager.beginTransaction();
+    //
+    //    Map<String, Object> employee = new HashMap<>();
+    //    employee.put("name", "张三");
+    //
+    //    repository.save(employee);
+    //
+    //    transactionManager.commitTransaction();
   }
 }

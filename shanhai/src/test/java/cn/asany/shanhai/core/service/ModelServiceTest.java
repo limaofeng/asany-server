@@ -161,12 +161,4 @@ class ModelServiceTest {
     model = modelService.update(model);
     log.debug(model.getCode());
   }
-
-  @Test
-  void publish() {
-    Optional<Model> optional = modelService.findByCode("Employee");
-    Model model = optional.orElseGet(this::testEmployee);
-    modelService.publish(model.getId());
-    log.debug("Hibernate HBM XML:" + model.getMetadata().getHbm());
-  }
 }
