@@ -62,7 +62,7 @@ public class MasterModelFeature implements IModelFeature, InitializingBean {
     endpoints.add(buildCreateEndpoint(model));
     endpoints.add(buildUpdateEndpoint(model));
     endpoints.add(buildDeleteEndpoint(model));
-    //        endpoints.add(buildDeleteManyEndpoint(model));
+    endpoints.add(buildDeleteManyEndpoint(model));
     endpoints.add(buildGetEndpoint(model));
     endpoints.add(buildFindAllEndpoint(model));
     endpoints.add(buildFindPaginationEndpoint(model));
@@ -135,18 +135,21 @@ public class MasterModelFeature implements IModelFeature, InitializingBean {
             .list(true)
             .name("对所有由 AND 组合的给定过滤器进行逻辑非.")
             .build());
-    for (ModelField field :
-        model.getFields().stream()
-            .filter(item -> !item.getSystem() && !item.getPrimaryKey())
-            .collect(Collectors.toList())) {
+    for (ModelField field : new ArrayList<>(model.getFields())) {
       if (field.getRealType().getType() == ModelType.SCALAR) {
         for (MatchType matchType : field.getMetadata().getFilters()) {
           String fieldName =
               matchType == MatchType.EQ
                   ? field.getCode()
                   : field.getCode() + "_" + matchType.getSlug();
+
+          boolean isList = matchType == MatchType.IN || matchType == MatchType.NOT_IN;
           fields.add(
-              ModelField.builder().code(fieldName).type(field.getRealType().getCode()).build());
+              ModelField.builder()
+                  .code(fieldName)
+                  .type(field.getRealType().getCode())
+                  .list(isList)
+                  .build());
         }
       }
     }
@@ -510,7 +513,7 @@ public class MasterModelFeature implements IModelFeature, InitializingBean {
   }
 
   private ModelEndpoint buildDeleteEndpoint(Model model) {
-    String code = ENDPOINT_PREFIX_DELETE_MANY + StringUtil.upperCaseFirst(model.getCode());
+    String code = ENDPOINT_PREFIX_DELETE + StringUtil.upperCaseFirst(model.getCode());
     String name = "删除" + model.getName();
     return model.getEndpoints().stream()
         .filter(item -> item.getType() == ModelEndpointType.DELETE)
@@ -539,10 +542,10 @@ public class MasterModelFeature implements IModelFeature, InitializingBean {
   }
 
   private ModelEndpoint buildDeleteManyEndpoint(Model model) {
-    String code = ENDPOINT_PREFIX_DELETE + StringUtil.upperCaseFirst(model.getCode());
-    String name = "删除" + model.getName();
+    String code = ENDPOINT_PREFIX_DELETE_MANY + StringUtil.upperCaseFirst(model.getCode() + "s");
+    String name = "批量删除" + model.getName();
     return model.getEndpoints().stream()
-        .filter(item -> item.getType() == ModelEndpointType.DELETE)
+        .filter(item -> item.getType() == ModelEndpointType.DELETE_MANY)
         .findFirst()
         .map(
             item -> {
@@ -554,11 +557,11 @@ public class MasterModelFeature implements IModelFeature, InitializingBean {
             () -> {
               ModelEndpoint endpoint =
                   ModelEndpoint.builder()
-                      .type(ModelEndpointType.DELETE)
+                      .type(ModelEndpointType.DELETE_MANY)
                       .code(code)
                       .name(name)
-                      .argument("id", FieldType.ID, true)
-                      .returnType(model)
+                      .argument("where", getWhereInputTypeName(model), true)
+                      .returnType(true, model)
                       .model(model)
                       .delegate(BaseMutationDeleteDataFetcher.class)
                       .build();
@@ -615,7 +618,7 @@ public class MasterModelFeature implements IModelFeature, InitializingBean {
                       .type(ModelEndpointType.LIST)
                       .code(code)
                       .name(name)
-                      .argument("where", getWhereInputTypeName(model))
+                      .argument("where", getWhereInputTypeName(model), "查询条件", "{}")
                       .argument("offset", FieldType.Int, "开始位置", 0)
                       .argument("limit", FieldType.Int, "数据量", 15)
                       .argument("orderBy", getOrderByTypeName(model), "排序")
@@ -647,7 +650,7 @@ public class MasterModelFeature implements IModelFeature, InitializingBean {
                       .type(ModelEndpointType.CONNECTION)
                       .code(code)
                       .name(model.getName() + "分页查询")
-                      .argument("where", getWhereInputTypeName(model))
+                      .argument("where", getWhereInputTypeName(model), "查询条件", "{}")
                       .argument("page", FieldType.Int, "页码", 1)
                       .argument("pageSize", FieldType.Int, "每页展示条数", 15)
                       .argument("orderBy", getOrderByTypeName(model), "排序")

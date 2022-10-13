@@ -504,7 +504,7 @@ public class ModelUtils {
 
   @SafeVarargs
   private final <T> void merge(T dest, T... sources) {
-    Class entityClass = ClassUtil.getRealClass(dest);
+    Class<?> entityClass = ClassUtil.getRealClass(dest);
     for (T source : sources) {
       mergeColumn(entityClass, dest, source);
     }
@@ -625,8 +625,6 @@ public class ModelUtils {
   }
 
   public static class ModelUtilCache {
-    private List<Model> models = new ArrayList<>();
-    private final List<ModelField> fields = new ArrayList<>();
     private final Map<Long, Model> modelsById = new HashMap<>();
     private final Map<String, Model> modelsByCode = new HashMap<>();
 

@@ -36,11 +36,11 @@ public class GraphQLTypeUtils {
   }
 
   public static Value<?> toDefaultValue(ModelEndpointArgument argument) {
-    if (argument.getType().endsWith("WhereInput")) {
-      return ObjectValue.newObjectValue().build();
-    }
     if (StringUtil.isBlank(argument.getDefaultValue())) {
       return null;
+    }
+    if ("{}".equals(argument.getDefaultValue())) {
+      return ObjectValue.newObjectValue().build();
     }
     FieldType<?, ?> fieldType = getFieldTypeRegistry().getType(argument.getType());
     switch (fieldType.getGraphQLType()) {
@@ -226,7 +226,7 @@ public class GraphQLTypeUtils {
                 create.getCode(),
                 update.getCode(),
                 delete.getCode(),
-                "deleteMany");
+                deleteMany.getCode());
 
     return resolverClass
         .getConstructor(CustomModelService.class)

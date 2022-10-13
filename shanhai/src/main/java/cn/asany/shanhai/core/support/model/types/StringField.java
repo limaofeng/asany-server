@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
  */
 @Data
 @Component
-public class StringField implements FieldType {
+public class StringField implements FieldType<String, String> {
   private String id = "String";
   private String name = "字符串";
   private String javaType = java.lang.String.class.getName();
@@ -50,7 +50,9 @@ public class StringField implements FieldType {
       PropertyFilter.MatchType.EQ,
       PropertyFilter.MatchType.CONTAINS,
       PropertyFilter.MatchType.STARTS_WITH,
-      PropertyFilter.MatchType.ENDS_WITH
+      PropertyFilter.MatchType.ENDS_WITH,
+      PropertyFilter.MatchType.IN,
+      PropertyFilter.MatchType.NOT_IN
     };
   }
 }

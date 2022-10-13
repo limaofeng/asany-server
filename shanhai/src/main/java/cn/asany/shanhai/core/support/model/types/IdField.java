@@ -45,6 +45,6 @@ public class IdField implements FieldType<Long, Long> {
 
   @Override
   public MatchType[] filters() {
-    return new MatchType[] {MatchType.EQ};
+    return new MatchType[] {MatchType.EQ, MatchType.IN, MatchType.NOT_IN};
   }
 }
