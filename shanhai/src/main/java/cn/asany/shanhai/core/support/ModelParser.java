@@ -9,6 +9,7 @@ import cn.asany.shanhai.core.domain.ModelRelation;
 import cn.asany.shanhai.core.domain.enums.ModelConnectType;
 import cn.asany.shanhai.core.domain.enums.ModelEndpointType;
 import cn.asany.shanhai.core.domain.enums.ModelRelationType;
+import cn.asany.shanhai.core.listener.StopWatchHolder;
 import cn.asany.shanhai.core.service.ModelEndpointService;
 import cn.asany.shanhai.core.service.ModelService;
 import cn.asany.shanhai.core.support.dao.ModelRepository;
@@ -27,16 +28,16 @@ import graphql.language.ObjectTypeExtensionDefinition;
 import graphql.schema.GraphQLScalarType;
 import graphql.schema.idl.SchemaDirectiveWiring;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import lombok.*;
+import lombok.extern.slf4j.Slf4j;
 import org.jfantasy.framework.dao.mybatis.keygen.util.DataBaseKeyGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StopWatch;
 
+@Slf4j
 public class ModelParser {
 
   @Autowired FieldTypeRegistry fieldTypeRegistry;
@@ -172,14 +173,20 @@ public class ModelParser {
   }
 
   public void updateModelField(Long modelId, ModelField field) {
+    StopWatch sw = StopWatchHolder.get();
+
     ModelMediator mediator = allModels.get(modelId);
 
     mediator.reinstall();
 
+    sw.start("刷新接口");
     this.refreshQueryDefinition();
     this.refreshMutationDefinition();
+    sw.stop();
 
+    sw.start("更新 Model Session Factory");
     modelSessionFactory.update();
+    sw.stop();
   }
 
   public void deleteModelField(Long modelId, ModelField field) {
@@ -304,10 +311,14 @@ public class ModelParser {
       this.model = ModelParser.this.modelService.getDetails(id);
       this.code = model.getCode();
 
+      StopWatch sw = StopWatchHolder.get();
+
       Class<?> entityClass =
           dynamicClassGenerator.makeEntityClass(model.getModule().getCode(), model);
 
+      sw.start("生成 ModelRepository");
       ModelRepository modelRepository = modelSessionFactory.buildModelRepository(model);
+      sw.stop();
 
       ModelParser.this.modelResourceMap.put(
           model.getId(), ModelResource.builder().model(model).repository(modelRepository).build());

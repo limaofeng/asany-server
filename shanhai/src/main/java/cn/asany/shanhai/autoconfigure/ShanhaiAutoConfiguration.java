@@ -63,7 +63,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
     },
     repositoryBaseClass = ComplexJpaRepository.class)
 @Slf4j
-@Import({CustomFieldTypeConfig.class, ModelAutoConfiguration.class})
+@Import({CustomFieldTypeConfig.class})
 public class ShanhaiAutoConfiguration {
 
   @Bean

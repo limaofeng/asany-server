@@ -2,11 +2,11 @@ package cn.asany.shanhai.autoconfigure;
 
 import cn.asany.shanhai.core.support.ModelParser;
 import cn.asany.shanhai.core.support.graphql.DynamicGraphQLSchemaProvider;
+import cn.asany.shanhai.core.support.graphql.GraphQLReloadSchemaProvider;
 import cn.asany.shanhai.core.support.graphql.ModelEndpointDataFetcherFactory;
 import cn.asany.shanhai.core.support.tools.DynamicClassGenerator;
 import graphql.kickstart.autoconfigure.tools.SchemaDirective;
 import graphql.kickstart.autoconfigure.tools.SchemaStringProvider;
-import graphql.kickstart.servlet.config.GraphQLSchemaServletProvider;
 import graphql.kickstart.tools.*;
 import graphql.kickstart.tools.proxy.ProxyHandler;
 import graphql.schema.GraphQLScalarType;
@@ -99,7 +99,7 @@ public class ModelAutoConfiguration {
   }
 
   @Bean
-  public GraphQLSchemaServletProvider graphQLSchemaProvider(ModelParser modelParser) {
+  public GraphQLReloadSchemaProvider graphQLSchemaProvider(ModelParser modelParser) {
     return new DynamicGraphQLSchemaProvider(modelParser);
   }
 

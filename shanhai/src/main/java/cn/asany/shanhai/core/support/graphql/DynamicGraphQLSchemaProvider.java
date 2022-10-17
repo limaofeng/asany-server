@@ -2,14 +2,14 @@ package cn.asany.shanhai.core.support.graphql;
 
 import cn.asany.shanhai.core.support.ModelParser;
 import graphql.kickstart.execution.config.GraphQLSchemaProvider;
-import graphql.kickstart.servlet.config.GraphQLSchemaServletProvider;
 import graphql.kickstart.tools.SchemaParser;
 import graphql.schema.GraphQLSchema;
 import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.websocket.server.HandshakeRequest;
+import org.springframework.scheduling.annotation.Async;
 
-public class DynamicGraphQLSchemaProvider implements GraphQLSchemaServletProvider {
+public class DynamicGraphQLSchemaProvider implements GraphQLReloadSchemaProvider {
 
   private final ModelParser modelParser;
   private GraphQLSchema graphQLSchema;
@@ -24,6 +24,7 @@ public class DynamicGraphQLSchemaProvider implements GraphQLSchemaServletProvide
     this.readOnlySchema = GraphQLSchemaProvider.copyReadOnly(this.graphQLSchema);
   }
 
+  @Async
   public void updateSchema() throws IOException {
     SchemaParser schemaParser = modelParser.rebuildSchemaParser();
 
