@@ -55,7 +55,7 @@ public class ModelView extends BaseBusEntity {
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(
       name = "MODEL_ID",
-      foreignKey = @ForeignKey(name = "FK_MODEL_FIELD_MODEL_ID"),
+      foreignKey = @ForeignKey(name = "FK_MODEL_VIEW_MODEL_ID"),
       updatable = false,
       nullable = false)
   @LazyToOne(LazyToOneOption.NO_PROXY)
