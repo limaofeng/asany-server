@@ -17,7 +17,8 @@ public interface ApplicationRouteConverter {
   @Mappings({
     @Mapping(target = "application", source = "application", qualifiedByName = "toApplication"),
     @Mapping(target = "parent", source = "parentRoute", qualifiedByName = "toParentRoute"),
-    @Mapping(target = "component", source = "component", qualifiedByName = "toComponent")
+    @Mapping(target = "component", source = "component", qualifiedByName = "toComponent"),
+    @Mapping(target = "breadcrumb", source = "breadcrumb", qualifiedByName = "toComponent")
   })
   ApplicationRoute toRoute(ApplicationRouteCreateInput input);
 

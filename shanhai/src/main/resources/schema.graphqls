@@ -223,6 +223,21 @@ type ModelMetadata {
   databaseTableName: String
 }
 
+enum ModelViewType {
+  LIST
+  NEW
+  EDIT
+  CUSTOM
+}
+
+type ModelView {
+  id: ID!
+  name: String
+  type: ModelViewType
+  component: Component!
+  model: Model!
+}
+
 type Model {
   id: ID!
   """
@@ -265,6 +280,14 @@ type Model {
   元数据
   """
   metadata: ModelMetadata
+  """
+  默认视图
+  """
+  defaultView(type: ModelViewType = LIST): ModelView
+  """
+  实体的视图界面
+  """
+  views: [ModelView!]!
 }
 
 type ModelFieldMetadata {
@@ -462,12 +485,22 @@ type Module {
   描述
   """
   description: String
+  """
+  模块包含的实体
+  """
+  models: [Model!]!
 }
 
 input ModuleFilter {
   id: ID
   code: String
   name: String
+}
+
+input ModelViewFilter {
+  name: String
+  type: ModelViewType
+  defaultView: Boolean
 }
 
 enum ModelFiledTypeFamily {
@@ -579,6 +612,20 @@ extend type Query {
   查询模型支持的字段类型
   """
   modelFiledTypes: [ModelFiledType!]!
+  """
+  实体视图(单个)
+  """
+  modelView(id: ID!): ModelView
+  """
+  实体视图(列表)
+  """
+  modelViews(
+    module: ID!
+    filter: ModelViewFilter = {}
+    offset: Int = 0
+    limit: Int = 15
+    orderBy: OrderBy = "unsorted"
+  ): [ModelView!]!
 }
 
 extend type Mutation {

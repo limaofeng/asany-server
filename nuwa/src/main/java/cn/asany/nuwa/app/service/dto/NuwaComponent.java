@@ -15,8 +15,4 @@ import lombok.NoArgsConstructor;
 public class NuwaComponent {
   private String template;
   private String blocks;
-
-  public NuwaComponent(String template) {
-    this.template = template;
-  }
 }

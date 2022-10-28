@@ -31,6 +31,8 @@ public class ApplicationRouteCreateInput {
   private Long parentRoute;
   /** 应用 */
   private Long application;
+  /** 面包屑组件 */
+  private Long breadcrumb;
   /** 布局设置 */
   private LayoutSettingsInput layout;
 }

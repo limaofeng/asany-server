@@ -6,6 +6,7 @@ import cn.asany.shanhai.core.domain.enums.ModelType;
 import cn.asany.shanhai.gateway.domain.ModelGroupResource;
 import cn.asany.shanhai.gateway.domain.Service;
 import cn.asany.shanhai.gateway.util.GraphQLFieldArgument;
+import cn.asany.shanhai.view.domain.ModelView;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -171,6 +172,14 @@ public class Model extends BaseBusEntity implements ModelGroupResource {
       foreignKey = @ForeignKey(name = "FK_MODEL_MODULE_ID"))
   @ToString.Exclude
   private Module module;
+
+  @OrderBy("createdAt asc")
+  @OneToMany(
+      mappedBy = "model",
+      cascade = {CascadeType.REMOVE},
+      fetch = FetchType.LAZY)
+  @ToString.Exclude
+  private List<ModelView> views;
 
   @Transient
   public void connect(Model model, ModelRelationType type, String relation) {

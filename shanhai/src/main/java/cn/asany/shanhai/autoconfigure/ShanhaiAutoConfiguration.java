@@ -35,6 +35,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EntityScan({
   "cn.asany.shanhai.core.domain",
   "cn.asany.shanhai.data.domain",
+  "cn.asany.shanhai.view.domain",
   "cn.asany.shanhai.gateway.domain",
 })
 @ComponentScan({
@@ -47,6 +48,9 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
   "cn.asany.shanhai.core.listener",
   "cn.asany.shanhai.core.service",
   "cn.asany.shanhai.core.graphql",
+  "cn.asany.shanhai.view.dao",
+  "cn.asany.shanhai.view.service",
+  "cn.asany.shanhai.view.graphql",
   "cn.asany.shanhai.data.engine",
   "cn.asany.shanhai.data.dao",
   "cn.asany.shanhai.data.service",
@@ -59,6 +63,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
     basePackages = {
       "cn.asany.shanhai.core.dao",
       "cn.asany.shanhai.data.dao",
+      "cn.asany.shanhai.view.dao",
       "cn.asany.shanhai.gateway.dao"
     },
     repositoryBaseClass = ComplexJpaRepository.class)
