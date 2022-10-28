@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.34](https://github.com/limaofeng/asany-server/compare/v0.1.33...v0.1.34) (2022-10-28)
+
+
+### Features
+
+* 删除自定义实体时同时删除对应的主键序列 ([365288e](https://github.com/limaofeng/asany-server/commit/365288e1999960a75a046928970d6d77d4bf77c9))
+* 实体新增时，支持设置 databaseTableName ([f40e308](https://github.com/limaofeng/asany-server/commit/f40e30854f8c42d2e959f428d1daa7a2fffc6150))
+* 实现自定义实体的新增修改删除接口 ([a2ed26a](https://github.com/limaofeng/asany-server/commit/a2ed26a399afb673c77288a567ecbfb8648b5f5d))
+* 自定义实体同步生成表结构 ([ee66889](https://github.com/limaofeng/asany-server/commit/ee66889095263e272e5ec79db48de24121662199))
+* 自定义实体添加批量删除接口 ([effdc4b](https://github.com/limaofeng/asany-server/commit/effdc4b1fe031928fa6babe470df8c076f987f02))
+* 自定义模块异步刷新接口 ([5bca5a0](https://github.com/limaofeng/asany-server/commit/5bca5a0767a955868b2a7d679466556a731376c3))
+* 自定义模块视图接口 ([8e55ff0](https://github.com/limaofeng/asany-server/commit/8e55ff03f229a3486ba2d0fc597df2ab0a0bfcef))
+
+
+### Bug Fixes
+
+* 解决自定义实体更新/修改/删除接口的事务问题 ([46dd715](https://github.com/limaofeng/asany-server/commit/46dd715de4b90d7a6cc17f10d6685e6bb60dbea3))
+
 ### [0.1.33](https://github.com/limaofeng/asany-server/compare/v0.1.32...v0.1.33) (2022-09-23)
 
 
