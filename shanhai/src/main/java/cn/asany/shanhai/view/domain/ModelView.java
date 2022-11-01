@@ -48,7 +48,7 @@ public class ModelView extends BaseBusEntity {
   @JoinColumn(
       nullable = false,
       name = "COMPONENT_ID",
-      foreignKey = @ForeignKey(name = "FK_APPLICATION_MENU_COMPONENT"))
+      foreignKey = @ForeignKey(name = "FK_MODEL_VIEW_COMPONENT"))
   @ToString.Exclude
   private Component component;
   /** 实体 */
