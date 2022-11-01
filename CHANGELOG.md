@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.38](https://github.com/limaofeng/asany-server/compare/v0.1.37...v0.1.38) (2022-11-01)
+
+
+### Features
+
+* 调整 jpa 配置 ([bd7af82](https://github.com/limaofeng/asany-server/commit/bd7af82e7a45ef36cf92ea4b0f4bae0d522d7f1a))
+
 ### [0.1.37](https://github.com/limaofeng/asany-server/compare/v0.1.36...v0.1.37) (2022-11-01)
 
 
