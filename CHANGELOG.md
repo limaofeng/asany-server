@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.37](https://github.com/limaofeng/asany-server/compare/v0.1.36...v0.1.37) (2022-11-01)
+
+
+### Bug Fixes
+
+* 解决 jpa 外键设置错误 ([580bad8](https://github.com/limaofeng/asany-server/commit/580bad83ec7638a9cdeb888c2905d703e9203ffd))
+
 ### [0.1.36](https://github.com/limaofeng/asany-server/compare/v0.1.35...v0.1.36) (2022-10-28)
 
 
