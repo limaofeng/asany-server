@@ -4,12 +4,12 @@ spring:
   sequence:
     pool-size: 10
   jpa:
-    show-sql: false
+    show-sql: true
     hibernate:
       ddl-auto: update
     properties:
       hibernate:
-        generate_statistics: false
+        generate_statistics: true
   datasource:
     name: datasource
     url: jdbc:mysql://dev.local:3306/asany?nullCatalogMeansCurrent=true&autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&rewriteBatchedStatements=true
