@@ -8,14 +8,14 @@ import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.springframework.stereotype.Component;
 
 /**
- * 字符串类型
+ * 文件
  *
  * @author limaofeng
  */
 @Data
 @Component
-public class AssetField implements FieldType {
-  private String id = "String";
+public class AssetField implements FieldType<String, FileObject> {
+  private String id = "File";
   private String name = "文件对象";
   private String javaType = FileObject.class.getName();
   private String graphQLType = "File";

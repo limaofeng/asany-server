@@ -6,7 +6,7 @@ import lombok.Data;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 
 @Data
-public class ObjectField implements FieldType {
+public class ObjectField implements FieldType<Object, Object> {
   private String id;
   private String name;
   private String description;
