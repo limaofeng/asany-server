@@ -90,12 +90,18 @@ public class ModelUtils {
     Model Boolean =
         Model.builder().type(ModelType.SCALAR).id(7L).code("Boolean").name("布尔型").build();
     Model Date = Model.builder().type(ModelType.SCALAR).id(8L).code("Date").name("日期").build();
+    Model File = Model.builder().type(ModelType.SCALAR).id(9L).code("File").name("文件对象").build();
+    Model JSON = Model.builder().type(ModelType.SCALAR).id(10L).code("JSON").name("JSON对象").build();
+
     DEFAULT_SCALARS.add(ID);
     DEFAULT_SCALARS.add(Int);
     DEFAULT_SCALARS.add(Float);
     DEFAULT_SCALARS.add(String);
     DEFAULT_SCALARS.add(Boolean);
     DEFAULT_SCALARS.add(Date);
+    DEFAULT_SCALARS.add(File);
+    DEFAULT_SCALARS.add(JSON);
+
     DEFAULT_TYPES.addAll(DEFAULT_SCALARS);
     DEFAULT_TYPES.add(FieldType.Query);
     DEFAULT_TYPES.add(FieldType.Mutation);
