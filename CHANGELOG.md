@@ -1,6 +1,5 @@
-# Changelog
-
-All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+# 变更日志\n\n  \n
+### [0.1.42](https://github.com/limaofeng/asany-server/compare/v0.1.41...v0.1.42) (2022-11-02)
 
 ### [0.1.41](https://github.com/limaofeng/asany-server/compare/v0.1.40...v0.1.41) (2022-11-02)
 
