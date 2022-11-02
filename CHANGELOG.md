@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.39](https://github.com/limaofeng/asany-server/compare/v0.1.38...v0.1.39) (2022-11-02)
+
+
+### Bug Fixes
+
+* 解决自定义模块字段类型定义错误的问题 ([cadd92c](https://github.com/limaofeng/asany-server/commit/cadd92cd56feb279dc8b04fc1c3001b0c7c356e1))
+
 ### [0.1.38](https://github.com/limaofeng/asany-server/compare/v0.1.37...v0.1.38) (2022-11-01)
 
 
