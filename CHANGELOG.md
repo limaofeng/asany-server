@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.40](https://github.com/limaofeng/asany-server/compare/v0.1.39...v0.1.40) (2022-11-02)
+
+
+### Bug Fixes
+
+* 自定义实体添加 File 与 JSON 类型 ([9701a7e](https://github.com/limaofeng/asany-server/commit/9701a7ee1022af42c770218999bdb6a8f674833f))
+
 ### [0.1.39](https://github.com/limaofeng/asany-server/compare/v0.1.38...v0.1.39) (2022-11-02)
 
 
