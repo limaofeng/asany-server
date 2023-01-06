@@ -1,0 +1,23 @@
+package cn.asany.flowable.core.graphql.type;
+
+import java.util.List;
+import lombok.*;
+import org.flowable.task.api.TaskInfo;
+import org.jfantasy.graphql.Edge;
+import org.jfantasy.graphql.types.BaseConnection;
+
+@Data
+@EqualsAndHashCode(callSuper = false)
+public class TaskConnection extends BaseConnection<TaskConnection.TaskInfoEdge, TaskInfo> {
+
+  private List<TaskInfoEdge> edges;
+
+  @Data
+  @Builder
+  @NoArgsConstructor
+  @AllArgsConstructor
+  public static class TaskInfoEdge implements Edge<TaskInfo> {
+    private String cursor;
+    private TaskInfo node;
+  }
+}

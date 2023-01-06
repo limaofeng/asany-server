@@ -1,0 +1,75 @@
+type Task {
+  #任务id
+  id: String
+  #任务名称
+  name: String
+  #描述
+  description: String
+  #优先级
+  priority: Int
+  #任务的委托人
+  owner: String
+  #处理人
+  #assignee: User
+}
+
+type TaskEdge {
+  cursor: String!
+  node: Task!
+}
+
+type TaskConnection {
+  """
+  总数据条数
+  """
+  totalCount: Int!
+  """
+  每页显示条数
+  """
+  pageSize: Int!
+  """
+  总页数
+  """
+  totalPage: Int!
+  """
+  当前页
+  """
+  currentPage: Int!
+  edges: [TaskEdge!]!
+  pageInfo: PageInfo!
+}
+
+enum TaskStatus {
+  """
+  未完成
+  """
+  INCOMPLETE
+  """
+  已完成
+  """
+  COMPLETED
+  """
+  全部
+  """
+  ALL
+}
+
+input TaskFilter {
+  """
+  状态
+  """
+  status: TaskStatus
+}
+
+extend type Query {
+  myTasks(
+    filter: TaskFilter = { status: INCOMPLETE }
+    page: Int = 1
+    pageSize: Int = 15
+    orderBy: OrderBy = "unsorted"
+  ): TaskConnection
+}
+
+extend type Mutation {
+  createTask: Boolean
+}
