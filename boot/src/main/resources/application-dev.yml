@@ -33,6 +33,11 @@ spring:
               driver: com.mysql.cj.jdbc.Driver
               user: root
               password: yV2jJxvNs8BD
+  flyway:
+    url: jdbc:mysql://dev.local:3306/mysql?useUnicode=true&characterEncoding=UTF-8&useSSL=false
+    user: root
+    password: yV2jJxvNs8BD
+    schemas: asany
 
 openim:
   url: http://47.103.119.188:10002

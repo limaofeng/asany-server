@@ -9,7 +9,7 @@ apply plugin: 'org.springframework.boot'
 jar {
     manifest {
         attributes 'provider': 'gradle'
-        attributes 'Main-Class': 'cn.asany.sanhai.Application'
+        attributes 'Main-Class': 'cn.asany.shanhai.Application'
     }
 }
 
@@ -42,7 +42,10 @@ dependencies {
     implementation project(":website")
     implementation project(":flowable")
     implementation project(":project")
+    implementation project(":message")
     implementation project(":im")
+    implementation "org.flywaydb:flyway-core"
+    implementation "org.flywaydb:flyway-mysql"
     compileOnly "org.projectlombok:lombok:${LIB_LOMBOK_VER}"
     annotationProcessor "org.projectlombok:lombok:$LIB_LOMBOK_VER"
     testCompileOnly "org.projectlombok:lombok:${LIB_LOMBOK_VER}"

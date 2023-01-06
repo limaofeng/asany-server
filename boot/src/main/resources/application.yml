@@ -74,7 +74,7 @@ spring:
     wait-for-jobs-to-complete-on-shutdown: true
     overwrite-existing-jobs: true
     jdbc:
-      initialize-schema: always
+      initialize-schema: never
     properties:
       org:
         quartz:
@@ -98,6 +98,10 @@ spring:
             threadCount: 10
             threadPriority: 5
             threadsInheritContextClassLoaderOfInitializingThread: true
+  flyway:
+    locations: classpath:db
+    create-schemas: true
+    placeholder-replacement: false
 
 flowable:
   async-executor-activate: false

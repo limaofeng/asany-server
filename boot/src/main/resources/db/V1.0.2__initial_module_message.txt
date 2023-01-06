@@ -1,0 +1,2 @@
+# DROP TABLE IF EXISTS `james_max_domain_message_count`;
+select now()

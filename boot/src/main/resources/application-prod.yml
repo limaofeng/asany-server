@@ -26,6 +26,11 @@ spring:
               driver: com.mysql.cj.jdbc.Driver
               user: ${DATABASE_USERNAME}
               password: ${DATABASE_PASSWORD}
+  flyway:
+    url: jdbc:mysql://${DATABASE_HOST}/mysql?useUnicode=true&characterEncoding=utf-8&useSSL=false
+    user: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
+    schemas: ${DATABASE_INSTANCE_NAME}
 
 openim:
   url: ${OPENIM_SERVER}
