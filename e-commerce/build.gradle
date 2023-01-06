@@ -1,0 +1,11 @@
+description = "电商"
+
+dependencies {
+    compileOnly project(":base")
+    compileOnly project(":openapi")
+    compileOnly project(":security")
+    compileOnly project(":cms")
+    compileOnly project(":nuwa")
+    compileOnly project(":storage-api")
+    testImplementation project(":storage")
+}
