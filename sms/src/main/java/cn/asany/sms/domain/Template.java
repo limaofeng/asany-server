@@ -11,7 +11,7 @@ import org.jfantasy.framework.dao.BaseBusEntity;
 @RequiredArgsConstructor
 @Builder
 @AllArgsConstructor
-@Entity
+@Entity(name = "SmsTemplate")
 @Table(name = "SMS_TEMPLATE")
 @GenericGenerator(name = "template_gen", strategy = "fantasy-sequence")
 @JsonIgnoreProperties({"hibernate_lazy_initializer", "handler", "id"})

@@ -1,8 +1,10 @@
 apply plugin: "com.diffplug.spotless"
 
 spotless {
+    ratchetFrom 'origin/master'
     format 'misc', {
         target '*.gradle', '*.md', '.gitignore'
+        targetExclude '**/.gradle/', '**/build/'
 
         indentWithSpaces()
         trimTrailingWhitespace()

@@ -33,7 +33,10 @@ include ":shanhai",
         ":im",
         ":sms",
         ":project",
-//        ":uptime",
+        ":crm",
+        ":uptime",
+        ":message",
+        ":e-commerce",
         ":boot"
 
 // 基础
@@ -72,8 +75,14 @@ project(':weixin-api').projectDir = "$rootDir/weixin-api" as File
 project(':sms').projectDir = "$rootDir/sms" as File
 // open-api
 project(':openapi').projectDir = "$rootDir/openapi" as File
+// 客户关系管理
+project(':crm').projectDir = "$rootDir/crm" as File
+// 电子商务
+project(':e-commerce').projectDir = "$rootDir/e-commerce" as File
+// 消息中心
+project(':message').projectDir = "$rootDir/message" as File
 // 站点健康
-//project(':uptime').projectDir = "$rootDir/uptime" as File
+project(':uptime').projectDir = "$rootDir/uptime" as File
 // 即时通讯
 project(':im').projectDir = "$rootDir/im" as File
 // 项目管理

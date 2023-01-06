@@ -58,4 +58,7 @@ public class Website extends BaseBusEntity {
       foreignKey = @ForeignKey(name = "FK_WEBSITE_ORGANIZATION_ID"))
   @ToString.Exclude
   private Organization organization;
+  /** 存储器 */
+  @Column(name = "STORAGE_ID", length = 500, nullable = false)
+  private String storage;
 }
