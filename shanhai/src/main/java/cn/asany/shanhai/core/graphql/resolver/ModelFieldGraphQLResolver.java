@@ -15,6 +15,10 @@ public class ModelFieldGraphQLResolver implements GraphQLResolver<ModelField> {
     this.fieldTypeRegistry = fieldTypeRegistry;
   }
 
+  public Integer index(ModelField modelField) {
+    return modelField.getSort();
+  }
+
   public FieldType<?, ?> type(ModelField modelField) {
     return fieldTypeRegistry.getType(modelField.getType());
   }

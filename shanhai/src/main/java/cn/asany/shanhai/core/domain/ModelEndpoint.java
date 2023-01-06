@@ -48,7 +48,6 @@ public class ModelEndpoint extends BaseBusEntity {
   @Enumerated(EnumType.STRING)
   @Column(name = "TYPE", length = 20, nullable = false)
   private ModelEndpointType type;
-
   /** 描述 */
   @Column(name = "DESCRIPTION", length = 200)
   private String description;

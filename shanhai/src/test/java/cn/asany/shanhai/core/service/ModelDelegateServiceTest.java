@@ -1,7 +1,6 @@
 package cn.asany.shanhai.core.service;
 
 import cn.asany.shanhai.TestApplication;
-import cn.asany.shanhai.core.runners.DefaultCRUDDelegateCommandLineRunner;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.jfantasy.framework.spring.SpringBeanUtils;

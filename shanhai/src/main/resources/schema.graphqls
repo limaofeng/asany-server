@@ -238,6 +238,43 @@ type ModelView {
   model: Model!
 }
 
+enum ModelEndpointType {
+  CREATE
+  UPDATE
+  DELETE
+  DELETE_MANY
+  GET
+  LIST
+  CONNECTION
+}
+
+type ModelEndpointArgument {
+  id: ID!
+  name: String!
+  type: String!
+  required: Boolean!
+  list: Boolean!
+  description: String
+  defaultValue: String
+}
+
+type ModelEndpointReturnType {
+  id: ID!
+  required: Boolean!
+  list: Boolean!
+  type: Model!
+}
+
+type ModelEndpoint {
+  id: ID!
+  code: String!
+  name: String
+  type: ModelEndpointType!
+  description: String
+  arguments: [ModelEndpointArgument!]!
+  returnType: ModelEndpointReturnType!
+}
+
 type Model {
   id: ID!
   """
@@ -288,6 +325,10 @@ type Model {
   实体的视图界面
   """
   views: [ModelView!]!
+  """
+  实体接口
+  """
+  endpoints: [ModelEndpoint!]!
 }
 
 type ModelFieldMetadata {
@@ -343,6 +384,10 @@ type ModelField {
   所属实体
   """
   model: Model!
+  """
+  序号
+  """
+  index: Int!
 }
 
 enum ServiceIdType {
