@@ -1,0 +1,145 @@
+type MessageType {
+  id: ID!
+  name: String!
+  icon: String!
+  description: String
+  parent: MessageType
+  children: [MessageType!]!
+}
+
+enum TemplateType {
+  """
+  短信
+  """
+  SMS
+  """
+  邮件
+  """
+  EMAIL
+  """
+  消息服务(系统内置消息系统)
+  """
+  MS
+}
+
+type MessageMappingVariable {
+  key: String
+  value: String
+}
+
+type ReminderDefinition {
+  id: String!
+  name: String!
+  template: MessageTemplate!
+  system: Boolean!
+}
+
+type MessageDefinitionReminder {
+  id: ID
+  mappingVariables: [MessageMappingVariable!]!
+  reminderDefinition: ReminderDefinition
+}
+
+type MessageDefinition {
+  id: ID!
+  name: String!
+  system: Boolean!
+  variables: [VariableDefinition!]!
+  mappingVariables: [MessageMappingVariable!]!
+  template: MessageTemplate!
+  reminders: [MessageDefinitionReminder!]!
+}
+
+type VariableDefinition {
+  name: String
+  description: String
+  example: String
+}
+
+type MessageTemplate {
+  id: ID!
+  type: TemplateType!
+  name: String!
+  sign: String
+  variables: [VariableDefinition!]!
+  code: String
+  content: String
+}
+
+input MessageTypeCreateInput {
+  name: String
+  icon: String
+  description: String
+  parent: ID
+}
+
+input VariableDefinitionInput {
+  name: String
+  description: String
+  example: String
+}
+
+input MessageTemplateCreateInput {
+  type: TemplateType!
+  name: String!
+  sign: String
+  variables: [VariableDefinitionInput!]!
+  code: String
+  content: String
+}
+
+input MappingVariableInput {
+  key: String
+  value: String
+}
+
+input MessageTemplateCombinedInput {
+  id: ID
+  type: TemplateType!
+  name: String!
+  sign: String
+  variables: [VariableDefinitionInput!]!
+  code: String
+  content: String
+}
+
+input ReminderDefinitionCombinedInput {
+  id: ID
+  name: String
+  template: MessageTemplateCombinedInput
+}
+
+#input MessageDefinitionReminderCreateInput {
+#  mappingVariables: [MappingVariableInput!]!
+#  reminderDefinition: ReminderDefinitionCombinedInput!
+#}
+
+input MessageDefinitionCreateInput {
+  name: String
+  system: Boolean
+  variables: [VariableDefinitionInput!]!
+  mappingVariables: [MappingVariableInput!]!
+  #  template: MessageTemplateCombinedInput!
+  #  reminders: [MessageDefinitionReminderCreateInput!]!
+}
+
+extend type Query {
+  messageTypes: [MessageType!]!
+}
+
+extend type Mutation {
+  """
+  创建消息类型
+  """
+  createMessageType(input: MessageTypeCreateInput): MessageType
+  """
+  创建消息模版
+  """
+  createMessageTemplate(input: MessageTemplateCreateInput): MessageTemplate
+  """
+  创建消息定义
+  """
+  createMessageDefinition(
+    input: MessageDefinitionCreateInput
+  ): MessageDefinition
+}

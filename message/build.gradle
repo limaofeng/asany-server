@@ -1,0 +1,10 @@
+description = "消息中心: 包含(消息/通知)"
+
+dependencies {
+    implementation project(":base")
+    implementation project(":security")
+    implementation project(":storage-api")
+    compileOnly "org.springframework:spring-context"
+    compileOnly "org.springframework.boot:spring-boot-autoconfigure"
+    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+}
