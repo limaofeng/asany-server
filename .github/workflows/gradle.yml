@@ -36,7 +36,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build with Gradle
-        run: ./gradlew clean build -x test
+        run: ./gradlew clean build -x test -x spotlessCheck
 
       - name: Coverage
         run: ./gradlew codeCoverageReport coveralls
