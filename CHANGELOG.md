@@ -20,6 +20,27 @@ All notable changes to this project will be documented in this file. See [standa
 ### Bug Fixes
 
 * 去掉之前使用程序保证初始化数据的做法 ([9a36b1e](https://github.com/limaofeng/asany-server/commit/9a36b1e9fcc96822cd270171f314bdea0e679d59))
+* 屏蔽由于 openim 导致的登陆问题 ([0078b29](https://github.com/limaofeng/asany-server/commit/0078b29fee2b969bb5e9fb870fe3715ccf3dfef4))
+* 解决编译错误 ([1d07492](https://github.com/limaofeng/asany-server/commit/1d074924bf30e463879be0f6d78736cd0a9990c1))
+
+### [0.1.41](https://github.com/limaofeng/asany-server/compare/v0.1.40...v0.1.41) (2023-04-14)
+
+
+### Features
+
+* 优化消息模块 ([08616b1](https://github.com/limaofeng/asany-server/commit/08616b1f2c2fd07d2a51803340f6b61368d41d31))
+* 使用 flywaydb 控制数据库版本 ([b14ecfe](https://github.com/limaofeng/asany-server/commit/b14ecfe4e52cc10f0e90056b9af8ef04aee0c515))
+* 修复自定义建模接口BUG ([72251f1](https://github.com/limaofeng/asany-server/commit/72251f173350899444c5e4db50887e75964334b4))
+* 升级 gradlew 到 7.6 ([b8c9961](https://github.com/limaofeng/asany-server/commit/b8c9961e1115d4f4ee8f433798a1eaedab480a2d))
+* 添加 CRM 模块 ([adc1e27](https://github.com/limaofeng/asany-server/commit/adc1e27ebd2f28191e08b24351accde8ef5c1dc5))
+* 添加消息模块 ([da4b33c](https://github.com/limaofeng/asany-server/commit/da4b33c03e1c7fbe14d5f80e60e54f23c3614684))
+* 添加电商模块 ([f1bd5d8](https://github.com/limaofeng/asany-server/commit/f1bd5d826fb8106250bca52729a00c1956f4e286))
+* 添加获取我的任务接口 ([a3f370f](https://github.com/limaofeng/asany-server/commit/a3f370f79bf947ae5057a81f64fc7d4ebd522128))
+
+
+### Bug Fixes
+
+* 去掉之前使用程序保证初始化数据的做法 ([9a36b1e](https://github.com/limaofeng/asany-server/commit/9a36b1e9fcc96822cd270171f314bdea0e679d59))
 
 ### [0.1.40](https://github.com/limaofeng/asany-server/compare/v0.1.39...v0.1.40) (2022-11-02)
 
