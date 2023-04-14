@@ -14,6 +14,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.jfantasy.framework.jackson.JSON;
 import org.springframework.stereotype.Service;
 
+/**
+ * 用户服务
+ *
+ * @author limaofeng
+ */
 @Slf4j
 @Getter
 @Service("im.UserService")
@@ -23,6 +28,7 @@ public class UserService {
   private final String secret;
   private final AdminUser admin;
 
+  @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
   public UserService(String url, String secret, AdminUser admin) {
     this.url = url;
     this.secret = secret;

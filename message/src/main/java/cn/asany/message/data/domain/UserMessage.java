@@ -9,7 +9,11 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
-/** 用户收到的消息 */
+/**
+ * 用户收到的消息
+ *
+ * @author limaofeng
+ */
 @Getter
 @Setter
 @RequiredArgsConstructor
@@ -41,7 +45,7 @@ public class UserMessage extends BaseBusEntity {
   private Message message;
   /** 已读标识 */
   @Builder.Default
-  @Column(name = "READ", nullable = false)
+  @Column(name = "`READ`", nullable = false)
   private Boolean read = false;
   /** 用户 */
   @ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY)

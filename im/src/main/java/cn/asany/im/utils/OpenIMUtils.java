@@ -10,6 +10,11 @@ import cn.asany.im.user.service.vo.GetUsersOnlineStatusRequestBody;
 import cn.asany.im.user.service.vo.UsersOnlineStatusData;
 import java.util.List;
 
+/**
+ * OpenIM 工具类
+ *
+ * @author limaofeng
+ */
 public class OpenIMUtils {
 
   public static <T> T getData(GeneralResponse<T> responseBody) throws OpenIMServerAPIException {
