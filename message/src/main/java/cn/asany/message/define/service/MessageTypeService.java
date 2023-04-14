@@ -3,6 +3,7 @@ package cn.asany.message.define.service;
 import cn.asany.message.define.dao.MessageTypeDao;
 import cn.asany.message.define.domain.MessageType;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,5 +23,9 @@ public class MessageTypeService {
 
   public MessageType save(MessageType messageType) {
     return this.messageTypeDao.save(messageType);
+  }
+
+  public Optional<MessageType> findById(String id) {
+    return this.messageTypeDao.findById(id);
   }
 }

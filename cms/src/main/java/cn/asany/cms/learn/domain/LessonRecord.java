@@ -8,13 +8,14 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import javax.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
 /**
  * 学习记录
  *
  * @author limaofeng
- * @version V1.0 @Description: TODO
+ * @version V1.0
  * @date 2022/7/28 9:12 9:12
  */
 @Data
@@ -29,20 +30,15 @@ public class LessonRecord extends BaseBusEntity {
 
   @Id
   @Column(name = "ID")
-  @GeneratedValue(generator = "cms_course_lesson_record_gen")
-  @TableGenerator(
-      name = "cms_course_lesson_record_gen",
-      table = "sys_sequence",
-      pkColumnName = "gen_name",
-      pkColumnValue = "cms_course_lesson_record:id",
-      valueColumnName = "gen_value")
+  @GeneratedValue(generator = "fantasy-sequence")
+  @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
 
   /** 课程 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JsonDeserialize(using = CourseDeserializer.class)
   @JoinColumn(
-      name = "course",
+      name = "COURSE_ID",
       foreignKey = @ForeignKey(name = "FK_COURSE_LESSON_RECORD_ID"),
       updatable = false,
       nullable = false)
@@ -52,7 +48,7 @@ public class LessonRecord extends BaseBusEntity {
   @ManyToOne(fetch = FetchType.LAZY)
   @JsonDeserialize(using = LessonDeserializer.class)
   @JoinColumn(
-      name = "lesson",
+      name = "LESSON_ID",
       foreignKey = @ForeignKey(name = "FK_LESSON_LESSON_RECORD_ID"),
       updatable = false,
       nullable = false)
@@ -69,10 +65,10 @@ public class LessonRecord extends BaseBusEntity {
   private Learner learner;
 
   /** 章节学习进度 */
-  @Column(name = "lesson_learning_progress")
+  @Column(name = "LESSON_LEARNING_PROGRESS")
   private int lessonLearningProgress;
 
   @Enumerated(EnumType.STRING)
-  @Column(name = "lesson_schedule", length = 20)
+  @Column(name = "LESSON_SCHEDULE", length = 20)
   private LessonScheduleType lessonScheduleType;
 }

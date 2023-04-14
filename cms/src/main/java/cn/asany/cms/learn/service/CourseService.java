@@ -3,18 +3,15 @@ package cn.asany.cms.learn.service;
 import cn.asany.cms.article.domain.Article;
 import cn.asany.cms.article.service.ArticleService;
 import cn.asany.cms.learn.dao.CourseDao;
-import cn.asany.cms.learn.dao.LearnerScopeDao;
 import cn.asany.cms.learn.dao.LessonRecordDao;
 import cn.asany.cms.learn.domain.*;
 import cn.asany.cms.learn.graphql.inputs.CourseInput;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.util.common.DateUtil;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -23,16 +20,28 @@ import org.springframework.transaction.annotation.Transactional;
 @Service("courseService")
 public class CourseService {
 
-  @Autowired private CourseDao courseDao;
+  private final CourseDao courseDao;
 
-  @Autowired private LearnerService learnerService;
+  private final LearnerService learnerService;
 
-  @Autowired private LessonService lessonService;
+  private final LessonService lessonService;
 
-  @Autowired private ArticleService articleService;
+  private final ArticleService articleService;
 
-  @Autowired private LearnerScopeDao learnerScopeDao;
-  @Autowired private LessonRecordDao lessonRecordDao;
+  private final LessonRecordDao lessonRecordDao;
+
+  public CourseService(
+      CourseDao courseDao,
+      LearnerService learnerService,
+      LessonService lessonService,
+      ArticleService articleService,
+      LessonRecordDao lessonRecordDao) {
+    this.courseDao = courseDao;
+    this.learnerService = learnerService;
+    this.lessonService = lessonService;
+    this.articleService = articleService;
+    this.lessonRecordDao = lessonRecordDao;
+  }
 
   public Course findById(Long id) {
     return courseDao.findById(id).orElse(null);
@@ -64,12 +73,12 @@ public class CourseService {
     Course save = courseDao.save(course);
     if (CollectionUtils.isNotEmpty(courseInput.getLearnerScope())) {
       List<String> learnerScopes = courseInput.getLearnerScope();
-      for (String scope : learnerScopes) {
-        LearnerScope learnerScope = new LearnerScope();
-        learnerScope.setScope(scope);
-        learnerScope.setCourse(save);
-        learnerScopeDao.save(learnerScope);
-      }
+      //      for (String scope : learnerScopes) {
+      //        LearnerScope learnerScope = new LearnerScope();
+      //        learnerScope.setScope(scope);
+      //        learnerScope.setCourse(save);
+      //        learnerScopeDao.save(learnerScope);
+      //      }
     }
     return save;
   }
@@ -96,37 +105,41 @@ public class CourseService {
     // 该课程新的学习人
     List<String> learnerScopesNew = courseInput.getLearnerScope();
     if (CollectionUtils.isNotEmpty(learnerScopesNew)) {
-      for (String learnerScopeNew : learnerScopesNew) {
-        LearnerScope learnerScope = new LearnerScope();
-        learnerScope.setCourse(course);
-        learnerScope.setScope(learnerScopeNew);
-        LearnerScope scope = learnerScopeDao.findByCourseAndScope(course, learnerScopeNew);
-        if (scope == null) {
-          scope = learnerScopeDao.save(learnerScope);
-        }
-        LearnerTrans learnerTrans = new LearnerTrans(scope.getCourse().getId(), scope.getScope());
-        learnerTransList.add(learnerTrans);
-      }
+      //      for (String learnerScopeNew : learnerScopesNew) {
+      //        LearnerScope learnerScope = new LearnerScope();
+      //        learnerScope.setCourse(course);
+      //        learnerScope.setScope(learnerScopeNew);
+      //        LearnerScope scope = learnerScopeDao.findByCourseAndScope(course, learnerScopeNew);
+      //        if (scope == null) {
+      //          scope = learnerScopeDao.save(learnerScope);
+      //        }
+      //        LearnerTrans learnerTrans = new LearnerTrans(scope.getCourse().getId(),
+      // scope.getScope());
+      //        learnerTransList.add(learnerTrans);
+      //      }
       // 该课程老的学习人
-      List<LearnerScope> learnerScopesOld = learnerScopeDao.findByCourse(course);
-      // 如果新的学习人不包含之前老的学习人则删除老的学习人
-      for (LearnerScope learnerScopeOld : learnerScopesOld) {
-        LearnerTrans learnerTrans =
-            new LearnerTrans(learnerScopeOld.getCourse().getId(), learnerScopeOld.getScope());
-        if (!learnerTransList.contains(learnerTrans)) {
-          learnerScopeDao.delete(learnerScopeOld);
-          String employeeId = StringUtils.substringAfterLast(learnerScopeOld.getScope(), "_");
-          Learner learner =
-              learnerService.findByCourseAndEmployee(
-                  Course.builder().id(id).build(), Long.valueOf(employeeId));
-          if (learner != null) {
-            List<LessonRecord> lessonRecords =
-                lessonRecordDao.findByCourseAndLearner(Course.builder().id(id).build(), learner);
-            lessonRecordDao.deleteAll(lessonRecords);
-            learnerService.removeLearner(learner.getId());
-          }
-        }
-      }
+      //      List<LearnerScope> learnerScopesOld = learnerScopeDao.findByCourse(course);
+      //      // 如果新的学习人不包含之前老的学习人则删除老的学习人
+      //      for (LearnerScope learnerScopeOld : learnerScopesOld) {
+      //        LearnerTrans learnerTrans =
+      //            new LearnerTrans(learnerScopeOld.getCourse().getId(),
+      // learnerScopeOld.getScope());
+      //        if (!learnerTransList.contains(learnerTrans)) {
+      //          learnerScopeDao.delete(learnerScopeOld);
+      //          String employeeId = StringUtils.substringAfterLast(learnerScopeOld.getScope(),
+      // "_");
+      //          Learner learner =
+      //              learnerService.findByCourseAndEmployee(
+      //                  Course.builder().id(id).build(), Long.valueOf(employeeId));
+      //          if (learner != null) {
+      //            List<LessonRecord> lessonRecords =
+      //                lessonRecordDao.findByCourseAndLearner(Course.builder().id(id).build(),
+      // learner);
+      //            lessonRecordDao.deleteAll(lessonRecords);
+      //            learnerService.removeLearner(learner.getId());
+      //          }
+      //        }
+      //      }
     }
     return courseDao.update(course, merge);
   }
@@ -147,9 +160,9 @@ public class CourseService {
     }
     List<Learner> learners = learnerService.learnerByCourseId(id);
     learners.forEach(learner -> learnerService.removeLearner(learner.getId()));
-    List<LearnerScope> learnerScopes =
-        learnerScopeDao.findByCourse(Course.builder().id(id).build());
-    learnerScopeDao.deleteAll(learnerScopes);
+    //    List<LearnerScope> learnerScopes =
+    //        learnerScopeDao.findByCourse(Course.builder().id(id).build());
+    //    learnerScopeDao.deleteAll(learnerScopes);
     courseDao.deleteById(id);
     return true;
   }

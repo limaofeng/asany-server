@@ -3,6 +3,8 @@ package cn.asany.message.data.domain;
 import cn.asany.message.data.domain.enums.MessageStatus;
 import cn.asany.message.define.domain.MessageDefinition;
 import cn.asany.message.define.domain.MessageType;
+import cn.asany.message.define.domain.converter.VariableDefinitionValueListConverter;
+import cn.asany.message.define.domain.toys.VariableDefinitionValue;
 import cn.asany.security.core.domain.User;
 import java.util.List;
 import javax.persistence.*;
@@ -33,6 +35,10 @@ public class Message extends BaseBusEntity {
   @Column(name = "STATUS", length = 10)
   @Enumerated(EnumType.STRING)
   private MessageStatus status;
+
+  @Column(name = "VARIABLES", nullable = false, columnDefinition = "JSON")
+  @Convert(converter = VariableDefinitionValueListConverter.class)
+  private List<VariableDefinitionValue> variables;
   /** 消息内容 */
   @Column(name = "CONTENT", columnDefinition = "TEXT")
   private String content;

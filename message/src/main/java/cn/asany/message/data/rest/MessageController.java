@@ -6,6 +6,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * 消息测试
+ *
+ * @author limaofeng
+ */
 @Slf4j
 @RestController
 public class MessageController {

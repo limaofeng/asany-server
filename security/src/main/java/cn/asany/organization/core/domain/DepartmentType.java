@@ -11,7 +11,7 @@ import org.jfantasy.framework.dao.BaseBusEntity;
  * 部门类型
  *
  * @author limaofeng
- * @version V1.0 @Description: TODO
+ * @version V1.0
  * @date 2022/7/28 9:12 9:12
  */
 @Setter

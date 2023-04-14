@@ -7,6 +7,7 @@ import javax.persistence.*;
 import javax.tools.FileObject;
 import lombok.*;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
 @Data
@@ -21,15 +22,9 @@ import org.jfantasy.framework.dao.BaseBusEntity;
 public class SpecialArticle extends BaseBusEntity {
 
   @Id
-  //  @Null(groups = RESTful.POST.class)
   @Column(name = "ID", nullable = false)
-  @GeneratedValue(strategy = GenerationType.TABLE, generator = "special_article_gen")
-  @TableGenerator(
-      name = "special_article_gen",
-      table = "sys_sequence",
-      pkColumnName = "gen_name",
-      pkColumnValue = "cms_special_article:id",
-      valueColumnName = "gen_value")
+  @GeneratedValue(generator = "fantasy-sequence")
+  @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
   /** 期数 */
   @Column(name = "PERIODICAL", nullable = false)

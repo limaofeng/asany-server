@@ -4,6 +4,7 @@ dependencies {
     implementation project(":base")
     implementation project(":security")
     implementation project(":storage-api")
+    implementation project(":message-api")
     compileOnly "org.springframework:spring-context"
     compileOnly "org.springframework.boot:spring-boot-autoconfigure"
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"

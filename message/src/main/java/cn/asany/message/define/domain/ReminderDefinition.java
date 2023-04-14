@@ -10,6 +10,8 @@ import org.jfantasy.framework.dao.BaseBusEntity;
 /**
  * 消息提醒 <br>
  * 提醒一般为外部消息,比如短信 / 邮件 / AppPush 等外部提醒手段
+ *
+ * @author limaofeng
  */
 @Getter
 @Setter
@@ -34,7 +36,7 @@ public class ReminderDefinition extends BaseBusEntity {
   @JoinColumn(
       name = "TEMPLATE_ID",
       nullable = false,
-      foreignKey = @ForeignKey(name = "FK_MESSAGE_TEMPLATE_ID"))
+      foreignKey = @ForeignKey(name = "FK_REMINDER_DEFINITION_TEMPLATE_ID"))
   private MessageTemplate template;
   /** 是否为系统内置 */
   @Builder.Default

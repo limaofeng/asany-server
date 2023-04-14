@@ -1,4 +1,4 @@
-package cn.asany.message.define.converter;
+package cn.asany.message.define.graphql.mapper;
 
 import cn.asany.message.define.domain.MessageTemplate;
 import cn.asany.message.define.graphql.input.MessageTemplateCreateInput;

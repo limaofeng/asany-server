@@ -6,8 +6,9 @@ import lombok.*;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
 /**
+ * 圈子
+ *
  * @author admin
- * @date 2022/7/28 9:12
  */
 @Getter
 @Setter

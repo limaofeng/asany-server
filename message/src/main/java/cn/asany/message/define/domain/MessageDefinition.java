@@ -12,6 +12,11 @@ import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.framework.dao.hibernate.converter.MapConverter;
 
+/**
+ * 消息定义
+ *
+ * @author limaofeng
+ */
 @Getter
 @Setter
 @RequiredArgsConstructor
@@ -43,12 +48,19 @@ public class MessageDefinition extends BaseBusEntity {
   @Convert(converter = MapConverter.class)
   @Column(name = "MAPPING_VARIABLES", columnDefinition = "Text")
   private Map<String, String> mappingVariables;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(
+      name = "SENDER",
+      nullable = false,
+      foreignKey = @ForeignKey(name = "FK_MESSAGE_DEFINITION_SENDER"))
+  private MessageSenderDefinition sender;
   /** 模版文件 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(
       name = "TEMPLATE_ID",
       nullable = false,
-      foreignKey = @ForeignKey(name = "FK_MESSAGE_TEMPLATE_ID"))
+      foreignKey = @ForeignKey(name = "FK_MESSAGE_DEFINITION_TEMPLATE_ID"))
   private MessageTemplate template;
   /** 提醒设置 - 额外的第三方提醒,比如: 短信 / 邮件 / APP_PUSH / WEB_PUSH */
   @OneToMany(

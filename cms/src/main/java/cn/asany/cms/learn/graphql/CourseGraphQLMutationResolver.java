@@ -4,13 +4,16 @@ import cn.asany.cms.learn.domain.Course;
 import cn.asany.cms.learn.graphql.inputs.CourseInput;
 import cn.asany.cms.learn.service.CourseService;
 import graphql.kickstart.tools.GraphQLMutationResolver;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class CourseGraphQLMutationResolver implements GraphQLMutationResolver {
 
-  @Autowired private CourseService courseService;
+  private final CourseService courseService;
+
+  public CourseGraphQLMutationResolver(CourseService courseService) {
+    this.courseService = courseService;
+  }
 
   public Course createCourse(CourseInput input) {
     return courseService.addCourse(input);

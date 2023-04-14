@@ -38,6 +38,11 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EnableConfigurationProperties({SmsProperties.class})
 public class SmsAutoConfiguration {
 
+  @Bean
+  public ShortMessageSenderBuilder shortMessageSenderBuilder() {
+    return new ShortMessageSenderBuilder();
+  }
+
   /**
    * 使用AK&SK初始化账号Client
    *

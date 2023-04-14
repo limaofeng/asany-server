@@ -15,7 +15,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
   "cn.asany.message.*.dao",
   "cn.asany.message.*.converter",
   "cn.asany.message.*.service",
-  "cn.asany.message.*.listener",
   "cn.asany.message.*.graphql",
 })
 @EnableJpaRepositories(

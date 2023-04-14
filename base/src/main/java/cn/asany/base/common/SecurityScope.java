@@ -8,6 +8,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * 权限范围
+ *
+ * @author limaofeng
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -16,9 +21,9 @@ public class SecurityScope implements Serializable {
   private String value;
 
   public static SecurityScope newInstance(String id) {
-    List<String> strs = new ArrayList<>(Arrays.asList(id.split("_")));
-    String type = strs.remove(0);
-    String value = String.join("_", strs.toArray(new String[strs.size()]));
+    List<String> strings = new ArrayList<>(Arrays.asList(id.split("_")));
+    String type = strings.remove(0);
+    String value = String.join("_", strings.toArray(new String[0]));
     if ("EMPLOYEEGROUP".equals(type)) {
       return new SecurityScope(SecurityType.employeeGroup, value);
     }

@@ -1,10 +1,5 @@
 package cn.asany.cms.learn.domain;
 
-/**
- * @author limaofeng
- * @version V1.0 @Description: TODO
- * @date 2022/7/28 9:12 9:12
- */
 import cn.asany.cms.article.domain.Article;
 import cn.asany.cms.learn.domain.enums.LessonType;
 import javax.persistence.*;

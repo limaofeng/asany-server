@@ -3,7 +3,6 @@ package cn.asany.cms.learn.graphql.inputs;
 import cn.asany.cms.learn.domain.Course;
 import cn.asany.cms.learn.domain.Learner;
 import cn.asany.cms.learn.domain.enums.LearnerType;
-import cn.asany.cms.learn.service.LearnerScopeService;
 import cn.asany.cms.learn.service.LearnerService;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
@@ -71,19 +70,19 @@ public class CourseFilter {
 
   public void setElectiveEmployee(Long employeeId) {
     LearnerService learnerService = SpringBeanUtils.getBeanByType(LearnerService.class);
-    List<Long> ids =
+    //    LearnerScopeService service = SpringBeanUtils.getBeanByType(LearnerScopeService.class);
+    //    ids.addAll(
+    //        service.findAllByLearnerScope("EMPLOYEE_" + employeeId).stream()
+    //            .map(Course::getId)
+    //            .collect(Collectors.toList()));
+    builder.notIn(
+        "id",
         learnerService.findAllByEmployee(employeeId).stream()
             .map(Learner::getCourse)
             .collect(Collectors.toList())
             .stream()
             .map(Course::getId)
-            .collect(Collectors.toList());
-    LearnerScopeService service = SpringBeanUtils.getBeanByType(LearnerScopeService.class);
-    ids.addAll(
-        service.findAllByLearnerScope("EMPLOYEE_" + employeeId).stream()
-            .map(Course::getId)
-            .collect(Collectors.toList()));
-    builder.notIn("id", ids.toArray());
+            .toArray());
   }
 
   public List<PropertyFilter> build() {

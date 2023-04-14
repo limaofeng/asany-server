@@ -1,13 +1,12 @@
 package cn.asany.cms.learn.domain;
 
-import cn.asany.cms.learn.domain.databind.LearnerScopeDeserializer;
 import cn.asany.storage.api.FileObject;
 import cn.asany.storage.api.converter.FileObjectConverter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.List;
 import javax.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
 /**
@@ -29,13 +28,8 @@ public class Course extends BaseBusEntity {
 
   @Id
   @Column(name = "ID")
-  @GeneratedValue(generator = "cms_course_gen")
-  @TableGenerator(
-      name = "cms_course_gen",
-      table = "sys_sequence",
-      pkColumnName = "gen_name",
-      pkColumnValue = "cms_course:id",
-      valueColumnName = "gen_value")
+  @GeneratedValue(generator = "fantasy-sequence")
+  @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
   /** 名称 */
   @Column(name = "NAME", length = 50)
@@ -56,13 +50,6 @@ public class Course extends BaseBusEntity {
   /** 发布日期 */
   @Column(name = "PUBLISH_DATE", length = 200)
   private String publishDate;
-  /** 学习范围 */
-  @JsonDeserialize(using = LearnerScopeDeserializer.class)
-  @OneToMany(
-      mappedBy = "course",
-      fetch = FetchType.LAZY,
-      cascade = {CascadeType.REMOVE})
-  private List<LearnerScope> learnerScope;
   /** 简介 */
   @Lob
   @Column(name = "INTRODUCTION")

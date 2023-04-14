@@ -16,8 +16,8 @@ ENV LANG="zh_CN.UTF-8"
 
 VOLUME ["/logs"]
 
-EXPOSE 8080 50983
+EXPOSE 8080
 
 ENV VERSION_NUMBER=$version_number
 
-ENTRYPOINT java -server -Dfile.encoding=UTF-8 -Xmx512m -Xss256k -Xnoagent -Djava.compiler=NONE -Dspring.profiles.active=prod -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=50983 -Djava.security.egd=file:/dev/./urandom -jar /app/app.jar
+ENTRYPOINT java -server -Duser.timezone=Asia/Shanghai -Dfile.encoding=UTF-8 -Xmx512m -Xss256k -Xnoagent -Djava.compiler=NONE -Dspring.profiles.active=prod -Djava.security.egd=file:/dev/./urandom -jar /app/app.jar

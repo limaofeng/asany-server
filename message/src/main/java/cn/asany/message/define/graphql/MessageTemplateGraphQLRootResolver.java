@@ -1,8 +1,8 @@
 package cn.asany.message.define.graphql;
 
-import cn.asany.message.define.converter.MessageTemplateConverter;
 import cn.asany.message.define.domain.MessageTemplate;
 import cn.asany.message.define.graphql.input.MessageTemplateCreateInput;
+import cn.asany.message.define.graphql.mapper.MessageTemplateConverter;
 import cn.asany.message.define.service.MessageTemplateService;
 import graphql.kickstart.tools.GraphQLMutationResolver;
 import graphql.kickstart.tools.GraphQLQueryResolver;

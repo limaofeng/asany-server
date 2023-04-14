@@ -1,6 +1,7 @@
 package cn.asany.storage.data.service;
 
 import cn.asany.storage.api.FileObject;
+import cn.asany.storage.api.UploadException;
 import cn.asany.storage.api.UploadOptions;
 import cn.asany.storage.api.UploadService;
 import cn.asany.storage.core.engine.virtual.VirtualFileObject;
@@ -17,7 +18,7 @@ import java.util.concurrent.Future;
 import lombok.SneakyThrows;
 import org.hibernate.Hibernate;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
-import org.jfantasy.schedule.service.SchedulerUtil;
+import org.jfantasy.schedule.service.SchedulerUtils;
 import org.quartz.*;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
@@ -25,6 +26,11 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * 缩略图服务
+ *
+ * @author limaofeng
+ */
 @Service
 public class ThumbnailService {
 
@@ -34,11 +40,11 @@ public class ThumbnailService {
   public static final String THUMBNAIL_STORAGE_SPACE_KEY = "wg1NcUDz";
 
   private final ThumbnailDao thumbnailDao;
-  private final SchedulerUtil schedulerUtil;
+  private final SchedulerUtils schedulerUtil;
   private final UploadService uploadService;
 
   public ThumbnailService(
-      UploadService uploadService, ThumbnailDao thumbnailDao, SchedulerUtil schedulerUtil) {
+      UploadService uploadService, ThumbnailDao thumbnailDao, SchedulerUtils schedulerUtil) {
     this.uploadService = uploadService;
     this.schedulerUtil = schedulerUtil;
     this.thumbnailDao = thumbnailDao;
@@ -63,8 +69,8 @@ public class ThumbnailService {
         });
   }
 
-  @Transactional
-  @SneakyThrows
+  @SneakyThrows({UploadException.class})
+  @Transactional(rollbackFor = Exception.class)
   @CachePut(key = "targetClass + '.findBySize#' + #p0 + ',' + #p1", value = THUMBNAIL_CACHE_KEY)
   public Thumbnail save(String size, Long source, String name, File file) {
     FileObject object = UploadUtils.fileToObject(name, file);
@@ -82,11 +88,11 @@ public class ThumbnailService {
             .build());
   }
 
-  @SneakyThrows
   @CacheEvict(
       key = "targetClass + '.findBySize#' + #p0 + ',' + #p1",
       value = THUMBNAIL_CACHE_KEY,
       beforeInvocation = true)
+  @SneakyThrows({Exception.class})
   public Thumbnail generate(String size, Long source) {
     TriggerKey taskId = generateTaskId(source, size);
     Future<Long> thumbnailFuture = waitForComplete(taskId);
@@ -94,7 +100,7 @@ public class ThumbnailService {
       schedulerUtil.removeTrigger(taskId);
     }
     if (!schedulerUtil.checkExists(taskId)) {
-      Map<String, String> data = new HashMap<>();
+      Map<String, String> data = new HashMap<>(2);
       data.put("source", source.toString());
       data.put("size", size);
       schedulerUtil.addTrigger(JOBKEY_GENERATE_THUMBNAIL, taskId, data);

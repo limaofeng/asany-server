@@ -6,25 +6,18 @@ import cn.asany.cms.article.graphql.resolver.ArticleGraphQLResolver;
 import cn.asany.cms.article.graphql.type.CommentConnection;
 import cn.asany.cms.article.service.ArticleService;
 import cn.asany.cms.learn.domain.Course;
-import cn.asany.cms.learn.domain.LearnerScope;
 import cn.asany.cms.learn.domain.Lesson;
 import cn.asany.cms.learn.domain.enums.LearnerType;
 import cn.asany.cms.learn.graphql.inputs.LearnerFilter;
-import cn.asany.cms.learn.graphql.inputs.LearnerScopeFilter;
 import cn.asany.cms.learn.graphql.inputs.LessonRecordFilter;
 import cn.asany.cms.learn.graphql.types.CourseConnection;
 import cn.asany.cms.learn.graphql.types.LearnerConnection;
-import cn.asany.cms.learn.graphql.types.LearnerScopeConnection;
 import cn.asany.cms.learn.graphql.types.LessonRecordConnection;
-import cn.asany.cms.learn.service.LearnerScopeService;
 import cn.asany.cms.learn.service.LearnerService;
 import cn.asany.cms.learn.service.LessonRecordService;
 import cn.asany.cms.learn.service.LessonService;
-import cn.asany.cms.permission.service.SecurityScope;
-import cn.asany.cms.permission.specification.SecurityScopeEmployeeSpecification;
 import graphql.kickstart.tools.GraphQLResolver;
 import java.util.*;
-import java.util.stream.Collectors;
 import org.apache.commons.collections.CollectionUtils;
 import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
 import org.jfantasy.framework.util.common.ObjectUtil;
@@ -32,7 +25,6 @@ import org.jfantasy.graphql.util.Kit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
@@ -42,7 +34,6 @@ public class CourseGraphQLResolver implements GraphQLResolver<Course> {
   @Autowired private LessonService lessonService;
   @Autowired private LearnerService learnerService;
   @Autowired private LessonRecordService lessonRecordService;
-  @Autowired private LearnerScopeService learnerScopeService;
   @Autowired private ArticleService articleService;
   @Autowired private ArticleGraphQLResolver articleGraphQLResolver;
 
@@ -72,26 +63,26 @@ public class CourseGraphQLResolver implements GraphQLResolver<Course> {
 
     Page vpage = null;
     if (filter != null && LearnerType.compulsory == filter.getType()) {
-      filter
-          .getEmployeeBuilder()
-          .and(
-              new SecurityScopeEmployeeSpecification(
-                  course.getLearnerScope().stream()
-                      .map(item -> SecurityScope.newInstance(item.getScope()))
-                      .collect(Collectors.toList())));
-      Set<Long> stringSet = new HashSet<>();
-      course
-          .getLearnerScope()
-          .forEach(
-              id -> {
-                String str = id.getScope();
-                List<String> strs = new ArrayList<>(Arrays.asList(str.split("_")));
-                String type = strs.remove(0);
-                String value = String.join("_", strs.toArray(new String[strs.size()]));
-                stringSet.add(Long.valueOf(value));
-              });
-      PropertyFilterBuilder builder1 = new PropertyFilterBuilder();
-      builder1.in("id", stringSet.toArray());
+      //      filter
+      //          .getEmployeeBuilder()
+      //          .and(
+      //              new SecurityScopeEmployeeSpecification(
+      //                  course.getLearnerScope().stream()
+      //                      .map(item -> SecurityScope.newInstance(item.getScope()))
+      //                      .collect(Collectors.toList())));
+      //      Set<Long> stringSet = new HashSet<>();
+      //      course
+      //          .getLearnerScope()
+      //          .forEach(
+      //              id -> {
+      //                String str = id.getScope();
+      //                List<String> strs = new ArrayList<>(Arrays.asList(str.split("_")));
+      //                String type = strs.remove(0);
+      //                String value = String.join("_", strs.toArray(new String[strs.size()]));
+      //                stringSet.add(Long.valueOf(value));
+      //              });
+      //      PropertyFilterBuilder builder1 = new PropertyFilterBuilder();
+      //      builder1.in("id", stringSet.toArray());
       // todo
       //            Pager<Employee> pager = employeeService.findPager(new Pager<>(page, pageSize,
       // orderBy), builder1.build());
@@ -118,10 +109,6 @@ public class CourseGraphQLResolver implements GraphQLResolver<Course> {
         LessonRecordConnection.class);
   }
 
-  public List<LearnerScope> learnerScopes(Course course) {
-    return learnerScopeService.findLearnerScopeByCourseId(course);
-  }
-
   public CommentConnection comments(
       Course course, CommentFilter filter, int page, int pageSize, Sort orderBy) {
     CommentConnection connection = new CommentConnection();
@@ -145,13 +132,6 @@ public class CourseGraphQLResolver implements GraphQLResolver<Course> {
 
   public float totalLearningTime(Course course, Long employee) {
     return learnerService.totalLearningTime(employee);
-  }
-
-  public LearnerScopeConnection scopes(
-      Course course, LearnerScopeFilter filter, int page, int pageSize, Sort orderBy) {
-    Pageable pageable = PageRequest.of(page - 1, pageSize, orderBy);
-    return Kit.connection(
-        learnerScopeService.findPage(pageable, filter.build()), LearnerScopeConnection.class);
   }
 
   public Boolean hasJoined(Course course, Long employeeId) {

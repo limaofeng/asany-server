@@ -66,6 +66,30 @@ type MessageTemplate {
   content: String
 }
 
+type Message {
+  id: ID!
+}
+
+input MessageVariableValueInput {
+    name: String!
+    value: String!
+}
+
+input MessageCreateInput {
+  """
+  消息类型
+  """
+  type: String
+  """
+  消息数据
+  """
+  variables: [MessageVariableValueInput!]
+  """
+  消息 URI
+  """
+  uri: String
+}
+
 input MessageTypeCreateInput {
   name: String
   icon: String
@@ -124,10 +148,25 @@ input MessageDefinitionCreateInput {
 }
 
 extend type Query {
+  """
+  查询消息类型(集合)
+  """
   messageTypes: [MessageType!]!
+  """
+  查询消息类型
+  """
+  messageType(id: ID!): MessageType
+  """
+  消息定义
+  """
+  messageDefinition(id: ID!): MessageDefinition
 }
 
 extend type Mutation {
+  """
+  创建消息
+  """
+  createMessage(input: MessageCreateInput): Message
   """
   创建消息类型
   """
