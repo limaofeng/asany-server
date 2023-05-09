@@ -6,34 +6,49 @@ import cn.asany.storage.data.domain.FileDetail;
 import cn.asany.storage.data.domain.Thumbnail;
 import cn.asany.storage.data.service.FileService;
 import cn.asany.storage.data.service.ThumbnailService;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.List;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.jfantasy.framework.util.FFmpegUtil;
-import org.jfantasy.framework.util.ImageUtil;
+import org.jfantasy.framework.util.FFmpeg;
+import org.jfantasy.framework.util.Images;
 import org.jfantasy.framework.util.common.StreamUtil;
 import org.jfantasy.framework.util.common.file.FileUtil;
 import org.quartz.Job;
 import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * 生成缩略图
+ * @author limaofeng
+ */
 @Slf4j
 public class GenerateThumbnailJob implements Job {
 
-  @Autowired private FileService fileService;
-  @Autowired private StorageResolver storageResolver;
-  @Autowired private ThumbnailService thumbnailService;
-  @Autowired private CacheManager cacheManager;
+  private final FileService fileService;
+  private final  StorageResolver storageResolver;
+  private final ThumbnailService thumbnailService;
+  private final CacheManager cacheManager;
 
+    public GenerateThumbnailJob(FileService fileService, StorageResolver storageResolver, ThumbnailService thumbnailService, CacheManager cacheManager) {
+        this.fileService = fileService;
+        this.storageResolver = storageResolver;
+        this.thumbnailService = thumbnailService;
+        this.cacheManager = cacheManager;
+    }
+
+    @SneakyThrows({Exception.class})
   @Override
-  public void execute(JobExecutionContext context) throws JobExecutionException {
+  public void execute(JobExecutionContext context) {
     JobDataMap data = context.getMergedJobDataMap();
     Long source = Long.valueOf((String) data.get("source"));
     String size = (String) data.get("size");
@@ -42,39 +57,39 @@ public class GenerateThumbnailJob implements Job {
 
     Storage storage = storageResolver.resolve(fileDetail.getStorageConfig().getId());
 
-    List<File> temps = new ArrayList<>();
+    List<Path> temps = new ArrayList<>();
 
-    File temp = FileUtil.tmp();
+    Path temp = FileUtil.tmp();
 
     temps.add(temp);
 
     try {
 
-      String sourcePath = temp.getAbsolutePath();
+      String sourcePath = temp.toString();
 
       String thumbnailPath = null;
       if (fileDetail.getMimeType().startsWith("image/")) {
-        storage.readFile(fileDetail.getStorePath(), Files.newOutputStream(temp.toPath()));
+        storage.readFile(fileDetail.getStorePath(), Files.newOutputStream(temp));
 
-        thumbnailPath = ImageUtil.resize(sourcePath, size);
-        temps.add(new File(thumbnailPath));
+        thumbnailPath = Images.resize(sourcePath, size);
+        temps.add(Paths.get(thumbnailPath));
       } else if (fileDetail.getMimeType().startsWith("video/")) {
 
         InputStream input =
             storage.readFile(fileDetail.getStorePath(), new long[] {0, 1024 * 1024 * 30});
-        StreamUtil.copyThenClose(input, Files.newOutputStream(temp.toPath()));
+        StreamUtil.copyThenClose(input, Files.newOutputStream(temp));
 
-        long length = FFmpegUtil.duration(sourcePath);
+        long length = FFmpeg.duration(sourcePath);
         log.debug(" 视频长度: " + length);
 
         long location = (length / 60) > 14 ? 60 : 30;
 
         String imagPath;
         do {
-          imagPath = FFmpegUtil.image2(sourcePath, location);
-          temps.add(new File(imagPath));
+          imagPath = FFmpeg.image2(sourcePath, location);
+          temps.add(Paths.get(imagPath));
 
-          ImageUtil.ImageMetadata metadata = ImageUtil.identify(imagPath);
+          Images.ImageMetadata metadata = Images.identify(imagPath);
 
           int r = metadata.getChannelStatistics().getRed().getMean();
           int g = metadata.getChannelStatistics().getGreen().getMean();
@@ -101,7 +116,9 @@ public class GenerateThumbnailJob implements Job {
     } catch (IOException e) {
       throw new JobExecutionException(e.getMessage(), e);
     } finally {
-      temps.forEach(FileUtil::delFile);
+        for(Path temp1 : temps){
+            FileUtil.rm(temp1);
+        }
     }
   }
 }

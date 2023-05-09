@@ -10,11 +10,6 @@ import cn.asany.storage.data.service.FileService;
 import cn.asany.storage.data.service.MultipartUploadService;
 import cn.asany.storage.data.util.IdUtils;
 import cn.asany.storage.plugin.*;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.util.*;
-import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.common.StreamUtil;
@@ -23,6 +18,12 @@ import org.jfantasy.framework.util.common.file.FileUtil;
 import org.jfantasy.framework.util.web.WebUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 文件上传服务
@@ -102,17 +103,17 @@ public class FileUploadService implements UploadService {
 
   @Override
   public FileObject upload(FileObject file, UploadOptions options) throws UploadException {
-    File temp = null;
+    Path temp = null;
     UploadFileObject uploadFileObject;
     try {
       // 获取临时文件
       if (file instanceof UploadFileObject) {
-        temp = ((UploadFileObject) file).getFile();
+        temp = ((UploadFileObject) file).getFile().toPath();
         uploadFileObject = ((UploadFileObject) file);
       } else {
         temp = FileUtil.tmp();
-        StreamUtil.copyThenClose(file.getInputStream(), Files.newOutputStream(temp.toPath()));
-        uploadFileObject = new UploadFileObject(file.getName(), temp, file.getMetadata());
+        StreamUtil.copyThenClose(file.getInputStream(), Files.newOutputStream(temp));
+        uploadFileObject = new UploadFileObject(file.getName(), temp.toFile(), file.getMetadata());
       }
 
       // 将要上传的位置
@@ -132,7 +133,11 @@ public class FileUploadService implements UploadService {
       throw new UploadException(e.getMessage());
     } finally {
       if (temp != null) {
-        FileUtil.delFile(temp);
+          try {
+              FileUtil.rm(temp);
+          } catch (IOException e) {
+              log.error(e.getMessage(), e);
+          }
       }
     }
   }
@@ -214,6 +219,7 @@ public class FileUploadService implements UploadService {
     }
   }
 
+  @Override
   public FileObject completeMultipartUpload(String uploadId, String name, String folderKey)
       throws UploadException {
     try {
@@ -229,7 +235,7 @@ public class FileUploadService implements UploadService {
       }
 
       List<MultipartUploadChunk> chunks = multipartUpload.getChunks();
-      List<String> partETags =
+      List<String> partEtags =
           ObjectUtil.sort(chunks, "index", "asc").stream()
               .map(MultipartUploadChunk::getEtag)
               .collect(Collectors.toList());
@@ -239,7 +245,7 @@ public class FileUploadService implements UploadService {
       if (object == null) {
         storage
             .multipartUpload()
-            .complete(multipartUpload.getPath(), multipartUpload.getUploadId(), partETags);
+            .complete(multipartUpload.getPath(), multipartUpload.getUploadId(), partEtags);
         object = storage.getFileItem(multipartUpload.getPath());
       }
 

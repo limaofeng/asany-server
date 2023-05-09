@@ -17,6 +17,8 @@ import cn.asany.storage.data.util.IdUtils;
 import cn.asany.storage.data.util.ZipUtil;
 import cn.asany.storage.data.web.wrapper.DownloadLimitServletOutputStream;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -33,6 +35,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * 文件下载
+ * @author limaofeng
+ */
 @Slf4j
 @RestController
 public class DownloadController {
@@ -220,8 +226,9 @@ public class DownloadController {
     }
 
     log.debug("打包的数据:" + Arrays.toString(fidlist) + ", 没有缓存,执行打包操作");
-    File tmp = FileUtil.tmp();
-    FileOutputStream tempOutput = new FileOutputStream(tmp);
+    Path tmp = FileUtil.tmp();
+    OutputStream tempOutput = Files.newOutputStream(tmp);
+    // new FileOutputStream(tmp.toFile())
     try {
 
       String relative = null;
@@ -259,13 +266,13 @@ public class DownloadController {
       String zipPath = tempFolder.getPath() + filename;
       String showName = "【批量下载】" + files.get(0).getName() + " 等 (" + files.size() + ").zip";
 
-      storage.writeFile(zipPath, tmp, showName);
+      storage.writeFile(zipPath, tmp.toFile(), showName);
 
       log.debug("打包的数据:" + Arrays.toString(fidlist) + ", 完成压缩包上传操作");
       return storage.getFileItem(zipPath);
     } finally {
       StreamUtil.closeQuietly(tempOutput);
-      FileUtil.delFile(tmp);
+      FileUtil.rm(tmp);
     }
   }
 }

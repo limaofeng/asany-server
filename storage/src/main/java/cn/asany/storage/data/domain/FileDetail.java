@@ -154,8 +154,12 @@ public class FileDetail extends BaseBusEntity implements Cloneable {
 
   @Override
   public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+    if (this == o) {
+        return true;
+    }
+    if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) {
+        return false;
+    }
     FileDetail that = (FileDetail) o;
     return id != null && Objects.equals(id, that.id);
   }

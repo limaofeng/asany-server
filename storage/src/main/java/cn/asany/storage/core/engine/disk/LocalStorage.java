@@ -2,6 +2,8 @@ package cn.asany.storage.core.engine.disk;
 
 import cn.asany.storage.api.*;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -23,7 +25,7 @@ public class LocalStorage implements Storage {
 
   @Override
   public void readFile(String remotePath, String localPath) throws IOException {
-    readFile(remotePath, new FileOutputStream(localPath));
+    readFile(remotePath, Files.newOutputStream(Paths.get(localPath)));
   }
 
   @Override
@@ -38,7 +40,7 @@ public class LocalStorage implements Storage {
 
   @Override
   public void writeFile(String remotePath, File file) throws IOException {
-    writeFile(remotePath, new FileInputStream(file));
+    writeFile(remotePath, Files.newInputStream(file.toPath()));
   }
 
   @Override
@@ -51,8 +53,8 @@ public class LocalStorage implements Storage {
     return getInputStream(remotePath);
   }
 
-  public void setDefaultDir(String defaultDir) {
-    FileUtil.createFolder(new File(defaultDir));
+  public void setDefaultDir(String defaultDir) throws IOException {
+    FileUtil.mkdir(new File(defaultDir).toPath());
     this.defaultDir = defaultDir;
   }
 
@@ -62,7 +64,7 @@ public class LocalStorage implements Storage {
   }
 
   private OutputStream getOutputStream(String absolutePath) throws IOException {
-    return new FileOutputStream(createFile(absolutePath));
+    return Files.newOutputStream(createFile(absolutePath).toPath());
   }
 
   private String filterRemotePath(String remotePath) {
@@ -76,11 +78,11 @@ public class LocalStorage implements Storage {
     if (!file.exists()) {
       throw new FileNotFoundException("文件:" + remotePath + "不存在!");
     }
-    return new FileInputStream(file);
+    return Files.newInputStream(file.toPath());
   }
 
-  private File createFile(String remotePath) {
-    return FileUtil.createFile(this.defaultDir + filterRemotePath(remotePath));
+  private File createFile(String remotePath) throws IOException {
+    return FileUtil.createFile(Paths.get(this.defaultDir + filterRemotePath(remotePath))).toFile();
   }
 
   @Override
@@ -152,7 +154,7 @@ public class LocalStorage implements Storage {
   }
 
   @Override
-  public void removeFile(String remotePath) {
-    FileUtil.delFile(this.defaultDir + remotePath);
+  public void removeFile(String remotePath) throws IOException {
+    FileUtil.rm(Paths.get(this.defaultDir + remotePath));
   }
 }

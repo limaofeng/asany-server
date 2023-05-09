@@ -26,6 +26,7 @@ public interface Storage {
    *
    * @param remotePath 路径
    * @param file 文件对象
+   * @throws IOException 异常
    */
   void writeFile(String remotePath, File file) throws IOException;
 
@@ -34,6 +35,7 @@ public interface Storage {
    *
    * @param remotePath 路径
    * @param in 输出流
+   *           @throws IOException 异常
    */
   void writeFile(String remotePath, InputStream in) throws IOException;
 
@@ -42,6 +44,7 @@ public interface Storage {
    *
    * @param remotePath 路径
    * @return {OutputStream}
+   * @throws IOException 异常
    */
   OutputStream writeFile(String remotePath) throws IOException;
 
@@ -50,6 +53,7 @@ public interface Storage {
    *
    * @param remotePath 路径
    * @param localPath 路径
+   *                  @throws IOException 异常
    */
   void readFile(String remotePath, String localPath) throws IOException;
 
@@ -58,6 +62,7 @@ public interface Storage {
    *
    * @param remotePath 路径
    * @param out 输出流
+   *            @throws IOException 异常
    */
   void readFile(String remotePath, OutputStream out) throws IOException;
 
@@ -66,6 +71,7 @@ public interface Storage {
    *
    * @param remotePath 路径
    * @return 返回 InputStream 对象
+   * @throws IOException 异常
    */
   InputStream readFile(String remotePath) throws IOException;
 
@@ -73,7 +79,9 @@ public interface Storage {
    * 通过一个地址获取文件对应的 InputStream
    *
    * @param remotePath 路径 @Param range 范围下载
+   * @param range 范围下载
    * @return 返回 InputStream 对象
+   * @throws IOException 异常
    */
   default InputStream readFile(String remotePath, long[] range) throws IOException {
     return this.getFileItem(remotePath).getInputStream(range[0], range[1]);
@@ -140,8 +148,13 @@ public interface Storage {
    * 删除地址对应的文件
    *
    * @param remotePath 地址
+   *                   <p>如果是文件夹，会删除文件夹下的所有文件</p>
+   *                   <p>如果是文件，会删除文件</p>
+   *                   <p>如果是不存在的文件，会抛出异常</p>
+   *                   <p>如果是不存在的文件夹，会抛出异常</p>
+   * @throws IOException IOException
    */
-  void removeFile(String remotePath);
+  void removeFile(String remotePath) throws IOException;
 
   /**
    * 是否支持 分片上传
