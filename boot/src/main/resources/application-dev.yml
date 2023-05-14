@@ -42,10 +42,10 @@ spring:
     schemas: ${DATABASE_INSTANCE_NAME}
 
 openim:
-  url: http://47.103.119.188:10002
-  secret: tuoyun
+  url: ${OPENIM_SERVER}
+  secret: ${OPENIM_SECRET}
   admin:
-    user: openIMAdmin
+    user: ${OPENIM_ADMIN}
 
 sms:
   provider:
