@@ -8,7 +8,7 @@ spring:
         generate_statistics: false
   datasource:
     name: datasource
-    url: jdbc:mysql://${DATABASE_HOST}/${DATABASE_INSTANCE_NAME}?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&useSSL=false
+    url: jdbc:mysql://${DATABASE_HOST}/${DATABASE_INSTANCE_NAME}?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&rewriteBatchedStatements=true
     username: ${DATABASE_USERNAME}
     password: ${DATABASE_PASSWORD}
   redis:
@@ -27,7 +27,7 @@ spring:
               user: ${DATABASE_USERNAME}
               password: ${DATABASE_PASSWORD}
   flyway:
-    url: jdbc:mysql://${DATABASE_HOST}/mysql?useUnicode=true&characterEncoding=utf-8&useSSL=false
+    url: jdbc:mysql://${DATABASE_HOST}/mysql?useUnicode=true&characterEncoding=utf-8
     user: ${DATABASE_USERNAME}
     password: ${DATABASE_PASSWORD}
     schemas: ${DATABASE_INSTANCE_NAME}

@@ -1,4 +1,6 @@
 spring:
+  config:
+    import: optional:file:.env[.properties]
   application:
     name: server
   sequence:
@@ -12,32 +14,32 @@ spring:
         generate_statistics: true
   datasource:
     name: datasource
-    url: jdbc:mysql://dev.local:3306/asany?nullCatalogMeansCurrent=true&autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&rewriteBatchedStatements=true
-    username: root
-    password: yV2jJxvNs8BD
+    url: jdbc:mysql://${DATABASE_HOST}/${DATABASE_INSTANCE_NAME}?nullCatalogMeansCurrent=true&autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&rewriteBatchedStatements=true
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
     hikari:
       minimum-idle: 5
       maximum-pool-size: 20
     proxy: true
   redis:
-    host: dev.local
+    host: ${REDIS_HOST}
     port: 6379
-    password: sOmE_sEcUrE_pAsS
+    password: ${REDIS_PASSWORD}
   quartz:
     properties:
       org:
         quartz:
           dataSource:
             qzDS:
-              URL: jdbc:mysql://dev.local:3306/asany?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&rewriteBatchedStatements=true
+              URL: jdbc:mysql://${DATABASE_HOST}/${DATABASE_INSTANCE_NAME}?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&rewriteBatchedStatements=true
               driver: com.mysql.cj.jdbc.Driver
-              user: root
-              password: yV2jJxvNs8BD
+              user: ${DATABASE_USERNAME}
+              password: ${DATABASE_PASSWORD}
   flyway:
-    url: jdbc:mysql://dev.local:3306/mysql?useUnicode=true&characterEncoding=UTF-8&useSSL=false
-    user: root
-    password: yV2jJxvNs8BD
-    schemas: asany
+    url: jdbc:mysql://${DATABASE_HOST}/mysql?useUnicode=true&characterEncoding=UTF-8
+    user: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
+    schemas: ${DATABASE_INSTANCE_NAME}
 
 openim:
   url: http://47.103.119.188:10002
