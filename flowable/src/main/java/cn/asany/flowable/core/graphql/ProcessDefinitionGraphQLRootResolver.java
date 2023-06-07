@@ -4,6 +4,11 @@ import cn.asany.flowable.core.service.ProcessDefinitionService;
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import org.springframework.stereotype.Component;
 
+/**
+ * 流程定义
+ *
+ * @author limaofeng
+ */
 @Component
 public class ProcessDefinitionGraphQLRootResolver implements GraphQLQueryResolver {
 

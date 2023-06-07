@@ -4,11 +4,23 @@ apply plugin: 'java-library'
 
 dependencies {
     implementation project(":storage-api")
-    implementation "org.flowable:flowable-spring-boot-starter:$LIB_FLOWABLE_VER"
-    implementation("org.flowable:flowable-ui-common:$LIB_FLOWABLE_VER") {
-        exclude group: "org.springframework.boot"
+    implementation("org.flowable:flowable-spring-boot-starter:$LIB_FLOWABLE_VER"){
+        exclude group: "org.springframework.boot", module: "*"
+        exclude group: "org.springframework", module: "*"
+        exclude group: "org.springframework.security", module: "*"
     }
-    implementation "org.flowable:flowable-ui-modeler-conf:$LIB_FLOWABLE_VER"
-    implementation "org.flowable:flowable-ui-modeler-logic:$LIB_FLOWABLE_VER"
-    implementation "org.flowable:flowable-ui-modeler-rest:$LIB_FLOWABLE_VER"
+    implementation("org.flowable:flowable-ui-common:$LIB_FLOWABLE_VER") {
+        exclude group: "org.springframework.boot", module: "*"
+        exclude group: "org.springframework", module: "*"
+        exclude group: "org.springframework.security", module: "*"
+    }
+    implementation("org.flowable:flowable-ui-modeler-conf:$LIB_FLOWABLE_VER") {
+        exclude group: "org.flowable", module: "flowable-ui-common"
+    }
+    implementation ("org.flowable:flowable-ui-modeler-logic:$LIB_FLOWABLE_VER"){
+        exclude group: "org.flowable", module: "flowable-ui-common"
+    }
+    implementation ("org.flowable:flowable-ui-modeler-rest:$LIB_FLOWABLE_VER") {
+        exclude group: "org.flowable", module: "flowable-ui-common"
+    }
 }

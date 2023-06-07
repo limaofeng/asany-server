@@ -16,7 +16,7 @@ public class PersonalTaskGraphQLRootResolver
   }
 
   public Boolean createTask() {
-    personalTaskService.createTask();
+//    personalTaskService.createTask(1L, "", "");
     return Boolean.TRUE;
   }
 }

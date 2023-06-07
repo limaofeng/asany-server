@@ -17,6 +17,11 @@ import org.jfantasy.framework.security.LoginUser;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+/**
+ * 流程模型
+ *
+ * @author limaofeng
+ */
 @Service
 public class ProcessModelService {
 
@@ -37,10 +42,19 @@ public class ProcessModelService {
     return this.processModelDao.getProcessModel(id);
   }
 
-  public Page<ProcessModel> findPage(Page page, ProcessModelFilter filter) {
+  public Page<ProcessModel> findPage(Page<ProcessModel> page, ProcessModelFilter filter) {
     return this.processModelDao.findPage(page, filter);
   }
 
+  /**
+   * 导入流程模型
+   *
+   * @param loginUser 当前登录用户
+   * @param request 请求
+   * @param file 文件
+   * @return ProcessModel
+   * @throws IOException IOException
+   */
   public ProcessModel importProcessModel(LoginUser loginUser, HttpServletRequest request, Part file)
       throws IOException {
     MultipartFile multipartFile = UploadUtils.partToMultipartFile(file);

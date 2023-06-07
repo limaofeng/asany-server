@@ -58,8 +58,8 @@ public class SecurityGraphQLQueryResolver implements GraphQLQueryResolver {
   /** 查询所有用户,带条件查询 */
   public UserConnection users(UserFilter filter, int page, int pageSize, Sort orderBy) {
     Pageable pageable = PageRequest.of(page - 1, pageSize, orderBy);
-    PropertyFilterBuilder builder = ObjectUtil.defaultValue(filter, new UserFilter()).getBuilder();
-    return Kit.connection(userService.findPage(pageable, builder.build()), UserConnection.class);
+    filter = ObjectUtil.defaultValue(filter, new UserFilter());
+    return Kit.connection(userService.findPage(pageable, filter.build()), UserConnection.class);
   }
 
   public List<SecurityScopeObject> securityScopes(
@@ -178,9 +178,8 @@ public class SecurityGraphQLQueryResolver implements GraphQLQueryResolver {
   //    }
 
   public List<RoleSpace> roleScopes(BusinessFilter filter) {
-    PropertyFilterBuilder builder =
-        ObjectUtil.defaultValue(filter, new BusinessFilter()).getBuilder();
-    return roleScopeService.findAll(builder.build());
+    filter = ObjectUtil.defaultValue(filter, new BusinessFilter());
+    return roleScopeService.findAll(filter.build());
   }
 
   public RoleSpace roleScope(String id) {
@@ -190,8 +189,8 @@ public class SecurityGraphQLQueryResolver implements GraphQLQueryResolver {
   /** 查询角色 */
   public RoleConnection findRoles(RoleFilter filter, int page, int pageSize, Sort orderBy) {
     Pageable pageable = PageRequest.of(page - 1, pageSize, orderBy);
-    PropertyFilterBuilder builder = ObjectUtil.defaultValue(filter, new RoleFilter()).getBuilder();
-    return Kit.connection(roleService.findPage(pageable, builder.build()), RoleConnection.class);
+    filter = ObjectUtil.defaultValue(filter, new RoleFilter());
+    return Kit.connection(roleService.findPage(pageable, filter.build()), RoleConnection.class);
   }
 
   /** 查询权限分类 */

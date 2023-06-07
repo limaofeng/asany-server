@@ -8,6 +8,11 @@ import org.flowable.engine.repository.ProcessDefinitionQuery;
 import org.jfantasy.framework.util.common.StringUtil;
 import org.springframework.stereotype.Service;
 
+/**
+ * 流程定义
+ *
+ * @author limaofeng
+ */
 @Service
 public class ProcessDefinitionService {
 

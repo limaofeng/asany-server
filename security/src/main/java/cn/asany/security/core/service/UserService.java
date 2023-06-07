@@ -149,8 +149,8 @@ public class UserService implements UserDetailsService {
     return optional.orElse(null);
   }
 
-  public Page<User> findPage(Pageable pageable, List<PropertyFilter> filters) {
-    return this.userDao.findPage(pageable, filters);
+  public Page<User> findPage(Pageable pageable, PropertyFilter filter) {
+    return this.userDao.findPage(pageable, filter);
   }
 
   public void delete(Long... ids) {

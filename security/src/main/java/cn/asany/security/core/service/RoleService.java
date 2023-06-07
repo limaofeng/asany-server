@@ -40,8 +40,8 @@ public class RoleService {
     return roleDao.findAll(Example.of(Role.builder().enabled(true).build()));
   }
 
-  public Page<Role> findPage(Pageable pageable, List<PropertyFilter> filters) {
-    return this.roleDao.findPage(pageable, filters);
+  public Page<Role> findPage(Pageable pageable, PropertyFilter filter) {
+    return this.roleDao.findPage(pageable, filter);
   }
 
   public Role save(Role role) {
@@ -63,7 +63,7 @@ public class RoleService {
   }
 
   public Optional<Role> findByCode(String role) {
-    return this.roleDao.findOne(PropertyFilter.builder().equal("code", role).build());
+    return this.roleDao.findOne(PropertyFilter.newFilter().equal("code", role));
   }
 
   public void delete(Long... ids) {

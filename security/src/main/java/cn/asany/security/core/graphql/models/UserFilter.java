@@ -1,16 +1,16 @@
 package cn.asany.security.core.graphql.models;
 
+import cn.asany.security.core.domain.User;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
+import org.jfantasy.graphql.inputs.QueryFilter;
 
 @Data
-public class UserFilter {
-
-  private PropertyFilterBuilder builder = new PropertyFilterBuilder();
+public class UserFilter extends QueryFilter<UserFilter, User> {
 
   @JsonProperty("nickname_like")
   public void setNicknameLike(String value) {
@@ -33,10 +33,6 @@ public class UserFilter {
     // departmentService.departmentsByPath(department.getPath());
     //        builder.and(new GrantPermissionSpecification("DEPARTMENT_ADMIN", SecurityType.user,
     // departments.stream().map(item -> item.getId().toString()).collect(Collectors.toList())));
-  }
-
-  public List<PropertyFilter> build() {
-    return this.builder.build();
   }
 
   @JsonProperty("username_like")

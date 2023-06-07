@@ -81,7 +81,6 @@ import org.springframework.context.annotation.ComponentScan.Filter;
       @Filter(type = FilterType.ASSIGNABLE_TYPE, classes = RemoteAccountResource.class) //
     } //
     )
-@Import(WebSecurityConfig.class)
 public class CustomFlowableAutoConfiguration {
 
   protected static final String LIQUIBASE_CHANGELOG_PREFIX = "ACT_DE_";
