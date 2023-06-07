@@ -29,8 +29,9 @@ public class ArticleTagService {
     this.tagDao = tagDao;
   }
 
-  public Page<ArticleTag> findPage(Pageable pageable, List<PropertyFilter> filters) {
-    return this.tagDao.findPage(pageable, filters);
+
+  public Page<ArticleTag> findPage(Pageable pageable, PropertyFilter filter) {
+    return this.tagDao.findPage(pageable, filter);
   }
 
   public Optional<ArticleTag> get(Long id) {
@@ -45,12 +46,12 @@ public class ArticleTagService {
     return tagDao.findOne(Example.of(ArticleTag.builder().name(name).build()));
   }
 
-  public List<ArticleTag> findAll(List<PropertyFilter> filters) {
-    return this.tagDao.findAll(filters);
+  public List<ArticleTag> findAll(PropertyFilter filter) {
+    return this.tagDao.findAll(filter);
   }
 
-  public List<ArticleTag> findAllArticle(List<PropertyFilter> filters, Sort orderBy) {
-    return this.tagDao.findAll(filters, orderBy);
+  public List<ArticleTag> findAllArticle(PropertyFilter filter, Sort orderBy) {
+    return this.tagDao.findAll(filter, orderBy);
   }
 
   public List<ArticleTag> findAll(ArticleTag articleTag, Sort orderBy) {

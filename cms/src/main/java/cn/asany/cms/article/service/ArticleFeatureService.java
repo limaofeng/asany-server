@@ -29,11 +29,11 @@ public class ArticleFeatureService {
   /**
    * 根据查询条件查询所有推荐位
    *
-   * @param filters
+   * @param filter
    * @return
    */
-  public List<ArticleFeature> findAll(List<PropertyFilter> filters, Sort orderBy) {
-    return articleFeatureDao.findAll(filters, orderBy);
+  public List<ArticleFeature> findAll(PropertyFilter filter, Sort orderBy) {
+    return articleFeatureDao.findAll(filter, orderBy);
   }
 
   public ArticleFeature findById(Long id) {

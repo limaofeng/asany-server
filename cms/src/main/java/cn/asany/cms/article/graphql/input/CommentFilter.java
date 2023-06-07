@@ -8,20 +8,9 @@ import lombok.Data;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
 import org.jfantasy.framework.spring.SpringBeanUtils;
+import org.jfantasy.graphql.inputs.QueryFilter;
 
-@Data
-public class CommentFilter {
-  private PropertyFilterBuilder builder = new PropertyFilterBuilder();
-
-  @JsonProperty(value = "uid")
-  public void setUid(String uid) {
-    builder.equal("uid", uid);
-  }
-
-  @JsonProperty(value = "id_ne")
-  public void setIdNe(Long id) {
-    builder.notEqual("id", id);
-  }
+public class CommentFilter extends QueryFilter<CommentFilter, Comment> {
 
   @JsonProperty(value = "forComment_isEmpty")
   public void setForCommentIsEmpty(Boolean isEmpty) {
@@ -45,12 +34,4 @@ public class CommentFilter {
     this.builder.contains("path", comment.getPath() + "%");
   }
 
-  @JsonProperty(value = "status")
-  public void setStatus(String status) {
-    this.builder.equal("status", status);
-  }
-
-  public List<PropertyFilter> build() {
-    return this.builder.build();
-  }
 }

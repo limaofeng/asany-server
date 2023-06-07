@@ -82,8 +82,8 @@ public class EmployeeService {
     this.passwordEncoder = passwordEncoder;
   }
 
-  public Page<Employee> findPage(Pageable pageable, List<PropertyFilter> filters) {
-    return employeeDao.findPage(pageable, filters);
+  public Page<Employee> findPage(Pageable pageable, PropertyFilter filter) {
+    return employeeDao.findPage(pageable, filter);
   }
 
   public Employee save(Long orgId, MemberRole role, Employee employee) {
@@ -478,7 +478,7 @@ public class EmployeeService {
                     root.join("employeePositions").join("organization").get("id"), orgId));
   }
 
-  public List<Employee> findAll(List<PropertyFilter> filters) {
+  public List<Employee> findAll(PropertyFilter filter) {
     return this.employeeDao.findAll(filters);
   }
 
@@ -667,20 +667,20 @@ public class EmployeeService {
     return employees;
   }
 
-  public Long findEmployeeCount(List<PropertyFilter> filters) {
+  public Long findEmployeeCount(PropertyFilter filter) {
     return employeeDao.count(filters);
   }
 
   public Long findEmployeeCount(Department department, List<String> status) {
-    PropertyFilterBuilder builder = new PropertyFilterBuilder();
+    PropertyFilter filter = PropertyFilter.newFilter();
     // 根据部门path路径和人员状态过滤
-    builder.startsWith("employeePositions.department.path", department.getPath());
+    filter.startsWith("employeePositions.department.path", department.getPath());
     if (status != null) {
       for (String statu : status) {
-        builder.equal("employeePositions.status.status.code", statu);
+        filter.equal("employeePositions.status.status.code", statu);
       }
     }
-    return employeeDao.count(builder.build());
+    return employeeDao.count(filter);
   }
 
   //    public Optional<OrganizationEmployee> getOrganizationEmployee(Employee employee) {
@@ -707,7 +707,7 @@ public class EmployeeService {
   //        if (CollectionUtils.isEmpty(deptIds)) {
   //            return "";
   //        }
-  //        List<PropertyFilter> filters = new DepartmentFilter().getBuilder()
+  //        PropertyFilter filter = new DepartmentFilter().getBuilder()
   //            .equal("organization.id", orgId)
   //            .in("id", deptIds)
   //            .build();

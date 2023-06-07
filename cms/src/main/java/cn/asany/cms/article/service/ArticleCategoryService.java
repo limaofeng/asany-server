@@ -56,8 +56,8 @@ public class ArticleCategoryService {
     this.applicationContext = applicationContext;
   }
 
-  public Page<ArticleCategory> findPage(Pageable pageable, List<PropertyFilter> filters) {
-    return this.categoryDao.findPage(pageable, filters);
+  public Page<ArticleCategory> findPage(Pageable pageable, PropertyFilter filter) {
+    return this.categoryDao.findPage(pageable, filter);
   }
 
   public Optional<ArticleCategory> findById(Long id) {
@@ -68,12 +68,12 @@ public class ArticleCategoryService {
     return categoryDao.findOne(Example.of(ArticleCategory.builder().name(name).build()));
   }
 
-  public List<ArticleCategory> findAll(List<PropertyFilter> filters) {
-    return this.categoryDao.findAll(filters);
+  public List<ArticleCategory> findAll(PropertyFilter filter) {
+    return this.categoryDao.findAll(filter);
   }
 
-  public List<ArticleCategory> findAllArticle(List<PropertyFilter> filters, Sort orderBy) {
-    return this.categoryDao.findAll(filters, orderBy);
+  public List<ArticleCategory> findAllArticle(PropertyFilter filter, Sort orderBy) {
+    return this.categoryDao.findAll(filter, orderBy);
   }
 
   public List<ArticleCategory> findAll(ArticleCategory ArticleCategory, Sort orderBy) {
@@ -125,10 +125,9 @@ public class ArticleCategoryService {
 
               Optional<ArticleCategory> optional =
                   this.categoryDao.findOne(
-                      PropertyFilter.builder()
+                      PropertyFilter.newFilter()
                           .equal("slug", item.getSlug())
-                          .startsWith("path", rootChannel.getPath())
-                          .build());
+                          .startsWith("path", rootChannel.getPath()));
 
               if (optional.isPresent()) {
                 item.setId(optional.get().getId());
@@ -352,13 +351,13 @@ public class ArticleCategoryService {
   }
 
   private List<ArticleCategory> siblings(ArticleCategory parent, ArticleCategory current) {
-    PropertyFilterBuilder builder = PropertyFilter.builder().notEqual("id", current.getId());
+    PropertyFilter filter = PropertyFilter.newFilter().notEqual("id", current.getId());
     if (parent == null || parent.getId().equals(0L)) {
-      builder.isNull("parent");
+      filter.isNull("parent");
     } else {
-      builder.equal("parent.id", parent.getId());
+      filter.equal("parent.id", parent.getId());
     }
-    return ObjectUtil.sort(categoryDao.findAll(builder.build()), "index", "asc");
+    return ObjectUtil.sort(categoryDao.findAll(filter), "index", "asc");
   }
 
   /**
