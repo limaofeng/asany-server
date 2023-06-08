@@ -36,12 +36,12 @@ public class AccessTokenService {
   }
 
   public List<PersonalAccessToken> getPersonalAccessTokens(String clientId, Long uid) {
-    PropertyFilterBuilder builder =
-        PropertyFilter.builder()
+    PropertyFilter filter =
+        PropertyFilter.newFilter()
             .equal("client.id", clientId)
             .equal("tokenType", TokenType.PERSONAL)
             .equal("user.id", uid);
-    List<AccessToken> accessTokens = this.accessTokenDao.findAll(builder.build());
+    List<AccessToken> accessTokens = this.accessTokenDao.findAll(filter);
     return accessTokenConverter.toPersonalAccessTokens(accessTokens);
   }
 
@@ -110,7 +110,7 @@ public class AccessTokenService {
   }
 
   public Optional<AccessToken> getAccessToken(String token) {
-    return this.accessTokenDao.findOne(PropertyFilter.builder().equal("token", token).build());
+    return this.accessTokenDao.findOne(PropertyFilter.newFilter().equal("token", token));
   }
 
   public SessionAccessToken getSessionById(Long id) {
@@ -119,13 +119,13 @@ public class AccessTokenService {
   }
 
   public List<SessionAccessToken> getSessions(String clientId, Long uid) {
-    PropertyFilterBuilder builder =
-        PropertyFilter.builder()
+    PropertyFilter filter =
+        PropertyFilter.newFilter()
             .equal("client", clientId)
             .equal("tokenType", TokenType.SESSION)
             .equal("user.id", uid);
     List<AccessToken> accessTokens =
-        this.accessTokenDao.findAll(builder.build(), Sort.by("issuedAt").descending());
+        this.accessTokenDao.findAll(filter, Sort.by("issuedAt").descending());
     return accessTokenConverter.toSessions(accessTokens);
   }
 
@@ -139,10 +139,10 @@ public class AccessTokenService {
   public Date getLastUseTime(String client, String clientSecret) {
     List<AccessToken> accessTokens =
         this.accessTokenDao.findAll(
-            PropertyFilter.builder()
+            PropertyFilter.newFilter()
                 .equal("client", client)
                 .equal("clientSecret", clientSecret)
-                .build(),
+                ,
             1,
             Sort.by("lastUsedTime").descending());
     if (accessTokens.isEmpty()) {

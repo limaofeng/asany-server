@@ -19,7 +19,7 @@ public class ModelEndpointService {
   @Transactional(readOnly = true)
   public List<ModelEndpoint> listEndpoints(Long model) {
     List<ModelEndpoint> endpoints =
-        this.modelEndpointDao.findAll(PropertyFilter.builder().equal("model.id", model).build());
+        this.modelEndpointDao.findAll(PropertyFilter.newFilter().equal("model.id", model));
     endpoints.forEach(
         item -> {
           Hibernate.initialize(item.getReturnType());

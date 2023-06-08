@@ -60,11 +60,11 @@ public class LandingGraphQLQueryAndMutationResolver
   }
 
   public LandingPageConnection landingPagesConnection(
-      LandingPageFilter filter, int page, int pageSize, Sort orderBy) {
-    filter = ObjectUtil.defaultValue(filter, new LandingPageFilter());
+    LandingPageWhereInput where, int page, int pageSize, Sort orderBy) {
+    where = ObjectUtil.defaultValue(where, new LandingPageWhereInput());
     Pageable pageable = PageRequest.of(page - 1, pageSize, orderBy);
     return Kit.connection(
-        landingService.findLandingPagePager(pageable, filter.build()), LandingPageConnection.class);
+        landingService.findLandingPagePager(pageable, where.toFilter()), LandingPageConnection.class);
   }
 
   public LandingPoster createLandingPoster(LandingPosterCreateInput input) {
@@ -86,11 +86,11 @@ public class LandingGraphQLQueryAndMutationResolver
   }
 
   public LandingPosterConnection landingPostersConnection(
-      LandingPosterFilter filter, int page, int pageSize, Sort orderBy) {
-    filter = ObjectUtil.defaultValue(filter, new LandingPosterFilter());
+    LandingPosterWhere where, int page, int pageSize, Sort orderBy) {
+    where = ObjectUtil.defaultValue(where, new LandingPosterWhere());
     Pageable pageable = PageRequest.of(page - 1, pageSize, orderBy);
     return Kit.connection(
-        landingService.findLandingPosterPage(pageable, filter.build()),
+        landingService.findLandingPosterPage(pageable, where.toFilter()),
         LandingPosterConnection.class);
   }
 
@@ -113,11 +113,11 @@ public class LandingGraphQLQueryAndMutationResolver
   }
 
   public LandingStoreConnection landingStoresConnection(
-      LandingStoreFilter filter, int page, int pageSize, Sort orderBy) {
-    filter = ObjectUtil.defaultValue(filter, new LandingStoreFilter());
+    LandingStoreWhereInput where, int page, int pageSize, Sort orderBy) {
+    where = ObjectUtil.defaultValue(where, new LandingStoreWhereInput());
     Pageable pageable = PageRequest.of(page - 1, pageSize, orderBy);
     return Kit.connection(
-        landingService.findLandingStorePage(pageable, filter.build()),
+        landingService.findLandingStorePage(pageable, where.toFilter()),
         LandingStoreConnection.class);
   }
 }

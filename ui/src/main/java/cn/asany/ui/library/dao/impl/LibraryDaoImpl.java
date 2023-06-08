@@ -25,7 +25,7 @@ public class LibraryDaoImpl extends ComplexJpaRepository<Library, Long> implemen
   }
 
   @Override
-  public List<Library> findAllWithIcon(List<PropertyFilter> filters) {
-    return this.findAll(filters);
+  public List<Library> findAllWithIcon(PropertyFilter filter) {
+    return this.findAll(filter);
   }
 }

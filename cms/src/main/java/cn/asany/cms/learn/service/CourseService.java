@@ -47,8 +47,8 @@ public class CourseService {
     return courseDao.findById(id).orElse(null);
   }
 
-  public List<Course> course(List<PropertyFilter> filters) {
-    return courseDao.findAll(filters);
+  public List<Course> course(PropertyFilter filter) {
+    return courseDao.findAll(filter);
   }
 
   @Transactional(rollbackFor = Exception.class)
@@ -83,8 +83,8 @@ public class CourseService {
     return save;
   }
 
-  public Page<Course> findPage(Pageable pageable, List<PropertyFilter> filters) {
-    return courseDao.findPage(pageable, filters);
+  public Page<Course> findPage(Pageable pageable, PropertyFilter filter) {
+    return courseDao.findPage(pageable, filter);
   }
 
   @Transactional(rollbackFor = Exception.class)

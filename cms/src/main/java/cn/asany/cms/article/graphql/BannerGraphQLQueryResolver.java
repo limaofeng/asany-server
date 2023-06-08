@@ -1,7 +1,7 @@
 package cn.asany.cms.article.graphql;
 
 import cn.asany.cms.article.domain.Banner;
-import cn.asany.cms.article.graphql.input.BannerFilter;
+import cn.asany.cms.article.graphql.input.BannerWhereInput;
 import cn.asany.cms.article.service.BannerService;
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import java.util.List;
@@ -28,11 +28,11 @@ public class BannerGraphQLQueryResolver implements GraphQLQueryResolver {
   /**
    * 横幅广告
    *
-   * @param filter 筛选
+   * @param where 筛选
    * @param orderBy 排序
    * @return List<Banner>
    */
-  public List<Banner> banners(BannerFilter filter, Sort orderBy) {
-    return this.bannerService.findAll(filter.build(), orderBy);
+  public List<Banner> banners(BannerWhereInput where, Sort orderBy) {
+    return this.bannerService.findAll(where.toFilter(), orderBy);
   }
 }

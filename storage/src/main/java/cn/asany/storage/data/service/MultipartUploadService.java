@@ -84,16 +84,15 @@ public class MultipartUploadService {
   public Optional<MultipartUpload> findMultipartUploadByHash(
       String hash, String space, String storage) {
     return this.multipartUploadDao.findOne(
-        PropertyFilter.builder()
+        PropertyFilter.newFilter()
             .equal("hash", hash)
             .equal("space", space)
-            .equal("storage", storage)
-            .build());
+            .equal("storage", storage));
   }
 
   public Optional<MultipartUpload> findMultipartUploadByHash(String hash, String storage) {
     return this.multipartUploadDao.findOne(
-        PropertyFilter.builder().equal("hash", hash).equal("storage", storage).build());
+        PropertyFilter.newFilter().equal("hash", hash).equal("storage", storage));
   }
 
   public void updateMultipartUpload(MultipartUpload multipartUpload) {

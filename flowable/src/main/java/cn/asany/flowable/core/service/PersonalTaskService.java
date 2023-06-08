@@ -11,6 +11,7 @@ import org.flowable.task.api.Task;
 import org.flowable.task.api.TaskBuilder;
 import org.flowable.task.api.TaskInfo;
 import org.flowable.task.api.TaskQuery;
+import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;

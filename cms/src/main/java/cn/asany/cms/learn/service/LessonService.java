@@ -12,7 +12,8 @@ import cn.asany.cms.learn.domain.enums.LessonScheduleType;
 import cn.asany.cms.learn.graphql.inputs.LessonInput;
 import java.text.NumberFormat;
 import java.util.List;
-import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
+
+import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,10 +39,10 @@ public class LessonService {
     if (CollectionUtils.isEmpty(lessonList)) {
       return null;
     }
-    PropertyFilterBuilder builder = new PropertyFilterBuilder();
-    builder.equal("course", course.getId());
-    builder.equal("learner.employee.id", learner);
-    List<LessonRecord> lessonRecords = lessonRecordDao.findAll(builder.build());
+    PropertyFilter propertyFilter = PropertyFilter.newFilter();
+    propertyFilter.equal("course", course.getId());
+    propertyFilter.equal("learner.employee.id", learner);
+    List<LessonRecord> lessonRecords = lessonRecordDao.findAll(propertyFilter);
     for (LessonRecord lessonRecord : lessonRecords) {
       // 每个章节的学习时间
       float lessonProgress = course.getDuration() / lessonList.size();

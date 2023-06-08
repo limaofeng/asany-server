@@ -32,6 +32,6 @@ public class DictGraphQLResolver implements GraphQLResolver<Dict> {
   public List<Dict> parents(Dict dict) {
     String[] codes = StringUtil.tokenizeToStringArray(dict.getPath(), Dict.PATH_SEPARATOR);
     return dictService.findAll(
-        PropertyFilter.builder().in("code", codes).build(), Sort.by("index").ascending());
+        PropertyFilter.newFilter().in("code", codes), Sort.by("index").ascending());
   }
 }

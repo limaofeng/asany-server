@@ -49,7 +49,7 @@ input WebsiteCreateInput {
   channel: ID
 }
 
-input WebsiteFilter {
+input WebsiteWhereInput {
   name: String
 }
 
@@ -61,7 +61,7 @@ extend type Query {
     """
     筛选条件
     """
-    filter: WebsiteFilter = {}
+    where: WebsiteWhereInput = {}
     """
     排序
     """

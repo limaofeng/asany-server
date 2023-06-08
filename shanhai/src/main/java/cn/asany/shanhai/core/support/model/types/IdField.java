@@ -4,7 +4,7 @@ import cn.asany.shanhai.core.domain.ModelFieldMetadata;
 import cn.asany.shanhai.core.support.model.DatabaseColumn;
 import cn.asany.shanhai.core.support.model.FieldType;
 import lombok.Data;
-import org.jfantasy.framework.dao.jpa.PropertyFilter.MatchType;
+import org.jfantasy.framework.dao.MatchType;
 import org.springframework.stereotype.Component;
 
 /**

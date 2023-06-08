@@ -45,10 +45,9 @@ public class IconService {
     Optional<Icon> optionalIcon = this.iconDao.findById(id);
     Optional<LibraryItem> optionalItem =
         this.libraryItemDao.findOne(
-            PropertyFilter.builder()
+            PropertyFilter.newFilter()
                 .equal("resourceId", id)
-                .equal("resourceType", Icon.RESOURCE_NAME)
-                .build());
+                .equal("resourceType", Icon.RESOURCE_NAME));
     if (!optionalIcon.isPresent() || !optionalItem.isPresent()) {
       throw new ValidationException("图标{" + id + "}不存在");
     }
@@ -192,8 +191,8 @@ public class IconService {
     return icon;
   }
 
-  public Set<Icon> findAll(List<PropertyFilter> filters) {
+  public Set<Icon> findAll(PropertyFilter filter) {
     return libraryConverter.toIcons(
-        this.libraryItemDao.findAllByTagWithIcon(filters).stream().collect(Collectors.toSet()));
+      new HashSet<>(this.libraryItemDao.findAllByTagWithIcon(filter)));
   }
 }

@@ -1,7 +1,7 @@
 package cn.asany.flowable.core.graphql;
 
 import cn.asany.flowable.core.domain.ProcessModel;
-import cn.asany.flowable.core.graphql.input.ProcessModelFilter;
+import cn.asany.flowable.core.graphql.input.ProcessModelWhereInput;
 import cn.asany.flowable.core.graphql.type.ProcessModelConnection;
 import cn.asany.flowable.core.service.ProcessModelService;
 import graphql.kickstart.tools.GraphQLMutationResolver;
@@ -13,6 +13,7 @@ import javax.servlet.http.Part;
 import lombok.extern.slf4j.Slf4j;
 import org.jfantasy.framework.dao.OrderBy;
 import org.jfantasy.framework.dao.Page;
+import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.security.LoginUser;
 import org.jfantasy.framework.security.SpringSecurityUtils;
 import org.jfantasy.graphql.context.AuthorizationGraphQLServletContext;
@@ -36,13 +37,13 @@ public class ProcessModelGraphQLRootResolver
   }
 
   public ProcessModelConnection processModels(
-      ProcessModelFilter filter, int currentPage, int pageSize, Sort orderBy) {
-    if ("self".equals(filter.getUser())) {
+    ProcessModelWhereInput where, int currentPage, int pageSize, Sort orderBy) {
+    if ("self".equals(where.getUser())) {
       LoginUser loginUser = SpringSecurityUtils.getCurrentUser();
-      filter.setUser(loginUser.getUid().toString());
+      where.setUser(loginUser.getUid().toString());
     }
     Page<ProcessModel> page =
-        processModelService.findPage(Page.of(currentPage, pageSize, OrderBy.sort(orderBy)), filter);
+        processModelService.findPage(Page.of(currentPage, pageSize, OrderBy.sort(orderBy)), PropertyFilter.newFilter());
     return Kit.connection(page, ProcessModelConnection.class);
   }
 

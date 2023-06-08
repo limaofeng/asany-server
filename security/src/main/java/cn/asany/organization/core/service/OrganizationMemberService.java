@@ -19,9 +19,6 @@ public class OrganizationMemberService {
   @Transactional(readOnly = true)
   public Optional<OrganizationMember> findOneByUserAndOrganization(Long user, Long organization) {
     return this.organizationMemberDao.findOne(
-        PropertyFilter.builder()
-            .equal("user.id", user)
-            .equal("organization.id", organization)
-            .build());
+        PropertyFilter.newFilter().equal("user.id", user).equal("organization.id", organization));
   }
 }

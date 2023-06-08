@@ -24,7 +24,7 @@ public class DictDaoImpl extends ComplexJpaRepository<Dict, DictKey> implements 
     DictType dictType = em.getReference(DictType.class, type);
 
     Specification spec =
-        toSpecification(PropertyFilter.builder().startsWith("path", dictType.getPath()).build());
+        toSpecification(PropertyFilter.newFilter().startsWith("path", dictType.getPath()));
 
     Class clazz = DictType.class;
     List<DictType> types = super.getQuery(spec, clazz, Sort.unsorted()).getResultList();

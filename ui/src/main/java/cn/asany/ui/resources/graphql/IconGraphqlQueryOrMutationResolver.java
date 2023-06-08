@@ -3,13 +3,14 @@ package cn.asany.ui.resources.graphql;
 import cn.asany.ui.resources.convert.IconConverter;
 import cn.asany.ui.resources.domain.Icon;
 import cn.asany.ui.resources.graphql.input.IconCreateInput;
-import cn.asany.ui.resources.graphql.input.IconFilter;
+import cn.asany.ui.resources.graphql.input.IconWhereInput;
 import cn.asany.ui.resources.graphql.input.IconUpdateInput;
 import cn.asany.ui.resources.service.IconService;
 import graphql.kickstart.tools.GraphQLMutationResolver;
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import java.util.Set;
-import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
+
+import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.springframework.stereotype.Component;
 
@@ -30,16 +31,16 @@ public class IconGraphqlQueryOrMutationResolver
     this.iconConverter = iconConverter;
   }
 
-  public Set<Icon> icons(IconFilter filter) {
-    filter = ObjectUtil.defaultValue(filter, IconFilter::new);
-    PropertyFilterBuilder builder = filter.getBuilder();
+  public Set<Icon> icons(IconWhereInput where) {
+    where = ObjectUtil.defaultValue(where, IconWhereInput::new);
+    PropertyFilter propertyFilter = where.toFilter();
     // TODO: 需要替换新的写法
     //        if (filter.getLibrary_in() != null) {
     //            builder.and(new LibrarySpecification(filter.getLibrary_in()));
     //        } else if (filter.getLibrary() != null) {
     //            builder.and(new LibrarySpecification(filter.getLibrary()));
     //        }
-    return this.iconService.findAll(builder.build());
+    return this.iconService.findAll(propertyFilter);
   }
 
   public Icon createIcon(IconCreateInput input) {

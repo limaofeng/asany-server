@@ -9,11 +9,13 @@ import org.hibernate.Session;
 import org.hibernate.criterion.*;
 import org.hibernate.internal.CriteriaImpl;
 import org.hibernate.transform.ResultTransformer;
+import org.jfantasy.framework.dao.MatchType;
 import org.jfantasy.framework.dao.OrderBy;
 import org.jfantasy.framework.dao.Page;
 import org.jfantasy.framework.dao.hibernate.util.ReflectionUtils;
+import org.jfantasy.framework.dao.jpa.JpaDefaultPropertyFilter;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
-import org.jfantasy.framework.dao.jpa.PropertyFilter.MatchType;
+import org.jfantasy.framework.dao.jpa.PropertyPredicate;
 import org.jfantasy.framework.error.IgnoreException;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.ognl.OgnlUtil;
@@ -93,20 +95,20 @@ public class ModelRepository {
     return criteria.list();
   }
 
-  public <T> List<T> findAll(List<PropertyFilter> filters) {
-    return find(buildPropertyFilterCriterion(filters));
+  public <T> List<T> findAll(PropertyFilter filter) {
+    return find(buildPropertyFilterCriterion(filter));
   }
 
-  public <T> List<T> findAll(List<PropertyFilter> filters, int offset, int limit, OrderBy orderBy) {
-    Criteria c = distinct(createCriteria(buildPropertyFilterCriterion(filters)));
+  public <T> List<T> findAll(PropertyFilter filter, int offset, int limit, OrderBy orderBy) {
+    Criteria c = distinct(createCriteria(buildPropertyFilterCriterion(filter)));
     c.setFirstResult(offset);
     c.setMaxResults(limit);
     setOrderBy(c, orderBy);
     return c.list();
   }
 
-  public <T> Page<T> findPage(Page<T> page, List<PropertyFilter> filters) {
-    Criterion[] criterions = buildPropertyFilterCriterion(filters);
+  public <T> Page<T> findPage(Page<T> page, PropertyFilter filter) {
+    Criterion[] criterions = buildPropertyFilterCriterion(filter);
     return findPage(page, criterions);
   }
 
@@ -187,13 +189,14 @@ public class ModelRepository {
     return source;
   }
 
-  protected Criterion[] buildPropertyFilterCriterion(List<PropertyFilter> filters) {
+  protected Criterion[] buildPropertyFilterCriterion(PropertyFilter filter) {
     List<Criterion> criterionList = new ArrayList<>();
-    for (PropertyFilter filter : filters) {
-      Object propertyValue = getPropertyValue(filter);
+    List<PropertyPredicate> predicates = ((JpaDefaultPropertyFilter) filter).build();
+    for (PropertyPredicate predicate : predicates) {
+      Object propertyValue = getPropertyValue(predicate);
       Criterion criterion =
           buildPropertyFilterCriterion(
-              filter.getPropertyName(), propertyValue, filter.getMatchType());
+              predicate.getPropertyName(), propertyValue, predicate.getMatchType());
       if (criterion == null) {
         continue;
       }
@@ -209,8 +212,8 @@ public class ModelRepository {
     return matchType == MatchType.AND ? Restrictions.and(criteria) : Restrictions.or(criteria);
   }
 
-  private Object getPropertyValue(PropertyFilter filter) {
-    return filter.getPropertyValue();
+  private Object getPropertyValue(PropertyPredicate predicate) {
+    return predicate.getPropertyValue();
   }
 
   protected Criterion buildPropertyFilterCriterion(
@@ -218,7 +221,7 @@ public class ModelRepository {
     if (matchType == MatchType.OR || matchType == MatchType.AND) {
       return conjunction(
           matchType,
-          ((List<List<PropertyFilter>>) propertyValue)
+          ((List<PropertyFilter>) propertyValue)
               .stream()
                   .map(item -> conjunction(MatchType.AND, buildPropertyFilterCriterion(item)))
                   .toArray(Criterion[]::new));

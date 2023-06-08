@@ -3,13 +3,13 @@ enum ApplicationIdType {
   ID
 }
 
-input ApplicationFilter {
+input ApplicationWhereInput {
   id_in: [String]
   # 分类
   enabled: Boolean
 }
 
-input RouteFilter {
+input RouteWhereInput {
   space: ID = "web"
   """
   是否启用
@@ -392,7 +392,7 @@ type Application {
   """
   路由
   """
-  routes(filter: RouteFilter = {}): [Route!]!
+  routes(where: RouteWhereInput = {}): [Route!]!
   """
   菜单
   """
@@ -567,7 +567,7 @@ extend type Query {
   """
   所有的应用
   """
-  applications(filter: ApplicationFilter = {}): [Application!]!
+  applications(where: ApplicationWhereInput = {}): [Application!]!
   """
   查询单个应用的信息
   """

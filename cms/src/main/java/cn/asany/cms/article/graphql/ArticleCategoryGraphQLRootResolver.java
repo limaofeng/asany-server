@@ -2,7 +2,7 @@ package cn.asany.cms.article.graphql;
 
 import cn.asany.cms.article.converter.ArticleCategoryConverter;
 import cn.asany.cms.article.domain.ArticleCategory;
-import cn.asany.cms.article.graphql.input.ArticleCategoryFilter;
+import cn.asany.cms.article.graphql.input.ArticleCategoryWhereInput;
 import cn.asany.cms.article.graphql.input.ArticleCategoryInput;
 import cn.asany.cms.article.service.ArticleCategoryService;
 import graphql.kickstart.tools.GraphQLMutationResolver;
@@ -33,11 +33,11 @@ public class ArticleCategoryGraphQLRootResolver
    *
    * @return List<ArticleCategory>
    */
-  public List<ArticleCategory> articleCategories(ArticleCategoryFilter filter, Sort orderBy) {
+  public List<ArticleCategory> articleCategories(ArticleCategoryWhereInput filter, Sort orderBy) {
     if (orderBy != null) {
-      return channelService.findAllArticle(filter.build(), orderBy);
+      return channelService.findAllArticle(filter.toFilter(), orderBy);
     } else {
-      return channelService.findAll(filter.build());
+      return channelService.findAll(filter.toFilter());
     }
   }
 

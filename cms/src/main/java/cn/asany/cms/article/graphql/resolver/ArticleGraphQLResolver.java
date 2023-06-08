@@ -4,7 +4,7 @@ import cn.asany.cms.article.domain.Article;
 import cn.asany.cms.article.domain.ArticleBody;
 import cn.asany.cms.article.domain.ArticleCategory;
 import cn.asany.cms.article.graphql.enums.ArticleStarType;
-import cn.asany.cms.article.graphql.input.CommentFilter;
+import cn.asany.cms.article.graphql.input.CommentWhereInput;
 import cn.asany.cms.article.graphql.type.CommentConnection;
 import cn.asany.cms.article.graphql.type.Starrable;
 import cn.asany.security.core.domain.Permission;
@@ -101,7 +101,7 @@ public class ArticleGraphQLResolver implements GraphQLResolver<Article> {
   //    }
 
   public CommentConnection comments(
-      Article article, CommentFilter filter, int page, int pageSize, Sort orderBy) {
+    Article article, CommentWhereInput where, int page, int pageSize, Sort orderBy) {
     CommentConnection comments = new CommentConnection();
     //    if (article.getCategory() == ArticleCategory.news) {
     //      comments =

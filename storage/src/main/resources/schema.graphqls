@@ -157,7 +157,7 @@ input AcceptFolder {
   subfolders: Boolean = false
 }
 
-input FileFilter {
+input FileWhereInput {
   """
   媒体类型
   """
@@ -213,15 +213,15 @@ input FileFilter {
   """
   NOT 子句
   """
-  NOT: [FileFilter]
+  NOT: [FileWhereInput]
   """
   AND 子句
   """
-  AND: [FileFilter]
+  AND: [FileWhereInput]
   """
   OR 子句
   """
-  OR: [FileFilter]
+  OR: [FileWhereInput]
 }
 
 type FileObjectConnection {
@@ -315,7 +315,7 @@ extend type Query {
     """
     过滤器
     """
-    filter: FileFilter = {}
+    where: FileWhereInput = {}
     """
     第几页
     """

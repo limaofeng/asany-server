@@ -114,7 +114,7 @@ input ArticleCategoryUpdateInput {
   page: PageComponentInput
 }
 
-input ArticleFilter {
+input ArticleWhereInput {
   # 关键字
   Keyword: String
   # 标签
@@ -126,9 +126,9 @@ input ArticleFilter {
   # 多个栏目
   channel_in: [ID]
   # 复杂查询支持
-  and: [ArticleFilter]
+  and: [ArticleWhereInput]
   # 复杂查询支持
-  or: [ArticleFilter]
+  or: [ArticleWhereInput]
   # 发布状态
   status: ArticleStatus
   # 发布状态
@@ -145,7 +145,7 @@ input ArticleFilter {
   validity: Boolean
 }
 
-input BannerFilter {
+input BannerWhereInput {
   # ID 查询
   id_in: [ID]
   # 是否启用
@@ -291,7 +291,7 @@ type ArticleCategory {
     """
     筛选
     """
-    filter: ArticleFilter = {}
+    where: ArticleWhereInput = {}
     # 跳过
     skip: Int = 0
     # 游标定位 之后
@@ -375,7 +375,7 @@ type Article {
   """
   bodyHtml: String
   #查询评论
-  #    comments(filter: CommentFilter, page: Int = 1, pageSize: Int = 15, orderBy: OrderBy = "unsorted"): CommentConnection
+  #    comments(filter: CommentWhereInput, page: Int = 1, pageSize: Int = 15, orderBy: OrderBy = "unsorted"): CommentConnection
   """
   文章分类
   """
@@ -715,7 +715,7 @@ input AcceptArticleCategory {
   subColumns: Boolean = false
 }
 
-input ArticleCategoryFilter {
+input ArticleCategoryWhereInput {
   """
   名称
   """
@@ -735,7 +735,7 @@ input PermissionInput {
   grants: [String]
 }
 
-input ArticleFeatureFilter {
+input ArticleFeatureWhereInput {
   # 名称
   name: String
 }
@@ -849,7 +849,7 @@ extend type Query {
   全部文章
   """
   articles(
-    filter: ArticleFilter
+    where: ArticleWhereInput
     first: Int = 0
     page: Int = 1
     pageSize: Int = 15
@@ -859,7 +859,7 @@ extend type Query {
   文章栏目
   """
   articleCategories(
-    filter: ArticleCategoryFilter = {}
+    where: ArticleCategoryWhereInput = {}
     orderBy: OrderBy = "unsorted"
   ): [ArticleCategory!]!
   """
@@ -867,7 +867,7 @@ extend type Query {
   """
   articleTags(
     organization: ID!
-    filter: ArticleCategoryFilter
+    where: ArticleCategoryWhereInput
     orderBy: OrderBy = "unsorted"
   ): [ArticleTag]
   """
@@ -891,7 +891,7 @@ extend type Query {
   starredArticles(
     uid: ID!
     starType: ArticleStarType!
-    filter: ArticleFilter = {}
+    where: ArticleWhereInput = {}
     page: Int = 1
     pageSize: Int = 15
     orderBy: OrderBy = "unsorted"
@@ -901,7 +901,7 @@ extend type Query {
   """
   articleFeatures(
     organization: ID!
-    filter: ArticleFeatureFilter = {}
+    where: ArticleFeatureWhereInput = {}
     orderBy: OrderBy = "createdAt_DESC"
   ): [ArticleFeature]
   """
@@ -911,7 +911,7 @@ extend type Query {
   # 横幅广告
   banner(id: ID!): Banner
   # 横幅广告
-  banners(filter: BannerFilter = {}, orderBy: OrderBy = "unsorted"): [Banner]
+  banners(where: BannerWhereInput = {}, orderBy: OrderBy = "unsorted"): [Banner]
 }
 
 type Mutation {

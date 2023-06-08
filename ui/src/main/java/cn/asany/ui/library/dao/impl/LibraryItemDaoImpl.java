@@ -6,8 +6,12 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import org.jfantasy.framework.dao.jpa.ComplexJpaRepository;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
-import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
 
+/**
+ * LibraryItemDaoImpl
+ *
+ * @author limaofeng
+ */
 public class LibraryItemDaoImpl extends ComplexJpaRepository<LibraryItem, Long>
     implements LibraryItemDao {
 
@@ -17,15 +21,15 @@ public class LibraryItemDaoImpl extends ComplexJpaRepository<LibraryItem, Long>
 
   @Override
   public List<LibraryItem> findAllByTagWithIcon(Long libraryId, String tag) {
-    PropertyFilterBuilder builder = PropertyFilter.builder();
-    builder.or(
-        PropertyFilter.builder().equal("tags", tag).build(),
-        PropertyFilter.builder().startsWith("tags", tag + "/").build());
-    return this.findAll(builder.equal("library.id", libraryId).build());
+    PropertyFilter filter = PropertyFilter.newFilter();
+    filter.or(
+        PropertyFilter.newFilter().equal("tags", tag),
+        PropertyFilter.newFilter().startsWith("tags", tag + "/"));
+    return this.findAll(filter.equal("library.id", libraryId));
   }
 
   @Override
-  public List<LibraryItem> findAllByTagWithIcon(List<PropertyFilter> filters) {
-    return super.findAll(filters);
+  public List<LibraryItem> findAllByTagWithIcon(PropertyFilter filter) {
+    return super.findAll(filter);
   }
 }

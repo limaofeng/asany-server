@@ -119,7 +119,7 @@ public class OplogService implements InitializingBean {
     }
   }
 
-  public List<Oplog> oplogs(List<PropertyFilter> filters) {
-    return this.oplogDao.findAll(filters, Sort.by("createdAt"));
+  public List<Oplog> oplogs(PropertyFilter filter) {
+    return this.oplogDao.findAll(filter, Sort.by("createdAt"));
   }
 }

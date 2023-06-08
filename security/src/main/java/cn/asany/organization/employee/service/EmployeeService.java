@@ -82,8 +82,8 @@ public class EmployeeService {
     this.passwordEncoder = passwordEncoder;
   }
 
-  public Page<Employee> findPage(Pageable pageable, List<PropertyFilter> filters) {
-    return employeeDao.findPage(pageable, filters);
+  public Page<Employee> findPage(Pageable pageable, PropertyFilter filter) {
+    return employeeDao.findPage(pageable, filter);
   }
 
   public Employee save(Long orgId, MemberRole role, Employee employee) {
@@ -143,10 +143,9 @@ public class EmployeeService {
 
   private Optional<EmployeeStatus> getStatus(OrganizationDimension dimension, String code) {
     return this.employeeStatusDao.findOne(
-        PropertyFilter.builder()
+        PropertyFilter.newFilter()
             .equal("dimension.id", dimension.getId())
-            .equal("code", code)
-            .build());
+            .equal("code", code));
   }
 
   //    /**
@@ -478,8 +477,8 @@ public class EmployeeService {
                     root.join("employeePositions").join("organization").get("id"), orgId));
   }
 
-  public List<Employee> findAll(List<PropertyFilter> filters) {
-    return this.employeeDao.findAll(filters);
+  public List<Employee> findAll(PropertyFilter filter) {
+    return this.employeeDao.findAll(filter);
   }
 
   public Employee findOneBySN(String sn) {
@@ -547,9 +546,9 @@ public class EmployeeService {
   }
 
   public List<Employee> findAllByDepartment(Long id) {
-    PropertyFilterBuilder builder = PropertyFilter.builder();
-    builder.equal("employeePositions.department.id", id);
-    return this.employeeDao.findAll(builder.build());
+    PropertyFilter filter = PropertyFilter.newFilter();
+    filter.equal("employeePositions.department.id", id);
+    return this.employeeDao.findAll(filter);
   }
 
   public Long totalEmployeeNumber(Department department) {
@@ -667,20 +666,20 @@ public class EmployeeService {
     return employees;
   }
 
-  public Long findEmployeeCount(List<PropertyFilter> filters) {
-    return employeeDao.count(filters);
+  public Long findEmployeeCount(PropertyFilter filter) {
+    return employeeDao.count(filter);
   }
 
   public Long findEmployeeCount(Department department, List<String> status) {
-    PropertyFilterBuilder builder = new PropertyFilterBuilder();
+    PropertyFilter filter = PropertyFilter.newFilter();
     // 根据部门path路径和人员状态过滤
-    builder.startsWith("employeePositions.department.path", department.getPath());
+    filter.startsWith("employeePositions.department.path", department.getPath());
     if (status != null) {
       for (String statu : status) {
-        builder.equal("employeePositions.status.status.code", statu);
+        filter.equal("employeePositions.status.status.code", statu);
       }
     }
-    return employeeDao.count(builder.build());
+    return employeeDao.count(filter);
   }
 
   //    public Optional<OrganizationEmployee> getOrganizationEmployee(Employee employee) {
@@ -707,7 +706,7 @@ public class EmployeeService {
   //        if (CollectionUtils.isEmpty(deptIds)) {
   //            return "";
   //        }
-  //        List<PropertyFilter> filters = new DepartmentFilter().getBuilder()
+  //        PropertyFilter filter = new DepartmentFilter().getBuilder()
   //            .equal("organization.id", orgId)
   //            .in("id", deptIds)
   //            .build();
@@ -1037,9 +1036,9 @@ public class EmployeeService {
   }
 
   public Optional<Employee> findOneByMobile(String mobile) {
-    PropertyFilterBuilder builder = PropertyFilter.builder();
-    builder.equal("mobile", mobile);
-    List<Employee> employees = this.employeeDao.findAll(builder.build());
+    PropertyFilter filter = PropertyFilter.newFilter();
+    filter.equal("mobile", mobile);
+    List<Employee> employees = this.employeeDao.findAll(filter);
     if (employees.isEmpty()) {
       return Optional.empty();
     }
@@ -1047,10 +1046,10 @@ public class EmployeeService {
   }
 
   public Optional<Employee> findOneByLink(LinkType dingtalk, String id) {
-    PropertyFilterBuilder builder = PropertyFilter.builder();
-    builder.equal("links.type", dingtalk);
-    builder.equal("links.linkId", id);
-    List<Employee> employees = this.employeeDao.findAll(builder.build());
+    PropertyFilter filter = PropertyFilter.newFilter();
+    filter.equal("links.type", dingtalk);
+    filter.equal("links.linkId", id);
+    List<Employee> employees = this.employeeDao.findAll(filter);
     if (employees.isEmpty()) {
       return Optional.empty();
     }
@@ -1061,10 +1060,10 @@ public class EmployeeService {
     if (provider != SocialProvider.dingtalk) {
       throw new ValidationException("1002004", "不支持 provider = " + provider + " 绑定失败");
     }
-    PropertyFilterBuilder builder = PropertyFilter.builder();
-    builder.equal("employee.id", employee.getId());
-    builder.equal("type", LinkType.valueOf(provider.name()));
-    Optional<EmployeeLink> optional = employeeLinkDao.findOne(builder.build());
+    PropertyFilter filter = PropertyFilter.newFilter();
+    filter.equal("employee.id", employee.getId());
+    filter.equal("type", LinkType.valueOf(provider.name()));
+    Optional<EmployeeLink> optional = employeeLinkDao.findOne(filter);
     if (optional.isPresent()) {
       EmployeeLink link = optional.get();
       link.setLinkId(id);
@@ -1081,10 +1080,10 @@ public class EmployeeService {
   }
 
   public void disconnect(Employee employee, SocialProvider provider) {
-    PropertyFilterBuilder builder = PropertyFilter.builder();
-    builder.equal("employee.id", employee.getId());
-    builder.equal("type", LinkType.valueOf(provider.name()));
-    Optional<EmployeeLink> optional = employeeLinkDao.findOne(builder.build());
+    PropertyFilter filter = PropertyFilter.newFilter();
+    filter.equal("employee.id", employee.getId());
+    filter.equal("type", LinkType.valueOf(provider.name()));
+    Optional<EmployeeLink> optional = employeeLinkDao.findOne(filter);
     if (!optional.isPresent()) {
       return;
     }

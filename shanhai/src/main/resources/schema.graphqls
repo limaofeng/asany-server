@@ -125,7 +125,7 @@ input ModelFieldInput {
   databaseColumnName: String
 }
 
-input ModelFilter {
+input ModelWhereInput {
   type: ModelType
   type_not: ModelType
   type_in: [ModelType]
@@ -135,12 +135,12 @@ input ModelFilter {
   name: String
   name_contains: String
   databaseTableName: String
-  AND: [ModelFilter]
-  OR: [ModelFilter]
-  NOT: [ModelFilter]
+  AND: [ModelWhereInput]
+  OR: [ModelWhereInput]
+  NOT: [ModelWhereInput]
 }
 
-input ModelFieldFilter {
+input ModelFieldWhereInput {
   code: String
   code_contains: String
   name: String
@@ -493,7 +493,7 @@ type DataSetField {
   name: String
 }
 
-type DataSetFilter {
+type DataSetWhereInput {
   name: String
 }
 
@@ -505,7 +505,7 @@ type DataSet {
   """
   数据集筛选
   """
-  filters: [DataSetFilter]
+  filters: [DataSetWhereInput]
   """
   数据结果
   """
@@ -536,13 +536,13 @@ type Module {
   models: [Model!]!
 }
 
-input ModuleFilter {
+input ModuleWhereInput {
   id: ID
   code: String
   name: String
 }
 
-input ModelViewFilter {
+input ModelViewWhereInput {
   name: String
   type: ModelViewType
   defaultView: Boolean
@@ -581,7 +581,7 @@ extend type Query {
   查询全部模块
   """
   modules(
-    filter: ModuleFilter = {}
+    where: ModuleWhereInput = {}
     offset: Int = 0
     limit: Int = 15
     orderBy: OrderBy = "unsorted"
@@ -590,7 +590,7 @@ extend type Query {
   查询全部模块（分页）
   """
   modulesConnection(
-    filter: ModuleFilter = {}
+    where: ModuleWhereInput = {}
     page: Int = 1
     pageSize: Int = 15
     orderBy: OrderBy = "unsorted"
@@ -600,7 +600,7 @@ extend type Query {
   """
   models(
     module: ID!
-    filter: ModelFilter = {}
+    where: ModelWhereInput = {}
     offset: Int = 0
     limit: Int = 15
     orderBy: OrderBy = "unsorted"
@@ -610,7 +610,7 @@ extend type Query {
   """
   modelsConnection(
     module: ID!
-    filter: ModelFilter = {}
+    where: ModelWhereInput = {}
     page: Int = 1
     pageSize: Int = 15
     orderBy: OrderBy = "unsorted"
@@ -624,7 +624,7 @@ extend type Query {
   """
   modelFields(
     model: ID!
-    filter: ModelFieldFilter = {}
+    where: ModelFieldWhereInput = {}
     offset: Int = 0
     limit: Int = 15
     orderBy: OrderBy = "sort_asc"
@@ -666,7 +666,7 @@ extend type Query {
   """
   modelViews(
     module: ID!
-    filter: ModelViewFilter = {}
+    where: ModelViewWhereInput = {}
     offset: Int = 0
     limit: Int = 15
     orderBy: OrderBy = "unsorted"

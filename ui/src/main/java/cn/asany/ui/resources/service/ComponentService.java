@@ -33,8 +33,8 @@ public class ComponentService {
     this.libraryItemDao = libraryItemDao;
   }
 
-  public Page<Component> findPage(Pageable pageable, List<PropertyFilter> filters) {
-    return componentDao.findPage(pageable, filters);
+  public Page<Component> findPage(Pageable pageable, PropertyFilter filter) {
+    return componentDao.findPage(pageable, filter);
   }
 
   public Component save(Component component) {
@@ -70,10 +70,9 @@ public class ComponentService {
     if (libraryId != null) {
       Optional<LibraryItem> itemOptional =
           this.libraryItemDao.findOne(
-              PropertyFilter.builder()
+              PropertyFilter.newFilter()
                   .equal("library.id", libraryId)
-                  .equal("resourceId", id)
-                  .build());
+                  .equal("resourceId", id));
       if (itemOptional.isPresent()) {
         LibraryItem item = itemOptional.get();
         item.setTags(tags);
@@ -86,7 +85,7 @@ public class ComponentService {
 
   public void delete(Long id) {
     this.libraryItemDao.deleteAll(
-        this.libraryItemDao.findAll(PropertyFilter.builder().equal("resourceId", id).build()));
+        this.libraryItemDao.findAll(PropertyFilter.newFilter().equal("resourceId", id)));
     this.componentDao.deleteById(id);
   }
 

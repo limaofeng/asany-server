@@ -1,18 +1,20 @@
 package cn.asany.cms.learn.graphql.inputs;
 
+import cn.asany.cms.learn.domain.Learner;
 import cn.asany.cms.learn.domain.enums.LearnerType;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.List;
 import lombok.Data;
-import org.jfantasy.framework.dao.jpa.PropertyFilter;
-import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
+import lombok.EqualsAndHashCode;
+import org.jfantasy.graphql.inputs.WhereInput;
 
+/**
+ * 学习者查询条件
+ *
+ * @author limaofeng
+ */
+@EqualsAndHashCode(callSuper = true)
 @Data
-public class LearnerFilter {
-
-  private PropertyFilterBuilder builder = new PropertyFilterBuilder();
-
-  private PropertyFilterBuilder employeeBuilder = PropertyFilter.builder();
+public class LearnerFilter extends WhereInput<LearnerFilter, Learner> {
 
   private LearnerType type;
 
@@ -21,47 +23,44 @@ public class LearnerFilter {
 
   @JsonProperty(value = "employee")
   public void setEmployee(Long employee) {
-    builder.equal("employee.id", employee);
+    filter.equal("employee.id", employee);
   }
 
   @JsonProperty(value = "type")
   public void setType(LearnerType learnerType) {
     this.type = learnerType;
     if (LearnerType.compulsory == this.type) {
-      builder.and(employeeBuilder);
+      filter.and(filter);
     } else {
-      builder.equal("type", learnerType);
+      filter.equal("type", learnerType);
     }
   }
 
   @JsonProperty(value = "name")
   public void setName(String name) {
     if (LearnerType.compulsory == this.type) {
-      employeeBuilder.contains("name", name);
+      filter.contains("name", name);
     } else {
-      builder.equal("employee.name", name);
+      filter.equal("employee.name", name);
     }
   }
 
   @JsonProperty(value = "department")
   public void setDepartment(Long department) {
     if (LearnerType.compulsory == this.type) {
-      employeeBuilder.equal("employeePositions.department.id", department);
+      filter.equal("employeePositions.department.id", department);
     } else {
-      builder.equal("employee.employeePositions.department.id", department);
+      filter.equal("employee.employeePositions.department.id", department);
     }
   }
 
   @JsonProperty(value = "learningProgress")
   public void setLearningProgress(int learningProgress) {
     if (learningProgress == COMPLETE) {
-      builder.equal("learningProgress", learningProgress);
+      filter.equal("learningProgress", learningProgress);
     } else {
-      builder.notEqual("learningProgress", COMPLETE);
+      filter.notEqual("learningProgress", COMPLETE);
     }
   }
 
-  public List<PropertyFilter> build() {
-    return this.builder.build();
-  }
 }

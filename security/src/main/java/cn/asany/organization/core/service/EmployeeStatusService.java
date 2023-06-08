@@ -22,7 +22,7 @@ public class EmployeeStatusService {
         .orElse(null);
   }
 
-  public List<EmployeeStatus> findAll(List<PropertyFilter> filter) {
+  public List<EmployeeStatus> findAll(PropertyFilter filter) {
     return this.employeeStatusDao.findAll(filter, Sort.by("createdAt").descending());
   }
 

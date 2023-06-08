@@ -78,7 +78,7 @@ public class PositionService {
     return true;
   }
 
-  public List<Position> findAll(List<PropertyFilter> builder) {
-    return this.positionDao.findAll(builder, Sort.by("createdAt").descending());
+  public List<Position> findAll(PropertyFilter filter) {
+    return this.positionDao.findAll(filter, Sort.by("createdAt").descending());
   }
 }

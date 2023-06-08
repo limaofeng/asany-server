@@ -47,8 +47,8 @@ public class FansService {
     this.fansDao.deleteById(key);
   }
 
-  public Page<Fans> findPage(Pageable pageable, List<PropertyFilter> filters) {
-    return this.fansDao.findPage(pageable, filters);
+  public Page<Fans> findPage(Pageable pageable, PropertyFilter filter) {
+    return this.fansDao.findPage(pageable, filter);
   }
 
   public Fans save(String id, User user) {

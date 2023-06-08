@@ -1,8 +1,8 @@
 package cn.asany.flowable.core.dao;
 
 import cn.asany.flowable.core.domain.ProcessModel;
-import cn.asany.flowable.core.graphql.input.ProcessModelFilter;
 import org.jfantasy.framework.dao.Page;
+import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.dao.mybatis.sqlmapper.SqlMapper;
 import org.springframework.stereotype.Repository;
 
@@ -29,5 +29,5 @@ public interface ProcessModelDao extends SqlMapper {
    * @param filter 过滤条件
    * @return Page<ProcessModel>
    */
-  Page<ProcessModel> findPage(Page<ProcessModel> page, ProcessModelFilter filter);
+  Page<ProcessModel> findPage(Page<ProcessModel> page, PropertyFilter filter);
 }

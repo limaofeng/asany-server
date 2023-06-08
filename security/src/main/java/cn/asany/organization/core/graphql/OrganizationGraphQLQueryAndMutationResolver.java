@@ -3,8 +3,8 @@ package cn.asany.organization.core.graphql;
 import cn.asany.organization.core.convert.OrganizationConverter;
 import cn.asany.organization.core.domain.Department;
 import cn.asany.organization.core.domain.Organization;
-import cn.asany.organization.core.graphql.inputs.DepartmentFilter;
-import cn.asany.organization.core.graphql.inputs.OrganizationFilter;
+import cn.asany.organization.core.graphql.inputs.DepartmentWhereInput;
+import cn.asany.organization.core.graphql.inputs.OrganizationWhereInput;
 import cn.asany.organization.core.graphql.inputs.UpdateOrganizationProfileUpdateInput;
 import cn.asany.organization.core.graphql.resolvers.OrganizationGraphQLResolver;
 import cn.asany.organization.core.service.DepartmentService;
@@ -15,7 +15,8 @@ import graphql.kickstart.tools.GraphQLMutationResolver;
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import java.util.List;
 import java.util.Optional;
-import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
+
+import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.security.LoginUser;
 import org.jfantasy.framework.security.SpringSecurityUtils;
 import org.jfantasy.framework.util.regexp.RegexpConstant;
@@ -53,14 +54,14 @@ public class OrganizationGraphQLQueryAndMutationResolver
     this.organizationGraphQLResolver = organizationGraphQLResolver;
   }
 
-  public List<Organization> organizations(OrganizationFilter filter) {
-    PropertyFilterBuilder builder = filter.getBuilder();
+  public List<Organization> organizations(OrganizationWhereInput filter) {
+    PropertyFilter propertyFilter = filter.toFilter();
     LoginUser user = SpringSecurityUtils.getCurrentUser();
-    builder.notEqual("code", Organization.DEFAULT_ORGANIZATION_CODE);
+    propertyFilter.notEqual("code", Organization.DEFAULT_ORGANIZATION_CODE);
     if (user != null) {
-      builder.equal("members.user.id", user.getUid());
+      propertyFilter.equal("members.user.id", user.getUid());
     }
-    return organizationService.findAll(builder.build());
+    return organizationService.findAll(propertyFilter);
   }
 
   public Optional<Organization> organization(String id) {
@@ -77,7 +78,7 @@ public class OrganizationGraphQLQueryAndMutationResolver
    * @param filter 过滤器
    * @return List<Department> 部门集合
    */
-  public List<Department> departments(String organization, DepartmentFilter filter) {
+  public List<Department> departments(String organization, DepartmentWhereInput filter) {
     return null;
   }
 

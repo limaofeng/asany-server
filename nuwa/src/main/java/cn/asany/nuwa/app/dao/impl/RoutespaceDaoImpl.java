@@ -18,11 +18,11 @@ public class RoutespaceDaoImpl extends ComplexJpaRepository<Routespace, String>
 
   @Override
   public List<Routespace> findByIdsWithApplicationTemplate(Set<String> ids) {
-    return this.findAll(PropertyFilter.builder().in("id", ids).build());
+    return this.findAll(PropertyFilter.newFilter().in("id", ids));
   }
 
   @Override
   public Optional<Routespace> findByIdWithApplicationTemplate(String id) {
-    return this.findOne(PropertyFilter.builder().endsWith("id", id).build());
+    return this.findOne(PropertyFilter.newFilter().endsWith("id", id));
   }
 }

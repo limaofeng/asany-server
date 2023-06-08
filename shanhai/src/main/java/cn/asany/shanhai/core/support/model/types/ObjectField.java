@@ -3,6 +3,7 @@ package cn.asany.shanhai.core.support.model.types;
 import cn.asany.shanhai.core.domain.ModelFieldMetadata;
 import cn.asany.shanhai.core.support.model.FieldType;
 import lombok.Data;
+import org.jfantasy.framework.dao.MatchType;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 
 @Data
@@ -36,7 +37,7 @@ public class ObjectField implements FieldType<Object, Object> {
   }
 
   @Override
-  public PropertyFilter.MatchType[] filters() {
-    return new PropertyFilter.MatchType[] {};
+  public MatchType[] filters() {
+    return new MatchType[] {};
   }
 }

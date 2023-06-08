@@ -74,7 +74,7 @@ input ProjectCreateInput {
   description: String
 }
 
-input ProjectFilter {
+input ProjectWhereInput {
   name: String
 }
 
@@ -87,7 +87,7 @@ extend type Query {
   项目查询
   """
   projects(
-    filter: ProjectFilter = {}
+    where: ProjectWhereInput = {}
     page: Int = 1
     pageSize: Int = 15
     orderBy: OrderBy = "unsorted"

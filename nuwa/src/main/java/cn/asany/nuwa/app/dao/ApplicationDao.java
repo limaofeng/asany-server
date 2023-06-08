@@ -72,5 +72,5 @@ public interface ApplicationDao extends JpaRepository<Application, Long> {
   @EntityGraph(
       value = "Graph.Application.FetchClientDetails",
       type = EntityGraph.EntityGraphType.FETCH)
-  Optional<Application> findOneWithClientDetails(List<PropertyFilter> filters);
+  Optional<Application> findOneWithClientDetails(PropertyFilter filter);
 }

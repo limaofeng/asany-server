@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.util.*;
 import org.hibernate.Hibernate;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
-import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
 import org.jfantasy.framework.dao.mybatis.keygen.util.DataBaseKeyGenerator;
 import org.jfantasy.framework.error.ValidationException;
 import org.jfantasy.framework.util.common.StringUtil;
@@ -120,10 +119,7 @@ public class FileService {
   public synchronized FileDetail getFolderOrCreateIt(String name, Long parentFolder) {
     Optional<FileDetail> folderOptional =
         this.fileDetailDao.findOne(
-            PropertyFilter.builder()
-                .equal("name", name)
-                .equal("parentFile.id", parentFolder)
-                .build());
+            PropertyFilter.newFilter().equal("name", name).equal("parentFile.id", parentFolder));
     return folderOptional.orElseGet(() -> createFolder(name, new HashSet<>(), parentFolder));
   }
 
@@ -195,29 +191,28 @@ public class FileService {
 
   @Cacheable(key = "targetClass + '.' + methodName + '#' + #p0", value = "STORAGE")
   public Optional<FileDetail> findByPath(String path) {
-    return this.fileDetailDao.findOne(PropertyFilter.builder().equal("path", path).build());
+    return this.fileDetailDao.findOne(PropertyFilter.newFilter().equal("path", path));
   }
 
   public boolean exists(String name, Long folder, String storage) {
     return this.fileDetailDao.exists(
-        PropertyFilter.builder()
+        PropertyFilter.newFilter()
             .equal("storageConfig.id", storage)
             .equal("name", name)
-            .equal("parentFile.id", folder)
-            .build());
+            .equal("parentFile.id", folder));
   }
 
   public Optional<FileDetail> findByNamePath(String path) {
     String[] names = StringUtil.tokenizeToStringArray(path, FileObject.SEPARATOR);
     FileDetail parent = null;
     for (String name : names) {
-      PropertyFilterBuilder builder = PropertyFilter.builder().equal("name", name);
+      PropertyFilter filter = PropertyFilter.newFilter().equal("name", name);
       if (parent == null) {
-        builder.isNull("parentFile");
+        filter.isNull("parentFile");
       } else {
-        builder.equal("parentFile.id", path);
+        filter.equal("parentFile.id", path);
       }
-      Optional<FileDetail> file = this.fileDetailDao.findOne(builder.build());
+      Optional<FileDetail> file = this.fileDetailDao.findOne(filter);
       if (!file.isPresent()) {
         return Optional.empty();
       }
@@ -228,8 +223,7 @@ public class FileService {
 
   private FileDetail getRootFolderOrCreateIt() {
     Optional<FileDetail> rootFolder =
-        this.fileDetailDao.findOne(
-            PropertyFilter.builder().equal("path", FileObject.ROOT_PATH).build());
+        this.fileDetailDao.findOne(PropertyFilter.newFilter().equal("path", FileObject.ROOT_PATH));
     return rootFolder.orElseGet(
         () ->
             this.fileDetailDao.save(
@@ -245,27 +239,23 @@ public class FileService {
                     .build()));
   }
 
-  public Page<FileDetail> findPage(Pageable pageable, List<PropertyFilter> filters) {
-    return this.fileDetailDao.findPage(pageable, filters);
+  public Page<FileDetail> findPage(Pageable pageable, PropertyFilter filter) {
+    return this.fileDetailDao.findPage(pageable, filter);
   }
 
   public List<FileDetail> listFolder(String path, String storage, String orderBy) {
     return this.fileDetailDao.findAll(
-        PropertyFilter.builder()
+        PropertyFilter.newFilter()
             .equal("parentFolder.path", path)
             .equal("isDirectory", true)
-            .equal("storageConfig.id", storage)
-            .build(),
+            .equal("storageConfig.id", storage),
         Sort.by(orderBy));
   }
 
   @Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
   public List<FileDetail> listFileDetail(String path, String storageId, String orderBy) {
     return this.fileDetailDao.findAll(
-        PropertyFilter.builder()
-            .equal("folder.path", path)
-            .equal("storageConfig.id", storageId)
-            .build(),
+        PropertyFilter.newFilter().equal("folder.path", path).equal("storageConfig.id", storageId),
         Sort.by(orderBy));
   }
 
@@ -273,10 +263,7 @@ public class FileService {
   public FileDetail getFileDetailByMd5(String md5, String storageId) {
     List<FileDetail> fileDetails =
         this.fileDetailDao.findAll(
-            PropertyFilter.builder()
-                .equal("md5", md5)
-                .equal("storageConfig.id", storageId)
-                .build());
+            PropertyFilter.newFilter().equal("md5", md5).equal("storageConfig.id", storageId));
     if (fileDetails.isEmpty()) {
       return null;
     }
@@ -317,8 +304,8 @@ public class FileService {
     return space.get();
   }
 
-  public long count(List<PropertyFilter> filters) {
-    return this.fileDetailDao.count(filters);
+  public long count(PropertyFilter filter) {
+    return this.fileDetailDao.count(filter);
   }
 
   public List<FileDetail> getFileParentsById(Long id) {
@@ -333,7 +320,7 @@ public class FileService {
       }
       newPaths.add(basePath);
     }
-    return this.fileDetailDao.findAll(PropertyFilter.builder().in("path", newPaths).build());
+    return this.fileDetailDao.findAll(PropertyFilter.newFilter().in("path", newPaths));
   }
 
   public Space createStorageSpace(String id, String name, String path, String storage) {
@@ -364,13 +351,13 @@ public class FileService {
       throw new ValidationException("文件名不能包含以下字符：<,>,|,*,?,,/");
     }
 
-    PropertyFilterBuilder builder =
-        PropertyFilter.builder()
+    PropertyFilter filter =
+        PropertyFilter.newFilter()
             .notEqual("id", id)
             .equal("name", name)
             .equal("parentFile.id", fileDetail.getParentFile().getId());
 
-    if (this.fileDetailDao.exists(builder.build())) {
+    if (this.fileDetailDao.exists(filter)) {
       throw new ValidationException("重命名失败，文件名被占用");
     }
 
@@ -392,10 +379,7 @@ public class FileService {
     }
 
     if (this.fileDetailDao.exists(
-        PropertyFilter.builder()
-            .equal("parentFile.id", parent.getId())
-            .equal("name", name)
-            .build())) {
+        PropertyFilter.newFilter().equal("parentFile.id", parent.getId()).equal("name", name))) {
       throw new ValidationException("新建文件夹失败，文件名被占用");
     }
 
@@ -404,8 +388,8 @@ public class FileService {
     return createFolder(name, parent);
   }
 
-  public List<FileDetail> findAll(List<PropertyFilter> filters) {
-    return this.fileDetailDao.findAll(filters);
+  public List<FileDetail> findAll(PropertyFilter filter) {
+    return this.fileDetailDao.findAll(filter);
   }
 
   public Integer clearTrash(Long rootFolder) {
@@ -423,12 +407,11 @@ public class FileService {
 
     Optional<FileDetail> tempFolderOptional =
         this.fileDetailDao.findOne(
-            PropertyFilter.builder()
+            PropertyFilter.newFilter()
                 .equal("parentFile.id", rootFolder.getId())
                 .equal("name", FileDetail.NAME_OF_THE_TEMP_FOLDER)
                 .equal("labels.name", FileDetail.NAME_OF_THE_TEMP_FOLDER)
-                .equal("labels.namespace", FileLabel.SYSTEM_NAMESPACE)
-                .build());
+                .equal("labels.namespace", FileLabel.SYSTEM_NAMESPACE));
 
     return tempFolderOptional.orElseGet(
         () -> {
@@ -455,12 +438,11 @@ public class FileService {
 
     Optional<FileDetail> recycleBinOptional =
         this.fileDetailDao.findOne(
-            PropertyFilter.builder()
+            PropertyFilter.newFilter()
                 .equal("parentFile.id", rootFolder.getId())
                 .equal("name", FileDetail.NAME_OF_THE_RECYCLE_BIN)
                 .equal("labels.name", FileDetail.NAME_OF_THE_RECYCLE_BIN)
-                .equal("labels.namespace", FileLabel.SYSTEM_NAMESPACE)
-                .build());
+                .equal("labels.namespace", FileLabel.SYSTEM_NAMESPACE));
 
     return recycleBinOptional.orElseGet(
         () -> {
@@ -486,7 +468,7 @@ public class FileService {
   public Optional<FileDetail> closest(String path) {
     Optional<FileDetail> folder;
     do {
-      folder = this.fileDetailDao.findOne(PropertyFilter.builder().equal("path", path).build());
+      folder = this.fileDetailDao.findOne(PropertyFilter.newFilter().equal("path", path));
       if (folder.isPresent()) {
         break;
       }
@@ -521,7 +503,7 @@ public class FileService {
   private void cacheEvict(String path) {
     for (FileDetail subFile :
         this.fileDetailDao.findAll(
-            PropertyFilter.builder().startsWith("path", path).notEqual("path", path).build())) {
+            PropertyFilter.newFilter().startsWith("path", path).notEqual("path", path))) {
       cacheEvict(subFile);
     }
   }

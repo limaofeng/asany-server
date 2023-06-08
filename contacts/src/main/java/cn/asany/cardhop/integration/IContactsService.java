@@ -18,7 +18,7 @@ public interface IContactsService {
   List<ContactGroup> getGroups(ContactBook book, String namespace);
 
   Page<Contact> findPager(
-      ContactBook book, String namespace, Pageable pageable, List<PropertyFilter> filters);
+      ContactBook book, String namespace, Pageable pageable, PropertyFilter filter);
 
   Optional<Contact> findContactById(Long id);
 }

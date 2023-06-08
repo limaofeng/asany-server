@@ -22,7 +22,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 import lombok.SneakyThrows;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
-import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
 import org.jfantasy.framework.error.ValidationException;
 import org.jfantasy.framework.security.LoginUser;
 import org.jfantasy.framework.util.common.DateUtil;
@@ -60,11 +59,11 @@ public class CalendarService {
   }
 
   public Optional<Calendar> findByUrl(String url) {
-    return this.calendarDao.findOne(PropertyFilter.builder().equal("url", url).build());
+    return this.calendarDao.findOne(PropertyFilter.newFilter().equal("url", url));
   }
 
   public List<CalendarAccount> calendarAccounts(Long uid) {
-    return this.calendarAccountDao.findAll(PropertyFilter.builder().equal("owner.id", uid).build());
+    return this.calendarAccountDao.findAll(PropertyFilter.newFilter().equal("owner.id", uid));
   }
 
   public List<Calendar> calendars(Long uid) {
@@ -73,7 +72,7 @@ public class CalendarService {
 
   public List<CalendarSet> calendarSets(Long uid) {
     return this.calendarSetDao.findAll(
-        PropertyFilter.builder().equal("owner.id", uid).build(), Sort.by("index").ascending());
+        PropertyFilter.newFilter().equal("owner.id", uid), Sort.by("index").ascending());
   }
 
   public Optional<Calendar> findById(Long id) {
@@ -97,10 +96,10 @@ public class CalendarService {
    * @return List<CalendarEvent>
    */
   public List<CalendarEvent> calendarEventsByCalendarSet(Long calendarSet, Date starts, Date ends) {
-    PropertyFilterBuilder builder = PropertyFilter.builder().between("dates.date", starts, ends);
-    builder.equal("calendar.calendarSets.id", calendarSet);
+    PropertyFilter filter = PropertyFilter.newFilter().between("dates.date", starts, ends);
+    filter.equal("calendar.calendarSets.id", calendarSet);
     return this.calendarEventDao.findAllWithDates(
-        builder.build(), Sort.by("datetime.starts").ascending());
+        filter, Sort.by("datetime.starts").ascending());
   }
 
   public List<CalendarEvent> calendarEventsWithDaysByCalendar(Long calendar, Date date, Long days) {
@@ -128,10 +127,10 @@ public class CalendarService {
   }
 
   public List<CalendarEvent> calendarEventsByUid(Long uid, Date starts, Date ends) {
-    PropertyFilterBuilder builder = PropertyFilter.builder().between("dates.date", starts, ends);
-    builder.equal("calendar.account.owner.id", uid);
+    PropertyFilter filter = PropertyFilter.newFilter().between("dates.date", starts, ends);
+    filter.equal("calendar.account.owner.id", uid);
     return this.calendarEventDao.findAllWithDates(
-        builder.build(), Sort.by("datetime.starts").ascending());
+        filter, Sort.by("datetime.starts").ascending());
   }
 
   /**
@@ -183,7 +182,7 @@ public class CalendarService {
   public Calendar subscribe(String url) {
     net.fortuna.ical4j.model.Calendar icalendar = CalendarUtils.loadRemote(url);
 
-    if (this.calendarDao.exists(PropertyFilter.builder().equal("url", url).build())) {
+    if (this.calendarDao.exists(PropertyFilter.newFilter().equal("url", url))) {
       throw new ValidationException("该地址已经订阅");
     }
 
@@ -214,7 +213,7 @@ public class CalendarService {
         name = CALENDAR_DEFAULT_NAME + (i != 0 ? " (" + i + ")" : "");
         isExist =
             this.calendarDao.exists(
-                PropertyFilter.builder().equal("account.id", account).equal("name", name).build());
+                PropertyFilter.newFilter().equal("account.id", account).equal("name", name));
         i++;
       } while (isExist);
       builder.name(name);
@@ -237,7 +236,7 @@ public class CalendarService {
       Integer sourceIndex = source.getIndex();
       List<Calendar> calendars =
           this.calendarDao.findAll(
-              PropertyFilter.builder().equal("account.id", source.getAccount().getId()).build(),
+              PropertyFilter.newFilter().equal("account.id", source.getAccount().getId()),
               Sort.by("index").ascending());
       if (calendars.isEmpty()) {
         calendar.setIndex(1);
@@ -264,7 +263,7 @@ public class CalendarService {
 
     List<Calendar> calendars =
         this.calendarDao.findAll(
-            PropertyFilter.builder().equal("account.id", source.getAccount().getId()).build(),
+            PropertyFilter.newFilter().equal("account.id", source.getAccount().getId()),
             Sort.by("index").ascending());
 
     rearrangeCalendars(calendars, sourceIndex, calendars.size(), false);
@@ -322,7 +321,7 @@ public class CalendarService {
         name = CALENDAR_SET_DEFAULT_NAME + (i != 0 ? " (" + i + ")" : "");
         isExist =
             this.calendarSetDao.exists(
-                PropertyFilter.builder().equal("owner.id", uid).equal("name", name).build());
+                PropertyFilter.newFilter().equal("owner.id", uid).equal("name", name));
         i++;
       } while (isExist);
       builder.name(name);
@@ -350,7 +349,7 @@ public class CalendarService {
       Integer sourceIndex = source.getIndex();
       List<CalendarSet> calendarSets =
           this.calendarSetDao.findAll(
-              PropertyFilter.builder().equal("owner.id", source.getOwner().getId()).build(),
+              PropertyFilter.newFilter().equal("owner.id", source.getOwner().getId()),
               Sort.by("index").ascending());
       if (calendarSets.isEmpty()) {
         calendarSet.setIndex(1);
@@ -377,7 +376,7 @@ public class CalendarService {
 
     List<CalendarSet> calendarSets =
         this.calendarSetDao.findAll(
-            PropertyFilter.builder().equal("owner.id", source.getOwner().getId()).build(),
+            PropertyFilter.newFilter().equal("owner.id", source.getOwner().getId()),
             Sort.by("index").ascending());
 
     rearrange(calendarSets, sourceIndex, calendarSets.size(), false);
@@ -429,7 +428,7 @@ public class CalendarService {
 
   public boolean verifyAccount(Long account, LoginUser user) {
     return this.calendarAccountDao.exists(
-        PropertyFilter.builder().equal("id", account).equal("owner.id", user.getUid()).build());
+        PropertyFilter.newFilter().equal("id", account).equal("owner.id", user.getUid()));
   }
 
   public CalendarSet addCalendarToSet(Long id, Long set) {

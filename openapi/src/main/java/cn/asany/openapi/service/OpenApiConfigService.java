@@ -29,14 +29,14 @@ public class OpenApiConfigService implements WeixinAppService {
 
   public OpenApiConfig getAmapDefault() {
     List<OpenApiConfig> configs =
-        openApiConfigDao.findAll(PropertyFilter.builder().equal("type", OpenApiType.AMAP).build());
+        openApiConfigDao.findAll(PropertyFilter.newFilter().equal("type", OpenApiType.AMAP));
     return configs.isEmpty() ? null : configs.get(0);
   }
 
   public OpenApiConfig getDefaultWeixin() {
     List<OpenApiConfig> configs =
         openApiConfigDao.findAll(
-            PropertyFilter.builder().equal("type", OpenApiType.WEIXIN).build());
+            PropertyFilter.newFilter().equal("type", OpenApiType.WEIXIN));
     return configs.isEmpty() ? null : configs.get(0);
   }
 
@@ -44,10 +44,9 @@ public class OpenApiConfigService implements WeixinAppService {
   public WeixinApp loadAccountByAppid(String appid) throws AppidNotFoundException {
     Optional<OpenApiConfig> configOptional =
         this.openApiConfigDao.findOne(
-            PropertyFilter.builder()
+            PropertyFilter.newFilter()
                 .equal("type", OpenApiType.WEIXIN)
-                .equal("appid", appid)
-                .build());
+                .equal("appid", appid));
     return configOptional
         .map(it -> it.toConfig(WeixinConfig.class))
         .orElseThrow(() -> new AppidNotFoundException(" appid [ " + appid + " ] 不存在 "));
@@ -56,7 +55,7 @@ public class OpenApiConfigService implements WeixinAppService {
   @Override
   public List<WeixinApp> getAll() {
     return this.openApiConfigDao
-        .findAll(PropertyFilter.builder().equal("type", OpenApiType.WEIXIN).build()).stream()
+        .findAll(PropertyFilter.newFilter().equal("type", OpenApiType.WEIXIN)).stream()
         .map(it -> it.toConfig(WeixinConfig.class))
         .collect(Collectors.toList());
   }

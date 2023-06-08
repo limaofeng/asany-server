@@ -1,7 +1,7 @@
 package cn.asany.pm.issue.core.graphql;
 
 import cn.asany.pm.issue.core.domain.Issue;
-import cn.asany.pm.issue.core.graphql.input.IssueFilter;
+import cn.asany.pm.issue.core.graphql.input.IssueWhereInput;
 import cn.asany.pm.issue.core.graphql.type.IssueConnection;
 import cn.asany.pm.issue.core.service.IssueService;
 import graphql.kickstart.tools.GraphQLQueryResolver;
@@ -44,8 +44,8 @@ public class IssueGraphQLQueryResolver implements GraphQLQueryResolver {
    * @param orderBy 排序
    * @return 任务列表
    */
-  public IssueConnection issues(IssueFilter filter, int page, int pageSize, Sort orderBy) {
+  public IssueConnection issues(IssueWhereInput filter, int page, int pageSize, Sort orderBy) {
     Pageable pageable = PageRequest.of(page - 1, pageSize, orderBy);
-    return Kit.connection(issueService.findPage(pageable, filter.build()), IssueConnection.class);
+    return Kit.connection(issueService.findPage(pageable, filter.toFilter()), IssueConnection.class);
   }
 }

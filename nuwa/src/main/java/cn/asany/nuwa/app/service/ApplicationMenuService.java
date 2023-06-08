@@ -29,11 +29,11 @@ public class ApplicationMenuService {
   }
 
   public List<ApplicationMenu> findAll(Long appId) {
-    return this.menuDao.findAll(PropertyFilter.builder().equal("application", appId).build());
+    return this.menuDao.findAll(PropertyFilter.newFilter().equal("application", appId));
   }
 
-  public List<ApplicationMenu> findAll(List<PropertyFilter> filters) {
-    return this.menuDao.findAll(filters);
+  public List<ApplicationMenu> findAll(PropertyFilter filter) {
+    return this.menuDao.findAll(filter);
   }
 
   public ApplicationMenu get(Long id) {
@@ -78,15 +78,15 @@ public class ApplicationMenuService {
   private class MenuSortNodeLoader implements SortNodeLoader<ApplicationMenu> {
     @Override
     public List<ApplicationMenu> getAll(Serializable parentId, ApplicationMenu route) {
-      PropertyFilterBuilder builder = PropertyFilter.builder();
+      PropertyFilter filter = PropertyFilter.newFilter();
       if (route.getParent() == null) {
-        builder.isNull("parent");
-        builder.equal("application.id", route.getApplication().getId());
+        filter.isNull("parent");
+        filter.equal("application.id", route.getApplication().getId());
       } else {
-        builder.equal("parent.id", parentId);
+        filter.equal("parent.id", parentId);
       }
       return ApplicationMenuService.this.menuDao.findAll(
-          builder.build(), Sort.by("index").ascending());
+          filter, Sort.by("index").ascending());
     }
 
     @Override

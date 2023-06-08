@@ -16,7 +16,7 @@ import org.jfantasy.framework.util.asm.AsmUtil;
 import org.jfantasy.framework.util.asm.MethodInfo;
 import org.jfantasy.framework.util.asm.Property;
 import org.jfantasy.framework.util.common.ClassUtil;
-import org.jfantasy.graphql.inputs.QueryFilter;
+import org.jfantasy.graphql.inputs.WhereInput;
 import org.jfantasy.graphql.types.BaseConnection;
 import org.objectweb.asm.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -558,12 +558,12 @@ public class DynamicClassGenerator {
     String classname = namespace.concat(".").concat(model.getCode());
     return AsmUtil.makeClass(
         classname,
-        "Lorg/jfantasy/graphql/inputs/QueryFilter<L"
+        "Lorg/jfantasy/graphql/inputs/WhereInput<L"
             + classname.replace(".", "/")
             + ";L"
             + entityClass.getName().replace(".", "/")
             + ";>;",
-        QueryFilter.class.getName(),
+        WhereInput.class.getName(),
         new Class[] {},
         new Property[] {},
         new MethodInfo[0]);

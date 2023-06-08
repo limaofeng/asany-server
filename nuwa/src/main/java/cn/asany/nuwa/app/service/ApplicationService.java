@@ -84,7 +84,7 @@ public class ApplicationService implements ClientDetailsService {
     this.cacheManager = cacheManager;
   }
 
-  public List<Application> findAll(List<PropertyFilter> filter) {
+  public List<Application> findAll(PropertyFilter filter) {
     return applicationDao.findAll(filter);
   }
 
@@ -93,7 +93,7 @@ public class ApplicationService implements ClientDetailsService {
   public ClientDetails loadClientByClientId(String clientId) throws ClientRegistrationException {
     Optional<Application> optional =
         this.applicationDao.findOneWithClientDetails(
-            PropertyFilter.builder().equal("clientId", clientId).equal("enabled", true).build());
+            PropertyFilter.newFilter().equal("clientId", clientId).equal("enabled", true));
     if (!optional.isPresent()) {
       throw new ClientRegistrationException("[client_id=" + clientId + "]不存在");
     }
@@ -102,7 +102,7 @@ public class ApplicationService implements ClientDetailsService {
 
   @Transactional(rollbackFor = RuntimeException.class)
   public boolean existsByClientId(String clientId) {
-    return this.applicationDao.exists(PropertyFilter.builder().equal("clientId", clientId).build());
+    return this.applicationDao.exists(PropertyFilter.newFilter().equal("clientId", clientId));
   }
 
   @Transactional(rollbackFor = RuntimeException.class)
@@ -128,8 +128,7 @@ public class ApplicationService implements ClientDetailsService {
   @Cacheable(key = "targetClass  + '.' +  methodName + '#' + #p0", value = CACHE_KEY)
   public List<ApplicationDependency> findDependencies(Long id) {
     return this.applicationDependencyDao.findAll(
-        PropertyFilter.builder().equal("application.id", id).build(),
-        Sort.by("createdAt").ascending());
+        PropertyFilter.newFilter().equal("application.id", id), Sort.by("createdAt").ascending());
   }
 
   @Transactional(rollbackFor = RuntimeException.class)
@@ -256,7 +255,7 @@ public class ApplicationService implements ClientDetailsService {
   @Transactional(propagation = Propagation.REQUIRES_NEW)
   public void deleteApplication(String clientId) {
     Optional<Application> application =
-        this.applicationDao.findOne(PropertyFilter.builder().equal("clientId", clientId).build());
+        this.applicationDao.findOne(PropertyFilter.newFilter().equal("clientId", clientId));
     if (!application.isPresent()) {
       return;
     }
@@ -269,22 +268,20 @@ public class ApplicationService implements ClientDetailsService {
     // 路由组件
     List<ApplicationRoute> routes =
         this.applicationRouteDao.findAll(
-            PropertyFilter.builder()
+            PropertyFilter.newFilter()
                 .equal("component.scope", ComponentScope.ROUTE)
                 .equal("application.id", id)
-                .isNotNull("component")
-                .build());
+                .isNotNull("component"));
     List<Component> components =
         routes.stream().map(ApplicationRoute::getComponent).collect(Collectors.toList());
 
     // 菜单组件
     List<ApplicationMenu> menus =
         this.applicationMenuDao.findAll(
-            PropertyFilter.builder()
+            PropertyFilter.newFilter()
                 .equal("component.scope", ComponentScope.MENU)
                 .equal("application.id", id)
-                .isNotNull("component")
-                .build());
+                .isNotNull("component"));
     components.addAll(
         menus.stream().map(ApplicationMenu::getComponent).collect(Collectors.toList()));
 

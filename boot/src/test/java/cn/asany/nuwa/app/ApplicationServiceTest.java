@@ -109,11 +109,11 @@ class ApplicationServiceTest {
 
     List<ApplicationRoute> routes =
         this.applicationRouteService.findAll(
-            PropertyFilter.builder().equal("application.id", appId).build());
+            PropertyFilter.newFilter().equal("application.id", appId));
 
     List<ApplicationMenu> menus =
         this.applicationMenuService.findAll(
-            PropertyFilter.builder().equal("application.id", appId).build());
+            PropertyFilter.newFilter().equal("application.id", appId));
 
     assert libraryId != null;
 

@@ -54,7 +54,7 @@ enum TaskStatus {
   ALL
 }
 
-input TaskFilter {
+input TaskWhereInput {
   """
   状态
   """
@@ -63,7 +63,7 @@ input TaskFilter {
 
 extend type Query {
   myTasks(
-    filter: TaskFilter = { status: INCOMPLETE }
+    where: TaskWhereInput = { status: INCOMPLETE }
     page: Int = 1
     pageSize: Int = 15
     orderBy: OrderBy = "unsorted"

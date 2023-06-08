@@ -3,6 +3,7 @@ package cn.asany.shanhai.core.support.model.types;
 import cn.asany.shanhai.core.domain.ModelFieldMetadata;
 import cn.asany.shanhai.core.support.model.FieldType;
 import lombok.Data;
+import org.jfantasy.framework.dao.MatchType;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.springframework.stereotype.Component;
 
@@ -45,14 +46,14 @@ public class StringField implements FieldType<String, String> {
   }
 
   @Override
-  public PropertyFilter.MatchType[] filters() {
-    return new PropertyFilter.MatchType[] {
-      PropertyFilter.MatchType.EQ,
-      PropertyFilter.MatchType.CONTAINS,
-      PropertyFilter.MatchType.STARTS_WITH,
-      PropertyFilter.MatchType.ENDS_WITH,
-      PropertyFilter.MatchType.IN,
-      PropertyFilter.MatchType.NOT_IN
+  public MatchType[] filters() {
+    return new MatchType[] {
+      MatchType.EQ,
+      MatchType.CONTAINS,
+      MatchType.STARTS_WITH,
+      MatchType.ENDS_WITH,
+      MatchType.IN,
+      MatchType.NOT_IN
     };
   }
 }

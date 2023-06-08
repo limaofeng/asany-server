@@ -3,7 +3,7 @@ package cn.asany.pm.project.graphql;
 import cn.asany.pm.project.convert.ProjectConverter;
 import cn.asany.pm.project.domain.Project;
 import cn.asany.pm.project.graphql.input.ProjectCreateInput;
-import cn.asany.pm.project.graphql.input.ProjectFilter;
+import cn.asany.pm.project.graphql.input.ProjectWhereInput;
 import cn.asany.pm.project.graphql.type.ProjectConnection;
 import cn.asany.pm.project.service.ProjectService;
 import graphql.kickstart.tools.GraphQLMutationResolver;
@@ -51,15 +51,15 @@ public class ProjectGraphQLRootResolver implements GraphQLMutationResolver, Grap
   /**
    * 查询所有项目
    *
-   * @param filter 过滤
+   * @param where 过滤
    * @param page 页码
    * @param pageSize 每页显示数据条数
    * @param orderBy 排序
    * @return ProjectConnection
    */
-  public ProjectConnection projects(ProjectFilter filter, int page, int pageSize, Sort orderBy) {
+  public ProjectConnection projects(ProjectWhereInput where, int page, int pageSize, Sort orderBy) {
     Pageable pageable = PageRequest.of(page - 1, pageSize, orderBy);
     return Kit.connection(
-        projectService.findPage(pageable, filter.build()), ProjectConnection.class);
+        projectService.findPage(pageable, where.toFilter()), ProjectConnection.class);
   }
 }

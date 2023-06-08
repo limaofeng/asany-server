@@ -3,7 +3,7 @@ package cn.asany.website.data.graphql;
 import cn.asany.website.data.convert.WebsiteConverter;
 import cn.asany.website.data.domain.Website;
 import cn.asany.website.data.graphql.input.WebsiteCreateInput;
-import cn.asany.website.data.graphql.input.WebsiteFilter;
+import cn.asany.website.data.graphql.input.WebsiteWhereInput;
 import cn.asany.website.data.service.WebsiteService;
 import graphql.kickstart.tools.GraphQLMutationResolver;
 import graphql.kickstart.tools.GraphQLQueryResolver;
@@ -25,8 +25,8 @@ public class WebsiteGraphQLQueryAndMutationResolver
     this.websiteConverter = websiteConverter;
   }
 
-  public List<Website> websites(WebsiteFilter filter, Sort orderBy) {
-    return this.websiteService.websites(filter.build(), orderBy);
+  public List<Website> websites(WebsiteWhereInput where, Sort orderBy) {
+    return this.websiteService.websites(where.toFilter(), orderBy);
   }
 
   public Website website(Long id) {

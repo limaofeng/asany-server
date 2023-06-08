@@ -18,9 +18,8 @@ public class ApplicationRouteDaoImpl extends ComplexJpaRepository<ApplicationRou
   public List<ApplicationRoute> findAllByApplicationAndSpaceWithComponent(
       Long applicationId, String space) {
     return this.findAll(
-        PropertyFilter.builder()
+        PropertyFilter.newFilter()
             .equal("application.id", applicationId)
-            .equal("space.id", space)
-            .build());
+            .equal("space.id", space));
   }
 }

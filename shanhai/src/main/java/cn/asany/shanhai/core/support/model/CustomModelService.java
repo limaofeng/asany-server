@@ -27,7 +27,7 @@ public interface CustomModelService {
    * @param <T> 实体类型
    * @return 数据集
    */
-  <T> List<T> findAll(List<PropertyFilter> filters, int offset, int limit, OrderBy sort);
+  <T> List<T> findAll(PropertyFilter filter, int offset, int limit, OrderBy sort);
 
   /**
    * 分页查询
@@ -37,7 +37,7 @@ public interface CustomModelService {
    * @param <T> 实体类型
    * @return 分页结果
    */
-  <T> Page<T> findPage(Page<T> page, List<PropertyFilter> filters);
+  <T> Page<T> findPage(Page<T> page, PropertyFilter filter);
 
   /**
    * 保存对象
@@ -75,7 +75,7 @@ public interface CustomModelService {
    * @param <T> 实体类型
    * @return 返回被删除的对象集合
    */
-  <T> List<T> deleteMany(List<PropertyFilter> filters);
+  <T> List<T> deleteMany(PropertyFilter filter);
 
   /**
    * 排序转换方法

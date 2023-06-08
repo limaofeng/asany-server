@@ -19,8 +19,8 @@ public class RoleScopeService {
     this.roleSpaceDao = roleSpaceDao;
   }
 
-  public Page<RoleSpace> findPage(Pageable pageable, List<PropertyFilter> filters) {
-    return this.roleSpaceDao.findPage(pageable, filters);
+  public Page<RoleSpace> findPage(Pageable pageable, PropertyFilter filter) {
+    return this.roleSpaceDao.findPage(pageable, filter);
   }
 
   public RoleSpace get(String id) {
@@ -31,8 +31,8 @@ public class RoleScopeService {
     return roleSpaceDao.save(scope);
   }
 
-  public List<RoleSpace> findAll(List<PropertyFilter> filters) {
-    return roleSpaceDao.findAll(filters);
+  public List<RoleSpace> findAll(PropertyFilter filter) {
+    return roleSpaceDao.findAll(filter);
   }
 
   public RoleSpace update(Long id, boolean merge, RoleSpace scope) {

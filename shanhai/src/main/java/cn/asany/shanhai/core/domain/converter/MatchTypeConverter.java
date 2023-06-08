@@ -2,7 +2,8 @@ package cn.asany.shanhai.core.domain.converter;
 
 import java.util.Arrays;
 import javax.persistence.AttributeConverter;
-import org.jfantasy.framework.dao.jpa.PropertyFilter.MatchType;
+
+import org.jfantasy.framework.dao.MatchType;
 import org.jfantasy.framework.jackson.JSON;
 import org.jfantasy.framework.util.common.StringUtil;
 

@@ -72,12 +72,12 @@ public class ModelService {
     this.publisher = publisher;
   }
 
-  public Page<Model> findPage(Pageable pageable, List<PropertyFilter> filters) {
-    return modelDao.findPage(pageable, filters);
+  public Page<Model> findPage(Pageable pageable, PropertyFilter filter) {
+    return modelDao.findPage(pageable, filter);
   }
 
-  public List<Model> findAll(List<PropertyFilter> filters, int offset, int limit, Sort orderBy) {
-    return modelDao.findAll(filters, offset, limit, orderBy);
+  public List<Model> findAll(PropertyFilter filter, int offset, int limit, Sort orderBy) {
+    return modelDao.findAll(filter, offset, limit, orderBy);
   }
 
   @Transactional(isolation = Isolation.READ_COMMITTED)
@@ -403,10 +403,10 @@ public class ModelService {
   }
 
   public void clear() {
-    PropertyFilterBuilder builder = PropertyFilter.builder();
+    PropertyFilter filter = PropertyFilter.newFilter();
     List<Model> models =
         this.modelDao.findAllWithMetadataAndFields(
-            builder.build(), Sort.by(Sort.Direction.DESC, "createdAt"));
+            filter, Sort.by(Sort.Direction.DESC, "createdAt"));
     Set<Long> modelIds = new HashSet<>();
     Set<Long> fieldIds = new HashSet<>();
     Set<Long> argumentIds = new HashSet<>();
@@ -448,7 +448,7 @@ public class ModelService {
 
   @Transactional(readOnly = true)
   public List<Model> findEntityModels() {
-    return this.modelDao.findAll(PropertyFilter.builder().equal("type", ModelType.ENTITY).build());
+    return this.modelDao.findAll(PropertyFilter.newFilter().equal("type", ModelType.ENTITY));
   }
 
   @Transactional(readOnly = true)
@@ -484,19 +484,19 @@ public class ModelService {
   }
 
   public List<ModelField> queries() {
-    PropertyFilterBuilder builder = PropertyFilter.builder();
-    builder.equal("model.code", "Query");
-    return this.modelFieldDao.findAll(builder.build());
+    PropertyFilter filter = PropertyFilter.newFilter();
+    filter.equal("model.code", "Query");
+    return this.modelFieldDao.findAll(filter);
   }
 
-  public List<ModelField> findAllModelFields(List<PropertyFilter> filters) {
-    return this.modelFieldDao.findAll(filters);
+  public List<ModelField> findAllModelFields(PropertyFilter filter) {
+    return this.modelFieldDao.findAll(filter);
   }
 
   public List<ModelField> endpoints() {
-    PropertyFilterBuilder builder = PropertyFilter.builder();
-    builder.in("model.code", "Query", "Mutation");
-    return this.modelFieldDao.findWithModelAndType(builder.build());
+    PropertyFilter filter = PropertyFilter.newFilter();
+    filter.in("model.code", "Query", "Mutation");
+    return this.modelFieldDao.findWithModelAndType(filter);
   }
 
   public List<ModelGroupItem> findResourcesByUngrouped() {
@@ -528,9 +528,9 @@ public class ModelService {
   }
 
   public Optional<ModelField> findEndpointByCode(String code) {
-    PropertyFilterBuilder builder = PropertyFilter.builder();
-    builder.equal("code", code);
-    return this.modelFieldDao.findOne(builder.build());
+    PropertyFilter filter = PropertyFilter.newFilter();
+    filter.equal("code", code);
+    return this.modelFieldDao.findOne(filter);
   }
 
   @Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class)
@@ -611,9 +611,8 @@ public class ModelService {
   }
 
   @Transactional(readOnly = true)
-  public List<ModelField> listModelFields(
-      List<PropertyFilter> filters, int offset, int limit, Sort sort) {
-    return this.modelFieldDao.findAll(filters, offset, limit, sort);
+  public List<ModelField> listModelFields(PropertyFilter filter, int offset, int limit, Sort sort) {
+    return this.modelFieldDao.findAll(filter, offset, limit, sort);
   }
 
   @Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class)

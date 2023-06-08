@@ -61,7 +61,7 @@ public class ThumbnailService {
   public Optional<Thumbnail> findBySize(String size, Long source) {
     Optional<Thumbnail> optional =
         this.thumbnailDao.findOne(
-            PropertyFilter.builder().equal("size", size).equal("source.id", source).build());
+            PropertyFilter.newFilter().equal("size", size).equal("source.id", source));
     return optional.map(
         item -> {
           Hibernate.initialize(item.getFile());

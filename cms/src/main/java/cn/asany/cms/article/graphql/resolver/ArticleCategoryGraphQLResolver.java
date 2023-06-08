@@ -3,7 +3,7 @@ package cn.asany.cms.article.graphql.resolver;
 import cn.asany.cms.article.domain.Article;
 import cn.asany.cms.article.domain.ArticleCategory;
 import cn.asany.cms.article.graphql.input.AcceptArticleCategory;
-import cn.asany.cms.article.graphql.input.ArticleFilter;
+import cn.asany.cms.article.graphql.input.ArticleWhereInput;
 import cn.asany.cms.article.graphql.type.Starrable;
 import cn.asany.cms.article.service.ArticleCategoryService;
 import cn.asany.cms.article.service.ArticleService;
@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.jfantasy.framework.dao.LimitPageRequest;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
-import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.common.StringUtil;
 import org.springframework.data.domain.Pageable;
@@ -80,7 +79,7 @@ public class ArticleCategoryGraphQLResolver implements GraphQLResolver<ArticleCa
     }
 
     List<ArticleCategory> parents =
-        this.articleCategoryService.findAll(PropertyFilter.builder().in("id", ids).build());
+        this.articleCategoryService.findAll(PropertyFilter.newFilter().in("id", ids));
 
     return ids.stream().map(id -> ObjectUtil.find(parents, "id", id)).collect(Collectors.toList());
   }
@@ -88,7 +87,7 @@ public class ArticleCategoryGraphQLResolver implements GraphQLResolver<ArticleCa
   public List<Article> articles(
       ArticleCategory category,
       /* 筛选 */
-      ArticleFilter filter,
+      ArticleWhereInput where,
       /* 跳过 */
       int skip,
       /* 游标定位 之后 */
@@ -104,17 +103,12 @@ public class ArticleCategoryGraphQLResolver implements GraphQLResolver<ArticleCa
 
     Pageable pageable = LimitPageRequest.of(skip, first, orderBy);
 
-    PropertyFilterBuilder builder = PropertyFilter.builder();
+    where = ObjectUtil.defaultValue(where, ArticleWhereInput::new);
 
-    if (filter != null) {
-      builder.and(filter.getBuilder());
-    }
-
-    assert filter != null;
-    filter.setCategory(
+    where.setCategory(
         AcceptArticleCategory.builder().id(category.getId().toString()).subColumns(false).build());
 
-    return this.articleService.findPage(pageable, builder.build()).getContent();
+    return this.articleService.findPage(pageable, where.toFilter()).getContent();
   }
 
   public Permission permissions(ArticleCategory channel) {

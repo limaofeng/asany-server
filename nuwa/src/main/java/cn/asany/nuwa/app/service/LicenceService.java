@@ -25,10 +25,10 @@ public class LicenceService {
 
   public Optional<Licence> findOneByActive(Long app, Long org) {
     return this.licenceDao.findOne(
-        PropertyFilter.builder()
+        PropertyFilter.newFilter()
             .equal("application.id", app)
             .equal("ownership.id", org)
             .equal("status", LicenceStatus.ACTIVE)
-            .build());
+            );
   }
 }

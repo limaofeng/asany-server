@@ -9,6 +9,7 @@ import lombok.*;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
+import org.jfantasy.framework.dao.MatchType;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 
 /**
@@ -55,7 +56,7 @@ public class ModelFieldMetadata implements Serializable {
   /** 字段支持的筛选方式 */
   @Column(name = "FILTERS", columnDefinition = "JSON")
   @Convert(converter = MatchTypeConverter.class)
-  private PropertyFilter.MatchType[] filters;
+  private MatchType[] filters;
 
   @OneToOne(fetch = FetchType.LAZY)
   @PrimaryKeyJoinColumn

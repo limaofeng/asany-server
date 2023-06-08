@@ -149,7 +149,7 @@ type Oplog {
   data: JSON
 }
 
-input OplogFilter {
+input OplogWhereInput {
   entityName: String
   primarykeyName: String
   primarykeyValue: String
@@ -157,12 +157,12 @@ input OplogFilter {
   entityName_in: [String]
 }
 
-input IconFilter {
+input IconWhereInput {
   id_in: [ID]
   library: ID
 }
 
-input IconLibraryFilter {
+input IconLibraryWhereInput {
   id_in: [ID]
 }
 
@@ -318,7 +318,7 @@ type Component {
   libraryId: ID!
 }
 
-input ComponentFilter {
+input ComponentWhereInput {
   name: String
   title: String
 }
@@ -365,7 +365,7 @@ extend type Query {
   图标库
   """
   iconLibraries(
-    filter: IconLibraryFilter = {}
+    where: IconLibraryWhereInput = {}
     ownership: OwnershipInput = { type: "PERSONAL", id: "me" }
   ): [IconLibrary!]!
   """
@@ -379,11 +379,11 @@ extend type Query {
   """
   查询图标
   """
-  icons(filter: IconFilter = {}): [Icon!]!
+  icons(where: IconWhereInput = {}): [Icon!]!
   """
   查询日志
   """
-  oplogs(filter: OplogFilter = {}): [Oplog!]!
+  oplogs(where: OplogWhereInput = {}): [Oplog!]!
   """
   查询组件 单个
   """
@@ -392,7 +392,7 @@ extend type Query {
   查询组件 列表
   """
   components(
-    filter: ComponentFilter = {}
+    where: ComponentWhereInput = {}
     page: Int = 1
     pageSize: Int = 15
     orderBy: OrderBy = "unsorted"
@@ -401,7 +401,7 @@ extend type Query {
   查询组件 分页
   """
   componentsConnection(
-    filter: ComponentFilter = {}
+    where: ComponentWhereInput = {}
     page: Int = 1
     pageSize: Int = 15
     orderBy: OrderBy = "unsorted"

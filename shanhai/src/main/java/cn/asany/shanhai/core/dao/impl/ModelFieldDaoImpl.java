@@ -17,8 +17,8 @@ public class ModelFieldDaoImpl extends ComplexJpaRepository<ModelField, Long>
   }
 
   @Override
-  public List<ModelField> findWithModelAndType(List<PropertyFilter> filters) {
-    return this.findAll(filters);
+  public List<ModelField> findWithModelAndType(PropertyFilter filter) {
+    return this.findAll(filter);
   }
 
   @Override

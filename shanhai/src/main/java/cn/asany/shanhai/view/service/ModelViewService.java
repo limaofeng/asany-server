@@ -20,11 +20,11 @@ public class ModelViewService {
 
   public Optional<ModelView> getDefaultView(Long modelId, ModelViewType type) {
     return this.modelViewDao.findOne(
-        PropertyFilter.builder()
+        PropertyFilter.newFilter()
             .equal("model.id", modelId)
             .equal("type", type)
             .equal("defaultView", true)
-            .build());
+            );
   }
 
   public Optional<ModelView> findById(Long id) {
@@ -32,7 +32,7 @@ public class ModelViewService {
   }
 
   public List<ModelView> findAll(
-      List<PropertyFilter> filters, int offset, int limit, Sort orderBy) {
-    return this.modelViewDao.findAll(filters, offset, limit, orderBy);
+      PropertyFilter filter, int offset, int limit, Sort orderBy) {
+    return this.modelViewDao.findAll(filter, offset, limit, orderBy);
   }
 }

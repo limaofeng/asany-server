@@ -22,8 +22,8 @@ public class SpaceService {
     this.spaceDao = spaceDao;
   }
 
-  public Page<Space> findPage(Pageable pageable, List<PropertyFilter> filters) {
-    return spaceDao.findPage(pageable, filters);
+  public Page<Space> findPage(Pageable pageable, PropertyFilter filter) {
+    return spaceDao.findPage(pageable, filter);
   }
 
   public void delete(String... ids) {

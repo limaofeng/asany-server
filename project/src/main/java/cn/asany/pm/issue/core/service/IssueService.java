@@ -62,12 +62,12 @@ public class IssueService {
     return issueDao.findById(id).orElse(null);
   }
 
-  public Page<Issue> findPage(Pageable pageable, List<PropertyFilter> filters) {
-    return issueDao.findPage(pageable, filters);
+  public Page<Issue> findPage(Pageable pageable, PropertyFilter filter) {
+    return issueDao.findPage(pageable, filter);
   }
 
-  public List<Issue> findAll(List<PropertyFilter> filters, int size, Sort orderBy) {
-    return issueDao.findAll(filters, size, orderBy);
+  public List<Issue> findAll(PropertyFilter filter, int size, Sort orderBy) {
+    return issueDao.findAll(filter, size, orderBy);
   }
 
   /**

@@ -9,7 +9,6 @@ import com.github.stuxuhai.jpinyin.PinyinException;
 import java.util.*;
 import java.util.stream.Collectors;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
-import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
 import org.jfantasy.framework.error.ValidationException;
 import org.jfantasy.framework.spring.mvc.error.NotFoundException;
 import org.jfantasy.framework.util.PinyinUtils;
@@ -86,24 +85,24 @@ public class DictService {
    * 分页查询方法
    *
    * @param pageable 分页对象
-   * @param filters 过滤条件
+   * @param filter 过滤条件
    * @return {List}
    */
-  public Page<Dict> findPage(Pageable pageable, List<PropertyFilter> filters) {
-    return this.dictDao.findPage(pageable, filters);
+  public Page<Dict> findPage(Pageable pageable, PropertyFilter filter) {
+    return this.dictDao.findPage(pageable, filter);
   }
 
   @Cacheable(key = "targetClass + methodName + '#' + #p0.toString()", value = CACHE_KEY)
-  public List<Dict> findAll(List<PropertyFilter> filters) {
-    return this.dictDao.findAll(filters);
+  public List<Dict> findAll(PropertyFilter filter) {
+    return this.dictDao.findAll(filter);
   }
 
-  public List<Dict> findAll(List<PropertyFilter> filters, Sort orderBy) {
-    return this.dictDao.findAll(filters, orderBy);
+  public List<Dict> findAll(PropertyFilter filter, Sort orderBy) {
+    return this.dictDao.findAll(filter, orderBy);
   }
 
-  public Page<DictType> findDictTypePage(Pageable pageable, List<PropertyFilter> filters) {
-    return this.dictTypeDao.findPage(pageable, filters);
+  public Page<DictType> findDictTypePage(Pageable pageable, PropertyFilter filter) {
+    return this.dictTypeDao.findPage(pageable, filter);
   }
 
   public List<Dict> findType(String type) {
@@ -259,7 +258,7 @@ public class DictService {
    * @param dictType 数据字典分类
    */
   public DictType save(DictType dictType) {
-    long index = this.dictTypeDao.count(PropertyFilter.builder().isNull("parent").build()) + 1;
+    long index = this.dictTypeDao.count(PropertyFilter.newFilter().isNull("parent")) + 1;
 
     if (this.dictTypeDao.existsById(dictType.getId())) {
       throw new ValidationException("编码已经存在[" + dictType.getId() + "], 请使用新的编码重新保存");
@@ -274,9 +273,9 @@ public class DictService {
       DictType parent =
           optionalParent.orElseThrow(
               () -> new NotFoundException("错误的上级编码[" + dictType.getParent().getId() + "]"));
-      PropertyFilterBuilder filterBuilder =
-          PropertyFilter.builder().equal("parent.id", parent.getId());
-      index = this.dictTypeDao.count(filterBuilder.build()) + 1;
+      PropertyFilter filter =
+          PropertyFilter.newFilter().equal("parent.id", parent.getId());
+      index = this.dictTypeDao.count(filter) + 1;
 
       dictType.setLevel(parent.getLevel() + 1);
       dictType.setPath(parent.getPath() + dictType.getId() + DictType.PATH_SEPARATOR);
@@ -418,7 +417,7 @@ public class DictService {
     return dictTypeDao.findAll(partyQueryMenu);
   }
 
-  public Optional<Dict> findOne(List<PropertyFilter> filter) {
+  public Optional<Dict> findOne(PropertyFilter filter) {
     return this.dictDao.findOne(filter);
   }
 }

@@ -117,15 +117,15 @@ type LandingPoster {
   createdAt: Date! @dateFormat
 }
 
-input LandingPageFilter {
+input LandingPageWhereInput {
   name_contains: String
 }
 
-input LandingPosterFilter {
+input LandingPosterWhereInput {
   name_contains: String
 }
 
-input LandingStoreFilter {
+input LandingStoreWhereInput {
   id_in: [ID!]
   code_contains: String
   name_contains: String
@@ -311,7 +311,7 @@ extend type Query {
   查询活动页
   """
   landingPagesConnection(
-    filter: LandingPageFilter
+    where: LandingPageWhereInput
     page: Int = 1
     pageSize: Int = 15
     orderBy: OrderBy = "unsorted"
@@ -324,7 +324,7 @@ extend type Query {
   查询活动页海报
   """
   landingPostersConnection(
-    filter: LandingPosterFilter
+    where: LandingPosterWhereInput
     page: Int = 1
     pageSize: Int = 15
     orderBy: OrderBy = "unsorted"
@@ -337,7 +337,7 @@ extend type Query {
   查询活动页门店
   """
   landingStoresConnection(
-    filter: LandingStoreFilter
+    where: LandingStoreWhereInput
     page: Int = 1
     pageSize: Int = 15
     orderBy: OrderBy = "unsorted"

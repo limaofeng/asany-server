@@ -1,7 +1,7 @@
 package cn.asany.pm.issue.priority.graphql;
 
 import cn.asany.pm.issue.priority.graphql.connection.IssuePriorityConnection;
-import cn.asany.pm.issue.priority.graphql.filter.IssuePriorityFilter;
+import cn.asany.pm.issue.priority.graphql.filter.IssuePriorityWhereInput;
 import cn.asany.pm.issue.priority.service.IssuePriorityService;
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import org.jfantasy.graphql.util.Kit;
@@ -24,9 +24,9 @@ public class PriorityGraphQLQueryResolver implements GraphQLQueryResolver {
 
   /** 查询所有优先级 */
   public IssuePriorityConnection issuePrioritys(
-      IssuePriorityFilter filter, int page, int pageSize, Sort orderBy) {
+    IssuePriorityWhereInput where, int page, int pageSize, Sort orderBy) {
     Pageable pageable = PageRequest.of(page - 1, pageSize, orderBy);
     return Kit.connection(
-        issuePriorityService.findPage(pageable, filter.build()), IssuePriorityConnection.class);
+        issuePriorityService.findPage(pageable, where.toFilter()), IssuePriorityConnection.class);
   }
 }

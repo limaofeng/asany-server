@@ -4,7 +4,7 @@ import cn.asany.organization.core.domain.Department;
 import cn.asany.organization.core.domain.Job;
 import cn.asany.organization.core.domain.Organization;
 import cn.asany.organization.core.domain.OrganizationMember;
-import cn.asany.organization.core.graphql.inputs.DepartmentFilter;
+import cn.asany.organization.core.graphql.inputs.DepartmentWhereInput;
 import cn.asany.organization.core.service.DepartmentService;
 import cn.asany.organization.core.service.DepartmentTypeService;
 import cn.asany.organization.core.service.JobService;
@@ -41,12 +41,12 @@ public class OrganizationGraphQLResolver implements GraphQLResolver<Organization
     return jobService.findAll(organization.getId(), orderBy);
   }
 
-  public List<Department> departments(Organization organization, DepartmentFilter filter) {
-    if (filter == null) {
-      filter = new DepartmentFilter();
+  public List<Department> departments(Organization organization, DepartmentWhereInput where) {
+    if (where == null) {
+      where = new DepartmentWhereInput();
     }
     return departmentService.findAll(
-        filter.getBuilder().equal("organization.id", organization.getId()).build());
+        where.toFilter().equal("organization.id", organization.getId()));
   }
 
   //    public EmployeeConnection employees(Organization organization, EmployeeFilter filter, int

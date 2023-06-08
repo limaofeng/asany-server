@@ -22,36 +22,36 @@ public class ApplicationDaoImpl extends ComplexJpaRepository<Application, Long>
 
   @Override
   public Optional<Application> findDetailsByClientId(String clientId) {
-    return this.findOne(PropertyFilter.builder().equal("clientId", clientId).build());
+    return this.findOne(PropertyFilter.newFilter().equal("clientId", clientId));
   }
 
   @Override
   public Optional<Application> findDetailsById(Long id) {
-    return this.findOne(PropertyFilter.builder().equal("id", id).build());
+    return this.findOne(PropertyFilter.newFilter().equal("id", id));
   }
 
   @Override
   public Optional<Application> findOneWithRoutesByClientId(String clientId) {
-    return this.findOne(PropertyFilter.builder().equal("clientId", clientId).build());
+    return this.findOne(PropertyFilter.newFilter().equal("clientId", clientId));
   }
 
   @Override
   public Optional<Application> findOneWithMenusByClientId(String clientId) {
-    return this.findOne(PropertyFilter.builder().equal("clientId", clientId).build());
+    return this.findOne(PropertyFilter.newFilter().equal("clientId", clientId));
   }
 
   @Override
   public Optional<Application> findOneWithRoutesById(Long id) {
-    return this.findOne(PropertyFilter.builder().equal("id", id).build());
+    return this.findOne(PropertyFilter.newFilter().equal("id", id));
   }
 
   @Override
   public Optional<Application> findOneWithMenusById(Long id) {
-    return this.findOne(PropertyFilter.builder().equal("id", id).build());
+    return this.findOne(PropertyFilter.newFilter().equal("id", id));
   }
 
   @Override
-  public Optional<Application> findOneWithClientDetails(List<PropertyFilter> filters) {
-    return this.findOne(filters);
+  public Optional<Application> findOneWithClientDetails(PropertyFilter filter) {
+    return this.findOne(filter);
   }
 }

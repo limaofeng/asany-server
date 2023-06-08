@@ -97,10 +97,10 @@ public class LessonRecordService {
     return lessonRecord;
   }
 
-  public Page<Course> compulsoryCourseAndRecords(Pageable pageable, List<PropertyFilter> filters) {
+  public Page<Course> compulsoryCourseAndRecords(Pageable pageable, PropertyFilter filter) {
     Set<Course> courses = new HashSet<>();
     // 查询该用户的所有课程（区分选修必修）
-    List<Learner> learnerList = learnerDao.findAll(filters);
+    List<Learner> learnerList = learnerDao.findAll(filter);
     for (Learner learner : learnerList) {
       // 必修课程
       Course course = courseDao.findById(learner.getCourse().getId()).get();
@@ -117,12 +117,12 @@ public class LessonRecordService {
     return Page.empty(pageable);
   }
 
-  public Page<LessonRecord> findPage(Pageable pageable, List<PropertyFilter> filters) {
+  public Page<LessonRecord> findPage(Pageable pageable, PropertyFilter filter) {
     if (pageable.getSort().isUnsorted()) {
       pageable =
           PageRequest.of(
               pageable.getPageNumber(), pageable.getPageSize(), Sort.by("createdAt").descending());
     }
-    return lessonRecordDao.findPage(pageable, filters);
+    return lessonRecordDao.findPage(pageable, filter);
   }
 }

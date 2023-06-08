@@ -72,7 +72,7 @@ public class ArticleService {
    * @param filters 筛选条件
    * @return string
    */
-  public Page<Article> findPage(Pageable pageable, List<PropertyFilter> filters) {
+  public Page<Article> findPage(Pageable pageable, PropertyFilter filter) {
     if (pageable.getSort().isUnsorted()) {
       pageable =
           PageRequest.of(
@@ -80,7 +80,7 @@ public class ArticleService {
               pageable.getPageSize(),
               Sort.by("publishedAt").descending());
     }
-    return articleDao.findPage(pageable, filters);
+    return articleDao.findPage(pageable, filter);
   }
 
   public List<Article> findAll(Article article) {

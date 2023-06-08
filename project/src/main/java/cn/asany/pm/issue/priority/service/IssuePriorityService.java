@@ -42,8 +42,8 @@ public class IssuePriorityService {
     return true;
   }
 
-  public Page<Priority> findPage(Pageable pager, List<PropertyFilter> filters) {
-    return issuePriorityDao.findPage(pager, filters);
+  public Page<Priority> findPage(Pageable pager, PropertyFilter filter) {
+    return issuePriorityDao.findPage(pager, filter);
   }
 
   public List<Priority> findAll() {

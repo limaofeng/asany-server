@@ -22,13 +22,13 @@ public class DefaultCustomModelService implements CustomModelService {
   }
 
   @Override
-  public <T> List<T> findAll(List<PropertyFilter> filters, int offset, int limit, OrderBy sort) {
-    return repository.findAll(filters, offset, limit, sort);
+  public <T> List<T> findAll(PropertyFilter filter, int offset, int limit, OrderBy sort) {
+    return repository.findAll(filter, offset, limit, sort);
   }
 
   @Override
-  public <T> Page<T> findPage(Page<T> page, List<PropertyFilter> filters) {
-    return repository.findPage(page, filters);
+  public <T> Page<T> findPage(Page<T> page, PropertyFilter filter) {
+    return repository.findPage(page, filter);
   }
 
   @Override
@@ -60,8 +60,8 @@ public class DefaultCustomModelService implements CustomModelService {
   }
 
   @Override
-  public <T> List<T> deleteMany(List<PropertyFilter> filters) {
-    List<T> deletes = repository.findAll(filters);
+  public <T> List<T> deleteMany(PropertyFilter filter) {
+    List<T> deletes = repository.findAll(filter);
     for (T t : deletes) {
       repository.delete(t);
     }

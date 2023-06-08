@@ -64,7 +64,7 @@ type DictType {
 """
 字典过滤器
 """
-input DictFilter {
+input DictWhereInput {
   # 编码
   code: String
   # 名称
@@ -102,7 +102,7 @@ type Query {
   查询数据字典
   """
   dictsConnection(
-    filter: DictFilter = {}
+    where: DictWhereInput = {}
     page: Int = 1
     pageSize: Int = 15
     orderBy: OrderBy = "unsorted"
@@ -110,7 +110,7 @@ type Query {
   """
   查询数据字典
   """
-  dicts(filter: DictFilter = {}): [Dict!]!
+  dicts(where: DictWhereInput = {}): [Dict!]!
   """
   数据字典
   非 ID 查询时，必须同时提供 code 与 type

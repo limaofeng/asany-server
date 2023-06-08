@@ -13,7 +13,6 @@ import cn.asany.storage.data.service.FileService;
 import java.util.List;
 import java.util.Optional;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
-import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
 import org.jfantasy.framework.spring.mvc.error.NotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -77,21 +76,21 @@ public class CloudDriveService {
   }
 
   public Optional<CloudDrive> findPersonalCloudDriveByUserId(Long uid) {
-    PropertyFilterBuilder builder =
-        PropertyFilter.builder()
+    PropertyFilter builder =
+        PropertyFilter.newFilter()
             .equal("type", CloudDriveType.PERSONAL)
             .equal("ownerType", User.OWNERSHIP_KEY)
             .equal("ownerId", uid);
-    return cloudDriveDao.findOne(builder.build());
+    return cloudDriveDao.findOne(builder);
   }
 
   public List<CloudDrive> cloudDrives(Long uid) {
-    PropertyFilterBuilder builder =
-        PropertyFilter.builder()
+    PropertyFilter filter =
+        PropertyFilter.newFilter()
             .equal("type", CloudDriveType.PERSONAL)
             .equal("ownerType", User.OWNERSHIP_KEY)
             .equal("ownerId", uid);
-    return cloudDriveDao.findAll(builder.build());
+    return cloudDriveDao.findAll(filter);
   }
 
   public CloudDrive getCloudDriveById(Long id) {

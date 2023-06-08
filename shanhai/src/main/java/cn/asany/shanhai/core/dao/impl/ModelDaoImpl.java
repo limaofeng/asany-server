@@ -26,7 +26,7 @@ public class ModelDaoImpl extends ComplexJpaRepository<Model, Long> implements M
   }
 
   @Override
-  public List<Model> findAllWithMetadataAndFields(List<PropertyFilter> filters, Sort orderBy) {
-    return super.findAll(filters, orderBy);
+  public List<Model> findAllWithMetadataAndFields(PropertyFilter filter, Sort orderBy) {
+    return super.findAll(filter, orderBy);
   }
 }

@@ -100,7 +100,7 @@ public class VirtualStorage implements Storage {
   public List<FileObject> listFiles() {
     List<FileDetail> objects =
         this.fileService.findAll(
-            PropertyFilter.builder().equal("parentFile.id", this.rootFolder.getId()).build());
+            PropertyFilter.newFilter().equal("parentFile.id", this.rootFolder.getId()));
     return objects.stream().map(item -> item.toFileObject(this)).collect(Collectors.toList());
   }
 
@@ -108,7 +108,7 @@ public class VirtualStorage implements Storage {
   public List<FileObject> listFiles(String remotePath) {
     List<FileDetail> objects =
         this.fileService.findAll(
-            PropertyFilter.builder().equal("parentFile.path", remotePath).build());
+            PropertyFilter.newFilter().equal("parentFile.path", remotePath));
     return objects.stream().map(item -> item.toFileObject(this)).collect(Collectors.toList());
   }
 

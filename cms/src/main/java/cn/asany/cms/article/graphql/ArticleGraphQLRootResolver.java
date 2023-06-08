@@ -18,8 +18,8 @@ import cn.asany.organization.core.domain.Organization;
 import graphql.kickstart.tools.GraphQLMutationResolver;
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import java.util.List;
+import org.jfantasy.framework.dao.jpa.JpaDefaultPropertyFilter;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
-import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.graphql.util.Kit;
 import org.springframework.core.env.Environment;
@@ -74,49 +74,48 @@ public class ArticleGraphQLRootResolver implements GraphQLQueryResolver, GraphQL
    * @return ArticleConnection
    */
   public ArticleConnection articles(
-      ArticleFilter filter, int first, int page, int pageSize, Sort orderBy) {
-    PropertyFilterBuilder builder =
-        ObjectUtil.defaultValue(filter, new ArticleFilter()).getBuilder();
+    ArticleWhereInput filter, int first, int page, int pageSize, Sort orderBy) {
+    PropertyFilter queryFilter =
+        ObjectUtil.defaultValue(filter, new ArticleWhereInput()).toFilter();
 
     Pageable pageable = PageRequest.of(page - 1, pageSize, orderBy);
 
     return Kit.connection(
-        articleService.findPage(pageable, builder.build()), ArticleConnection.class);
+        articleService.findPage(pageable, queryFilter), ArticleConnection.class);
   }
 
   public List<ArticleTag> articleTags(
-      String organization, ArticleCategoryFilter filter, Sort orderBy) {
-    PropertyFilterBuilder builder =
-        ObjectUtil.defaultValue(filter, new ArticleCategoryFilter()).getBuilder();
+    String organization, ArticleCategoryWhereInput filter, Sort orderBy) {
+    PropertyFilter builder =
+        ObjectUtil.defaultValue(filter, new ArticleCategoryWhereInput()).toFilter();
     if (organization != null) {
       builder.equal("organization.id", organization);
     }
     if (orderBy != null) {
-      return articleTagService.findAllArticle(builder.build(), orderBy);
+      return articleTagService.findAllArticle(builder, orderBy);
     } else {
-      return articleTagService.findAll(builder.build());
+      return articleTagService.findAll(builder);
     }
   }
 
   public List<ArticleCategory> starredArticleCategories(
       Long employee, ArticleChannelStarType starType) {
-    PropertyFilterBuilder builder = PropertyFilter.builder();
-    builder.and(new StarSpecification(employee, starType.getValue()));
-    return articleCategoryService.findAll(builder.build());
+    PropertyFilter builder = PropertyFilter.newFilter().and(new StarSpecification(employee, starType.getValue()));
+    return articleCategoryService.findAll(builder);
   }
 
   public ArticleConnection starredArticles(
       Long employee,
       ArticleStarType starType,
-      ArticleFilter filter,
+      ArticleWhereInput filter,
       int page,
       int pageSize,
       Sort orderBy) {
-    PropertyFilterBuilder builder =
-        ObjectUtil.defaultValue(filter, new ArticleFilter()).getBuilder();
-    builder.and(new StarSpecification(employee, starType.getValue()));
+    JpaDefaultPropertyFilter propertyFilter =
+      (JpaDefaultPropertyFilter)ObjectUtil.defaultValue(filter, new ArticleWhereInput()).toFilter();
+    propertyFilter.and(new StarSpecification(employee, starType.getValue()));
     return Kit.connection(
-        articleService.findPage(PageRequest.of(page - 1, pageSize, orderBy), builder.build()),
+        articleService.findPage(PageRequest.of(page - 1, pageSize, orderBy), propertyFilter),
         ArticleConnection.class);
   }
 

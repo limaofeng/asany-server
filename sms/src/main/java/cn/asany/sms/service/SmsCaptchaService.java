@@ -70,6 +70,7 @@ public class SmsCaptchaService implements CaptchaService {
    * @param code 验证码
    * @return {boolean}
    */
+  @Override
   public boolean validateResponseForID(String configId, String id, String code) {
     CaptchaConfig config = this.getConfig(configId);
     // 配置信息不存在
@@ -81,7 +82,7 @@ public class SmsCaptchaService implements CaptchaService {
     }
     Optional<Captcha> captchaOptional =
         captchaDao.findOne(
-            PropertyFilter.builder().equal("config.id", configId).equal("sessionId", id).build());
+            PropertyFilter.newFilter().equal("config.id", configId).equal("sessionId", id));
     // 验证码不存在或者超过重试次数
     if (!captchaOptional.isPresent() || captchaOptional.get().getRetry() >= config.getRetry()) {
       throw new ValidationException("200105", "验证码不存在或者超过重试次数");
@@ -111,6 +112,7 @@ public class SmsCaptchaService implements CaptchaService {
    * @param force 强制发送
    * @return String
    */
+  @Override
   public String getChallengeForID(String configId, String id, String phone, boolean force) {
     if (!RegexpUtil.isMatch(phone, VALIDATOR_MOBILE)) {
       if (log.isDebugEnabled()) {
@@ -148,7 +150,7 @@ public class SmsCaptchaService implements CaptchaService {
 
     Optional<Captcha> captchaOptional =
         captchaDao.findOne(
-            PropertyFilter.builder().equal("config.id", configId).equal("sessionId", id).build());
+            PropertyFilter.newFilter().equal("config.id", configId).equal("sessionId", id));
     Captcha captcha = captchaOptional.orElse(null);
 
     if (captcha != null) {
@@ -199,8 +201,8 @@ public class SmsCaptchaService implements CaptchaService {
     }
   }
 
-  public Page<Captcha> findCaptchaPage(Pageable page, List<PropertyFilter> filters) {
-    return this.captchaDao.findPage(page, filters);
+  public Page<Captcha> findCaptchaPage(Pageable page, PropertyFilter filter) {
+    return this.captchaDao.findPage(page, filter);
   }
 
   public CaptchaConfig getConfig(String configId) {
@@ -212,8 +214,8 @@ public class SmsCaptchaService implements CaptchaService {
    *
    * @return pager
    */
-  public Page<CaptchaConfig> findPage(Pageable page, List<PropertyFilter> filters) {
-    return this.captchaConfigDao.findPage(page, filters);
+  public Page<CaptchaConfig> findPage(Pageable page, PropertyFilter filter) {
+    return this.captchaConfigDao.findPage(page, filter);
   }
 
   /**

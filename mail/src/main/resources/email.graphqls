@@ -154,7 +154,7 @@ type MailboxMessage {
   originalMailboxName: String!
 }
 
-input MailboxMessageFilter {
+input MailboxMessageWhereInput {
   mailbox: ID
 }
 
@@ -394,7 +394,7 @@ extend type Query {
     """
     筛选条件
     """
-    filter: MailboxMessageFilter = {}
+    where: MailboxMessageWhereInput = {}
     """
     偏移量
     """

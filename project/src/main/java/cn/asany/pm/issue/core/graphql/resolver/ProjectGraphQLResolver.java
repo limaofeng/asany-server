@@ -1,7 +1,7 @@
 package cn.asany.pm.issue.core.graphql.resolver;
 
 import cn.asany.pm.issue.core.domain.Issue;
-import cn.asany.pm.issue.core.graphql.input.IssueFilter;
+import cn.asany.pm.issue.core.graphql.input.IssueWhereInput;
 import cn.asany.pm.issue.core.service.IssueService;
 import cn.asany.pm.project.domain.Project;
 import graphql.kickstart.tools.GraphQLResolver;
@@ -18,8 +18,8 @@ public class ProjectGraphQLResolver implements GraphQLResolver<Project> {
     this.issueService = issueService;
   }
 
-  public List<Issue> issues(Project project, IssueFilter filter, int size, Sort orderBy) {
-    filter.setProject(project.getId());
-    return issueService.findAll(filter.build(), size, orderBy);
+  public List<Issue> issues(Project project, IssueWhereInput where, int size, Sort orderBy) {
+    where.setProject(project.getId());
+    return issueService.findAll(where.toFilter(), size, orderBy);
   }
 }

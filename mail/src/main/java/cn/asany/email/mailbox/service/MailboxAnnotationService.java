@@ -14,18 +14,18 @@ public class MailboxAnnotationService {
 
   public List<JamesMailboxAnnotation> retrieveAllAnnotations(long mailboxId) {
     return this.mailboxAnnotationDao.findAll(
-        PropertyFilter.builder().equal("mailboxId", mailboxId).build());
+        PropertyFilter.newFilter().equal("mailboxId", mailboxId));
   }
 
   public JamesMailboxAnnotation retrieveByKey(long mailboxId, String key) {
     return this.mailboxAnnotationDao
-        .findOne(PropertyFilter.builder().equal("mailboxId", mailboxId).equal("key", key).build())
+        .findOne(PropertyFilter.newFilter().equal("mailboxId", mailboxId).equal("key", key))
         .orElse(null);
   }
 
   public List<JamesMailboxAnnotation> retrieveByKeyLike(long mailboxId, String key) {
     return this.mailboxAnnotationDao.findAll(
-        PropertyFilter.builder().equal("mailboxId", mailboxId).contains("key", key).build());
+        PropertyFilter.newFilter().equal("mailboxId", mailboxId).contains("key", key));
   }
 
   public Optional<JamesMailboxAnnotation> findById(JPAMailboxAnnotationId id) {
@@ -50,6 +50,6 @@ public class MailboxAnnotationService {
 
   public long countAnnotationsInMailbox(long mailboxId) {
     return this.mailboxAnnotationDao.count(
-        PropertyFilter.builder().equal("mailboxId", mailboxId).build());
+        PropertyFilter.newFilter().equal("mailboxId", mailboxId));
   }
 }

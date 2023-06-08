@@ -56,10 +56,9 @@ public class EmployeeGroupService {
     }
     //        updateBusinessEmployeeGroup(businessId, employeeGroup, employees);
     for (Long employee : employees) {
-      List<PropertyFilter> list = new ArrayList();
-      list.add(new PropertyFilter("EQ_employees.id", employee));
-      list.add(new PropertyFilter("EQ_id", group));
-      List ListEmployee = employeeGroupDao.findAll(list);
+      PropertyFilter filter = PropertyFilter.newFilter();
+      filter.equal("employees.id", employee).equal("id", group);
+      List ListEmployee = employeeGroupDao.findAll(filter);
       if (ListEmployee.size() > 0) {
         continue;
       }

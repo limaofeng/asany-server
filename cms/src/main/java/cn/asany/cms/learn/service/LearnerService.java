@@ -55,7 +55,7 @@ public class LearnerService {
     return true;
   }
 
-  public Page<Learner> findPage(Pageable pageable, List<PropertyFilter> filter) {
+  public Page<Learner> findPage(Pageable pageable, PropertyFilter filter) {
     if (pageable.getSort().isUnsorted()) {
       pageable =
           PageRequest.of(
@@ -74,15 +74,15 @@ public class LearnerService {
   }
 
   public Date lastStudyTime(Learner learner, int page, int pageSize) {
-    PropertyFilterBuilder builder = new PropertyFilterBuilder();
+    PropertyFilter filter = PropertyFilter.newFilter();
     if (learner.getEmployee() != null) {
-      builder.equal("learner.employee.id", learner.getEmployee());
+      filter.equal("learner.employee.id", learner.getEmployee());
     }
     if (learner.getCourse() != null) {
-      builder.equal("course", learner.getCourse());
+      filter.equal("course", learner.getCourse());
     }
     Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by("updatedAt").descending());
-    Page<LessonRecord> lessonRecordPager = lessonRecordDao.findPage(pageable, builder.build());
+    Page<LessonRecord> lessonRecordPager = lessonRecordDao.findPage(pageable, filter);
     if (CollectionUtils.isEmpty(lessonRecordPager.getContent())) {
       return null;
     }

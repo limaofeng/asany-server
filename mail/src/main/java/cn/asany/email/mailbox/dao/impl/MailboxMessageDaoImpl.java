@@ -63,7 +63,7 @@ public class MailboxMessageDaoImpl
 
   @Override
   public Page<JamesMailboxMessage> findWithDetailsPage(
-      Pageable pageable, List<PropertyFilter> filters) {
-    return this.findPage(pageable, filters);
+      Pageable pageable, PropertyFilter filter) {
+    return this.findPage(pageable, filter);
   }
 }

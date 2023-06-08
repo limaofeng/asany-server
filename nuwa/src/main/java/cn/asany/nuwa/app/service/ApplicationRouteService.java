@@ -85,22 +85,22 @@ public class ApplicationRouteService {
 
   private final SortNodeLoader<ApplicationRoute> sortNodeLoader = new RouteSortNodeLoader();
 
-  public List<ApplicationRoute> findAll(List<PropertyFilter> filters) {
-    return this.routeDao.findAll(filters);
+  public List<ApplicationRoute> findAll(PropertyFilter filter) {
+    return this.routeDao.findAll(filter);
   }
 
   private class RouteSortNodeLoader implements SortNodeLoader<ApplicationRoute> {
     @Override
     public List<ApplicationRoute> getAll(Serializable parentId, ApplicationRoute route) {
-      PropertyFilterBuilder builder = PropertyFilter.builder();
+      PropertyFilter filter = PropertyFilter.newFilter();
       if (route.getParent() == null) {
-        builder.isNull("parent");
-        builder.equal("application.id", route.getApplication().getId());
+        filter.isNull("parent");
+        filter.equal("application.id", route.getApplication().getId());
       } else {
-        builder.equal("parent.id", parentId);
+        filter.equal("parent.id", parentId);
       }
       return ApplicationRouteService.this.routeDao.findAll(
-          builder.build(), Sort.by("index").ascending());
+          filter, Sort.by("index").ascending());
     }
 
     @Override

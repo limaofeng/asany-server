@@ -587,11 +587,10 @@ public class ModelUtils {
       if (defaultTypes == null) {
         defaultTypes =
             this.modelDao.findAll(
-                PropertyFilter.builder()
+                PropertyFilter.newFilter()
                     .or(
-                        PropertyFilter.builder().equal("type", ModelType.SCALAR),
-                        PropertyFilter.builder().in("code", "Query", "Mutation"))
-                    .build());
+                        PropertyFilter.newFilter().equal("type", ModelType.SCALAR),
+                        PropertyFilter.newFilter().in("code", "Query", "Mutation")));
       }
       HOLDER.set(new ModelUtilCache(defaultTypes));
       return HOLDER.get();

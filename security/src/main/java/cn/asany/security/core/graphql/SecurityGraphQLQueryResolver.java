@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.lang3.ObjectUtils;
-import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
+import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.graphql.util.Kit;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,10 +56,10 @@ public class SecurityGraphQLQueryResolver implements GraphQLQueryResolver {
   }
 
   /** 查询所有用户,带条件查询 */
-  public UserConnection users(UserFilter filter, int page, int pageSize, Sort orderBy) {
+  public UserConnection users(UserWhereInput where, int page, int pageSize, Sort orderBy) {
     Pageable pageable = PageRequest.of(page - 1, pageSize, orderBy);
-    filter = ObjectUtil.defaultValue(filter, new UserFilter());
-    return Kit.connection(userService.findPage(pageable, filter.build()), UserConnection.class);
+    where = ObjectUtil.defaultValue(where, new UserWhereInput());
+    return Kit.connection(userService.findPage(pageable, where.toFilter()), UserConnection.class);
   }
 
   public List<SecurityScopeObject> securityScopes(
@@ -177,9 +177,9 @@ public class SecurityGraphQLQueryResolver implements GraphQLQueryResolver {
   //        return securityService.scopesAnalysis(ids);
   //    }
 
-  public List<RoleSpace> roleScopes(BusinessFilter filter) {
-    filter = ObjectUtil.defaultValue(filter, new BusinessFilter());
-    return roleScopeService.findAll(filter.build());
+  public List<RoleSpace> roleScopes(BusinessWhereInput filter) {
+    filter = ObjectUtil.defaultValue(filter, new BusinessWhereInput());
+    return roleScopeService.findAll(filter.toFilter());
   }
 
   public RoleSpace roleScope(String id) {
@@ -187,30 +187,30 @@ public class SecurityGraphQLQueryResolver implements GraphQLQueryResolver {
   }
 
   /** 查询角色 */
-  public RoleConnection findRoles(RoleFilter filter, int page, int pageSize, Sort orderBy) {
+  public RoleConnection findRoles(RoleWhereInput filter, int page, int pageSize, Sort orderBy) {
     Pageable pageable = PageRequest.of(page - 1, pageSize, orderBy);
-    filter = ObjectUtil.defaultValue(filter, new RoleFilter());
-    return Kit.connection(roleService.findPage(pageable, filter.build()), RoleConnection.class);
+    filter = ObjectUtil.defaultValue(filter, new RoleWhereInput());
+    return Kit.connection(roleService.findPage(pageable, filter.toFilter()), RoleConnection.class);
   }
 
   /** 查询权限分类 */
   public PermissionTypeConnection permissionTypes(
-      PermissionTypeFilter filter, int page, int pageSize, Sort orderBy) {
+    PermissionTypeWhereInput filter, int page, int pageSize, Sort orderBy) {
     Pageable pageable = PageRequest.of(page - 1, pageSize, orderBy);
-    PropertyFilterBuilder builder =
-        ObjectUtil.defaultValue(filter, new PermissionTypeFilter()).getBuilder();
+    PropertyFilter propertyFilter =
+        ObjectUtil.defaultValue(filter, new PermissionTypeWhereInput()).toFilter();
     return Kit.connection(
-        permissionService.findTypePage(pageable, builder.build()), PermissionTypeConnection.class);
+        permissionService.findTypePage(pageable, propertyFilter), PermissionTypeConnection.class);
   }
 
   /** 查询权限分类 */
   public PermissionConnection permissions(
-      PermissionFilter filter, int page, int pageSize, Sort orderBy) {
+    PermissionWhereInput filter, int page, int pageSize, Sort orderBy) {
     Pageable pageable = PageRequest.of(page - 1, pageSize, orderBy);
-    PropertyFilterBuilder builder =
-        ObjectUtil.defaultValue(filter, new PermissionFilter()).getBuilder();
+    PropertyFilter propertyFilter =
+        ObjectUtil.defaultValue(filter, new PermissionWhereInput()).toFilter();
     return Kit.connection(
-        permissionService.findPage(pageable, builder.build()), PermissionConnection.class);
+        permissionService.findPage(pageable, propertyFilter), PermissionConnection.class);
   }
 
   /** 查询用户是否有指定的权限 */

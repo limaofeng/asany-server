@@ -47,11 +47,11 @@ input OrganizationEmployeeInput {
   positions: [EmployeePositionInput]
 }
 
-input OrganizationFilter {
+input OrganizationWhereInput {
   id_in: [String]
 }
 
-input DepartmentFilter {
+input DepartmentWhereInput {
   type: ID
   # parent为null时，查询所有部门，为0时查询所有一级部门，其他值时查询该部门下所有一级子集部门
   parent: ID
@@ -379,7 +379,7 @@ input OrganizationUpdateInput {
   remark: String
 }
 
-input OrganizationEmployeeStatusFilter {
+input OrganizationEmployeeStatusWhereInput {
   # Id
   id: ID
   # 人员状态
@@ -387,7 +387,7 @@ input OrganizationEmployeeStatusFilter {
   # 适用组织
   organizationId: String
 }
-input PositionFilter {
+input PositionWhereInput {
   # Id
   id: ID
   # 职位名称
@@ -523,7 +523,7 @@ input UpdateOrganizationProfileUpdateInput {
   location: AddressInput
 }
 
-input EmployeeFilter {
+input EmployeeWhereInput {
   id_in: [ID]
   # 职务
   job: ID
@@ -553,11 +553,11 @@ input EmployeeFilter {
   userName: String
   # 角色
   role: ID
-  AND: [EmployeeFilter]
-  OR: [EmployeeFilter]
-  NOT: [EmployeeFilter]
-  and: [EmployeeFilter]
-  or: [EmployeeFilter]
+  AND: [EmployeeWhereInput]
+  OR: [EmployeeWhereInput]
+  NOT: [EmployeeWhereInput]
+  and: [EmployeeWhereInput]
+  or: [EmployeeWhereInput]
 }
 
 input ExtensionField {
@@ -567,7 +567,7 @@ input ExtensionField {
   value: String
 }
 
-input OrganizationEmployeeFilter {
+input OrganizationEmployeeWhereInput {
   id_in: [ID]
   # 职务
   job: ID
@@ -827,13 +827,13 @@ type TeamMember {
 
 extend type Query {
   # 组织•组织列表
-  organizations(filter: OrganizationFilter = {}): [Organization!]!
+  organizations(where: OrganizationWhereInput = {}): [Organization!]!
   # 团队成员
   teamMembers: [TeamMember!]!
   # 组织•单个组织
   organization(id: ID!): Organization
   # 全部部门
-  departments(organization: ID!, filter: DepartmentFilter): [Department!]!
+  departments(organization: ID!, where: DepartmentWhereInput): [Department!]!
   # 单个部门
   department(id: ID!): Department
   #    # 员工分页查询

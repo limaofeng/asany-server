@@ -7,6 +7,7 @@ import cn.asany.organization.core.domain.EmployeeGroupScope;
 import java.util.List;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -32,12 +33,12 @@ public class EmployeeGroupScopeService {
   }
 
   public List<EmployeeGroupScope> findAll(Long organization, String name) {
-    PropertyFilterBuilder builder = new PropertyFilterBuilder();
-    builder.equal("organization.id", organization);
+    PropertyFilter filter = PropertyFilter.newFilter();
+    filter.equal("organization.id", organization);
     if (StringUtils.isNotBlank(name)) {
-      builder.contains("name", name);
+      filter.contains("name", name);
     }
-    return employeeGroupScopeDao.findAll(builder.build());
+    return employeeGroupScopeDao.findAll(filter);
   }
 
   public EmployeeGroupScope get(String id) {

@@ -2,7 +2,7 @@ package cn.asany.cms.article.graphql;
 
 import cn.asany.cms.article.converter.ArticleFeatureConverter;
 import cn.asany.cms.article.domain.ArticleFeature;
-import cn.asany.cms.article.graphql.input.ArticleFeatureFilter;
+import cn.asany.cms.article.graphql.input.ArticleFeatureWhereInput;
 import cn.asany.cms.article.graphql.input.ArticleFeatureInput;
 import cn.asany.cms.article.service.ArticleFeatureService;
 import graphql.kickstart.tools.GraphQLMutationResolver;
@@ -30,9 +30,9 @@ public class ArticleFeatureGraphQLQueryResolver
   }
 
   public List<ArticleFeature> articleFeatures(
-      String organization, ArticleFeatureFilter filter, Sort orderBy) {
-    filter.getBuilder().equal("organization.id", organization);
-    return featureService.findAll(filter.build(), orderBy);
+    String organization, ArticleFeatureWhereInput where, Sort orderBy) {
+    where.toFilter().equal("organization.id", organization);
+    return featureService.findAll(where.toFilter(), orderBy);
   }
 
   public ArticleFeature articleFeature(Long id) {

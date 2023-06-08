@@ -2,7 +2,7 @@ package cn.asany.workflow.state.graphql.filter;
 
 import cn.asany.workflow.state.domain.State;
 import lombok.Data;
-import org.jfantasy.graphql.inputs.QueryFilter;
+import org.jfantasy.graphql.inputs.WhereInput;
 
 /**
  * 状态筛选
@@ -11,4 +11,4 @@ import org.jfantasy.graphql.inputs.QueryFilter;
  * @date 2022/7/28 9:12 9:12
  */
 @Data
-public class StateFilter extends QueryFilter<StateFilter, State> {}
+public class StateFilter extends WhereInput<StateFilter, State> {}

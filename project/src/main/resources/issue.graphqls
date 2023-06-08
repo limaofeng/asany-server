@@ -195,7 +195,7 @@ type IssueTimeTrack {
 }
 
 #任务条件筛选
-input IssueFilter {
+input IssueWhereInput {
   #所属项目
   projectId_eq: ID
   # 任务状态
@@ -350,7 +350,7 @@ input IssueFieldValue {
 
 extend type Project {
   issues(
-    filter: IssueFilter = {}
+    where: IssueWhereInput = {}
     size: Int = 10
     orderBy: OrderBy = "unsorted"
   ): [Issue!]!
@@ -360,7 +360,7 @@ extend type Query {
   issue(id: ID!): Issue
   #分页查询任务
   issues(
-    filter: IssueFilter = {}
+    where: IssueWhereInput = {}
     page: Int = 1
     pageSize: Int = 15
     orderBy: OrderBy = "unsorted"

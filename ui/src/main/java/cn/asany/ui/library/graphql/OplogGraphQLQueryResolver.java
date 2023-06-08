@@ -1,7 +1,7 @@
 package cn.asany.ui.library.graphql;
 
 import cn.asany.ui.library.domain.Oplog;
-import cn.asany.ui.library.graphql.input.OplogFilter;
+import cn.asany.ui.library.graphql.input.OplogWhereInput;
 import cn.asany.ui.library.service.OplogService;
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import java.util.List;
@@ -17,8 +17,8 @@ public class OplogGraphQLQueryResolver implements GraphQLQueryResolver {
     this.oplogService = oplogService;
   }
 
-  public List<Oplog> oplogs(OplogFilter filter) {
-    filter = ObjectUtil.defaultValue(filter, new OplogFilter());
-    return this.oplogService.oplogs(filter.build());
+  public List<Oplog> oplogs(OplogWhereInput filter) {
+    filter = ObjectUtil.defaultValue(filter, new OplogWhereInput());
+    return this.oplogService.oplogs(filter.toFilter());
   }
 }

@@ -67,7 +67,7 @@ public class StatusService {
     return statusDao.save(Status);
   }
 
-  public Page<Status> findPage(Pageable pageable, List<PropertyFilter> filters) {
-    return statusDao.findPage(pageable, filters);
+  public Page<Status> findPage(Pageable pageable, PropertyFilter filter) {
+    return statusDao.findPage(pageable, filter);
   }
 }

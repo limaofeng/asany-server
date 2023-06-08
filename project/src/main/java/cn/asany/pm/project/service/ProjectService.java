@@ -44,7 +44,7 @@ public class ProjectService {
   }
 
   @Transactional(readOnly = true)
-  public Page<Project> findPage(Pageable pageable, List<PropertyFilter> filters) {
-    return this.projectDao.findPage(pageable, filters);
+  public Page<Project> findPage(Pageable pageable, PropertyFilter filter) {
+    return this.projectDao.findPage(pageable, filter);
   }
 }

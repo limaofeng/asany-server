@@ -79,7 +79,7 @@ type PermissionEdge {
   node: Permission
 }
 
-input PermissionFilter {
+input PermissionWhereInput {
   """
   名称模糊查询
   """
@@ -91,7 +91,7 @@ extend type Query {
   查询权限 (分页)
   """
   permissionsConnection(
-    filter: PermissionFilter = {}
+    where: PermissionWhereInput = {}
     page: Int = 1
     pageSize: Int = 15
     orderBy: OrderBy = "unsorted"
@@ -100,7 +100,7 @@ extend type Query {
   查询权限
   """
   permissions(
-    filter: PermissionFilter
+    where: PermissionWhereInput
     orderBy: OrderBy = "unsorted"
   ): [Permission]
 }

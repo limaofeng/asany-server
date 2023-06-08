@@ -14,5 +14,5 @@ public interface LibraryItemDao extends JpaRepository<LibraryItem, Long> {
   List<LibraryItem> findAllByTagWithIcon(Long libraryId, String tag);
 
   @EntityGraph(value = "Graph.LibraryItem.FetchIcon", type = EntityGraph.EntityGraphType.FETCH)
-  List<LibraryItem> findAllByTagWithIcon(List<PropertyFilter> filters);
+  List<LibraryItem> findAllByTagWithIcon(PropertyFilter filter);
 }

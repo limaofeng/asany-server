@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
-import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,12 +41,12 @@ public class LibraryService {
     this.oplogService = oplogService;
   }
 
-  public List<Library> libraries(PropertyFilterBuilder builder, LibraryType type, boolean with) {
+  public List<Library> libraries(PropertyFilter filter, LibraryType type, boolean with) {
     if (LibraryType.ICONS == type) {
-      builder.equal("type", LibraryType.ICONS);
+      filter.equal("type", LibraryType.ICONS);
       return with
-          ? this.libraryDao.findAllWithIcon(builder.build())
-          : this.libraryDao.findAll(builder.build());
+          ? this.libraryDao.findAllWithIcon(filter)
+          : this.libraryDao.findAll(filter);
     }
     return new ArrayList<>();
   }
@@ -94,7 +93,7 @@ public class LibraryService {
   }
 
   public Long getResourceTotal(Long id) {
-    return this.libraryItemDao.count(PropertyFilter.builder().equal("library.id", id).build());
+    return this.libraryItemDao.count(PropertyFilter.newFilter().equal("library.id", id));
   }
 
   @Transactional

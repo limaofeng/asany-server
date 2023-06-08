@@ -2,7 +2,6 @@ package cn.asany.flowable.core.service;
 
 import cn.asany.flowable.core.dao.ProcessModelDao;
 import cn.asany.flowable.core.domain.ProcessModel;
-import cn.asany.flowable.core.graphql.input.ProcessModelFilter;
 import cn.asany.storage.utils.UploadUtils;
 import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
@@ -13,6 +12,7 @@ import org.flowable.ui.modeler.model.ModelRepresentation;
 import org.flowable.ui.modeler.service.FlowableModelQueryService;
 import org.flowable.ui.modeler.serviceapi.ModelService;
 import org.jfantasy.framework.dao.Page;
+import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.security.LoginUser;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -42,7 +42,7 @@ public class ProcessModelService {
     return this.processModelDao.getProcessModel(id);
   }
 
-  public Page<ProcessModel> findPage(Page<ProcessModel> page, ProcessModelFilter filter) {
+  public Page<ProcessModel> findPage(Page<ProcessModel> page, PropertyFilter filter) {
     return this.processModelDao.findPage(page, filter);
   }
 

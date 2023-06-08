@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
-import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
 import org.jfantasy.framework.util.common.StringUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -73,15 +72,14 @@ public class EnterpriseContactsService implements IContactsService {
 
   @Override
   public Page<Contact> findPager(
-      ContactBook book, String namespace, Pageable pageable, List<PropertyFilter> filters) {
+      ContactBook book, String namespace, Pageable pageable, PropertyFilter filter) {
     Organization organization = (Organization) book.getOwner();
 
     String finalNamespace =
         StringUtil.defaultValue(namespace, () -> ContactGroupNamespace.ENTERPRISE_DEPARTMENT);
 
     if (ContactGroupNamespace.ENTERPRISE_DEPARTMENT.equals(finalNamespace)) {
-      PropertyFilterBuilder builder = PropertyFilter.builder().and(filters);
-      Page<Employee> page = this.employeeService.findPage(pageable, builder.build());
+      Page<Employee> page = this.employeeService.findPage(pageable, filter);
       return page.map(contactsConverter::toContact);
     }
 

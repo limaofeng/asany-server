@@ -44,5 +44,5 @@ public interface MailboxMessageDao extends JpaRepository<JamesMailboxMessage, Ma
   @EntityGraph(
       value = "Graph.MailboxMessage.FetchDetails",
       type = EntityGraph.EntityGraphType.FETCH)
-  Page<JamesMailboxMessage> findWithDetailsPage(Pageable pageable, List<PropertyFilter> filters);
+  Page<JamesMailboxMessage> findWithDetailsPage(Pageable pageable, PropertyFilter filter);
 }

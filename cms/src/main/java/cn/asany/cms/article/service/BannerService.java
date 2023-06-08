@@ -25,8 +25,8 @@ public class BannerService {
   }
 
   @Transactional(readOnly = true)
-  public List<Banner> findAll(List<PropertyFilter> filters, Sort orderBy) {
-    return bannerDao.findAll(filters, orderBy);
+  public List<Banner> findAll(PropertyFilter filter, Sort orderBy) {
+    return bannerDao.findAll(filter, orderBy);
   }
 
   @Transactional(readOnly = true)

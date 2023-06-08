@@ -4,6 +4,7 @@ import cn.asany.shanhai.core.domain.ModelFieldMetadata;
 import cn.asany.shanhai.core.support.model.FieldType;
 import cn.asany.storage.api.FileObject;
 import lombok.Data;
+import org.jfantasy.framework.dao.MatchType;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.springframework.stereotype.Component;
 
@@ -44,7 +45,7 @@ public class AssetField implements FieldType<String, FileObject> {
   }
 
   @Override
-  public PropertyFilter.MatchType[] filters() {
-    return new PropertyFilter.MatchType[] {};
+  public MatchType[] filters() {
+    return new MatchType[] {};
   }
 }

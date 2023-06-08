@@ -43,7 +43,7 @@ public class StateService {
     return stateDao.save(state);
   }
 
-  public Page<State> findPage(Pageable pageable, List<PropertyFilter> filters) {
-    return stateDao.findPage(pageable, filters);
+  public Page<State> findPage(Pageable pageable, PropertyFilter filter) {
+    return stateDao.findPage(pageable, filter);
   }
 }

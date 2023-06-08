@@ -4,6 +4,8 @@ import cn.asany.shanhai.core.support.graphql.resolvers.base.utils.MethodArgument
 import graphql.schema.DataFetchingEnvironment;
 import java.util.List;
 import java.util.Map;
+
+import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
 
 public interface QueryFindAllDataFetcher extends DelegateDataFetcher, BaseDataFetcher {
@@ -24,5 +26,5 @@ public interface QueryFindAllDataFetcher extends DelegateDataFetcher, BaseDataFe
     return new Object[] {MethodArgumentResolver.where(where)};
   }
 
-  List<Object> findAll(PropertyFilterBuilder filter);
+  List<Object> findAll(PropertyFilter filter);
 }

@@ -14,11 +14,11 @@ public class SubscriptionService {
   public Optional<JamesSubscription> findFindMailboxSubscriptionForUser(
       String user, String mailbox) {
     return this.subscriptionDao.findOne(
-        PropertyFilter.builder().equal("username", user).equal("mailbox", mailbox).build());
+        PropertyFilter.newFilter().equal("username", user).equal("mailbox", mailbox));
   }
 
   public List<JamesSubscription> findSubscriptionsForUser(String user) {
-    return this.subscriptionDao.findAll(PropertyFilter.builder().equal("username", user).build());
+    return this.subscriptionDao.findAll(PropertyFilter.newFilter().equal("username", user));
   }
 
   public void delete(long id) {

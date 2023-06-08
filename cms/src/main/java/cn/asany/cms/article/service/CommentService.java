@@ -44,16 +44,16 @@ public class CommentService {
     return this.commentDao.update(comment, merge);
   }
 
-  public Page<Comment> findPage(Pageable pageable, List<PropertyFilter> filters) {
-    return this.commentDao.findPage(pageable, filters);
+  public Page<Comment> findPage(Pageable pageable, PropertyFilter filter) {
+    return this.commentDao.findPage(pageable, filter);
   }
 
   public Comment get(Long id) {
     return this.commentDao.getReferenceById(id);
   }
 
-  public List<Comment> findAll(List<PropertyFilter> filters) {
-    return this.commentDao.findAll(filters, Sort.by("createdAt").ascending());
+  public List<Comment> findAll(PropertyFilter filter) {
+    return this.commentDao.findAll(filter, Sort.by("createdAt").ascending());
   }
 
   public Boolean removeComment(Long id) {

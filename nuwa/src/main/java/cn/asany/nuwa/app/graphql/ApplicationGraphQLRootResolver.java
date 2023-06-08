@@ -4,7 +4,7 @@ import cn.asany.nuwa.YamlUtils;
 import cn.asany.nuwa.app.converter.ApplicationConverter;
 import cn.asany.nuwa.app.domain.Application;
 import cn.asany.nuwa.app.graphql.input.ApplicationCreateInput;
-import cn.asany.nuwa.app.graphql.input.ApplicationFilter;
+import cn.asany.nuwa.app.graphql.input.ApplicationWhereInput;
 import cn.asany.nuwa.app.graphql.type.ApplicationIdType;
 import cn.asany.nuwa.app.service.ApplicationService;
 import cn.asany.nuwa.app.service.dto.NativeApplication;
@@ -81,7 +81,7 @@ public class ApplicationGraphQLRootResolver
     return applicationService.findDetailsById(Long.valueOf(id), hasFetchRoutes, hasFetchMenus);
   }
 
-  public List<Application> applications(ApplicationFilter filter) {
-    return applicationService.findAll(filter.build());
+  public List<Application> applications(ApplicationWhereInput filter) {
+    return applicationService.findAll(filter.toFilter());
   }
 }

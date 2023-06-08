@@ -13411,7 +13411,7 @@ type Query {
   "根据年度,所属支部,查询是否已存在"
   judgeUniqueness(deptId: Int, year: String): Boolean
   "关键字查询"
-  keywordQuery(filter: KeyWordQueryFilter, orderBy: String, page: Int = 1, pageSize: Int = 15, parameter: String): BudgetProjectConnection
+  keywordQuery(filter: KeyWordWhereInput, orderBy: String, page: Int = 1, pageSize: Int = 15, parameter: String): BudgetProjectConnection
   "根据主键id查询知识库信息"
   knowledge(id: ID): Knowledge
   knowledgeTypes: [KnowledgeType]
@@ -22971,7 +22971,7 @@ input JoinconditionInput {
   user: String
 }
 
-input KeyWordQueryFilter {
+input KeyWordWhereInput {
   "预算组织"
   budgetHospital_eq: String
   "预算编号模糊查询"

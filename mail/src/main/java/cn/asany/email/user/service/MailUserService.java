@@ -125,11 +125,11 @@ public class MailUserService {
               .filter(
                   item ->
                       !this.mailboxDao.exists(
-                          PropertyFilter.builder()
+                          PropertyFilter.newFilter()
                               .equal("user", item.getUser())
                               .equal("name", item.getName())
                               .equal("namespace", item.getNamespace())
-                              .build()))
+                              ))
               .collect(Collectors.toList()));
     }
   }

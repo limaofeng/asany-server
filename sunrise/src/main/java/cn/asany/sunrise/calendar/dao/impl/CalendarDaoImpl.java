@@ -33,7 +33,7 @@ public class CalendarDaoImpl extends ComplexJpaRepository<Calendar, Long> implem
   public List<Calendar> findAllWithAccountByUid(Long uid) {
     List<Calendar> calendars =
         this.findAll(
-            PropertyFilter.builder().equal("account.owner.id", uid).build(),
+            PropertyFilter.newFilter().equal("account.owner.id", uid),
             Sort.by("index").ascending());
     return ObjectUtil.sort(
         calendars,
@@ -48,10 +48,10 @@ public class CalendarDaoImpl extends ComplexJpaRepository<Calendar, Long> implem
   public Calendar defaultCalendar(Long uid) {
     List<Calendar> calendars =
         this.findAll(
-            PropertyFilter.builder()
+            PropertyFilter.newFilter()
                 .equal("account.owner.id", uid)
                 .equal("type", CalendarType.SUNRISE)
-                .build(),
+                ,
             1,
             Sort.by("index").ascending());
     return calendars.isEmpty() ? null : calendars.get(0);

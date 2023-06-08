@@ -4,9 +4,10 @@ import cn.asany.shanhai.core.domain.Model;
 import cn.asany.shanhai.core.domain.ModelFieldMetadata;
 import cn.asany.shanhai.core.domain.enums.ModelType;
 import cn.asany.shanhai.core.support.model.types.FieldTypeFamily;
+import org.jfantasy.framework.dao.MatchType;
+
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
-import org.jfantasy.framework.dao.jpa.PropertyFilter.MatchType;
 
 /**
  * 字段类型

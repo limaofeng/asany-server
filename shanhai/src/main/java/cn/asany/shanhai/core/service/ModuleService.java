@@ -19,16 +19,16 @@ public class ModuleService {
     this.moduleDao = moduleDao;
   }
 
-  public Page<Module> findPage(Pageable pageable, List<PropertyFilter> filters) {
-    return this.moduleDao.findPage(pageable, filters);
+  public Page<Module> findPage(Pageable pageable, PropertyFilter filter) {
+    return this.moduleDao.findPage(pageable, filter);
   }
 
   public Optional<Module> findById(Long id) {
     return this.moduleDao.findById(id);
   }
 
-  public List<Module> findAll(List<PropertyFilter> filters, int offset, int limit, Sort sort) {
-    return this.moduleDao.findAll(filters, offset, limit, sort);
+  public List<Module> findAll(PropertyFilter filter, int offset, int limit, Sort sort) {
+    return this.moduleDao.findAll(filter, offset, limit, sort);
   }
 
   public Module save(Module module) {

@@ -15,7 +15,7 @@ type Role {
   description: String
 }
 
-input UserFilter {
+input UserWhereInput {
   # 昵称模糊查询
   nickname_like: String
 }
@@ -401,7 +401,7 @@ extend type Query {
   查询用户
   """
   users(
-    filter: UserFilter
+    where: UserWhereInput
     # 跳过
     skip: Int = 0
     # 游标定位 之后

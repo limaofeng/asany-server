@@ -17,7 +17,6 @@ import lombok.NoArgsConstructor;
 import org.hibernate.Hibernate;
 import org.jfantasy.framework.dao.jpa.ComplexJpaRepository;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
-import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
 import org.jfantasy.framework.spring.SpringBeanUtils;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.common.toys.CompareResults;
@@ -119,13 +118,13 @@ public class StorageService {
     }
   }
 
-  public Page<FileDetail> findPage(Pageable pageable, List<PropertyFilter> filters) {
-    return this.fileDetailDao.findPage(pageable, filters);
+  public Page<FileDetail> findPage(Pageable pageable, PropertyFilter filter) {
+    return this.fileDetailDao.findPage(pageable, filter);
   }
 
   public Optional<FileDetail> findOneByPath(String id, String path) {
     return this.fileDetailDao.findOne(
-        PropertyFilter.builder().equal("storageConfig.id", id).equal("path", path).build());
+        PropertyFilter.newFilter().equal("storageConfig.id", id).equal("path", path));
   }
 
   @NoArgsConstructor
@@ -143,17 +142,17 @@ public class StorageService {
     public void exec(List<FileObject> fileObjects) {
       boolean isRoot = FileObject.ROOT_PATH.equals(currentFile.getPath());
 
-      PropertyFilterBuilder filterBuilder =
-          PropertyFilter.builder().equal("storageConfig.id", storageId);
+      PropertyFilter filter =
+          PropertyFilter.newFilter().equal("storageConfig.id", storageId);
 
       if (isRoot) {
-        filterBuilder.isNull("parentFile");
+        filter.isNull("parentFile");
       } else {
-        filterBuilder.equal("parentFile.path", currentFile.getPath());
+        filter.equal("parentFile.path", currentFile.getPath());
       }
 
       List<FileObject> alreadyExisted =
-          this.fileDetailDao.findAll(filterBuilder.build()).stream()
+          this.fileDetailDao.findAll(filter).stream()
               .map(FileDetail::toFileObject)
               .collect(Collectors.toList());
 
@@ -225,10 +224,10 @@ public class StorageService {
         file =
             fileDetailDao
                 .findOne(
-                    PropertyFilter.builder()
+                    PropertyFilter.newFilter()
                         .equal("storageConfig.id", storageId)
                         .equal("path", path)
-                        .build())
+                        )
                 .orElse(null);
       }
       return file;

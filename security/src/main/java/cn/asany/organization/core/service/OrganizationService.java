@@ -268,7 +268,7 @@ public class OrganizationService {
         isNewOrg
             ? new ArrayList<>()
             : this.departmentDao.findAll(
-                PropertyFilter.builder().equal("dimension.id", dimension.getId()).build());
+                PropertyFilter.newFilter().equal("dimension.id", dimension.getId()));
 
     departments =
         ObjectUtil.recursive(
@@ -334,10 +334,9 @@ public class OrganizationService {
           isNewOrg
               ? Optional.empty()
               : this.departmentTypeDao.findOne(
-                  PropertyFilter.builder()
+                  PropertyFilter.newFilter()
                       .equal("code", departmentType.getCode())
-                      .equal("dimension.id", dimension.getId())
-                      .build());
+                      .equal("dimension.id", dimension.getId()));
       if (!optionalDepartmentType.isPresent()) {
         departmentType.setDimension(dimension);
         departmentType.setOrganization(dimension.getOrganization());
@@ -359,10 +358,9 @@ public class OrganizationService {
           isNewOrg
               ? Optional.empty()
               : this.employeeStatusDao.findOne(
-                  PropertyFilter.builder()
+                  PropertyFilter.newFilter()
                       .equal("code", status.getCode())
-                      .equal("dimension.id", dimension.getId())
-                      .build());
+                      .equal("dimension.id", dimension.getId()));
       if (!optionalStatus.isPresent()) {
         status.setDimension(dimension);
         status.setOrganization(dimension.getOrganization());
@@ -463,9 +461,9 @@ public class OrganizationService {
     this.organizationDao.deleteById(id);
   }
 
-  public List<Organization> findAll(List<PropertyFilter> filters) {
+  public List<Organization> findAll(PropertyFilter filter) {
     return this.organizationDao.findAll(
-        filters, new OrderBy("updatedAt", OrderBy.Direction.DESC).toSort());
+        filter, new OrderBy("updatedAt", OrderBy.Direction.DESC).toSort());
   }
 
   public Optional<Organization> findOneByCode(String code) {

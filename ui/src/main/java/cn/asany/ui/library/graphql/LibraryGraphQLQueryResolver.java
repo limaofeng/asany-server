@@ -4,7 +4,7 @@ import cn.asany.base.common.graphql.input.OwnershipInput;
 import cn.asany.ui.library.convert.LibraryConverter;
 import cn.asany.ui.library.domain.Library;
 import cn.asany.ui.library.domain.enums.LibraryType;
-import cn.asany.ui.library.graphql.input.IconLibraryFilter;
+import cn.asany.ui.library.graphql.input.IconLibraryWhereInput;
 import cn.asany.ui.library.graphql.type.ComponentLibrary;
 import cn.asany.ui.library.graphql.type.ILibrary;
 import cn.asany.ui.library.graphql.type.IconLibrary;
@@ -31,7 +31,7 @@ public class LibraryGraphQLQueryResolver implements GraphQLQueryResolver {
   public List<ILibrary> libraries(
       LibraryType type, OwnershipInput ownership, DataFetchingEnvironment environment) {
     if (type == LibraryType.ICONS) {
-      return new ArrayList<>(iconLibraries(new IconLibraryFilter(), ownership, environment));
+      return new ArrayList<>(iconLibraries(new IconLibraryWhereInput(), ownership, environment));
     }
     return new ArrayList<>();
   }
@@ -42,10 +42,10 @@ public class LibraryGraphQLQueryResolver implements GraphQLQueryResolver {
   }
 
   public List<IconLibrary> iconLibraries(
-      IconLibraryFilter filter, OwnershipInput ownership, DataFetchingEnvironment environment) {
+    IconLibraryWhereInput where, OwnershipInput ownership, DataFetchingEnvironment environment) {
     boolean with = environment.getSelectionSet().contains("icons");
     List<Library> libraries =
-        libraryService.libraries(filter.getBuilder(), LibraryType.ICONS, with);
+        libraryService.libraries(where.toFilter(), LibraryType.ICONS, with);
     if (!with) {
       return libraryConverter.toLibraries(libraries);
     }

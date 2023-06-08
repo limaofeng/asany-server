@@ -44,7 +44,7 @@ public class DomainService {
   @Cacheable(key = "targetClass + methodName", value = "MAIL_DOMAIN")
   public JamesDomain getDefaultDomain() {
     return this.jamesDomainDao
-        .findOne(PropertyFilter.builder().isNull("organization").build())
+        .findOne(PropertyFilter.newFilter().isNull("organization"))
         .orElseThrow(() -> new RuntimeException("Default Domain is Null"));
   }
 }

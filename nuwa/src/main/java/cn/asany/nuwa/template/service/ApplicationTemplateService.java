@@ -39,11 +39,11 @@ public class ApplicationTemplateService {
   public void deleteApplicationTemplate(Long applicationId) {
     List<ApplicationTemplateRoute> routes =
         this.applicationTemplateRouteDao.findAll(
-            PropertyFilter.builder()
+            PropertyFilter.newFilter()
                 .equal("application.id", applicationId)
                 .equal("component.scope", ComponentScope.ROUTE)
                 .isNotNull("component")
-                .build());
+                );
     Set<Long> componentIds =
         routes.stream().map(item -> item.getComponent().getId()).collect(Collectors.toSet());
     // 删除应用模版
@@ -116,7 +116,7 @@ public class ApplicationTemplateService {
     }
     if (component.getName() != null) {
       return this.componentDao.findOne(
-          PropertyFilter.builder().equal("name", component.getName()).build());
+          PropertyFilter.newFilter().equal("name", component.getName()));
     }
     if (component.getScope() != ComponentScope.ROUTE) {
       component.setScope(ComponentScope.ROUTE);

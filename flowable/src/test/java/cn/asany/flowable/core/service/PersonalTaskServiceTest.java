@@ -3,6 +3,8 @@ package cn.asany.flowable.core.service;
 import cn.asany.flowable.TestApplication;
 import cn.asany.flowable.core.domain.PersonalTask;
 import java.util.ArrayList;
+
+import cn.asany.flowable.core.filters.TaskPropertyFilter;
 import lombok.extern.slf4j.Slf4j;
 import org.flowable.task.api.TaskInfo;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
@@ -33,7 +35,7 @@ class PersonalTaskServiceTest {
   @Test
   void getTasks() {
     Page<TaskInfo> page =
-        personalTaskService.getTasks(Pageable.ofSize(5), PropertyFilter.builder().equal("owner", "1").build());
+        personalTaskService.findPage(Pageable.ofSize(5), TaskPropertyFilter.newFilter().equal("owner", "1"));
     for (TaskInfo task : page.getContent()) {
       log.info("getTasks: {}", task);
     }

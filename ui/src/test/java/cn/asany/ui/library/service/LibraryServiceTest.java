@@ -26,7 +26,7 @@ class LibraryServiceTest {
   @Test
   void libraries() {
     List<Library> libraries =
-        libraryService.libraries(PropertyFilter.builder(), LibraryType.ICONS, false);
+        libraryService.libraries(PropertyFilter.newFilter(), LibraryType.ICONS, false);
     log.debug("libraries length " + libraries.size());
   }
 
@@ -36,7 +36,7 @@ class LibraryServiceTest {
   @Test
   void delete() {
     List<Library> libraries =
-        libraryService.libraries(PropertyFilter.builder(), LibraryType.ICONS, false);
+        libraryService.libraries(PropertyFilter.newFilter(), LibraryType.ICONS, false);
     for (Library library : libraries) {
       libraryService.delete(library.getId());
     }

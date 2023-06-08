@@ -2,7 +2,7 @@ package cn.asany.cardhop.contacts.graphql;
 
 import cn.asany.cardhop.contacts.domain.Contact;
 import cn.asany.cardhop.contacts.domain.ContactBook;
-import cn.asany.cardhop.contacts.graphql.input.ContactFilter;
+import cn.asany.cardhop.contacts.graphql.input.ContactWhereInput;
 import cn.asany.cardhop.contacts.graphql.type.ContactConnection;
 import cn.asany.cardhop.contacts.service.ContactsService;
 import cn.asany.cardhop.contacts.service.DefaultContactsServiceFactory;
@@ -64,7 +64,7 @@ public class ContactsGraphqlApiResolver implements GraphQLQueryResolver, GraphQL
 
   public ContactConnection contacts(
       /* 筛选条件 */
-      ContactFilter filter,
+      ContactWhereInput where,
       /* 偏移量 */
       int offset,
       /* 返回数据条数 */
@@ -85,7 +85,7 @@ public class ContactsGraphqlApiResolver implements GraphQLQueryResolver, GraphQL
       DataFetchingEnvironment environment) {
     Pageable pageable = PageRequest.of(page - 1, pageSize, orderBy);
 
-    IdUtils.IdKey idKey = IdUtils.parseKey(filter.getToken());
+    IdUtils.IdKey idKey = IdUtils.parseKey(where.getToken());
 
     AuthorizationGraphQLServletContext context = environment.getContext();
 
@@ -99,7 +99,7 @@ public class ContactsGraphqlApiResolver implements GraphQLQueryResolver, GraphQL
     IContactsService service = contactsServiceFactory.getService(contactBook.getType());
 
     return Kit.connection(
-        service.findPager(contactBook, idKey.getNamespace(), pageable, filter.build()),
+        service.findPager(contactBook, idKey.getNamespace(), pageable, where.toFilter()),
         ContactConnection.class);
   }
 }

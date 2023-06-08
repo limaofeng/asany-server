@@ -5,6 +5,7 @@ import cn.asany.email.mailbox.dao.MailboxMessageDao;
 import cn.asany.email.mailbox.domain.JamesMailbox;
 import java.util.List;
 import java.util.Optional;
+import lombok.extern.slf4j.Slf4j;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
  *
  * @author limaofeng
  */
+@Slf4j
 @Service
 @Transactional(rollbackFor = RuntimeException.class)
 public class MailboxService {
@@ -32,54 +34,50 @@ public class MailboxService {
 
   public Optional<JamesMailbox> findMailboxByName(String name, String namespace) {
     return this.mailboxDao.findOne(
-        PropertyFilter.builder()
+        PropertyFilter.newFilter()
             .equal("name", name)
             .isNull("user")
-            .equal("namespace", namespace)
-            .build());
+            .equal("namespace", namespace));
   }
 
   public List<JamesMailbox> findMailboxWithNameLike(String name, String namespace) {
     return this.mailboxDao.findAll(
-        PropertyFilter.builder()
+        PropertyFilter.newFilter()
             .contains("name", name)
             .isNull("user")
-            .equal("namespace", namespace)
-            .build());
+            .equal("namespace", namespace));
   }
 
   public List<JamesMailbox> findMailboxesWithUser(String user) {
-    return this.mailboxDao.findAll(PropertyFilter.builder().equal("user", user).build());
+    return this.mailboxDao.findAll(PropertyFilter.newFilter().equal("user", user));
   }
 
   public List<JamesMailbox> findMailboxesWithUser(String user, String namespace) {
     return this.mailboxDao.findAll(
-        PropertyFilter.builder().equal("user", user).equal("namespace", namespace).build());
+        PropertyFilter.newFilter().equal("user", user).equal("namespace", namespace));
   }
 
   public List<JamesMailbox> findMailboxWithNameLikeWithUser(
       String name, String user, String namespace) {
     return this.mailboxDao.findAll(
-        PropertyFilter.builder()
+        PropertyFilter.newFilter()
             .contains("name", name)
             .equal("user", user)
-            .equal("namespace", namespace)
-            .build());
+            .equal("namespace", namespace));
   }
 
   public Optional<JamesMailbox> findMailboxByNameWithUser(
       String name, String user, String namespace) {
     return this.mailboxDao.findOne(
-        PropertyFilter.builder()
+        PropertyFilter.newFilter()
             .equal("name", name)
             .equal("user", user)
-            .equal("namespace", namespace)
-            .build());
+            .equal("namespace", namespace));
   }
 
   public Optional<JamesMailbox> findMailboxByNameWithUser(String name, String user) {
     return this.mailboxDao.findOne(
-        PropertyFilter.builder().equal("name", name).equal("user", user).build());
+        PropertyFilter.newFilter().equal("name", name).equal("user", user));
   }
 
   public Optional<JamesMailbox> findMailboxById(long id) {
@@ -88,25 +86,24 @@ public class MailboxService {
 
   public void delete(long id) {
     int rows = this.mailboxMessageDao.deleteMessages(id);
+    log.debug("删除{}条消息", rows);
     this.mailboxDao.deleteById(id);
   }
 
   public long countMailboxesWithNameLike(String name, String namespace) {
     return this.mailboxDao.count(
-        PropertyFilter.builder()
+        PropertyFilter.newFilter()
             .contains("name", name)
             .isNull("user")
-            .equal("namespace", namespace)
-            .build());
+            .equal("namespace", namespace));
   }
 
   public Long countMailboxesWithNameLikeWithUser(String name, String user, String namespace) {
     return this.mailboxDao.count(
-        PropertyFilter.builder()
+        PropertyFilter.newFilter()
             .contains("name", name)
             .equal("user", user)
-            .equal("namespace", namespace)
-            .build());
+            .equal("namespace", namespace));
   }
 
   public List<JamesMailbox> listMailboxes() {

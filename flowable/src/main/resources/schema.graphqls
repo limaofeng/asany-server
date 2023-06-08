@@ -32,7 +32,7 @@ type ProcessModelEdge {
   node: ProcessModel!
 }
 
-input ProcessModelFilter {
+input ProcessModelWhereInput {
   name_contains: String
   """
   所有者
@@ -50,7 +50,7 @@ extend type Query {
   流程模型(分页)
   """
   processModels(
-    filter: ProcessModelFilter = {}
+    where: ProcessModelWhereInput = {}
     page: Int = 1
     pageSize: Int = 15
     orderBy: OrderBy = "unsorted"

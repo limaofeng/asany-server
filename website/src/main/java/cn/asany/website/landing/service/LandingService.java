@@ -47,17 +47,17 @@ public class LandingService {
   }
 
   @Transactional(readOnly = true)
-  public Page<LandingPage> findLandingPagePager(Pageable pageable, List<PropertyFilter> filter) {
+  public Page<LandingPage> findLandingPagePager(Pageable pageable, PropertyFilter filter) {
     return this.landingPageDao.findPage(pageable, filter);
   }
 
   @Transactional(readOnly = true)
-  public Page<LandingPoster> findLandingPosterPage(Pageable pageable, List<PropertyFilter> filter) {
+  public Page<LandingPoster> findLandingPosterPage(Pageable pageable, PropertyFilter filter) {
     return this.landingPosterDao.findPage(pageable, filter);
   }
 
   @Transactional(readOnly = true)
-  public Page<LandingStore> findLandingStorePage(Pageable pageable, List<PropertyFilter> filter) {
+  public Page<LandingStore> findLandingStorePage(Pageable pageable, PropertyFilter filter) {
     return this.landingStoreDao.findPage(pageable, filter);
   }
 

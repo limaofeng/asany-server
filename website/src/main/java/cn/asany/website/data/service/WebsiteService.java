@@ -16,8 +16,8 @@ public class WebsiteService {
     this.websiteDao = websiteDao;
   }
 
-  public List<Website> websites(List<PropertyFilter> filters, Sort sort) {
-    return this.websiteDao.findAll(filters, sort);
+  public List<Website> websites(PropertyFilter filter, Sort sort) {
+    return this.websiteDao.findAll(filter, sort);
   }
 
   public Website save(Website website) {

@@ -6,7 +6,6 @@ import cn.asany.cms.special.dao.SubscriberDao;
 import cn.asany.cms.special.domain.Special;
 import cn.asany.cms.special.domain.SpecialArticle;
 import cn.asany.cms.special.domain.Subscriber;
-import java.util.List;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -30,8 +29,8 @@ public class SpecialService {
   }
 
   @Transactional
-  public Page<Special> findPage(Pageable pageable, List<PropertyFilter> filters) {
-    return this.specialDao.findPage(pageable, filters);
+  public Page<Special> findPage(Pageable pageable, PropertyFilter filter) {
+    return this.specialDao.findPage(pageable, filter);
   }
 
   @Transactional
@@ -55,16 +54,16 @@ public class SpecialService {
 
   @Transactional
   public Page<Subscriber> findSubscriberPager(
-      String id, Pageable pageable, List<PropertyFilter> filters) {
-    filters.add(new PropertyFilter("EQS_special.id", id));
-    return this.subscriberDao.findPage(pageable, filters);
+      String id, Pageable pageable, PropertyFilter filter) {
+    filter.equal("special.id", id);
+    return this.subscriberDao.findPage(pageable, filter);
   }
 
   @Transactional
   public Page<SpecialArticle> findSpecialArticlePager(
-      String id, Pageable pageable, List<PropertyFilter> filters) {
-    filters.add(new PropertyFilter("EQS_special.id", id));
-    return this.specialArticleDao.findPage(pageable, filters);
+      String id, Pageable pageable, PropertyFilter filter) {
+    filter.equal("special.id", id);
+    return this.specialArticleDao.findPage(pageable, filter);
   }
 
   @Transactional

@@ -8,7 +8,7 @@ import cn.asany.email.mailbox.domain.JamesMailbox;
 import cn.asany.email.mailbox.domain.JamesMailboxMessage;
 import cn.asany.email.mailbox.domain.toys.MailboxIdUidKey;
 import cn.asany.email.mailbox.graphql.input.MailboxMessageCreateInput;
-import cn.asany.email.mailbox.graphql.input.MailboxMessageFilter;
+import cn.asany.email.mailbox.graphql.input.MailboxMessageWhereInput;
 import cn.asany.email.mailbox.graphql.input.MailboxMessageUpdateInput;
 import cn.asany.email.mailbox.graphql.type.MailboxMessageConnection;
 import cn.asany.email.mailbox.graphql.type.MailboxMessageResult;
@@ -88,7 +88,7 @@ public class MailboxMessageGraphqlApiResolver
 
   public MailboxMessageConnection mailboxMessages(
       String account,
-      MailboxMessageFilter filter,
+      MailboxMessageWhereInput where,
       int offset,
       int first,
       int last,
@@ -112,7 +112,7 @@ public class MailboxMessageGraphqlApiResolver
     }
 
     return Kit.connection(
-        this.mailboxMessageService.findPage(pageable, filter.build(mailUserId)),
+        this.mailboxMessageService.findPage(pageable, where.toFilter().equal("mailbox.user", mailUserId)),
         MailboxMessageConnection.class,
         message -> new MailboxMessageConnection.MailboxMessageEdge(JamesUtil.wrap(message)));
   }

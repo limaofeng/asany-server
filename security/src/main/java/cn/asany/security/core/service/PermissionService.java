@@ -43,12 +43,12 @@ public class PermissionService {
     this.grantPermissionDao = grantPermissionDao;
   }
 
-  public Page<Permission> findPage(Pageable pageable, List<PropertyFilter> filters) {
-    return this.permissionDao.findPage(pageable, filters);
+  public Page<Permission> findPage(Pageable pageable, PropertyFilter filter) {
+    return this.permissionDao.findPage(pageable, filter);
   }
 
-  public List<Permission> findAll(List<PropertyFilter> filters, Sort orderBy) {
-    return this.permissionDao.findAll(filters, orderBy);
+  public List<Permission> findAll(PropertyFilter filter, Sort orderBy) {
+    return this.permissionDao.findAll(filter, orderBy);
   }
 
   public Permission save(Permission permission) {
@@ -139,8 +139,8 @@ public class PermissionService {
         (root, query, builder) -> builder.equal(root.get("roles.id"), roleId));
   }
 
-  public Page<PermissionType> findTypePage(Pageable pageable, List<PropertyFilter> filters) {
-    return this.permissionTypeDao.findPage(pageable, filters);
+  public Page<PermissionType> findTypePage(Pageable pageable, PropertyFilter filter) {
+    return this.permissionTypeDao.findPage(pageable, filter);
   }
 
   public PermissionType savePermissionType(PermissionType permissionType) {

@@ -2,12 +2,11 @@ package cn.asany.cms.article.graphql.resolver;
 
 import cn.asany.cms.article.domain.Comment;
 import cn.asany.cms.article.graphql.enums.CommentStarType;
-import cn.asany.cms.article.graphql.input.CommentFilter;
+import cn.asany.cms.article.graphql.input.CommentWhereInput;
 import cn.asany.cms.article.graphql.type.Starrable;
 import cn.asany.cms.article.service.CommentService;
 import graphql.kickstart.tools.GraphQLResolver;
 import java.util.List;
-import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -26,12 +25,12 @@ public class CommentGraphQLResolver implements GraphQLResolver<Comment> {
     return comment.getUid();
   }
 
-  public List<Comment> comments(Comment comment, CommentFilter filter) {
-    PropertyFilterBuilder builder =
-        ObjectUtil.defaultValue(filter, new CommentFilter()).getBuilder();
-    builder.startsWith("path", comment.getPath());
-    builder.notEqual("id", comment.getId());
-    return commentService.findAll(builder.build());
+  public List<Comment> comments(Comment comment, CommentWhereInput where) {
+    return commentService.findAll(
+        ObjectUtil.defaultValue(where, new CommentWhereInput())
+            .toFilter()
+            .startsWith("path", comment.getPath())
+            .notEqual("id", comment.getId()));
   }
 
   public Starrable starrable(Comment comment, CommentStarType starType) {

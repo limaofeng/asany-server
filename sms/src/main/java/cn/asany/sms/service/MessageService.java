@@ -35,8 +35,8 @@ public class MessageService {
   }
 
   @Transactional
-  public Page<ShortMessage> findPage(Pageable pageable, List<PropertyFilter> filters) {
-    return this.messageDao.findPage(pageable, filters);
+  public Page<ShortMessage> findPage(Pageable pageable, PropertyFilter filter) {
+    return this.messageDao.findPage(pageable, filter);
   }
 
   @Transactional
@@ -70,7 +70,7 @@ public class MessageService {
     shortMessage.setSign(sign);
 
     Optional<Template> templateOptional =
-        this.templateDao.findOne(PropertyFilter.builder().equal("code", template).build());
+        this.templateDao.findOne(PropertyFilter.newFilter().equal("code", template));
 
     Template temp = templateOptional.orElseThrow(() -> new ValidationException("短信模版不存在"));
     shortMessage.setTemplate(temp);
@@ -93,11 +93,10 @@ public class MessageService {
   @Transactional
   public List<ShortMessage> findList(String phone, Long template, String time) {
     return this.messageDao.findAll(
-        PropertyFilter.builder()
+        PropertyFilter.newFilter()
             .equal("phones", phone)
             .equal("template.id", template)
-            .greaterThan("createdAt", DateUtil.parse(time, "yyyy-MM-dd HH:mm:ss"))
-            .build(),
+            .greaterThan("createdAt", DateUtil.parse(time, "yyyy-MM-dd HH:mm:ss")),
         Sort.by("createdAt").descending());
   }
 }

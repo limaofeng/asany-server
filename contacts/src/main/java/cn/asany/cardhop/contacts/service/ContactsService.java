@@ -33,8 +33,8 @@ public class ContactsService {
   //        return new AddressBook(book);
   //    }
 
-  public Page<Contact> findPage(Pageable pageable, List<PropertyFilter> filters) {
-    return this.contactDao.findPage(pageable, filters);
+  public Page<Contact> findPage(Pageable pageable, PropertyFilter filter) {
+    return this.contactDao.findPage(pageable, filter);
   }
 
   //    public AddressBook myBook(String username) {
@@ -79,6 +79,6 @@ public class ContactsService {
 
   public List<ContactGroup> getGroups(Long book, String namespace) {
     return this.contactGroupDao.findAll(
-        PropertyFilter.builder().equal("book.id", book).equal("namespace", namespace).build());
+        PropertyFilter.newFilter().equal("book.id", book).equal("namespace", namespace));
   }
 }

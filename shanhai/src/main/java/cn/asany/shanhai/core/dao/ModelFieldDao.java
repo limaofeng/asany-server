@@ -21,7 +21,7 @@ public interface ModelFieldDao extends JpaRepository<ModelField, Long> {
   @EntityGraph(
       value = "Graph.ModelField.FetchModelAndType",
       type = EntityGraph.EntityGraphType.FETCH)
-  List<ModelField> findWithModelAndType(List<PropertyFilter> filters);
+  List<ModelField> findWithModelAndType(PropertyFilter filter);
 
   @EntityGraph(
       value = "Graph.ModelField.FetchModelAndType",

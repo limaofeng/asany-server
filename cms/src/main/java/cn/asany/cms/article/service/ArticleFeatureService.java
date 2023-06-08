@@ -32,8 +32,8 @@ public class ArticleFeatureService {
    * @param filters
    * @return
    */
-  public List<ArticleFeature> findAll(List<PropertyFilter> filters, Sort orderBy) {
-    return articleFeatureDao.findAll(filters, orderBy);
+  public List<ArticleFeature> findAll(PropertyFilter filter, Sort orderBy) {
+    return articleFeatureDao.findAll(filter, orderBy);
   }
 
   public ArticleFeature findById(Long id) {

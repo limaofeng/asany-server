@@ -2,7 +2,7 @@ package cn.asany.security.core.graphql;
 
 import cn.asany.security.core.domain.Permission;
 import cn.asany.security.core.graphql.models.PermissionConnection;
-import cn.asany.security.core.graphql.models.PermissionFilter;
+import cn.asany.security.core.graphql.models.PermissionWhereInput;
 import cn.asany.security.core.service.PermissionService;
 import graphql.kickstart.tools.GraphQLMutationResolver;
 import graphql.kickstart.tools.GraphQLQueryResolver;
@@ -26,16 +26,16 @@ public class PermissionGraphQLQueryAndMutationResolver
 
   /** 查询权限 */
   public PermissionConnection permissionsConnection(
-      PermissionFilter filter, int page, int pageSize, Sort orderBy) {
-    filter = ObjectUtil.defaultValue(filter, new PermissionFilter());
+    PermissionWhereInput where, int page, int pageSize, Sort orderBy) {
+    where = ObjectUtil.defaultValue(where, new PermissionWhereInput());
     Pageable pageable = PageRequest.of(page - 1, pageSize, orderBy);
     return Kit.connection(
-        permissionService.findPage(pageable, filter.build()), PermissionConnection.class);
+        permissionService.findPage(pageable, where.toFilter()), PermissionConnection.class);
   }
 
   /** 查询权限 */
-  public List<Permission> permissions(PermissionFilter filter, Sort orderBy) {
-    filter = ObjectUtil.defaultValue(filter, new PermissionFilter());
-    return permissionService.findAll(filter.build(), orderBy);
+  public List<Permission> permissions(PermissionWhereInput where, Sort orderBy) {
+    where = ObjectUtil.defaultValue(where, new PermissionWhereInput());
+    return permissionService.findAll(where.toFilter(), orderBy);
   }
 }

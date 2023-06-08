@@ -1,7 +1,7 @@
 package cn.asany.shanhai.view.graphql;
 
 import cn.asany.shanhai.view.domain.ModelView;
-import cn.asany.shanhai.view.graphql.input.ModelViewFilter;
+import cn.asany.shanhai.view.graphql.input.ModelViewWhereInput;
 import cn.asany.shanhai.view.service.ModelViewService;
 import graphql.kickstart.tools.GraphQLMutationResolver;
 import graphql.kickstart.tools.GraphQLQueryResolver;
@@ -24,8 +24,8 @@ public class ModelViewGraphQLRootResolver implements GraphQLMutationResolver, Gr
   }
 
   public List<ModelView> modelViews(
-      Long id, ModelViewFilter filter, int offset, int limit, Sort orderBy) {
+    Long id, ModelViewWhereInput where, int offset, int limit, Sort orderBy) {
     return this.modelViewService.findAll(
-        filter.getBuilder().equal("model.module.id", id).build(), offset, limit, orderBy);
+        where.toFilter().equal("model.module.id", id), offset, limit, orderBy);
   }
 }

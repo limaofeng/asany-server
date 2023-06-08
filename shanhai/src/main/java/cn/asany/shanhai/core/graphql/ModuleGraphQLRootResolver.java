@@ -3,7 +3,7 @@ package cn.asany.shanhai.core.graphql;
 import cn.asany.shanhai.core.convert.ModuleConverter;
 import cn.asany.shanhai.core.domain.Module;
 import cn.asany.shanhai.core.graphql.inputs.ModuleCreateInput;
-import cn.asany.shanhai.core.graphql.inputs.ModuleFilter;
+import cn.asany.shanhai.core.graphql.inputs.ModuleWhereInput;
 import cn.asany.shanhai.core.graphql.inputs.ModuleUpdateInput;
 import cn.asany.shanhai.core.graphql.types.ModuleConnection;
 import cn.asany.shanhai.core.service.ModuleService;
@@ -29,14 +29,14 @@ public class ModuleGraphQLRootResolver implements GraphQLMutationResolver, Graph
     this.moduleConverter = moduleConverter;
   }
 
-  public List<Module> modules(ModuleFilter filter, int offset, int limit, Sort orderBy) {
-    return moduleService.findAll(filter.build(), offset, limit, orderBy);
+  public List<Module> modules(ModuleWhereInput where, int offset, int limit, Sort orderBy) {
+    return moduleService.findAll(where.toFilter(), offset, limit, orderBy);
   }
 
   public ModuleConnection modulesConnection(
-      ModuleFilter filter, int page, int pageSize, Sort orderBy) {
+    ModuleWhereInput where, int page, int pageSize, Sort orderBy) {
     Pageable pageable = PageRequest.of(page - 1, pageSize, orderBy);
-    return Kit.connection(moduleService.findPage(pageable, filter.build()), ModuleConnection.class);
+    return Kit.connection(moduleService.findPage(pageable, where.toFilter()), ModuleConnection.class);
   }
 
   public Optional<Module> module(Long id) {

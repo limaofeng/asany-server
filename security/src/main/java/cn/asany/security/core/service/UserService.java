@@ -77,7 +77,7 @@ public class UserService implements UserDetailsService {
    */
   public User save(User user) {
     boolean existing =
-        this.userDao.exists(PropertyFilter.builder().equal("username", user.getUsername()).build());
+        this.userDao.exists(PropertyFilter.newFilter().equal("username", user.getUsername()));
     if (existing) {
       throw new ValidationException("登录名[" + user.getUsername() + "]已经存在");
     }
