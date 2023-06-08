@@ -69,7 +69,7 @@ public class ArticleService {
    * 文章查询方法
    *
    * @param pageable 翻页对象
-   * @param filters 筛选条件
+   * @param filter 筛选条件
    * @return string
    */
   public Page<Article> findPage(Pageable pageable, PropertyFilter filter) {

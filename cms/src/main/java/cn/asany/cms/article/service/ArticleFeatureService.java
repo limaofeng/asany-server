@@ -29,7 +29,7 @@ public class ArticleFeatureService {
   /**
    * 根据查询条件查询所有推荐位
    *
-   * @param filters
+   * @param filter
    * @return
    */
   public List<ArticleFeature> findAll(PropertyFilter filter, Sort orderBy) {

@@ -273,8 +273,7 @@ public class DictService {
       DictType parent =
           optionalParent.orElseThrow(
               () -> new NotFoundException("错误的上级编码[" + dictType.getParent().getId() + "]"));
-      PropertyFilter filter =
-          PropertyFilter.newFilter().equal("parent.id", parent.getId());
+      PropertyFilter filter = PropertyFilter.newFilter().equal("parent.id", parent.getId());
       index = this.dictTypeDao.count(filter) + 1;
 
       dictType.setLevel(parent.getLevel() + 1);
@@ -389,14 +388,11 @@ public class DictService {
 
   public void deleteType(String... codes) {
     List<DictType> types =
-        Arrays.stream(codes)
-            .map(id -> this.dictTypeDao.getOne(id))
-            .filter(type -> type != null)
-            .collect(Collectors.toList());
+        Arrays.stream(codes).map(this.dictTypeDao::getReferenceById).collect(Collectors.toList());
     for (DictType type : types) {
-      this.dictDao.deleteInBatch(type.getDicts());
+      this.dictDao.deleteAllInBatch(type.getDicts());
     }
-    this.dictTypeDao.deleteInBatch(types);
+    this.dictTypeDao.deleteAllInBatch(types);
   }
 
   /** 删除字典 */
