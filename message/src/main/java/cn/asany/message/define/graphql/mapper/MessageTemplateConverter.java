@@ -10,6 +10,6 @@ import org.mapstruct.*;
     unmappedTargetPolicy = ReportingPolicy.IGNORE,
     nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
 public interface MessageTemplateConverter {
-  @Mappings({})
+  @Mappings({@Mapping(target = "content", ignore = true)})
   MessageTemplate toMessageTemplate(MessageTemplateCreateInput input);
 }
