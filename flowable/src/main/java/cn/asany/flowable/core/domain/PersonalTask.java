@@ -13,7 +13,6 @@ import java.util.Date;
 @Data
 @Builder
 public class PersonalTask {
-    private Long uid;
     private String name;
     private String description;
     private Integer priority;

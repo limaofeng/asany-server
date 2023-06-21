@@ -1,14 +1,19 @@
 package cn.asany.storage.core.engine.oss;
 
+import cn.asany.storage.api.IStorageConfig;
 import cn.asany.storage.api.StorageBuilder;
 import org.springframework.stereotype.Component;
 
-/** @author limaofeng */
+/**
+ * 阿里云 OSS 存储构建器
+ *
+ * @author limaofeng
+ */
 @Component
 public class OSSStorageBuilder implements StorageBuilder<OSSStorage, OSSStorageConfig> {
 
   @Override
-  public boolean supports(Class<OSSStorageConfig> config) {
+  public boolean supports(Class<? extends IStorageConfig> config) {
     return OSSStorageConfig.class.isAssignableFrom(config);
   }
 

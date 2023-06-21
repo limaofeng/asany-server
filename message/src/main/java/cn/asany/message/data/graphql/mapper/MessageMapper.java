@@ -2,8 +2,17 @@ package cn.asany.message.data.graphql.mapper;
 
 import cn.asany.message.data.domain.Message;
 import cn.asany.message.data.graphql.input.MessageCreateInput;
+import cn.asany.message.data.graphql.input.MessageVariableValueInput;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import org.mapstruct.*;
 
+/**
+ * Message Mapper
+ *
+ * @author limaofeng
+ */
 @Mapper(
     componentModel = "spring",
     builder = @Builder(disableBuilder = true),
@@ -11,8 +20,34 @@ import org.mapstruct.*;
     nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
 public interface MessageMapper {
 
+  /**
+   * toMessage
+   *
+   * @param input input
+   * @return Message
+   */
   @Mappings({
     @Mapping(source = "type", target = "type.id"),
+    @Mapping(
+        source = "variables",
+        target = "variables",
+        qualifiedByName = "toMessageVariableValues"),
   })
   Message toMessage(MessageCreateInput input);
+
+  /**
+   * toMessageVariableValues
+   *
+   * @param values input
+   * @return Map
+   */
+  @Named("toMessageVariableValues")
+  default Map<String, Object> toMessageVariableValues(List<MessageVariableValueInput> values) {
+    Map<String, Object> variables = new HashMap<>(10);
+    values.forEach(
+        value -> {
+          variables.put(value.getName(), value.getValue());
+        });
+    return variables;
+  }
 }

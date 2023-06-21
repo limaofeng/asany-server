@@ -6,8 +6,10 @@ import cn.asany.storage.utils.UploadUtils;
 import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.Part;
+import org.flowable.idm.api.User;
 import org.flowable.ui.common.model.RemoteUser;
 import org.flowable.ui.common.security.SecurityUtils;
+import org.flowable.ui.modeler.domain.Model;
 import org.flowable.ui.modeler.model.ModelRepresentation;
 import org.flowable.ui.modeler.service.FlowableModelQueryService;
 import org.flowable.ui.modeler.serviceapi.ModelService;
@@ -44,6 +46,12 @@ public class ProcessModelService {
 
   public Page<ProcessModel> findPage(Page<ProcessModel> page, PropertyFilter filter) {
     return this.processModelDao.findPage(page, filter);
+  }
+
+  public ProcessModel save(ProcessModel model) {
+    User createdBy = SecurityUtils.getCurrentUserObject();
+    Model internalModel = this.modelService.createModel(model, createdBy);
+    return this.get(internalModel.getId());
   }
 
   /**

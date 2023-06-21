@@ -7,8 +7,12 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * 消息类型服务
+ *
+ * @author limaofeng
+ */
 @Service
-@Transactional
 public class MessageTypeService {
 
   private final MessageTypeDao messageTypeDao;
@@ -17,14 +21,17 @@ public class MessageTypeService {
     this.messageTypeDao = messageTypeDao;
   }
 
+  @Transactional(readOnly = true)
   public List<MessageType> findAll() {
     return this.messageTypeDao.findAll();
   }
 
+  @Transactional(rollbackFor = Exception.class)
   public MessageType save(MessageType messageType) {
     return this.messageTypeDao.save(messageType);
   }
 
+  @Transactional(readOnly = true)
   public Optional<MessageType> findById(String id) {
     return this.messageTypeDao.findById(id);
   }

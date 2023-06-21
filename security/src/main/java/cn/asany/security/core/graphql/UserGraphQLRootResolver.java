@@ -107,7 +107,7 @@ public class UserGraphQLRootResolver implements GraphQLMutationResolver, GraphQL
   }
 
   public User user(Long id) {
-    return this.userService.findById(
+    return this.userService.get(
         ObjectUtil.defaultValue(id, () -> SpringSecurityUtils.getCurrentUser().getUid()));
   }
 

@@ -20,7 +20,7 @@ spring:
     allow-bean-definition-overriding: true
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
       use-new-id-generator-mappings: true
       naming:
         implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyJpaCompliantImpl

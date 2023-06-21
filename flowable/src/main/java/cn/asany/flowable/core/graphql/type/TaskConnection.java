@@ -6,6 +6,11 @@ import org.flowable.task.api.TaskInfo;
 import org.jfantasy.graphql.Edge;
 import org.jfantasy.graphql.types.BaseConnection;
 
+/**
+ * 任务连接
+ *
+ * @author limaofeng
+ */
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class TaskConnection extends BaseConnection<TaskConnection.TaskInfoEdge, TaskInfo> {

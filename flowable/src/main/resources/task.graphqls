@@ -1,16 +1,66 @@
 type Task {
-  #任务id
+  """
+  任务id
+  """
   id: String
-  #任务名称
+  """
+  任务名称
+  """
   name: String
-  #描述
+  """
+  任务状态
+  """
+  status: TaskStatus
+  """
+  描述
+  """
   description: String
-  #优先级
+  """
+  优先级
+  """
   priority: Int
-  #任务的委托人
-  owner: String
-  #处理人
-  #assignee: User
+  """
+  责任人
+  """
+  owner: User
+  """
+  开始时间
+  """
+  startTime: Date
+  """
+  结束时间
+  """
+  endTime: Date
+  """
+  到期日期
+  """
+  dueDate: Date
+  """
+  任务的持续时间
+  """
+  durationInMillis: Int
+  """
+  任务类别
+  """
+  category: String
+  """
+  指派人或处理者
+  """
+  assignee: User
+  """
+  评论
+  """
+  comments(type: String): [TaskComment!]!
+}
+
+type TaskComment  {
+  id: String
+  # 评论时间
+  time: Date
+  # 评论内容
+  content: String
+  # 评论人
+  author: String
 }
 
 type TaskEdge {
@@ -39,37 +89,133 @@ type TaskConnection {
   pageInfo: PageInfo!
 }
 
+"""
+任务状态
+"""
 enum TaskStatus {
   """
-  未完成
+  创建
   """
-  INCOMPLETE
+  CREATED
+  """
+  待处理
+  """
+  PENDING
+  """
+  进行中
+  """
+  IN_PROGRESS
+  """
+  暂停
+  """
+  SUSPENDED
   """
   已完成
   """
   COMPLETED
   """
-  全部
+  已取消
   """
-  ALL
+  CANCELED
 }
 
+"""
+任务查询条件
+"""
 input TaskWhereInput {
   """
   状态
   """
   status: TaskStatus
+  """
+  任务类别
+  """
+  category: String
+  """
+  负责人
+  """
+  owner: String
+  """
+  未分配
+  """
+  unassigned: Boolean
+  """
+  未完成
+  """
+  incomplete: Boolean
+  """
+  已完成
+  """
+  completed: Boolean
+  """
+  任务完成时间晚于
+  """
+  completedAfter: Date
+  """
+  任务完成时间与
+  """
+  completedOn: Date
+  """
+  任务完成时间早于
+  """
+  completedBefore: Date
+}
+
+input PersonalTaskInput {
+  """
+  任务名称
+  """
+  name: String!
+  """
+  描述
+  """
+  description: String
+  """
+  优先级
+  """
+  priority: Int
+  """
+  到期日期
+  """
+  dueDate: Date
 }
 
 extend type Query {
+  """
+  查询任务详情
+  """
+  task(id: ID!): Task
+  """
+  查询我的任务
+  """
   myTasks(
-    where: TaskWhereInput = { status: INCOMPLETE }
+    """
+    查询条件
+    """
+    where: TaskWhereInput = { }
+    """
+    当前页
+    """
     page: Int = 1
+    """
+    每页显示条数
+    """
     pageSize: Int = 15
+    """
+    排序
+    """
     orderBy: OrderBy = "unsorted"
   ): TaskConnection
 }
 
 extend type Mutation {
-  createTask: Boolean
+  """
+  分配任务
+  """
+  assigneeTask(id: ID!, assignee: ID!): Boolean
+
+  """
+  创建个人任务
+  """
+  createPersonalTask(input: PersonalTaskInput): Boolean
 }

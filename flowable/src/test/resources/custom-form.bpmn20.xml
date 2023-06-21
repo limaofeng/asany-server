@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:flowable="http://flowable.org/bpmn"
+             xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/BPMN20.xsd"
+             id="definitions"
+             targetNamespace="http://flowable.org/bpmn">
+
+    <!-- 自定义表单模型定义 -->
+    <flowable:formModel id="customFormModel" name="Custom Form Model" description="This is a custom form model"
+                        formClass="cn.asany.flowable.engine.form.model.CustomFormModel">
+        <flowable:formField id="field1" name="Field 1" type="string" defaultValue="Default Value 1"/>
+        <flowable:formField id="field2" name="Field 2" type="integer" defaultValue="10"/>
+    </flowable:formModel>
+
+</definitions>

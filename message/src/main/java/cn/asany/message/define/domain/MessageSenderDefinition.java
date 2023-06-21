@@ -1,6 +1,7 @@
 package cn.asany.message.define.domain;
 
 import cn.asany.message.api.ISenderConfig;
+import cn.asany.message.api.SMSSenderConfig;
 import cn.asany.message.define.domain.enums.TemplateType;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import javax.persistence.*;
@@ -8,11 +9,12 @@ import lombok.*;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
+import org.jfantasy.framework.jackson.JSON;
 
 /**
  * 消息发送者定义
  *
- * @author
+ * @author limaofeng
  */
 @Getter
 @Setter
@@ -47,6 +49,9 @@ public class MessageSenderDefinition extends BaseBusEntity {
 
   @Transient
   public ISenderConfig getSenderConfig() {
+    if (type == TemplateType.SMS) {
+      return JSON.deserialize(config, SMSSenderConfig.class);
+    }
     return null;
   }
 }

@@ -1,8 +1,10 @@
 package cn.asany.message.define.domain;
 
+import cn.asany.message.data.utils.MessageUtils;
 import cn.asany.message.define.domain.converter.VariableDefinitionListConverter;
 import cn.asany.message.define.domain.toys.VariableDefinition;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.persistence.*;
@@ -67,5 +69,22 @@ public class MessageDefinition extends BaseBusEntity {
       mappedBy = "messageDefinition",
       fetch = FetchType.LAZY,
       cascade = {CascadeType.REMOVE})
-  private List<MessageDefinitionReminder> reminders;
+  private List<MessageReminderDefinition> reminders;
+
+  public void validate(Map<String, Object> values) {
+    MessageUtils.validate(this.variables, values);
+  }
+
+  public Map<String, Object> toTemplateData(Map<String, Object> values) {
+    Map<String, Object> newValues = new HashMap<>(values);
+    Map<String, String> data = this.getMappingVariables();
+    data.forEach(
+        (key, value) -> {
+          if (newValues.containsKey(key)) {
+            newValues.remove(key);
+            newValues.put(value, newValues.get(key));
+          }
+        });
+    return newValues;
+  }
 }

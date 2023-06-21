@@ -1,12 +1,11 @@
 package cn.asany.sms.service;
 
+import cn.asany.base.sms.*;
 import cn.asany.sms.dao.MessageDao;
+import cn.asany.sms.dao.ProviderDao;
 import cn.asany.sms.dao.TemplateDao;
-import cn.asany.sms.domain.Captcha;
-import cn.asany.sms.domain.CaptchaConfig;
-import cn.asany.sms.domain.ShortMessage;
-import cn.asany.sms.domain.Template;
-import cn.asany.sms.domain.enums.MessageStatus;
+import cn.asany.sms.domain.*;
+import cn.asany.sms.provider.AliyunSMSProviderConfig;
 import cn.asany.sms.utils.TemplateContentUtil;
 import java.util.*;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
@@ -21,17 +20,23 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/** 消息服务 */
+/**
+ * 消息服务
+ *
+ * @author limaofeng
+ */
 @Service("sms.messageService")
-public class MessageService {
+public class MessageService implements ShortMessageSendService {
 
   private final MessageDao messageDao;
   private final TemplateDao templateDao;
+  private final ProviderDao providerDao;
 
   @Autowired
-  public MessageService(MessageDao messageDao, TemplateDao templateDao) {
+  public MessageService(MessageDao messageDao, TemplateDao templateDao, ProviderDao providerDao) {
     this.messageDao = messageDao;
     this.templateDao = templateDao;
+    this.providerDao = providerDao;
   }
 
   @Transactional
@@ -39,12 +44,12 @@ public class MessageService {
     return this.messageDao.findPage(pageable, filter);
   }
 
-  @Transactional
+  @Transactional(readOnly = true)
   public ShortMessage get(Long id) {
     return this.messageDao.getReferenceById(id);
   }
 
-  @Transactional
+  @Transactional(rollbackFor = RuntimeException.class)
   public void save(Captcha captcha) {
     CaptchaConfig config = captcha.getConfig();
     Map<String, String> params = new HashMap<>();
@@ -63,14 +68,20 @@ public class MessageService {
     messageDao.save(shortMessage);
   }
 
-  @Transactional
-  public ShortMessage save(
-      String sign, String template, Map<String, String> params, Long delay, String... phones) {
+  @Override
+  @Transactional(rollbackFor = RuntimeException.class)
+  public ShortMessageInfo send(String template, Map<String, String> params, String sign, long delay, String... phones)  {
+    return send(DEFAULT_PROVIDER, template, params, sign, delay, phones);
+  }
+
+  @Override
+  @Transactional(rollbackFor = RuntimeException.class)
+  public ShortMessageInfo send(String provider, String template, Map<String, String> params, String sign, long delay,  String... phones) {
     ShortMessage shortMessage = new ShortMessage();
     shortMessage.setSign(sign);
 
     Optional<Template> templateOptional =
-        this.templateDao.findOne(PropertyFilter.newFilter().equal("code", template));
+      this.templateDao.findOne(PropertyFilter.newFilter().equal("code", template));
 
     Template temp = templateOptional.orElseThrow(() -> new ValidationException("短信模版不存在"));
     shortMessage.setTemplate(temp);
@@ -85,7 +96,9 @@ public class MessageService {
     return messageDao.save(shortMessage);
   }
 
-  @Transactional
+
+
+  @Transactional(rollbackFor = RuntimeException.class)
   public void update(ShortMessage message) {
     this.messageDao.update(message);
   }
@@ -99,4 +112,25 @@ public class MessageService {
             .greaterThan("createdAt", DateUtil.parse(time, "yyyy-MM-dd HH:mm:ss")),
         Sort.by("createdAt").descending());
   }
+
+  public SMSProviderConfig getProviderConfig(String provider) {
+    String[] keys = provider.split("\\.");
+    Optional<Provider> optional =
+        this.providerDao.findOne(
+            PropertyFilter.newFilter().equal("id", keys[1]).equal("type", SMSProvider.of(keys[0])));
+    return optional
+        .map(
+            p -> {
+              if (p.getType() == SMSProvider.ALIYUN) {
+                AliyunSMSProviderConfig config =
+                    JSON.deserialize(p.getConfig(), AliyunSMSProviderConfig.class);
+                config.setKey(p.getType().getValue() + "." + p.getId());
+                return config;
+              }
+              return null;
+            })
+        .orElseThrow(() -> new ValidationException("短信服务商不存在"));
+  }
+
+
 }

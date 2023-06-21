@@ -1,10 +1,11 @@
 package cn.asany.sms.listener;
 
 import cn.asany.base.sms.SendFailedException;
-import cn.asany.base.sms.ShortMessageSendService;
+import cn.asany.base.sms.ShortMessageServiceProvider;
 import cn.asany.sms.domain.ShortMessage;
-import cn.asany.sms.domain.enums.MessageStatus;
+import cn.asany.base.sms.MessageStatus;
 import cn.asany.sms.event.SendMessageEvent;
+import cn.asany.sms.provider.ShortMessageServiceProviderFactory;
 import cn.asany.sms.service.MessageService;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,26 +17,33 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * 发送短信监听器
+ *
+ * @author limaofeng
+ */
 @Slf4j
 @Component
 public class SendMessageListener implements ApplicationListener<SendMessageEvent> {
 
   private MessageService messageService;
-  private ShortMessageSendService smsService;
+  private ShortMessageServiceProviderFactory providerFactory;
 
-  @Override
   @Async
-  @Transactional
+  @Override
+  @Transactional(rollbackFor = Exception.class)
   public void onApplicationEvent(SendMessageEvent event) {
     Long id = event.getMessage().getId();
     ShortMessage shortMessage = messageService.get(id);
     if (shortMessage.getStatus() != MessageStatus.unsent) {
       return;
     }
+    //noinspection unchecked
     Map<String, String> params = JSON.deserialize(shortMessage.getContent(), HashMap.class);
+    ShortMessageServiceProvider provider = providerFactory.getProvider(shortMessage.getProvider());
     try {
       String result =
-          smsService.send(
+        provider.send(
               shortMessage.getTemplate().getCode(),
               params,
               shortMessage.getSign(),
@@ -51,8 +59,8 @@ public class SendMessageListener implements ApplicationListener<SendMessageEvent
   }
 
   @Autowired
-  public void setSmsService(ShortMessageSendService smsService) {
-    this.smsService = smsService;
+  public void setProviderFactory(ShortMessageServiceProviderFactory providerFactory) {
+    this.providerFactory = providerFactory;
   }
 
   @Autowired

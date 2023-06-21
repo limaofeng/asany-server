@@ -13,7 +13,7 @@ public interface StorageBuilder<T extends Storage, C extends IStorageConfig> {
    * @param clazz 类型
    * @return Boolean
    */
-  boolean supports(Class<C> clazz);
+  boolean supports(Class<? extends IStorageConfig> clazz);
 
   /**
    * 构建方法

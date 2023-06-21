@@ -1,0 +1,223 @@
+package cn.asany.flowable.core.service;
+
+import cn.asany.flowable.engine.form.model.CustomFormModel;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+
+import com.github.jknack.handlebars.internal.lang3.StringUtils;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
+import org.flowable.bpmn.model.BpmnModel;
+import org.flowable.bpmn.model.ExtensionAttribute;
+import org.flowable.bpmn.model.FlowElement;
+import org.flowable.bpmn.model.Process;
+import org.flowable.bpmn.model.StartEvent;
+import org.flowable.engine.HistoryService;
+import org.flowable.engine.RepositoryService;
+import org.flowable.form.api.FormInfo;
+import org.flowable.form.api.FormModel;
+import org.flowable.form.api.FormRepositoryService;
+import org.flowable.form.model.SimpleFormModel;
+import org.flowable.variable.api.history.HistoricVariableInstance;
+import org.jfantasy.framework.util.common.StringUtil;
+
+/**
+ * 表单服务
+ *
+ * @author limaofeng
+ */
+public class FormService {
+
+  private FormRepositoryService formRepositoryService;
+
+  private RepositoryService repositoryService;
+
+  private HistoryService historyService;
+
+  /**
+   * 获取开始表单
+   *
+   * @param processDefinitionId 流程定义ID
+   * @param elementData
+   * @param processInstanceId 流程实例ID
+   * @return
+   */
+  public CustomFormModel getStartForm(
+      String processDefinitionId, Map<String, Object> elementData, String processInstanceId) {
+    BpmnModel bpmnModel = repositoryService.getBpmnModel(processDefinitionId);
+    Process process = bpmnModel.getMainProcess();
+    FlowElement initialFlowElement = process.getInitialFlowElement();
+    String startForm =
+        null; // defineFormElement.getDefineFormRules(processDefinitionId, elementData);
+    if (StringUtil.isNull(startForm)) {
+      return null;
+    }
+    FlowElement startFlowElement = getStartFlowElement(process.getFlowElements());
+    String ver = findFlowElement(startFlowElement, "defineFormsVer");
+    CustomFormModel formInfoModel = null;
+    if (null == ver) {
+//      formInfoModel = this.findByKey(startForm);
+    } else {
+//      formInfoModel = this.findByKey(startForm, Integer.valueOf(ver));
+    }
+    System.out.println(startForm);
+//    formInfoModel.setActivity(
+//        initialFlowElement instanceof StartEvent ? initialFlowElement.getId() : "");
+//    formInfoModel.setProcessDefinitionId(processDefinitionId);
+//    formInfoModel.setBusinessId(getBusinessIdData(processInId, formInfoModel.getKey()));
+    return formInfoModel;
+  }
+
+  public FormInfoModel findByKey(String formKey) {
+    return this.findByKey(formKey, null);
+  }
+
+  /**
+   * 查询表单
+   *
+   * @param formKey
+   * @param processInstanceId
+   * @return
+   */
+  public CustomFormModel findByKey(String formKey, String processInstanceId) {
+    if (StringUtils.isEmpty(formKey)) {
+      return null;
+    }
+    FormInfo formInfo = formRepositoryService.getFormModelByKey(formKey);
+    if (formInfo == null) {
+      return null;
+    }
+    CustomFormModel formInfoModel = CustomFormModel.newFormModel(formInfo.getFormModel());
+    if (StringUtil.isNull(processInstanceId)) {
+      return formInfoModel;
+    }
+    HistoricVariableInstance result =
+        historyService
+            .createHistoricVariableInstanceQuery()
+            .processInstanceId(processInstanceId)
+//            .variableName(ProcessProperties.formId.name())
+            .singleResult();
+    if (result == null) {
+      return formInfoModel;
+    }
+    FormInfo formStart = formRepositoryService.getFormModelById(result.getValue().toString());
+    FormInfoModel startForm = formInfoToFormInfoModel(formStart, processInstanceId);
+    if (startForm.getModelId().equals(formInfoModel.getModelId())) {
+      formInfoModel.setBusinessId(startForm.getBusinessId());
+    }
+    return formInfoModel;
+  }
+
+  /**
+   * 返回流程的开始节点
+   *
+   * @param flowElements 节点集合
+   * @return 开始节点
+   */
+  private static FlowElement getStartFlowElement(Collection<FlowElement> flowElements) {
+    for (FlowElement flowElement : flowElements) {
+      if (flowElement instanceof StartEvent) {
+        return flowElement;
+      }
+    }
+    return null;
+  }
+
+  /**
+   * 获取属性
+   *
+   * @param flowElement
+   * @param elementsName
+   * @return
+   */
+  public String findFlowElement(FlowElement flowElement, String elementsName) {
+    if (flowElement == null || MapUtils.isEmpty(flowElement.getAttributes())) {
+      return null;
+    }
+    List<ExtensionAttribute> list = flowElement.getAttributes().get(elementsName);
+    if (CollectionUtils.isEmpty(list)) {
+      return null;
+    }
+    ExtensionAttribute extensionAttribute = list.get(0);
+    if (null == extensionAttribute) {
+      return null;
+    }
+    return extensionAttribute.getValue();
+  }
+
+  /**
+   * 获取自定义属性
+   *
+   * @param processDefId
+   * @param flowElementId
+   * @param elementsName
+   * @return
+   */
+  public ExtensionAttribute findFlowElement(
+      String process, String flowElementId, String elementsName) {
+    if (StringUtil.isBlank(processDefId)) {
+      return null;
+    }
+    FlowElement flowElement =
+        repositoryService.getBpmnModel(processDefId).getMainProcess().getFlowElement(flowElementId);
+    if (flowElement == null || MapUtils.isEmpty(flowElement.getAttributes())) {
+      return null;
+    }
+    List<ExtensionAttribute> list = flowElement.getAttributes().get(elementsName);
+    if (CollectionUtils.isEmpty(list)) {
+      return null;
+    }
+    return list.get(0);
+  }
+
+  /**
+   * 转换
+   *
+   * @param formInfo
+   * @param processInstanceId
+   * @return
+   */
+  private SimpleFormModel formInfoToFormInfoModel(FormInfo formInfo, String processInstanceId) {
+    SimpleFormModel simpleFormModel = (SimpleFormModel) formInfo.getFormModel();
+    CustomFormModel formModel = CustomFormModel.newFormModel(formInfo.getFormModel());
+    //    FormInfoModel formInfoModel =
+    // FormInfoModel.builder().id(formInfo.getId()).name(formInfo.getName()).description(formInfo.getDescription())
+    //      .modelId(ProcessForm.Model.builder().id(simpleFormModel.getModelId()).build())
+    //      .component(simpleFormModel.getComponent())
+    //      .renderForm(simpleFormModel.getRenderForm())
+    //      .key(formInfo.getKey()).build();
+    //    formInfoModel.setBusinessId(getBusinessIdData(processInstanceId,formInfo.getId()));
+    //    List<FormFieldModel> list = new ArrayList<>();
+    //    if(CollectionUtils.isEmpty(simpleFormModel.getFields())){
+    //      return formInfoModel;
+    //    }
+    //    simpleFormModel.getFields().stream().filter(b -> !"initiator".equals(b.getId()))
+    //      .forEach(value ->
+    //        list.add(FormFieldModel.builder().
+    //          id(formInfoModel.getId() + ":" + value.getId())
+    //          .name(value.getId())
+    //          .label(value.getName())
+    //          .type(value.getType())
+    //          .value(value.getValue())
+    //          .icon(value.getIcon())
+    //          .params(value.getParams())
+    //          .defaultValue(value.getDefaultValue())
+    //          .readOnly(value.isReadOnly())
+    //          .required(value.isRequired())
+    //          .dataSource(value.getDataSource())
+    //          .placeholder(value.getPlaceholder())
+    //          .renderer(value.getRenderer()).build()
+    //        ));
+    //    formInfoModel.setFields(list);
+    return formModel;
+  }
+
+  public String submitForm(String mid, Map<String, Object> formData) {
+    // TODO: 查找保存位置
+
+    // TODO: 保存表单数据
+
+    return "";
+  }
+}

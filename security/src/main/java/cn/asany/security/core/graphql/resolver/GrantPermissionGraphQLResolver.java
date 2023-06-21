@@ -86,6 +86,6 @@ public class GrantPermissionGraphQLResolver implements GraphQLResolver<GrantPerm
     if (objectId == null) {
       return null;
     }
-    return this.userService.get(objectId).orElse(null);
+    return this.userService.get(objectId);
   }
 }

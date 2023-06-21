@@ -103,7 +103,7 @@ public class JamesUtil {
   }
 
   public static String getUserNameByUserId(Long loginUserId) {
-    Optional<User> optional = getUserService().get(loginUserId);
+    Optional<User> optional = getUserService().findById(loginUserId);
     if (!optional.isPresent()) {
       throw new NotFoundException("用户不存在");
     }

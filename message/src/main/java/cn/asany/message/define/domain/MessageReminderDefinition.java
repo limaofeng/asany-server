@@ -23,7 +23,7 @@ import org.jfantasy.framework.dao.hibernate.converter.MapConverter;
 @Table(name = "MSG_MESSAGE_DEFINITION_REMINDER")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class MessageDefinitionReminder extends BaseBusEntity {
+public class MessageReminderDefinition extends BaseBusEntity {
 
   @Id
   @Column(name = "ID", nullable = false, updatable = false)

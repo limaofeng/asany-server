@@ -5,9 +5,9 @@ import cn.asany.storage.api.Storage;
 import cn.asany.storage.api.StorageBuilder;
 import cn.asany.storage.data.domain.StorageConfig;
 import cn.asany.storage.data.service.StorageService;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.apache.commons.collections.map.HashedMap;
 import org.jfantasy.framework.jackson.JSON;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,10 +21,10 @@ public class DefaultStorageResolver implements StorageResolver {
 
   @Autowired private StorageService storageService;
 
-  private Map<String, Storage> storages = new HashedMap();
-  private List<StorageBuilder> builders;
+  private final Map<String, Storage> storages = new HashMap<>();
+  private final List<StorageBuilder<?,IStorageConfig>> builders;
 
-  public DefaultStorageResolver(List<StorageBuilder> builders) {
+  public DefaultStorageResolver(List<StorageBuilder<?,IStorageConfig>> builders) {
     this.builders = builders;
   }
 
@@ -40,7 +40,7 @@ public class DefaultStorageResolver implements StorageResolver {
 
   @Override
   public Storage resolve(IStorageConfig config) {
-    for (StorageBuilder builder : builders) {
+    for (StorageBuilder<?,IStorageConfig> builder : builders) {
       if (builder.supports(config.getClass())) {
         Storage storage = builder.build(config);
         if (storage != null) {

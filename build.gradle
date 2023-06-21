@@ -76,8 +76,8 @@ subprojects {
     apply plugin: 'maven-publish'
     apply plugin: 'signing'
 
-    sourceCompatibility = 1.8
-    targetCompatibility = 1.8
+    sourceCompatibility = project.property('SOURCE_COMPATIBILITY')
+    targetCompatibility = project.property('TARGET_COMPATIBILITY')
 
     [compileJava, compileTestJava, javadoc]*.options*.encoding = 'UTF-8'
 

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.asany.flowable.core.dao.FormModelDao">
+
+    <resultMap id="formModelResultMap" type="cn.asany.flowable.core.domain.FormModel">
+        <id property="id" column="id" jdbcType="VARCHAR"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="key" column="model_key" jdbcType="VARCHAR"/>
+        <result property="description" column="description" jdbcType="VARCHAR"/>
+        <result property="comment" column="model_comment" jdbcType="VARCHAR"/>
+        <result property="created" column="created" jdbcType="TIMESTAMP"/>
+        <result property="createdBy" column="created_by" jdbcType="VARCHAR"/>
+        <result property="lastUpdated" column="last_updated" jdbcType="TIMESTAMP"/>
+        <result property="lastUpdatedBy" column="last_updated_by" jdbcType="VARCHAR"/>
+        <result property="version" column="version" jdbcType="INTEGER"/>
+        <result property="modelEditorJson" column="model_editor_json" jdbcType="VARCHAR"/>
+        <result property="modelType" column="model_type" jdbcType="INTEGER"/>
+        <result property="thumbnail" column="thumbnail" jdbcType="${blobType}"/>
+        <result property="tenantId" column="tenant_id" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <select id="getFormModel" parameterType="string" resultMap="formModelResultMap">
+        select *
+        from ${prefix}ACT_DE_MODEL
+        where id = #{id, jdbcType=VARCHAR} and model_type = 2
+    </select>
+
+    <select id="findPage" parameterType="org.jfantasy.framework.dao.jpa.PropertyFilter"
+            resultMap="formModelResultMap">
+        select *
+        from ${prefix}ACT_DE_MODEL
+        where model_type = 2
+        <if test="user != null">and created_by=#{user}</if>
+    </select>
+
+</mapper>

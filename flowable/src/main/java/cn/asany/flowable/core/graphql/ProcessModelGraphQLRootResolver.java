@@ -21,6 +21,11 @@ import org.jfantasy.graphql.util.Kit;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
+/**
+ * 工作流/流程模型
+ *
+ * @author limaofeng
+ */
 @Slf4j
 @Component
 public class ProcessModelGraphQLRootResolver

@@ -9,9 +9,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.websocket.server.HandshakeRequest;
 import org.springframework.scheduling.annotation.Async;
 
+/**
+ * 动态 GraphQL Schema 提供者
+ *
+ * @author limaofeng
+ */
 public class DynamicGraphQLSchemaProvider implements GraphQLReloadSchemaProvider {
 
   private final ModelParser modelParser;
+  @SuppressWarnings("AlibabaLowerCamelCaseVariableNaming")
   private GraphQLSchema graphQLSchema;
   private GraphQLSchema readOnlySchema;
 
@@ -25,6 +31,7 @@ public class DynamicGraphQLSchemaProvider implements GraphQLReloadSchemaProvider
   }
 
   @Async
+  @Override
   public void updateSchema() throws IOException {
     SchemaParser schemaParser = modelParser.rebuildSchemaParser();
 

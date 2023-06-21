@@ -1,5 +1,10 @@
 package cn.asany.message.define.domain.enums;
 
+/**
+ * 模版类型
+ *
+ * @author limaofeng
+ */
 public enum TemplateType {
   /** 短信 */
   SMS,

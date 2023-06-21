@@ -11,6 +11,12 @@ pluginManagement {
     }
 }
 
+buildCache {
+    local {
+        enabled = true
+    }
+}
+
 rootProject.name = 'sunmao'
 include ":shanhai",
         ":weixin-api",
@@ -23,8 +29,9 @@ include ":shanhai",
         ":mail",
         ":drive",
         ":security",
-        ":storage-api",
+        ":security-api",
         ":storage",
+        ":storage-api",
         ":website",
         ":nuwa",
         ":ui",
@@ -35,8 +42,8 @@ include ":shanhai",
         ":project",
         ":crm",
         ":uptime",
-        ":message-api",
         ":message",
+        ":message-api",
         ":e-commerce",
         ":boot"
 
@@ -48,6 +55,7 @@ project(':website').projectDir = "$rootDir/website" as File
 project(':shanhai').projectDir = "$rootDir/shanhai" as File
 // 组织 / 员工 / 安全 / 登录 / 授权
 project(':security').projectDir = "$rootDir/security" as File
+project(':security-api').projectDir = "$rootDir/security-api" as File
 // 工作流
 project(':flowable').projectDir = "$rootDir/flowable" as File
 // 存储服务接口

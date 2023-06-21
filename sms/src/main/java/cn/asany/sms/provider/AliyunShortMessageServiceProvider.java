@@ -1,23 +1,38 @@
-package cn.asany.sms.service;
+package cn.asany.sms.provider;
 
+import cn.asany.base.sms.SMSProviderConfig;
 import cn.asany.base.sms.SendFailedException;
 import cn.asany.base.sms.ShortMessageSendService;
+import cn.asany.base.sms.ShortMessageServiceProvider;
 import com.aliyun.dysmsapi20170525.Client;
 import com.aliyun.dysmsapi20170525.models.SendSmsRequest;
 import com.aliyun.dysmsapi20170525.models.SendSmsResponse;
+import com.aliyun.teaopenapi.models.Config;
 import com.aliyun.teautil.models.RuntimeOptions;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.jfantasy.framework.jackson.JSON;
 import org.jfantasy.framework.util.common.StringUtil;
 
+/**
+ * 阿里云短信发送服务
+ *
+ * @author limaofeng
+ */
 @Slf4j
-public class AliyunShortMessageSendService implements ShortMessageSendService {
+public class AliyunShortMessageServiceProvider implements ShortMessageServiceProvider {
 
-  private final Client client;
+  private Client client;
 
-  public AliyunShortMessageSendService(Client client) {
-    this.client = client;
+  @Override
+  public void configure(SMSProviderConfig config) throws Exception {
+    AliyunSMSProviderConfig aliyunProviderConfig = (AliyunSMSProviderConfig) config;
+    String accessKeyId = aliyunProviderConfig.getAccessKeyId();
+    String accessKeySecret = aliyunProviderConfig.getAccessKeySecret();
+    Config aliyunConfig =
+        new Config().setAccessKeyId(accessKeyId).setAccessKeySecret(accessKeySecret);
+    aliyunConfig.endpoint = "dysmsapi.aliyuncs.com";
+    this.client = new com.aliyun.dysmsapi20170525.Client(aliyunConfig);
   }
 
   @Override

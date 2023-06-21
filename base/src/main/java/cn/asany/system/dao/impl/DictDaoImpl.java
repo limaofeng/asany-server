@@ -13,6 +13,11 @@ import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 
+/**
+ * 字典
+ *
+ * @author limaofeng
+ */
 public class DictDaoImpl extends ComplexJpaRepository<Dict, DictKey> implements DictDao {
 
   public DictDaoImpl(EntityManager entityManager) {

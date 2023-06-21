@@ -161,8 +161,8 @@ public class UserService implements UserDetailsService {
     this.userDao.deleteAllByIdInBatch(ids);
   }
 
-  public Optional<User> get(Long id) {
-    return this.userDao.findById(id);
+  public User get(Long id) {
+    return this.userDao.getReferenceById(id);
   }
 
   public User update(Long id, User user) {
@@ -217,8 +217,8 @@ public class UserService implements UserDetailsService {
     return null;
   }
 
-  public User findById(Long id) {
-    return userDao.findById(id).orElse(null);
+  public Optional<User> findById(Long id) {
+    return userDao.findById(id);
   }
 
   // 检查用户是否有指定的权限
@@ -326,5 +326,10 @@ public class UserService implements UserDetailsService {
     LoginUser loginUser = builder.build();
     loginUser.setAttribute(LOGIN_ATTRS_AVATAR, user.getAvatar());
     return loginUser;
+  }
+
+  @Transactional(readOnly = true)
+  public List<User> findAll(PropertyFilter filter) {
+    return this.userDao.findAll(filter);
   }
 }

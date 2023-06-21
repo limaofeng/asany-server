@@ -1,0 +1,99 @@
+package cn.asany.flowable.core.service;
+
+import java.util.HashMap;
+
+import cn.asany.flowable.engine.form.model.CustomFormModel;
+import cn.asany.security.core.domain.User;
+import cn.asany.security.core.service.UserService;
+import org.flowable.common.engine.impl.identity.Authentication;
+import org.flowable.engine.RepositoryService;
+import org.flowable.engine.RuntimeService;
+import org.flowable.engine.repository.ProcessDefinition;
+import org.flowable.engine.runtime.ProcessInstance;
+import org.flowable.form.api.FormInfo;
+import org.flowable.form.api.FormModel;
+import org.flowable.form.api.FormRepositoryService;
+import org.flowable.form.model.SimpleFormModel;
+import org.jfantasy.framework.util.common.StringUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+
+public class ProcessService {
+
+  private UserService userService;
+  private RuntimeService runtimeService;
+  private RepositoryService repositoryService;
+  private FormRepositoryService formRepositoryService;
+
+  private FormService formService;
+
+  public ProcessInstance createProcessInstance(String processDefinitionId, String formId, Long uid) {
+    String processKey = "";
+    ProcessDefinition processDefinition =
+        repositoryService
+            .createProcessDefinitionQuery()
+            .processDefinitionKey(processKey)
+            .latestVersion()
+            .singleResult();
+    Authentication.setAuthenticatedUserId(String.valueOf(uid));
+    User user = userService.get(uid);
+    //    Employee value = userService.employeeById(createProcessInstance.getEmpId());
+    HashMap<String, Object> map = new HashMap<>(); // createProcessInstance.getValue();
+    //    value.setPreApprover(createProcessInstance.getPreApprover());
+    //    value.setCandidates(createProcessInstance.getCandidates());
+    // 发起人
+    //    map.put(ProcessProperties.initiator.name(),value);
+    // 预审人
+    //    map.put(ProcessProperties.preApprover.name(),createProcessInstance.getPreApprover());
+    // 候选人
+    //    map.put(ProcessProperties.candidates.name(),createProcessInstance.getCandidates());
+    // 业务数据
+    //
+    // map.put(ProcessProperties.activityHandlers.name(),createProcessInstance.getActivityHandlers());
+    // 流程处理数据
+    //    map.put(ProcessProperties.element.name(),map);
+    Authentication.setAuthenticatedUserId(String.valueOf(uid));
+    ProcessInstance processInstance =
+        runtimeService.startProcessInstanceWithForm(
+            processId, "", map, processDefinition.getName());
+    // 设置流程数据
+    //
+    // runtimeService.setVariable(processInstance.getId(),ProcessProperties.processProcessingData.name(),map);
+    // 设置表单数据
+    setFormData(processDefinition.getId(), formId, map, processInstance.getProcessInstanceId());
+    //    map.put(ProcessProperties.processInstance.name(), processInstance);
+    //    ProcessInstanceModel processInstanceModel =
+    //        ProcessInstanceModel.builder()
+    //            .id(processInstance.getId())
+    //            .name(processInstance.getName())
+    //            .definitionKey(processDefinition.getKey())
+    //            .startUser(Employee.builder().id(processInstance.getStartUserId()).build())
+    //            .startTime(processInstance.getStartTime())
+    //            .description(processInstance.getDescription())
+    //            .processDefinitionId(processInstance.getProcessDefinitionId())
+    //            .currentTasks(settingTask(processInstance))
+    //            .build();
+    Authentication.setAuthenticatedUserId(null);
+    return null;
+  }
+
+  private void setFormData(
+      String processDefinitionId, String formId, HashMap<String, Object> formData, String processInstanceId)
+       {
+    //    formData.remove(ProcessProperties.initiator.name());
+    //    formData.remove(ProcessProperties.preApprover.name());
+    //    formData.remove(ProcessProperties.processInstanceId.name());
+    if (StringUtil.isNull(formId)) {
+      CustomFormModel startForm = formService.getStartForm(processDefinitionId, null, processInstanceId);
+      if (startForm == null) {
+        return;
+      }
+      formId = startForm.getId();
+    }
+    FormInfo formInfo = formRepositoryService.getFormModelById(formId);
+    SimpleFormModel simpleFormModel = (SimpleFormModel) formInfo.getFormModel();
+    String str = formService.submitForm(simpleFormModel.getModelId(), formData);
+    runtimeService.setVariable(processInstanceId, formInfo.getKey(), str);
+    runtimeService.setVariable(
+        processInstanceId, ProcessProperties.startFormKey.name(), formInfo.getKey());
+  }
+}

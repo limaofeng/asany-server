@@ -12,7 +12,6 @@ import cn.asany.storage.data.util.IdUtils;
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import java.util.List;
 import java.util.Optional;
-
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.graphql.util.Kit;
@@ -50,11 +49,10 @@ public class StorageGraphQLQueryResolver implements GraphQLQueryResolver {
   }
 
   public FileObjectConnection listFiles(
-    String key, FileWhereInput where, int _page, int pageSize, Sort orderBy) {
+      String key, FileWhereInput where, int pageNumber, int pageSize, Sort orderBy) {
     IdUtils.FileKey fileKey = IdUtils.parseKey(key);
 
-    PropertyFilter filter =
-        ObjectUtil.defaultValue(where, FileWhereInput::new).toFilter();
+    PropertyFilter filter = ObjectUtil.defaultValue(where, FileWhereInput::new).toFilter();
 
     filter
         .notEqual("id", fileKey.getRootFolder().getId())
@@ -65,9 +63,7 @@ public class StorageGraphQLQueryResolver implements GraphQLQueryResolver {
     }
 
     Page<FileDetail> page =
-        this.storageService.findPage(
-            PageRequest.of(_page - 1, pageSize, orderBy), filter);
-
+        this.storageService.findPage(PageRequest.of(pageNumber - 1, pageSize, orderBy), filter);
     return Kit.connection(
         page,
         FileObjectConnection.class,

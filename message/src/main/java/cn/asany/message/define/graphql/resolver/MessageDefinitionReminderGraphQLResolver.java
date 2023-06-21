@@ -1,6 +1,6 @@
 package cn.asany.message.define.graphql.resolver;
 
-import cn.asany.message.define.domain.MessageDefinitionReminder;
+import cn.asany.message.define.domain.MessageReminderDefinition;
 import cn.asany.message.define.graphql.type.MessageMappingVariable;
 import graphql.kickstart.tools.GraphQLResolver;
 import java.util.ArrayList;
@@ -10,9 +10,9 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class MessageDefinitionReminderGraphQLResolver
-    implements GraphQLResolver<MessageDefinitionReminder> {
+    implements GraphQLResolver<MessageReminderDefinition> {
 
-  public List<MessageMappingVariable> mappingVariables(MessageDefinitionReminder definition) {
+  public List<MessageMappingVariable> mappingVariables(MessageReminderDefinition definition) {
     List<MessageMappingVariable> mappingVariables = new ArrayList<>();
     for (Map.Entry<String, String> entry : definition.getMappingVariables().entrySet()) {
       mappingVariables.add(

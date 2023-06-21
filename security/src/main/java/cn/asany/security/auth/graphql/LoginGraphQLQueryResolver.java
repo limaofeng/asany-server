@@ -43,7 +43,7 @@ public class LoginGraphQLQueryResolver implements GraphQLQueryResolver {
     if (loginUser == null) {
       throw new UnauthorizedException("需要登录");
     }
-    Optional<User> optionalUser = userService.get(loginUser.getUid());
+    Optional<User> optionalUser = userService.findById(loginUser.getUid());
 
     return userConverter.toCurrentUser(
         optionalUser.orElseThrow(() -> new UserNotFoundException(loginUser.getUid() + "对应的用户不存在")));

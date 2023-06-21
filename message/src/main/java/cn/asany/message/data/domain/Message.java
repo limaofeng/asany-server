@@ -7,11 +7,18 @@ import cn.asany.message.define.domain.converter.VariableDefinitionValueListConve
 import cn.asany.message.define.domain.toys.VariableDefinitionValue;
 import cn.asany.security.core.domain.User;
 import java.util.List;
+import java.util.Map;
 import javax.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
+import org.jfantasy.framework.dao.hibernate.converter.MapConverter;
 
+/**
+ * 消息
+ *
+ * @author limaofeng
+ */
 @Getter
 @Setter
 @RequiredArgsConstructor
@@ -37,8 +44,8 @@ public class Message extends BaseBusEntity {
   private MessageStatus status;
 
   @Column(name = "VARIABLES", nullable = false, columnDefinition = "JSON")
-  @Convert(converter = VariableDefinitionValueListConverter.class)
-  private List<VariableDefinitionValue> variables;
+  @Convert(converter = MapConverter.class)
+  private Map<String, Object> variables;
   /** 消息内容 */
   @Column(name = "CONTENT", columnDefinition = "TEXT")
   private String content;

@@ -1,15 +1,10 @@
 package cn.asany.autoconfigure;
 
-import cn.asany.autoconfigure.properties.AliyunProvider;
 import cn.asany.autoconfigure.properties.SmsProperties;
-import cn.asany.autoconfigure.properties.SmsProvider;
-import cn.asany.base.sms.ShortMessageSendService;
-import cn.asany.sms.service.AliyunShortMessageSendService;
-import com.aliyun.dysmsapi20170525.Client;
-import com.aliyun.teaopenapi.models.Config;
+import cn.asany.sms.provider.ShortMessageServiceProviderFactory;
+import cn.asany.sms.service.MessageService;
 import lombok.extern.slf4j.Slf4j;
 import org.jfantasy.framework.dao.jpa.ComplexJpaRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -39,30 +34,14 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 public class SmsAutoConfiguration {
 
   @Bean
-  public ShortMessageSenderBuilder shortMessageSenderBuilder() {
-    return new ShortMessageSenderBuilder();
-  }
-
-  /**
-   * 使用AK&SK初始化账号Client
-   *
-   * @param properties 配置
-   * @return Client
-   */
-  @Bean("aliyun.sms.client")
-  public Client createClient(SmsProperties properties) throws Exception {
-    SmsProvider providers = properties.getProvider();
-    AliyunProvider provider = providers.getAliyun();
-    String accessKeyId = provider.getAccessKeyId();
-    String accessKeySecret = provider.getAccessKeySecret();
-    Config config = new Config().setAccessKeyId(accessKeyId).setAccessKeySecret(accessKeySecret);
-    // 访问的域名
-    config.endpoint = "dysmsapi.aliyuncs.com";
-    return new com.aliyun.dysmsapi20170525.Client(config);
+  public ShortMessageSenderBuilder shortMessageSenderBuilder(
+      ShortMessageServiceProviderFactory providerFactory) {
+    return new ShortMessageSenderBuilder(providerFactory);
   }
 
   @Bean
-  public ShortMessageSendService shortMessageSendService(@Autowired Client client) {
-    return new AliyunShortMessageSendService(client);
+  public ShortMessageServiceProviderFactory shortMessageServiceProviderFactory(
+      MessageService messageService) {
+    return new ShortMessageServiceProviderFactory(messageService);
   }
 }

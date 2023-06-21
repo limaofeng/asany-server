@@ -25,7 +25,7 @@
         where id = #{id, jdbcType=VARCHAR} and model_type = 0
     </select>
 
-    <select id="findPage" parameterType="cn.asany.flowable.core.graphql.input.ProcessModelFilter"
+    <select id="findPage" parameterType="org.jfantasy.framework.dao.jpa.PropertyFilter"
             resultMap="processModelResultMap">
         select *
         from ${prefix}ACT_DE_MODEL

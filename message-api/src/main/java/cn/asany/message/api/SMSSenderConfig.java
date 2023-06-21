@@ -1,5 +1,7 @@
 package cn.asany.message.api;
 
+import cn.asany.base.sms.SMSProvider;
+import cn.asany.base.sms.SMSProviderConfig;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,7 +18,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class SMSSenderConfig implements ISenderConfig {
 
+  private SMSProvider provider;
   @Builder.Default private String endpoint = "dysmsapi.aliyuncs.com";
   private String accessKeyId;
   private String accessKeySecret;
+
+
 }

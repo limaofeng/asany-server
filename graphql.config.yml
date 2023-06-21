@@ -1,0 +1,13 @@
+schema: schema.graphql
+#projects:
+#  boot:
+#    include:
+#      - src/**/*.graphqls
+#      - /Users/limaofeng/Workspace/framework/graphql/src/main/resources/schema.graphqls
+extensions:
+  endpoints:
+    Gatsby GraphQL Endpoint:
+      url: http://localhost:8080/graphql
+      headers:
+        user-agent: JS GraphQL
+      introspect: true

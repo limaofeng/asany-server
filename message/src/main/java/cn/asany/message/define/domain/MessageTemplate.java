@@ -1,10 +1,14 @@
 package cn.asany.message.define.domain;
 
+import cn.asany.message.data.utils.MessageUtils;
+import cn.asany.message.define.domain.converter.MessageContentConverter;
 import cn.asany.message.define.domain.converter.VariableDefinitionListConverter;
 import cn.asany.message.define.domain.enums.TemplateType;
+import cn.asany.message.define.domain.toys.MessageContent;
 import cn.asany.message.define.domain.toys.VariableDefinition;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.List;
+import java.util.Map;
 import javax.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -51,7 +55,12 @@ public class MessageTemplate extends BaseBusEntity {
    */
   @Column(name = "CODE", length = 50)
   private String code;
-  /** 模版内容 */
+  /** 内容模版 */
   @Column(name = "CONTENT", columnDefinition = "Text")
-  private String content;
+  @Convert(converter = MessageContentConverter.class)
+  private MessageContent content;
+
+  public void validate(Map<String, Object> values) {
+    MessageUtils.validate(this.variables, values);
+  }
 }

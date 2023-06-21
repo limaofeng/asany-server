@@ -5,6 +5,11 @@ import graphql.kickstart.tools.GraphQLSubscriptionResolver;
 import org.reactivestreams.Publisher;
 import org.springframework.stereotype.Component;
 
+/**
+ * 应用模板路由 GraphQL 订阅解析器
+ *
+ * @author limaofeng
+ */
 @Component
 public class ApplicationGraphQLSubscriptionResolver implements GraphQLSubscriptionResolver {
 

@@ -1,6 +1,6 @@
 package cn.asany.message.define.dao;
 
-import cn.asany.message.define.domain.MessageDefinitionReminder;
+import cn.asany.message.define.domain.MessageReminderDefinition;
 import org.jfantasy.framework.dao.jpa.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -10,5 +10,5 @@ import org.springframework.stereotype.Repository;
  * @author limaofeng
  */
 @Repository
-public interface MessageDefinitionReminderDao
-    extends JpaRepository<MessageDefinitionReminder, String> {}
+public interface MessageReminderDefinitionDao
+    extends JpaRepository<MessageReminderDefinition, String> {}

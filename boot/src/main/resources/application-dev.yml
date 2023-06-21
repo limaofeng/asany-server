@@ -8,10 +8,10 @@ spring:
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
     properties:
       hibernate:
-        generate_statistics: true
+        generate_statistics: false
   datasource:
     name: datasource
     url: jdbc:mysql://${DATABASE_HOST}/${DATABASE_INSTANCE_NAME}?nullCatalogMeansCurrent=true&autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&rewriteBatchedStatements=true

@@ -1,6 +1,7 @@
 package cn.asany.sms.domain;
 
-import cn.asany.sms.domain.enums.MessageStatus;
+import cn.asany.base.sms.MessageStatus;
+import cn.asany.base.sms.ShortMessageInfo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.List;
 import javax.persistence.*;
@@ -8,6 +9,11 @@ import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
+/**
+ * 短信消息
+ *
+ * @author limaofeng
+ */
 @Getter
 @Setter
 @RequiredArgsConstructor
@@ -16,7 +22,7 @@ import org.jfantasy.framework.dao.BaseBusEntity;
 @Entity
 @Table(name = "SMS_MESSAGE")
 @JsonIgnoreProperties({"hibernate_lazy_initializer", "handler", "config"})
-public class ShortMessage extends BaseBusEntity {
+public class ShortMessage extends BaseBusEntity implements ShortMessageInfo {
   @Id
   @Column(name = "ID", nullable = false, updatable = false, precision = 22)
   @GeneratedValue(generator = "fantasy-sequence")
@@ -50,12 +56,22 @@ public class ShortMessage extends BaseBusEntity {
   /** 延时发送的时间 */
   @Column(name = "DELAY", nullable = false)
   private Long delay;
+  /** 短信服务商 */
+  @Column(name = "PROVIDER", nullable = false, updatable = false, length = 50)
+  private String provider;
   /** 如果为短信验证码时，该字段不为空 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "CONFIG_ID", foreignKey = @ForeignKey(name = "FK_SMS_CONFIG"))
   private CaptchaConfig config;
 
   @Transient
+  @Override
+  public String getTemplateId() {
+    return this.template != null ? this.template.getCode() : null;
+  }
+
+  @Transient
+  @Override
   public String getConfigId() {
     return this.getConfig() != null ? this.getConfig().getId() : null;
   }

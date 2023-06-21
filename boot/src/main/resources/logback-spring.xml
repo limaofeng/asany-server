@@ -42,10 +42,10 @@
     </springProfile>
 
     <springProfile name="dev">
-        <logger name="org.hibernate.SQL" level="debug"/>
-        <logger name="org.hibernate.type.descriptor.sql" level="debug" additivity="false">
-            <appender-ref ref="CONSOLE"/>
-        </logger>
+<!--        <logger name="org.hibernate.SQL" level="debug"/>-->
+<!--        <logger name="org.hibernate.type.descriptor.sql" level="debug" additivity="false">-->
+<!--            <appender-ref ref="CONSOLE"/>-->
+<!--        </logger>-->
         <root level="info">
             <appender-ref ref="CONSOLE"/>
         </root>

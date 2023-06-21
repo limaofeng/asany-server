@@ -5,7 +5,9 @@ dependencies {
     implementation project(":security")
     implementation project(":storage-api")
     implementation project(":message-api")
+    compileOnly "io.projectreactor:reactor-core:3.4.26"
     compileOnly "org.springframework:spring-context"
     compileOnly "org.springframework.boot:spring-boot-autoconfigure"
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+    testImplementation project(":sms")
 }
