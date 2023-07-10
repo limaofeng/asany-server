@@ -1,10 +1,12 @@
 package cn.asany.message.api;
 
+import java.io.Serializable;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
-
 import lombok.Builder;
 import lombok.Data;
+import lombok.ToString;
 
 /**
  * 简单消息
@@ -13,7 +15,7 @@ import lombok.Data;
  */
 @Data
 @Builder
-public class SimpleMessage {
+public class SimpleMessage implements Message, Serializable {
   /** 消息发送者 */
   private String from;
   /** 消息接收者 */
@@ -24,10 +26,43 @@ public class SimpleMessage {
   private String subject;
   /** 消息内容 */
   private String text;
-  /** 签名名称 */
-  private String signName;
-  /** 模板代码 */
-  private String templateCode;
   /** 模板参数 */
-  private Map<String, String> templateParams;
+  private Map<String, Object> templateParams;
+  /** 附加信息 */
+  @ToString.Exclude private Map<String, Object> extra;
+  /** 消息跳转地址 */
+  private String uri;
+
+  private IChannelConfig config;
+
+  public void set(String key, Object value) {
+    this.extra.put(key, value);
+  }
+
+  public Object get(String key) {
+    return this.extra.get(key);
+  }
+
+  public <T> T getOriginalMessage() {
+    return (T) get("originalMessage");
+  }
+
+  public <T> T getOriginalMessageType() {
+    return (T) get("originalMessageType");
+  }
+
+  public static class SimpleMessageBuilder {
+
+    private Map<String, Object> extra = new HashMap<>();
+
+    public SimpleMessageBuilder originalMessage(Object originalMessage) {
+      this.extra.put("originalMessage", originalMessage);
+      return this;
+    }
+
+    public SimpleMessageBuilder originalMessageType(Object originalMessageType) {
+      this.extra.put("originalMessageType", originalMessageType);
+      return this;
+    }
+  }
 }

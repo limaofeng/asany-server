@@ -1,15 +1,18 @@
 package cn.asany.message.define.domain.toys;
 
-import cn.asany.message.data.utils.MessageUtils;
+import cn.asany.message.data.util.MessageUtils;
+import java.io.Serializable;
+import java.util.Collections;
 import java.util.Map;
 import org.jfantasy.framework.dao.hibernate.util.ReflectionUtils;
+import org.jfantasy.framework.util.HandlebarsTemplateUtils;
 
 /**
  * 消息内容
  *
  * @author limaofeng
  */
-public class MessageContent {
+public class MessageContent implements Serializable {
 
   public static final String DATA_BOUNDARY = "--MessageContentBoundary--";
   public static final String CONTENT = "content";
@@ -19,6 +22,10 @@ public class MessageContent {
 
   public MessageContent(Map<String, Object> variables) {
     this.variables = variables;
+  }
+
+  public static MessageContent empty() {
+    return new MessageContent(Collections.emptyMap());
   }
 
   public String getTitle() {
@@ -31,6 +38,19 @@ public class MessageContent {
 
   public void setTitle(String title) {
     variables.put(TITLE, title);
+  }
+
+  public String getTitle(Map<String, Object> data) {
+    return processTemplateIntoString(TITLE, data);
+  }
+
+  public String getContent(Map<String, Object> data) {
+    return processTemplateIntoString(CONTENT, data);
+  }
+
+  public String processTemplateIntoString(String key, Map<String, Object> data) {
+    String templateInline = get(key, String.class);
+    return HandlebarsTemplateUtils.processTemplateIntoString(templateInline, data);
   }
 
   public void setContent(String content) {

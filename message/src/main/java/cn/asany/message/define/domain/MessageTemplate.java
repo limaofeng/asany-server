@@ -1,6 +1,6 @@
 package cn.asany.message.define.domain;
 
-import cn.asany.message.data.utils.MessageUtils;
+import cn.asany.message.data.util.MessageUtils;
 import cn.asany.message.define.domain.converter.MessageContentConverter;
 import cn.asany.message.define.domain.converter.VariableDefinitionListConverter;
 import cn.asany.message.define.domain.enums.TemplateType;

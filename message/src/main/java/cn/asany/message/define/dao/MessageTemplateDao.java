@@ -10,4 +10,4 @@ import org.springframework.stereotype.Repository;
  * @author limaofeng
  */
 @Repository
-public interface MessageTemplateDao extends JpaRepository<MessageTemplate, String> {}
+public interface MessageTemplateDao extends JpaRepository<MessageTemplate, Long> {}

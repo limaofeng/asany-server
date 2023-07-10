@@ -13,4 +13,5 @@ public class MessageCreateInput {
   private String type;
   private List<MessageVariableValueInput> variables;
   private String uri;
+  private List<String> recipients;
 }

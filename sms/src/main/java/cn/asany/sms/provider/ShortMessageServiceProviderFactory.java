@@ -37,6 +37,11 @@ public class ShortMessageServiceProviderFactory {
     }
   }
 
+  public ShortMessageServiceProvider getProvider(SMSProviderConfig config) {
+    cache.containsKey(config.getProvider().name());
+    return getProvider(config.getProvider().name());
+  }
+
   public ShortMessageServiceProvider getProvider(String provider) {
     SMSProviderConfig config = messageService.getProviderConfig(provider);
     if (cache.containsKey(provider)) {

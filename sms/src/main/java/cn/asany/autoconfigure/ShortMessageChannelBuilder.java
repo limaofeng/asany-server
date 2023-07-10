@@ -2,10 +2,10 @@ package cn.asany.autoconfigure;
 
 import cn.asany.base.sms.SMSProvider;
 import cn.asany.base.sms.SMSProviderConfig;
-import cn.asany.message.api.MessageSenderBuilder;
-import cn.asany.message.api.SMSSenderConfig;
+import cn.asany.base.sms.ShortMessageSendService;
+import cn.asany.message.api.MessageChannelBuilder;
+import cn.asany.message.api.SMSChannelConfig;
 import cn.asany.sms.provider.AliyunSMSProviderConfig;
-import cn.asany.sms.provider.ShortMessageServiceProviderFactory;
 import java.util.Objects;
 
 /**
@@ -13,24 +13,24 @@ import java.util.Objects;
  *
  * @author limaofeng
  */
-public class ShortMessageSenderBuilder
-    implements MessageSenderBuilder<ShortMessageSender, SMSSenderConfig> {
+public class ShortMessageChannelBuilder
+    implements MessageChannelBuilder<ShortMessageHandler, SMSChannelConfig> {
 
-  private final ShortMessageServiceProviderFactory providerFactory;
+  private final ShortMessageSendService shortMessageSendService;
 
-  public ShortMessageSenderBuilder(ShortMessageServiceProviderFactory providerFactory) {
-    this.providerFactory = providerFactory;
+  public ShortMessageChannelBuilder(ShortMessageSendService shortMessageSendService) {
+    this.shortMessageSendService = shortMessageSendService;
   }
 
   @Override
-  public boolean supports(Class<SMSSenderConfig> clazz) {
-    return SMSSenderConfig.class.isAssignableFrom(clazz);
+  public boolean supports(Class<SMSChannelConfig> clazz) {
+    return SMSChannelConfig.class.isAssignableFrom(clazz);
   }
 
   @Override
-  public ShortMessageSender build(SMSSenderConfig config) {
+  public ShortMessageHandler build(SMSChannelConfig config) {
     SMSProviderConfig smsProviderConfig = toConfig(config);
-    return new ShortMessageSender(providerFactory.createProvider(smsProviderConfig));
+    return new ShortMessageHandler("", shortMessageSendService);
   }
 
   /**
@@ -39,7 +39,7 @@ public class ShortMessageSenderBuilder
    * @param config 配置
    * @return 短信服务配置
    */
-  private SMSProviderConfig toConfig(SMSSenderConfig config) {
+  private SMSProviderConfig toConfig(SMSChannelConfig config) {
     if (Objects.requireNonNull(config.getProvider()) == SMSProvider.ALIYUN) {
       return AliyunSMSProviderConfig.builder()
           .key(SMSProvider.ALIYUN.name() + "." + config.getAccessKeyId())

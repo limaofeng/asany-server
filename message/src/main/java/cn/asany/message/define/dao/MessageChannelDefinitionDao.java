@@ -1,6 +1,6 @@
 package cn.asany.message.define.dao;
 
-import cn.asany.message.define.domain.MessageSenderDefinition;
+import cn.asany.message.define.domain.MessageChannelDefinition;
 import org.jfantasy.framework.dao.jpa.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -10,4 +10,5 @@ import org.springframework.stereotype.Repository;
  * @author limaofeng
  */
 @Repository
-public interface MessageSenderDefinitionDao extends JpaRepository<MessageSenderDefinition, Long> {}
+public interface MessageChannelDefinitionDao
+    extends JpaRepository<MessageChannelDefinition, Long> {}

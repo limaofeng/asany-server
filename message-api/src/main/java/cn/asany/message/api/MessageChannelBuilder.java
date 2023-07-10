@@ -7,7 +7,7 @@ package cn.asany.message.api;
  * @param <T> 消息发送者
  * @param <C> 消息发送者配置
  */
-public interface MessageSenderBuilder<T extends MessageSender, C extends ISenderConfig> {
+public interface MessageChannelBuilder<T extends MessageChannel, C extends IChannelConfig> {
 
   /**
    * 支持

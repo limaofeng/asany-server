@@ -11,6 +11,11 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Component;
 
+/**
+ * 消息类型 GraphQL 根解析器
+ *
+ * @author limaofeng
+ */
 @Component
 public class MessageTypeGraphQLRootResolver
     implements GraphQLQueryResolver, GraphQLMutationResolver {

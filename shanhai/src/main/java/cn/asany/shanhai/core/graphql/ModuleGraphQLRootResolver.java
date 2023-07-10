@@ -3,8 +3,8 @@ package cn.asany.shanhai.core.graphql;
 import cn.asany.shanhai.core.convert.ModuleConverter;
 import cn.asany.shanhai.core.domain.Module;
 import cn.asany.shanhai.core.graphql.inputs.ModuleCreateInput;
-import cn.asany.shanhai.core.graphql.inputs.ModuleWhereInput;
 import cn.asany.shanhai.core.graphql.inputs.ModuleUpdateInput;
+import cn.asany.shanhai.core.graphql.inputs.ModuleWhereInput;
 import cn.asany.shanhai.core.graphql.types.ModuleConnection;
 import cn.asany.shanhai.core.service.ModuleService;
 import graphql.kickstart.tools.GraphQLMutationResolver;
@@ -17,6 +17,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
+/**
+ * 模块 GraphQL Root Resolver
+ *
+ * @author limaofeng
+ */
 @Component
 public class ModuleGraphQLRootResolver implements GraphQLMutationResolver, GraphQLQueryResolver {
 
@@ -34,9 +39,10 @@ public class ModuleGraphQLRootResolver implements GraphQLMutationResolver, Graph
   }
 
   public ModuleConnection modulesConnection(
-    ModuleWhereInput where, int page, int pageSize, Sort orderBy) {
+      ModuleWhereInput where, int page, int pageSize, Sort orderBy) {
     Pageable pageable = PageRequest.of(page - 1, pageSize, orderBy);
-    return Kit.connection(moduleService.findPage(pageable, where.toFilter()), ModuleConnection.class);
+    return Kit.connection(
+        moduleService.findPage(pageable, where.toFilter()), ModuleConnection.class);
   }
 
   public Optional<Module> module(Long id) {

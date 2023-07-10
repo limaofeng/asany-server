@@ -1,5 +1,7 @@
 package cn.asany.message.core;
 
+import cn.asany.message.define.domain.MessageType;
+import java.io.Serializable;
 import lombok.Builder;
 import lombok.Data;
 
@@ -10,7 +12,18 @@ import lombok.Data;
  */
 @Data
 @Builder
-public class Notification {
+public class Notification implements Serializable {
+  private Long id;
+  /** 类型 */
+  private MessageType type;
+  /** 系统消息 */
+  private boolean systemMessage;
+  /** 用户ID */
+  private Long userId;
+  /** 标题 */
   private String title;
-  private String content;
+  /** 消息 */
+  private String message;
+  /** URI */
+  private String uri;
 }

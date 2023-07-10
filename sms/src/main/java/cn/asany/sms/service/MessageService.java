@@ -70,18 +70,32 @@ public class MessageService implements ShortMessageSendService {
 
   @Override
   @Transactional(rollbackFor = RuntimeException.class)
-  public ShortMessageInfo send(String template, Map<String, String> params, String sign, long delay, String... phones)  {
+  public ShortMessageInfo send(
+      String template, Map<String, String> params, String sign, long delay, String... phones) {
     return send(DEFAULT_PROVIDER, template, params, sign, delay, phones);
   }
 
   @Override
   @Transactional(rollbackFor = RuntimeException.class)
-  public ShortMessageInfo send(String provider, String template, Map<String, String> params, String sign, long delay,  String... phones) {
+  public ShortMessageInfo send(
+      String provider, String template, Map<String, String> params, String sign, String... phones) {
+    return send(provider, template, params, sign, 0L, phones);
+  }
+
+  @Override
+  @Transactional(rollbackFor = RuntimeException.class)
+  public ShortMessageInfo send(
+      String provider,
+      String template,
+      Map<String, String> params,
+      String sign,
+      long delay,
+      String... phones) {
     ShortMessage shortMessage = new ShortMessage();
     shortMessage.setSign(sign);
 
     Optional<Template> templateOptional =
-      this.templateDao.findOne(PropertyFilter.newFilter().equal("code", template));
+        this.templateDao.findOne(PropertyFilter.newFilter().equal("code", template));
 
     Template temp = templateOptional.orElseThrow(() -> new ValidationException("短信模版不存在"));
     shortMessage.setTemplate(temp);
@@ -95,8 +109,6 @@ public class MessageService implements ShortMessageSendService {
     shortMessage.setStatus(MessageStatus.unsent);
     return messageDao.save(shortMessage);
   }
-
-
 
   @Transactional(rollbackFor = RuntimeException.class)
   public void update(ShortMessage message) {
@@ -131,6 +143,4 @@ public class MessageService implements ShortMessageSendService {
             })
         .orElseThrow(() -> new ValidationException("短信服务商不存在"));
   }
-
-
 }

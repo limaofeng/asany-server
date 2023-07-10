@@ -56,6 +56,7 @@ project(':shanhai').projectDir = "$rootDir/shanhai" as File
 // 组织 / 员工 / 安全 / 登录 / 授权
 project(':security').projectDir = "$rootDir/security" as File
 project(':security-api').projectDir = "$rootDir/security-api" as File
+//project(':storage-preview').projectDir = "$rootDir/storage-preview" as File
 // 工作流
 project(':flowable').projectDir = "$rootDir/flowable" as File
 // 存储服务接口

@@ -1,7 +1,6 @@
 package cn.asany.security.auth.graphql.resolvers;
 
-import static cn.asany.security.core.service.UserService.LOGIN_ATTRS_AVATAR;
-
+import cn.asany.security.core.util.UserUtil;
 import cn.asany.storage.api.FileObject;
 import graphql.kickstart.tools.GraphQLResolver;
 import java.util.Set;
@@ -36,6 +35,6 @@ public class LoginUserGraphQLResolver implements GraphQLResolver<LoginUser> {
   }
 
   public FileObject avatar(LoginUser user) {
-    return user.getAttribute(LOGIN_ATTRS_AVATAR);
+    return user.getAttribute(UserUtil.LOGIN_ATTRS_AVATAR);
   }
 }

@@ -1,7 +1,9 @@
-package cn.asany.message.data.utils;
+package cn.asany.message.data.util;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import cn.asany.message.define.domain.toys.MessageContent;
+import java.util.HashMap;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -33,5 +35,19 @@ class MessageUtilsTest {
 
     multipartString = MessageUtils.convertToMultipartString(data, boundary);
     log.info("multipartString: {}", multipartString);
+  }
+
+  @Test
+  void convertToMultipartString() {
+    Map<String, Object> data = new HashMap<>();
+    data.put(MessageContent.TITLE, "hello, {{user.name}}");
+    data.put(MessageContent.CONTENT, "you have a new task: {{task.name}}");
+    String multipartString =
+        MessageUtils.convertToMultipartString(data, MessageContent.DATA_BOUNDARY);
+    log.info("multipartString: {}", multipartString);
+
+    data = MessageUtils.parseMultipartString(multipartString, MessageContent.DATA_BOUNDARY);
+
+    assertEquals("hello, {{user.name}}", data.get(MessageContent.TITLE));
   }
 }

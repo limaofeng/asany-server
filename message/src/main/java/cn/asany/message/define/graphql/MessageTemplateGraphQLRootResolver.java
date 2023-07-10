@@ -8,6 +8,11 @@ import graphql.kickstart.tools.GraphQLMutationResolver;
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import org.springframework.stereotype.Component;
 
+/**
+ * 消息模板 GraphQL 根解析器
+ *
+ * @author limaofeng
+ */
 @Component
 public class MessageTemplateGraphQLRootResolver
     implements GraphQLQueryResolver, GraphQLMutationResolver {

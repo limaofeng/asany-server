@@ -1,8 +1,6 @@
 package cn.asany.security.core.service;
 
 import cn.asany.base.common.domain.Phone;
-import cn.asany.base.common.domain.enums.EmailStatus;
-import cn.asany.base.common.domain.enums.PhoneNumberStatus;
 import cn.asany.security.core.dao.GrantPermissionDao;
 import cn.asany.security.core.dao.UserDao;
 import cn.asany.security.core.domain.Role;
@@ -10,16 +8,13 @@ import cn.asany.security.core.domain.User;
 import cn.asany.security.core.domain.enums.UserType;
 import cn.asany.security.core.exception.UserInvalidException;
 import cn.asany.security.core.exception.UserNotFoundException;
+import cn.asany.security.core.util.UserUtil;
 import java.util.*;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.error.ValidationException;
 import org.jfantasy.framework.security.LoginUser;
-import org.jfantasy.framework.security.LoginUser.LoginUserBuilder;
-import org.jfantasy.framework.security.core.userdetails.UserDetails;
-import org.jfantasy.framework.security.core.userdetails.UserDetailsService;
-import org.jfantasy.framework.security.core.userdetails.UsernameNotFoundException;
 import org.jfantasy.framework.security.crypto.password.PasswordEncoder;
 import org.jfantasy.framework.util.common.BeanUtil;
 import org.jfantasy.framework.util.common.ObjectUtil;
@@ -38,9 +33,7 @@ import org.springframework.util.CollectionUtils;
 @Slf4j
 @Service
 @Transactional(rollbackFor = Exception.class)
-public class UserService implements UserDetailsService {
-
-  public static final String LOGIN_ATTRS_AVATAR = "_avatar";
+public class UserService {
 
   public static final String LOGIN_ATTRS_NICKNAME = "_nickName";
 
@@ -143,10 +136,9 @@ public class UserService implements UserDetailsService {
     return this.userDao.findOne(Example.of(User.builder().username(username).build()));
   }
 
-  public User findUniqueByUsername(String username) {
-    Optional<User> optional =
-        this.userDao.findOne(Example.of(User.builder().username(username).build()));
-    return optional.orElse(null);
+  public Optional<User> findOneByPhone(String username) {
+    return this.userDao.findOne(
+        Example.of(User.builder().phone(Phone.builder().number(username).build()).build()));
   }
 
   public Page<User> findPage(Pageable pageable, PropertyFilter filter) {
@@ -273,59 +265,7 @@ public class UserService implements UserDetailsService {
       user.setUsername(user.getPhone().getNumber());
     }
     user = this.save(user);
-    return buildLoginUser(user);
-  }
-
-  @Override
-  public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-    Optional<User> optional =
-        this.userDao.findOne(Example.of(User.builder().username(username).build()));
-
-    if (!optional.isPresent()) {
-      optional =
-          this.userDao.findOne(
-              Example.of(User.builder().phone(Phone.builder().number(username).build()).build()));
-    }
-
-    // 用户不存在
-    if (!optional.isPresent()) {
-      throw new UsernameNotFoundException(
-          this.messages.getMessage(
-              "AbstractUserDetailsAuthenticationProvider.badCredentials", "Bad credentials"));
-    }
-    return buildLoginUser(optional.get());
-  }
-
-  public LoginUser buildLoginUser(User user) {
-    LoginUserBuilder builder =
-        LoginUser.builder()
-            .uid(user.getId())
-            .type(user.getUserType().name())
-            .username(user.getUsername())
-            .title(user.getTitle())
-            .name(user.getNickName())
-            .password(user.getPassword())
-            .enabled(user.getEnabled())
-            .accountNonExpired(user.getAccountNonExpired())
-            .accountNonLocked(user.getAccountNonLocked())
-            .credentialsNonExpired(user.getCredentialsNonExpired())
-            .authorities(user.getAuthorities());
-
-    if (user.getPhone() != null && user.getPhone().getStatus() == PhoneNumberStatus.VERIFIED) {
-      builder.phone(user.getPhone().getNumber());
-    }
-
-    if (user.getEmail() != null && user.getEmail().getStatus() == EmailStatus.VERIFIED) {
-      builder.phone(user.getEmail().getAddress());
-    }
-
-    if (user.getAvatar() != null) {
-      builder.avatar(user.getAvatar().getPath());
-    }
-
-    LoginUser loginUser = builder.build();
-    loginUser.setAttribute(LOGIN_ATTRS_AVATAR, user.getAvatar());
-    return loginUser;
+    return UserUtil.buildLoginUser(user);
   }
 
   @Transactional(readOnly = true)

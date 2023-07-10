@@ -1,7 +1,8 @@
 package cn.asany.message.define.domain;
 
-import cn.asany.message.api.ISenderConfig;
-import cn.asany.message.api.SMSSenderConfig;
+import cn.asany.message.api.IChannelConfig;
+import cn.asany.message.api.MSChannelConfig;
+import cn.asany.message.api.SMSChannelConfig;
 import cn.asany.message.define.domain.enums.TemplateType;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import javax.persistence.*;
@@ -12,7 +13,7 @@ import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.framework.jackson.JSON;
 
 /**
- * 消息发送者定义
+ * 消息通道定义
  *
  * @author limaofeng
  */
@@ -22,10 +23,10 @@ import org.jfantasy.framework.jackson.JSON;
 @Builder
 @AllArgsConstructor
 @Entity
-@Table(name = "MSG_MESSAGE_SENDER_DEFINITION")
+@Table(name = "MSG_MESSAGE_CHANNEL_DEFINITION")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class MessageSenderDefinition extends BaseBusEntity {
+public class MessageChannelDefinition extends BaseBusEntity {
 
   @Id
   @Column(name = "ID", nullable = false, updatable = false, precision = 22)
@@ -48,9 +49,13 @@ public class MessageSenderDefinition extends BaseBusEntity {
   private String config;
 
   @Transient
-  public ISenderConfig getSenderConfig() {
+  public IChannelConfig getChannelConfig() {
     if (type == TemplateType.SMS) {
-      return JSON.deserialize(config, SMSSenderConfig.class);
+      return JSON.deserialize(config, SMSChannelConfig.class);
+    } else if (type == TemplateType.EMAIL) {
+      return JSON.deserialize(config, SMSChannelConfig.class);
+    } else if (type == TemplateType.MS) {
+      return JSON.deserialize(config, MSChannelConfig.class);
     }
     return null;
   }

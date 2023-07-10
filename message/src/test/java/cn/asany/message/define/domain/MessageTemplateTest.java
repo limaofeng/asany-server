@@ -1,13 +1,9 @@
 package cn.asany.message.define.domain;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import cn.asany.message.TestApplication;
-import cn.asany.message.api.MessageException;
-import cn.asany.message.api.MessageSender;
-import cn.asany.message.api.MessageSenderResolver;
-import cn.asany.message.api.SimpleMessage;
+import cn.asany.message.api.*;
 import cn.asany.message.define.domain.enums.TemplateType;
+import cn.asany.message.define.domain.toys.MessageContent;
 import java.util.HashMap;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -22,7 +18,7 @@ import org.springframework.test.context.ActiveProfiles;
 @ActiveProfiles("test")
 class MessageTemplateTest {
 
-  @Autowired private MessageSenderResolver messageSenderResolver;
+  @Autowired private MessageChannelResolver messageChannelResolver;
 
   @Test
   void testSmsMessage() throws MessageException {
@@ -31,16 +27,16 @@ class MessageTemplateTest {
     template.setName("测试短信");
     template.setSign("测试");
     template.setCode("test");
-    template.setContent("测试短信内容");
+    template.setContent(MessageContent.of("测试短信内容"));
 
-    MessageSender sender = messageSenderResolver.resolve("1");
-    sender.send(
-        SimpleMessage.builder()
+    MessageChannel channel = messageChannelResolver.resolve("1");
+
+    channel.send(
+        SmsMessage.builder()
             .signName(template.getSign())
             .templateCode(template.getCode())
             .templateParams(new HashMap<>())
-            .from("test")
-            .to(new String[] {"15921884771"})
+            .phones(new String[] {"15921884771"})
             .build());
   }
 }

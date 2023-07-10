@@ -1,6 +1,6 @@
 package cn.asany.message.define.domain;
 
-import cn.asany.message.data.utils.MessageUtils;
+import cn.asany.message.data.util.MessageUtils;
 import cn.asany.message.define.domain.converter.VariableDefinitionListConverter;
 import cn.asany.message.define.domain.toys.VariableDefinition;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -53,10 +53,10 @@ public class MessageDefinition extends BaseBusEntity {
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(
-      name = "SENDER",
+      name = "CHANNEL",
       nullable = false,
-      foreignKey = @ForeignKey(name = "FK_MESSAGE_DEFINITION_SENDER"))
-  private MessageSenderDefinition sender;
+      foreignKey = @ForeignKey(name = "FK_MESSAGE_DEFINITION_CHANNEL"))
+  private MessageChannelDefinition channel;
   /** 模版文件 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(

@@ -1,0 +1,1 @@
+create table sms_provider (id varchar(255) not null, created_at datetime(6), created_by bigint, updated_at datetime(6), updated_by bigint, config_store JSON, description varchar(500) not null, name varchar(20) not null, type varchar(10) not null, primary key (id)) engine=InnoDB

@@ -5,13 +5,13 @@ package cn.asany.message.api;
  *
  * @author limaofeng
  */
-public interface MessageSender {
+public interface MessageChannel {
 
   /**
    * 发送消息
    *
-   * @param simpleMessage 消息
+   * @param message 消息
    * @throws MessageException 消息异常
    */
-  void send(SimpleMessage simpleMessage) throws MessageException;
+  void send(Message message) throws MessageException;
 }

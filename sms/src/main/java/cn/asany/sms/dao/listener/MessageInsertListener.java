@@ -8,7 +8,12 @@ import org.hibernate.event.spi.PostUpdateEvent;
 import org.jfantasy.framework.dao.hibernate.listener.AbstractChangedListener;
 import org.springframework.stereotype.Component;
 
-@Component
+/**
+ * 发送短信监听器
+ *
+ * @author limaofeng
+ */
+@Component("ShortMessageInsertListener")
 public class MessageInsertListener extends AbstractChangedListener<ShortMessage> {
 
   public MessageInsertListener() {

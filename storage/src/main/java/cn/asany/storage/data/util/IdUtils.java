@@ -10,6 +10,11 @@ import lombok.Data;
 import org.jfantasy.framework.spring.SpringBeanUtils;
 import org.jfantasy.framework.util.common.StringUtil;
 
+/**
+ * ID 工具类
+ *
+ * @author limaofeng
+ */
 public class IdUtils {
 
   public static String toKey(String type, String space, Long id) {

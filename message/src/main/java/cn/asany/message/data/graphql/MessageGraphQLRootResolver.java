@@ -6,6 +6,7 @@ import cn.asany.message.data.graphql.mapper.MessageMapper;
 import cn.asany.message.data.service.DefaultMessageService;
 import graphql.kickstart.tools.GraphQLMutationResolver;
 import graphql.kickstart.tools.GraphQLQueryResolver;
+import java.util.Map;
 import org.springframework.stereotype.Component;
 
 /**
@@ -19,12 +20,19 @@ public class MessageGraphQLRootResolver implements GraphQLQueryResolver, GraphQL
   private final DefaultMessageService messageService;
   private final MessageMapper messageMapper;
 
-  public MessageGraphQLRootResolver(DefaultMessageService messageService, MessageMapper messageMapper) {
+  public MessageGraphQLRootResolver(
+      DefaultMessageService messageService, MessageMapper messageMapper) {
     this.messageService = messageService;
     this.messageMapper = messageMapper;
   }
 
   public Message createMessage(MessageCreateInput input) {
-    return this.messageService.save(messageMapper.toMessage(input));
+    Map<String, Object> variables = messageMapper.toMessageVariableValues(input.getVariables());
+    String id =
+        this.messageService.send(
+            input.getType(), variables, input.getRecipients().toArray(new String[0]));
+    return messageService
+        .findById(Long.valueOf(id))
+        .orElseThrow(() -> new RuntimeException("消息发送失败"));
   }
 }

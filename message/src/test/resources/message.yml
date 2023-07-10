@@ -1,0 +1,15 @@
+messages:
+  name: 分配任务
+  type: task.assignee
+  variables:
+    - name: user
+      type: json
+      required: true
+      default: { "name": "张三", "id": "1" }
+  mappingVariables:
+    - user: user
+  sender: system
+  template:
+    type: MS
+    title: hello, {{user.name}}
+    message: message!!!

@@ -5,7 +5,7 @@ package cn.asany.message.api;
  *
  * @author limaofeng
  */
-public interface MessageSenderResolver {
+public interface MessageChannelResolver {
 
   /**
    * 解析消息发送者
@@ -14,7 +14,7 @@ public interface MessageSenderResolver {
    * @return 消息发送者
    * @throws MessageException 消息异常
    */
-  MessageSender resolve(String id) throws MessageException;
+  MessageChannel resolve(String id) throws MessageException;
 
   /**
    * 解析消息发送者
@@ -24,5 +24,5 @@ public interface MessageSenderResolver {
    * @return 消息发送者
    * @throws MessageException 消息异常
    */
-  MessageSender resolve(String id, ISenderConfig config) throws MessageException;
+  MessageChannel resolve(String id, IChannelConfig config) throws MessageException;
 }

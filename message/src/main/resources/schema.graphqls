@@ -7,6 +7,16 @@ type MessageType {
   children: [MessageType!]!
 }
 
+type Notification {
+  id: ID!
+  type: MessageType!
+  systemMessage: Boolean!
+  userId: ID!
+  title: String!
+  message: String!
+  uri: String!
+}
+
 enum TemplateType {
   """
   短信
@@ -79,7 +89,7 @@ input MessageCreateInput {
   """
   消息类型
   """
-  type: String
+  type: String!
   """
   消息数据
   """
@@ -88,6 +98,10 @@ input MessageCreateInput {
   消息 URI
   """
   uri: String
+  """
+  消息接收人
+  """
+  recipients: [String!]!
 }
 
 input MessageTypeCreateInput {
@@ -181,4 +195,11 @@ extend type Mutation {
   createMessageDefinition(
     input: MessageDefinitionCreateInput
   ): MessageDefinition
+}
+
+type Subscription {
+  """
+  通知
+  """
+  notification(types: [String!] = []): Notification
 }

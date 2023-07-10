@@ -1,5 +1,7 @@
-package cn.asany.message.data.utils;
+package cn.asany.message.data.util;
 
+import cn.asany.message.data.domain.MessageRecipient;
+import cn.asany.message.data.domain.enums.MessageRecipientType;
 import cn.asany.message.define.domain.toys.VariableDefinition;
 import java.io.File;
 import java.io.IOException;
@@ -12,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import javax.servlet.http.Part;
 import lombok.extern.slf4j.Slf4j;
+import org.jfantasy.framework.util.common.StringUtil;
 import org.springframework.http.HttpHeaders;
 import org.springframework.mock.web.MockPart;
 
@@ -22,6 +25,81 @@ import org.springframework.mock.web.MockPart;
  */
 @Slf4j
 public class MessageUtils {
+
+  /**
+   * 格式化收件人
+   *
+   * @param phone 手机号
+   * @return 格式化后的收件人
+   */
+  public static String formatRecipientFromPhone(String phone) {
+    return MessageRecipientType.PHONE.getName() + MessageRecipientType.DELIMITER + phone;
+  }
+
+  public static String formatRecipientFromUser(Long userId) {
+    return MessageRecipientType.USER.getName() + MessageRecipientType.DELIMITER + userId;
+  }
+
+  /**
+   * 格式化收件人
+   *
+   * @param email 邮箱
+   * @return 格式化后的收件人
+   */
+  public static String formatRecipientFromEmail(String email) {
+    return MessageRecipientType.EMAIL.getName() + MessageRecipientType.DELIMITER + email;
+  }
+
+  public static String formatRecipient(MessageRecipient recipient) {
+    return recipient.getType().getName() + MessageRecipientType.DELIMITER + recipient.getValue();
+  }
+
+  public static List<String> parseRecipientPhoneNumber(String str) {
+    MessageRecipient recipient = recipient(str);
+    return parseRecipientPhoneNumber(recipient.getType(), recipient.getValue());
+  }
+
+  public static List<String> parseRecipientPhoneNumber(MessageRecipientType type, String value) {
+    List<String> recipients = new ArrayList<>();
+    if (type == MessageRecipientType.PHONE) {
+      recipients.add(value);
+      return recipients;
+    } else {
+      log.error("收件人类型错误：{}, 无法解析到手机号码", type + MessageRecipientType.DELIMITER + value);
+    }
+    return recipients;
+  }
+
+  public static List<String> parseRecipientEmail(MessageRecipientType type, String value) {
+    List<String> recipients = new ArrayList<>();
+    if (type == MessageRecipientType.EMAIL) {
+      recipients.add(value);
+      return recipients;
+    } else {
+      log.error("收件人类型错误：{}, 无法解析到邮箱", type + MessageRecipientType.DELIMITER + value);
+    }
+    return recipients;
+  }
+
+  public static List<String> parseRecipientUserId(MessageRecipientType type, String value) {
+    List<String> recipients = new ArrayList<>();
+    if (type == MessageRecipientType.USER) {
+      recipients.add(value);
+      return recipients;
+    } else {
+      log.error("收件人类型错误：{}, 无法解析到用户ID", type + MessageRecipientType.DELIMITER + value);
+    }
+    return recipients;
+  }
+
+  public static MessageRecipient recipient(String value) {
+    MessageRecipientType recipientType = MessageRecipientType.of(value);
+    return recipient(recipientType, value.substring(recipientType.getName().length() + 1));
+  }
+
+  public static MessageRecipient recipient(MessageRecipientType type, String value) {
+    return MessageRecipient.builder().type(type).value(value).build();
+  }
 
   public static void validate(List<VariableDefinition> variables, Map<String, Object> values) {
     List<String> fields = new ArrayList<>();
@@ -38,6 +116,10 @@ public class MessageUtils {
 
   public static Map<String, Object> parseMultipartString(String content, String boundary) {
     Map<String, Object> fields = new HashMap<>(5);
+
+    if (StringUtil.isBlank(content)) {
+      return fields;
+    }
 
     String[] parts = content.split("--" + boundary);
     for (String part : parts) {
@@ -161,18 +243,18 @@ public class MessageUtils {
     String contentType = "application/octet-stream";
     String fileName = file.getName();
     String fileExtension = fileName.substring(fileName.lastIndexOf('.') + 1);
-    if (fileExtension.equalsIgnoreCase("txt")) {
+    if ("txt".equalsIgnoreCase(fileExtension)) {
       contentType = "text/plain";
-    } else if (fileExtension.equalsIgnoreCase("jpg") || fileExtension.equalsIgnoreCase("jpeg")) {
+    } else if ("jpg".equalsIgnoreCase(fileExtension) || "jpeg".equalsIgnoreCase(fileExtension)) {
       contentType = "image/jpeg";
-    } else if (fileExtension.equalsIgnoreCase("png")) {
+    } else if ("png".equalsIgnoreCase(fileExtension)) {
       contentType = "image/png";
     }
     return contentType;
   }
 
   public static String extractBoundary(String multipartString) {
-    String[] lines = multipartString.split("\r\n");
+    String[] lines = multipartString.split("\r\n|\n\n");
     for (String line : lines) {
       if (line.startsWith("--")) {
         return line.substring(2);
@@ -182,7 +264,7 @@ public class MessageUtils {
   }
 
   private static String extractFieldName(String part) {
-    String[] lines = part.split("\r\n");
+    String[] lines = part.split("\r\n|\n\n");
     for (String line : lines) {
       if (line.startsWith("Content-Disposition")) {
         int startIndex = line.indexOf("name=\"") + 6;
@@ -194,7 +276,7 @@ public class MessageUtils {
   }
 
   private static String extractFileName(String part) {
-    String[] lines = part.split("\r\n");
+    String[] lines = part.split("\r\n|\n\n");
     for (String line : lines) {
       if (line.startsWith("Content-Disposition")) {
         int startIndex = line.indexOf("filename=\"") + 10;
@@ -206,7 +288,7 @@ public class MessageUtils {
   }
 
   private static String extractFieldValue(String part) {
-    String[] lines = part.split("\r\n");
+    String[] lines = part.split("\r\n|\n\n");
     boolean skipLines = true;
     StringBuilder valueBuilder = new StringBuilder();
 
@@ -223,7 +305,7 @@ public class MessageUtils {
   }
 
   public static String extractFileContentType(String part) {
-    String[] lines = part.split("\r\n");
+    String[] lines = part.split("\r\n|\n\n");
     for (String line : lines) {
       if (line.startsWith("Content-Type")) {
         int startIndex = line.indexOf(":") + 1;
@@ -234,7 +316,7 @@ public class MessageUtils {
   }
 
   private static byte[] extractFileContent(String part) {
-    String[] lines = part.split("\r\n");
+    String[] lines = part.split("\r\n|\n\n");
     StringBuilder contentBuilder = new StringBuilder();
     boolean startReading = false;
     for (String line : lines) {

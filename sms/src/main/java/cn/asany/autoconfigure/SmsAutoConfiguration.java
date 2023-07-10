@@ -34,12 +34,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 public class SmsAutoConfiguration {
 
   @Bean
-  public ShortMessageSenderBuilder shortMessageSenderBuilder(
-      ShortMessageServiceProviderFactory providerFactory) {
-    return new ShortMessageSenderBuilder(providerFactory);
-  }
-
-  @Bean
   public ShortMessageServiceProviderFactory shortMessageServiceProviderFactory(
       MessageService messageService) {
     return new ShortMessageServiceProviderFactory(messageService);

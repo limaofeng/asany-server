@@ -9,7 +9,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import javax.transaction.Transactional;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.jfantasy.framework.dao.hibernate.util.HibernateUtils;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
@@ -32,7 +31,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 public class OplogService implements InitializingBean {
-  private final LinkedQueue<Oplog> queue = new LinkedQueue();
+  private final LinkedQueue<Oplog> queue = new LinkedQueue<>();
 
   private final OplogDao oplogDao;
   private final SchedulingTaskExecutor executor;
@@ -48,12 +47,17 @@ public class OplogService implements InitializingBean {
     executor.execute(this::execute);
   }
 
-  @SneakyThrows
   public void execute() {
     List<Oplog> cache = new ArrayList<>();
     OplogService oplogService = SpringBeanUtils.getBeanByType(OplogService.class);
     do {
-      Oplog oplog = queue.poll(500, TimeUnit.MILLISECONDS);
+      Oplog oplog;
+      try {
+        oplog = queue.poll(500, TimeUnit.MILLISECONDS);
+      } catch (InterruptedException e) {
+        log.error(e.getMessage());
+        break;
+      }
       if (oplog != null) {
         cache.add(oplog);
       } else if (!cache.isEmpty()) {
@@ -73,7 +77,7 @@ public class OplogService implements InitializingBean {
         entity instanceof OplogDataCollector
             ? (OplogDataCollector) entity
             : OplogDataCollector.EMPTY_OPLOG_DATA_COLLECTOR;
-    Class entityClass =
+    Class<?> entityClass =
         ObjectUtil.defaultValue(
             collector.getEntityClass(), () -> ClassUtil.getRealClass(entity.getClass()));
     String entityName =
