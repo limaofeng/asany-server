@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.6](https://github.com/limaofeng/asany-server/compare/v0.2.5...v0.2.6) (2023-07-26)
+
+
+### Features
+
+* 优化消息机制 ([861884d](https://github.com/limaofeng/asany-server/commit/861884d185dc4af7d86c5b0cb4b604980afef655))
+* 完成通知订阅接口 ([3bf7115](https://github.com/limaofeng/asany-server/commit/3bf7115450f628d7a9938a4298a3370e8f7f5497))
+* 权限信息采集 ([edc7295](https://github.com/limaofeng/asany-server/commit/edc729507fa470e37fa666d7e7d8ea1f86c8b142))
+
+
+### Bug Fixes
+
+* 解决编译问题 ([a59b27f](https://github.com/limaofeng/asany-server/commit/a59b27f9177d794888964a3fcfb132c4014a5016))
+
 ### [0.2.5](https://github.com/limaofeng/asany-server/compare/v0.2.4...v0.2.5) (2023-05-14)
 
 
