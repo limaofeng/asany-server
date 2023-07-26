@@ -6,6 +6,11 @@ import graphql.kickstart.tools.GraphQLResolver;
 import org.jfantasy.framework.util.common.StringUtil;
 import org.springframework.stereotype.Component;
 
+/**
+ * 联系人分组
+ *
+ * @author limaofeng
+ */
 @Component
 public class ContactGroupGraphQLResolver implements GraphQLResolver<ContactGroup> {
   public String id(ContactGroup group) {

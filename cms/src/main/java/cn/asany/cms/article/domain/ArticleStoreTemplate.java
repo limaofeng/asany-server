@@ -4,6 +4,11 @@ import javax.persistence.*;
 import lombok.*;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
+/**
+ * 文章存储模版
+ *
+ * @author limaofeng
+ */
 @Setter
 @Getter
 @Builder
@@ -25,5 +30,5 @@ public class ArticleStoreTemplate extends BaseBusEntity {
   @Column(name = "SORT")
   private Integer index;
   /** 相关展示组件 */
-  @Embedded private Components components;
+  @Embedded private ArticleComponents components;
 }

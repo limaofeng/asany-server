@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import javax.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
-import org.jfantasy.framework.dao.BaseBusBusinessEntity;
+import org.jfantasy.framework.dao.SoftDeletableBaseBusEntity;
 
 /**
  * @author limaofeng@msn.com
@@ -18,7 +18,7 @@ import org.jfantasy.framework.dao.BaseBusBusinessEntity;
 @Entity
 @Table(name = "PM_ISSUE_FOLLOW")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class Follow extends BaseBusBusinessEntity {
+public class Follow extends SoftDeletableBaseBusEntity {
   /** ID */
   @Id
   @Column(name = "ID")

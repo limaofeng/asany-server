@@ -10,7 +10,10 @@ import cn.asany.message.define.service.MessageTypeService;
 import java.util.Map;
 import java.util.Optional;
 import org.hibernate.Hibernate;
+import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.error.ValidationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -76,5 +79,10 @@ public class DefaultMessageService implements MessageService {
               msg.getRecipients().forEach(Hibernate::unproxy);
               return msg;
             });
+  }
+
+  @Transactional(readOnly = true)
+  public Page<Message> findPage(Pageable pageable, PropertyFilter filter) {
+    return this.messageDao.findPage(pageable, filter);
   }
 }

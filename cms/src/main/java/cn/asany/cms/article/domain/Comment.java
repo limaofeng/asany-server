@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.List;
 import javax.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
 /**
@@ -26,17 +27,12 @@ import org.jfantasy.framework.dao.BaseBusEntity;
 public class Comment extends BaseBusEntity {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.TABLE, generator = "comment_gen")
-  @TableGenerator(
-      name = "comment_gen",
-      table = "sys_sequence",
-      pkColumnName = "gen_name",
-      pkColumnValue = "auth_comment:id",
-      valueColumnName = "gen_value")
   @Column(name = "ID")
+  @GeneratedValue(generator = "fantasy-sequence")
+  @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
   /** 文章标题 */
-  @Column(name = "TITLE")
+  @Column(name = "TITLE", length = 200)
   private String title;
   /** 评论内容 */
   @Column(name = "CONTENT", nullable = false, columnDefinition = "TEXT")

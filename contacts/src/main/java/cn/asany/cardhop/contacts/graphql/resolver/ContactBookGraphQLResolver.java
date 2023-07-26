@@ -13,6 +13,11 @@ import graphql.schema.DataFetchingEnvironment;
 import java.util.List;
 import org.springframework.stereotype.Component;
 
+/**
+ * 联系人分组
+ *
+ * @author limaofeng
+ */
 @Component
 public class ContactBookGraphQLResolver implements GraphQLResolver<ContactBook> {
 

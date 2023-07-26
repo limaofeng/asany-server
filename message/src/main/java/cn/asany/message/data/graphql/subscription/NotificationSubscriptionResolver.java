@@ -2,6 +2,7 @@ package cn.asany.message.data.graphql.subscription;
 
 import cn.asany.message.core.Notification;
 import graphql.kickstart.tools.GraphQLSubscriptionResolver;
+import graphql.schema.DataFetchingEnvironment;
 import java.util.List;
 import org.jfantasy.framework.security.LoginUser;
 import org.jfantasy.framework.security.SpringSecurityUtils;
@@ -22,7 +23,7 @@ public class NotificationSubscriptionResolver implements GraphQLSubscriptionReso
     this.notificationPublisher = notificationPublisher;
   }
 
-  Publisher<Notification> notification(List<String> types) {
+  Publisher<Notification> notification(List<String> types, DataFetchingEnvironment env) {
     LoginUser user = SpringSecurityUtils.getCurrentUser();
     if (user == null) {
       return notificationPublisher.getPublisher(

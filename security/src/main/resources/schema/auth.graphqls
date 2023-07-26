@@ -1,0 +1,22 @@
+directive @authInfo(
+  """
+  名称
+  """
+  name: String!
+  """
+  级别，只能是 Write, Read, List
+  """
+  accessLevel: String
+  """
+  授权资源类型
+  """
+  resourceTypes: [String!]
+  """
+  条件关键字
+  """
+  conditionKeywords: [String!]
+  """
+  关联操作
+  """
+  associatedOperations: [String!]
+) on FIELD_DEFINITION

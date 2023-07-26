@@ -3,7 +3,6 @@ dependencies {
     implementation project(":storage-api")
     implementation project(":security-api")
     implementation project(":openapi")
-    implementation "redis.clients:jedis"
     implementation("org.springframework.boot:spring-boot-starter-data-redis") {
         exclude group: 'io.lettuce', module: 'lettuce-core'
     }

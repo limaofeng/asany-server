@@ -193,7 +193,7 @@ public class UserService {
   }
 
   public List<Role> removeRoles(Long id, String... roles) {
-    User user = this.userDao.getOne(id);
+    User user = this.userDao.getReferenceById(id);
     for (String role : roles) {
       ObjectUtil.remove(user.getRoles(), "id", role);
     }
@@ -215,14 +215,14 @@ public class UserService {
 
   // 检查用户是否有指定的权限
   public String checkUserPermissions(long id, String permissions) {
-    User user = this.userDao.getOne(id);
-    String[] permisstionArray = permissions.split(",");
+    User user = this.userDao.getReferenceById(id);
+    String[] permissionArray = permissions.split(",");
     // 检查结果出用户拥有的权限列表
     //        UserServiceUtil.setDepartmentDao(departmentDao);
     UserServiceUtil.setGrantPermissionDao(grantPermissionDao);
-    Set<String> hasPermissionsList = UserServiceUtil.hasGrantPermissions(user, permisstionArray);
+    Set<String> hasPermissionsList = UserServiceUtil.hasGrantPermissions(user, permissionArray);
     // 返回json
-    return UserServiceUtil.comparePermissionsResult(hasPermissionsList, permisstionArray);
+    return UserServiceUtil.comparePermissionsResult(hasPermissionsList, permissionArray);
   }
 
   public void loginSuccess() {}

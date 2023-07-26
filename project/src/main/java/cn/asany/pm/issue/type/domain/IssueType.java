@@ -9,7 +9,7 @@ import lombok.*;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Where;
-import org.jfantasy.framework.dao.BaseBusBusinessEntity;
+import org.jfantasy.framework.dao.SoftDeletableBaseBusEntity;
 
 /**
  * 任务类型实体
@@ -27,7 +27,7 @@ import org.jfantasy.framework.dao.BaseBusBusinessEntity;
 @Table(name = "PM_ISSUE_TYPE")
 @Where(clause = "deleted = false")
 @JsonIgnoreProperties({"hibernateLazyInitializer"})
-public class IssueType extends BaseBusBusinessEntity {
+public class IssueType extends SoftDeletableBaseBusEntity {
   /** 主键ID */
   @Id
   @Column(name = "ID", length = 22)
@@ -53,8 +53,12 @@ public class IssueType extends BaseBusBusinessEntity {
 
   @Override
   public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+    if (this == o) {
+      return true;
+    }
+    if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) {
+      return false;
+    }
     IssueType issueType = (IssueType) o;
     return id != null && Objects.equals(id, issueType.id);
   }

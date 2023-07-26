@@ -280,6 +280,11 @@ extend type Mutation {
     input: MailboxMessageCreateInput!
     user: String
   ): MailboxMessage!
+    @authInfo(
+      name: "mail:CreateMailboxMessage"
+      accessLevel: "Write"
+      resourceTypes: ["mail:mailboxmessage/*"]
+    )
   """
   更新邮件(只限草稿)
   """
@@ -288,18 +293,37 @@ extend type Mutation {
     input: MailboxMessageUpdateInput!
     merge: Boolean = true
   ): MailboxMessage!
+    @authInfo(
+      name: "mail:UpdateMailboxMessage"
+      accessLevel: "Write"
+      resourceTypes: ["mail:mailboxmessage/*", "mail:mailboxmessage/{#id}"]
+    )
   """
   删除邮件
   """
   deleteMailboxMessage(id: ID!): Boolean
+    @authInfo(
+      name: "mail:DeleteMailboxMessage"
+      accessLevel: "Write"
+      resourceTypes: ["mail:mailboxmessage/*", "mail:mailboxmessage/{#id}"]
+    )
   """
   发送邮件
   """
   sendMailboxMessage(id: ID!): MailboxMessage!
+    @authInfo(
+      name: "mail:SendMailboxMessage"
+      accessLevel: "Write"
+      resourceTypes: ["mail:mailboxmessage/*", "mail:mailboxmessage/{#id}"]
+    )
   """
   清空 回收站
   """
   clearMailboxMessagesInTrashMailbox(user: String): Int
+    @authInfo(
+      name: "mail:ClearMailboxMessagesInTrashMailbox"
+      accessLevel: "Write"
+    )
   """
   更新我收藏的邮箱
   """
@@ -317,10 +341,12 @@ extend type Mutation {
     """
     mode: UpdateMode = ADD
   ): [String!]!
+    @authInfo(name: "mail:UpdateMyFavoriteMailboxes", accessLevel: "Write")
   """
   创建邮箱文件夹
   """
   createMailbox(namespace: String!, name: String!, user: String): Mailbox!
+    @authInfo(name: "mail:CreateMailbox", accessLevel: "Write")
   """
   更新邮件标记
   """
@@ -332,6 +358,7 @@ extend type Mutation {
     flags: [String!]!
     mode: MailboxFlagsUpdateMode = ADD
   ): MailboxMessage!
+    @authInfo(name: "mail:UpdateMailboxMessageFlags", accessLevel: "Write")
   """
   将邮件移动到指定文件夹
   """
@@ -345,6 +372,7 @@ extend type Mutation {
     """
     mailbox: ID!
   ): MailboxMessage!
+    @authInfo(name: "mail:MoveMailboxMessageToFolder", accessLevel: "Write")
 }
 
 extend type Query {
@@ -360,7 +388,7 @@ extend type Query {
     ID 类型
     """
     type: MailUserIdType = MAIL_USERNAME
-  ): MailUser
+  ): MailUser @authInfo(name: "mail:GetMailUser", accessLevel: "Read")
   """
   查询邮箱文件夹
   """
@@ -374,6 +402,11 @@ extend type Query {
     """
     user: ID
   ): Mailbox
+    @authInfo(
+      name: "mail:GetMailbox"
+      accessLevel: "Read"
+      resourceTypes: ["mail:mailbox/*", "mail:mailbox/{#id}"]
+    )
   """
   查询邮箱文件夹
   """
@@ -383,6 +416,11 @@ extend type Query {
     """
     user: ID
   ): [Mailbox!]!
+    @authInfo(
+      name: "mail:ListMailbox"
+      accessLevel: "List"
+      resourceTypes: ["mail:mailbox/*", "mail:mailbox/{#id}"]
+    )
   """
   查询文件夹下的邮件
   """
@@ -428,8 +466,18 @@ extend type Query {
     """
     orderBy: OrderBy = "internalDate_DESC"
   ): MailboxMessageConnection
+    @authInfo(
+      name: "mail:ListMailboxMessage"
+      accessLevel: "List"
+      resourceTypes: ["mail:mailboxmessage/*", "mail:mailboxmessage/{#id}"]
+    )
   """
   邮件详情
   """
   mailboxMessage(id: ID!): MailboxMessage
+    @authInfo(
+      name: "mail:GetMailboxMessage"
+      accessLevel: "Read"
+      resourceTypes: ["mail:mailboxmessage/*", "mail:mailboxmessage/{#id}"]
+    )
 }

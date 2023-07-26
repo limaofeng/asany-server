@@ -6,6 +6,7 @@
  */
 package org.hibernate.boot.registry.classloading.internal;
 
+import java.io.File;
 import java.io.InputStream;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
@@ -26,6 +27,7 @@ import org.hibernate.boot.registry.classloading.spi.ClassLoadingException;
 import org.hibernate.cfg.AvailableSettings;
 import org.hibernate.internal.CoreLogging;
 import org.hibernate.internal.CoreMessageLogger;
+import org.jboss.logging.Logger;
 import org.jfantasy.framework.util.FantasyClassLoader;
 
 /**
@@ -36,12 +38,12 @@ import org.jfantasy.framework.util.FantasyClassLoader;
  */
 public class ClassLoaderServiceImpl implements ClassLoaderService {
 
-  private static final CoreMessageLogger log =
+  private static final CoreMessageLogger LOG =
       CoreLogging.messageLogger(ClassLoaderServiceImpl.class);
 
   private static final String CLASS_PATH_SCHEME = "classpath://";
 
-  private final ConcurrentMap<Class, AggregatedServiceLoader<?>> serviceLoaders =
+  private final ConcurrentMap<Class<?>, AggregatedServiceLoader<?>> serviceLoaders =
       new ConcurrentHashMap<>();
   private volatile AggregatedClassLoader aggregatedClassLoader;
 
@@ -67,7 +69,7 @@ public class ClassLoaderServiceImpl implements ClassLoaderService {
    */
   public ClassLoaderServiceImpl(
       Collection<ClassLoader> providedClassLoaders, TcclLookupPrecedence lookupPrecedence) {
-    final LinkedHashSet<ClassLoader> orderedClassLoaderSet = new LinkedHashSet<ClassLoader>();
+    final LinkedHashSet<ClassLoader> orderedClassLoaderSet = new LinkedHashSet<>();
 
     // first, add all provided class loaders, if any
     if (providedClassLoaders != null) {
@@ -85,11 +87,8 @@ public class ClassLoaderServiceImpl implements ClassLoaderService {
     // now build the aggregated class loader...
     this.aggregatedClassLoader =
         AccessController.doPrivileged(
-            new PrivilegedAction<AggregatedClassLoader>() {
-              public AggregatedClassLoader run() {
-                return new AggregatedClassLoader(orderedClassLoaderSet, lookupPrecedence);
-              }
-            });
+            (PrivilegedAction<AggregatedClassLoader>)
+                () -> new AggregatedClassLoader(orderedClassLoaderSet, lookupPrecedence));
   }
 
   /**
@@ -100,9 +99,9 @@ public class ClassLoaderServiceImpl implements ClassLoaderService {
    * @deprecated No longer used/supported!
    */
   @Deprecated
-  @SuppressWarnings({"UnusedDeclaration", "unchecked", "deprecation"})
-  public static ClassLoaderServiceImpl fromConfigSettings(Map configValues) {
-    final List<ClassLoader> providedClassLoaders = new ArrayList<ClassLoader>();
+  @SuppressWarnings({"UnusedDeclaration", "unchecked"})
+  public static ClassLoaderServiceImpl fromConfigSettings(Map<?, ?> configValues) {
+    final List<ClassLoader> providedClassLoaders = new ArrayList<>();
 
     final Collection<ClassLoader> classLoaders =
         (Collection<ClassLoader>) configValues.get(AvailableSettings.CLASSLOADERS);
@@ -119,7 +118,7 @@ public class ClassLoaderServiceImpl implements ClassLoaderService {
   }
 
   private static void addIfSet(
-      List<ClassLoader> providedClassLoaders, String name, Map configVales) {
+      List<ClassLoader> providedClassLoaders, String name, Map<?, ?> configVales) {
     final ClassLoader providedClassLoader = (ClassLoader) configVales.get(name);
     if (providedClassLoader != null) {
       providedClassLoaders.add(providedClassLoader);
@@ -157,7 +156,7 @@ public class ClassLoaderServiceImpl implements ClassLoaderService {
     } catch (Exception ignore) {
     }
 
-    if (name.startsWith("/")) {
+    if (name.startsWith(File.separator)) {
       name = name.substring(1);
 
       try {
@@ -176,7 +175,7 @@ public class ClassLoaderServiceImpl implements ClassLoaderService {
   public InputStream locateResourceStream(String name) {
     // first we try name as a URL
     try {
-      log.tracef("trying via [new URL(\"%s\")]", name);
+      LOG.tracef("trying via [new URL(\"%s\")]", name);
       return new URL(name).openStream();
     } catch (Exception ignore) {
     }
@@ -187,7 +186,7 @@ public class ClassLoaderServiceImpl implements ClassLoaderService {
     name = stripClasspathScheme(name);
 
     try {
-      log.tracef("trying via [ClassLoader.getResourceAsStream(\"%s\")]", name);
+      LOG.tracef("trying via [ClassLoader.getResourceAsStream(\"%s\")]", name);
       final InputStream stream = getAggregatedClassLoader().getResourceAsStream(name);
       if (stream != null) {
         return stream;
@@ -199,13 +198,13 @@ public class ClassLoaderServiceImpl implements ClassLoaderService {
 
     if (stripped != null) {
       try {
-        log.tracef("trying via [new URL(\"%s\")]", stripped);
+        LOG.tracef("trying via [new URL(\"%s\")]", stripped);
         return new URL(stripped).openStream();
       } catch (Exception ignore) {
       }
 
       try {
-        log.tracef("trying via [ClassLoader.getResourceAsStream(\"%s\")]", stripped);
+        LOG.tracef("trying via [ClassLoader.getResourceAsStream(\"%s\")]", stripped);
         final InputStream stream = getAggregatedClassLoader().getResourceAsStream(stripped);
         if (stream != null) {
           return stream;
@@ -219,7 +218,7 @@ public class ClassLoaderServiceImpl implements ClassLoaderService {
 
   @Override
   public List<URL> locateResources(String name) {
-    final ArrayList<URL> urls = new ArrayList<URL>();
+    final ArrayList<URL> urls = new ArrayList<>();
     try {
       final Enumeration<URL> urlEnumeration = getAggregatedClassLoader().getResources(name);
       if (urlEnumeration != null && urlEnumeration.hasMoreElements()) {
@@ -227,7 +226,8 @@ public class ClassLoaderServiceImpl implements ClassLoaderService {
           urls.add(urlEnumeration.nextElement());
         }
       }
-    } catch (Exception ignore) {
+    } catch (Exception e) {
+      LOG.log(Logger.Level.ERROR, e.getMessage(), e);
     }
 
     return urls;
@@ -256,12 +256,12 @@ public class ClassLoaderServiceImpl implements ClassLoaderService {
     try {
       Class<?> aClass =
           Class.forName(packageName + ".package-info", true, getAggregatedClassLoader());
-      return aClass == null ? null : aClass.getPackage();
+      return aClass.getPackage();
     } catch (ClassNotFoundException e) {
-      log.packageNotFound(packageName);
+      LOG.packageNotFound(packageName);
       return null;
     } catch (LinkageError e) {
-      log.warn("LinkageError while attempting to load Package named " + packageName, e);
+      LOG.warn("LinkageError while attempting to load Package named " + packageName, e);
       return null;
     }
   }
@@ -274,7 +274,7 @@ public class ClassLoaderServiceImpl implements ClassLoaderService {
   private AggregatedClassLoader getAggregatedClassLoader() {
     final AggregatedClassLoader aggregated = this.aggregatedClassLoader;
     if (aggregated == null) {
-      throw log.usingStoppedClassLoaderService();
+      throw LOG.usingStoppedClassLoaderService();
     }
     return aggregated;
   }

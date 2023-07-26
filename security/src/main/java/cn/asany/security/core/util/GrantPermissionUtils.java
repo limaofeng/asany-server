@@ -39,9 +39,9 @@ public class GrantPermissionUtils {
         .map(
             item ->
                 GrantPermission.builder()
-                    .permission(item.getPermission())
+                    //                    .permission(item.getPermission())
                     //                    .securityType(item.getSecurityType())
-                    .value(item.getValue())
+                    //                    .value(item.getValue())
                     //                    .resource(item.getResource())
                     .build())
         .collect(Collectors.toList());
@@ -51,19 +51,19 @@ public class GrantPermissionUtils {
       List<GrantPermission> grants, String permissionKey) {
     Stream<GrantPermission> stream = grants.stream();
     if (StringUtil.isNotBlank(permissionKey)) {
-      stream =
-          stream.filter(
-              item ->
-                  item.getPermission().getEnabled()
-                      && item.getPermission().getId().equals(permissionKey));
+      //      stream =
+      //          stream.filter(
+      //              item ->
+      //                  item.getPermission().getEnabled()
+      //                      && item.getPermission().getId().equals(permissionKey));
     }
     return stream
         .map(
             item ->
                 GrantPermission.builder()
-                    .permission(item.getPermission())
+                    //                    .permission(item.getPermission())
                     //                    .securityType(item.getSecurityType())
-                    .value(item.getValue())
+                    //                    .value(item.getValue())
                     .build())
         .collect(Collectors.toList());
   }
@@ -72,7 +72,8 @@ public class GrantPermissionUtils {
       List<Permission> permissions, String permissionKey) {
     Stream<Permission> stream = permissions.stream();
     if (StringUtil.isNotBlank(permissionKey)) {
-      stream = stream.filter(item -> item.getEnabled() && item.getId().equals(permissionKey));
+      //      stream = stream.filter(item -> item.getEnabled() &&
+      // item.getId().equals(permissionKey));
     }
     List<User> users = new ArrayList<>();
     //    stream.forEach(
@@ -139,7 +140,8 @@ public class GrantPermissionUtils {
                             //                            .value(securityScope.getValue())
                             //                            .resource(resource.toString())
                             //                            .securityType(securityScope.getType())
-                            .permission(Permission.builder().id(item.getPermission()).build())
+                            //
+                            // .permission(Permission.builder().id(item.getPermission()).build())
                             .build());
                   });
         });
@@ -163,15 +165,16 @@ public class GrantPermissionUtils {
             item -> {
               Optional<Permission> optional =
                   permissions.stream()
-                      .filter(p -> p.getId().equals(item.getPermission().getId()))
+                      //                      .filter(p ->
+                      // p.getId().equals(item.getPermission().getId()))
                       .findFirst();
               if (optional.isPresent()) {
-                optional.get().getGrants().add(item);
+                //                optional.get().getGrants().add(item);
               } else {
-                Permission permission = item.getPermission();
-                permission.setGrants(new ArrayList<>());
-                permission.getGrants().add(item);
-                permissions.add(permission);
+                //                Permission permission = item.getPermission();
+                //                permission.setGrants(new ArrayList<>());
+                //                permission.getGrants().add(item);
+                //                permissions.add(permission);
               }
             });
     return permissions;

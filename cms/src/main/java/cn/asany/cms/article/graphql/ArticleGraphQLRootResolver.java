@@ -67,52 +67,49 @@ public class ArticleGraphQLRootResolver implements GraphQLQueryResolver, GraphQL
   /**
    * 查询所有文章
    *
-   * @param filter 过滤
+   * @param where 过滤
    * @param page 页码
    * @param pageSize 每页显示数据条数
    * @param orderBy 排序
    * @return ArticleConnection
    */
   public ArticleConnection articles(
-    ArticleWhereInput filter, int first, int page, int pageSize, Sort orderBy) {
-    PropertyFilter queryFilter =
-        ObjectUtil.defaultValue(filter, new ArticleWhereInput()).toFilter();
+      ArticleWhereInput where, int first, int page, int pageSize, Sort orderBy) {
+    PropertyFilter queryFilter = ObjectUtil.defaultValue(where, new ArticleWhereInput()).toFilter();
 
     Pageable pageable = PageRequest.of(page - 1, pageSize, orderBy);
 
-    return Kit.connection(
-        articleService.findPage(pageable, queryFilter), ArticleConnection.class);
+    return Kit.connection(articleService.findPage(pageable, queryFilter), ArticleConnection.class);
   }
 
   public List<ArticleTag> articleTags(
-    String organization, ArticleCategoryWhereInput filter, Sort orderBy) {
-    PropertyFilter builder =
-        ObjectUtil.defaultValue(filter, new ArticleCategoryWhereInput()).toFilter();
+      String organization, ArticleCategoryWhereInput where, Sort orderBy) {
+    PropertyFilter filter = where.toFilter();
     if (organization != null) {
-      builder.equal("organization.id", organization);
+      filter.equal("organization.id", organization);
     }
     if (orderBy != null) {
-      return articleTagService.findAllArticle(builder, orderBy);
+      return articleTagService.findAllArticle(filter, orderBy);
     } else {
-      return articleTagService.findAll(builder);
+      return articleTagService.findAll(filter);
     }
   }
 
   public List<ArticleCategory> starredArticleCategories(
       Long employee, ArticleChannelStarType starType) {
-    PropertyFilter builder = PropertyFilter.newFilter().and(new StarSpecification(employee, starType.getValue()));
+    PropertyFilter builder =
+        PropertyFilter.newFilter().and(new StarSpecification(employee, starType.getValue()));
     return articleCategoryService.findAll(builder);
   }
 
   public ArticleConnection starredArticles(
       Long employee,
       ArticleStarType starType,
-      ArticleWhereInput filter,
+      ArticleWhereInput where,
       int page,
       int pageSize,
       Sort orderBy) {
-    JpaDefaultPropertyFilter propertyFilter =
-      (JpaDefaultPropertyFilter)ObjectUtil.defaultValue(filter, new ArticleWhereInput()).toFilter();
+    JpaDefaultPropertyFilter propertyFilter = where.toFilter();
     propertyFilter.and(new StarSpecification(employee, starType.getValue()));
     return Kit.connection(
         articleService.findPage(PageRequest.of(page - 1, pageSize, orderBy), propertyFilter),

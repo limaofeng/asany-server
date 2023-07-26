@@ -1,8 +1,11 @@
 package cn.asany.autoconfigure;
 
+import cn.asany.security.auth.graphql.directive.AuthDirective;
+import cn.asany.security.auth.service.AuthInfoService;
 import cn.asany.security.core.domain.User;
 import cn.asany.security.core.service.DefaultUserDetailsService;
 import cn.asany.security.core.service.UserService;
+import graphql.kickstart.autoconfigure.tools.SchemaDirective;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
@@ -18,6 +21,7 @@ import org.jfantasy.framework.security.crypto.password.PasswordEncoder;
 import org.jfantasy.framework.security.crypto.password.PlaintextPasswordEncoder;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.graphql.context.DataLoaderRegistryCustomizer;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -38,8 +42,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
   "cn.asany.security.*.listener",
   "cn.asany.security.*.validators",
   "cn.asany.security.*.graphql",
-  // TODO: 待确认是否需要
-  //  "cn.asany.security.runner",
 })
 @EnableJpaRepositories(
     basePackages = "cn.asany.security.*.dao",
@@ -86,6 +88,11 @@ public class AsanySecurityAutoConfiguration {
   public DataLoaderRegistryCustomizer dataLoaderRegistryCustomizer(
       @Qualifier("user.DataLoader") DataLoader<?, ?> userDataLoader) {
     return registry -> registry.register("userDataLoader", userDataLoader);
+  }
+
+  @Bean
+  public SchemaDirective authDirective(@Autowired AuthInfoService authInfoService) {
+    return new SchemaDirective("authInfo", new AuthDirective(authInfoService));
   }
 
   //    @Bean(name = "dingtalk.AuthenticationProvider")

@@ -2,8 +2,8 @@ package cn.asany.cms.article.graphql;
 
 import cn.asany.cms.article.converter.ArticleCategoryConverter;
 import cn.asany.cms.article.domain.ArticleCategory;
-import cn.asany.cms.article.graphql.input.ArticleCategoryWhereInput;
 import cn.asany.cms.article.graphql.input.ArticleCategoryInput;
+import cn.asany.cms.article.graphql.input.ArticleCategoryWhereInput;
 import cn.asany.cms.article.service.ArticleCategoryService;
 import graphql.kickstart.tools.GraphQLMutationResolver;
 import graphql.kickstart.tools.GraphQLQueryResolver;
@@ -14,6 +14,11 @@ import org.jfantasy.framework.util.regexp.RegexpUtil;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
+/**
+ * 栏目
+ *
+ * @author limaofeng
+ */
 @Component
 public class ArticleCategoryGraphQLRootResolver
     implements GraphQLQueryResolver, GraphQLMutationResolver {
@@ -33,11 +38,11 @@ public class ArticleCategoryGraphQLRootResolver
    *
    * @return List<ArticleCategory>
    */
-  public List<ArticleCategory> articleCategories(ArticleCategoryWhereInput filter, Sort orderBy) {
+  public List<ArticleCategory> articleCategories(ArticleCategoryWhereInput where, Sort orderBy) {
     if (orderBy != null) {
-      return channelService.findAllArticle(filter.toFilter(), orderBy);
+      return channelService.findAllArticle(where.toFilter(), orderBy);
     } else {
-      return channelService.findAll(filter.toFilter());
+      return channelService.findAll(where.toFilter());
     }
   }
 

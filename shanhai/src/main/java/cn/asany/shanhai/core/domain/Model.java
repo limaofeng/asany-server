@@ -18,9 +18,15 @@ import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import lombok.*;
 import org.hibernate.annotations.*;
+import org.hibernate.annotations.Cache;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.framework.dao.hibernate.converter.StringArrayConverter;
 
+/**
+ * 模型
+ *
+ * @author limaofeng
+ */
 @Getter
 @Setter
 @RequiredArgsConstructor
@@ -69,6 +75,7 @@ import org.jfantasy.framework.dao.hibernate.converter.StringArrayConverter;
             name = "UK_MODEL_CODE",
             columnNames = {"MODULE_ID", "CODE"}))
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Model extends BaseBusEntity implements ModelGroupResource {
   @Id
   @Column(name = "ID")

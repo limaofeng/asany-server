@@ -1,16 +1,11 @@
-type PermissionType {
-  id: ID
-  name: String
-}
-
 type ResourceType {
   id: ID
   name: String
 }
 
-enum PermissionGrantType {
-  GENERAL
-  RESOURCE
+enum PermissionPolicyEffect {
+  Allow
+  Deny
 }
 
 type Permission {
@@ -18,47 +13,15 @@ type Permission {
   """
   名称
   """
-  name: String
+  action: String
   """
   描述
   """
-  description: String
-  """
-  启用状态
-  """
-  enabled: Boolean
-  """
-  预留 / 用于区分使用场合
-  """
-  tokenTypes: [String]
-  """
-  排序码
-  """
-  index: Int
-  """
-  权限类型
-  """
-  type: PermissionType
-  """
-  授权类型
-  """
-  grantType: PermissionGrantType
-  """
-  如果为资源授权，需要提供资源类型
-  """
-  resourceType: String
+  effect: PermissionPolicyEffect
   """
   被授权的资源
   """
   resources: [String]
-  """
-  上级权限
-  """
-  parent: Permission
-  """
-  子权限
-  """
-  scopes: [Permission]
 }
 
 type PermissionConnection {
@@ -100,7 +63,7 @@ extend type Query {
   查询权限
   """
   permissions(
-    where: PermissionWhereInput
+    where: PermissionWhereInput = {}
     orderBy: OrderBy = "unsorted"
   ): [Permission]
 }

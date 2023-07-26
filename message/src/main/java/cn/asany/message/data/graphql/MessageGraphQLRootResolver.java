@@ -2,11 +2,18 @@ package cn.asany.message.data.graphql;
 
 import cn.asany.message.data.domain.Message;
 import cn.asany.message.data.graphql.input.MessageCreateInput;
+import cn.asany.message.data.graphql.input.MessageWhereInput;
 import cn.asany.message.data.graphql.mapper.MessageMapper;
+import cn.asany.message.data.graphql.type.MessageConnection;
 import cn.asany.message.data.service.DefaultMessageService;
 import graphql.kickstart.tools.GraphQLMutationResolver;
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import java.util.Map;
+import org.jfantasy.graphql.util.Kit;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 /**
@@ -21,9 +28,17 @@ public class MessageGraphQLRootResolver implements GraphQLQueryResolver, GraphQL
   private final MessageMapper messageMapper;
 
   public MessageGraphQLRootResolver(
-      DefaultMessageService messageService, MessageMapper messageMapper) {
+      DefaultMessageService messageService,
+      @Autowired(required = false) MessageMapper messageMapper) {
     this.messageService = messageService;
     this.messageMapper = messageMapper;
+  }
+
+  public MessageConnection messages(
+      MessageWhereInput where, int first, int page, int pageSize, Sort orderBy) {
+    Pageable pageable = PageRequest.of(page - 1, pageSize, orderBy);
+    return Kit.connection(
+        messageService.findPage(pageable, where.toFilter()), MessageConnection.class);
   }
 
   public Message createMessage(MessageCreateInput input) {

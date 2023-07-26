@@ -11,7 +11,7 @@ import org.jfantasy.framework.dao.BaseBusEntity;
 /**
  * 消息类型
  *
- * @author
+ * @author limaofeng@msn.com
  */
 @Getter
 @Setter

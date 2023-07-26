@@ -122,4 +122,8 @@ public class UserGraphQLRootResolver implements GraphQLMutationResolver, GraphQL
     userService.changePassword(loginUser.getUid(), oldPassword, newPassword);
     return Boolean.TRUE;
   }
+
+  public User getUser(Long id) {
+    return null;
+  }
 }

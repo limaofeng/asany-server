@@ -5,7 +5,6 @@ import cn.asany.ui.library.graphql.input.OplogWhereInput;
 import cn.asany.ui.library.service.OplogService;
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import java.util.List;
-import org.jfantasy.framework.util.common.ObjectUtil;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -17,8 +16,7 @@ public class OplogGraphQLQueryResolver implements GraphQLQueryResolver {
     this.oplogService = oplogService;
   }
 
-  public List<Oplog> oplogs(OplogWhereInput filter) {
-    filter = ObjectUtil.defaultValue(filter, new OplogWhereInput());
-    return this.oplogService.oplogs(filter.toFilter());
+  public List<Oplog> oplogs(OplogWhereInput where) {
+    return this.oplogService.oplogs(where.toFilter());
   }
 }

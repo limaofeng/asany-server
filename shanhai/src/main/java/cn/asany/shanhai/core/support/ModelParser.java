@@ -37,6 +37,11 @@ import org.jfantasy.framework.dao.mybatis.keygen.util.DataBaseKeyGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StopWatch;
 
+/**
+ * Model Parser
+ *
+ * @author limaofeng
+ */
 @Slf4j
 public class ModelParser {
 
@@ -210,8 +215,8 @@ public class ModelParser {
         allModels.values().stream()
             .reduce(
                 new ArrayList<>(),
-                (acc, _item) -> {
-                  acc.addAll(_item.getTypeDefinitions().values());
+                (acc, item) -> {
+                  acc.addAll(item.getTypeDefinitions().values());
                   return acc;
                 },
                 (acc, bcc) -> {
@@ -244,17 +249,17 @@ public class ModelParser {
   public SchemaParser buildSchemaParser() throws IOException {
     SchemaParserBuilder builder = new SchemaParserBuilder();
 
-    SchemaParserDictionary _dictionary = new SchemaParserDictionary();
+    SchemaParserDictionary schemaParserDictionary = new SchemaParserDictionary();
 
     for (ModelMediator mediator : allModels.values()) {
-      _dictionary.add(mediator.dictionary);
+      schemaParserDictionary.add(mediator.dictionary);
     }
 
     if (nonNull(dictionary)) {
-      _dictionary.add(dictionary.getDictionary());
+      schemaParserDictionary.add(dictionary.getDictionary());
     }
 
-    builder.dictionary(_dictionary.getDictionary());
+    builder.dictionary(schemaParserDictionary.getDictionary());
 
     List<String> schemaStrings = schemaStringProvider.schemaStrings();
     schemaStrings.forEach(builder::schemaString);

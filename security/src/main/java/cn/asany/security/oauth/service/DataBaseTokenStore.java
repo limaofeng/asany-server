@@ -37,14 +37,14 @@ public class DataBaseTokenStore extends AbstractTokenStore {
   public DataBaseTokenStore(
       StringRedisTemplate redisTemplate,
       AccessTokenService accessTokenService,
-      OpenAPIService openAPIService) {
+      OpenAPIService openApiService) {
     super(redisTemplate);
     this.accessTokenService = accessTokenService;
-    this.openAPIService = openAPIService;
+    this.openAPIService = openApiService;
   }
 
   @Override
-  @Transactional
+  @Transactional(rollbackFor = Exception.class)
   public void storeAccessToken(OAuth2AccessToken token, Authentication authentication) {
     Optional<AccessToken> optionalAccessToken =
         this.accessTokenService.getAccessToken(token.getTokenValue());

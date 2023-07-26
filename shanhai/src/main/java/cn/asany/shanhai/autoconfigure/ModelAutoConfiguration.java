@@ -20,6 +20,11 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * Model Auto Configuration
+ *
+ * @author limaofeng
+ */
 @Configuration
 public class ModelAutoConfiguration {
 
@@ -54,7 +59,7 @@ public class ModelAutoConfiguration {
 
   @Bean
   @ConfigurationProperties("graphql.tools.schema-parser-options")
-  public SchemaParserOptions.Builder CustomOptionsBuilder(
+  public SchemaParserOptions.Builder customOptionsBuilder(
       @Autowired(required = false) PerFieldObjectMapperProvider perFieldObjectMapperProvider,
       @Autowired(required = false) List<SchemaParserOptions.GenericWrapper> genericWrappers,
       @Autowired(required = false) ObjectMapperConfigurer objectMapperConfigurer,
@@ -99,7 +104,7 @@ public class ModelAutoConfiguration {
   }
 
   @Bean
-  public GraphQLReloadSchemaProvider graphQLSchemaProvider(ModelParser modelParser) {
+  public GraphQLReloadSchemaProvider graphqlSchemaProvider(ModelParser modelParser) {
     return new DynamicGraphQLSchemaProvider(modelParser);
   }
 

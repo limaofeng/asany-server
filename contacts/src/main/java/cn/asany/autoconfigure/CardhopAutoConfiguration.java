@@ -11,6 +11,11 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
+/**
+ * Cardhop 自动配置
+ *
+ * @author limaofeng
+ */
 @Configuration
 @Slf4j
 @EntityScan({"cn.asany.cardhop.contacts.domain"})

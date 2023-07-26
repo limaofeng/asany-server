@@ -1,5 +1,6 @@
 package cn.asany.shanhai.core.domain;
 
+import java.io.Serializable;
 import javax.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
@@ -14,7 +15,7 @@ import org.hibernate.annotations.GenericGenerator;
 @ToString(of = "id")
 @Entity
 @Table(name = "SH_MODEL_FIELD_ARGUMENT")
-public class ModelFieldArgument {
+public class ModelFieldArgument implements Serializable {
   @Id
   @Column(name = "ID")
   @GeneratedValue(generator = "fantasy-sequence")

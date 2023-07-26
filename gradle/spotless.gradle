@@ -10,11 +10,11 @@ spotless {
         trimTrailingWhitespace()
         endWithNewline()
     }
-//    format 'styling', {
-//        target 'src/*/resources/**/*.graphqls'
-//
-//        prettier('2.4.1').config(['tabWidth': 2])
-//    }
+    format 'styling', {
+        target 'src/*/resources/**/*.graphqls'
+
+        prettier('2.4.1').config(['tabWidth': 2])
+    }
     java {
         target 'src/*/java/**/*.java'
 

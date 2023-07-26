@@ -44,8 +44,8 @@ public class IssueGraphQLQueryResolver implements GraphQLQueryResolver {
    * @param orderBy 排序
    * @return 任务列表
    */
-  public IssueConnection issues(IssueWhereInput filter, int page, int pageSize, Sort orderBy) {
+  public IssueConnection issues(IssueWhereInput where, int page, int pageSize, Sort orderBy) {
     Pageable pageable = PageRequest.of(page - 1, pageSize, orderBy);
-    return Kit.connection(issueService.findPage(pageable, filter.toFilter()), IssueConnection.class);
+    return Kit.connection(issueService.findPage(pageable, where.toFilter()), IssueConnection.class);
   }
 }

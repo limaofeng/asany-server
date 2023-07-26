@@ -15,7 +15,6 @@ import graphql.kickstart.tools.GraphQLMutationResolver;
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import java.util.List;
 import java.util.Optional;
-
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.security.LoginUser;
 import org.jfantasy.framework.security.SpringSecurityUtils;
@@ -54,8 +53,8 @@ public class OrganizationGraphQLQueryAndMutationResolver
     this.organizationGraphQLResolver = organizationGraphQLResolver;
   }
 
-  public List<Organization> organizations(OrganizationWhereInput filter) {
-    PropertyFilter propertyFilter = filter.toFilter();
+  public List<Organization> organizations(OrganizationWhereInput where) {
+    PropertyFilter propertyFilter = where.toFilter();
     LoginUser user = SpringSecurityUtils.getCurrentUser();
     propertyFilter.notEqual("code", Organization.DEFAULT_ORGANIZATION_CODE);
     if (user != null) {
@@ -75,10 +74,10 @@ public class OrganizationGraphQLQueryAndMutationResolver
    * 全部部门
    *
    * @param organization 组织
-   * @param filter 过滤器
+   * @param where 过滤器
    * @return List<Department> 部门集合
    */
-  public List<Department> departments(String organization, DepartmentWhereInput filter) {
+  public List<Department> departments(String organization, DepartmentWhereInput where) {
     return null;
   }
 

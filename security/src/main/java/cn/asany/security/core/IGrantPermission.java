@@ -12,28 +12,28 @@ public interface IGrantPermission {
   /**
    * 权限
    *
-   * @return
+   * @return 权限
    */
   Permission getPermission();
 
   /**
    * 权限类型
    *
-   * @return
+   * @return 权限类型
    */
   SecurityType getSecurityType();
 
   /**
    * 授权给
    *
-   * @return
+   * @return String
    */
   String getValue();
 
   /**
    * 授权资源
    *
-   * @return
+   * @return String
    */
   String getResource();
 }

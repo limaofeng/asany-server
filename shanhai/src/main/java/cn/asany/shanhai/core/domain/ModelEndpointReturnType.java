@@ -1,5 +1,6 @@
 package cn.asany.shanhai.core.domain;
 
+import java.io.Serializable;
 import javax.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
@@ -19,7 +20,7 @@ import org.hibernate.annotations.GenericGenerator;
 @ToString(of = "id")
 @Entity
 @Table(name = "SH_MODEL_ENDPOINT_RETURN_TYPE")
-public class ModelEndpointReturnType {
+public class ModelEndpointReturnType implements Serializable {
   @Id
   @Column(name = "ENDPOINT_ID", nullable = false, updatable = false, precision = 22, scale = 0)
   @GenericGenerator(

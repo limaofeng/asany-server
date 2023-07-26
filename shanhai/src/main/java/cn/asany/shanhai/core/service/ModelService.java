@@ -14,13 +14,15 @@ import cn.asany.shanhai.core.utils.TypeNotFoundException;
 import cn.asany.shanhai.gateway.domain.ModelGroupItem;
 import java.util.*;
 import java.util.stream.Collectors;
+import javax.persistence.EntityManager;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
-import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
 import org.jfantasy.framework.error.ValidationException;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.common.StringUtil;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -46,10 +48,14 @@ public class ModelService {
   private final ModelFieldMetadataDao modelFieldMetadataDao;
   private final ModelFieldArgumentDao modelFieldArgumentDao;
   private final ModelFeatureDao modelFeatureDao;
+  public static final String CACHE_KEY = "MODEL";
 
   private final ApplicationEventPublisher publisher;
 
+  private final CacheManager cacheManager;
+
   public ModelService(
+      CacheManager cacheManager,
       ModelDao modelDao,
       ModuleDao moduleDao,
       ModelFieldDao modelFieldDao,
@@ -60,6 +66,7 @@ public class ModelService {
       ModelMetadataDao modelMetadataDao,
       ModelFieldMetadataDao modelFieldMetadataDao,
       ApplicationEventPublisher publisher) {
+    this.cacheManager = cacheManager;
     this.modelDao = modelDao;
     this.moduleDao = moduleDao;
     this.modelFieldDao = modelFieldDao;
@@ -205,11 +212,11 @@ public class ModelService {
 
     ModelUtils.ModelLazySaveContext context = modelUtils.getModelLazySaveContext();
 
-    Model Query =
+    Model query =
         modelUtils
             .getModelByCode("Query")
             .orElseThrow(() -> new ValidationException("Model Query 未找到"));
-    Model Mutation =
+    Model mutation =
         modelUtils
             .getModelByCode("Mutation")
             .orElseThrow(() -> new ValidationException("Model Mutation 未找到"));
@@ -220,10 +227,10 @@ public class ModelService {
             .map(item -> modelUtils.install(item.getModel(), item))
             .collect(Collectors.toList()));
     this.modelFieldDao.saveAllInBatch(
-        queries.stream().map(item -> modelUtils.install(Query, item)).collect(Collectors.toList()));
+        queries.stream().map(item -> modelUtils.install(query, item)).collect(Collectors.toList()));
     this.modelFieldDao.saveAllInBatch(
         mutations.stream()
-            .map(item -> modelUtils.install(Mutation, item))
+            .map(item -> modelUtils.install(mutation, item))
             .collect(Collectors.toList()));
 
     modelUtils.clear();
@@ -275,7 +282,9 @@ public class ModelService {
       throw new ValidationException("Model 的 [ ID, CODE ] 不能同时为空");
     }
     Optional<Model> optionalOriginal =
-        model.getId() != null ? modelDao.findById(model.getId()) : findByCode(model.getCode());
+        model.getId() != null
+            ? modelUtils.getModelById(model.getId())
+            : modelUtils.getModelByCode(model.getCode());
     if (!optionalOriginal.isPresent()) {
       throw new ValidationException(
           "Model 的 [ ID = " + model.getId() + ", CODE = " + model.getCode() + " ] 没有查询到对应的数据");
@@ -312,7 +321,11 @@ public class ModelService {
   }
 
   public Optional<Model> findById(Long id) {
-    return this.modelDao.findById(id);
+    Cache cache = this.cacheManager.getCache(CACHE_KEY);
+    assert cache != null;
+    return Optional.ofNullable(
+        cache.get(
+            this.getClass().getName() + ".findById#" + id, () -> this.modelDao.findById(id).get()));
   }
 
   public int delete(Long[] ids) {
@@ -448,12 +461,19 @@ public class ModelService {
 
   @Transactional(readOnly = true)
   public List<Model> findEntityModels() {
-    return this.modelDao.findAll(PropertyFilter.newFilter().equal("type", ModelType.ENTITY));
+    Cache cache = this.cacheManager.getCache(CACHE_KEY);
+    assert cache != null;
+    return cache.get(
+        this.getClass().getName() + ".findEntityModels",
+        () -> this.modelDao.findAll(PropertyFilter.newFilter().equal("type", ModelType.ENTITY)));
   }
 
   @Transactional(readOnly = true)
   public Model getDetails(Long id) {
-    return this.modelDao.getDetails(id);
+    Cache cache = this.cacheManager.getCache(CACHE_KEY);
+    assert cache != null;
+    return cache.get(
+        this.getClass().getName() + ".getDetails#" + id, () -> this.modelDao.getDetails(id));
   }
 
   @Transactional
@@ -468,8 +488,12 @@ public class ModelService {
   }
 
   public Optional<Model> findByCode(String code) {
-    ModelUtils modelUtils = ModelUtils.getInstance();
-    return modelUtils.getModelByCode(code);
+    Cache cache = this.cacheManager.getCache(CACHE_KEY);
+    assert cache != null;
+    return Optional.ofNullable(
+        cache.get(
+            this.getClass().getName() + ".findByCode#" + code,
+            () -> this.modelDao.findOne(PropertyFilter.newFilter().equal("code", code)).get()));
   }
 
   public boolean exists(String code) {
@@ -652,5 +676,26 @@ public class ModelService {
     allDeleteFields.add(field);
     this.modelFieldDao.deleteAll(allDeleteFields);
     this.publisher.publishEvent(new DeleteModelFieldEvent(id, field));
+  }
+
+  public EntityManager getEntityManager() {
+    return this.modelDao.getEntityManager();
+  }
+
+  public List<Model> findAllByRoot() {
+    Cache cache = cacheManager.getCache(CACHE_KEY);
+    assert cache != null;
+    return cache.get(
+        this.getClass().getName() + ".findAllByRoot",
+        () ->
+            this.modelDao.findAll(
+                PropertyFilter.newFilter()
+                    .or(
+                        PropertyFilter.newFilter().equal("type", ModelType.SCALAR),
+                        PropertyFilter.newFilter().in("code", "Query", "Mutation"))));
+  }
+
+  public void directSave(Model entity) {
+    this.modelDao.save(entity);
   }
 }

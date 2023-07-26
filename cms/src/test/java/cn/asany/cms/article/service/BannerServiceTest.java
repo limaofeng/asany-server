@@ -6,8 +6,8 @@ import cn.asany.cms.TestApplication;
 import cn.asany.cms.article.converter.BannerConverter;
 import cn.asany.cms.article.domain.Banner;
 import cn.asany.cms.article.graphql.input.BannerCreateInput;
-import cn.asany.cms.article.graphql.input.BannerWhereInput;
 import cn.asany.cms.article.graphql.input.BannerUpdateInput;
+import cn.asany.cms.article.graphql.input.BannerWhereInput;
 import com.fasterxml.jackson.core.type.TypeReference;
 import java.io.InputStream;
 import java.util.HashSet;
@@ -61,8 +61,8 @@ class BannerServiceTest {
 
   @Test
   void findAll() {
-    BannerWhereInput filter = new BannerWhereInput();
-    List<Banner> banners = this.service.findAll(filter.build(), Sort.unsorted());
+    BannerWhereInput where = new BannerWhereInput();
+    List<Banner> banners = this.service.findAll(where.toFilter(), Sort.unsorted());
     assertNotNull(banners);
   }
 

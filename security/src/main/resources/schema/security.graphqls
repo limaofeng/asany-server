@@ -1,5 +1,3 @@
-directive @auth(requires: String) on OBJECT | FIELD_DEFINITION
-
 type RoleSpace {
   id: ID!
   code: String!
@@ -384,7 +382,7 @@ extend type Query {
   """
   系统•当前登录用户
   """
-  viewer(organization: ID): CurrentUser @auth(requires: "USER")
+  viewer(organization: ID): CurrentUser
   """
   会话
   """
@@ -401,7 +399,7 @@ extend type Query {
   查询用户
   """
   users(
-    where: UserWhereInput
+    where: UserWhereInput = {}
     # 跳过
     skip: Int = 0
     # 游标定位 之后

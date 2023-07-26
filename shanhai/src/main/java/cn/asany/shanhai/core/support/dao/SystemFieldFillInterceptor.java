@@ -4,8 +4,8 @@ import java.io.Serializable;
 import java.util.Arrays;
 import org.hibernate.EmptyInterceptor;
 import org.hibernate.type.Type;
-import org.jfantasy.framework.dao.BaseBusBusinessEntity;
 import org.jfantasy.framework.dao.BaseBusEntity;
+import org.jfantasy.framework.dao.SoftDeletableBaseBusEntity;
 import org.jfantasy.framework.security.LoginUser;
 import org.jfantasy.framework.security.SpringSecurityUtils;
 import org.jfantasy.framework.util.common.DateUtil;
@@ -81,7 +81,7 @@ public class SystemFieldFillInterceptor extends EmptyInterceptor {
       }
       int count = 0;
       int maxCount = 4;
-      if (entity instanceof BaseBusBusinessEntity) {
+      if (entity instanceof SoftDeletableBaseBusEntity) {
         maxCount++;
       }
       for (int i = 0; i < propertyNames.length; i++) {

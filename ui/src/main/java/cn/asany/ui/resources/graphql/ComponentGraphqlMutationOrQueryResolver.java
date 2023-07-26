@@ -54,17 +54,17 @@ public class ComponentGraphqlMutationOrQueryResolver
     return componentService.findById(id);
   }
 
-  public List<Component> components(ComponentWhereInput where, int first, int offset, Sort orderBy) {
+  public List<Component> components(
+      ComponentWhereInput where, int first, int offset, Sort orderBy) {
     Pageable pageable = LimitPageRequest.of(offset, first, orderBy);
     where = ObjectUtil.defaultValue(where, new ComponentWhereInput());
     return componentService.findPage(pageable, where.toFilter()).getContent();
   }
 
   public ComponentConnection componentsConnection(
-    ComponentWhereInput filter, int page, int pageSize, Sort orderBy) {
+      ComponentWhereInput where, int page, int pageSize, Sort orderBy) {
     Pageable pageable = PageRequest.of(page - 1, pageSize, orderBy);
-    filter = ObjectUtil.defaultValue(filter, new ComponentWhereInput());
     return Kit.connection(
-        componentService.findPage(pageable, filter.toFilter()), ComponentConnection.class);
+        componentService.findPage(pageable, where.toFilter()), ComponentConnection.class);
   }
 }

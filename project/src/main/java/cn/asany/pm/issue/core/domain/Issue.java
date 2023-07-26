@@ -16,7 +16,7 @@ import javax.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.GenericGenerator;
-import org.jfantasy.framework.dao.BaseBusBusinessEntity;
+import org.jfantasy.framework.dao.SoftDeletableBaseBusEntity;
 
 /**
  * 任务主表
@@ -33,7 +33,7 @@ import org.jfantasy.framework.dao.BaseBusBusinessEntity;
 @Entity
 @Table(name = "PM_ISSUE")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class Issue extends BaseBusBusinessEntity {
+public class Issue extends SoftDeletableBaseBusEntity {
   /** 任务ID */
   @Id
   @Column(name = "ID")
@@ -127,8 +127,12 @@ public class Issue extends BaseBusBusinessEntity {
 
   @Override
   public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+    if (this == o) {
+      return true;
+    }
+    if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) {
+      return false;
+    }
     Issue issue = (Issue) o;
     return id != null && Objects.equals(id, issue.id);
   }

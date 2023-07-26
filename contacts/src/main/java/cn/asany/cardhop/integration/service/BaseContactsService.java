@@ -13,6 +13,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+/**
+ * 通讯录
+ *
+ * @author limaofeng
+ */
 @Service
 public class BaseContactsService implements IContactsService {
 
@@ -33,7 +38,7 @@ public class BaseContactsService implements IContactsService {
   }
 
   @Override
-  public Page<Contact> findPager(
+  public Page<Contact> findPage(
       ContactBook book, String namespace, Pageable pageable, PropertyFilter filter) {
     return this.contactsService.findPage(
         pageable,

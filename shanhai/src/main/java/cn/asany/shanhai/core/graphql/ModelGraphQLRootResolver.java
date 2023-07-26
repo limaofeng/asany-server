@@ -49,16 +49,17 @@ public class ModelGraphQLRootResolver implements GraphQLMutationResolver, GraphQ
     return Boolean.TRUE;
   }
 
-  public List<Model> models(Long module, ModelWhereInput where, int offset, int limit, Sort orderBy) {
+  public List<Model> models(
+      Long module, ModelWhereInput where, int offset, int limit, Sort orderBy) {
     return modelService.findAll(
         where.toFilter().equal("module.id", module), offset, limit, orderBy);
   }
 
   public ModelConnection modelsConnection(
-    Long module, ModelWhereInput filter, int page, int pageSize, Sort orderBy) {
+      Long module, ModelWhereInput where, int page, int pageSize, Sort orderBy) {
     Pageable pageable = PageRequest.of(page - 1, pageSize, orderBy);
     return Kit.connection(
-        modelService.findPage(pageable, filter.toFilter().equal("module.id", module)),
+        modelService.findPage(pageable, where.toFilter().equal("module.id", module)),
         ModelConnection.class);
   }
 
@@ -92,7 +93,7 @@ public class ModelGraphQLRootResolver implements GraphQLMutationResolver, GraphQ
   }
 
   public List<ModelField> modelFields(
-    Long model, ModelFieldWhereInput where, int offset, int limit, Sort sort) {
+      Long model, ModelFieldWhereInput where, int offset, int limit, Sort sort) {
     return modelService.listModelFields(
         where.toFilter().equal("model.id", model), offset, limit, sort);
   }

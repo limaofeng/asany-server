@@ -15,6 +15,6 @@ public class PermissionSerializer extends JsonSerializer<Permission> {
   @Override
   public void serialize(Permission value, JsonGenerator gen, SerializerProvider serializers)
       throws IOException {
-    gen.writeString(value.getId());
+    gen.writeString(value.getId().toString());
   }
 }

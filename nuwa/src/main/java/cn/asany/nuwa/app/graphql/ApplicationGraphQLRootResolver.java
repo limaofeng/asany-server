@@ -81,7 +81,7 @@ public class ApplicationGraphQLRootResolver
     return applicationService.findDetailsById(Long.valueOf(id), hasFetchRoutes, hasFetchMenus);
   }
 
-  public List<Application> applications(ApplicationWhereInput filter) {
-    return applicationService.findAll(filter.toFilter());
+  public List<Application> applications(ApplicationWhereInput where) {
+    return applicationService.findAll(where.toFilter());
   }
 }

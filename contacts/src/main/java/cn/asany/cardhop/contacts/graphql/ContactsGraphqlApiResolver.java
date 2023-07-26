@@ -99,7 +99,7 @@ public class ContactsGraphqlApiResolver implements GraphQLQueryResolver, GraphQL
     IContactsService service = contactsServiceFactory.getService(contactBook.getType());
 
     return Kit.connection(
-        service.findPager(contactBook, idKey.getNamespace(), pageable, where.toFilter()),
+        service.findPage(contactBook, idKey.getNamespace(), pageable, where.toFilter()),
         ContactConnection.class);
   }
 }

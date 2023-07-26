@@ -31,11 +31,18 @@ input EmployeePositionUpdateInput {
   # 员工所在组织
   organizationId: String
   # 员工所在原部门id
-  originalDeparmentId: ID
+  originalDepartmentId: ID
   # 员工更换后部门id
-  newDeparmentId: ID
+  newDepartmentId: ID
   # 员工更换部门后对应的职位id
   newPositionId: ID
+}
+
+input EmployeePositionInput {
+  # 是否为主要职位
+  primary: Boolean
+  # 职位ID
+  position: ID
 }
 
 input OrganizationEmployeeInput {
@@ -126,7 +133,7 @@ type OrganizationEmployeeStatus {
   organization: Organization
 }
 
-type OrganiztionEmployee {
+type OrganizationEmployee {
   #ID
   id: ID
   #状态
@@ -251,13 +258,6 @@ input EmployeePhoneInput {
   primary: Boolean
   #电话状态
   status: PhoneStatus
-}
-
-input EmployeePositionInput {
-  # 是否为主要职位
-  primary: Boolean
-  # 职位ID
-  position: ID
 }
 
 input DepartmentCreateInput {
@@ -408,7 +408,9 @@ enum Sex {
   unknown
 }
 
-# 组织
+"""
+组织
+"""
 type Organization {
   id: ID!
   """
@@ -828,14 +830,42 @@ type TeamMember {
 extend type Query {
   # 组织•组织列表
   organizations(where: OrganizationWhereInput = {}): [Organization!]!
+    @authInfo(
+      name: "org:Organizations"
+      accessLevel: "List"
+      resourceTypes: ["org:organization/*", "org:organization/{#id}"]
+    )
   # 团队成员
   teamMembers: [TeamMember!]!
+    @authInfo(
+      name: "org:TeamMembers"
+      accessLevel: "List"
+      resourceTypes: ["org:teammember/*", "org:teammember/{#id}"]
+    )
   # 组织•单个组织
   organization(id: ID!): Organization
+    @authInfo(
+      name: "org:GetOrganization"
+      accessLevel: "Read"
+      resourceTypes: ["org:organization/{#id}"]
+    )
   # 全部部门
-  departments(organization: ID!, where: DepartmentWhereInput): [Department!]!
+  departments(
+    organization: ID!
+    where: DepartmentWhereInput = {}
+  ): [Department!]!
+    @authInfo(
+      name: "org:Departments"
+      accessLevel: "List"
+      resourceTypes: ["org:department/*", "org:department/{#id}"]
+    )
   # 单个部门
   department(id: ID!): Department
+    @authInfo(
+      name: "org:GetDepartment"
+      accessLevel: "Read"
+      resourceTypes: ["org:department/{#id}"]
+    )
   #    # 员工分页查询
   #    employees(organization: ID!, filter: EmployeeFilter = {}, page: Int = 1, pageSize: Int = 15, orderBy: OrderBy = "unsorted"): EmployeeConnection
   #    # 单个员工
@@ -874,14 +904,29 @@ extend type Mutation {
     id: ID!
     input: UpdateOrganizationProfileUpdateInput!
   ): Organization
+    @authInfo(
+      name: "org:UpdateOrganizationProfile"
+      accessLevel: "Write"
+      resourceTypes: ["org:organization/*", "org:organization/{#id}"]
+    )
   """
   重命名组织代码
   """
   renameOrganizationCode(id: ID!, code: String!): Organization
+    @authInfo(
+      name: "org:RenameOrganizationCode"
+      accessLevel: "Write"
+      resourceTypes: ["org:organization/*", "org:organization/{#id}"]
+    )
   """
   删除组织
   """
   deleteOrganization(id: ID!): Boolean
+    @authInfo(
+      name: "org:DeleteOrganization"
+      accessLevel: "Write"
+      resourceTypes: ["org:organization/*", "org:organization/{#id}"]
+    )
   #    # 创建组织
   #    createOrganization(input: OrganizationCreateInput!): Organization
   #    # 更新组织信息

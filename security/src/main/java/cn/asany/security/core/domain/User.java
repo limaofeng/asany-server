@@ -11,6 +11,7 @@ import cn.asany.storage.api.converter.FileObjectConverter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.*;
+import java.util.stream.Collectors;
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import lombok.*;
@@ -158,17 +159,30 @@ public class User extends BaseBusEntity implements Ownership {
   @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
   @ToString.Exclude
   private List<Role> roles;
+  /** 用户对应的用户组 */
+  @ToString.Exclude
+  @ManyToMany(targetEntity = UserGroup.class, fetch = FetchType.LAZY)
+  @JoinTable(
+      name = "AUTH_USERGROUP_USER",
+      joinColumns = @JoinColumn(name = "USER_ID"),
+      inverseJoinColumns = @JoinColumn(name = "USERGROUP_ID"),
+      foreignKey = @ForeignKey(name = "FK_USERGROUP_USER_US"))
+  @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+  private List<UserGroup> userGroups;
   /** 用户权限 */
   @Transient private List<GrantPermission> grants;
 
   @Transient
-  public Set<? extends GrantedAuthority> getAuthorities() {
+  public Set<GrantedAuthority> getAuthorities() {
     Set<GrantedAuthority> authorities = new HashSet<>();
-    if (this.userType == UserType.ADMIN) {
-      authorities.add(SimpleGrantedAuthority.newInstance("ROLE_ADMIN"));
-    } else {
-      authorities.add(SimpleGrantedAuthority.newInstance("ROLE_USER"));
-    }
+    authorities.addAll(
+        this.roles.stream()
+            .map(item -> SimpleGrantedAuthority.newInstance("ROLE_" + item.getCode()))
+            .collect(Collectors.toList()));
+    authorities.addAll(
+        this.userGroups.stream()
+            .map(item -> SimpleGrantedAuthority.newInstance("GROUP_" + item.getCode()))
+            .collect(Collectors.toList()));
     return authorities;
   }
 
@@ -185,8 +199,12 @@ public class User extends BaseBusEntity implements Ownership {
 
   @Override
   public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+    if (this == o) {
+      return true;
+    }
+    if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) {
+      return false;
+    }
     User user = (User) o;
     return id != null && Objects.equals(id, user.id);
   }

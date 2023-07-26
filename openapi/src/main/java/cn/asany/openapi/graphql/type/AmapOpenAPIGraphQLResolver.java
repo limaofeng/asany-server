@@ -8,14 +8,19 @@ import org.jfantasy.framework.util.web.WebUtil;
 import org.jfantasy.graphql.context.AuthorizationGraphQLServletContext;
 import org.springframework.stereotype.Component;
 
+/**
+ * AMAP OpenAPI
+ *
+ * @author limaofeng
+ */
 @Component
 public class AmapOpenAPIGraphQLResolver implements GraphQLResolver<AmapOpenAPI> {
 
-  public AmapOpenAPI.IpResult ip(AmapOpenAPI api, String _ip, DataFetchingEnvironment environment) {
+  public AmapOpenAPI.IpResult ip(AmapOpenAPI api, String ip, DataFetchingEnvironment environment) {
     AuthorizationGraphQLServletContext context = environment.getContext();
-    if (StringUtil.isBlank(_ip)) {
-      _ip = WebUtil.getRealIpAddress(context.getRequest());
+    if (StringUtil.isBlank(ip)) {
+      ip = WebUtil.getRealIpAddress(context.getRequest());
     }
-    return api.ip(_ip);
+    return api.ip(ip);
   }
 }

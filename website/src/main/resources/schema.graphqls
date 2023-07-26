@@ -311,7 +311,7 @@ extend type Query {
   查询活动页
   """
   landingPagesConnection(
-    where: LandingPageWhereInput
+    where: LandingPageWhereInput = {}
     page: Int = 1
     pageSize: Int = 15
     orderBy: OrderBy = "unsorted"
@@ -324,7 +324,7 @@ extend type Query {
   查询活动页海报
   """
   landingPostersConnection(
-    where: LandingPosterWhereInput
+    where: LandingPosterWhereInput = {}
     page: Int = 1
     pageSize: Int = 15
     orderBy: OrderBy = "unsorted"
@@ -337,7 +337,7 @@ extend type Query {
   查询活动页门店
   """
   landingStoresConnection(
-    where: LandingStoreWhereInput
+    where: LandingStoreWhereInput = {}
     page: Int = 1
     pageSize: Int = 15
     orderBy: OrderBy = "unsorted"

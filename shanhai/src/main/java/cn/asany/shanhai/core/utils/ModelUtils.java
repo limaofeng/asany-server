@@ -26,7 +26,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.spring.SpringBeanUtils;
 import org.jfantasy.framework.util.PinyinUtils;
 import org.jfantasy.framework.util.common.ClassUtil;
@@ -45,10 +44,9 @@ public class ModelUtils {
   private final ModelFeatureRegistry modelFeatureRegistry;
   private final FieldTypeRegistry fieldTypeRegistry;
   private final ModelFieldDao modelFieldDao;
-  private final ModelDao modelDao;
   private final ModelDelegateDao modelDelegateDao;
   private final ModelEndpointDao modelEndpointDao;
-
+  private final ModelService modelService;
   private static final ThreadLocal<ModelUtilCache> HOLDER = new ThreadLocal<>();
   private static final ThreadLocal<ModelLazySaveContext> LAZY = new ThreadLocal<>();
 
@@ -65,9 +63,9 @@ public class ModelUtils {
     this.modelFeatureRegistry = modelFeatureRegistry;
     this.fieldTypeRegistry = fieldTypeRegistry;
     this.modelFieldDao = modelFieldDao;
-    this.modelDao = modelDao;
     this.modelDelegateDao = modelDelegateDao;
     this.modelEndpointDao = modelEndpointDao;
+    this.modelService = modelService;
   }
 
   public static ModelUtils getInstance() {
@@ -286,8 +284,7 @@ public class ModelUtils {
     if (this.isLazySave()) {
       return cache.getModelByCode(code, Optional::empty);
     }
-    return cache.getModelByCode(
-        code, () -> this.modelDao.findOne(Example.of(Model.builder().code(code).build())));
+    return cache.getModelByCode(code, () -> this.modelService.findByCode(code));
   }
 
   public Optional<Model> getModelById(Long id) {
@@ -295,7 +292,7 @@ public class ModelUtils {
     if (this.isLazySave()) {
       return cache.getModelById(id, Optional::empty);
     }
-    return cache.getModelById(id, () -> this.modelDao.findById(id));
+    return cache.getModelById(id, () -> this.modelService.findById(id));
   }
 
   public ModelField generatePrimaryKeyField() {
@@ -360,13 +357,12 @@ public class ModelUtils {
     }
   }
 
-  @SneakyThrows
   public void reinstall(Model model, ModelFeature modelFeature, ModelService modelService) {
     IModelFeature feature = modelFeatureRegistry.get(modelFeature.getId());
 
     for (ModelRelation relation : feature.getTypes(model)) {
       Model type = relation.getInverse();
-      boolean isContains = this.modelDao.getEntityManager().contains(type);
+      boolean isContains = this.modelService.getEntityManager().contains(type);
       Optional<Model> optional =
           isContains ? Optional.of(type) : this.getModelByCode(type.getCode());
       // 如果之前存在对象，查询填充 ID 字段
@@ -585,12 +581,7 @@ public class ModelUtils {
     ModelUtilCache cache = HOLDER.get();
     if (cache == null) {
       if (defaultTypes == null) {
-        defaultTypes =
-            this.modelDao.findAll(
-                PropertyFilter.newFilter()
-                    .or(
-                        PropertyFilter.newFilter().equal("type", ModelType.SCALAR),
-                        PropertyFilter.newFilter().in("code", "Query", "Mutation")));
+        defaultTypes = this.modelService.findAllByRoot();
       }
       HOLDER.set(new ModelUtilCache(defaultTypes));
       return HOLDER.get();
@@ -608,7 +599,7 @@ public class ModelUtils {
 
   public Model saveWithCache(Model entity) {
     if (!this.isLazySave()) {
-      this.modelDao.save(entity);
+      this.modelService.directSave(entity);
       // 添加到缓存
       this.cache(entity);
     } else {

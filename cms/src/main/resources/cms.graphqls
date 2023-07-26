@@ -444,7 +444,7 @@ enum ArticleType {
   video
 }
 
-enum ArticleCategoriestarType {
+enum ArticleCategoryStarType {
   # 关注
   follow
 }
@@ -867,7 +867,7 @@ extend type Query {
   """
   articleTags(
     organization: ID!
-    where: ArticleCategoryWhereInput
+    where: ArticleCategoryWhereInput = {}
     orderBy: OrderBy = "unsorted"
   ): [ArticleTag]
   """
@@ -883,7 +883,7 @@ extend type Query {
   """
   starredArticleCategories(
     uid: ID!
-    starType: ArticleCategoriestarType!
+    starType: ArticleCategoryStarType!
   ): [ArticleCategory]
   """
   已加星标的文章

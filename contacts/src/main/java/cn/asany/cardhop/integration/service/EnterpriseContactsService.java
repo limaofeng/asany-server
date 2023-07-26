@@ -23,6 +23,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+/**
+ * 企业通讯录
+ *
+ * @author limaofeng
+ */
 @Service
 public class EnterpriseContactsService implements IContactsService {
 
@@ -71,7 +76,7 @@ public class EnterpriseContactsService implements IContactsService {
   }
 
   @Override
-  public Page<Contact> findPager(
+  public Page<Contact> findPage(
       ContactBook book, String namespace, Pageable pageable, PropertyFilter filter) {
     Organization organization = (Organization) book.getOwner();
 

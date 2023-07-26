@@ -6,7 +6,11 @@ import java.util.HashMap;
 import java.util.Map;
 import org.jfantasy.framework.util.common.DateUtil;
 
-/** @author limaofeng */
+/**
+ * 文件对象元数据
+ *
+ * @author limaofeng
+ */
 public class FileObjectMetadata {
   public static final String AUTHORIZATION = "Authorization";
   public static final String CACHE_CONTROL = "Cache-Control";

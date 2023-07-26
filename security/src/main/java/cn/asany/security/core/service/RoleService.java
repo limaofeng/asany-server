@@ -213,7 +213,7 @@ public class RoleService {
   private void roleAssignPermisstions(String roleId, String permisstionIds) {
     String[] entIds = permisstionIds.split(",");
     for (String eId : entIds) {
-      Permission permission = permissionDao.getOne(eId);
+      Permission permission = permissionDao.getOne(Long.valueOf(eId));
       //            grantPermissionDao.save(GrantPermission.builder()
       //                    .permission(permission)
       //                    .securityType(SecurityType.role)

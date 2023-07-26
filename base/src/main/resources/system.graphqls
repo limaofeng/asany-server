@@ -98,6 +98,11 @@ type Query {
   查询数据字典分类
   """
   dictTypes: [DictType!]!
+    @authInfo(
+      name: "sys:DictTypes"
+      accessLevel: "List"
+      resourceTypes: ["sys:dicttype/*", "sys:dicttype/{#id}"]
+    )
   """
   查询数据字典
   """
@@ -107,13 +112,28 @@ type Query {
     pageSize: Int = 15
     orderBy: OrderBy = "unsorted"
   ): DictConnection!
+    @authInfo(
+      name: "sys:DictsConnection"
+      accessLevel: "List"
+      resourceTypes: ["sys:dict/*", "sys:dict/{#id}"]
+    )
   """
   查询数据字典
   """
   dicts(where: DictWhereInput = {}): [Dict!]!
+    @authInfo(
+      name: "sys:Dicts"
+      accessLevel: "List"
+      resourceTypes: ["sys:dict/*", "sys:dict/{#id}"]
+    )
   """
   数据字典
   非 ID 查询时，必须同时提供 code 与 type
   """
   dict(id: ID, code: String, type: String, type_in: [String]): Dict
+    @authInfo(
+      name: "sys:GetDict"
+      accessLevel: "Read"
+      resourceTypes: ["sys:dict/*", "sys:dict/{#id}"]
+    )
 }

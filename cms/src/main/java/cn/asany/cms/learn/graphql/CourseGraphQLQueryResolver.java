@@ -6,7 +6,6 @@ import cn.asany.cms.learn.graphql.types.CourseConnection;
 import cn.asany.cms.learn.service.CourseService;
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
-import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.graphql.util.Kit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -22,14 +21,10 @@ public class CourseGraphQLQueryResolver implements GraphQLQueryResolver {
     return courseService.findById(id);
   }
 
-  public CourseConnection courses(CourseWhereInput filter, int page, int pageSize) {
-    PropertyFilter propertyFilter =
-        ObjectUtil.defaultValue(filter, new CourseWhereInput()).toFilter();
-    //        if (filter != null && ObjectUtils.isNotEmpty(filter.getLearnersLearner())){
-    //            builder.in("learnerScope.scope", emp.getAuthoritys());
-    //        }
+  public CourseConnection courses(CourseWhereInput where, int page, int pageSize) {
+    PropertyFilter propertyFilter = where.toFilter();
     return Kit.connection(
-        courseService.findPage(PageRequest.of(page - 1, pageSize, Sort.by("top")),propertyFilter),
+        courseService.findPage(PageRequest.of(page - 1, pageSize, Sort.by("top")), propertyFilter),
         CourseConnection.class);
   }
 }

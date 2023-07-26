@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
+import com.mashape.unirest.http.exceptions.UnirestException;
 import com.mashape.unirest.request.HttpRequest;
 import java.util.List;
 import lombok.Data;
@@ -15,6 +16,11 @@ import org.jfantasy.framework.error.ValidationException;
 import org.jfantasy.framework.jackson.JSON;
 import org.jfantasy.framework.util.common.StringUtil;
 
+/**
+ * amap OpenAPI
+ *
+ * @author limaofeng
+ */
 @Slf4j
 public class AmapOpenAPI {
   private static final String BASE_URL = "https://restapi.amap.com/v3";
@@ -25,7 +31,7 @@ public class AmapOpenAPI {
     this.amap = amap;
   }
 
-  @SneakyThrows
+  @SneakyThrows(UnirestException.class)
   public IpResult ip(String ip) {
     String url = BASE_URL + "/ip";
 
@@ -49,12 +55,11 @@ public class AmapOpenAPI {
     return result;
   }
 
-  @SneakyThrows
   public List<Geocode> geocode_geo(String addr) {
     return geocode_geo(addr, null);
   }
 
-  @SneakyThrows
+  @SneakyThrows(UnirestException.class)
   public List<Geocode> geocode_geo(String addr, String city) {
     String url = BASE_URL + "/geocode/geo";
 

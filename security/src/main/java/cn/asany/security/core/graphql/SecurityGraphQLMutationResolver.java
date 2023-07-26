@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.jfantasy.framework.dao.LimitPageRequest;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
-import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.graphql.util.Kit;
 import org.springframework.beans.BeanUtils;
@@ -38,7 +37,8 @@ public class SecurityGraphQLMutationResolver
   @Autowired private GrantPermissionService grantPermissionService;
 
   /** 查询所有用户 - 分页 */
-  public UserConnection usersConnection(UserWhereInput where, int page, int pageSize, Sort orderBy) {
+  public UserConnection usersConnection(
+      UserWhereInput where, int page, int pageSize, Sort orderBy) {
     Pageable pageable = PageRequest.of(page - 1, pageSize, orderBy);
     PropertyFilter filter = ObjectUtil.defaultValue(where, new UserWhereInput()).toFilter();
     return Kit.connection(userService.findPage(pageable, filter), UserConnection.class);
@@ -48,8 +48,7 @@ public class SecurityGraphQLMutationResolver
   public List<User> users(
       UserWhereInput where, int skip, int after, int before, int first, int last, Sort orderBy) {
     Pageable pageable = LimitPageRequest.of(skip, first, orderBy);
-    PropertyFilter filter =
-        ObjectUtil.defaultValue(where, new UserWhereInput()).toFilter();
+    PropertyFilter filter = ObjectUtil.defaultValue(where, new UserWhereInput()).toFilter();
     return userService.findPage(pageable, filter).getContent();
   }
 
@@ -156,7 +155,8 @@ public class SecurityGraphQLMutationResolver
         .map(
             item ->
                 GrantPermission.builder()
-                    .permission(Permission.builder().id(item.getPermission()).build())
+                    //
+                    // .permission(Permission.builder().id(item.getPermission()).build())
                     //                    .resource(item.getResource())
                     .build())
         .collect(Collectors.toList());
@@ -218,17 +218,17 @@ public class SecurityGraphQLMutationResolver
   //    return true;
   //  }
 
-  /**
-   * 新增权限分类
-   *
-   * @param input
-   * @return
-   */
-  public PermissionType createPermissionType(PermissionTypeInput input) {
-    PermissionType type = new PermissionType();
-    BeanUtils.copyProperties(input, type);
-    return permissionService.savePermissionType(type);
-  }
+  //  /**
+  //   * 新增权限分类
+  //   *
+  //   * @param input
+  //   * @return
+  //   */
+  //  public PermissionType createPermissionType(PermissionTypeInput input) {
+  //    PermissionType type = new PermissionType();
+  //    BeanUtils.copyProperties(input, type);
+  //    return permissionService.savePermissionType(type);
+  //  }
 
   /**
    * 更新权限分类
@@ -238,11 +238,12 @@ public class SecurityGraphQLMutationResolver
    * @param input
    * @return
    */
-  public PermissionType updatePermissionType(String id, Boolean merge, PermissionTypeInput input) {
-    PermissionType permissionCategory = new PermissionType();
-    BeanUtils.copyProperties(input, permissionCategory);
-    return permissionService.updatePermissionType(id, merge, permissionCategory);
-  }
+  //  public PermissionType updatePermissionType(String id, Boolean merge, PermissionTypeInput
+  // input) {
+  //    PermissionType permissionCategory = new PermissionType();
+  //    BeanUtils.copyProperties(input, permissionCategory);
+  //    return permissionService.updatePermissionType(id, merge, permissionCategory);
+  //  }
 
   /**
    * 删除权限分类
@@ -251,7 +252,7 @@ public class SecurityGraphQLMutationResolver
    * @return
    */
   public Boolean removePermissionType(String id) {
-    permissionService.deletePermissionType(id);
+    //    permissionService.deletePermissionType(id);
     return true;
   }
 
@@ -264,14 +265,15 @@ public class SecurityGraphQLMutationResolver
   public Permission createPermission(PermissionUpdateInput input) {
     Permission permission = new Permission();
     BeanUtils.copyProperties(input, permission);
-    permission.setType(PermissionType.builder().id("").build());
-    return permissionService.save(permission);
+    //    permission.setType(PermissionType.builder().id("").build());
+    //    return permissionService.save(permission);
+    return null;
   }
 
   // 处理分类类型
   private String getPermissionTypeInput(String PermissionTypeInput) {
     if (StringUtils.isEmpty(PermissionTypeInput)) {
-      return PermissionType.UNKNOWN;
+      //      return PermissionType.UNKNOWN;
     }
     return PermissionTypeInput;
   }
@@ -287,8 +289,9 @@ public class SecurityGraphQLMutationResolver
   public Permission updatePermission(String id, Boolean merge, PermissionUpdateInput input) {
     Permission permission = new Permission();
     BeanUtils.copyProperties(input, permission);
-    permission.setType(PermissionType.builder().id(getPermissionTypeInput("")).build());
-    return permissionService.update(id, merge, permission);
+    //    permission.setType(PermissionType.builder().id(getPermissionTypeInput("")).build());
+    //    return permissionService.update(id, merge, permission);
+    return null;
   }
 
   /**
@@ -298,7 +301,7 @@ public class SecurityGraphQLMutationResolver
    * @return
    */
   public Boolean removePermission(String id) {
-    permissionService.delete(id);
+    //    permissionService.delete(id);
     return true;
   }
 

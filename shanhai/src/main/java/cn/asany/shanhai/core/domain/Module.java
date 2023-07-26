@@ -9,6 +9,11 @@ import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
+/**
+ * 模型
+ *
+ * @author limaofeng
+ */
 @Getter
 @Setter
 @RequiredArgsConstructor

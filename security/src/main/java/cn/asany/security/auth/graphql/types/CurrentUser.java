@@ -2,10 +2,7 @@ package cn.asany.security.auth.graphql.types;
 
 import cn.asany.base.common.domain.Email;
 import cn.asany.base.common.domain.Phone;
-import cn.asany.security.core.domain.GrantPermission;
-import cn.asany.security.core.domain.Role;
-import cn.asany.security.core.domain.User;
-import cn.asany.security.core.domain.UserStatus;
+import cn.asany.security.core.domain.*;
 import cn.asany.security.core.domain.enums.Sex;
 import cn.asany.security.core.domain.enums.UserType;
 import cn.asany.storage.api.FileObject;
@@ -16,6 +13,11 @@ import lombok.*;
 import org.hibernate.validator.constraints.Length;
 import org.jfantasy.framework.spring.validation.Operation;
 
+/**
+ * 当前用户
+ *
+ * @author limaofeng
+ */
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
@@ -51,6 +53,7 @@ public class CurrentUser extends User {
       Date lockTime,
       Date lastLoginTime,
       List<Role> roles,
+      List<UserGroup> userGroups,
       List<GrantPermission> grants) {
     super(
         id,
@@ -75,6 +78,7 @@ public class CurrentUser extends User {
         lockTime,
         lastLoginTime,
         roles,
+        userGroups,
         grants);
   }
 }

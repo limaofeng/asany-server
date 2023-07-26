@@ -9,7 +9,6 @@ import cn.asany.security.core.domain.Permission;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import org.jfantasy.framework.util.common.StringUtil;
@@ -57,11 +56,11 @@ public class GrantPermissionService {
     if (optional.isPresent()) {
       GrantPermission oldGrant = optional.get();
       //      oldGrant.setSecurityType(grant.getSecurityType());
-      oldGrant.setValue(grant.getValue());
+      //      oldGrant.setValue(grant.getValue());
       //      oldGrant.setResource(grant.getResource());
       return this.grantPermissionDao.save(oldGrant);
     } else {
-      grant.setPermission(permissionDao.getOne(grant.getPermission().getId()));
+      //      grant.setPermission(permissionDao.getOne(grant.getPermission().getId()));
       return this.grantPermissionDao.save(grant);
     }
   }
@@ -122,9 +121,10 @@ public class GrantPermissionService {
     List<GrantPermission> grantPermissionList = new ArrayList<>();
     //        grantPermissionDao.findGrantPermissionsBySecurityTypeAndValue(SecurityType.role,
     // roleId);
-    return grantPermissionList.stream()
-        .map(GrantPermission::getPermission)
-        .collect(Collectors.toList());
+    //    return grantPermissionList.stream()
+    //        .map(GrantPermission::getPermission)
+    //        .collect(Collectors.toList());
+    return null;
   }
 
   public List<GrantPermission> getGrantPermissionsByPermissionId(String permissionId) {
@@ -162,10 +162,10 @@ public class GrantPermissionService {
 
   public void grantEntityPermissions(String permissionId, String entityType, String entityIds) {
     for (String entityId : entityIds.split(",")) {
-      Permission permission = permissionDao.getOne(permissionId);
+      //      Permission permission = permissionDao.getOne(permissionId);
       grantPermissionDao.save(
           GrantPermission.builder()
-              .permission(permission)
+              //              .permission(permission)
               //              .securityType(SecurityType.valueOf(entityType))
               //              .value(entityId)
               .build());

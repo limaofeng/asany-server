@@ -2,10 +2,7 @@ package cn.asany.storage.dto;
 
 import cn.asany.storage.api.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.URLConnection;
 import java.util.Date;
 import java.util.List;
@@ -23,7 +20,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class SimpleFileObject implements FileObject {
+public class SimpleFileObject implements FileObject, Serializable {
   private String id;
   /** 文件名称 */
   private String name;
@@ -106,6 +103,7 @@ public class SimpleFileObject implements FileObject {
   }
 
   @JsonIgnore
+  @Override
   public InputStream getInputStream() throws IOException {
     return null;
   }

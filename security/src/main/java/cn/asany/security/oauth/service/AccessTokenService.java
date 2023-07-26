@@ -12,7 +12,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
-import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
 import org.jfantasy.framework.security.oauth2.core.OAuth2AccessToken;
 import org.jfantasy.framework.security.oauth2.core.TokenType;
 import org.springframework.data.domain.Sort;
@@ -92,14 +91,14 @@ public class AccessTokenService {
       AccessToken accessToken, OAuth2AccessToken token, AccessTokenClientDetails clientDetails) {
     accessToken.setExpiresAt(token.getExpiresAt() != null ? Date.from(token.getExpiresAt()) : null);
 
-    AccessTokenClientDetails _clientDetails = accessToken.getClientDetails();
-    if (_clientDetails == null) {
-      _clientDetails = new AccessTokenClientDetails();
-      _clientDetails.setDevice(clientDetails.getDevice());
+    AccessTokenClientDetails tokenClientDetails = accessToken.getClientDetails();
+    if (tokenClientDetails == null) {
+      tokenClientDetails = new AccessTokenClientDetails();
+      tokenClientDetails.setDevice(clientDetails.getDevice());
     }
-    _clientDetails.setLastIp(clientDetails.getIp());
-    _clientDetails.setLastLocation(clientDetails.getLocation());
-    accessToken.setClientDetails(_clientDetails);
+    tokenClientDetails.setLastIp(clientDetails.getIp());
+    tokenClientDetails.setLastLocation(clientDetails.getLocation());
+    accessToken.setClientDetails(tokenClientDetails);
     accessToken.setLastUsedTime(Date.from(Instant.now()));
     this.accessTokenDao.update(accessToken);
     return accessToken;
@@ -139,10 +138,7 @@ public class AccessTokenService {
   public Date getLastUseTime(String client, String clientSecret) {
     List<AccessToken> accessTokens =
         this.accessTokenDao.findAll(
-            PropertyFilter.newFilter()
-                .equal("client", client)
-                .equal("clientSecret", clientSecret)
-                ,
+            PropertyFilter.newFilter().equal("client", client).equal("clientSecret", clientSecret),
             1,
             Sort.by("lastUsedTime").descending());
     if (accessTokens.isEmpty()) {
