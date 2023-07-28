@@ -151,3 +151,12 @@ management:
   health:
     elasticsearch:
       enabled: false
+
+cuckoo:
+  rebuild: false
+  elasticsearch:
+    client:
+      url: ${ELASTIC_URL}
+      api-key: ${ELASTIC_API}
+      ssl:
+        certificate-path: ${ELASTIC_CERTIFICATE_PATH}

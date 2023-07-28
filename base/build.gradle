@@ -1,3 +1,5 @@
+description "基础模块：包含公共引用工具包与第三方接口"
+
 dependencies {
     implementation project(":storage-api")
     compileOnly "org.projectlombok:lombok:${LIB_LOMBOK_VER}"

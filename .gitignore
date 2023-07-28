@@ -32,3 +32,6 @@ schema.graphql
 
 # laboratory
 storage-preview
+
+# james temp dir
+james

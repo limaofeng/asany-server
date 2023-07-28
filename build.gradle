@@ -96,6 +96,8 @@ subprojects {
     dependencies {
         implementation "cn.asany.chaos:jfantasy-core:$LIB_JFAN_VER"
         implementation "cn.asany.chaos:jfantasy-graphql:$LIB_JFAN_VER"
+        implementation "cn.asany.chaos:jfantasy-search:$LIB_JFAN_VER"
+        implementation "jakarta.json:jakarta.json-api:${LIB_JAKARTA_VAR}"
         implementation("org.springframework:spring-web")
         implementation("com.jayway.jsonpath:json-path")
         implementation("com.fasterxml.jackson.core:jackson-databind")
@@ -116,10 +118,12 @@ subprojects {
 
     plugins.withId('java') {
         project.apply plugin: 'org.zeroturnaround.gradle.jrebel'
+        //noinspection ConfigurationAvoidance
         def jarTask = project.tasks.findByName('jar')
         if (jarTask) {
             jarTask.dependsOn(generateRebel)
         }
+        //noinspection ConfigurationAvoidance
         def warTask = project.tasks.findByName('war')
         if (warTask) {
             warTask.dependsOn(generateRebel)
@@ -136,7 +140,9 @@ subprojects {
         subprojects { subproject ->
             subproject.plugins.withType(JacocoPlugin).configureEach {
                 subproject.tasks.matching({ t -> t.extensions.findByType(JacocoTaskExtension) }).configureEach { testTask ->
+                    //noinspection GroovyAssignabilityCheck
                     sourceSets subproject.sourceSets.main
+                    //noinspection GroovyAssignabilityCheck
                     executionData(testTask)
                 }
                 subproject.tasks.matching({ t -> t.extensions.findByType(JacocoTaskExtension) }).forEach {

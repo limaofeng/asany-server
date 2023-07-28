@@ -8,12 +8,14 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeUtility;
 import lombok.SneakyThrows;
 import org.apache.james.mailbox.DefaultMailboxes;
+import org.junit.jupiter.api.Test;
 
 public class HelloJMail {
 
   // 发送邮件
+  @Test
   @SneakyThrows
-  public static void sendMail() {
+  public void sendMail() {
     // String host = "192.168.1.98"; // 指定的smtp服务器，本机的局域网IP
     String host = "smtp.asany.cn"; // 本机smtp服务器
     // String host = "smtp.163.com"; // 163的smtp服务器
@@ -62,9 +64,10 @@ public class HelloJMail {
     }
   }
 
+  @Test
   // 接受邮件
   @SneakyThrows
-  public static void getMail() {
+  public void getMail() {
     String host = "imap.asany.cn";
     final String username = "limaofeng@asany.cn";
     final String password = "rzqabjaiomeuicgd";
@@ -130,10 +133,5 @@ public class HelloJMail {
       ex.printStackTrace();
     }
     return strText;
-  }
-
-  public static void main(String[] args) {
-    HelloJMail.sendMail();
-    //    HelloJMail.getMail();
   }
 }

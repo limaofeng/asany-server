@@ -21,7 +21,6 @@ import org.apache.james.adapter.mailbox.store.UserRepositoryAuthorizator;
 import org.apache.james.container.spring.bean.factory.mailetcontainer.MailetLoaderBeanFactory;
 import org.apache.james.container.spring.bean.factory.mailetcontainer.MatcherLoaderBeanFactory;
 import org.apache.james.container.spring.bean.factory.mailrepositorystore.MailRepositoryStoreBeanFactory;
-import org.apache.james.container.spring.bean.factory.protocols.ProtocolHandlerLoaderBeanFactory;
 import org.apache.james.dnsservice.api.DNSService;
 import org.apache.james.dnsservice.dnsjava.DNSJavaService;
 import org.apache.james.domainlist.api.DomainList;
@@ -58,7 +57,6 @@ import org.apache.james.metrics.dropwizard.DropWizardMetricFactory;
 import org.apache.james.protocols.lib.handler.ProtocolHandlerLoader;
 import org.apache.james.queue.api.MailQueueFactory;
 import org.apache.james.rrt.api.RecipientRewriteTable;
-import org.apache.james.server.core.filesystem.FileSystemImpl;
 import org.apache.james.sieverepository.api.SieveRepository;
 import org.apache.james.sieverepository.file.SieveFileRepository;
 import org.apache.james.smtpserver.netty.OioSMTPServerFactory;
@@ -152,34 +150,16 @@ public class SmtpServerAutoConfiguration {
   }
 
   @Bean
-  public ProtocolHandlerLoader protocolHandlerLoader() {
-    return new ProtocolHandlerLoaderBeanFactory();
-  }
-
-  @Bean
-  public FileSystem fileSystem() {
-    org.apache.james.server.core.configuration.Configuration configuration =
-        org.apache.james.server.core.configuration.Configuration.builder()
-            .workingDirectory("../")
-            .configurationFromClasspath()
-            .build();
-    return new FileSystemImpl(configuration.directories());
-  }
-
-  @Bean
   public HashedWheelTimer hashedWheelTimer() {
     return new HashedWheelTimer();
   }
 
   @Bean(initMethod = "init", destroyMethod = "destroy")
-  public SMTPServerFactory smtpServerFactory() throws Exception {
+  public SMTPServerFactory smtpServerFactory(ProtocolHandlerLoader loader, FileSystem fileSystem)
+      throws Exception {
     OioSMTPServerFactory smtpServerFactory =
         new OioSMTPServerFactory(
-            dnsService(),
-            protocolHandlerLoader(),
-            fileSystem(),
-            metricFactory(),
-            hashedWheelTimer());
+            dnsService(), loader, fileSystem, metricFactory(), hashedWheelTimer());
     XMLConfiguration configuration = smtpServerConfiguration();
     smtpServerFactory.configure(configuration);
     return smtpServerFactory;
@@ -359,8 +339,9 @@ public class SmtpServerAutoConfiguration {
   }
 
   @Bean
-  public SieveRepository sieveRepository() throws IOException {
-    return new SieveFileRepository(fileSystem());
+  public SieveRepository sieveRepository(FileSystem fileSystem) throws IOException {
+    //noinspection VulnerableCodeUsages
+    return new SieveFileRepository(fileSystem);
   }
 
   @Bean

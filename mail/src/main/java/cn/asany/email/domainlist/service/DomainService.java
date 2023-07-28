@@ -29,6 +29,7 @@ public class DomainService {
         .collect(Collectors.toList());
   }
 
+  @Cacheable(key = "targetClass + '.' + methodName + '#' + #p0", value = "MAIL_DOMAIN")
   public Optional<JamesDomain> findDomainByName(String name) {
     return this.jamesDomainDao.findById(name);
   }

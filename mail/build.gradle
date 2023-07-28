@@ -10,6 +10,7 @@ dependencies {
     implementation "org.apache.james:james-server-data-library:${LIB_JAMES_VER}"
     implementation "org.apache.james:james-server-protocols-imap4:${LIB_JAMES_VER}"
     implementation "org.apache.james:james-server-protocols-smtp:${LIB_JAMES_VER}"
+    implementation "org.apache.james:james-server-protocols-pop3:${LIB_JAMES_VER}"
     implementation "org.apache.james:james-server-dnsservice-dnsjava:${LIB_JAMES_VER}"
     implementation "org.apache.james:james-server-queue-memory:${LIB_JAMES_VER}"
     implementation "org.apache.james:james-server-mailrepository-api:${LIB_JAMES_VER}"
@@ -23,4 +24,7 @@ dependencies {
         exclude group: 'org.slf4j', module: 'slf4j-log4j12'
     }
     implementation "org.apache.camel:camel-spring:${LIB_CAMEL_SPRING_VER}"
+    compileOnly "org.springframework:spring-context"
+    compileOnly "org.springframework.boot:spring-boot-autoconfigure"
+    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 }

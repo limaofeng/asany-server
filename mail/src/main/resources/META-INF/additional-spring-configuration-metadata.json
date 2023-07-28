@@ -1,0 +1,24 @@
+{
+  "groups": [
+    {
+      "name": "james",
+      "description": "James 配置.",
+      "type": "cn.asany.autoconfigure.properties.JamesProperties",
+      "sourceType": "cn.asany.autoconfigure.properties.JamesProperties"
+    }
+  ],
+  "properties": [
+    {
+      "name": "james.filesystem.type",
+      "type": "java.lang.String",
+      "description": "文件系统类型.",
+      "sourceType": "cn.asany.autoconfigure.properties.FileSystemProperties"
+    },
+    {
+      "name": "james.filesystem.workingDirectory",
+      "type": "java.lang.String",
+      "description": "工作目录.",
+      "sourceType": "cn.asany.autoconfigure.properties.FileSystemProperties"
+    }
+  ]
+}

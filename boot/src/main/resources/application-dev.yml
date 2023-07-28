@@ -52,3 +52,7 @@ sms:
     aliyun:
       accessKeyId: ${ALIYUN_ACCESSKEY_ID}
       accessKeySecret: ${ALIYUN_ACCESSKEY_SECRET}
+
+james:
+  filesystem:
+    workingDirectory: ${JAMES_FILESYSTEM_WORKING_DIRECTORY}
