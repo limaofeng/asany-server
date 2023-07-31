@@ -19,7 +19,11 @@ import org.apache.james.mailbox.DefaultMailboxes;
 import org.apache.james.mailbox.exception.MailboxException;
 import org.apache.james.mailbox.model.MailboxConstants;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
+import org.jfantasy.framework.spring.SpringBeanUtils;
 import org.jfantasy.graphql.UpdateMode;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,8 +40,12 @@ public class MailUserService {
   private final MailboxDao mailboxDao;
   private final DomainService domainService;
   private final MailSettingsDao mailSettingsDao;
+  private final Cache cache;
+
+  public static final String CACHE_KEY = "mail::user";
 
   public MailUserService(
+      CacheManager cacheManager,
       MailUserDao mailUserDao,
       MailboxDao mailboxDao,
       DomainService domainService,
@@ -48,23 +56,34 @@ public class MailUserService {
     this.domainService = domainService;
     this.userDao = userDao;
     this.mailSettingsDao = mailSettingsDao;
+    this.cache = cacheManager.getCache(CACHE_KEY);
   }
 
   public boolean test(String name, String password) {
-    Optional<MailUser> optional = this.mailUserDao.findById(name);
-    return optional.map(mailUser -> mailUser.verifyPassword(password)).orElse(false);
+    MailUserService mailUserService = SpringBeanUtils.getBeanByType(MailUserService.class);
+    return mailUserService
+        .findById(name)
+        .map(mailUser -> mailUser.verifyPassword(password))
+        .orElse(false);
   }
 
+  @Transactional(readOnly = true)
+  @Cacheable(key = "#p0", value = CACHE_KEY)
+  public Optional<MailUser> findById(String name) {
+    return this.mailUserDao.findById(name);
+  }
+
+  @Transactional(readOnly = true)
+  @Cacheable(key = "#p0 + '#exists'", value = CACHE_KEY)
   public boolean contains(String name) {
     return this.mailUserDao.existsById(name);
   }
 
-  @Transactional
   public void createUser(Long id) {
     this.createUser(this.userDao.getReferenceById(id));
   }
 
-  @Transactional
+  @Transactional(rollbackFor = RuntimeException.class)
   public MailUser repairUser(Long id) {
     User user = this.userDao.getReferenceById(id);
     JamesDomain domain = this.domainService.getDefaultDomain();
@@ -104,7 +123,7 @@ public class MailUserService {
   private void initMailboxes(MailUser mailUser, boolean added) {
     Set<String> mailboxes = getDefaultMailboxes();
 
-    List<JamesMailbox> _mailboxes =
+    List<JamesMailbox> allMailboxes =
         mailboxes.stream()
             .map(
                 mailbox ->
@@ -118,18 +137,17 @@ public class MailUserService {
                         .build())
             .collect(Collectors.toList());
     if (added) {
-      this.mailboxDao.saveAllInBatch(_mailboxes);
+      this.mailboxDao.saveAllInBatch(allMailboxes);
     } else {
       this.mailboxDao.saveAllInBatch(
-          _mailboxes.stream()
+          allMailboxes.stream()
               .filter(
                   item ->
                       !this.mailboxDao.exists(
                           PropertyFilter.newFilter()
                               .equal("user", item.getUser())
                               .equal("name", item.getName())
-                              .equal("namespace", item.getNamespace())
-                              ))
+                              .equal("namespace", item.getNamespace())))
               .collect(Collectors.toList()));
     }
   }
@@ -140,11 +158,6 @@ public class MailUserService {
     return settings.get().getMailboxes();
   }
 
-  public Optional<MailUser> findMailUser(String id) {
-    return this.mailUserDao.findById(id);
-  }
-
-  //  @Cacheable(key = "targetClass  + '.' +  methodName + '#' + #p0", value = "MAIL")
   public MailUser getMailUser(String id) throws MailboxException {
     Optional<MailUser> user = this.mailUserDao.findById(id);
     return user.orElseThrow(() -> new MailboxException(String.format("邮箱账号%s不存在", id)));

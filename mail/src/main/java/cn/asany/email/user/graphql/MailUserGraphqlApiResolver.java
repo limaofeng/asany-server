@@ -6,6 +6,7 @@ import cn.asany.email.user.service.MailUserService;
 import cn.asany.email.utils.JamesUtil;
 import graphql.kickstart.tools.GraphQLMutationResolver;
 import graphql.kickstart.tools.GraphQLQueryResolver;
+import java.util.Optional;
 import java.util.Set;
 import org.apache.james.mailbox.exception.MailboxException;
 import org.jfantasy.framework.security.LoginUser;
@@ -32,7 +33,7 @@ public class MailUserGraphqlApiResolver implements GraphQLQueryResolver, GraphQL
     return this.mailUserService.updateMyFavoriteMailboxes(user, mailboxes, mode);
   }
 
-  public MailUser mailUser(String user, MailUserIdType type) throws MailboxException {
+  public Optional<MailUser> mailUser(String user, MailUserIdType type) throws MailboxException {
     if (StringUtil.isBlank(user) || type == MailUserIdType.LOGIN_USER_ID) {
       if (user != null && RegexpUtil.isMatch(user, RegexpConstant.VALIDATOR_INTEGE)) {
         user = JamesUtil.getUserNameByUserId(Long.parseLong(user));
@@ -40,6 +41,6 @@ public class MailUserGraphqlApiResolver implements GraphQLQueryResolver, GraphQL
         user = JamesUtil.getUserName(SpringSecurityUtils.getCurrentUser());
       }
     }
-    return this.mailUserService.getMailUser(user);
+    return this.mailUserService.findById(user);
   }
 }

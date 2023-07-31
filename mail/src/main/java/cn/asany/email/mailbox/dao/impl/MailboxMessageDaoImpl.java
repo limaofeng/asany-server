@@ -3,7 +3,6 @@ package cn.asany.email.mailbox.dao.impl;
 import cn.asany.email.mailbox.dao.MailboxMessageDao;
 import cn.asany.email.mailbox.domain.JamesMailboxMessage;
 import cn.asany.email.mailbox.domain.toys.MailboxIdUidKey;
-import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import org.jfantasy.framework.dao.jpa.ComplexJpaRepository;
@@ -53,17 +52,68 @@ public class MailboxMessageDaoImpl
 
   @Override
   public int deleteDeletedMessagesInMailboxWithUID(long mailboxId, long uid) {
-    throw new IgnoreException(" No SQL ");
+    String whereSql =
+        "message.mailbox.id = :mailboxId AND message.id=:uid AND message.deleted=TRUE";
+
+    Query query =
+        this.em.createQuery(
+            "DELETE FROM MailUserFlag WHERE mailboxId = :mailboxId and uid in (SELECT message.id FROM MailboxMessage message WHERE "
+                + whereSql
+                + ") ");
+    query.setParameter("mailboxId", mailboxId);
+    query.setParameter("uid", uid);
+    query.executeUpdate();
+
+    query =
+        this.em.createQuery(
+            "DELETE FROM MailProperty WHERE mailboxId = :mailboxId and uid in (SELECT message.id FROM MailboxMessage message WHERE "
+                + whereSql
+                + ")");
+    query.setParameter("mailboxId", mailboxId);
+    query.setParameter("uid", uid);
+    query.executeUpdate();
+
+    query = this.em.createQuery("DELETE FROM MailboxMessage message WHERE " + whereSql);
+    query.setParameter("mailboxId", mailboxId);
+    query.setParameter("uid", uid);
+    return query.executeUpdate();
   }
 
   @Override
   public int deleteDeletedMessagesInMailboxBetweenUIDs(long mailboxId, long from, long to) {
-    throw new IgnoreException(" No SQL ");
+
+    String whereSql =
+        "message.mailbox.id = :mailboxId AND message.id BETWEEN :from AND :to AND message.deleted=TRUE";
+
+    Query query =
+        this.em.createQuery(
+            "DELETE FROM MailUserFlag WHERE mailboxId = :mailboxId and uid in (SELECT message.id FROM MailboxMessage message WHERE "
+                + whereSql
+                + ") ");
+    query.setParameter("mailboxId", mailboxId);
+    query.setParameter("from", from);
+    query.setParameter("to", to);
+    query.executeUpdate();
+
+    query =
+        this.em.createQuery(
+            "DELETE FROM MailProperty WHERE mailboxId = :mailboxId and uid in (SELECT message.id FROM MailboxMessage message WHERE "
+                + whereSql
+                + ")");
+    query.setParameter("mailboxId", mailboxId);
+    query.setParameter("from", from);
+    query.setParameter("to", to);
+    query.executeUpdate();
+
+    query = this.em.createQuery("DELETE FROM MailboxMessage message WHERE " + whereSql);
+    query.setParameter("mailboxId", mailboxId);
+    query.setParameter("from", from);
+    query.setParameter("to", to);
+    return query.executeUpdate();
   }
 
   @Override
-  public Page<JamesMailboxMessage> findWithDetailsPage(
-      Pageable pageable, PropertyFilter filter) {
+  public Page<JamesMailboxMessage> findWithDetailsPage(Pageable pageable, PropertyFilter filter) {
     return this.findPage(pageable, filter);
   }
 }

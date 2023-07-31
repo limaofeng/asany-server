@@ -5,7 +5,6 @@ import cn.asany.email.domainlist.service.DomainService;
 import cn.asany.email.mailbox.component.JPAMailboxSessionMapperFactory;
 import cn.asany.email.mailbox.domain.JamesMailboxMessage;
 import cn.asany.email.mailbox.graphql.type.MailboxMessageResult;
-import cn.asany.email.user.domain.MailUser;
 import cn.asany.email.user.service.MailUserService;
 import cn.asany.security.core.domain.User;
 import cn.asany.security.core.service.UserService;
@@ -98,8 +97,12 @@ public class JamesUtil {
 
   public static String getUserFullName(String user) throws MailboxException {
     MailUserService mailUserService = mailUserService();
-    MailUser mailUser = mailUserService.getMailUser(user);
-    return StringUtil.defaultValue(mailUser.getFullName(), () -> mailUser.getUser().getName());
+    return mailUserService
+        .findById(user)
+        .map(
+            mailUser ->
+                StringUtil.defaultValue(mailUser.getFullName(), () -> mailUser.getUser().getName()))
+        .orElse(null);
   }
 
   public static String getUserNameByUserId(Long loginUserId) {

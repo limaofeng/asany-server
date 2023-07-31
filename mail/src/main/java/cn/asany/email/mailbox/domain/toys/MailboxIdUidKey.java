@@ -20,7 +20,6 @@ public class MailboxIdUidKey implements Serializable {
 
   public MailboxIdUidKey() {}
 
-  @SneakyThrows
   public MailboxIdUidKey(String key) {
     String out =
         new String(

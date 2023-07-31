@@ -1,5 +1,6 @@
 package cn.asany.email.mailbox.domain;
 
+import java.io.Serializable;
 import java.util.Objects;
 import javax.persistence.*;
 import lombok.Getter;
@@ -13,7 +14,7 @@ import org.hibernate.Hibernate;
 @RequiredArgsConstructor
 @Entity(name = "MailUserFlag")
 @Table(name = "JAMES_MAIL_USERFLAG")
-public class JamesUserFlag {
+public class JamesUserFlag implements Serializable {
 
   @Id
   @GeneratedValue

@@ -28,6 +28,11 @@ import org.apache.openjpa.persistence.jdbc.Index;
 import org.jetbrains.annotations.NotNull;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
+/**
+ * Abstract Mailbox Message
+ *
+ * @author limaofeng
+ */
 @Getter
 @Setter
 @IdClass(MailboxIdUidKey.class)

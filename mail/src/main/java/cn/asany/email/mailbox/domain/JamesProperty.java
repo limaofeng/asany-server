@@ -1,5 +1,6 @@
 package cn.asany.email.mailbox.domain;
 
+import java.io.Serializable;
 import java.util.Objects;
 import javax.persistence.*;
 import lombok.*;
@@ -23,7 +24,7 @@ import org.hibernate.annotations.GenericGenerator;
         @UniqueConstraint(
             name = "UK_LOCAL_NAME",
             columnNames = {"MAILBOX_ID", "LOCAL_NAME"}))
-public class JamesProperty implements Property {
+public class JamesProperty implements Property, Serializable {
 
   /** The system unique key */
   @Id
