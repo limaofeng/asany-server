@@ -1,4 +1,6 @@
 spring:
+  application:
+    name: server
   data:
     elasticsearch:
       repositories:
@@ -15,6 +17,10 @@ spring:
   sequence:
     pool-size: 500
   datasource:
+    name: datasource
+    url: jdbc:mysql://${DATABASE_HOST}/${DATABASE_INSTANCE_NAME}?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&rewriteBatchedStatements=true
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
     hikari:
       connection-timeout: 30000
       minimum-idle: 20
@@ -62,7 +68,9 @@ spring:
         ejb:
           identifier_generator_strategy_provider: org.jfantasy.framework.dao.hibernate.spi.CustomIdentifierGeneratorStrategyProvider
   redis:
-    port: 6379
+    port: ${REDIS_PORT}
+    host: ${REDIS_HOST}
+    password: ${REDIS_PASSWORD}
     timeout: 10000
     lettuce:
       cluster:
@@ -82,6 +90,10 @@ spring:
             qzDS:
               provider: hikaricp
               maxConnections: 10
+              URL: jdbc:mysql://${DATABASE_HOST}/${DATABASE_INSTANCE_NAME}?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&rewriteBatchedStatements=true
+              driver: com.mysql.cj.jdbc.Driver
+              user: ${DATABASE_USERNAME}
+              password: ${DATABASE_PASSWORD}
           scheduler:
             instanceName: scheduler
             instanceId: AUTO
@@ -102,6 +114,10 @@ spring:
     locations: classpath:db
     create-schemas: true
     placeholder-replacement: false
+    url: jdbc:mysql://${DATABASE_HOST}/mysql?useUnicode=true&characterEncoding=UTF-8
+    user: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
+    schemas: ${DATABASE_INSTANCE_NAME}
 
 flowable:
   async-executor-activate: false
@@ -160,3 +176,19 @@ cuckoo:
       api-key: ${ELASTIC_API}
       ssl:
         certificate-path: ${ELASTIC_CERTIFICATE_PATH}
+        
+openim:
+  url: ${OPENIM_SERVER}
+  secret: ${OPENIM_SECRET}
+  admin:
+    user: ${OPENIM_ADMIN}        
+
+sms:
+  provider:
+    aliyun:
+      accessKeyId: ${ALIYUN_ACCESSKEY_ID}
+      accessKeySecret: ${ALIYUN_ACCESSKEY_SECRET}
+
+james:
+  filesystem:
+    workingDirectory: ${JAMES_FILESYSTEM_WORKING_DIRECTORY}
