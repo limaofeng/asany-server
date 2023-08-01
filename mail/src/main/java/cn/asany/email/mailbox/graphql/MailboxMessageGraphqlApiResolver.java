@@ -8,8 +8,8 @@ import cn.asany.email.mailbox.domain.JamesMailbox;
 import cn.asany.email.mailbox.domain.JamesMailboxMessage;
 import cn.asany.email.mailbox.domain.toys.MailboxIdUidKey;
 import cn.asany.email.mailbox.graphql.input.MailboxMessageCreateInput;
-import cn.asany.email.mailbox.graphql.input.MailboxMessageWhereInput;
 import cn.asany.email.mailbox.graphql.input.MailboxMessageUpdateInput;
+import cn.asany.email.mailbox.graphql.input.MailboxMessageWhereInput;
 import cn.asany.email.mailbox.graphql.type.MailboxMessageConnection;
 import cn.asany.email.mailbox.graphql.type.MailboxMessageResult;
 import cn.asany.email.mailbox.service.MailboxMessageService;
@@ -26,6 +26,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.mail.MessagingException;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.james.core.MaybeSender;
 import org.apache.james.mailbox.DefaultMailboxes;
 import org.apache.james.mailbox.MailboxManager;
@@ -53,6 +54,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Component
 public class MailboxMessageGraphqlApiResolver
     implements GraphQLQueryResolver, GraphQLMutationResolver {
@@ -112,7 +114,8 @@ public class MailboxMessageGraphqlApiResolver
     }
 
     return Kit.connection(
-        this.mailboxMessageService.findPage(pageable, where.toFilter().equal("mailbox.user", mailUserId)),
+        this.mailboxMessageService.findPage(
+            pageable, where.toFilter().equal("mailbox.user", mailUserId)),
         MailboxMessageConnection.class,
         message -> new MailboxMessageConnection.MailboxMessageEdge(JamesUtil.wrap(message)));
   }
@@ -228,12 +231,13 @@ public class MailboxMessageGraphqlApiResolver
 
     message = context.getMessage();
 
-    this.deleteMailboxMessage(id);
+    Boolean isSuccess = this.deleteMailboxMessage(id);
+    log.debug("删除 {} 草稿 {}", id, isSuccess);
 
     return JamesUtil.wrap(message);
   }
 
-  @SneakyThrows
+  @SneakyThrows(MailboxException.class)
   public MailboxMessageResult updateMailboxMessageFlags(
       String id, List<String> flags, MessageManager.FlagsUpdateMode mode) {
     Optional<JamesMailboxMessage> messageOptional =
@@ -256,7 +260,7 @@ public class MailboxMessageGraphqlApiResolver
     return JamesUtil.wrap(message);
   }
 
-  @SneakyThrows
+  @SneakyThrows(MailboxException.class)
   public MailboxMessageResult moveMailboxMessageToFolder(String id, String mailboxId) {
     MailboxIdUidKey key = new MailboxIdUidKey(id);
     Optional<JamesMailboxMessage> messageOptional =

@@ -25,6 +25,7 @@ import org.apache.james.mailbox.store.MailboxSessionMapperFactory;
 import org.apache.james.mailbox.store.SessionProvider;
 import org.apache.james.mailbox.store.mail.MailboxMapper;
 import org.apache.james.mailbox.store.mail.MessageMapper;
+import org.apache.james.mime4j.MimeException;
 import org.apache.james.mime4j.dom.MessageBuilder;
 import org.apache.james.mime4j.dom.TextBody;
 import org.bouncycastle.util.encoders.Base64;
@@ -64,12 +65,12 @@ public class JamesUtil {
     DEFAULT_MAIL_FLAGS.put("recent", Flags.Flag.RECENT);
   }
 
-  @SneakyThrows
+  @SneakyThrows(MailboxException.class)
   public static MessageMapper createMessageMapper(MailboxSession session) {
     return getMailboxSessionMapperFactory().createMessageMapper(session);
   }
 
-  @SneakyThrows
+  @SneakyThrows(MailboxException.class)
   public static MailboxMapper createMailboxMapper(MailboxSession session) {
 
     return getMailboxSessionMapperFactory().createMailboxMapper(session);
@@ -169,18 +170,18 @@ public class JamesUtil {
 
   public static FlagsUpdateCalculator convert(
       List<String> flags, MessageManager.FlagsUpdateMode mode) {
-    Flags _flags = new Flags();
+    Flags newFlags = new Flags();
     for (String f : flags) {
       if (JamesUtil.DEFAULT_MAIL_FLAGS.containsKey(f)) {
-        _flags.add(JamesUtil.DEFAULT_MAIL_FLAGS.get(f));
+        newFlags.add(JamesUtil.DEFAULT_MAIL_FLAGS.get(f));
       } else {
-        _flags.add(f);
+        newFlags.add(f);
       }
     }
-    return new FlagsUpdateCalculator(_flags, mode);
+    return new FlagsUpdateCalculator(newFlags, mode);
   }
 
-  @SneakyThrows
+  @SneakyThrows({IOException.class, MimeException.class})
   public static MailboxMessageResult wrap(JamesMailboxMessage message) {
     return MailboxMessageResult.builder()
         .mailboxMessage(message)

@@ -11,6 +11,7 @@ import java.util.Optional;
 import lombok.SneakyThrows;
 import org.apache.james.mailbox.MailboxManager;
 import org.apache.james.mailbox.MailboxSession;
+import org.apache.james.mailbox.exception.MailboxException;
 import org.apache.james.mailbox.model.MailboxConstants;
 import org.apache.james.mailbox.model.MailboxId;
 import org.apache.james.mailbox.model.MailboxPath;
@@ -52,7 +53,7 @@ public class MailboxGraphqlApiResolver implements GraphQLQueryResolver, GraphQLM
     return this.mailboxService.findMailboxesWithUser(mailUser);
   }
 
-  @SneakyThrows
+  @SneakyThrows(MailboxException.class)
   public JamesMailbox createMailbox(String namespace, String name, String account) {
     LoginUser loginUser = SpringSecurityUtils.getCurrentUser();
     String user = StringUtil.defaultValue(account, () -> JamesUtil.getUserName(loginUser));
