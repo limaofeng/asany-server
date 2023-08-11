@@ -1,21 +1,35 @@
 package cn.asany.im.auth.service.vo;
 
-import cn.asany.im.utils.GeneralRequest;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.*;
-import lombok.experimental.SuperBuilder;
 
 @Data
-@EqualsAndHashCode(callSuper = true)
-@SuperBuilder
-public class UserRegisterRequestBody extends GeneralRequest {
-  private Long birth;
-  private String email;
-  private String faceURL;
-  private Integer gender;
-  private String nickname;
-  private String phoneNumber;
-  private Integer platform;
+@Builder
+public class UserRegisterRequestBody {
   private String secret;
-  private String userID;
-  private String ex;
+  private List<UserItem> users;
+
+  public static class UserRegisterRequestBodyBuilder {
+    public UserRegisterRequestBodyBuilder addUser(String user, String nickname, String faceUrl) {
+      if (this.users == null) {
+        this.users = new ArrayList<>();
+      }
+      this.users.add(UserItem.builder().userID(user).nickname(nickname).faceURL(faceUrl).build());
+      return this;
+    }
+  }
+
+  @Data
+  @Builder
+  @AllArgsConstructor
+  @NoArgsConstructor
+  public static class UserItem {
+    /** 用户名 */
+    private String nickname;
+    /** 用户ID */
+    private String userID;
+    /** 用户头像 */
+    private String faceURL;
+  }
 }

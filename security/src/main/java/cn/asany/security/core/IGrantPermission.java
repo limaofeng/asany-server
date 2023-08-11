@@ -4,9 +4,11 @@ import cn.asany.base.common.SecurityType;
 import cn.asany.security.core.domain.Permission;
 
 /**
+ * 授予权限
+ *
  * @author limaofeng
- * @version V1.0 @Description: TODO
- * @date 2022/7/28 9:12 9:12
+ * @version V1.0
+ * @date 2022/7/28 9:12
  */
 public interface IGrantPermission {
   /**

@@ -1,12 +1,14 @@
 package cn.asany.base.common.domain;
 
 import java.io.Serializable;
+import lombok.Data;
 
 /**
  * 通知
  *
  * @author limaofeng
  */
+@Data
 public class Notification implements Serializable {
 
   //  标题（Title）：通知的标题，用于概括通知内容。

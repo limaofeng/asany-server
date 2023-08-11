@@ -6,5 +6,6 @@ import lombok.Data;
 public class GeneralResponse<T> {
   private int errCode;
   private String errMsg;
+  private String errDlt;
   private T data;
 }

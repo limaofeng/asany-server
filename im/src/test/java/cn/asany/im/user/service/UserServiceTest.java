@@ -1,7 +1,6 @@
 package cn.asany.im.user.service;
 
 import cn.asany.im.TestApplication;
-import cn.asany.im.auth.graphql.type.Platform;
 import cn.asany.im.auth.service.AuthService;
 import cn.asany.im.auth.service.vo.UserRegisterRequestBody;
 import cn.asany.im.auth.service.vo.UserTokenData;
@@ -9,7 +8,6 @@ import cn.asany.im.auth.service.vo.UserTokenRequestBody;
 import cn.asany.im.error.OpenIMServerAPIException;
 import cn.asany.im.user.service.vo.*;
 import cn.asany.security.core.domain.User;
-import cn.asany.security.core.domain.enums.Sex;
 import java.util.List;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
@@ -40,7 +38,7 @@ class UserServiceTest {
   public String token(String userID) throws OpenIMServerAPIException {
     UserTokenData data =
         authService.userToken(
-            UserTokenRequestBody.builder().secret("tuoyun").userID(userID).platform(8).build());
+            UserTokenRequestBody.builder().secret("tuoyun").user(userID).platform(8).build());
     log.debug(data.toString());
     return data.getToken();
   }
@@ -107,43 +105,15 @@ class UserServiceTest {
 
   @Test
   void syncToOpenIM() throws OpenIMServerAPIException {
-    Optional<User> userOptional = userService1.get(1L);
+    Optional<User> userOptional = userService1.findById(1L);
     if (userOptional.isPresent()) {
       User user = userOptional.get();
-      UserRegisterRequestBody.UserRegisterRequestBodyBuilder<?, ?> builder =
+      UserRegisterRequestBody.UserRegisterRequestBodyBuilder builder =
           UserRegisterRequestBody.builder()
-              .nickname(user.getNickName())
-              .secret("tuoyun")
-              .userID(String.valueOf(user.getId()))
-              .platform(Platform.Web.getValue());
+              .addUser(String.valueOf(user.getId()), user.getNickName(), user.getAvatar().getPath())
+              .secret("tuoyun");
 
-      if (user.getSex() != null) {
-        if (user.getSex() == Sex.male) {
-          builder.gender(1);
-        } else if (user.getSex() == Sex.female) {
-          builder.gender(2);
-        } else {
-          builder.gender(0);
-        }
-      }
-
-      if (user.getAvatar() != null) {
-        builder.faceURL(user.getAvatar().getPath());
-      }
-
-      if (user.getBirthday() != null) {
-        builder.birth(user.getBirthday().getTime() / 1000);
-      }
-
-      if (user.getEmail() != null) {
-        builder.email(user.getEmail().getAddress());
-      }
-
-      if (user.getPhone() != null) {
-        builder.phoneNumber(user.getPhone().getNumber());
-      }
-
-      authService.userRegister(builder.build());
+      userService.userRegister(builder.build());
     }
   }
 }

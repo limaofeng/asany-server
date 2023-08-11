@@ -19,6 +19,11 @@ import org.jfantasy.framework.util.common.StringUtil;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 
+/**
+ * IM 授权服务
+ *
+ * @author limaofeng
+ */
 @Slf4j
 @Getter
 public class AuthService {
@@ -40,27 +45,6 @@ public class AuthService {
     this.url = url;
     this.secret = secret;
     this.admin = admin;
-  }
-
-  /**
-   * 用户注册
-   *
-   * @param request UserRegisterRequest
-   * @return UserRegisterResponse
-   */
-  public UserRegisterData userRegister(UserRegisterRequestBody request)
-      throws OpenIMServerAPIException {
-    String url = this.url + "/auth/user_register";
-    try {
-      if (StringUtil.isBlank(request.getSecret())) {
-        request.setSecret(secret);
-      }
-      HttpResponse<UserRegisterResponseBody> response =
-          Unirest.post(url).body(JSON.serialize(request)).asObject(UserRegisterResponseBody.class);
-      return OpenIMUtils.getData(response.getBody());
-    } catch (UnirestException e) {
-      throw new ServerException(e.getMessage());
-    }
   }
 
   public ParseTokenData parseToken(String token, ParseTokenRequestBody request)
@@ -103,7 +87,10 @@ public class AuthService {
     String url = this.url + "/auth/user_token";
     try {
       HttpResponse<UserTokenResponseBody> response =
-          Unirest.post(url).body(JSON.serialize(body)).asObject(UserTokenResponseBody.class);
+          Unirest.post(url)
+              .header("operationID", createTraceId())
+              .body(JSON.serialize(body))
+              .asObject(UserTokenResponseBody.class);
       return OpenIMUtils.getData(response.getBody());
     } catch (UnirestException e) {
       throw new ServerException(e.getMessage());
@@ -126,17 +113,22 @@ public class AuthService {
         this.userToken(
             UserTokenRequestBody.builder()
                 .secret(secret)
-                .userID(user)
+                .user(user)
                 .platform(platform.getValue())
                 .build());
+
     log.debug(data.toString());
-    String _token = data.getToken();
+    String token = data.getToken();
 
     Date expireAt = Date.from(Instant.now().plus(data.getExpiredTime(), ChronoUnit.SECONDS));
 
-    this.valueOperations.set(cacheKey, _token);
+    this.valueOperations.set(cacheKey, token);
     redisTemplate.expireAt(cacheKey, expireAt);
 
-    return _token;
+    return token;
+  }
+
+  public String createTraceId() {
+    return StringUtil.uuid();
   }
 }

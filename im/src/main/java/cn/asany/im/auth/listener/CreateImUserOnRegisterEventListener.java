@@ -1,11 +1,11 @@
 package cn.asany.im.auth.listener;
 
-import cn.asany.im.auth.service.AuthService;
 import cn.asany.im.auth.service.vo.UserRegisterRequestBody;
+import cn.asany.im.error.OpenIMServerAPIException;
+import cn.asany.im.user.service.UserService;
 import cn.asany.security.core.event.RegisterSuccessEvent;
 import lombok.SneakyThrows;
 import org.jfantasy.framework.security.LoginUser;
-import org.jfantasy.framework.util.common.StringUtil;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
@@ -18,24 +18,19 @@ import org.springframework.stereotype.Component;
 public class CreateImUserOnRegisterEventListener
     implements ApplicationListener<RegisterSuccessEvent> {
 
-  private final AuthService authService;
+  private final UserService userService;
 
-  public CreateImUserOnRegisterEventListener(AuthService authService) {
-    this.authService = authService;
+  public CreateImUserOnRegisterEventListener(UserService userService) {
+    this.userService = userService;
   }
 
-  @SneakyThrows
+  @SneakyThrows(OpenIMServerAPIException.class)
   @Override
   public void onApplicationEvent(RegisterSuccessEvent event) {
     LoginUser user = event.getLoginUser();
-    authService.userRegister(
+    userService.userRegister(
         UserRegisterRequestBody.builder()
-            .userID(user.getUid().toString())
-            .faceURL(user.getAvatar())
-            .nickname(user.getName())
-            .platform(5)
-            .phoneNumber(user.getPhone())
-            .operationID(StringUtil.uuid())
+            .addUser(user.getUid().toString(), user.getName(), user.getAvatar())
             .build());
   }
 }

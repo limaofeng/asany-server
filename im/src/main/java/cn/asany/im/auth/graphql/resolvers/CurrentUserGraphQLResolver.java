@@ -4,11 +4,14 @@ import cn.asany.im.auth.graphql.type.OnlineStatus;
 import cn.asany.im.auth.graphql.type.OnlineStatusDetails;
 import cn.asany.im.auth.graphql.type.Platform;
 import cn.asany.im.auth.service.AuthService;
+import cn.asany.im.auth.service.vo.UserRegisterRequestBody;
+import cn.asany.im.error.ErrorCode;
 import cn.asany.im.error.OpenIMServerAPIException;
 import cn.asany.im.user.service.UserService;
 import cn.asany.im.utils.OpenIMUtils;
 import cn.asany.security.auth.graphql.types.CurrentUser;
 import graphql.kickstart.tools.GraphQLResolver;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -29,12 +32,23 @@ public class CurrentUserGraphQLResolver implements GraphQLResolver<CurrentUser> 
     this.userService = userService;
   }
 
+  @SneakyThrows(OpenIMServerAPIException.class)
   public String imToken(CurrentUser user, Platform platform) {
     try {
       return this.authService.token(platform, String.valueOf(user.getId()));
     } catch (OpenIMServerAPIException e) {
       log.error(e.getMessage(), e);
-      return null;
+      if (e.getCode() == ErrorCode.RECORD_NOT_FOUND.getCode()) {
+        this.userService.userRegister(
+            UserRegisterRequestBody.builder()
+                .addUser(
+                    String.valueOf(user.getId()),
+                    user.getName(),
+                    user.getAvatar() != null ? user.getAvatar().getPath() : null)
+                .build());
+        return imToken(user, platform);
+      }
+      throw e;
     }
   }
 

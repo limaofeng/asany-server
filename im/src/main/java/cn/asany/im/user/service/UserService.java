@@ -1,6 +1,9 @@
 package cn.asany.im.user.service;
 
 import cn.asany.autoconfigure.properties.AdminUser;
+import cn.asany.im.auth.service.vo.UserRegisterData;
+import cn.asany.im.auth.service.vo.UserRegisterRequestBody;
+import cn.asany.im.auth.service.vo.UserRegisterResponseBody;
 import cn.asany.im.error.OpenIMServerAPIException;
 import cn.asany.im.error.ServerException;
 import cn.asany.im.user.service.vo.*;
@@ -8,10 +11,13 @@ import cn.asany.im.utils.OpenIMUtils;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import java.util.Collections;
 import java.util.List;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.jfantasy.framework.jackson.JSON;
+import org.jfantasy.framework.util.common.ObjectUtil;
+import org.jfantasy.framework.util.common.StringUtil;
 import org.springframework.stereotype.Service;
 
 /**
@@ -33,6 +39,30 @@ public class UserService {
     this.url = url;
     this.secret = secret;
     this.admin = admin;
+  }
+
+  /**
+   * 用户注册
+   *
+   * @param request UserRegisterRequest
+   * @return UserRegisterResponse
+   */
+  public UserRegisterData userRegister(UserRegisterRequestBody request)
+      throws OpenIMServerAPIException {
+    String url = this.url + "/user/user_register";
+    try {
+      if (StringUtil.isBlank(request.getSecret())) {
+        request.setSecret(secret);
+      }
+      HttpResponse<UserRegisterResponseBody> response =
+          Unirest.post(url)
+              .header("operationID", createTraceId())
+              .body(JSON.serialize(request))
+              .asObject(UserRegisterResponseBody.class);
+      return OpenIMUtils.getData(response.getBody());
+    } catch (UnirestException e) {
+      throw new ServerException(e.getMessage());
+    }
   }
 
   /**
@@ -64,12 +94,17 @@ public class UserService {
       HttpResponse<AllUsersUidResponseBody> response =
           Unirest.post(url)
               .header("token", token)
+              .header("operationID", createTraceId())
               .body(JSON.serialize(body))
               .asObject(AllUsersUidResponseBody.class);
       return OpenIMUtils.getData(response.getBody());
     } catch (UnirestException e) {
       throw new ServerException(e.getMessage());
     }
+  }
+
+  public String createTraceId() {
+    return StringUtil.uuid();
   }
 
   public UserInfoData getSelfUserInfo(String token, GetSelfUserInfoRequestBody body)
@@ -109,9 +144,11 @@ public class UserService {
       HttpResponse<GetUsersOnlineStatusResponseBody> response =
           Unirest.post(url)
               .header("token", token)
+              .header("operationID", createTraceId())
               .body(JSON.serialize(body))
               .asObject(GetUsersOnlineStatusResponseBody.class);
-      return OpenIMUtils.getData(response.getBody());
+      return ObjectUtil.defaultValue(
+          OpenIMUtils.getData(response.getBody()), Collections.emptyList());
     } catch (UnirestException e) {
       throw new ServerException(e.getMessage());
     }

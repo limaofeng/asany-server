@@ -1,6 +1,7 @@
 package cn.asany.im.auth.service.vo;
 
 import cn.asany.im.utils.GeneralRequest;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
@@ -10,6 +11,10 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 public class UserTokenRequestBody extends GeneralRequest {
   private String secret;
+
+  @JsonProperty("platformID")
   private Integer platform;
-  private String userID;
+
+  @JsonProperty("userID")
+  private String user;
 }

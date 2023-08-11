@@ -16,7 +16,7 @@ spring:
     password: sOmE_sEcUrE_pAsS
 
 openim:
-  url: http://47.103.119.188:10002
-  secret: tuoyun
+  url: http://10.226.116.180:10002
+  secret: Eq4g6Q3DDi6FmXMu
   admin:
     user: openIMAdmin
