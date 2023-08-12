@@ -1,8 +1,8 @@
 package cn.asany.security.core.service;
 
 import cn.asany.security.core.dao.GrantPermissionDao;
-import cn.asany.security.core.dao.PermissionDao;
-import cn.asany.security.core.domain.Permission;
+import cn.asany.security.core.dao.PermissionStatementDao;
+import cn.asany.security.core.domain.PermissionStatement;
 import cn.asany.security.core.exception.ValidDataException;
 import java.util.*;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
@@ -18,47 +18,49 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class PermissionService {
 
-  private final PermissionDao permissionDao;
+  private final PermissionStatementDao permissionStatementDao;
 
   private final GrantPermissionDao grantPermissionDao;
 
   @Autowired
-  public PermissionService(PermissionDao permissionDao, GrantPermissionDao grantPermissionDao) {
-    this.permissionDao = permissionDao;
+  public PermissionService(
+      PermissionStatementDao permissionStatementDao, GrantPermissionDao grantPermissionDao) {
+    this.permissionStatementDao = permissionStatementDao;
     this.grantPermissionDao = grantPermissionDao;
   }
 
-  public Page<Permission> findPage(Pageable pageable, PropertyFilter filter) {
-    return this.permissionDao.findPage(pageable, filter);
+  public Page<PermissionStatement> findPage(Pageable pageable, PropertyFilter filter) {
+    return this.permissionStatementDao.findPage(pageable, filter);
   }
 
-  public List<Permission> findAll(PropertyFilter filter, Sort orderBy) {
-    return this.permissionDao.findAll(filter, orderBy);
+  public List<PermissionStatement> findAll(PropertyFilter filter, Sort orderBy) {
+    return this.permissionStatementDao.findAll(filter, orderBy);
   }
 
-  public Permission save(Permission permission) {
+  public PermissionStatement save(PermissionStatement permissionStatement) {
     //    if (permissionDao.existsById(permission.getId())) {
     //      throw new ValidDataException(ValidDataException.PERMISSION_EXISTS, permission.getId());
     //    }
-    return this.permissionDao.save(permission);
+    return this.permissionStatementDao.save(permissionStatement);
   }
 
-  public Permission update(Long id, Boolean merge, Permission permission) {
-    if (!permissionDao.existsById(id)) {
+  public PermissionStatement update(
+      Long id, Boolean merge, PermissionStatement permissionStatement) {
+    if (!permissionStatementDao.existsById(id)) {
       throw new ValidDataException(ValidDataException.PERMISSION_NOTEXISTS, id);
     }
-    permission.setId(id);
-    return permissionDao.save(permission);
+    permissionStatement.setId(id);
+    return permissionStatementDao.save(permissionStatement);
   }
 
   public void delete(Long... ids) {
     for (Long id : ids) {
-      if (!permissionDao.existsById(id)) {
+      if (!permissionStatementDao.existsById(id)) {
         throw new ValidDataException(ValidDataException.PERMISSION_NOTEXISTS, id);
       }
       //      grantPermissionDao.deleteGrantPermissionByPermissionId(id);
       grantPermissionDao.flush();
-      permissionDao.deleteById(id);
+      permissionStatementDao.deleteById(id);
     }
   }
 
@@ -68,8 +70,8 @@ public class PermissionService {
   //            builder.and(builder.equal(root.get("resource.type"), ResourceType.url)));
   //  }
 
-  public List<Permission> findByRoleId(String roleId) {
-    return this.permissionDao.findAll(
+  public List<PermissionStatement> findByRoleId(String roleId) {
+    return this.permissionStatementDao.findAll(
         (root, query, builder) -> builder.equal(root.get("roles.id"), roleId));
   }
 

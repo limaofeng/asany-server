@@ -1,4 +1,4 @@
-package cn.asany.security.core.graphql.models;
+package cn.asany.security.core.graphql.types;
 
 import cn.asany.security.core.domain.Role;
 import java.util.List;
@@ -7,9 +7,9 @@ import org.jfantasy.graphql.Edge;
 import org.jfantasy.graphql.types.BaseConnection;
 
 /**
- * @author: guoyong
- * @description: 角色查询接口
- * @create: 2020/6/9 15:47
+ * 角色查询接口
+ *
+ * @author limaofeng
  */
 @Data
 @EqualsAndHashCode(callSuper = false)

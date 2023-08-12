@@ -7,7 +7,7 @@ import cn.asany.cms.article.graphql.enums.ArticleStarType;
 import cn.asany.cms.article.graphql.input.CommentWhereInput;
 import cn.asany.cms.article.graphql.type.CommentConnection;
 import cn.asany.cms.article.graphql.type.Starrable;
-import cn.asany.security.core.domain.Permission;
+import cn.asany.security.core.domain.PermissionStatement;
 import graphql.kickstart.tools.GraphQLResolver;
 import java.util.ArrayList;
 import java.util.List;
@@ -126,11 +126,11 @@ public class ArticleGraphQLResolver implements GraphQLResolver<Article> {
     return comments;
   }
 
-  public Permission permissions(Article article) {
+  public PermissionStatement permissions(Article article) {
     return null; // Permission.builder().resourceType("Article").id(String.valueOf(article.getId())).build();
   }
 
-  private List<Permission> loadGrantPermissions(Article article) {
+  private List<PermissionStatement> loadGrantPermissions(Article article) {
     //        if (article.getPermissions() == null) {
     //            article.setPermissions(securityGrpcInvoke.getPermissions("Article",
     // String.valueOf(article.getId())));

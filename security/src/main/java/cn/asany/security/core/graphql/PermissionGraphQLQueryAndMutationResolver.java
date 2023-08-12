@@ -1,8 +1,8 @@
 package cn.asany.security.core.graphql;
 
-import cn.asany.security.core.domain.Permission;
-import cn.asany.security.core.graphql.models.PermissionConnection;
-import cn.asany.security.core.graphql.models.PermissionWhereInput;
+import cn.asany.security.core.domain.PermissionStatement;
+import cn.asany.security.core.graphql.input.PermissionWhereInput;
+import cn.asany.security.core.graphql.types.PermissionConnection;
 import cn.asany.security.core.service.PermissionService;
 import graphql.kickstart.tools.GraphQLMutationResolver;
 import graphql.kickstart.tools.GraphQLQueryResolver;
@@ -34,7 +34,7 @@ public class PermissionGraphQLQueryAndMutationResolver
   }
 
   /** 查询权限 */
-  public List<Permission> permissions(PermissionWhereInput where, Sort orderBy) {
+  public List<PermissionStatement> permissions(PermissionWhereInput where, Sort orderBy) {
     where = ObjectUtil.defaultValue(where, new PermissionWhereInput());
     return permissionService.findAll(where.toFilter(), orderBy);
   }

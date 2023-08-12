@@ -1,14 +1,15 @@
 package cn.asany.security.core.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.util.List;
 import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
+import org.jfantasy.framework.dao.Tenantable;
 
 /**
  * 用户组
@@ -20,8 +21,14 @@ import org.jfantasy.framework.dao.BaseBusEntity;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Entity
-@Table(name = "AUTH_USERGROUP")
-@GenericGenerator(name = "user_group_gen", strategy = "fantasy-sequence")
+@Table(
+    name = "AUTH_GROUP",
+    uniqueConstraints = {
+      @UniqueConstraint(
+          name = "UK_AUTH_GROUP",
+          columnNames = {"ID", "TENANT_ID"})
+    })
+@IdClass(GroupPrimaryKey.class)
 @JsonIgnoreProperties({
   "hibernate_lazy_initializer",
   "handler",
@@ -31,15 +38,10 @@ import org.jfantasy.framework.dao.BaseBusEntity;
   "permissions"
 })
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class UserGroup extends BaseBusEntity {
-  @Id
-  @Column(name = "ID", nullable = false)
-  @GeneratedValue(generator = "fantasy-sequence")
-  @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
-  private Long id;
-  /** 用户组编码 */
-  @Column(name = "CODE")
-  private String code;
+public class Group extends BaseBusEntity implements Tenantable {
+  @Id private String id;
+  /** 租户ID */
+  @Id private String tenantId;
   /** 用户组名称 */
   @Column(name = "NAME")
   private String name;
@@ -49,4 +51,7 @@ public class UserGroup extends BaseBusEntity {
   /** 描述 */
   @Column(name = "DESCRIPTION")
   private String description;
+  /** 组内成员 */
+  @OneToMany(mappedBy = "userGroup", fetch = FetchType.LAZY)
+  private List<GroupMember> members;
 }

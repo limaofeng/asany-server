@@ -1,6 +1,6 @@
 package cn.asany.security.auth.graphql.directive;
 
-import cn.asany.security.core.domain.Permission;
+import cn.asany.security.core.domain.PermissionStatement;
 import cn.asany.security.core.domain.ResourceType;
 import cn.asany.security.core.domain.enums.AccessLevel;
 import cn.asany.security.core.domain.enums.PermissionPolicyEffect;
@@ -38,11 +38,12 @@ public class AuthInfo implements Serializable {
   public boolean checkUserPermission(Authentication authentication, Map<String, Object> args) {
     Collection<GrantedAuthority> authorities = authentication.getAuthorities();
 
-    List<Permission> permissions = permissionPolicyService.loadPolicies(authorities, name);
+    List<PermissionStatement> permissionStatements =
+      permissionPolicyService.loadPolicies(authorities, name);
 
     List<String> paths = buildResourcePaths(args);
 
-    return permissions.stream()
+    return permissionStatements.stream()
         .anyMatch(
             permission ->
                 permission.getEffect() == PermissionPolicyEffect.Allow

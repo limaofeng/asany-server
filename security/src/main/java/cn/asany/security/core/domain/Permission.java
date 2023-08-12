@@ -1,50 +1,55 @@
 package cn.asany.security.core.domain;
 
-import cn.asany.security.core.domain.enums.PermissionPolicyEffect;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import java.io.Serializable;
 import javax.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
-import org.jfantasy.framework.dao.hibernate.converter.StringArrayConverter;
+import org.jfantasy.framework.dao.BaseBusEntity;
+import org.jfantasy.framework.dao.Tenantable;
 
 /**
- * 权限策略声明
+ * 授权
  *
  * @author limaofeng
  */
-@Getter
-@Setter
-@ToString
-@RequiredArgsConstructor
+@Data
+@EqualsAndHashCode(callSuper = true)
 @Builder
+@NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Table(name = "AUTH_PERMISSION")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class Permission implements Serializable {
+public class Permission extends BaseBusEntity implements Tenantable {
 
   @Id
-  @Column(name = "ID", nullable = false, updatable = false, precision = 22)
+  @Column(name = "ID", nullable = false, updatable = false)
   @GeneratedValue(generator = "fantasy-sequence")
   @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
-
-  @Enumerated(EnumType.STRING)
-  @Column(name = "EFFECT", length = 20)
-  private PermissionPolicyEffect effect;
-
-  @Column(name = "ACTION", length = 100)
-  private String action;
-
-  @Column(name = "RESOURCE", length = 200)
-  @Convert(converter = StringArrayConverter.class)
-  private String[] resources;
-
+  /**
+   * 授权范围
+   */
+  @Column(name = "SCOPE", length = 25, nullable = false)
+  private String scope;
+  /**
+   * 授权主体
+   */
+  @Column(name = "SUBJECT", length = 25, nullable = false)
+  private String subject;
+  /**
+   * 授权策略
+   */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(
-      name = "PERMISSION_POLICY",
+    name = "POLICY_ID",
       foreignKey = @ForeignKey(name = "FK_PERMISSION_POLICY_ID"),
+    updatable = false,
       nullable = false)
   private PermissionPolicy policy;
+  /**
+   * 租户ID
+   */
+  @Column(name = "TENANT_ID", length = 24)
+  private String tenantId;
 }

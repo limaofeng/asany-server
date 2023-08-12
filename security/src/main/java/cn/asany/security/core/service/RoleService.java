@@ -1,9 +1,9 @@
 package cn.asany.security.core.service;
 
 import cn.asany.security.core.dao.GrantPermissionDao;
-import cn.asany.security.core.dao.PermissionDao;
+import cn.asany.security.core.dao.PermissionStatementDao;
 import cn.asany.security.core.dao.RoleDao;
-import cn.asany.security.core.domain.Permission;
+import cn.asany.security.core.domain.PermissionStatement;
 import cn.asany.security.core.domain.Role;
 import cn.asany.security.core.domain.enums.RoleType;
 import cn.asany.security.core.exception.ValidDataException;
@@ -29,7 +29,7 @@ public class RoleService {
 
   @Autowired private GrantPermissionDao grantPermissionDao;
 
-  @Autowired private PermissionDao permissionDao;
+  @Autowired private PermissionStatementDao permissionStatementDao;
 
   @Autowired
   public RoleService(RoleDao roleDao) {
@@ -50,7 +50,7 @@ public class RoleService {
     return roleDao.save(role);
   }
 
-  public Role update(Long id, boolean merge, Role role) {
+  public Role update(Long id, Role role, boolean merge) {
     if (!roleDao.existsById(id)) {
       throw new ValidDataException(ValidDataException.ROLE_NOTEXISTS, id);
     }
@@ -213,7 +213,7 @@ public class RoleService {
   private void roleAssignPermisstions(String roleId, String permisstionIds) {
     String[] entIds = permisstionIds.split(",");
     for (String eId : entIds) {
-      Permission permission = permissionDao.getOne(Long.valueOf(eId));
+      PermissionStatement permissionStatement = permissionStatementDao.getOne(Long.valueOf(eId));
       //            grantPermissionDao.save(GrantPermission.builder()
       //                    .permission(permission)
       //                    .securityType(SecurityType.role)

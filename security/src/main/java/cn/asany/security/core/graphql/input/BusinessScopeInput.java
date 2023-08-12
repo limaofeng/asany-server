@@ -1,4 +1,4 @@
-package cn.asany.security.core.graphql.models;
+package cn.asany.security.core.graphql.input;
 
 import lombok.Data;
 

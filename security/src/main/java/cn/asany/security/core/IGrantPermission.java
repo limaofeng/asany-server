@@ -1,7 +1,7 @@
 package cn.asany.security.core;
 
 import cn.asany.base.common.SecurityType;
-import cn.asany.security.core.domain.Permission;
+import cn.asany.security.core.domain.PermissionStatement;
 
 /**
  * 授予权限
@@ -16,7 +16,7 @@ public interface IGrantPermission {
    *
    * @return 权限
    */
-  Permission getPermission();
+  PermissionStatement getPermission();
 
   /**
    * 权限类型

@@ -1,6 +1,5 @@
-package cn.asany.security.core.graphql.models;
+package cn.asany.security.core.graphql.input;
 
-import cn.asany.security.core.graphql.input.GrantPermissionByUserInput;
 import java.util.List;
 import java.util.Set;
 import lombok.Data;

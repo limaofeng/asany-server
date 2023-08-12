@@ -3,9 +3,9 @@ package cn.asany.security.core.service;
 import cn.asany.base.common.SecurityScope;
 import cn.asany.base.common.SecurityType;
 import cn.asany.security.core.dao.GrantPermissionDao;
-import cn.asany.security.core.dao.PermissionDao;
+import cn.asany.security.core.dao.PermissionStatementDao;
 import cn.asany.security.core.domain.GrantPermission;
-import cn.asany.security.core.domain.Permission;
+import cn.asany.security.core.domain.PermissionStatement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -28,7 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class GrantPermissionService {
 
   @Autowired private GrantPermissionDao grantPermissionDao;
-  @Autowired private PermissionDao permissionDao;
+  @Autowired private PermissionStatementDao permissionStatementDao;
 
   public List<GrantPermission> getGrantPermissions(String resourceType, String resource) {
     return grantPermissionDao.findAll(
@@ -117,7 +117,7 @@ public class GrantPermissionService {
             });
   }
 
-  public List<Permission> getPermissionsByRoleId(String roleId) {
+  public List<PermissionStatement> getPermissionsByRoleId(String roleId) {
     List<GrantPermission> grantPermissionList = new ArrayList<>();
     //        grantPermissionDao.findGrantPermissionsBySecurityTypeAndValue(SecurityType.role,
     // roleId);

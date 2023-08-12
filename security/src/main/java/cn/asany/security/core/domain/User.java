@@ -21,12 +21,17 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.validator.constraints.Length;
 import org.jfantasy.framework.dao.BaseBusEntity;
+import org.jfantasy.framework.dao.Tenantable;
 import org.jfantasy.framework.security.core.GrantedAuthority;
 import org.jfantasy.framework.security.core.SimpleGrantedAuthority;
 import org.jfantasy.framework.spring.validation.Operation;
 import org.jfantasy.framework.spring.validation.Use;
 
-/** @author limaofeng */
+/**
+ * 用户
+ *
+ * @author limaofeng
+ */
 @Getter
 @Setter
 @RequiredArgsConstructor
@@ -52,7 +57,7 @@ import org.jfantasy.framework.spring.validation.Use;
   "authorities"
 })
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class User extends BaseBusEntity implements Ownership {
+public class User extends BaseBusEntity implements Ownership, Tenantable {
 
   public static final String OWNERSHIP_KEY = "PERSONAL";
 
@@ -161,14 +166,19 @@ public class User extends BaseBusEntity implements Ownership {
   private List<Role> roles;
   /** 用户对应的用户组 */
   @ToString.Exclude
-  @ManyToMany(targetEntity = UserGroup.class, fetch = FetchType.LAZY)
+  @ManyToMany(targetEntity = Group.class, fetch = FetchType.LAZY)
   @JoinTable(
       name = "AUTH_USERGROUP_USER",
       joinColumns = @JoinColumn(name = "USER_ID"),
       inverseJoinColumns = @JoinColumn(name = "USERGROUP_ID"),
       foreignKey = @ForeignKey(name = "FK_USERGROUP_USER_US"))
   @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-  private List<UserGroup> userGroups;
+  private List<Group> groups;
+  /**
+   * 租户ID
+   */
+  @Column(name = "TENANT_ID", length = 24)
+  private String tenantId;
   /** 用户权限 */
   @Transient private List<GrantPermission> grants;
 
@@ -180,8 +190,8 @@ public class User extends BaseBusEntity implements Ownership {
             .map(item -> SimpleGrantedAuthority.newInstance("ROLE_" + item.getCode()))
             .collect(Collectors.toList()));
     authorities.addAll(
-        this.userGroups.stream()
-            .map(item -> SimpleGrantedAuthority.newInstance("GROUP_" + item.getCode()))
+      this.groups.stream()
+        .map(item -> SimpleGrantedAuthority.newInstance("GROUP_" + item.getId()))
             .collect(Collectors.toList()));
     return authorities;
   }

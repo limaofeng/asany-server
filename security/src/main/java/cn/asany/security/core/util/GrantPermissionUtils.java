@@ -3,7 +3,7 @@ package cn.asany.security.core.util;
 import cn.asany.base.common.SecurityScope;
 import cn.asany.base.common.SecurityType;
 import cn.asany.security.core.domain.GrantPermission;
-import cn.asany.security.core.domain.Permission;
+import cn.asany.security.core.domain.PermissionStatement;
 import cn.asany.security.core.domain.User;
 import cn.asany.security.core.graphql.input.PermissionInput;
 import cn.asany.security.core.service.GrantPermissionService;
@@ -69,8 +69,8 @@ public class GrantPermissionUtils {
   }
 
   public static Stream<User> getUsersByPermission(
-      List<Permission> permissions, String permissionKey) {
-    Stream<Permission> stream = permissions.stream();
+      List<PermissionStatement> permissionStatements, String permissionKey) {
+    Stream<PermissionStatement> stream = permissionStatements.stream();
     if (StringUtil.isNotBlank(permissionKey)) {
       //      stream = stream.filter(item -> item.getEnabled() &&
       // item.getId().equals(permissionKey));
@@ -94,7 +94,8 @@ public class GrantPermissionUtils {
     return SpringBeanUtils.getBeanByType(UserService.class);
   }
 
-  public static List<Permission> getPermissions(List<Permission> grants, String permissionKey) {
+  public static List<PermissionStatement> getPermissions(
+      List<PermissionStatement> grants, String permissionKey) {
     if (StringUtil.isBlank(permissionKey)) {
       return grants;
     }
@@ -108,13 +109,13 @@ public class GrantPermissionUtils {
     return grantPermissionService.getGrantPermissions(resourceType, resource.toString());
   }
 
-  public static List<Permission> getPermissions(String resourceType, String resource) {
+  public static List<PermissionStatement> getPermissions(String resourceType, String resource) {
     GrantPermissionService grantPermissionService = getGrantPermissionService();
     return grantPermissionToPermission(
         grantPermissionService.getGrantPermissions(resourceType, resource));
   }
 
-  public static List<Permission> getPermissions(String resourceType, Long resource) {
+  public static List<PermissionStatement> getPermissions(String resourceType, Long resource) {
     GrantPermissionService grantPermissionService = getGrantPermissionService();
     return grantPermissionToPermission(
         grantPermissionService.getGrantPermissions(resourceType, resource.toString()));
@@ -125,7 +126,7 @@ public class GrantPermissionUtils {
     return grantPermissionService.getGrantPermissions(securityType, value);
   }
 
-  public static List<Permission> updateGrantPermissions(
+  public static List<PermissionStatement> updateGrantPermissions(
       String resourceType, Long resource, List<PermissionInput> inputs) {
     // 转换数据
     List<GrantPermission> grants = new ArrayList<>();
@@ -158,13 +159,14 @@ public class GrantPermissionUtils {
     return grantPermissionToPermission(grantPermissions);
   }
 
-  private static List<Permission> grantPermissionToPermission(List<GrantPermission> grants) {
-    List<Permission> permissions = new ArrayList<>();
+  private static List<PermissionStatement> grantPermissionToPermission(
+      List<GrantPermission> grants) {
+    List<PermissionStatement> permissionStatements = new ArrayList<>();
     grants.stream()
         .forEach(
             item -> {
-              Optional<Permission> optional =
-                  permissions.stream()
+              Optional<PermissionStatement> optional =
+                  permissionStatements.stream()
                       //                      .filter(p ->
                       // p.getId().equals(item.getPermission().getId()))
                       .findFirst();
@@ -177,7 +179,7 @@ public class GrantPermissionUtils {
                 //                permissions.add(permission);
               }
             });
-    return permissions;
+    return permissionStatements;
   }
 
   private static void cleanGrantPermission(

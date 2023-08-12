@@ -2,11 +2,10 @@ package cn.asany.security.core.graphql;
 
 import cn.asany.security.core.domain.*;
 import cn.asany.security.core.graphql.enums.ResultTypeScope;
-import cn.asany.security.core.graphql.input.ContextInput;
-import cn.asany.security.core.graphql.input.ScopeTypeAttribute;
-import cn.asany.security.core.graphql.input.ScopeTypeResult;
-import cn.asany.security.core.graphql.models.*;
+import cn.asany.security.core.graphql.input.*;
+import cn.asany.security.core.graphql.types.PermissionConnection;
 import cn.asany.security.core.graphql.types.SecurityScopeObject;
+import cn.asany.security.core.graphql.types.UserConnection;
 import cn.asany.security.core.service.PermissionService;
 import cn.asany.security.core.service.RoleScopeService;
 import cn.asany.security.core.service.RoleService;
@@ -184,12 +183,6 @@ public class SecurityGraphQLQueryResolver implements GraphQLQueryResolver {
     return roleScopeService.get(id);
   }
 
-  /** 查询角色 */
-  public RoleConnection findRoles(RoleWhereInput where, int page, int pageSize, Sort orderBy) {
-    Pageable pageable = PageRequest.of(page - 1, pageSize, orderBy);
-    return Kit.connection(roleService.findPage(pageable, where.toFilter()), RoleConnection.class);
-  }
-
   /** 查询权限分类 */
   public PermissionConnection permissions(
       PermissionWhereInput where, int page, int pageSize, Sort orderBy) {
@@ -209,9 +202,9 @@ public class SecurityGraphQLQueryResolver implements GraphQLQueryResolver {
    * @param id
    * @return
    */
-  public List<Permission> permission(String id, String resourceId) {
+  public List<PermissionStatement> permission(String id, String resourceId) {
     if (ObjectUtils.isEmpty(resourceId)) {
-      return new ArrayList<Permission>();
+      return new ArrayList<PermissionStatement>();
     }
     return null; // permissionService.permission(id, resourceId);
   }

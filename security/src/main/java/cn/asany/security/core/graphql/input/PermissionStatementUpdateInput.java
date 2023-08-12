@@ -1,6 +1,6 @@
-package cn.asany.security.core.graphql.models;
+package cn.asany.security.core.graphql.input;
 
-import cn.asany.security.core.domain.Permission;
+import cn.asany.security.core.domain.PermissionStatement;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -11,7 +11,7 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class PermissionUpdateInput extends Permission {
+public class PermissionStatementUpdateInput extends PermissionStatement {
   /** 权限分类输入 */
   private String permissionTypeInput;
 }

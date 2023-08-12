@@ -1,14 +1,17 @@
 package cn.asany.security.core.service;
 
-import cn.asany.security.core.dao.PermissionDao;
 import cn.asany.security.core.dao.PermissionPolicyDao;
-import cn.asany.security.core.domain.Permission;
+import cn.asany.security.core.dao.PermissionStatementDao;
+import cn.asany.security.core.domain.PermissionPolicy;
+import cn.asany.security.core.domain.PermissionStatement;
 import cn.asany.security.core.domain.enums.GranteeType;
 import java.util.Collection;
 import java.util.List;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.security.core.GrantedAuthority;
 import org.jfantasy.framework.security.core.SimpleGrantedAuthority;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 /**
@@ -20,19 +23,20 @@ import org.springframework.stereotype.Service;
 public class PermissionPolicyService {
 
   private final PermissionPolicyDao permissionPolicyDao;
-  private final PermissionDao permissionDao;
+  private final PermissionStatementDao permissionStatementDao;
   private final GrantPermissionService grantPermissionService;
 
   public PermissionPolicyService(
       PermissionPolicyDao permissionPolicyDao,
-      PermissionDao permissionDao,
+      PermissionStatementDao permissionStatementDao,
       GrantPermissionService grantPermissionService) {
     this.permissionPolicyDao = permissionPolicyDao;
-    this.permissionDao = permissionDao;
+    this.permissionStatementDao = permissionStatementDao;
     this.grantPermissionService = grantPermissionService;
   }
 
-  public List<Permission> loadPolicies(Collection<GrantedAuthority> authorities, String action) {
+  public List<PermissionStatement> loadPolicies(
+      Collection<GrantedAuthority> authorities, String action) {
     PropertyFilter filter = PropertyFilter.newFilter().equal("action", action);
     for (GrantedAuthority authority : authorities) {
       if (authority instanceof SimpleGrantedAuthority) {
@@ -44,6 +48,10 @@ public class PermissionPolicyService {
                 .equal("policy.grantPermissions.granteeId", code));
       }
     }
-    return permissionDao.findAll(filter);
+    return permissionStatementDao.findAll(filter);
+  }
+
+  public Page<PermissionPolicy> findPage(Pageable pageable, PropertyFilter filter) {
+    return this.permissionPolicyDao.findPage(pageable, filter);
   }
 }

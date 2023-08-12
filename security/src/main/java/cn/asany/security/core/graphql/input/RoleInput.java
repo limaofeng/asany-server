@@ -1,4 +1,4 @@
-package cn.asany.security.core.graphql.models;
+package cn.asany.security.core.graphql.input;
 
 import cn.asany.security.core.domain.Role;
 import lombok.Data;

@@ -3,11 +3,13 @@ package cn.asany.security.core.graphql;
 import cn.asany.base.common.domain.Phone;
 import cn.asany.base.common.domain.enums.PhoneNumberStatus;
 import cn.asany.base.sms.CaptchaService;
+import cn.asany.base.sms.CaptchaSource;
 import cn.asany.security.auth.utils.AuthUtils;
 import cn.asany.security.core.convert.UserConverter;
 import cn.asany.security.core.domain.User;
 import cn.asany.security.core.domain.enums.UserType;
 import cn.asany.security.core.event.RegisterSuccessEvent;
+import cn.asany.security.core.graphql.input.UserCreateInput;
 import cn.asany.security.core.graphql.input.UserUpdateInput;
 import cn.asany.security.core.service.UserService;
 import cn.asany.storage.api.FileObject;
@@ -71,12 +73,12 @@ public class UserGraphQLRootResolver implements GraphQLMutationResolver, GraphQL
 
     AuthorizationGraphQLServletContext context = environment.getContext();
 
-    //    if (!this.captchaService.validateResponseForID(
-    //        CaptchaSource.CAPTCHA_CONFIG_ID,
-    //        CaptchaSource.getSessionId(phoneNumber, CaptchaSource.LOGIN),
-    //        smsCode)) {
-    //      return null;
-    //    }
+    if (!this.captchaService.validateResponseForID(
+        CaptchaSource.CAPTCHA_CONFIG_ID,
+        CaptchaSource.getSessionId(phoneNumber, CaptchaSource.LOGIN),
+        smsCode)) {
+      return null;
+    }
 
     User user =
         User.builder()
@@ -90,7 +92,7 @@ public class UserGraphQLRootResolver implements GraphQLMutationResolver, GraphQL
 
     LoginUser loginUser = this.userService.register(user);
 
-    SimpleAuthenticationToken authentication = new SimpleAuthenticationToken(loginUser);
+    SimpleAuthenticationToken<?> authentication = new SimpleAuthenticationToken<>(loginUser);
     authentication.setDetails(context.getAuthentication().getDetails());
 
     String clientId = context.getRequest().getHeader("X-Client-ID");
@@ -109,6 +111,10 @@ public class UserGraphQLRootResolver implements GraphQLMutationResolver, GraphQL
   public User user(Long id) {
     return this.userService.get(
         ObjectUtil.defaultValue(id, () -> SpringSecurityUtils.getCurrentUser().getUid()));
+  }
+
+  public User createUser(UserCreateInput input) {
+    return null;
   }
 
   public User updateUser(Long id, UserUpdateInput input) {

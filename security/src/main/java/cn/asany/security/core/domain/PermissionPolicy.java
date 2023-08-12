@@ -36,7 +36,7 @@ public class PermissionPolicy extends BaseBusEntity {
   private String description;
 
   @OneToMany(mappedBy = "policy", fetch = FetchType.LAZY)
-  private List<Permission> permissions;
+  private List<PermissionStatement> permissionStatements;
 
   @OneToMany(mappedBy = "permissionPolicy", fetch = FetchType.LAZY)
   private List<GrantPermission> grantPermissions;

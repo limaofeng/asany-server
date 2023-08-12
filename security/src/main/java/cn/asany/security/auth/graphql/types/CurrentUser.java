@@ -53,7 +53,8 @@ public class CurrentUser extends User {
       Date lockTime,
       Date lastLoginTime,
       List<Role> roles,
-      List<UserGroup> userGroups,
+      List<Group> groups,
+      String tenantId,
       List<GrantPermission> grants) {
     super(
         id,
@@ -78,7 +79,8 @@ public class CurrentUser extends User {
         lockTime,
         lastLoginTime,
         roles,
-        userGroups,
+      groups,
+      tenantId,
         grants);
   }
 }

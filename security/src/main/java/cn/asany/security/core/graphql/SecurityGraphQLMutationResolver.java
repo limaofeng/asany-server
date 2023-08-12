@@ -1,10 +1,9 @@
 package cn.asany.security.core.graphql;
 
 import cn.asany.security.core.domain.*;
-import cn.asany.security.core.graphql.input.GrantPermissionByUserInput;
-import cn.asany.security.core.graphql.models.*;
+import cn.asany.security.core.graphql.input.*;
+import cn.asany.security.core.graphql.types.UserConnection;
 import cn.asany.security.core.service.*;
-import com.github.stuxuhai.jpinyin.PinyinException;
 import graphql.kickstart.tools.GraphQLMutationResolver;
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import java.util.List;
@@ -52,103 +51,6 @@ public class SecurityGraphQLMutationResolver
     return userService.findPage(pageable, filter).getContent();
   }
 
-  /**
-   * 新增角色
-   *
-   * @param input
-   * @return
-   */
-  public Role createRole(String organization, RoleInput input) throws PinyinException {
-    Role role = new Role();
-    BeanUtils.copyProperties(input, role);
-    //        role.setOrganization(Organization.builder().id(organization).build());
-    //    if (StringUtil.isBlank(role.getId())) {
-    //      role.setId((organization + "_" + PinyinUtils.getShort(input.getName())).toUpperCase());
-    //    }
-    //    role.setScope(RoleScope.builder().id(input.getScopes()).build());
-    //
-    // role.setRoleType(RoleType.builder().id(getRoleTypeInput(input.getRoleTypeInput())).build());
-    return roleService.save(role);
-  }
-
-  /**
-   * 更新角色
-   *
-   * @param id
-   * @param merge
-   * @param input
-   * @return
-   */
-  public Role updateRole(Long id, Boolean merge, RoleInput input) {
-    Role role = new Role();
-    //    BeanUtils.copyProperties(input, role);
-    //    role.setScope(RoleScope.builder().id(input.getScopes()).build());
-    //
-    // role.setRoleType(RoleType.builder().id(getRoleTypeInput(input.getRoleTypeInput())).build());
-    return roleService.update(id, merge, role);
-  }
-
-  // 处理分类类型
-  private String getRoleTypeInput(String roleTypeInput) {
-    //    if (StringUtils.isEmpty(roleTypeInput)) {
-    //      return RoleType.UNKNOWN;
-    //    }
-    return roleTypeInput;
-  }
-
-  /**
-   * 删除角色
-   *
-   * @param id
-   * @return
-   */
-  public Boolean removeRole(Long id) {
-    roleService.delete(id);
-    return true;
-  }
-
-  /**
-   * 新增用户
-   *
-   * @param organization
-   * @param input
-   * @return
-   */
-  public User createUser(String organization, UserInput input) {
-    User user = new User();
-    BeanUtils.copyProperties(input, user, "grants", "tel", "roles");
-    //    if (input.getTel() != null) {
-    //      user.set("tel", input.getTel());
-    //    } else {
-    //      user.set("tel", "");
-    //    }
-    //        user.setOrganization(Organization.builder().id(organization).build());
-    //        if (input.getEmployee() != null) {
-    //            user.setEmployee(Employee.builder().id(input.getEmployee()).build());
-    //        }
-    //    List<Role> roles = new ArrayList<>();
-    //    if (input.getRoles() != null) {
-    //      for (String roleid : input.getRoles()) {
-    //        roles.add(Role.builder().id(roleid).build());
-    //      }
-    //    }
-    // 后加 默认添加用户角色
-    //    roles.add(Role.builder().id("USER").build());
-
-    //    user.setRoles(roles);
-    //    user.setUserType(UserType.USER);
-    user = userService.save(user);
-    // 保存权限
-    //    if (input.getGrants() != null) {
-    //      user.setGrants(
-    //          GrantPermissionUtils.allocation(
-    //              SecurityType.user,
-    //              user.getId().toString(),
-    //              getGrantPermissionByUser(input.getGrants())));
-    //    }
-    return user;
-  }
-
   private List<GrantPermission> getGrantPermissionByUser(
       List<GrantPermissionByUserInput> grantInputs) {
     return grantInputs.stream()
@@ -160,11 +62,6 @@ public class SecurityGraphQLMutationResolver
                     //                    .resource(item.getResource())
                     .build())
         .collect(Collectors.toList());
-  }
-
-  public Boolean removeUser(Long id) {
-    userService.delete(id);
-    return true;
   }
 
   //  public RoleScope updateBusiness(String id, Boolean merge, BusinessScopeInput input) {
@@ -262,9 +159,9 @@ public class SecurityGraphQLMutationResolver
    * @param input
    * @return
    */
-  public Permission createPermission(PermissionUpdateInput input) {
-    Permission permission = new Permission();
-    BeanUtils.copyProperties(input, permission);
+  public PermissionStatement createPermission(PermissionStatementUpdateInput input) {
+    PermissionStatement permissionStatement = new PermissionStatement();
+    BeanUtils.copyProperties(input, permissionStatement);
     //    permission.setType(PermissionType.builder().id("").build());
     //    return permissionService.save(permission);
     return null;
@@ -286,9 +183,10 @@ public class SecurityGraphQLMutationResolver
    * @param input
    * @return
    */
-  public Permission updatePermission(String id, Boolean merge, PermissionUpdateInput input) {
-    Permission permission = new Permission();
-    BeanUtils.copyProperties(input, permission);
+  public PermissionStatement updatePermission(
+      String id, Boolean merge, PermissionStatementUpdateInput input) {
+    PermissionStatement permissionStatement = new PermissionStatement();
+    BeanUtils.copyProperties(input, permissionStatement);
     //    permission.setType(PermissionType.builder().id(getPermissionTypeInput("")).build());
     //    return permissionService.update(id, merge, permission);
     return null;

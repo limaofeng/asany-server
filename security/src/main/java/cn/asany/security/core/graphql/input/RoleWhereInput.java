@@ -1,4 +1,4 @@
-package cn.asany.security.core.graphql.models;
+package cn.asany.security.core.graphql.input;
 
 import cn.asany.security.core.domain.Role;
 import lombok.Data;
@@ -12,6 +12,4 @@ import org.jfantasy.graphql.inputs.WhereInput;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class RoleWhereInput extends WhereInput<RoleWhereInput, Role> {
-
-}
+public class RoleWhereInput extends WhereInput<RoleWhereInput, Role> {}

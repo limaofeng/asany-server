@@ -1,4 +1,4 @@
-package cn.asany.security.core.graphql.models;
+package cn.asany.security.core.graphql.types;
 
 import cn.asany.security.core.domain.User;
 import java.util.List;
