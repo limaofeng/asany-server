@@ -16,6 +16,7 @@ bin
 *.iws
 
 ### JRebel
+rebel.xml
 /**/resources/rebel.xml
 
 ### Build
