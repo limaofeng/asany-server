@@ -1,0 +1,25 @@
+enum RoleType {
+  CLASSIC
+  TEMPLATE
+}
+
+type RoleScopeType {
+  id: ID!
+  name: String
+  description: String
+  service: AuthorizedService
+}
+
+type RoleScope {
+  id: ID!
+  type: RoleScopeType!
+  value: String!
+}
+
+type Role {
+  id: ID!
+  type: RoleType!
+  name: String!
+  description: String
+  scopes: [RoleScope!]!
+}

@@ -1,11 +1,8 @@
-directive @fileSize(unit: String!) on FIELD_DEFINITION
 directive @fileFormat on FIELD_DEFINITION
 
 scalar JSON
-scalar Date
 scalar File
 scalar Number
-scalar OrderBy
 
 enum FileSizeUnit {
   bytes

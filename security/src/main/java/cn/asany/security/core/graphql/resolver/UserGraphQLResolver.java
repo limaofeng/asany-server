@@ -1,14 +1,7 @@
 package cn.asany.security.core.graphql.resolver;
 
-import cn.asany.base.common.SecurityScope;
-import cn.asany.base.common.SecurityType;
-import cn.asany.security.core.domain.GrantPermission;
 import cn.asany.security.core.domain.User;
-import cn.asany.security.core.service.GrantPermissionService;
 import graphql.kickstart.tools.GraphQLResolver;
-import java.util.ArrayList;
-import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -20,7 +13,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserGraphQLResolver implements GraphQLResolver<User> {
 
-  @Autowired private GrantPermissionService grantPermissionService;
+  //  @Autowired private GrantPermissionService grantPermissionService;
   //    @Autowired
   //    private EmployeeService employeeService;
 
@@ -41,17 +34,18 @@ public class UserGraphQLResolver implements GraphQLResolver<User> {
   //        return employee;
   //    }
 
-  public List<GrantPermission> permissions(User user, String resourceType, String permissionKey) {
-    List<GrantPermission> grantPermissions = new ArrayList<>();
-    if (user != null) {
-      grantPermissions.addAll(
-          grantPermissionService.getPermissions(
-              resourceType,
-              permissionKey,
-              SecurityScope.newInstance(SecurityType.user, user.getId().toString())));
-    }
-    return grantPermissions;
-  }
+  //  public List<GrantPermission> permissions(User user, String resourceType, String permissionKey)
+  // {
+  //    List<GrantPermission> grantPermissions = new ArrayList<>();
+  //    if (user != null) {
+  //      grantPermissions.addAll(
+  //          grantPermissionService.getPermissions(
+  //              resourceType,
+  //              permissionKey,
+  //              SecurityScope.newInstance(SecurityType.user, user.getId().toString())));
+  //    }
+  //    return grantPermissions;
+  //  }
 
   public String deptsNodesNames(User user) {
     //        Employee employee = user.getEmployee();

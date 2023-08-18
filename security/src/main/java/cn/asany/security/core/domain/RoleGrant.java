@@ -1,15 +1,15 @@
 package cn.asany.security.core.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.util.Date;
 import javax.persistence.*;
 import lombok.*;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
 /**
- * 业务角色
+ * 角色授权
  *
  * @author limaofeng
- * @date 2022/7/28 9:12 9:12
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -17,18 +17,25 @@ import org.jfantasy.framework.dao.BaseBusEntity;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "AUTH_ROLE_PLAY")
+@Table(name = "AUTH_ROLE_GRANT")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class RolePlay extends BaseBusEntity {
+public class RoleGrant extends BaseBusEntity {
 
   @Id
   @Column(name = "ID", length = 32)
   private String id;
   /** 对应角色 */
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "ROLE_ID", foreignKey = @ForeignKey(name = "FK_ROLE_PLAY_ROLE_ID"))
+  @JoinColumn(name = "ROLE_ID", foreignKey = @ForeignKey(name = "FK_ROLE_GRANT_ROLE_ID"))
   private Role role;
-  /** 业务ID */
-  @Column(name = "PLAYER", length = 50)
-  private String player;
+  /** 授权主体 */
+  @Embedded private Grantee grantee;
+  /** 授予日期 */
+  @Temporal(TemporalType.TIMESTAMP)
+  @Column(name = "GRANT_DATE")
+  private Date grantDate;
+  /** 过期日期 */
+  @Temporal(TemporalType.TIMESTAMP)
+  @Column(name = "EXPIRY_DATE")
+  private Date expiryDate;
 }

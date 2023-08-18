@@ -407,7 +407,7 @@ type Article {
   # 统计计数
   #    starrable(starType: ArticleStarType!): Starrable!
   # 权限设置
-  permissionStatements: Permission
+  #  permissionStatements: Permission
   createdBy: Int
   updatedBy: Int
   createdAt: Date
@@ -616,10 +616,10 @@ input ArticleUpdateInput {
   发布日期
   """
   publishedAt: String
-  """
-  授予权限
-  """
-  permissionStatements: [PermissionInput]
+  #  """
+  #  授予权限
+  #  """
+  #  permissionStatements: [PermissionInput]
   """
   附件
   """

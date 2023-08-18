@@ -5,6 +5,7 @@ import cn.asany.security.auth.service.AuthInfoService;
 import cn.asany.security.core.domain.User;
 import cn.asany.security.core.service.DefaultUserDetailsService;
 import cn.asany.security.core.service.UserService;
+import cn.asany.security.oauth.job.TokenCleanupJob;
 import graphql.kickstart.autoconfigure.tools.SchemaDirective;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -21,6 +22,8 @@ import org.jfantasy.framework.security.crypto.password.PasswordEncoder;
 import org.jfantasy.framework.security.crypto.password.PlaintextPasswordEncoder;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.graphql.context.DataLoaderRegistryCustomizer;
+import org.jfantasy.schedule.service.TaskScheduler;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
@@ -32,7 +35,9 @@ import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
-/** @author limaofeng */
+/**
+ * @author limaofeng
+ */
 @Configuration
 @EntityScan({"cn.asany.security.*.domain"})
 @ComponentScan({
@@ -47,7 +52,20 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
     basePackages = "cn.asany.security.*.dao",
     repositoryBaseClass = ComplexJpaRepository.class)
 @AutoConfigureBefore({OAuth2SecurityAutoConfiguration.class})
-public class AsanySecurityAutoConfiguration {
+public class AsanySecurityAutoConfiguration implements InitializingBean {
+
+  private final TaskScheduler taskScheduler;
+
+  public AsanySecurityAutoConfiguration(TaskScheduler taskScheduler) {
+    this.taskScheduler = taskScheduler;
+  }
+
+  @Override
+  public void afterPropertiesSet() throws Exception {
+    if (!this.taskScheduler.checkExists(TokenCleanupJob.JOBKEY_TOKEN_CLEANUP)) {
+      this.taskScheduler.addJob(TokenCleanupJob.JOBKEY_TOKEN_CLEANUP, TokenCleanupJob.class);
+    }
+  }
 
   @Bean("asany.PasswordEncoder")
   public PasswordEncoder passwordEncoder(Environment environment) {

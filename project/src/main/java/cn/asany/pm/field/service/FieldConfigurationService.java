@@ -63,7 +63,7 @@ public class FieldConfigurationService {
       return this.saveFieldValue(issue, values);
     } else {
       Boolean value = this.saveFieldValue(issue, values);
-      if (value == true) {
+      if (value) {
         // 向记录表中添加数据
         WorkflowSchedule workflowSchedule = new WorkflowSchedule();
         workflowSchedule.setProject(issue.getProject());

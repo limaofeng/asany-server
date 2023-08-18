@@ -6,11 +6,16 @@ import cn.asany.email.mailbox.domain.JamesMailboxAnnotation;
 import java.util.List;
 import java.util.Optional;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class MailboxAnnotationService {
 
-  @Autowired private MailboxAnnotationDao mailboxAnnotationDao;
+  private final MailboxAnnotationDao mailboxAnnotationDao;
+
+  public MailboxAnnotationService(MailboxAnnotationDao mailboxAnnotationDao) {
+    this.mailboxAnnotationDao = mailboxAnnotationDao;
+  }
 
   public List<JamesMailboxAnnotation> retrieveAllAnnotations(long mailboxId) {
     return this.mailboxAnnotationDao.findAll(

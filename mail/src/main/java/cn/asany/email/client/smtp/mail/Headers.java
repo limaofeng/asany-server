@@ -111,7 +111,7 @@ public final class Headers {
   public long byteCount() {
     // Each header name has 2 bytes of overhead for ': ' and every header value has 2 bytes of
     // overhead for '\r\n'.
-    long result = namesAndValues.length * 2;
+    long result = namesAndValues.length * 2L;
 
     for (int i = 0, size = namesAndValues.length; i < size; i++) {
       result += namesAndValues[i].length();

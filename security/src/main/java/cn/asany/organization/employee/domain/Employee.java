@@ -11,7 +11,6 @@ import cn.asany.organization.relationship.domain.EmployeePosition;
 import cn.asany.security.core.domain.User;
 import cn.asany.security.core.domain.enums.Sex;
 import cn.asany.storage.api.FileObject;
-import cn.asany.storage.api.converter.FileObjectConverter;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.ArrayList;
@@ -20,6 +19,7 @@ import java.util.List;
 import javax.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.framework.dao.hibernate.converter.StringArrayConverter;
 
@@ -54,7 +54,7 @@ public class Employee extends BaseBusEntity implements Ownership {
   @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
   /** 头像 */
-  @Convert(converter = FileObjectConverter.class)
+  @Type(type = "file")
   @Column(name = "avatar", length = 500)
   private FileObject avatar;
   /** 工号 */

@@ -1,5 +1,6 @@
 package cn.asany.security.core.domain.enums;
 
+import lombok.Getter;
 import org.jfantasy.framework.error.ValidationException;
 
 /**
@@ -7,6 +8,7 @@ import org.jfantasy.framework.error.ValidationException;
  *
  * @author limaofeng
  */
+@Getter
 public enum GranteeType {
   /** 用户 */
   USER("user"),
@@ -32,9 +34,5 @@ public enum GranteeType {
       return ROLE;
     }
     throw new ValidationException("被授权者类型格式错误：" + value);
-  }
-
-  public String getName() {
-    return name;
   }
 }

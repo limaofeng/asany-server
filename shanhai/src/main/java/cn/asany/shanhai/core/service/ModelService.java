@@ -8,7 +8,6 @@ import cn.asany.shanhai.core.domain.enums.ModelType;
 import cn.asany.shanhai.core.event.*;
 import cn.asany.shanhai.core.support.model.features.MasterModelFeature;
 import cn.asany.shanhai.core.utils.DuplicateFieldException;
-import cn.asany.shanhai.core.utils.JdbcUtil;
 import cn.asany.shanhai.core.utils.ModelUtils;
 import cn.asany.shanhai.core.utils.TypeNotFoundException;
 import cn.asany.shanhai.gateway.domain.ModelGroupItem;
@@ -18,6 +17,7 @@ import javax.persistence.EntityManager;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
+import org.jfantasy.framework.dao.util.JdbcUtils;
 import org.jfantasy.framework.error.ValidationException;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.common.StringUtil;
@@ -267,7 +267,7 @@ public class ModelService {
     }
 
     if (!tableName.equals(newTableName)) {
-      JdbcUtil.renameTable(tableName, newTableName);
+      JdbcUtils.renameTable(tableName, newTableName);
     }
 
     publisher.publishEvent(new UpdateModelEvent(model));
@@ -626,7 +626,7 @@ public class ModelService {
     }
 
     if (!oldColumnName.equals(newColumnName)) {
-      JdbcUtil.renameColumn(
+      JdbcUtils.renameColumn(
           model.getMetadata().getDatabaseTableName(), oldColumnName, newColumnName);
     }
 

@@ -1,15 +1,14 @@
 package cn.asany.cms.article.domain;
 
 import cn.asany.storage.api.FileObject;
-import cn.asany.storage.api.converter.FileObjectConverter;
 import java.io.Serializable;
 import javax.persistence.Column;
-import javax.persistence.Convert;
 import javax.persistence.Embeddable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Type;
 
 /**
  * 网页元数据 用于网页 SEO 优化
@@ -22,7 +21,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ArticleMetadata implements Serializable {
-  @Convert(converter = FileObjectConverter.class)
+  @Type(type = "file")
   @Column(name = "METADATA_IMAGE", length = 500)
   private FileObject image;
 

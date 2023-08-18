@@ -30,7 +30,6 @@ schema.graphql
 # local env
 .env
 
-
 # laboratory
 storage-preview
 

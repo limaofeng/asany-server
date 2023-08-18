@@ -4,6 +4,8 @@ import cn.asany.system.TestApplication;
 import cn.asany.system.domain.Dict;
 import cn.asany.system.domain.DictType;
 import com.fasterxml.jackson.core.type.TypeReference;
+import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
@@ -48,12 +50,13 @@ class DictServiceTest {
   }
 
   @Test
-  void importPcas() {
+  void importPcas() throws IOException {
     // InputStream input = new URL(url).openStream();
 
     String body =
-        FileUtil.readFile(
-            "/Users/limaofeng/Workspace/whir/kuafu/base/src/test/resources/pcas-code.json");
+        FileUtil.readString(
+            Paths.get(
+                "/Users/limaofeng/Workspace/whir/kuafu/base/src/test/resources/pcas-code.json"));
 
     List<Dict> dicts = JSON.deserialize(body, new TypeReference<List<Dict>>() {});
 

@@ -7,7 +7,6 @@ import cn.asany.security.core.service.*;
 import graphql.kickstart.tools.GraphQLMutationResolver;
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.jfantasy.framework.dao.LimitPageRequest;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.util.common.ObjectUtil;
@@ -31,9 +30,9 @@ public class SecurityGraphQLMutationResolver
 
   @Autowired private RoleService roleService;
   @Autowired private UserService userService;
-  @Autowired private RoleScopeService roleScopeService;
+  @Autowired private RoleScopeTypeService roleScopeTypeService;
   @Autowired private PermissionService permissionService;
-  @Autowired private GrantPermissionService grantPermissionService;
+  //  @Autowired private GrantPermissionService grantPermissionService;
 
   /** 查询所有用户 - 分页 */
   public UserConnection usersConnection(
@@ -51,18 +50,18 @@ public class SecurityGraphQLMutationResolver
     return userService.findPage(pageable, filter).getContent();
   }
 
-  private List<GrantPermission> getGrantPermissionByUser(
-      List<GrantPermissionByUserInput> grantInputs) {
-    return grantInputs.stream()
-        .map(
-            item ->
-                GrantPermission.builder()
-                    //
-                    // .permission(Permission.builder().id(item.getPermission()).build())
-                    //                    .resource(item.getResource())
-                    .build())
-        .collect(Collectors.toList());
-  }
+  //  private List<GrantPermission> getGrantPermissionByUser(
+  //      List<GrantPermissionByUserInput> grantInputs) {
+  //    return grantInputs.stream()
+  //        .map(
+  //            item ->
+  //                GrantPermission.builder()
+  //                    //
+  //                    // .permission(Permission.builder().id(item.getPermission()).build())
+  //                    //                    .resource(item.getResource())
+  //                    .build())
+  //        .collect(Collectors.toList());
+  //  }
 
   //  public RoleScope updateBusiness(String id, Boolean merge, BusinessScopeInput input) {
   //    RoleScope roleScope = new RoleScope();
@@ -211,7 +210,7 @@ public class SecurityGraphQLMutationResolver
    * @return
    */
   public Boolean assignPermissions(String permissionIds, String entityTypeIds) {
-    grantPermissionService.assignPermissions(permissionIds, entityTypeIds);
+    //    grantPermissionService.assignPermissions(permissionIds, entityTypeIds);
     return true;
   }
 

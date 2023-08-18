@@ -5,13 +5,16 @@ import cn.asany.cms.article.domain.enums.CommentTargetType;
 import cn.asany.cms.article.graphql.input.CommentInput;
 import cn.asany.cms.article.service.CommentService;
 import graphql.kickstart.tools.GraphQLMutationResolver;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class CommentGraphQLMutationResolver implements GraphQLMutationResolver {
 
-  @Autowired private CommentService commentService;
+  private final CommentService commentService;
+
+  public CommentGraphQLMutationResolver(CommentService commentService) {
+    this.commentService = commentService;
+  }
 
   public Comment createComment(CommentTargetType targetType, String targetId, CommentInput input) {
     return this.commentService.addComment(targetType, targetId, input);

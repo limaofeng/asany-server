@@ -110,7 +110,7 @@ class UserServiceTest {
       User user = userOptional.get();
       UserRegisterRequestBody.UserRegisterRequestBodyBuilder builder =
           UserRegisterRequestBody.builder()
-              .addUser(String.valueOf(user.getId()), user.getNickName(), user.getAvatar().getPath())
+              .addUser(String.valueOf(user.getId()), user.getNickname(), user.getAvatar().getPath())
               .secret("tuoyun");
 
       userService.userRegister(builder.build());

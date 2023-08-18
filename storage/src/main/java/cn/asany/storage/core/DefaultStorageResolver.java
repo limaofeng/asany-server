@@ -19,12 +19,12 @@ import org.springframework.transaction.annotation.Transactional;
  */
 public class DefaultStorageResolver implements StorageResolver {
 
-  @Autowired private StorageService storageService;
+  private StorageService storageService;
 
   private final Map<String, Storage> storages = new HashMap<>();
-  private final List<StorageBuilder<?,IStorageConfig>> builders;
+  private final List<StorageBuilder<?, IStorageConfig>> builders;
 
-  public DefaultStorageResolver(List<StorageBuilder<?,IStorageConfig>> builders) {
+  public DefaultStorageResolver(List<StorageBuilder<?, IStorageConfig>> builders) {
     this.builders = builders;
   }
 
@@ -40,7 +40,7 @@ public class DefaultStorageResolver implements StorageResolver {
 
   @Override
   public Storage resolve(IStorageConfig config) {
-    for (StorageBuilder<?,IStorageConfig> builder : builders) {
+    for (StorageBuilder<?, IStorageConfig> builder : builders) {
       if (builder.supports(config.getClass())) {
         Storage storage = builder.build(config);
         if (storage != null) {
@@ -50,5 +50,9 @@ public class DefaultStorageResolver implements StorageResolver {
       }
     }
     throw new FileStoreException("不能创建 IStorage For " + JSON.serialize(config));
+  }
+
+  public void setStorageService(@Autowired StorageService storageService) {
+    this.storageService = storageService;
   }
 }

@@ -2,11 +2,11 @@ package cn.asany.cms.article.domain;
 
 import cn.asany.cms.article.domain.enums.BackgroundType;
 import cn.asany.storage.api.FileObject;
-import cn.asany.storage.api.converter.FileObjectConverter;
 import javax.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
 /**
@@ -49,7 +49,7 @@ public class Banner extends BaseBusEntity {
   private BackgroundType backgroundType;
   /** 媒介 */
   @Column(name = "BACKGROUND", columnDefinition = "TINYTEXT")
-  @Convert(converter = FileObjectConverter.class)
+  @Type(type = "file")
   private FileObject background;
   /** 地址 */
   @Column(name = "URL", length = 100)

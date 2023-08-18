@@ -3,9 +3,8 @@ dependencies {
     implementation project(":storage-api")
     implementation project(":security-api")
     implementation project(":openapi")
-    implementation("org.springframework.boot:spring-boot-starter-data-redis") {
-        exclude group: 'io.lettuce', module: 'lettuce-core'
-    }
+    implementation "org.springframework.boot:spring-boot-starter-data-redis"
+    testImplementation project(":sms")
 }
 
 repositories {

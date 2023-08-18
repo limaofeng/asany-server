@@ -6,7 +6,6 @@ import cn.asany.cms.body.domain.Content;
 import cn.asany.cms.permission.domain.Permission;
 import cn.asany.organization.core.domain.Organization;
 import cn.asany.storage.api.FileObject;
-import cn.asany.storage.api.converter.FileObjectConverter;
 import cn.asany.storage.api.converter.FileObjectsConverter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.Date;
@@ -81,7 +80,7 @@ public class Article extends BaseBusEntity {
   private String summary;
   /** 文章图片 */
   @Column(name = "IMAGE", columnDefinition = "JSON")
-  @Convert(converter = FileObjectConverter.class)
+  @Type(type = "file")
   private FileObject image;
   /** 附件 */
   @Column(name = "ATTACHMENTS", columnDefinition = "JSON")

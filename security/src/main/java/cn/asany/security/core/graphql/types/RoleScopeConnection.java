@@ -1,6 +1,6 @@
 package cn.asany.security.core.graphql.types;
 
-import cn.asany.security.core.domain.RoleSpace;
+import cn.asany.security.core.domain.TrustedEntityType;
 import java.util.List;
 import lombok.*;
 import org.jfantasy.graphql.Edge;
@@ -9,7 +9,7 @@ import org.jfantasy.graphql.types.BaseConnection;
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class RoleScopeConnection
-    extends BaseConnection<RoleScopeConnection.RoleScopeEdge, RoleSpace> {
+    extends BaseConnection<RoleScopeConnection.RoleScopeEdge, TrustedEntityType> {
 
   private List<RoleScopeEdge> edges;
 
@@ -17,8 +17,8 @@ public class RoleScopeConnection
   @Builder
   @NoArgsConstructor
   @AllArgsConstructor
-  public static class RoleScopeEdge implements Edge<RoleSpace> {
+  public static class RoleScopeEdge implements Edge<TrustedEntityType> {
     private String cursor;
-    private RoleSpace node;
+    private TrustedEntityType node;
   }
 }

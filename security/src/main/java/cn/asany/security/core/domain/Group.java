@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.framework.dao.Tenantable;
 
@@ -26,32 +27,35 @@ import org.jfantasy.framework.dao.Tenantable;
     uniqueConstraints = {
       @UniqueConstraint(
           name = "UK_AUTH_GROUP",
-          columnNames = {"ID", "TENANT_ID"})
+          columnNames = {"NAME", "TENANT_ID"})
     })
-@IdClass(GroupPrimaryKey.class)
 @JsonIgnoreProperties({
   "hibernate_lazy_initializer",
   "handler",
-  "menus",
-  "permissions",
-  "roles",
-  "permissions"
 })
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Group extends BaseBusEntity implements Tenantable {
-  @Id private String id;
-  /** 租户ID */
-  @Id private String tenantId;
-  /** 用户组名称 */
-  @Column(name = "NAME")
+  @Id
+  @Column(name = "ID")
+  @GeneratedValue(generator = "fantasy-sequence")
+  @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+  private Long id;
+  /** 名称 */
+  @Column(name = "NAME", length = 50)
   private String name;
-  /** 是否启用 */
-  @Column(name = "ENABLED")
-  private Boolean enabled;
+  /** 显示名称 */
+  @Column(name = "DISPLAY_NAME", length = 50)
+  private String displayName;
   /** 描述 */
-  @Column(name = "DESCRIPTION")
+  @Column(name = "DESCRIPTION", length = 250)
   private String description;
+  /** 租户ID */
+  @Column(name = "TENANT_ID", length = 24, nullable = false)
+  private String tenantId;
   /** 组内成员 */
-  @OneToMany(mappedBy = "userGroup", fetch = FetchType.LAZY)
+  @OneToMany(
+      mappedBy = "group",
+      fetch = FetchType.LAZY,
+      cascade = {CascadeType.REMOVE})
   private List<GroupMember> members;
 }

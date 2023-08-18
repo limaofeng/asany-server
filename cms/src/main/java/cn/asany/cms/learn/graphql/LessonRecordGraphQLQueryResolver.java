@@ -7,7 +7,6 @@ import graphql.kickstart.tools.GraphQLQueryResolver;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.graphql.util.Kit;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
@@ -15,12 +14,15 @@ import org.springframework.stereotype.Component;
 @Component
 public class LessonRecordGraphQLQueryResolver implements GraphQLQueryResolver {
 
-  @Autowired private LessonRecordService lessonRecordService;
+  private final LessonRecordService lessonRecordService;
+
+  public LessonRecordGraphQLQueryResolver(LessonRecordService lessonRecordService) {
+    this.lessonRecordService = lessonRecordService;
+  }
 
   public LessonRecordConnection lessonRecords(
-    LessonRecordWhereInput where, int page, int pageSize, Sort orderBy) {
-    PropertyFilter filter =
-        ObjectUtil.defaultValue(where, new LessonRecordWhereInput()).toFilter();
+      LessonRecordWhereInput where, int page, int pageSize, Sort orderBy) {
+    PropertyFilter filter = ObjectUtil.defaultValue(where, new LessonRecordWhereInput()).toFilter();
     return Kit.connection(
         lessonRecordService.findPage(PageRequest.of(page - 1, pageSize, orderBy), filter),
         LessonRecordConnection.class);

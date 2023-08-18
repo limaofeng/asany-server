@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class FileMetadata {
   /** 文件夹属性 - 允许的扩展名 */
-  @Column(name = "ALLOWED_EXTENSIONS")
+  @Column(name = "ALLOWED_EXTENSIONS", length = 64)
   private String allowedExtensions;
   /** 文件夹属性 - 大小限制 */
   @Column(name = "LIMITS")

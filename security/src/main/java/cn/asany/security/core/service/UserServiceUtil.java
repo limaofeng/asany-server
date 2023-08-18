@@ -1,7 +1,5 @@
 package cn.asany.security.core.service;
 
-import cn.asany.security.core.dao.GrantPermissionDao;
-import cn.asany.security.core.domain.Role;
 import cn.asany.security.core.domain.User;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -14,18 +12,19 @@ import org.springframework.util.CollectionUtils;
  * @description: 处理一些用户逻辑
  * @create: 2020/6/16 15:22
  */
+@Deprecated
 public class UserServiceUtil {
 
   //    private static DepartmentDao departmentDao;
-  private static GrantPermissionDao grantPermissionDao;
+  //  private static GrantPermissionDao grantPermissionDao;
 
   //    public static void setDepartmentDao(DepartmentDao departmentDao) {
   //        UserServiceUtil.departmentDao = departmentDao;
   //    }
 
-  public static void setGrantPermissionDao(GrantPermissionDao grantPermissionDao) {
-    UserServiceUtil.grantPermissionDao = grantPermissionDao;
-  }
+  //  public static void setGrantPermissionDao(GrantPermissionDao grantPermissionDao) {
+  //    UserServiceUtil.grantPermissionDao = grantPermissionDao;
+  //  }
 
   private UserServiceUtil() {
     throw new IllegalStateException("UserServiceUtil class");
@@ -223,16 +222,15 @@ public class UserServiceUtil {
     return roleCodes;
   }
 
-  // 用户自己的角色
+  // TODO: 用户自己的角色
   private static Set<String> getUserSelfRoleCodes(User user) {
     Set<String> roleCodes = new HashSet<>();
-    List<Role> roles = user.getRoles();
-    if (roles != null) {
-      for (Role role : roles) {
-        roleCodes.add(role.getCode());
-      }
-    }
-    // 不使用lamda方式，避免代码检查问题
+    //    List<Role> roles = user.getRoles();
+    //    if (roles != null) {
+    //      for (Role role : roles) {
+    //        roleCodes.add(role.getName());
+    //      }
+    //    }
     return roleCodes;
   }
 

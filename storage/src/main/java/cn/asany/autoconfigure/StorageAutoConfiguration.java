@@ -41,6 +41,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
     repositoryBaseClass = ComplexJpaRepository.class)
 public class StorageAutoConfiguration {
 
+  public void init() {}
+
   @Bean
   public GraphQLScalarType uploadScalarDefine() {
     return ApolloScalars.Upload;
@@ -61,7 +63,7 @@ public class StorageAutoConfiguration {
   }
 
   @Bean
-  public StorageResolver storageResolver(List<StorageBuilder<?,IStorageConfig>> builders) {
+  public StorageResolver storageResolver(List<StorageBuilder<?, IStorageConfig>> builders) {
     return new DefaultStorageResolver(builders);
   }
 

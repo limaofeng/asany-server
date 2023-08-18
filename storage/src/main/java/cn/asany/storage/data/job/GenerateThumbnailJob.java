@@ -6,6 +6,14 @@ import cn.asany.storage.data.domain.FileDetail;
 import cn.asany.storage.data.domain.Thumbnail;
 import cn.asany.storage.data.service.FileService;
 import cn.asany.storage.data.service.ThumbnailService;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.jfantasy.framework.util.FFmpeg;
@@ -18,35 +26,31 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.springframework.cache.CacheManager;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * 生成缩略图
+ *
  * @author limaofeng
  */
 @Slf4j
 public class GenerateThumbnailJob implements Job {
 
   private final FileService fileService;
-  private final  StorageResolver storageResolver;
+  private final StorageResolver storageResolver;
   private final ThumbnailService thumbnailService;
   private final CacheManager cacheManager;
 
-    public GenerateThumbnailJob(FileService fileService, StorageResolver storageResolver, ThumbnailService thumbnailService, CacheManager cacheManager) {
-        this.fileService = fileService;
-        this.storageResolver = storageResolver;
-        this.thumbnailService = thumbnailService;
-        this.cacheManager = cacheManager;
-    }
+  public GenerateThumbnailJob(
+      FileService fileService,
+      StorageResolver storageResolver,
+      ThumbnailService thumbnailService,
+      CacheManager cacheManager) {
+    this.fileService = fileService;
+    this.storageResolver = storageResolver;
+    this.thumbnailService = thumbnailService;
+    this.cacheManager = cacheManager;
+  }
 
-    @SneakyThrows({Exception.class})
+  @SneakyThrows({Exception.class})
   @Override
   public void execute(JobExecutionContext context) {
     JobDataMap data = context.getMergedJobDataMap();
@@ -116,9 +120,9 @@ public class GenerateThumbnailJob implements Job {
     } catch (IOException e) {
       throw new JobExecutionException(e.getMessage(), e);
     } finally {
-        for(Path temp1 : temps){
-            FileUtil.rm(temp1);
-        }
+      for (Path temp1 : temps) {
+        FileUtil.rm(temp1);
+      }
     }
   }
 }

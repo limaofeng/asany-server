@@ -1,6 +1,15 @@
+"""
+日期格式化
+"""
 directive @dateFormat on FIELD_DEFINITION
-directive @dict on FIELD_DEFINITION
-directive @fileObjectFormat on FIELD_DEFINITION
+"""
+数字格式化
+"""
+directive @numberFormat on FIELD_DEFINITION
+"""
+文件大小格式化
+"""
+directive @fileSize(unit: String!) on FIELD_DEFINITION
 
 enum UpdateMode {
   ADD
@@ -93,3 +102,7 @@ interface BaseEntity {
   """
   updatedAt: Date @dateFormat
 }
+
+scalar Date
+scalar OrderBy
+scalar BigDecimal

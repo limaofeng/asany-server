@@ -1,0 +1,13 @@
+policies:
+  - name: AdministratorAccess
+    description: 管理资源的权限
+    statements:
+      - effect: Allow
+        action: '*'
+        resource: '*'
+  - name: ACFullAccess
+    description: 管理访问控制的权限，即管理用户以及授权的权限
+    statements:
+      - effect: Allow
+        action: ac:*
+        resource: '*'

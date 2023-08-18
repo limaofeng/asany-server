@@ -11,8 +11,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserUpdateInput {
-  /** 姓名 */
-  private String name;
+  /** 昵称 */
+  private String nickname;
   /** 头像 */
   private FileObject avatar;
   /** 电话 */

@@ -151,4 +151,8 @@ public class AccessTokenService {
     Optional<AccessToken> accessToken = getAccessToken(token);
     accessToken.ifPresent(this.accessTokenDao::delete);
   }
+
+  public void cleanupExpiredToken(String tokenValue) {
+    delete(tokenValue);
+  }
 }

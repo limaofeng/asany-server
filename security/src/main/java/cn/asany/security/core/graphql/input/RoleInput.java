@@ -13,7 +13,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class RoleInput extends Role {
 
-  private String scopes;
+  //  private String scopes;
 
   private String roleTypeInput;
 }

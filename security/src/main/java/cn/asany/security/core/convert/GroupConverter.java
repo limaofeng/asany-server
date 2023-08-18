@@ -14,11 +14,11 @@ import org.mapstruct.ReportingPolicy;
  * @author limaofeng
  */
 @Mapper(
-  componentModel = "spring",
-  builder = @Builder,
-  unmappedTargetPolicy = ReportingPolicy.IGNORE,
-  nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
-public interface UserGroupConverter {
+    componentModel = "spring",
+    builder = @Builder,
+    unmappedTargetPolicy = ReportingPolicy.IGNORE,
+    nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
+public interface GroupConverter {
 
   /**
    * 用户组
@@ -26,7 +26,13 @@ public interface UserGroupConverter {
    * @param input 输入对象
    * @return UserGroup
    */
-  Group toUserGroup(GroupUpdateInput input);
+  Group toGroup(GroupUpdateInput input);
 
-  Group toUserGroup(GroupCreateInput input);
+  /**
+   * 将 GroupCreateInput 转换为 用户组
+   *
+   * @param input GroupCreateInput
+   * @return Group
+   */
+  Group toGroup(GroupCreateInput input);
 }

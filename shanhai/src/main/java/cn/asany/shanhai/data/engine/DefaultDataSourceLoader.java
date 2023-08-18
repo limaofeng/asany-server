@@ -11,9 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 public class DefaultDataSourceLoader implements IDataSourceLoader {
 
-  private Map<String, IDataSourceBuilder> builders = new HashMap<>();
+  private final Map<String, IDataSourceBuilder<IDataSourceOptions>> builders = new HashMap<>();
 
-  @Autowired private DataSourceService dataSourceService;
+  private DataSourceService dataSourceService;
 
   @Override
   public List<String> getTypes() {
@@ -21,7 +21,7 @@ public class DefaultDataSourceLoader implements IDataSourceLoader {
   }
 
   @Override
-  public void addBuilder(String type, IDataSourceBuilder builder) {
+  public void addBuilder(String type, IDataSourceBuilder<IDataSourceOptions> builder) {
     builders.put(type, builder);
   }
 
@@ -29,12 +29,16 @@ public class DefaultDataSourceLoader implements IDataSourceLoader {
   public IDataSource load(Long id) {
     DataSourceConfig config = dataSourceService.getConfig(id);
     IDataSourceBuilder<IDataSourceOptions> builder = this.builders.get(config.getType());
-    Class optionsClass =
+    Class<IDataSourceOptions> optionsClass =
         ClassUtil.getInterfaceGenricType(builder.getClass(), IDataSourceBuilder.class, 0);
     return builder.build(
         config.getId().toString(),
         config.getName(),
         config.getDescription(),
         config.getOptions(optionsClass));
+  }
+
+  public void setDataSourceService(@Autowired DataSourceService dataSourceService) {
+    this.dataSourceService = dataSourceService;
   }
 }

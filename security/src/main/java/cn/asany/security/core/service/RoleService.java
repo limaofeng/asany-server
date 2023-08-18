@@ -1,21 +1,21 @@
 package cn.asany.security.core.service;
 
-import cn.asany.security.core.dao.GrantPermissionDao;
 import cn.asany.security.core.dao.PermissionStatementDao;
 import cn.asany.security.core.dao.RoleDao;
+import cn.asany.security.core.dao.RoleGrantDao;
 import cn.asany.security.core.domain.PermissionStatement;
 import cn.asany.security.core.domain.Role;
+import cn.asany.security.core.domain.enums.GranteeType;
 import cn.asany.security.core.domain.enums.RoleType;
 import cn.asany.security.core.exception.ValidDataException;
 import cn.asany.security.core.graphql.enums.RoleAssignEntityTypeEnum;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
+import org.jfantasy.framework.spring.SpringBeanUtils;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,11 +25,16 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 public class RoleService {
+
   @Autowired private final RoleDao roleDao;
 
-  @Autowired private GrantPermissionDao grantPermissionDao;
+  //  @Autowired private GrantPermissionDao grantPermissionDao;
+
+  @Autowired private RoleGrantDao roleGrantDao;
 
   @Autowired private PermissionStatementDao permissionStatementDao;
+
+  private static final String CACHE_KEY = "ac::role";
 
   @Autowired
   public RoleService(RoleDao roleDao) {
@@ -37,7 +42,7 @@ public class RoleService {
   }
 
   public List<Role> getAll() {
-    return roleDao.findAll(Example.of(Role.builder().enabled(true).build()));
+    return roleDao.findAll(Example.of(Role.builder().build()));
   }
 
   public Page<Role> findPage(Pageable pageable, PropertyFilter filter) {
@@ -45,7 +50,6 @@ public class RoleService {
   }
 
   public Role save(Role role) {
-    role.setEnabled(ObjectUtil.defaultValue(role.getEnabled(), true));
     role.setType(ObjectUtil.defaultValue(role.getType(), RoleType.CLASSIC));
     return roleDao.save(role);
   }
@@ -58,6 +62,7 @@ public class RoleService {
     return this.roleDao.save(role);
   }
 
+  @Cacheable(key = "'id=' + #p0", value = CACHE_KEY)
   public Optional<Role> findById(Long id) {
     return this.roleDao.findById(id);
   }
@@ -219,5 +224,23 @@ public class RoleService {
       //                    .securityType(SecurityType.role)
       //                    .value(roleId).build());
     }
+  }
+
+  public List<Role> findAllByUser(Long userId) {
+    Set<Long> roleIds =
+        this.roleGrantDao
+            .findAll(
+                PropertyFilter.newFilter()
+                    .equal("grantee.type", GranteeType.USER)
+                    .equal("grantee.value", String.valueOf(userId)))
+            .stream()
+            .map(item -> item.getRole().getId())
+            .collect(Collectors.toSet());
+    RoleService self = SpringBeanUtils.getBean(RoleService.class);
+    return roleIds.stream()
+        .map(self::findById)
+        .filter(Optional::isPresent)
+        .map(Optional::get)
+        .collect(Collectors.toList());
   }
 }

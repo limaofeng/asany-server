@@ -8,20 +8,24 @@ enum PermissionPolicyEffect {
   Deny
 }
 
-type Permission {
-  id: ID
+type PermissionStatement {
+  id: ID!
   """
   名称
   """
-  action: String
+  action: [String!]!
   """
   描述
   """
-  effect: PermissionPolicyEffect
+  effect: PermissionPolicyEffect!
   """
   被授权的资源
   """
-  resources: [String]
+  resource: [String!]!
+}
+
+type Permission {
+  id: ID!
 }
 
 type PermissionConnection {

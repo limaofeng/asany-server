@@ -3,24 +3,15 @@ package cn.asany.security.core.graphql;
 import cn.asany.security.core.domain.*;
 import cn.asany.security.core.graphql.enums.ResultTypeScope;
 import cn.asany.security.core.graphql.input.*;
-import cn.asany.security.core.graphql.types.PermissionConnection;
 import cn.asany.security.core.graphql.types.SecurityScopeObject;
-import cn.asany.security.core.graphql.types.UserConnection;
 import cn.asany.security.core.service.PermissionService;
-import cn.asany.security.core.service.RoleScopeService;
 import cn.asany.security.core.service.RoleService;
 import cn.asany.security.core.service.UserService;
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import org.apache.commons.lang3.ObjectUtils;
-import org.jfantasy.framework.util.common.ObjectUtil;
-import org.jfantasy.graphql.util.Kit;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 /**
@@ -47,17 +38,10 @@ public class SecurityGraphQLQueryResolver implements GraphQLQueryResolver {
   //    @Autowired
   //    private GetObjectByID byID;
 
-  @Autowired private RoleScopeService roleScopeService;
+  //  @Autowired private RoleScopeService roleScopeService;
 
   public List<Role> roles(String organization, String scope) {
     return new ArrayList<>(); // this.roleService.getAllByOrg(organization,RoleScope.builder().id(scope).build());
-  }
-
-  /** 查询所有用户,带条件查询 */
-  public UserConnection users(UserWhereInput where, int page, int pageSize, Sort orderBy) {
-    Pageable pageable = PageRequest.of(page - 1, pageSize, orderBy);
-    where = ObjectUtil.defaultValue(where, new UserWhereInput());
-    return Kit.connection(userService.findPage(pageable, where.toFilter()), UserConnection.class);
   }
 
   public List<SecurityScopeObject> securityScopes(
@@ -175,39 +159,31 @@ public class SecurityGraphQLQueryResolver implements GraphQLQueryResolver {
   //        return securityService.scopesAnalysis(ids);
   //    }
 
-  public List<RoleSpace> roleScopes(BusinessWhereInput where) {
-    return roleScopeService.findAll(where.toFilter());
-  }
-
-  public RoleSpace roleScope(String id) {
-    return roleScopeService.get(id);
-  }
-
-  /** 查询权限分类 */
-  public PermissionConnection permissions(
-      PermissionWhereInput where, int page, int pageSize, Sort orderBy) {
-    Pageable pageable = PageRequest.of(page - 1, pageSize, orderBy);
-    return Kit.connection(
-        permissionService.findPage(pageable, where.toFilter()), PermissionConnection.class);
-  }
+  //  public List<TrustedEntityType> roleScopes(BusinessWhereInput where) {
+  //    return roleScopeService.findAll(where.toFilter());
+  //  }
+  //
+  //  public TrustedEntityType roleScope(String id) {
+  //    return roleScopeService.get(id);
+  //  }
 
   /** 查询用户是否有指定的权限 */
   public String userPermissionsStatus(long userId, String permissions) {
     return userService.checkUserPermissions(userId, permissions);
   }
 
-  /**
-   * 查询权限详情
-   *
-   * @param id
-   * @return
-   */
-  public List<PermissionStatement> permission(String id, String resourceId) {
-    if (ObjectUtils.isEmpty(resourceId)) {
-      return new ArrayList<PermissionStatement>();
-    }
-    return null; // permissionService.permission(id, resourceId);
-  }
+  //  /**
+  //   * 查询权限详情
+  //   *
+  //   * @param id
+  //   * @return
+  //   */
+  //  public List<PermissionStatement> permission(String id, String resourceId) {
+  //    if (ObjectUtils.isEmpty(resourceId)) {
+  //      return new ArrayList<PermissionStatement>();
+  //    }
+  //    return null; // permissionService.permission(id, resourceId);
+  //  }
 
   /**
    * 根据目标类型查询对应的属性

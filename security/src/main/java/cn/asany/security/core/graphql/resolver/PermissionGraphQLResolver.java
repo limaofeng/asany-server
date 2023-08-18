@@ -1,13 +1,10 @@
 package cn.asany.security.core.graphql.resolver;
 
-import cn.asany.security.core.domain.GrantPermission;
 import cn.asany.security.core.domain.PermissionStatement;
 import cn.asany.security.core.graphql.types.SecurityScopeObject;
-import cn.asany.security.core.service.GrantPermissionService;
 import graphql.kickstart.tools.GraphQLResolver;
 import java.util.ArrayList;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -19,7 +16,7 @@ import org.springframework.stereotype.Component;
 public class PermissionGraphQLResolver implements GraphQLResolver<PermissionStatement> {
   //    @Autowired
   //    private SecurityService securityService;
-  @Autowired private GrantPermissionService grantPermissionService;
+  //  @Autowired private GrantPermissionService grantPermissionService;
 
   public List<SecurityScopeObject> grants(PermissionStatement permissionStatement) {
     //    if (ObjectUtils.isEmpty(permission.getGrants())) {
@@ -31,9 +28,9 @@ public class PermissionGraphQLResolver implements GraphQLResolver<PermissionStat
     // item.getValue())).collect(Collectors.toList()), null);
   }
 
-  public List<GrantPermission> grantPermissions(PermissionStatement permissionStatement) {
-    //    List<GrantPermission> list =
-    //        grantPermissionService.getGrantPermissionsByPermissionId(permission.getId());
-    return null;
-  }
+  //  public List<GrantPermission> grantPermissions(PermissionStatement permissionStatement) {
+  //    //    List<GrantPermission> list =
+  //    //        grantPermissionService.getGrantPermissionsByPermissionId(permission.getId());
+  //    return null;
+  //  }
 }

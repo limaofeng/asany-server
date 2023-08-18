@@ -1,9 +1,6 @@
-schema: schema.graphql
-#projects:
-#  boot:
-#    include:
-#      - src/**/*.graphqls
-#      - /Users/limaofeng/Workspace/framework/graphql/src/main/resources/schema.graphqls
+schema:
+  - ./boot/src/test/resources/graphql/schema.graphqls
+  - '**/main/resources/**/*.graphqls'
 extensions:
   endpoints:
     Gatsby GraphQL Endpoint:

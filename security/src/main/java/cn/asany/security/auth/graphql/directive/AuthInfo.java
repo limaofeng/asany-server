@@ -1,22 +1,20 @@
 package cn.asany.security.auth.graphql.directive;
 
+import cn.asany.security.core.domain.PermissionPolicy;
 import cn.asany.security.core.domain.PermissionStatement;
 import cn.asany.security.core.domain.ResourceType;
 import cn.asany.security.core.domain.enums.AccessLevel;
-import cn.asany.security.core.domain.enums.PermissionPolicyEffect;
 import cn.asany.security.core.service.PermissionPolicyService;
+import cn.asany.security.core.service.PermissionService;
 import java.io.Serializable;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.jfantasy.framework.security.LoginUser;
 import org.jfantasy.framework.security.authentication.Authentication;
-import org.jfantasy.framework.security.core.GrantedAuthority;
 import org.jfantasy.framework.util.regexp.RegexpUtil;
 
 /**
@@ -33,34 +31,44 @@ public class AuthInfo implements Serializable {
   private String description;
   private AccessLevel accessLevel;
   private List<ResourceType> resourceTypes;
+  private PermissionService permissionService;
   private PermissionPolicyService permissionPolicyService;
 
   public boolean checkUserPermission(Authentication authentication, Map<String, Object> args) {
-    Collection<GrantedAuthority> authorities = authentication.getAuthorities();
+    LoginUser userDetails = (LoginUser) authentication.getPrincipal();
 
-    List<PermissionStatement> permissionStatements =
-      permissionPolicyService.loadPolicies(authorities, name);
+    Set<String> permissions = permissionService.getPermissions(userDetails.getUid());
 
     List<String> paths = buildResourcePaths(args);
 
-    return permissionStatements.stream()
+    for (String permission : permissions) {
+      PermissionPolicy policy = permissionPolicyService.loadPolicy(permission);
+      if (policy.getStatements().stream()
+          .filter(this::hasOperationPermission)
+          .anyMatch(statement -> hasResourceAccess(statement, paths))) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private boolean hasOperationPermission(PermissionStatement statement) {
+    return Arrays.stream(statement.getAction())
+        .anyMatch(action -> RegexpUtil.wildMatch(action, this.name));
+  }
+
+  private boolean hasResourceAccess(PermissionStatement statement, List<String> paths) {
+    return paths.stream()
         .anyMatch(
-            permission ->
-                permission.getEffect() == PermissionPolicyEffect.Allow
-                    && canAccessResource(permission.getResources(), paths));
+            path ->
+                Arrays.stream(statement.getResource())
+                    .anyMatch(pattern -> RegexpUtil.wildMatch(pattern, path)));
   }
 
   private List<String> buildResourcePaths(Map<String, Object> args) {
     return resourceTypes.stream()
         .map(item -> replacePlaceholders(item.getArn(), args))
         .collect(Collectors.toList());
-  }
-
-  private boolean canAccessResource(String[] patterns, List<String> paths) {
-    return paths.stream()
-        .anyMatch(
-            path ->
-                Arrays.stream(patterns).anyMatch(pattern -> RegexpUtil.wildMatch(pattern, path)));
   }
 
   public static String replacePlaceholders(String input, Map<String, Object> dataMap) {

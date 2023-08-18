@@ -2,13 +2,13 @@ package cn.asany.cardhop.contacts.domain;
 
 import cn.asany.security.core.domain.enums.Sex;
 import cn.asany.storage.api.FileObject;
-import cn.asany.storage.api.converter.FileObjectConverter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.List;
 import javax.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
 /**
@@ -37,7 +37,7 @@ public class Contact extends BaseBusEntity {
   @JoinColumn(name = "BOOK_ID", foreignKey = @ForeignKey(name = "FK_CARDHOP_CONTACT_BOOK"))
   private ContactBook book;
   /** 联系人照片 */
-  @Convert(converter = FileObjectConverter.class)
+  @Type(type = "file")
   @Column(name = "AVATAR", length = 500)
   private FileObject avatar;
   /** 姓名 */

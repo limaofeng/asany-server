@@ -2,7 +2,6 @@ package cn.asany.cms.article.domain;
 
 import cn.asany.organization.core.domain.Organization;
 import cn.asany.storage.api.FileObject;
-import cn.asany.storage.api.converter.FileObjectConverter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import javax.persistence.*;
@@ -10,6 +9,7 @@ import lombok.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.framework.search.annotations.IndexEmbedBy;
 
@@ -55,7 +55,7 @@ public class ArticleCategory extends BaseBusEntity {
   private String icon;
   /** 封面 */
   @Column(name = "IMAGE", length = 500, columnDefinition = "JSON")
-  @Convert(converter = FileObjectConverter.class)
+  @Type(type = "file")
   private FileObject image;
   /** 描述 */
   @Column(name = "DESCRIPTION", length = 400)

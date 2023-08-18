@@ -1,13 +1,13 @@
 package cn.asany.cms.special.domain;
 
 import cn.asany.cms.article.domain.Article;
-import cn.asany.storage.api.converter.FileObjectConverter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import javax.persistence.*;
 import javax.tools.FileObject;
 import lombok.*;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
 @Data
@@ -37,7 +37,7 @@ public class SpecialArticle extends BaseBusEntity {
   private String summary;
   /** 封面 */
   @Column(name = "COVER", length = 500)
-  @Convert(converter = FileObjectConverter.class)
+  @Type(type = "file")
   private FileObject cover;
   /** 发布日期 */
   @Column(name = "PUBLISH_DATE", length = 15, nullable = false)

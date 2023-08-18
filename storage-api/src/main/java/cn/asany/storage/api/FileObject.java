@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -22,7 +23,7 @@ import java.util.List;
  * @since 2013-9-8 下午4:49:25
  */
 @JsonDeserialize(using = DefaultFileObjectSerializer.class)
-public interface FileObject {
+public interface FileObject extends Serializable {
 
   String ROOT_PATH = "/";
 

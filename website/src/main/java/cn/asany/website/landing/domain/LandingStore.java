@@ -3,13 +3,13 @@ package cn.asany.website.landing.domain;
 import cn.asany.base.common.domain.Address;
 import cn.asany.base.common.domain.Geolocation;
 import cn.asany.storage.api.FileObject;
-import cn.asany.storage.api.converter.FileObjectConverter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.Objects;
 import javax.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
 @Getter
@@ -39,7 +39,7 @@ public class LandingStore extends BaseBusEntity {
   /** 门店位置 (经纬坐标) */
   @Embedded private Geolocation location;
   /** 二维码 */
-  @Convert(converter = FileObjectConverter.class)
+  @Type(type = "file")
   @Column(name = "QR_CODE", precision = 500)
   private FileObject qrCode;
   /** 门店负责人 */

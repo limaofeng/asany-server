@@ -60,7 +60,7 @@ class FileServiceTest {
   void repairData() {
     List<FileDetail> fileDetailList =
         fileService.findAll(
-            PropertyFilter.builder().equal("extension", "").equal("isDirectory", false).build());
+            PropertyFilter.newFilter().equal("extension", "").equal("isDirectory", false));
     for (FileDetail item : fileDetailList) {
       if (item.getMimeType().startsWith("image/")) {
         String extension = item.getMimeType().substring(item.getMimeType().lastIndexOf("/") + 1);

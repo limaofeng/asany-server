@@ -6,14 +6,17 @@ import cn.asany.cms.article.service.BannerService;
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import java.util.List;
 import java.util.Optional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 @Component
 public class BannerGraphQLQueryResolver implements GraphQLQueryResolver {
 
-  @Autowired private BannerService bannerService;
+  private final BannerService bannerService;
+
+  public BannerGraphQLQueryResolver(BannerService bannerService) {
+    this.bannerService = bannerService;
+  }
 
   /**
    * 横幅广告

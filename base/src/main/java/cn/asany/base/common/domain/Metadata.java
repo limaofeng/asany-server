@@ -1,14 +1,13 @@
 package cn.asany.base.common.domain;
 
 import cn.asany.storage.api.FileObject;
-import cn.asany.storage.api.converter.FileObjectConverter;
 import javax.persistence.Column;
-import javax.persistence.Convert;
 import javax.persistence.Embeddable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Type;
 
 @Embeddable
 @Data
@@ -17,7 +16,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Metadata {
   /** 缩略图 */
-  @Convert(converter = FileObjectConverter.class)
+  @Type(type = "file")
   @Column(name = "META_THUMB", length = 500)
   private FileObject thumb;
   /** 标题 */

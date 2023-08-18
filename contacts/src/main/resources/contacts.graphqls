@@ -31,10 +31,10 @@ type ContactBook {
   分组命名空间
   """
   namespaces: [ContactGroupNamespace!]!
-  """
-  分组
-  """
-  groups(namespace: String): [ContactGroup!]!
+  #  """
+  #  分组
+  #  """
+  #  groups(namespace: String): [ContactGroup!]!
 }
 
 """

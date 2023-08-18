@@ -1,6 +1,5 @@
 package cn.asany.cms.special.domain;
 
-import cn.asany.storage.api.converter.FileObjectConverter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.Date;
 import java.util.List;
@@ -8,6 +7,7 @@ import javax.persistence.*;
 import javax.tools.FileObject;
 import lombok.*;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Type;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
 /** 专栏／专题 */
@@ -33,7 +33,7 @@ public class Special extends BaseBusEntity {
   private String summary;
   /** 封面 */
   @Column(name = "COVER", length = 500)
-  @Convert(converter = FileObjectConverter.class)
+  @Type(type = "file")
   private FileObject cover;
   /** 期刊号 */
   @Column(name = "ISSN", length = 50)

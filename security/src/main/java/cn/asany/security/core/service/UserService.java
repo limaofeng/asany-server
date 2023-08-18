@@ -1,13 +1,13 @@
 package cn.asany.security.core.service;
 
 import cn.asany.base.common.domain.Phone;
-import cn.asany.security.core.dao.GrantPermissionDao;
 import cn.asany.security.core.dao.UserDao;
-import cn.asany.security.core.domain.Role;
-import cn.asany.security.core.domain.User;
+import cn.asany.security.core.domain.*;
+import cn.asany.security.core.domain.enums.GranteeType;
 import cn.asany.security.core.domain.enums.UserType;
 import cn.asany.security.core.exception.UserInvalidException;
 import cn.asany.security.core.exception.UserNotFoundException;
+import cn.asany.security.core.util.PasswordGenerator;
 import cn.asany.security.core.util.UserUtil;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -15,9 +15,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.error.ValidationException;
 import org.jfantasy.framework.security.LoginUser;
+import org.jfantasy.framework.security.core.GrantedAuthority;
+import org.jfantasy.framework.security.core.SimpleGrantedAuthority;
 import org.jfantasy.framework.security.crypto.password.PasswordEncoder;
 import org.jfantasy.framework.util.common.BeanUtil;
-import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.common.StringUtil;
 import org.jfantasy.framework.util.reflect.Property;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,25 +33,23 @@ import org.springframework.util.CollectionUtils;
 /** @author limaofeng */
 @Slf4j
 @Service
-@Transactional(rollbackFor = Exception.class)
 public class UserService {
 
   public static final String LOGIN_ATTRS_NICKNAME = "_nickName";
+
+  private final PasswordGenerator passwordGenerator = new PasswordGenerator();
 
   private final UserDao userDao;
 
   protected final MessageSourceAccessor messages;
 
-  @Autowired private GrantPermissionDao grantPermissionDao;
-
   private PasswordEncoder passwordEncoder;
 
-  private RoleService roleService;
+  private final RoleService roleService;
 
-  @Autowired
-  public void setRoleService(RoleService roleService) {
-    this.roleService = roleService;
-  }
+  private final GroupService groupService;
+
+  private final TenantService tenantService;
 
   @Autowired(required = false)
   public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
@@ -58,9 +57,21 @@ public class UserService {
   }
 
   @Autowired
-  public UserService(UserDao userDao, MessageSourceAccessor messages) {
+  public UserService(
+      UserDao userDao,
+      MessageSourceAccessor messages,
+      RoleService roleService,
+      GroupService groupService,
+      TenantService tenantService) {
     this.userDao = userDao;
     this.messages = messages;
+    this.roleService = roleService;
+    this.tenantService = tenantService;
+    this.groupService = groupService;
+  }
+
+  public List<User> saveAll(List<User> users) {
+    return users.stream().map(this::save).collect(Collectors.toList());
   }
 
   /**
@@ -76,8 +87,8 @@ public class UserService {
     }
 
     // 默认昵称与用户名一致
-    if (StringUtil.isBlank(user.getNickName())) {
-      user.setNickName(user.getUsername());
+    if (StringUtil.isBlank(user.getNickname())) {
+      user.setNickname(user.getUsername());
     }
 
     // 默认为 USER
@@ -85,16 +96,16 @@ public class UserService {
       user.setUserType(UserType.USER);
     }
 
-    // 初始化用户权限
-    if (user.getRoles() == null) {
-      user.setRoles(new ArrayList<>());
-    }
-
-    if (UserType.ADMIN == user.getUserType()) {
-      user.getRoles().add(Role.ADMIN);
-    } else {
-      user.getRoles().add(Role.USER);
-    }
+    //    // 初始化用户权限
+    //    if (user.getRoles() == null) {
+    //      user.setRoles(new ArrayList<>());
+    //    }
+    //
+    //    if (UserType.ADMIN == user.getUserType()) {
+    //      user.getRoles().add(Role.ADMIN);
+    //    } else {
+    //      user.getRoles().add(Role.USER);
+    //    }
 
     // 初始化用户状态
     user.setEnabled(true);
@@ -102,9 +113,22 @@ public class UserService {
     user.setAccountNonExpired(true);
     user.setCredentialsNonExpired(true);
 
-    if (StringUtil.isNotBlank(user.getPassword())) {
-      user.setPassword(passwordEncoder.encode(user.getPassword()));
+    Tenant tenant =
+        tenantService
+            .findById(user.getTenantId())
+            .orElseThrow(() -> new ValidationException("租户不存在"));
+
+    AccessControlSettings accessControlSettings = tenant.getAccessControlSettings();
+
+    PasswordPolicy passwordPolicy = accessControlSettings.getPasswordPolicy();
+
+    String password = user.getPassword();
+
+    if (StringUtil.isBlank(password)) {
+      password = passwordGenerator.generatePassword(passwordPolicy, user.getUsername());
     }
+
+    user.setPassword(passwordEncoder.encode(password));
 
     // 保存用户
     return this.userDao.save(user);
@@ -145,8 +169,19 @@ public class UserService {
     return this.userDao.findPage(pageable, filter);
   }
 
-  public void delete(Long... ids) {
-    this.delete(Arrays.stream(ids).collect(Collectors.toSet()));
+  @Transactional(rollbackFor = Exception.class)
+  public User delete(Long id) {
+    User user = this.userDao.getReferenceById(id);
+    this.userDao.delete(user);
+    return user;
+  }
+
+  @Transactional(rollbackFor = Exception.class)
+  public List<User> deleteMany(List<Long> ids) {
+    List<User> users =
+        ids.stream().map(this.userDao::getReferenceById).collect(Collectors.toList());
+    this.userDao.deleteAllInBatch(users);
+    return users;
   }
 
   public void delete(Set<Long> ids) {
@@ -157,7 +192,7 @@ public class UserService {
     return this.userDao.getReferenceById(id);
   }
 
-  public User update(Long id, User user) {
+  public User update(Long id, User user, boolean merge) {
     user.setId(id);
     User oldUser = this.userDao.getReferenceById(id);
     BeanUtil.copyProperties(
@@ -169,36 +204,53 @@ public class UserService {
           }
           return value != null;
         });
-    user = this.userDao.update(oldUser);
+    user = this.userDao.update(oldUser, merge);
     return user;
+  }
+
+  public List<GrantedAuthority> getGrantedAuthorities(Long id) {
+    List<Role> roles = roleService.findAllByUser(id);
+    List<GrantedAuthority> authorities = new ArrayList<>();
+    for (Role role : roles) {
+      authorities.add(
+          SimpleGrantedAuthority.newInstance(GranteeType.ROLE.name() + "_" + role.getName()));
+    }
+    List<Group> groups = groupService.findAllByUser(id);
+    for (Group group : groups) {
+      authorities.add(
+          SimpleGrantedAuthority.newInstance(GranteeType.GROUP.name() + "_" + group.getName()));
+    }
+    return authorities;
   }
 
   public List<Role> addRoles(Long id, String[] roles, boolean clear) {
     User user = this.userDao.getReferenceById(id);
     if (clear) {
-      user.getRoles().clear();
+      //      user.getRoles().clear();
     }
     for (String role : roles) {
-      if (ObjectUtil.exists(user.getRoles(), "code", role)) {
-        continue;
-      }
+      //      if (ObjectUtil.exists(user.getRoles(), "code", role)) {
+      //        continue;
+      //      }
       Optional<Role> optionalRole = this.roleService.findByCode(role);
       if (!optionalRole.isPresent()) {
         continue;
       }
-      user.getRoles().add(optionalRole.get());
+      //      user.getRoles().add(optionalRole.get());
     }
     this.userDao.save(user);
-    return user.getRoles();
+    //    return user.getRoles();
+    return new ArrayList<>();
   }
 
   public List<Role> removeRoles(Long id, String... roles) {
     User user = this.userDao.getReferenceById(id);
-    for (String role : roles) {
-      ObjectUtil.remove(user.getRoles(), "id", role);
-    }
-    this.userDao.save(user);
-    return user.getRoles();
+    //    for (String role : roles) {
+    //      ObjectUtil.remove(user.getRoles(), "id", role);
+    //    }
+    //    this.userDao.save(user);
+    //    return user.getRoles();
+    return new ArrayList<>();
   }
 
   public PasswordEncoder getPasswordEncoder() {
@@ -219,7 +271,7 @@ public class UserService {
     String[] permissionArray = permissions.split(",");
     // 检查结果出用户拥有的权限列表
     //        UserServiceUtil.setDepartmentDao(departmentDao);
-    UserServiceUtil.setGrantPermissionDao(grantPermissionDao);
+    //    UserServiceUtil.setGrantPermissionDao(grantPermissionDao);
     Set<String> hasPermissionsList = UserServiceUtil.hasGrantPermissions(user, permissionArray);
     // 返回json
     return UserServiceUtil.comparePermissionsResult(hasPermissionsList, permissionArray);
@@ -235,7 +287,7 @@ public class UserService {
     try {
       // 取用户的角色列表
       //            UserServiceUtil.setDepartmentDao(departmentDao);
-      UserServiceUtil.setGrantPermissionDao(grantPermissionDao);
+      //      UserServiceUtil.setGrantPermissionDao(grantPermissionDao);
       Set<String> roleCodes = UserServiceUtil.getUserRoleCodes(user);
       if (!CollectionUtils.isEmpty(roleCodes)) {
         //                for (String roleCode : roleCodes) {

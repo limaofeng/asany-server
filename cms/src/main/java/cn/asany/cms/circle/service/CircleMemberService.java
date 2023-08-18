@@ -2,14 +2,17 @@ package cn.asany.cms.circle.service;
 
 import cn.asany.cms.circle.dao.CircleMemberDao;
 import cn.asany.cms.circle.domain.CircleMember;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
 public class CircleMemberService {
-  @Autowired private CircleMemberDao circleMemberDao;
+  private final CircleMemberDao circleMemberDao;
+
+  public CircleMemberService(CircleMemberDao circleMemberDao) {
+    this.circleMemberDao = circleMemberDao;
+  }
 
   public void delete(Long userId, String categoryId) {
     circleMemberDao.deleteById(0L);

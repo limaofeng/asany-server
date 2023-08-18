@@ -1,0 +1,59 @@
+extend type Query {
+  group(id: ID!): Group
+}
+
+"""
+组
+"""
+type Group {
+  id: ID!
+  """
+  名称
+  """
+  name: String!
+  """
+  显示名称
+  """
+  displayName: String
+  """
+  描述
+  """
+  description: String
+  """
+  成员
+  """
+  members: [GroupMember!]!
+}
+
+"""
+被授权者类型
+"""
+enum GranteeType {
+  """
+  用户
+  """
+  USER
+  """
+  用户组
+  """
+  GROUP
+  """
+  角色
+  """
+  ROLE
+}
+
+"""
+组成员
+"""
+type GroupMember {
+  id: ID!
+  """
+  被授权者类型
+  """
+  type: GranteeType
+  """
+  被授权者ID
+  """
+  value: String
+}

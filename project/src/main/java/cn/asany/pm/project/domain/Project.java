@@ -1,13 +1,13 @@
 package cn.asany.pm.project.domain;
 
 import cn.asany.storage.api.FileObject;
-import cn.asany.storage.api.converter.FileObjectConverter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.Objects;
 import javax.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
 /**
@@ -34,7 +34,7 @@ public class Project extends BaseBusEntity {
   private Long id;
   /** 标志 */
   @Column(name = "LOGO", length = 500, columnDefinition = "JSON")
-  @Convert(converter = FileObjectConverter.class)
+  @Type(type = "file")
   private FileObject logo;
   /** 项目名称 */
   @Column(name = "NAME", length = 20)

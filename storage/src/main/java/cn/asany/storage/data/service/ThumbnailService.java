@@ -18,7 +18,7 @@ import java.util.concurrent.Future;
 import lombok.SneakyThrows;
 import org.hibernate.Hibernate;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
-import org.jfantasy.schedule.service.SchedulerUtils;
+import org.jfantasy.schedule.service.TaskScheduler;
 import org.quartz.*;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
@@ -40,13 +40,13 @@ public class ThumbnailService {
   public static final String THUMBNAIL_STORAGE_SPACE_KEY = "wg1NcUDz";
 
   private final ThumbnailDao thumbnailDao;
-  private final SchedulerUtils schedulerUtil;
+  private final TaskScheduler taskScheduler;
   private final UploadService uploadService;
 
   public ThumbnailService(
-      UploadService uploadService, ThumbnailDao thumbnailDao, SchedulerUtils schedulerUtil) {
+      UploadService uploadService, ThumbnailDao thumbnailDao, TaskScheduler taskScheduler) {
     this.uploadService = uploadService;
-    this.schedulerUtil = schedulerUtil;
+    this.taskScheduler = taskScheduler;
     this.thumbnailDao = thumbnailDao;
   }
 
@@ -96,14 +96,14 @@ public class ThumbnailService {
   public Thumbnail generate(String size, Long source) {
     TriggerKey taskId = generateTaskId(source, size);
     Future<Long> thumbnailFuture = waitForComplete(taskId);
-    if (schedulerUtil.getTriggerState(taskId) == Trigger.TriggerState.COMPLETE) {
-      schedulerUtil.removeTrigger(taskId);
+    if (taskScheduler.getTriggerState(taskId) == Trigger.TriggerState.COMPLETE) {
+      taskScheduler.removeTrigger(taskId);
     }
-    if (!schedulerUtil.checkExists(taskId)) {
+    if (!taskScheduler.checkExists(taskId)) {
       Map<String, String> data = new HashMap<>(2);
       data.put("source", source.toString());
       data.put("size", size);
-      schedulerUtil.addTrigger(JOBKEY_GENERATE_THUMBNAIL, taskId, data);
+      taskScheduler.scheduleTask(JOBKEY_GENERATE_THUMBNAIL, taskId, data);
     }
     Long thumbnailId = thumbnailFuture.get();
     Thumbnail thumbnail = this.thumbnailDao.getReferenceById(thumbnailId);
@@ -116,7 +116,7 @@ public class ThumbnailService {
   }
 
   private Future<Long> waitForComplete(TriggerKey taskId) throws SchedulerException {
-    ListenerManager listenerManager = schedulerUtil.getListenerManager();
+    ListenerManager listenerManager = taskScheduler.getListenerManager();
     CompletableFuture<Long> future = new CompletableFuture<>();
 
     listenerManager.addTriggerListener(

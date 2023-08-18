@@ -1,10 +1,11 @@
 package cn.asany.security.auth.graphql.directive;
 
-import graphql.GraphQLException;
+import cn.asany.security.auth.error.UnauthorizedException;
 import graphql.schema.*;
 import graphql.schema.idl.SchemaDirectiveWiringEnvironment;
 import java.util.Map;
 import org.jfantasy.framework.security.authentication.Authentication;
+import org.jfantasy.framework.security.authentication.NotAuthenticatedException;
 import org.jfantasy.graphql.context.AuthorizationGraphQLServletContext;
 
 /**
@@ -34,14 +35,14 @@ public class FieldPermissionDataFetcher implements DataFetcher<Object> {
     Authentication authentication = context.getAuthentication();
 
     if (!authentication.isAuthenticated()) {
-      throw new GraphQLException("You need authenticated");
+      throw new NotAuthenticatedException("You need authenticated");
     }
 
     Map<String, Object> args = environment.getArguments();
     boolean hasPermission = authInfo.checkUserPermission(authentication, args);
 
     if (!hasPermission) {
-      throw new GraphQLException(
+      throw new UnauthorizedException(
           "Access denied. You don't have permission to access this resource.");
     }
 

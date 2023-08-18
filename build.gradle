@@ -98,9 +98,10 @@ subprojects {
         implementation "cn.asany.chaos:jfantasy-graphql:$LIB_JFAN_VER"
         implementation "cn.asany.chaos:jfantasy-search:$LIB_JFAN_VER"
         implementation "jakarta.json:jakarta.json-api:${LIB_JAKARTA_VAR}"
-        implementation("org.springframework:spring-web")
-        implementation("com.jayway.jsonpath:json-path")
-        implementation("com.fasterxml.jackson.core:jackson-databind")
+        implementation "org.springframework:spring-web"
+        implementation "com.jayway.jsonpath:json-path"
+        implementation "com.fasterxml.jackson.core:jackson-databind"
+        implementation "cn.hutool:hutool-all:$LIB_HUTOOL_VAR"
         compileOnly "org.mapstruct:mapstruct:$LIB_MAPSTRUCT_VER"
         compileOnly "org.projectlombok:lombok:$LIB_LOMBOK_VER"
         annotationProcessor "org.mapstruct:mapstruct-processor:$LIB_MAPSTRUCT_VER"

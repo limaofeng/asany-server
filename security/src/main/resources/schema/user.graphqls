@@ -1,0 +1,261 @@
+extend type Query {
+  """
+  查询用户
+  """
+  users(
+    where: UserWhereInput = {}
+    # 跳过
+    skip: Int = 0
+    # 游标定位 之后
+    after: ID
+    # 游标定位 之前
+    before: ID
+    # 开始几条
+    first: Int = 15
+    # 之前几条
+    last: Int
+    # 排序
+    orderBy: OrderBy = "unsorted"
+  ): [User]
+  @authInfo(
+    name: "ac:UserConnection"
+    accessLevel: "List"
+    resourceTypes: ["ac:user/*", "ac:user/{#id}"]
+  )
+  """
+  用户详情
+  """
+  user(id: ID): User!
+  @authInfo(
+    name: "ac:GetUser"
+    accessLevel: "Read"
+    resourceTypes: ["ac:user/*", "ac:user/{#id}"]
+  )
+}
+
+extend type Mutation {
+  """
+  修改密码
+  """
+  changePassword(
+    """
+    用户ID, 为空时，修改当前用户的密码
+    """
+    id: ID
+    """
+    旧密码
+    """
+    oldPassword: String!
+    """
+    新密码
+    """
+    newPassword: String!
+  ): Boolean!
+  @authInfo(
+    name: "ac:ChangePassword"
+    accessLevel: "Write"
+    resourceTypes: ["ac:user/*", "ac:user/{#id}"]
+  )
+  """
+  创建用户
+  """
+  createUsers(
+    users: [UserCreateInput!]!
+    settings: UserSettingsInput!
+  ): [User!]!
+  @authInfo(
+    name: "ac:CreateUsers"
+    accessLevel: "Write"
+    resourceTypes: ["ac:user/*", "ac:user/{#id}"]
+  )
+  """
+  更新用户
+  """
+  updateUser(id: ID!, input: UserUpdateInput!, merge: Boolean = true): User!
+  @authInfo(
+    name: "ac:UpdateUser"
+    accessLevel: "Write"
+    resourceTypes: ["ac:user/*", "ac:user/{#id}"]
+  )
+  """
+  删除用户
+  """
+  deleteUser(id: ID): User!
+  @authInfo(
+    name: "ac:DeleteUser"
+    accessLevel: "Write"
+    resourceTypes: ["ac:user/*", "ac:user/{#id}"]
+  )
+  """
+  批量删除用户
+  """
+  deleteManyUsers(ids: [ID!]!): [User!]!
+  @authInfo(
+    name: "ac:DeleteManyUsers"
+    accessLevel: "Write"
+    resourceTypes: ["ac:user/*", "ac:user/{#id}"]
+  )
+}
+
+input UserCreateInput {
+  username: String!
+  nickname: String
+}
+
+input UserSettingsInput {
+  password: String
+  forcePasswordReset: Boolean
+}
+
+input UserWhereInput {
+  # 昵称模糊查询
+  nickname_like: String
+}
+
+type UserEdge {
+  cursor: String
+  node: User
+}
+
+type UserConnection {
+  # 总数据条数
+  totalCount: Int
+  # 每页显示条数
+  pageSize: Int
+  # 总页数
+  totalPage: Int
+  # 当前页
+  currentPage: Int
+  edges: [UserEdge!]!
+  pageInfo: PageInfo
+}
+
+enum UserType {
+  """
+  用户
+  """
+  USER
+  """
+  管理员
+  """
+  ADMIN
+}
+
+type User {
+  id: ID
+  """
+  称号
+  """
+  title: String
+  """
+  名称
+  """
+  name: String
+  """
+  登录名
+  """
+  username: String
+  """
+  登录密码
+  """
+  password: String
+  """
+  头像
+  """
+  avatar: File @fileFormat
+  """
+  用户类型
+  """
+  userType: UserType
+  """
+  电话
+  """
+  phone: Phone
+  """
+  邮箱
+  """
+  email: Email
+  """
+  生日
+  """
+  birthday: Date
+  """
+  性别
+  """
+  sex: Sex
+  """
+  公司
+  """
+  company: String
+  """
+  位置
+  """
+  location: String
+  """
+  自我介绍
+  """
+  bio: String
+  """
+  是否启用
+  """
+  enabled: Boolean
+  """
+  未过期
+  """
+  accountNonExpired: Boolean
+  """
+  未锁定
+  """
+  accountNonLocked: Boolean
+  """
+  未失效
+  """
+  credentialsNonExpired: Boolean
+  """
+  锁定时间
+  """
+  lockTime: Date
+  """
+  最后登录时间
+  """
+  lastLoginTime: Date
+}
+
+input UserUpdateInput {
+  """
+  名称
+  """
+  name: String
+  """
+  头像
+  """
+  avatar: File
+  """
+  电话
+  """
+  phone: String
+  """
+  邮箱
+  """
+  email: String
+  """
+  生日
+  """
+  birthday: Date
+  """
+  性别
+  """
+  sex: Sex
+  """
+  自我介绍
+  """
+  bio: String
+  """
+  公司
+  """
+  company: String
+  """
+  位置
+  """
+  location: String
+}

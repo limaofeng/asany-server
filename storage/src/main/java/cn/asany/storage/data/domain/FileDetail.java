@@ -3,6 +3,7 @@ package cn.asany.storage.data.domain;
 import cn.asany.storage.api.*;
 import cn.asany.storage.core.engine.virtual.VirtualFileObject;
 import cn.asany.storage.core.engine.virtual.VirtualStorage;
+import cn.asany.storage.data.domain.type.FileObjectCustomType;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.Date;
 import java.util.List;
@@ -13,6 +14,7 @@ import javax.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.TypeDef;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.framework.util.common.ObjectUtil;
 
@@ -49,6 +51,7 @@ import org.jfantasy.framework.util.common.ObjectUtil;
       "metadata",
       "inputStream"
     })
+@TypeDef(name = "file", typeClass = FileObjectCustomType.class)
 public class FileDetail extends BaseBusEntity implements Cloneable {
 
   public static String NAME_OF_THE_RECYCLE_BIN = "$RECYCLE.BIN";
@@ -155,10 +158,10 @@ public class FileDetail extends BaseBusEntity implements Cloneable {
   @Override
   public boolean equals(Object o) {
     if (this == o) {
-        return true;
+      return true;
     }
     if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) {
-        return false;
+      return false;
     }
     FileDetail that = (FileDetail) o;
     return id != null && Objects.equals(id, that.id);
@@ -166,7 +169,7 @@ public class FileDetail extends BaseBusEntity implements Cloneable {
 
   @Override
   public int hashCode() {
-    return getClass().hashCode();
+    return Objects.hash(getId());
   }
 
   @Transient

@@ -1,11 +1,17 @@
 package cn.asany.weixin.framework.message.user;
 
 import java.util.Date;
+import lombok.Data;
 
-/** 微信用户对象 */
+/**
+ * 微信用户对象
+ *
+ * @author limaofeng
+ */
+@Data
 public class User {
   /** 用户是否订阅该公众号标识，值为0时，代表此用户没有关注该公众号，拉取不到其余信息。 */
-  private Boolean subscribe;
+  private boolean subscribe;
   /** 用户的标识，对当前公众号唯一 */
   private String openId;
   /** 用户的昵称 */
@@ -26,128 +32,4 @@ public class User {
   private Date subscribeTime;
   /** 只有在用户将公众号绑定到微信开放平台帐号后，才会出现该字段。详见：获取用户个人信息（UnionID机制） */
   private String unionid;
-
-  public Boolean isSubscribe() {
-    return subscribe;
-  }
-
-  public void setSubscribe(Boolean subscribe) {
-    this.subscribe = subscribe;
-  }
-
-  public String getOpenId() {
-    return openId;
-  }
-
-  public void setOpenId(String openId) {
-    this.openId = openId;
-  }
-
-  public String getNickname() {
-    return nickname;
-  }
-
-  public void setNickname(String nickname) {
-    this.nickname = nickname;
-  }
-
-  public Sex getSex() {
-    return sex;
-  }
-
-  public void setSex(Sex sex) {
-    this.sex = sex;
-  }
-
-  public String getCountry() {
-    return country;
-  }
-
-  public void setCountry(String country) {
-    this.country = country;
-  }
-
-  public String getProvince() {
-    return province;
-  }
-
-  public void setProvince(String province) {
-    this.province = province;
-  }
-
-  public String getCity() {
-    return city;
-  }
-
-  public void setCity(String city) {
-    this.city = city;
-  }
-
-  public String getLanguage() {
-    return language;
-  }
-
-  public void setLanguage(String language) {
-    this.language = language;
-  }
-
-  public String getAvatar() {
-    return avatar;
-  }
-
-  public void setAvatar(String avatar) {
-    this.avatar = avatar;
-  }
-
-  public Date getSubscribeTime() {
-    return subscribeTime;
-  }
-
-  public void setSubscribeTime(Date subscribeTime) {
-    this.subscribeTime = subscribeTime;
-  }
-
-  public String getUnionid() {
-    return unionid;
-  }
-
-  public void setUnionid(String unionid) {
-    this.unionid = unionid;
-  }
-
-  @Override
-  public String toString() {
-    return "User{"
-        + "subscribe="
-        + subscribe
-        + ", openId='"
-        + openId
-        + '\''
-        + ", nickname='"
-        + nickname
-        + '\''
-        + ", sex="
-        + sex
-        + ", country='"
-        + country
-        + '\''
-        + ", province='"
-        + province
-        + '\''
-        + ", city='"
-        + city
-        + '\''
-        + ", language='"
-        + language
-        + '\''
-        + ", avatar='"
-        + avatar
-        + '\''
-        + ", subscribeTime="
-        + subscribeTime
-        + ", unionid='"
-        + unionid
-        + '\''
-        + '}';
-  }
 }

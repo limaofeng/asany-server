@@ -152,7 +152,7 @@ type EmployeeGroupScope {
   #所属组织
   organization: Organization
   #用户所属用户组
-  groups: [EmployeeGroup]
+  #  groups: [EmployeeGroup]
 }
 
 input EmployeeCreateInput {
@@ -713,7 +713,7 @@ type Employee {
   user: User
   links: [EmployeeLink]
   #用户所属用户组
-  groups: [EmployeeGroup]
+  #  groups: [EmployeeGroup]
 }
 
 # 职位

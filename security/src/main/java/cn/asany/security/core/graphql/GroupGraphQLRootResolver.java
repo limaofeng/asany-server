@@ -1,8 +1,7 @@
 package cn.asany.security.core.graphql;
 
-import cn.asany.security.core.convert.UserGroupConverter;
+import cn.asany.security.core.convert.GroupConverter;
 import cn.asany.security.core.domain.Group;
-import cn.asany.security.core.domain.GroupPrimaryKey;
 import cn.asany.security.core.graphql.input.GroupCreateInput;
 import cn.asany.security.core.graphql.input.GroupUpdateInput;
 import cn.asany.security.core.graphql.input.GroupWhereInput;
@@ -26,37 +25,36 @@ import org.springframework.stereotype.Component;
  * @author limaofeng
  */
 @Component
-public class UserGroupGraphQLRootResolver implements GraphQLMutationResolver, GraphQLQueryResolver {
+public class GroupGraphQLRootResolver implements GraphQLMutationResolver, GraphQLQueryResolver {
 
   private final GroupService groupService;
-  private final UserGroupConverter userGroupConverter;
+  private final GroupConverter groupConverter;
 
-  public UserGroupGraphQLRootResolver(
-      GroupService groupService,
-      @Autowired(required = false) UserGroupConverter userGroupConverter) {
+  public GroupGraphQLRootResolver(
+      GroupService groupService, @Autowired(required = false) GroupConverter groupConverter) {
     this.groupService = groupService;
-    this.userGroupConverter = userGroupConverter;
+    this.groupConverter = groupConverter;
   }
 
-  public GroupConnection groups(GroupWhereInput where, int page, int pageSize, Sort orderBy) {
+  public GroupConnection userGroups(GroupWhereInput where, int page, int pageSize, Sort orderBy) {
     Pageable pageable = PageRequest.of(page - 1, pageSize, orderBy);
     return Kit.connection(groupService.findPage(pageable, where.toFilter()), GroupConnection.class);
   }
 
-  public Optional<Group> group(String id) {
-    return groupService.findById(GroupPrimaryKey.builder().id(id).build());
+  public Optional<Group> group(Long id) {
+    return groupService.findById(id);
   }
 
   public Group createGroup(GroupCreateInput input) {
-    return groupService.save(userGroupConverter.toUserGroup(input));
+    return groupService.save(groupConverter.toGroup(input));
   }
 
   public Group updateGroup(Long id, GroupUpdateInput input, Boolean merge) {
-    return groupService.update(id, userGroupConverter.toUserGroup(input));
+    return groupService.update(id, groupConverter.toGroup(input));
   }
 
   public Boolean deleteGroup(Long id) {
-    this.groupService.deleteUserGroup(id);
+    this.groupService.deleteGroup(id);
     return Boolean.TRUE;
   }
 

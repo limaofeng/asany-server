@@ -2,7 +2,6 @@ package cn.asany.security.core.graphql.resolver;
 
 import cn.asany.security.core.domain.PermissionStatement;
 import cn.asany.security.core.domain.Role;
-import cn.asany.security.core.service.GrantPermissionService;
 import cn.asany.security.core.service.RoleService;
 import graphql.kickstart.tools.GraphQLResolver;
 import java.util.List;
@@ -17,7 +16,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class RoleGraphQLResolver implements GraphQLResolver<Role> {
   @Autowired private RoleService roleService;
-  @Autowired private GrantPermissionService grantPermissionService;
+  //  @Autowired private GrantPermissionService grantPermissionService;
 
   public List<PermissionStatement> permissions(Role role) {
     return null; // grantPermissionService.getPermissionsByRoleId("");

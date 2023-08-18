@@ -5,10 +5,7 @@ import cn.asany.security.core.domain.AuthorizedService;
 import cn.asany.security.core.domain.ResourceAction;
 import cn.asany.security.core.domain.ResourceType;
 import cn.asany.security.core.domain.enums.AccessLevel;
-import cn.asany.security.core.service.AuthorizedServiceService;
-import cn.asany.security.core.service.PermissionPolicyService;
-import cn.asany.security.core.service.ResourceActionService;
-import cn.asany.security.core.service.ResourceTypeService;
+import cn.asany.security.core.service.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -23,18 +20,19 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 public class AuthInfoService {
-
   private final ResourceActionService resourceActionService;
   private final ResourceTypeService resourceTypeService;
-
   private final AuthorizedServiceService authorizedServiceService;
+  private final PermissionService permissionService;
   private final PermissionPolicyService permissionPolicyService;
 
   public AuthInfoService(
+      PermissionService permissionService,
       ResourceActionService resourceActionService,
       ResourceTypeService resourceTypeService,
       PermissionPolicyService permissionPolicyService,
       AuthorizedServiceService authorizedServiceService) {
+    this.permissionService = permissionService;
     this.resourceActionService = resourceActionService;
     this.resourceTypeService = resourceTypeService;
     this.permissionPolicyService = permissionPolicyService;
@@ -67,6 +65,7 @@ public class AuthInfoService {
         .description(action.getDescription())
         .accessLevel(action.getAccessLevel())
         .resourceTypes(action.getResourceTypes())
+        .permissionService(permissionService)
         .permissionPolicyService(permissionPolicyService)
         .build();
   }

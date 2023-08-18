@@ -9,6 +9,7 @@ import lombok.*;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
+import org.jfantasy.framework.dao.Tenantable;
 import org.jfantasy.framework.security.core.GrantedAuthority;
 import org.jfantasy.framework.security.oauth2.core.ClientDetails;
 import org.jfantasy.framework.security.oauth2.core.ClientSecretType;
@@ -90,7 +91,7 @@ import org.jfantasy.framework.security.oauth2.core.ClientSecretType;
       @UniqueConstraint(name = "UK_APPLICATION_NAME", columnNames = "NAME"),
       @UniqueConstraint(name = "UK_APPLICATION_CLIENT_ID", columnNames = "CLIENT_ID")
     })
-public class Application extends BaseBusEntity implements ClientDetails {
+public class Application extends BaseBusEntity implements ClientDetails, Tenantable {
   /** ID */
   @Id
   @Column(name = "ID")
@@ -175,6 +176,13 @@ public class Application extends BaseBusEntity implements ClientDetails {
       fetch = FetchType.LAZY)
   @ToString.Exclude
   private List<ApplicationDependency> dependencies;
+  /** 租户ID */
+  @Column(name = "TENANT_ID", length = 24, nullable = false)
+  private String tenantId;
+
+  @Builder.Default
+  @Column(name = "TOKEN_EXPIRES")
+  private Integer tokenExpires = 30;
 
   @Override
   public Map<String, Object> getAdditionalInformation() {
@@ -209,11 +217,7 @@ public class Application extends BaseBusEntity implements ClientDetails {
     return new HashSet<>();
   }
 
-  @Override
-  public int getTokenExpires() {
-    return 30;
-  }
-
+  @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -228,6 +232,6 @@ public class Application extends BaseBusEntity implements ClientDetails {
 
   @Override
   public int hashCode() {
-    return getClass().hashCode();
+    return Objects.hashCode(getId());
   }
 }

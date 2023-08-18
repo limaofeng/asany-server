@@ -1,12 +1,12 @@
 package cn.asany.shanhai.core.domain;
 
 import cn.asany.storage.api.FileObject;
-import cn.asany.storage.api.converter.FileObjectConverter;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import java.util.Set;
 import javax.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
 /**
@@ -35,7 +35,7 @@ public class Module extends BaseBusEntity {
   @Column(name = "NAME", length = 100)
   private String name;
   /** 模块图片 */
-  @Convert(converter = FileObjectConverter.class)
+  @Type(type = "file")
   @Column(name = "PICTURE", length = 500)
   private FileObject picture;
   /** 描述 */

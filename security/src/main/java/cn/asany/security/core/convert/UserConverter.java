@@ -4,6 +4,7 @@ import cn.asany.base.common.domain.Email;
 import cn.asany.base.common.domain.Phone;
 import cn.asany.security.auth.graphql.types.CurrentUser;
 import cn.asany.security.core.domain.User;
+import cn.asany.security.core.graphql.input.UserCreateInput;
 import cn.asany.security.core.graphql.input.UserUpdateInput;
 import org.mapstruct.*;
 
@@ -15,13 +16,21 @@ import org.mapstruct.*;
 public interface UserConverter {
 
   /**
+   * 新增用户
+   *
+   * @param input 输入
+   * @return 菜单
+   */
+  @Mappings({})
+  User toUser(UserCreateInput input);
+
+  /**
    * 更新用户
    *
    * @param input 输入
    * @return 菜单
    */
   @Mappings({
-    @Mapping(source = "name", target = "nickName"),
     @Mapping(target = "phone", qualifiedByName = "toPhone"),
     @Mapping(target = "email", qualifiedByName = "toEmail")
   })

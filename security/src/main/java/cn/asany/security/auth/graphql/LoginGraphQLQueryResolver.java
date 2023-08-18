@@ -11,7 +11,6 @@ import graphql.schema.DataFetchingEnvironment;
 import java.util.Optional;
 import org.jfantasy.framework.security.LoginUser;
 import org.jfantasy.framework.security.SpringSecurityUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -25,10 +24,11 @@ public class LoginGraphQLQueryResolver implements GraphQLQueryResolver {
 
   private final UserService userService;
 
-  @Autowired private UserConverter userConverter;
+  private final UserConverter userConverter;
 
-  public LoginGraphQLQueryResolver(UserService userService) {
+  public LoginGraphQLQueryResolver(UserService userService, UserConverter userConverter) {
     this.userService = userService;
+    this.userConverter = userConverter;
   }
 
   /**

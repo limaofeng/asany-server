@@ -3,7 +3,7 @@ package cn.asany.cms.article.graphql.resolver;
 import cn.asany.cms.article.domain.ArticleTag;
 import cn.asany.cms.article.graphql.converters.ArticleChannelConverter;
 import cn.asany.cms.article.graphql.inputs.ArticleFilter;
-import cn.asany.cms.permission.specification.StarSpecification;
+import cn.asany.cms.permissionStatement.specification.StarSpecification;
 import graphql.kickstart.tools.GraphQLResolver;
 import cn.asany.cms.article.graphql.type.ArticleChannel;
 import cn.asany.cms.article.graphql.enums.ArticleChannelStarType;

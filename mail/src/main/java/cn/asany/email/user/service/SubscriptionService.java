@@ -5,11 +5,16 @@ import cn.asany.email.user.domain.JamesSubscription;
 import java.util.List;
 import java.util.Optional;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class SubscriptionService {
 
-  @Autowired private SubscriptionDao subscriptionDao;
+  private final SubscriptionDao subscriptionDao;
+
+  public SubscriptionService(SubscriptionDao subscriptionDao) {
+    this.subscriptionDao = subscriptionDao;
+  }
 
   public Optional<JamesSubscription> findFindMailboxSubscriptionForUser(
       String user, String mailbox) {

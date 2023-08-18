@@ -1,13 +1,13 @@
 package cn.asany.website.landing.domain;
 
 import cn.asany.storage.api.FileObject;
-import cn.asany.storage.api.converter.FileObjectConverter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.Objects;
 import javax.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
 /** 海报 */
@@ -31,11 +31,11 @@ public class LandingPoster extends BaseBusEntity {
   @Column(name = "NAME", length = 100, nullable = false)
   private String name;
   /** 海报背景图片 */
-  @Convert(converter = FileObjectConverter.class)
+  @Type(type = "file")
   @Column(name = "BACKGROUND", precision = 500)
   private FileObject background;
   /** 海报背景音乐 */
-  @Convert(converter = FileObjectConverter.class)
+  @Type(type = "file")
   @Column(name = "MUSIC", precision = 500)
   private FileObject music;
   /** 描述 */

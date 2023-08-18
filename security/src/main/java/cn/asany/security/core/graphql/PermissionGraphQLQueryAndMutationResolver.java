@@ -1,6 +1,6 @@
 package cn.asany.security.core.graphql;
 
-import cn.asany.security.core.domain.PermissionStatement;
+import cn.asany.security.core.domain.Permission;
 import cn.asany.security.core.graphql.input.PermissionWhereInput;
 import cn.asany.security.core.graphql.types.PermissionConnection;
 import cn.asany.security.core.service.PermissionService;
@@ -26,7 +26,7 @@ public class PermissionGraphQLQueryAndMutationResolver
 
   /** 查询权限 */
   public PermissionConnection permissionsConnection(
-    PermissionWhereInput where, int page, int pageSize, Sort orderBy) {
+      PermissionWhereInput where, int page, int pageSize, Sort orderBy) {
     where = ObjectUtil.defaultValue(where, new PermissionWhereInput());
     Pageable pageable = PageRequest.of(page - 1, pageSize, orderBy);
     return Kit.connection(
@@ -34,8 +34,7 @@ public class PermissionGraphQLQueryAndMutationResolver
   }
 
   /** 查询权限 */
-  public List<PermissionStatement> permissions(PermissionWhereInput where, Sort orderBy) {
-    where = ObjectUtil.defaultValue(where, new PermissionWhereInput());
+  public List<Permission> permissions(PermissionWhereInput where, Sort orderBy) {
     return permissionService.findAll(where.toFilter(), orderBy);
   }
 }

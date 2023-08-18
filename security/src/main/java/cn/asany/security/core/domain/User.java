@@ -7,11 +7,9 @@ import cn.asany.security.core.domain.enums.Sex;
 import cn.asany.security.core.domain.enums.UserType;
 import cn.asany.security.core.validators.UsernameCannotRepeatValidator;
 import cn.asany.storage.api.FileObject;
-import cn.asany.storage.api.converter.FileObjectConverter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.*;
-import java.util.stream.Collectors;
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import lombok.*;
@@ -19,11 +17,11 @@ import org.hibernate.Hibernate;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.Length;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.framework.dao.Tenantable;
 import org.jfantasy.framework.security.core.GrantedAuthority;
-import org.jfantasy.framework.security.core.SimpleGrantedAuthority;
 import org.jfantasy.framework.spring.validation.Operation;
 import org.jfantasy.framework.spring.validation.Use;
 
@@ -51,10 +49,6 @@ import org.jfantasy.framework.spring.validation.Use;
 @JsonIgnoreProperties({
   "hibernateLazyInitializer",
   "handler",
-  "user_groups",
-  "website",
-  "menus",
-  "authorities"
 })
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class User extends BaseBusEntity implements Ownership, Tenantable {
@@ -88,12 +82,12 @@ public class User extends BaseBusEntity implements Ownership, Tenantable {
   @Column(name = "USER_TYPE", length = 20, nullable = false)
   private UserType userType;
   /** 头像 */
-  @Convert(converter = FileObjectConverter.class)
+  @Type(type = "file")
   @Column(name = "avatar", precision = 500)
   private FileObject avatar;
   /** 用户显示昵称 */
   @Column(name = "NICK_NAME", length = 50)
-  private String nickName;
+  private String nickname;
   /** 用户显示昵称 */
   @Column(name = "TITLE", length = 50)
   private String title;
@@ -147,58 +141,39 @@ public class User extends BaseBusEntity implements Ownership, Tenantable {
   /** 未失效 */
   @Column(name = "CREDENTIALS_NON_EXPIRED")
   private Boolean credentialsNonExpired;
+  /** 登陆成功后需要重置密码 */
+  @Builder.Default
+  @Column(name = "FORCE_PASSWORD_RESET")
+  private Boolean forcePasswordReset = Boolean.FALSE;
   /** 锁定时间 */
   @Column(name = "LOCK_TIME")
   private Date lockTime;
   /** 最后登录时间 */
   @Column(name = "LAST_LOGIN_TIME")
   private Date lastLoginTime;
-  /** 用户对应的角色 */
-  @ManyToMany(targetEntity = Role.class, fetch = FetchType.LAZY)
-  @JoinTable(
-      name = "AUTH_ROLE_USER",
-      joinColumns =
-          @JoinColumn(name = "USER_ID", foreignKey = @ForeignKey(name = "FK_AUTH_ROLE_USER_USER")),
-      inverseJoinColumns = @JoinColumn(name = "ROLE_CODE"),
-      foreignKey = @ForeignKey(name = "FK_ROLE_USER_UID"))
-  @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-  @ToString.Exclude
-  private List<Role> roles;
-  /** 用户对应的用户组 */
-  @ToString.Exclude
-  @ManyToMany(targetEntity = Group.class, fetch = FetchType.LAZY)
-  @JoinTable(
-      name = "AUTH_USERGROUP_USER",
-      joinColumns = @JoinColumn(name = "USER_ID"),
-      inverseJoinColumns = @JoinColumn(name = "USERGROUP_ID"),
-      foreignKey = @ForeignKey(name = "FK_USERGROUP_USER_US"))
-  @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-  private List<Group> groups;
-  /**
-   * 租户ID
-   */
+  /** 租户ID */
   @Column(name = "TENANT_ID", length = 24)
   private String tenantId;
   /** 用户权限 */
-  @Transient private List<GrantPermission> grants;
+  @Transient private List<Permission> permissions;
 
   @Transient
   public Set<GrantedAuthority> getAuthorities() {
-    Set<GrantedAuthority> authorities = new HashSet<>();
-    authorities.addAll(
-        this.roles.stream()
-            .map(item -> SimpleGrantedAuthority.newInstance("ROLE_" + item.getCode()))
-            .collect(Collectors.toList()));
-    authorities.addAll(
-      this.groups.stream()
-        .map(item -> SimpleGrantedAuthority.newInstance("GROUP_" + item.getId()))
-            .collect(Collectors.toList()));
-    return authorities;
+    //    Set<GrantedAuthority> authorities = new HashSet<>();
+    //    authorities.addAll(
+    //        this.roles.stream()
+    //            .map(item -> SimpleGrantedAuthority.newInstance("ROLE_" + item.getName()))
+    //            .collect(Collectors.toList()));
+    //    //    authorities.addAll(
+    //    //      this.groups.stream()
+    //    //        .map(item -> SimpleGrantedAuthority.newInstance("GROUP_" + item.getId()))
+    //    //            .collect(Collectors.toList()));
+    return new HashSet<>();
   }
 
   @Override
   public String getName() {
-    return this.nickName;
+    return this.nickname;
   }
 
   @Override
@@ -207,6 +182,7 @@ public class User extends BaseBusEntity implements Ownership, Tenantable {
     return OWNERSHIP_KEY;
   }
 
+  @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -216,11 +192,11 @@ public class User extends BaseBusEntity implements Ownership, Tenantable {
       return false;
     }
     User user = (User) o;
-    return id != null && Objects.equals(id, user.id);
+    return getId() != null && Objects.equals(getId(), user.getId());
   }
 
   @Override
   public int hashCode() {
-    return getClass().hashCode();
+    return Objects.hash(getId());
   }
 }

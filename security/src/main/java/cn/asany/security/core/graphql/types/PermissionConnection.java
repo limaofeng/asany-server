@@ -1,6 +1,6 @@
 package cn.asany.security.core.graphql.types;
 
-import cn.asany.security.core.domain.PermissionStatement;
+import cn.asany.security.core.domain.Permission;
 import java.util.List;
 import lombok.*;
 import org.jfantasy.graphql.Edge;
@@ -14,7 +14,7 @@ import org.jfantasy.graphql.types.BaseConnection;
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class PermissionConnection
-    extends BaseConnection<PermissionConnection.PermissionEdge, PermissionStatement> {
+    extends BaseConnection<PermissionConnection.PermissionEdge, Permission> {
 
   private List<PermissionEdge> edges;
 
@@ -22,8 +22,8 @@ public class PermissionConnection
   @Builder
   @NoArgsConstructor
   @AllArgsConstructor
-  public static class PermissionEdge implements Edge<PermissionStatement> {
+  public static class PermissionEdge implements Edge<Permission> {
     private String cursor;
-    private PermissionStatement node;
+    private Permission node;
   }
 }

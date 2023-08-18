@@ -16,13 +16,14 @@ public class UserUtil {
             .type(user.getUserType().name())
             .username(user.getUsername())
             .title(user.getTitle())
-            .name(user.getNickName())
+            .name(user.getNickname())
             .password(user.getPassword())
             .enabled(user.getEnabled())
             .accountNonExpired(user.getAccountNonExpired())
             .accountNonLocked(user.getAccountNonLocked())
             .credentialsNonExpired(user.getCredentialsNonExpired())
-            .authorities(user.getAuthorities());
+            .authorities(user.getAuthorities())
+            .tenantId(user.getTenantId());
 
     if (user.getPhone() != null && user.getPhone().getStatus() == PhoneNumberStatus.VERIFIED) {
       builder.phone(user.getPhone().getNumber());

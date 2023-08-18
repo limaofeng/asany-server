@@ -5,9 +5,12 @@ import cn.asany.openapi.service.OpenAPIService;
 import cn.asany.security.oauth.domain.AccessToken;
 import cn.asany.security.oauth.domain.AccessTokenClientDetails;
 import cn.asany.security.oauth.domain.ClientDevice;
+import cn.asany.security.oauth.job.TokenCleanupJob;
 import eu.bitwalker.useragentutils.UserAgent;
+import java.util.Date;
 import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.jfantasy.framework.security.authentication.Authentication;
 import org.jfantasy.framework.security.oauth2.JwtTokenPayload;
@@ -18,6 +21,8 @@ import org.jfantasy.framework.security.oauth2.jwt.JwtUtils;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.common.StringUtil;
 import org.jfantasy.framework.util.web.WebUtil;
+import org.jfantasy.schedule.service.TaskScheduler;
+import org.quartz.*;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,13 +39,17 @@ public class DataBaseTokenStore extends AbstractTokenStore {
   private final AccessTokenService accessTokenService;
   private final OpenAPIService openAPIService;
 
+  private final TaskScheduler taskScheduler;
+
   public DataBaseTokenStore(
       StringRedisTemplate redisTemplate,
       AccessTokenService accessTokenService,
-      OpenAPIService openApiService) {
+      OpenAPIService openApiService,
+      TaskScheduler taskScheduler) {
     super(redisTemplate);
     this.accessTokenService = accessTokenService;
     this.openAPIService = openApiService;
+    this.taskScheduler = taskScheduler;
   }
 
   @Override
@@ -107,8 +116,25 @@ public class DataBaseTokenStore extends AbstractTokenStore {
       accessToken = this.accessTokenService.updateAccessToken(accessToken, token, clientDetails);
       log.debug(String.format("accessToken(%d) 更新成功!", accessToken.getId()));
     }
-
     super.storeAccessToken(token, authentication);
+    this.scheduleTokenExpirationHandling(token.getTokenValue(), Date.from(token.getExpiresAt()));
+  }
+
+  @SneakyThrows(SchedulerException.class)
+  private void scheduleTokenExpirationHandling(String tokenValue, Date expiresAt) {
+    Trigger trigger =
+        TriggerBuilder.newTrigger()
+            .forJob(TokenCleanupJob.JOBKEY_TOKEN_CLEANUP)
+            .withIdentity(tokenValue, TokenCleanupJob.JOBKEY_TOKEN_CLEANUP.getGroup())
+            .usingJobData(TokenCleanupJob.jobData(tokenValue))
+            .withDescription(TokenCleanupJob.triggerDescription(tokenValue, expiresAt))
+            .withSchedule(
+                SimpleScheduleBuilder.simpleSchedule()
+                    .withRepeatCount(0)
+                    .withMisfireHandlingInstructionFireNow())
+            .startAt(expiresAt)
+            .build();
+    this.taskScheduler.scheduleJob(trigger);
   }
 
   @Override

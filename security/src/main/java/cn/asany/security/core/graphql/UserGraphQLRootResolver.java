@@ -10,12 +10,18 @@ import cn.asany.security.core.domain.User;
 import cn.asany.security.core.domain.enums.UserType;
 import cn.asany.security.core.event.RegisterSuccessEvent;
 import cn.asany.security.core.graphql.input.UserCreateInput;
+import cn.asany.security.core.graphql.input.UserSettingsInput;
 import cn.asany.security.core.graphql.input.UserUpdateInput;
+import cn.asany.security.core.graphql.input.UserWhereInput;
+import cn.asany.security.core.graphql.types.UserConnection;
 import cn.asany.security.core.service.UserService;
 import cn.asany.storage.api.FileObject;
 import graphql.kickstart.tools.GraphQLMutationResolver;
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import graphql.schema.DataFetchingEnvironment;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import org.jfantasy.framework.security.LoginUser;
 import org.jfantasy.framework.security.SpringSecurityUtils;
 import org.jfantasy.framework.security.authentication.SimpleAuthenticationToken;
@@ -24,7 +30,11 @@ import org.jfantasy.framework.security.oauth2.core.OAuth2Authentication;
 import org.jfantasy.framework.security.oauth2.core.token.AuthorizationServerTokenServices;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.graphql.context.AuthorizationGraphQLServletContext;
+import org.jfantasy.graphql.util.Kit;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -56,7 +66,7 @@ public class UserGraphQLRootResolver implements GraphQLMutationResolver, GraphQL
   /**
    * 注册
    *
-   * @param nickName 昵称
+   * @param nickname 昵称
    * @param avatar 头像
    * @param phoneNumber 电话号码
    * @param password 密码
@@ -64,13 +74,14 @@ public class UserGraphQLRootResolver implements GraphQLMutationResolver, GraphQL
    * @return User
    */
   public LoginUser register(
-      String nickName,
+      String nickname,
       FileObject avatar,
       String phoneNumber,
       String password,
       String smsCode,
       DataFetchingEnvironment environment) {
 
+    //noinspection deprecation
     AuthorizationGraphQLServletContext context = environment.getContext();
 
     if (!this.captchaService.validateResponseForID(
@@ -82,7 +93,7 @@ public class UserGraphQLRootResolver implements GraphQLMutationResolver, GraphQL
 
     User user =
         User.builder()
-            .nickName(nickName)
+            .nickname(nickname)
             .avatar(avatar)
             .userType(UserType.USER)
             .username(phoneNumber)
@@ -108,28 +119,64 @@ public class UserGraphQLRootResolver implements GraphQLMutationResolver, GraphQL
     return loginUser;
   }
 
+  /**
+   * 查询所有用户,带条件查询
+   *
+   * @param where 查询条件
+   * @param page 页码
+   * @param pageSize 每页大小
+   * @param orderBy 排序
+   * @return UserConnection
+   */
+  public UserConnection users(UserWhereInput where, int page, int pageSize, Sort orderBy) {
+    Pageable pageable = PageRequest.of(page - 1, pageSize, orderBy);
+    where = ObjectUtil.defaultValue(where, new UserWhereInput());
+    return Kit.connection(userService.findPage(pageable, where.toFilter()), UserConnection.class);
+  }
+
+  /**
+   * 查询用户, ID 为空时查询当前用户
+   *
+   * @param id 用户ID
+   * @return User
+   */
   public User user(Long id) {
-    return this.userService.get(
-        ObjectUtil.defaultValue(id, () -> SpringSecurityUtils.getCurrentUser().getUid()));
+    Long uid =
+        Optional.ofNullable(id).orElseGet(() -> SpringSecurityUtils.getCurrentUser().getUid());
+    return this.userService.get(uid);
   }
 
-  public User createUser(UserCreateInput input) {
-    return null;
-  }
-
-  public User updateUser(Long id, UserUpdateInput input) {
-    User user = this.userConverter.toUser(input);
-    return this.userService.update(
-        ObjectUtil.defaultValue(id, () -> SpringSecurityUtils.getCurrentUser().getUid()), user);
-  }
-
-  public Boolean changePassword(String oldPassword, String newPassword) {
+  public List<User> createUsers(List<UserCreateInput> users, UserSettingsInput settings) {
     LoginUser loginUser = SpringSecurityUtils.getCurrentUser();
-    userService.changePassword(loginUser.getUid(), oldPassword, newPassword);
-    return Boolean.TRUE;
+    return this.userService.saveAll(
+        users.stream()
+            .map(this.userConverter::toUser)
+            .peek(
+                user -> {
+                  user.setPassword(settings.getPassword());
+                  user.setForcePasswordReset(settings.isForcePasswordReset());
+                  user.setTenantId(loginUser.getTenantId());
+                })
+            .collect(Collectors.toList()));
   }
 
-  public User getUser(Long id) {
-    return null;
+  public User updateUser(Long id, UserUpdateInput input, Boolean merge) {
+    User user = this.userConverter.toUser(input);
+    return this.userService.update(id, user, merge);
+  }
+
+  public User deleteUser(Long id) {
+    return this.userService.delete(id);
+  }
+
+  public List<User> deleteManyUsers(List<Long> ids) {
+    return this.userService.deleteMany(ids);
+  }
+
+  public Boolean changePassword(Long id, String oldPassword, String newPassword) {
+    Long uid =
+        Optional.ofNullable(id).orElseGet(() -> SpringSecurityUtils.getCurrentUser().getUid());
+    userService.changePassword(uid, oldPassword, newPassword);
+    return Boolean.TRUE;
   }
 }

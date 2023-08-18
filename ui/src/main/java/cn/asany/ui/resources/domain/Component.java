@@ -1,7 +1,6 @@
 package cn.asany.ui.resources.domain;
 
 import cn.asany.storage.api.FileObject;
-import cn.asany.storage.api.converter.FileObjectConverter;
 import cn.asany.ui.resources.UIResource;
 import cn.asany.ui.resources.domain.converter.ComponentDataConverter;
 import cn.asany.ui.resources.domain.enums.ComponentScope;
@@ -16,6 +15,7 @@ import javax.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.framework.dao.hibernate.converter.MapConverter;
 import org.jfantasy.framework.util.common.ClassUtil;
@@ -49,7 +49,7 @@ public class Component extends BaseBusEntity implements UIResource {
   private ComponentScope scope;
   /** 图片 */
   @Column(name = "IMAGE", length = 500, columnDefinition = "JSON")
-  @Convert(converter = FileObjectConverter.class)
+  @Type(type = "file")
   private FileObject image;
   /** 组件类型 */
   @Enumerated(EnumType.STRING)

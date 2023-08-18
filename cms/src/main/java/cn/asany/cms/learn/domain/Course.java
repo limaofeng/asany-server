@@ -1,12 +1,12 @@
 package cn.asany.cms.learn.domain;
 
 import cn.asany.storage.api.FileObject;
-import cn.asany.storage.api.converter.FileObjectConverter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.List;
 import javax.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
 /**
@@ -37,7 +37,7 @@ public class Course extends BaseBusEntity {
 
   /** 封面 */
   @Column(name = "COVER", length = 500)
-  @Convert(converter = FileObjectConverter.class)
+  @Type(type = "file")
   private FileObject cover;
 
   /** 发布人 */

@@ -36,7 +36,7 @@ public class CurrentUser extends User {
       String password,
       UserType userType,
       FileObject avatar,
-      String nickName,
+      String nickname,
       String title,
       UserStatus status,
       Phone phone,
@@ -50,19 +50,18 @@ public class CurrentUser extends User {
       Boolean accountNonExpired,
       Boolean accountNonLocked,
       Boolean credentialsNonExpired,
+      Boolean forcePasswordReset,
       Date lockTime,
       Date lastLoginTime,
-      List<Role> roles,
-      List<Group> groups,
       String tenantId,
-      List<GrantPermission> grants) {
+      List<Permission> permissions) {
     super(
         id,
         username,
         password,
         userType,
         avatar,
-        nickName,
+        nickname,
         title,
         status,
         phone,
@@ -76,11 +75,10 @@ public class CurrentUser extends User {
         accountNonExpired,
         accountNonLocked,
         credentialsNonExpired,
+        forcePasswordReset,
         lockTime,
         lastLoginTime,
-        roles,
-      groups,
-      tenantId,
-        grants);
+        tenantId,
+        permissions);
   }
 }

@@ -18,7 +18,6 @@ import cn.asany.shanhai.core.support.graphql.config.CustomTypeDefinitionFactory;
 import cn.asany.shanhai.core.support.model.FieldTypeRegistry;
 import cn.asany.shanhai.core.support.tools.DynamicClassGenerator;
 import cn.asany.shanhai.core.utils.GraphQLTypeUtils;
-import cn.asany.shanhai.core.utils.JdbcUtil;
 import graphql.kickstart.autoconfigure.tools.SchemaDirective;
 import graphql.kickstart.autoconfigure.tools.SchemaStringProvider;
 import graphql.kickstart.tools.*;
@@ -34,6 +33,7 @@ import java.util.stream.Collectors;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.jfantasy.framework.dao.mybatis.keygen.util.DataBaseKeyGenerator;
+import org.jfantasy.framework.dao.util.JdbcUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StopWatch;
 
@@ -64,7 +64,7 @@ public class ModelParser {
   private final GraphQLScalarType[] scalars;
   private final List<SchemaDirective> directives;
   private final List<SchemaDirectiveWiring> directiveWirings;
-  private SchemaParser schemaParser;
+  @Getter private SchemaParser schemaParser;
 
   public ModelParser(
       List<GraphQLResolver<?>> resolvers,
@@ -202,7 +202,7 @@ public class ModelParser {
     String tableName = mediator.model.getMetadata().getDatabaseTableName();
     String columnName = field.getMetadata().getDatabaseColumnName();
 
-    JdbcUtil.dropColumn(tableName, columnName);
+    JdbcUtils.dropColumn(tableName, columnName);
 
     this.refreshQueryDefinition();
     this.refreshMutationDefinition();
@@ -240,10 +240,6 @@ public class ModelParser {
               ay.addAll(by);
               return ay;
             });
-  }
-
-  public SchemaParser getSchemaParser() {
-    return this.schemaParser;
   }
 
   public SchemaParser buildSchemaParser() throws IOException {
@@ -294,11 +290,12 @@ public class ModelParser {
     private ModelRepository repository;
   }
 
+  @Getter
   public class ModelMediator {
     private final Long id;
     private String code;
     private Model model;
-    @Getter private final Map<String, FieldDefinition> queryDefinitions = new ConcurrentHashMap<>();
+    private final Map<String, FieldDefinition> queryDefinitions = new ConcurrentHashMap<>();
 
     @Getter
     private final Map<String, FieldDefinition> mutationDefinitions = new ConcurrentHashMap<>();
@@ -410,21 +407,9 @@ public class ModelParser {
 
     public void uninstall() {
       modelSessionFactory.unbuildModelRepository(model.getCode());
-      JdbcUtil.dropTable(model.getMetadata().getDatabaseTableName());
+      JdbcUtils.dropTable(model.getMetadata().getDatabaseTableName());
       DataBaseKeyGenerator.getInstance()
           .reset(model.getMetadata().getDatabaseTableName().toLowerCase() + ":id");
-    }
-
-    public Long getId() {
-      return id;
-    }
-
-    public String getCode() {
-      return code;
-    }
-
-    public Model getModel() {
-      return model;
     }
 
     public List<GraphQLResolver<?>> getResolvers() {

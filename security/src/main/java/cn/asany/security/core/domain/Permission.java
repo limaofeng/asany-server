@@ -27,29 +27,20 @@ public class Permission extends BaseBusEntity implements Tenantable {
   @GeneratedValue(generator = "fantasy-sequence")
   @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
-  /**
-   * 授权范围
-   */
+  /** 授权范围 */
   @Column(name = "SCOPE", length = 25, nullable = false)
   private String scope;
-  /**
-   * 授权主体
-   */
-  @Column(name = "SUBJECT", length = 25, nullable = false)
-  private String subject;
-  /**
-   * 授权策略
-   */
+  /** 授权主体 */
+  @Embedded private Grantee grantee;
+  /** 授权策略 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(
-    name = "POLICY_ID",
+      name = "POLICY_ID",
       foreignKey = @ForeignKey(name = "FK_PERMISSION_POLICY_ID"),
-    updatable = false,
+      updatable = false,
       nullable = false)
   private PermissionPolicy policy;
-  /**
-   * 租户ID
-   */
-  @Column(name = "TENANT_ID", length = 24)
+  /** 租户ID */
+  @Column(name = "TENANT_ID", length = 24, updatable = false)
   private String tenantId;
 }
