@@ -43,7 +43,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EnableJpaRepositories(
     basePackages = "cn.asany.email.*.dao",
     repositoryBaseClass = ComplexJpaRepository.class)
-@EnableConfigurationProperties(JamesProperties.class)
+@EnableConfigurationProperties({JamesProperties.class, FileSystemProperties.class})
 public class EmailAutoConfiguration {
 
   @Bean

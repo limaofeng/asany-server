@@ -33,7 +33,6 @@ import org.springframework.stereotype.Component;
  *
  * @author limaofeng
  * @version V1.0
- * @date 2022/7/28 9:12 9:12
  */
 @Component
 public class ArticleGraphQLRootResolver implements GraphQLQueryResolver, GraphQLMutationResolver {
@@ -73,8 +72,8 @@ public class ArticleGraphQLRootResolver implements GraphQLQueryResolver, GraphQL
    * @param orderBy 排序
    * @return ArticleConnection
    */
-  public ArticleConnection articles(
-      ArticleWhereInput where, int first, int page, int pageSize, Sort orderBy) {
+  public ArticleConnection articlesConnection(
+      ArticleWhereInput where, int page, int pageSize, Sort orderBy) {
     PropertyFilter queryFilter = ObjectUtil.defaultValue(where, new ArticleWhereInput()).toFilter();
 
     Pageable pageable = PageRequest.of(page - 1, pageSize, orderBy);

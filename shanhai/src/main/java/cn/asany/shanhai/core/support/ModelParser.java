@@ -166,7 +166,7 @@ public class ModelParser {
     modelSessionFactory.update();
   }
 
-  public void createModelField(Long modelId, ModelField field) {
+  public void createModelField(Long modelId, @SuppressWarnings("unused") ModelField field) {
     ModelMediator mediator = allModels.get(modelId);
 
     mediator.reinstall();
@@ -177,7 +177,7 @@ public class ModelParser {
     modelSessionFactory.update();
   }
 
-  public void updateModelField(Long modelId, ModelField field) {
+  public void updateModelField(Long modelId, @SuppressWarnings("unused") ModelField field) {
     StopWatch sw = StopWatchHolder.get();
 
     ModelMediator mediator = allModels.get(modelId);

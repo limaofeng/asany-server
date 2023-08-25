@@ -20,7 +20,7 @@ public class TokenCleanupJob implements Job {
 
   @Override
   public void execute(JobExecutionContext context) throws JobExecutionException {
-    JobDataMap jobDataMap = context.getJobDetail().getJobDataMap();
+    JobDataMap jobDataMap = context.getMergedJobDataMap();
     String tokenValue = jobDataMap.getString("tokenValue");
 
     accessTokenService.cleanupExpiredToken(tokenValue);
@@ -32,7 +32,7 @@ public class TokenCleanupJob implements Job {
     return dataMap;
   }
 
-  public static String triggerDescription(String tokenValue, Date expiresAt) {
-    return "tokenValue: " + tokenValue + ", 预计于: " + expiresAt + " 过期";
+  public static String triggerDescription(String triggerKey, Date expiresAt) {
+    return "triggerKey: " + triggerKey + ", 预计于: " + expiresAt + " 过期";
   }
 }

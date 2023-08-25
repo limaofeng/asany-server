@@ -2,20 +2,11 @@ package cn.asany.security.core.graphql;
 
 import cn.asany.security.core.domain.*;
 import cn.asany.security.core.graphql.input.*;
-import cn.asany.security.core.graphql.types.UserConnection;
 import cn.asany.security.core.service.*;
 import graphql.kickstart.tools.GraphQLMutationResolver;
 import graphql.kickstart.tools.GraphQLQueryResolver;
-import java.util.List;
-import org.jfantasy.framework.dao.LimitPageRequest;
-import org.jfantasy.framework.dao.jpa.PropertyFilter;
-import org.jfantasy.framework.util.common.ObjectUtil;
-import org.jfantasy.graphql.util.Kit;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -35,20 +26,21 @@ public class SecurityGraphQLMutationResolver
   //  @Autowired private GrantPermissionService grantPermissionService;
 
   /** 查询所有用户 - 分页 */
-  public UserConnection usersConnection(
-      UserWhereInput where, int page, int pageSize, Sort orderBy) {
-    Pageable pageable = PageRequest.of(page - 1, pageSize, orderBy);
-    PropertyFilter filter = ObjectUtil.defaultValue(where, new UserWhereInput()).toFilter();
-    return Kit.connection(userService.findPage(pageable, filter), UserConnection.class);
-  }
+  //  public UserConnection usersConnection(
+  //      UserWhereInput where, int page, int pageSize, Sort orderBy) {
+  //    Pageable pageable = PageRequest.of(page - 1, pageSize, orderBy);
+  //    PropertyFilter filter = ObjectUtil.defaultValue(where, new UserWhereInput()).toFilter();
+  //    return Kit.connection(userService.findPage(pageable, filter), UserConnection.class);
+  //  }
 
-  /** 查询所有用户 - 列表 */
-  public List<User> users(
-      UserWhereInput where, int skip, int after, int before, int first, int last, Sort orderBy) {
-    Pageable pageable = LimitPageRequest.of(skip, first, orderBy);
-    PropertyFilter filter = ObjectUtil.defaultValue(where, new UserWhereInput()).toFilter();
-    return userService.findPage(pageable, filter).getContent();
-  }
+  //  /** 查询所有用户 - 列表 */
+  //  public List<User> users(
+  //      UserWhereInput where, int skip, int after, int before, int first, int last, Sort orderBy)
+  // {
+  //    Pageable pageable = LimitPageRequest.of(skip, first, orderBy);
+  //    PropertyFilter filter = ObjectUtil.defaultValue(where, new UserWhereInput()).toFilter();
+  //    return userService.findPage(pageable, filter).getContent();
+  //  }
 
   //  private List<GrantPermission> getGrantPermissionByUser(
   //      List<GrantPermissionByUserInput> grantInputs) {

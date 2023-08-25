@@ -1,6 +1,6 @@
 package cn.asany.im.auth.service;
 
-import cn.asany.autoconfigure.properties.AdminUser;
+import cn.asany.autoconfigure.properties.OpenIMProperties.AdminUser;
 import cn.asany.im.auth.graphql.type.Platform;
 import cn.asany.im.auth.service.vo.*;
 import cn.asany.im.error.OpenIMServerAPIException;

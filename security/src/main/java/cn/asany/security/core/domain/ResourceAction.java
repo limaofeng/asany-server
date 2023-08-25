@@ -2,8 +2,7 @@ package cn.asany.security.core.domain;
 
 import cn.asany.security.core.domain.enums.AccessLevel;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Set;
 import javax.persistence.*;
 import lombok.*;
 import org.jfantasy.framework.dao.BaseBusEntity;
@@ -44,18 +43,13 @@ public class ResourceAction extends BaseBusEntity {
   @Column(name = "ENDPOINT", length = 50)
   private String endpoint;
 
-  @ManyToMany(fetch = FetchType.LAZY)
-  @JoinTable(
+  @ElementCollection
+  @CollectionTable(
       name = "AUTH_RESOURCE_ACTION_RESOURCE_TYPE",
-      joinColumns =
-          @JoinColumn(
-              name = "RESOURCE_ACTION",
-              foreignKey = @ForeignKey(name = "FK_RESOURCE_ACTION_RESOURCE_TYPE_A_ID")),
-      inverseJoinColumns =
-          @JoinColumn(
-              name = "RESOURCE_TYPE",
-              foreignKey = @ForeignKey(name = "FK_RESOURCE_ACTION_RESOURCE_TYPE_R_ID")))
-  private List<ResourceType> resourceTypes;
+      foreignKey = @ForeignKey(name = "FK_RESOURCE_ACTION_RESOURCE_TYPE_A_ID"),
+      joinColumns = @JoinColumn(name = "RESOURCE_ACTION"))
+  @Column(name = "RESOURCE_TYPE_ARN", length = 250)
+  private Set<String> resourceTypes;
 
   @Override
   public boolean equals(Object o) {
@@ -78,10 +72,11 @@ public class ResourceAction extends BaseBusEntity {
     if (accessLevel != action.accessLevel) {
       return false;
     }
-    String leftResourceTypes =
-        resourceTypes.stream().map(ResourceType::getArn).collect(Collectors.joining(","));
-    String rightResourceTypes =
-        action.resourceTypes.stream().map(ResourceType::getArn).collect(Collectors.joining(","));
+    if (!endpoint.equals(action.endpoint)) {
+      return false;
+    }
+    String leftResourceTypes = String.join(",", resourceTypes);
+    String rightResourceTypes = String.join(",", action.resourceTypes);
     return leftResourceTypes.equals(rightResourceTypes);
   }
 
@@ -91,6 +86,7 @@ public class ResourceAction extends BaseBusEntity {
     result = 31 * result + name.hashCode();
     result = 31 * result + description.hashCode();
     result = 31 * result + accessLevel.hashCode();
+    result = 31 * result + endpoint.hashCode();
     result = 31 * result + resourceTypes.hashCode();
     return result;
   }

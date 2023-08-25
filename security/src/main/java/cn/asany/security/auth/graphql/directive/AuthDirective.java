@@ -2,13 +2,11 @@ package cn.asany.security.auth.graphql.directive;
 
 import cn.asany.security.auth.service.AuthInfoService;
 import cn.asany.security.core.domain.enums.AccessLevel;
-import graphql.schema.GraphQLArgument;
-import graphql.schema.GraphQLDirective;
-import graphql.schema.GraphQLFieldDefinition;
-import graphql.schema.GraphQLFieldsContainer;
+import graphql.schema.*;
 import graphql.schema.idl.SchemaDirectiveWiring;
 import graphql.schema.idl.SchemaDirectiveWiringEnvironment;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -31,21 +29,18 @@ public class AuthDirective implements SchemaDirectiveWiring {
     GraphQLFieldsContainer parentType = env.getFieldsContainer();
     GraphQLDirective directive = env.getDirective();
 
-    String name = directive.getArgument("name").toAppliedArgument().getValue();
-    GraphQLArgument descriptionArgument = directive.getArgument("description");
+    String name = DirectiveUtils.getArgumentValue(directive, "name");
     AccessLevel accessLevel =
-        AccessLevel.valueOf(directive.getArgument("accessLevel").toAppliedArgument().getValue());
+        AccessLevel.valueOf(DirectiveUtils.getArgumentValue(directive, "accessLevel"));
     String description =
-        descriptionArgument == null
-            ? field.getDescription()
-            : descriptionArgument.toAppliedArgument().getValue();
-    GraphQLArgument resourceTypeListArgument = directive.getArgument("resourceTypes");
+        DirectiveUtils.getArgumentValue(directive, "description", field.getDescription());
     List<String> resourceTypes =
-        resourceTypeListArgument == null
-            ? Collections.emptyList()
-            : resourceTypeListArgument.toAppliedArgument().getValue();
+        DirectiveUtils.getArgumentValue(directive, "resourceTypes", Collections.emptyList());
+    String endpoint = parentType.getName() + "." + field.getName();
 
-    AuthInfo authInfo = authInfoService.save(name, description, accessLevel, resourceTypes);
+    AuthInfo authInfo =
+        authInfoService.save(
+            name, description, endpoint, accessLevel, new HashSet<>(resourceTypes));
 
     env.getCodeRegistry()
         .dataFetcher(parentType, field, new FieldPermissionDataFetcher(env, authInfo));

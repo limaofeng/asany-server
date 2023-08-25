@@ -2,10 +2,10 @@ package cn.asany.shanhai.data.engine;
 
 import cn.asany.shanhai.data.domain.DataSourceConfig;
 import cn.asany.shanhai.data.service.DataSourceService;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import org.jfantasy.framework.util.common.ClassUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -17,7 +17,7 @@ public class DefaultDataSourceLoader implements IDataSourceLoader {
 
   @Override
   public List<String> getTypes() {
-    return builders.entrySet().stream().map(Map.Entry::getKey).collect(Collectors.toList());
+    return new ArrayList<>(builders.keySet());
   }
 
   @Override
@@ -38,6 +38,7 @@ public class DefaultDataSourceLoader implements IDataSourceLoader {
         config.getOptions(optionsClass));
   }
 
+  @SuppressWarnings("unused")
   public void setDataSourceService(@Autowired DataSourceService dataSourceService) {
     this.dataSourceService = dataSourceService;
   }

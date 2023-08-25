@@ -50,10 +50,6 @@ public class ThumbnailService {
     this.thumbnailDao = thumbnailDao;
   }
 
-  private Thumbnail getById(Long id) {
-    return this.thumbnailDao.getReferenceById(id);
-  }
-
   @Transactional(readOnly = true)
   @Cacheable(
       key = "targetClass + '.' + methodName + '#' + #p0 + ',' + #p1 ",

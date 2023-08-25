@@ -6,9 +6,8 @@ import cn.asany.security.core.domain.ResourceAction;
 import cn.asany.security.core.domain.ResourceType;
 import cn.asany.security.core.domain.enums.AccessLevel;
 import cn.asany.security.core.service.*;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import org.jfantasy.framework.util.common.StringUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,9 +40,13 @@ public class AuthInfoService {
 
   @Transactional(rollbackFor = RuntimeException.class)
   public AuthInfo save(
-      String name, String description, AccessLevel accessLevel, List<String> resourceTypes) {
+      String name,
+      String description,
+      String endpoint,
+      AccessLevel accessLevel,
+      Set<String> resourceTypes) {
 
-    List<ResourceType> resourceTypeList = this.saveOrUpdate(resourceTypes);
+    this.resourceTypeSaveOrUpdate(resourceTypes);
 
     Optional<ResourceAction> optional = this.resourceActionService.findById(name);
 
@@ -51,9 +54,10 @@ public class AuthInfoService {
         ResourceAction.builder()
             .id(name)
             .name(name)
+            .endpoint(endpoint)
             .description(description)
             .accessLevel(accessLevel)
-            .resourceTypes(resourceTypeList)
+            .resourceTypes(resourceTypes)
             .build();
 
     if (!optional.isPresent() || !action.equals(optional.get())) {
@@ -67,31 +71,35 @@ public class AuthInfoService {
         .resourceTypes(action.getResourceTypes())
         .permissionService(permissionService)
         .permissionPolicyService(permissionPolicyService)
+        .resourceTypeService(resourceTypeService)
         .build();
   }
 
-  private List<ResourceType> saveOrUpdate(List<String> resourceTypeStrings) {
-    List<ResourceType> resourceTypes = new ArrayList<>();
+  private void resourceTypeSaveOrUpdate(Set<String> resourceTypeStrings) {
     for (String arn : resourceTypeStrings) {
-      resourceTypes.add(
+      String label = arn.substring(0, arn.indexOf("/"));
+      ResourceType resourceType =
           this.resourceTypeService
-              .findByArn(arn)
+              .findByLabel(label)
               .orElseGet(
                   () -> {
                     String[] values = arn.split(":");
                     String resourceName =
                         StringUtil.upperCaseFirst(values[values.length - 1].split("/")[0]);
-
                     AuthorizedService service = this.getServiceOrSave(values[0]);
                     return this.resourceTypeService.save(
                         ResourceType.builder()
+                            .label(label)
                             .resourceName(resourceName)
                             .service(service)
                             .arn(arn)
                             .build());
-                  }));
+                  });
+      if (!resourceType.getArns().contains(arn)) {
+        resourceType.getArns().add(arn);
+        this.resourceTypeService.update(resourceType);
+      }
     }
-    return resourceTypes;
   }
 
   private AuthorizedService getServiceOrSave(String id) {

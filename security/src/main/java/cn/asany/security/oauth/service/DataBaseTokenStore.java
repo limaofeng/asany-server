@@ -122,19 +122,25 @@ public class DataBaseTokenStore extends AbstractTokenStore {
 
   @SneakyThrows(SchedulerException.class)
   private void scheduleTokenExpirationHandling(String tokenValue, Date expiresAt) {
+    TriggerKey triggerKey = TokenCleanupJob.triggerKey(StringUtil.md5(tokenValue));
     Trigger trigger =
         TriggerBuilder.newTrigger()
             .forJob(TokenCleanupJob.JOBKEY_TOKEN_CLEANUP)
-            .withIdentity(tokenValue, TokenCleanupJob.JOBKEY_TOKEN_CLEANUP.getGroup())
+            .withIdentity(triggerKey)
             .usingJobData(TokenCleanupJob.jobData(tokenValue))
-            .withDescription(TokenCleanupJob.triggerDescription(tokenValue, expiresAt))
+            .withDescription(
+                TokenCleanupJob.triggerDescription(StringUtil.md5(tokenValue), expiresAt))
             .withSchedule(
                 SimpleScheduleBuilder.simpleSchedule()
                     .withRepeatCount(0)
                     .withMisfireHandlingInstructionFireNow())
             .startAt(expiresAt)
             .build();
-    this.taskScheduler.scheduleJob(trigger);
+    if (this.taskScheduler.checkExists(triggerKey)) {
+      this.taskScheduler.rescheduleJob(triggerKey, trigger);
+    } else {
+      this.taskScheduler.scheduleJob(trigger);
+    }
   }
 
   @Override

@@ -21,6 +21,11 @@
       "sourceType": "cn.asany.autoconfigure.properties.OpenIMProperties"
     },
     {
+      "name": "openim.admin",
+      "description": "OpenIM 配置.",
+      "sourceType": "cn.asany.autoconfigure.properties.OpenIMProperties"
+    },
+    {
       "name": "openim.admin.user",
       "type": "java.lang.String",
       "description": "管理员账号.",

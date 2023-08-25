@@ -86,19 +86,10 @@ spring:
     properties:
       org:
         quartz:
-          dataSource:
-            qzDS:
-              provider: hikaricp
-              maxConnections: 10
-              URL: jdbc:mysql://${DATABASE_HOST}/${DATABASE_INSTANCE_NAME}?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&rewriteBatchedStatements=true
-              driver: com.mysql.cj.jdbc.Driver
-              user: ${DATABASE_USERNAME}
-              password: ${DATABASE_PASSWORD}
           scheduler:
             instanceName: scheduler
             instanceId: AUTO
           jobStore:
-            dataSource: qzDS
             class: org.springframework.scheduling.quartz.LocalDataSourceJobStore
             driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate
             tablePrefix: QRTZ_

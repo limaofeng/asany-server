@@ -1,6 +1,6 @@
 package cn.asany.im.user.service;
 
-import cn.asany.autoconfigure.properties.AdminUser;
+import cn.asany.autoconfigure.properties.OpenIMProperties.AdminUser;
 import cn.asany.im.auth.service.vo.UserRegisterData;
 import cn.asany.im.auth.service.vo.UserRegisterRequestBody;
 import cn.asany.im.auth.service.vo.UserRegisterResponseBody;

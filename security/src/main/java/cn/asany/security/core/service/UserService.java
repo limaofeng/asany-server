@@ -11,6 +11,7 @@ import cn.asany.security.core.util.PasswordGenerator;
 import cn.asany.security.core.util.UserUtil;
 import java.util.*;
 import java.util.stream.Collectors;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.error.ValidationException;
@@ -30,12 +31,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-/** @author limaofeng */
+/**
+ * 用户服务
+ *
+ * @author limaofeng
+ */
 @Slf4j
 @Service
 public class UserService {
-
-  public static final String LOGIN_ATTRS_NICKNAME = "_nickName";
 
   private final PasswordGenerator passwordGenerator = new PasswordGenerator();
 
@@ -43,7 +46,7 @@ public class UserService {
 
   protected final MessageSourceAccessor messages;
 
-  private PasswordEncoder passwordEncoder;
+  @Getter private PasswordEncoder passwordEncoder;
 
   private final RoleService roleService;
 
@@ -113,12 +116,10 @@ public class UserService {
     user.setAccountNonExpired(true);
     user.setCredentialsNonExpired(true);
 
-    Tenant tenant =
+    AccessControlSettings accessControlSettings =
         tenantService
-            .findById(user.getTenantId())
-            .orElseThrow(() -> new ValidationException("租户不存在"));
-
-    AccessControlSettings accessControlSettings = tenant.getAccessControlSettings();
+            .findAccessControlSettings(user.getTenantId())
+            .orElseThrow(() -> new ValidationException("租户访问控制设置不存在"));
 
     PasswordPolicy passwordPolicy = accessControlSettings.getPasswordPolicy();
 
@@ -221,44 +222,6 @@ public class UserService {
           SimpleGrantedAuthority.newInstance(GranteeType.GROUP.name() + "_" + group.getName()));
     }
     return authorities;
-  }
-
-  public List<Role> addRoles(Long id, String[] roles, boolean clear) {
-    User user = this.userDao.getReferenceById(id);
-    if (clear) {
-      //      user.getRoles().clear();
-    }
-    for (String role : roles) {
-      //      if (ObjectUtil.exists(user.getRoles(), "code", role)) {
-      //        continue;
-      //      }
-      Optional<Role> optionalRole = this.roleService.findByCode(role);
-      if (!optionalRole.isPresent()) {
-        continue;
-      }
-      //      user.getRoles().add(optionalRole.get());
-    }
-    this.userDao.save(user);
-    //    return user.getRoles();
-    return new ArrayList<>();
-  }
-
-  public List<Role> removeRoles(Long id, String... roles) {
-    User user = this.userDao.getReferenceById(id);
-    //    for (String role : roles) {
-    //      ObjectUtil.remove(user.getRoles(), "id", role);
-    //    }
-    //    this.userDao.save(user);
-    //    return user.getRoles();
-    return new ArrayList<>();
-  }
-
-  public PasswordEncoder getPasswordEncoder() {
-    return passwordEncoder;
-  }
-
-  public User findUniqueById(Long uid) {
-    return null;
   }
 
   public Optional<User> findById(Long id) {

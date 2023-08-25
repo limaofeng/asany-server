@@ -22,6 +22,8 @@ import graphql.schema.DataFetchingEnvironment;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.jfantasy.framework.dao.LimitPageRequest;
+import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.security.LoginUser;
 import org.jfantasy.framework.security.SpringSecurityUtils;
 import org.jfantasy.framework.security.authentication.SimpleAuthenticationToken;
@@ -128,10 +130,19 @@ public class UserGraphQLRootResolver implements GraphQLMutationResolver, GraphQL
    * @param orderBy 排序
    * @return UserConnection
    */
-  public UserConnection users(UserWhereInput where, int page, int pageSize, Sort orderBy) {
+  public UserConnection usersConnection(
+      UserWhereInput where, int page, int pageSize, Sort orderBy) {
     Pageable pageable = PageRequest.of(page - 1, pageSize, orderBy);
     where = ObjectUtil.defaultValue(where, new UserWhereInput());
     return Kit.connection(userService.findPage(pageable, where.toFilter()), UserConnection.class);
+  }
+
+  /** 查询所有用户 - 列表 */
+  public List<User> users(
+      UserWhereInput where, int skip, int after, int before, int first, int last, Sort orderBy) {
+    Pageable pageable = LimitPageRequest.of(skip, first, orderBy);
+    PropertyFilter filter = ObjectUtil.defaultValue(where, new UserWhereInput()).toFilter();
+    return userService.findPage(pageable, filter).getContent();
   }
 
   /**

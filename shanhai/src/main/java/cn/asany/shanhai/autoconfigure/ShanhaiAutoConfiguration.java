@@ -42,7 +42,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
   "cn.asany.shanhai.core.support.model.types",
   "cn.asany.shanhai.core.support.model.features",
   "cn.asany.shanhai.core.convert",
-  "cn.asany.shanhai.core.runners",
   "cn.asany.shanhai.core.utils",
   "cn.asany.shanhai.core.dao",
   "cn.asany.shanhai.core.listener",

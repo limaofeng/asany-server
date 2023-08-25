@@ -22,7 +22,7 @@ public class TaskPropertyFilter
   protected TaskPropertyFilter(TaskInfoQuery taskQuery) {
     super(taskQuery);
     this.isHistory = taskQuery instanceof HistoricTaskInstanceQuery;
-    this.property(
+    this.custom(
         "owner",
         new MatchType[] {MatchType.EQ},
         (name, matchType, value, context) -> {
@@ -31,7 +31,7 @@ public class TaskPropertyFilter
           }
         });
 
-    this.property(
+    this.custom(
         "assignee",
         new MatchType[] {MatchType.EQ},
         (name, matchType, value, context) -> {
@@ -40,7 +40,7 @@ public class TaskPropertyFilter
           }
         });
 
-    this.property(
+    this.custom(
         "unassigned",
         new MatchType[] {MatchType.EQ},
         (name, matchType, value, context) -> {
@@ -48,13 +48,11 @@ public class TaskPropertyFilter
             return;
           }
           if (matchType == MatchType.EQ) {
-            if (((Boolean) value)) {
-              getTaskQuery().taskUnassigned();
-            }
+            getTaskQuery().taskUnassigned();
           }
         });
 
-    this.property(
+    this.custom(
         "incomplete",
         new MatchType[] {MatchType.EQ},
         (name, matchType, value, context) -> {
@@ -66,7 +64,7 @@ public class TaskPropertyFilter
           }
         });
 
-    this.property(
+    this.custom(
         "completed",
         new MatchType[] {MatchType.EQ},
         (name, matchType, value, context) -> {
@@ -78,7 +76,7 @@ public class TaskPropertyFilter
           }
         });
 
-    this.property(
+    this.custom(
         "completedAfter",
         new MatchType[] {MatchType.EQ},
         (name, matchType, value, context) -> {
@@ -87,7 +85,7 @@ public class TaskPropertyFilter
           }
         });
 
-    this.property(
+    this.custom(
         "completedOn",
         new MatchType[] {MatchType.EQ},
         (name, matchType, value, context) -> {
@@ -96,7 +94,7 @@ public class TaskPropertyFilter
           }
         });
 
-    this.property(
+    this.custom(
         "completedBefore",
         new MatchType[] {MatchType.EQ},
         (name, matchType, value, context) -> {
@@ -105,7 +103,7 @@ public class TaskPropertyFilter
           }
         });
 
-    this.property(
+    this.custom(
         "category",
         new MatchType[] {MatchType.EQ},
         (name, matchType, value, context) -> {

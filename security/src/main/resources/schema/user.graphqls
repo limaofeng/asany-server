@@ -16,9 +16,26 @@ extend type Query {
     last: Int
     # 排序
     orderBy: OrderBy = "unsorted"
-  ): [User]
+  ): [User!]!
   @authInfo(
-    name: "ac:UserConnection"
+    name: "ac:UserList"
+    accessLevel: "List"
+    resourceTypes: ["ac:user/*", "ac:user/{#id}"]
+  )
+  """
+  查询用户
+  """
+  usersConnection(
+    where: UserWhereInput = {}
+    # 页码
+    page: Int = 0
+    # 每页显示数据条数
+    pageSize: Int = 15
+    # 排序
+    orderBy: OrderBy = "unsorted"
+  ): UserConnection!
+  @authInfo(
+    name: "ac:UsersConnection"
     accessLevel: "List"
     resourceTypes: ["ac:user/*", "ac:user/{#id}"]
   )
@@ -114,20 +131,20 @@ input UserWhereInput {
 
 type UserEdge {
   cursor: String
-  node: User
+  node: User!
 }
 
 type UserConnection {
   # 总数据条数
-  totalCount: Int
+  totalCount: Int!
   # 每页显示条数
-  pageSize: Int
+  pageSize: Int!
   # 总页数
-  totalPage: Int
+  totalPage: Int!
   # 当前页
-  currentPage: Int
+  currentPage: Int!
   edges: [UserEdge!]!
-  pageInfo: PageInfo
+  pageInfo: PageInfo!
 }
 
 enum UserType {

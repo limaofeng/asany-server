@@ -21,10 +21,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @ComponentScan({
   "cn.asany.nuwa.*.dao",
   "cn.asany.nuwa.*.service",
-  "cn.asany.nuwa.*.runner",
   "cn.asany.nuwa.*.converter",
   "cn.asany.nuwa.*.graphql",
-  "cn.asany.nuwa.*.runner",
 })
 @EnableJpaRepositories(
     basePackages = "cn.asany.nuwa.*.dao",

@@ -16,6 +16,7 @@ import org.jfantasy.framework.security.oauth2.core.OAuth2AccessToken;
 import org.jfantasy.framework.security.oauth2.core.TokenType;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 访问令牌服务
@@ -147,11 +148,13 @@ public class AccessTokenService {
     return accessTokens.get(0).getLastUsedTime();
   }
 
+  @Transactional(rollbackFor = Exception.class)
   public void delete(String token) {
     Optional<AccessToken> accessToken = getAccessToken(token);
     accessToken.ifPresent(this.accessTokenDao::delete);
   }
 
+  @Transactional(rollbackFor = Exception.class)
   public void cleanupExpiredToken(String tokenValue) {
     delete(tokenValue);
   }

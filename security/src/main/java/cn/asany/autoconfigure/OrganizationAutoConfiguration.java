@@ -23,13 +23,9 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
   "cn.asany.organization.core.service",
   "cn.asany.organization.core.graphql",
   "cn.asany.organization.employee.dao",
-  "cn.asany.organization.employee.converter",
   "cn.asany.organization.employee.service",
-  "cn.asany.organization.employee.graphql",
   "cn.asany.organization.relationship.dao",
-  "cn.asany.organization.relationship.converter",
   "cn.asany.organization.relationship.service",
-  "cn.asany.organization.relationship.graphql",
 })
 @EnableJpaRepositories(
     basePackages = {

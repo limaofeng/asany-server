@@ -16,7 +16,6 @@ import org.jfantasy.graphql.context.AuthorizationGraphQLServletContext;
 public class FieldPermissionDataFetcher implements DataFetcher<Object> {
 
   private final DataFetcher<?> dataFetcher;
-
   private final AuthInfo authInfo;
 
   public FieldPermissionDataFetcher(
@@ -39,12 +38,15 @@ public class FieldPermissionDataFetcher implements DataFetcher<Object> {
     }
 
     Map<String, Object> args = environment.getArguments();
+
     boolean hasPermission = authInfo.checkUserPermission(authentication, args);
 
     if (!hasPermission) {
       throw new UnauthorizedException(
           "Access denied. You don't have permission to access this resource.");
     }
+
+    authInfo.condition(authentication, args);
 
     return dataFetcher.get(environment);
   }

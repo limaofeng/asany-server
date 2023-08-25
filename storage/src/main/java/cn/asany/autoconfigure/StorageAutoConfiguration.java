@@ -22,7 +22,11 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
-/** @author limaofeng */
+/**
+ * 存储自动配置
+ *
+ * @author limaofeng
+ */
 @Configuration
 @EntityScan("cn.asany.storage.data.domain")
 @ComponentScan({
@@ -30,7 +34,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
   "cn.asany.storage.plugin",
   "cn.asany.storage.*.dao",
   "cn.asany.storage.*.service",
-  "cn.asany.storage.*.runner",
   "cn.asany.storage.*.converter",
   "cn.asany.storage.*.convert",
   "cn.asany.storage.*.graphql",
@@ -40,8 +43,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
     basePackages = "cn.asany.storage.*.dao",
     repositoryBaseClass = ComplexJpaRepository.class)
 public class StorageAutoConfiguration {
-
-  public void init() {}
 
   @Bean
   public GraphQLScalarType uploadScalarDefine() {

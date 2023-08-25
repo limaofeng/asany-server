@@ -124,6 +124,20 @@ directive @authInfo(
   associatedOperations: [String!]
 ) on FIELD_DEFINITION
 
+directive @resource(
+  # 资源的名称，用于标识这个资源
+  name: String!
+  # 在用户界面中显示的标签
+  label: String!
+  # 资源的描述，简要说明这个资源的作用
+  description: String!
+  # 可以操作的源类型，用于获取或操作数据
+  # 可以获取所有文章，或特定 ID 的文章
+  sourceTypes: [String!]!
+  # 资源的条件，限制访问或操作这个资源的范围
+  conditions: [String!]
+) on OBJECT
+
 enum LoginType {
   # 密码登录
   password

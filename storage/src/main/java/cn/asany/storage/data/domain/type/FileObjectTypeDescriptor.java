@@ -5,6 +5,7 @@ import org.hibernate.type.descriptor.WrapperOptions;
 import org.hibernate.type.descriptor.java.AbstractTypeDescriptor;
 import org.hibernate.type.descriptor.java.MutableMutabilityPlan;
 import org.jfantasy.framework.jackson.JSON;
+import org.jfantasy.framework.util.common.StringUtil;
 
 public class FileObjectTypeDescriptor extends AbstractTypeDescriptor<FileObject> {
 
@@ -28,6 +29,9 @@ public class FileObjectTypeDescriptor extends AbstractTypeDescriptor<FileObject>
 
   @Override
   public FileObject fromString(String value) {
+    if (StringUtil.isBlank(value)) {
+      return null;
+    }
     return JSON.deserialize(value, FileObject.class);
   }
 

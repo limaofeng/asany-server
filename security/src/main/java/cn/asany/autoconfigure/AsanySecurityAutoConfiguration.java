@@ -1,9 +1,11 @@
 package cn.asany.autoconfigure;
 
 import cn.asany.security.auth.graphql.directive.AuthDirective;
+import cn.asany.security.auth.graphql.directive.ResourceDirective;
 import cn.asany.security.auth.service.AuthInfoService;
 import cn.asany.security.core.domain.User;
 import cn.asany.security.core.service.DefaultUserDetailsService;
+import cn.asany.security.core.service.ResourceTypeService;
 import cn.asany.security.core.service.UserService;
 import cn.asany.security.oauth.job.TokenCleanupJob;
 import graphql.kickstart.autoconfigure.tools.SchemaDirective;
@@ -23,6 +25,7 @@ import org.jfantasy.framework.security.crypto.password.PlaintextPasswordEncoder;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.graphql.context.DataLoaderRegistryCustomizer;
 import org.jfantasy.schedule.service.TaskScheduler;
+import org.quartz.SchedulerException;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -34,6 +37,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.transaction.support.TransactionCallback;
+import org.springframework.transaction.support.TransactionTemplate;
 
 /**
  * @author limaofeng
@@ -55,16 +60,28 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 public class AsanySecurityAutoConfiguration implements InitializingBean {
 
   private final TaskScheduler taskScheduler;
+  private final TransactionTemplate transactionTemplate;
 
-  public AsanySecurityAutoConfiguration(TaskScheduler taskScheduler) {
+  public AsanySecurityAutoConfiguration(
+      TaskScheduler taskScheduler, TransactionTemplate transactionTemplate) {
     this.taskScheduler = taskScheduler;
+    this.transactionTemplate = transactionTemplate;
   }
 
   @Override
-  public void afterPropertiesSet() throws Exception {
-    if (!this.taskScheduler.checkExists(TokenCleanupJob.JOBKEY_TOKEN_CLEANUP)) {
-      this.taskScheduler.addJob(TokenCleanupJob.JOBKEY_TOKEN_CLEANUP, TokenCleanupJob.class);
-    }
+  public void afterPropertiesSet() {
+    transactionTemplate.execute(
+        (TransactionCallback<Void>)
+            status -> {
+              try {
+                if (!taskScheduler.checkExists(TokenCleanupJob.JOBKEY_TOKEN_CLEANUP)) {
+                  taskScheduler.addJob(TokenCleanupJob.JOBKEY_TOKEN_CLEANUP, TokenCleanupJob.class);
+                }
+              } catch (SchedulerException e) {
+                status.setRollbackOnly();
+              }
+              return null;
+            });
   }
 
   @Bean("asany.PasswordEncoder")
@@ -111,6 +128,11 @@ public class AsanySecurityAutoConfiguration implements InitializingBean {
   @Bean
   public SchemaDirective authDirective(@Autowired AuthInfoService authInfoService) {
     return new SchemaDirective("authInfo", new AuthDirective(authInfoService));
+  }
+
+  @Bean
+  public SchemaDirective resourceDirective(@Autowired ResourceTypeService resourceTypeService) {
+    return new SchemaDirective("resource", new ResourceDirective(resourceTypeService));
   }
 
   //    @Bean(name = "dingtalk.AuthenticationProvider")

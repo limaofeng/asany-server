@@ -9,4 +9,9 @@ public class OpenIMProperties {
   private String url;
   private String secret;
   private AdminUser admin;
+
+  @Data
+  public static class AdminUser {
+    private String user;
+  }
 }

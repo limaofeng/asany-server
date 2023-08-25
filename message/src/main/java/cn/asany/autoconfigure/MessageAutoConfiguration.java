@@ -21,7 +21,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @ComponentScan({
   "cn.asany.message.core",
   "cn.asany.message.*.dao",
-  "cn.asany.message.*.converter",
   "cn.asany.message.*.listener",
   "cn.asany.message.*.service",
   "cn.asany.message.*.graphql",

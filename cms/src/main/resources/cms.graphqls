@@ -333,7 +333,14 @@ type ArticleAuthor {
 }
 
 # 文章
-type Article {
+type Article
+@resource(
+  name: "文章"
+  label: "cms:article"
+  description: "文章"
+  sourceTypes: ["cms:article/*", "cms:article/{#id}"]
+  conditions: ["organization.id:StringEquals"]
+) {
   """
   文章ID
   """
@@ -846,15 +853,19 @@ extend type Query {
   """
   article(id: ID!): Article
   """
-  全部文章
+  全部文章(分页)
   """
-  articles(
+  articlesConnection(
     where: ArticleWhereInput
-    first: Int = 0
     page: Int = 1
     pageSize: Int = 15
     orderBy: OrderBy = "unsorted"
   ): ArticleConnection
+  @authInfo(
+    name: "cms:ArticlesConnection"
+    accessLevel: "List"
+    resourceTypes: ["cms:article/*", "cms:article/{#id}"]
+  )
   """
   文章栏目
   """

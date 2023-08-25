@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 @Slf4j
 class PasswordGeneratorTest {
 
-  private PasswordGenerator passwordGenerator = new PasswordGenerator();
+  private final PasswordGenerator passwordGenerator = new PasswordGenerator();
 
   @Test
   void generatePassword() {

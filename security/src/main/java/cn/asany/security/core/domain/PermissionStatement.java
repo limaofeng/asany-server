@@ -1,8 +1,10 @@
 package cn.asany.security.core.domain;
 
+import cn.asany.security.core.domain.converter.ConditionConverter;
 import cn.asany.security.core.domain.enums.PermissionPolicyEffect;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
@@ -42,6 +44,10 @@ public class PermissionStatement implements Serializable, Tenantable {
   @Column(name = "RESOURCE", columnDefinition = "JSON")
   @Convert(converter = StringArrayConverter.class)
   private String[] resource;
+
+  @Column(name = "CONDITION", columnDefinition = "JSON")
+  @Convert(converter = ConditionConverter.class)
+  private List<PermissionCondition> condition;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(

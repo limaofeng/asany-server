@@ -1,10 +1,10 @@
 {
   "groups": [
     {
-      "name": "james",
-      "description": "James 配置.",
-      "type": "cn.asany.autoconfigure.properties.JamesProperties",
-      "sourceType": "cn.asany.autoconfigure.properties.JamesProperties"
+      "name": "james.filesystem",
+      "description": "James filesystem 配置.",
+      "type": "cn.asany.autoconfigure.properties.FileSystemProperties",
+      "sourceType": "cn.asany.autoconfigure.properties.FileSystemProperties"
     }
   ],
   "properties": [

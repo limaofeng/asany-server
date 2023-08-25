@@ -52,6 +52,7 @@ public class DefaultStorageResolver implements StorageResolver {
     throw new FileStoreException("不能创建 IStorage For " + JSON.serialize(config));
   }
 
+  @SuppressWarnings("unused")
   public void setStorageService(@Autowired StorageService storageService) {
     this.storageService = storageService;
   }
