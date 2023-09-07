@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.7](https://github.com/limaofeng/asany-server/compare/v0.2.6...v0.2.7) (2023-09-07)
+
+
+### Features
+
+* 支持 OpenIM 3 版本修改 ([d2b1398](https://github.com/limaofeng/asany-server/commit/d2b13981ab5c675b845b02792640ea18ceef6e5f))
+* 添加权限相关实体类 ([421a8e0](https://github.com/limaofeng/asany-server/commit/421a8e08fd2195450687550fdfdaef171fab612f))
+* 访问控制设置，密码策略 ([185ea5b](https://github.com/limaofeng/asany-server/commit/185ea5b29e3945621d424ebd723816239859d7e3))
+* 访问控制设置，支持简单的数据权限 ([871c221](https://github.com/limaofeng/asany-server/commit/871c221a4a82d84efd36a520294782ba8e5030b4))
+* 邮箱支持 SSL 与 POP3 协议 ([55d0da9](https://github.com/limaofeng/asany-server/commit/55d0da9d047a45055fd65c9c330e2955d5523f2f))
+* 邮箱添加缓存 ([02d5674](https://github.com/limaofeng/asany-server/commit/02d5674a0d630c4ab126ababd763a30fd423e6a6))
+
 ### [0.2.6](https://github.com/limaofeng/asany-server/compare/v0.2.5...v0.2.6) (2023-07-26)
 
 
