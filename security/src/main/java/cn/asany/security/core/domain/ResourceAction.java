@@ -46,9 +46,9 @@ public class ResourceAction extends BaseBusEntity {
   @ElementCollection
   @CollectionTable(
       name = "AUTH_RESOURCE_ACTION_RESOURCE_TYPE",
-      foreignKey = @ForeignKey(name = "FK_RESOURCE_ACTION_RESOURCE_TYPE_A_ID"),
+      foreignKey = @ForeignKey(name = "FK_RESOURCE_ACTION_RESOURCE_TYPE_ACTION"),
       joinColumns = @JoinColumn(name = "RESOURCE_ACTION"))
-  @Column(name = "RESOURCE_TYPE_ARN", length = 250)
+  @Column(name = "RESOURCE_TYPE_ARN", length = 250, nullable = false)
   private Set<String> resourceTypes;
 
   @Override
