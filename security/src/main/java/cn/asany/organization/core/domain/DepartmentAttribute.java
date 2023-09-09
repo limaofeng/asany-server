@@ -5,7 +5,7 @@ import cn.asany.organization.core.domain.databind.DepartmentSerializer;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
@@ -39,6 +39,7 @@ public class DepartmentAttribute extends BaseBusEntity {
   @GeneratedValue(generator = "fantasy-sequence")
   @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
+
   /** 部门 */
   @JsonSerialize(using = DepartmentSerializer.class)
   @JsonDeserialize(using = DepartmentDeserializer.class)
@@ -53,9 +54,11 @@ public class DepartmentAttribute extends BaseBusEntity {
   /** 属性名称 */
   @Column(name = "attribute_name", length = 50)
   private String attributeName;
+
   /** 属性值 */
   @Column(name = "attribute_value", length = 50)
   private String attributeValue;
+
   /** 描述信息 */
   @Column(name = "DESCRIPTION", length = 150)
   private String description;

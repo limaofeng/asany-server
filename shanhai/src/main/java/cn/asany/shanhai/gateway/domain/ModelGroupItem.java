@@ -2,7 +2,7 @@ package cn.asany.shanhai.gateway.domain;
 
 import cn.asany.shanhai.core.domain.Model;
 import cn.asany.shanhai.core.domain.ModelField;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Any;
 import org.hibernate.annotations.AnyMetaDef;
@@ -23,6 +23,7 @@ public class ModelGroupItem extends BaseBusEntity {
   @GeneratedValue(generator = "fantasy-sequence")
   @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
+
   /** 引用资源 */
   @Any(
       metaColumn =

@@ -1,10 +1,10 @@
 package cn.asany.security.oauth.domain;
 
 import cn.asany.security.core.domain.User;
+import jakarta.persistence.*;
 import java.util.Date;
 import java.util.Objects;
 import java.util.Set;
-import javax.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.GenericGenerator;
@@ -35,43 +35,55 @@ public class AccessToken extends BaseBusEntity {
   @GeneratedValue(generator = "fantasy-sequence")
   @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
+
   /** 名称 */
   @Column(name = "NAME", length = 50)
   private String name;
+
   /** 凭证类型 */
   @Column(name = "TOKEN_TYPE", length = 20)
   @Enumerated(EnumType.STRING)
   private TokenType tokenType;
+
   /** 范围 */
   @Column(name = "SCOPES")
   @Convert(converter = StringSetConverter.class)
   private Set<String> scopes;
+
   /** 生成时间 */
   @Temporal(TemporalType.TIMESTAMP)
   @Column(name = "ISSUED_AT")
   private Date issuedAt;
+
   /** 过期时间 */
   @Temporal(TemporalType.TIMESTAMP)
   @Column(name = "EXPIRES_AT")
   private Date expiresAt;
+
   /** Token */
   @Column(name = "TOKEN", length = 500)
   private String token;
+
   /** 刷新 Token */
   @Column(name = "REFRESH_TOKEN", length = 32)
   private String refreshToken;
+
   /** 最后使用时间 */
   @Temporal(TemporalType.TIMESTAMP)
   @Column(name = "LAST_USED_TIME")
   private Date lastUsedTime;
+
   /** 应用 */
   @Column(name = "CLIENT_ID", length = 20, updatable = false, nullable = false)
   private String client;
+
   /** 密钥 */
   @Column(name = "CLIENT_SECRET", length = 40, updatable = false, nullable = false)
   private String clientSecret;
+
   /** 客户详细信息 */
   @Embedded private AccessTokenClientDetails clientDetails;
+
   /** 用户 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(

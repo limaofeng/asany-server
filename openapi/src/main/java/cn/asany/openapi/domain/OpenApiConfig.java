@@ -3,8 +3,8 @@ package cn.asany.openapi.domain;
 import cn.asany.openapi.IOpenApiConfig;
 import cn.asany.openapi.domain.enums.OpenApiType;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
 import java.util.Objects;
-import javax.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.GenericGenerator;
@@ -37,19 +37,24 @@ public class OpenApiConfig extends BaseBusEntity {
   @GeneratedValue(generator = "fantasy-sequence")
   @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
+
   /** 类型 */
   @Enumerated(EnumType.STRING)
   @Column(name = "TYPE", length = 20, nullable = false)
   private OpenApiType type;
+
   /** 名称 */
   @Column(name = "NAME", length = 100, nullable = false)
   private String name;
+
   /** 描述 */
   @Column(name = "DESCRIPTION", length = 500)
   private String description;
+
   /** APPID 唯一值, 方便检索配置 */
   @Column(name = "APPID", length = 100, nullable = false)
   private String appid;
+
   /** 存放配置参数 */
   @Column(name = "CONFIG_STORE", columnDefinition = "JSON")
   private String details;

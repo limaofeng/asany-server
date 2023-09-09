@@ -1,9 +1,9 @@
 package cn.asany.email.mailbox.component;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityTransaction;
-import javax.persistence.PersistenceException;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.PersistenceException;
 import org.apache.james.mailbox.exception.MailboxException;
 import org.apache.james.mailbox.store.transaction.TransactionalMapper;
 

@@ -1,7 +1,7 @@
 package cn.asany.security.core.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
@@ -26,8 +26,10 @@ public class AccessControlSettings extends BaseBusEntity implements Tenantable {
   @GeneratedValue(generator = "fantasy-sequence")
   @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
+
   /** 密码规则 */
   @Embedded private PasswordPolicy passwordPolicy;
+
   //  /** 用户安全设置 */
   //  @Embedded private UserSecuritySettings userSecuritySettings;
   /** 租户ID */

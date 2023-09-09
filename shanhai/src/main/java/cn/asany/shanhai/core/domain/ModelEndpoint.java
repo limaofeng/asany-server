@@ -5,10 +5,10 @@ import cn.asany.shanhai.core.support.graphql.resolvers.DelegateDataFetcher;
 import cn.asany.shanhai.core.utils.ModelUtils;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import jakarta.persistence.*;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
-import javax.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.GenericGenerator;
@@ -38,19 +38,24 @@ public class ModelEndpoint extends BaseBusEntity {
   @GeneratedValue(generator = "fantasy-sequence")
   @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
+
   /** 名称 */
   @Column(name = "CODE", length = 100, nullable = false)
   private String code;
+
   /** 名称 */
   @Column(name = "NAME", length = 100, nullable = false)
   private String name;
+
   /** 类型 */
   @Enumerated(EnumType.STRING)
   @Column(name = "TYPE", length = 20, nullable = false)
   private ModelEndpointType type;
+
   /** 描述 */
   @Column(name = "DESCRIPTION", length = 200)
   private String description;
+
   /** 实体 */
   @JsonIgnore
   @ManyToOne(fetch = FetchType.LAZY)
@@ -60,6 +65,7 @@ public class ModelEndpoint extends BaseBusEntity {
       nullable = false)
   @ToString.Exclude
   private Model model;
+
   /** 参数 */
   @OneToMany(
       mappedBy = "endpoint",
@@ -67,6 +73,7 @@ public class ModelEndpoint extends BaseBusEntity {
       fetch = FetchType.LAZY)
   @ToString.Exclude
   private Set<ModelEndpointArgument> arguments;
+
   /** 返回类型 */
   @OneToOne(
       fetch = FetchType.LAZY,
@@ -74,6 +81,7 @@ public class ModelEndpoint extends BaseBusEntity {
   @PrimaryKeyJoinColumn
   @ToString.Exclude
   private ModelEndpointReturnType returnType;
+
   /** 委派 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "DELEGATE_ID", foreignKey = @ForeignKey(name = "FK_MODEL_ENDPOINT_DID"))

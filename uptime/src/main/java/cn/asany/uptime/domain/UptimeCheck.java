@@ -3,7 +3,7 @@ package cn.asany.uptime.domain;
 import cn.asany.uptime.domain.enums.UptimeCheckType;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.List;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;

@@ -10,14 +10,14 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.NoResultException;
+import jakarta.persistence.PersistenceException;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.NoResultException;
-import javax.persistence.PersistenceException;
 import org.apache.james.mailbox.model.MailboxAnnotation;
 import org.apache.james.mailbox.model.MailboxAnnotationKey;
 import org.apache.james.mailbox.model.MailboxId;
@@ -87,7 +87,8 @@ public class JPAAnnotationMapper extends JPATransactionalMapper implements Annot
           .flatMap(
               key ->
                   this.mailboxAnnotationService
-                      .retrieveByKeyLike(jpaId.getRawId(), key.asString() + '%').stream()
+                      .retrieveByKeyLike(jpaId.getRawId(), key.asString() + '%')
+                      .stream()
                       .map(READ_ROW)
                       .filter(predicateFunction.apply(key)))
           .collect(Guavate.toImmutableList());

@@ -10,8 +10,8 @@ import cn.asany.storage.data.util.IdUtils;
 import cn.asany.storage.utils.UploadUtils;
 import graphql.kickstart.tools.GraphQLMutationResolver;
 import graphql.kickstart.tools.GraphQLQueryResolver;
+import jakarta.servlet.http.Part;
 import java.io.IOException;
-import javax.servlet.http.Part;
 import org.jfantasy.framework.util.common.StringUtil;
 import org.springframework.stereotype.Component;
 

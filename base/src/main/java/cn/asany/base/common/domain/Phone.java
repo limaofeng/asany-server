@@ -1,7 +1,7 @@
 package cn.asany.base.common.domain;
 
 import cn.asany.base.common.domain.enums.PhoneNumberStatus;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,6 +22,7 @@ public class Phone {
   @Enumerated(EnumType.STRING)
   @Column(name = "STATUS", nullable = false, length = 20)
   private PhoneNumberStatus status;
+
   /** 电话 */
   @Column(name = "NUMBER", nullable = false, length = 25)
   private String number;

@@ -2,9 +2,9 @@ package cn.asany.nuwa.app.domain;
 
 import cn.asany.nuwa.app.domain.enums.PaymentCycle;
 import cn.asany.nuwa.app.domain.enums.PlanStatus;
+import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.util.Objects;
-import javax.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.GenericGenerator;

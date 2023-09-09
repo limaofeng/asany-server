@@ -2,12 +2,12 @@ package cn.asany.email.mailbox.domain;
 
 import cn.asany.email.mailbox.component.JPAId;
 import cn.asany.email.mailbox.domain.toys.MailboxIdUidKey;
+import jakarta.persistence.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.SequenceInputStream;
 import java.util.*;
 import javax.mail.Flags;
-import javax.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.james.mailbox.MessageUid;

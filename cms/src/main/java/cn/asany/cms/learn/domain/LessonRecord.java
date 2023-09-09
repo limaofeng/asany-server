@@ -6,7 +6,7 @@ import cn.asany.cms.learn.domain.databind.LessonDeserializer;
 import cn.asany.cms.learn.domain.enums.LessonScheduleType;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;

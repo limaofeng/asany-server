@@ -5,7 +5,7 @@ import cn.asany.message.api.MSChannelConfig;
 import cn.asany.message.api.SMSChannelConfig;
 import cn.asany.message.define.domain.enums.TemplateType;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
@@ -36,6 +36,7 @@ public class MessageChannelDefinition extends BaseBusEntity {
 
   @Column(name = "NAME", nullable = false, length = 20)
   private String name;
+
   /** 是否为系统内置 */
   @Builder.Default
   @Column(name = "IS_SYSTEM", updatable = false, length = 1)

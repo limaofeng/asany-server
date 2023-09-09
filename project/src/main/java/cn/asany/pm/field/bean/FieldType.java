@@ -1,8 +1,8 @@
 package cn.asany.pm.field.bean;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
 import java.util.Objects;
-import javax.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
 import org.jfantasy.framework.dao.BaseBusEntity;
@@ -25,21 +25,27 @@ public class FieldType extends BaseBusEntity {
   @Id
   @Column(name = "ID", nullable = false, updatable = false, length = 24)
   private String id;
+
   /** 类型名称 */
   @Column(name = "NAME", length = 50, nullable = false)
   private String name;
+
   /** 描述 */
   @Column(name = "DESCRIPTION", length = 500, nullable = false)
   private String description;
+
   /** 示例值 */
   @Column(name = "EXAMPLE_VALUE", length = 500, nullable = false)
   private String example;
+
   /** 值类型 */
   @Column(name = "VALUE_TYPE", length = 20, nullable = false)
   private String valueType;
+
   /** 引用类型 */
   @Column(name = "REFERENCE_TYPE", length = 20, nullable = false)
   private String reference;
+
   /** 是否为集合类型 */
   @Column(name = "IS_LIST", length = 1, nullable = false)
   private boolean list;

@@ -2,9 +2,8 @@ package cn.asany.sms.domain;
 
 import cn.asany.base.sms.SMSProvider;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
 /**
@@ -38,5 +37,4 @@ public class Provider extends BaseBusEntity {
 
   @Column(name = "CONFIG_STORE", columnDefinition = "JSON")
   private String config;
-
 }

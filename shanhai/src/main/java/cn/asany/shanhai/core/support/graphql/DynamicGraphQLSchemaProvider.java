@@ -4,8 +4,8 @@ import cn.asany.shanhai.core.support.ModelParser;
 import graphql.kickstart.execution.config.GraphQLSchemaProvider;
 import graphql.kickstart.tools.SchemaParser;
 import graphql.schema.GraphQLSchema;
+import jakarta.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import javax.servlet.http.HttpServletRequest;
 import javax.websocket.server.HandshakeRequest;
 import org.springframework.scheduling.annotation.Async;
 
@@ -17,8 +17,10 @@ import org.springframework.scheduling.annotation.Async;
 public class DynamicGraphQLSchemaProvider implements GraphQLReloadSchemaProvider {
 
   private final ModelParser modelParser;
+
   @SuppressWarnings("AlibabaLowerCamelCaseVariableNaming")
   private GraphQLSchema graphQLSchema;
+
   private GraphQLSchema readOnlySchema;
 
   public DynamicGraphQLSchemaProvider(ModelParser modelParser) {

@@ -4,7 +4,7 @@ import cn.asany.shanhai.core.domain.enums.ModelDelegateType;
 import cn.asany.shanhai.core.support.graphql.DelegateHandler;
 import cn.asany.shanhai.gateway.domain.Service;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
@@ -31,21 +31,27 @@ public class ModelDelegate extends BaseBusEntity {
   @GeneratedValue(generator = "fantasy-sequence")
   @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
+
   /** 委托类型 */
   @Enumerated(EnumType.STRING)
   @Column(name = "TYPE", length = 50)
   private ModelDelegateType type;
+
   /** 名称 */
   @Column(name = "NAME", length = 50)
   private String name;
+
   /** 描述 */
   @Column(name = "DESCRIPTION", length = 200)
   private String description;
+
   /** 委托处理类 */
   @Column(name = "DELEGATE_CLASS_NAME", length = 200)
   private String delegateClassName;
+
   /** 规则 */
   @Transient private ModelEndpointDelegateRule rules;
+
   /** 服务 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(

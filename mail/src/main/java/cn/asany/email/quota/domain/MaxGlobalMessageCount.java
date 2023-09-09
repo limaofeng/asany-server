@@ -12,10 +12,10 @@
  */
 package cn.asany.email.quota.domain;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 @Entity(name = "MaxGlobalMessageCount")
 @Table(name = "JAMES_MAX_GLOBAL_MESSAGE_COUNT")

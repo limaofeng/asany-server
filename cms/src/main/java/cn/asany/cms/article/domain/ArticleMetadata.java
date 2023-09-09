@@ -1,9 +1,9 @@
 package cn.asany.cms.article.domain;
 
 import cn.asany.storage.api.FileObject;
+import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
 import java.io.Serializable;
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

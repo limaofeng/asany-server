@@ -1,8 +1,8 @@
 package cn.asany.shanhai.data.domain;
 
 import cn.asany.shanhai.data.engine.IDataSourceOptions;
+import jakarta.persistence.*;
 import java.util.Objects;
-import javax.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -30,15 +30,19 @@ public class DataSourceConfig extends BaseBusEntity {
   @GeneratedValue(generator = "fantasy-sequence")
   @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
+
   /** 名称 */
   @Column(name = "NAME")
   private String name;
+
   /** 描述 */
   @Column(name = "DESCRIPTION", length = 50)
   private String description;
+
   /** 类型 */
   @Column(name = "TYPE", length = 20)
   private String type;
+
   /** 配置详情 */
   @Column(name = "CONFIG_STORE", columnDefinition = "JSON")
   private String details;

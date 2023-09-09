@@ -6,11 +6,11 @@ import cn.asany.message.define.domain.MessageType;
 import cn.asany.message.define.domain.converter.MessageContentConverter;
 import cn.asany.message.define.domain.toys.MessageContent;
 import cn.asany.security.core.domain.User;
+import jakarta.persistence.*;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import javax.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
@@ -35,11 +35,13 @@ public class Message extends BaseBusEntity {
   @GeneratedValue(generator = "fantasy-sequence")
   @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
+
   /** 消息类型 */
   @ManyToOne(targetEntity = MessageType.class, fetch = FetchType.LAZY)
   @JoinColumn(name = "TYPE", foreignKey = @ForeignKey(name = "FK_MESSAGE_TYPE"))
   @ToString.Exclude
   private MessageType type;
+
   /** 消息状态 */
   @Column(name = "STATUS", length = 10)
   @Enumerated(EnumType.STRING)
@@ -48,14 +50,17 @@ public class Message extends BaseBusEntity {
   @Column(name = "VARIABLES", nullable = false, columnDefinition = "JSON")
   @Convert(converter = MapConverter.class)
   private Map<String, Object> variables;
+
   /** 消息内容 */
   @Column(name = "CONTENT", columnDefinition = "TEXT")
   @Convert(converter = MessageContentConverter.class)
   private MessageContent content;
+
   /** 发送人 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "SENDER_ID", foreignKey = @ForeignKey(name = "FK_MESSAGE_FROM_UID"))
   private User sender;
+
   /** 收件人 */
   @OneToMany(
       mappedBy = "message",
@@ -63,6 +68,7 @@ public class Message extends BaseBusEntity {
       cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
   @ToString.Exclude
   private List<MessageRecipient> recipients;
+
   /** 失败原因 */
   @Column(name = "FAILURE_REASON", length = 200)
   private String failureReason;

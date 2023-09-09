@@ -2,9 +2,9 @@ package cn.asany.pm.security.bean;
 
 import cn.asany.pm.security.bean.enums.PermissionsType;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
 import java.util.List;
 import java.util.Objects;
-import javax.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.GenericGenerator;

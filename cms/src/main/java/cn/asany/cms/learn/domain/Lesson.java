@@ -2,7 +2,7 @@ package cn.asany.cms.learn.domain;
 
 import cn.asany.cms.article.domain.Article;
 import cn.asany.cms.learn.domain.enums.LessonType;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.*;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
@@ -38,6 +38,7 @@ public class Lesson extends BaseBusEntity {
       updatable = false,
       foreignKey = @ForeignKey(name = "CMS_COURSE_LESSON_CID"))
   private Course course;
+
   /** 课程（章节） */
   @ManyToOne
   @JoinColumn(

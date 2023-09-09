@@ -1,5 +1,6 @@
 package cn.asany.email.mailbox.domain;
 
+import jakarta.persistence.*;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -7,7 +8,6 @@ import java.util.Date;
 import java.util.HashSet;
 import javax.mail.Flags;
 import javax.mail.internet.SharedInputStream;
-import javax.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;

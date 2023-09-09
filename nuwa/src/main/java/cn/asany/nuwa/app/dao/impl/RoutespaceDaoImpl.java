@@ -2,10 +2,10 @@ package cn.asany.nuwa.app.dao.impl;
 
 import cn.asany.nuwa.app.dao.RoutespaceDao;
 import cn.asany.nuwa.app.domain.Routespace;
+import jakarta.persistence.EntityManager;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import javax.persistence.EntityManager;
 import org.jfantasy.framework.dao.jpa.ComplexJpaRepository;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 

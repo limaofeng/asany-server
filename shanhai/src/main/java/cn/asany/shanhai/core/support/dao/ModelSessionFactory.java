@@ -2,11 +2,11 @@ package cn.asany.shanhai.core.support.dao;
 
 import cn.asany.shanhai.core.domain.Model;
 import cn.asany.shanhai.core.utils.HibernateMappingHelper;
+import jakarta.persistence.EntityManagerFactory;
 import java.io.ByteArrayInputStream;
 import java.util.EnumSet;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import javax.persistence.EntityManagerFactory;
 import lombok.SneakyThrows;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;

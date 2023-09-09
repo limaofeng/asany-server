@@ -1,8 +1,8 @@
 package cn.asany.security.core.domain;
 
 import cn.asany.security.core.domain.enums.MultiFactorAuthentication;
+import jakarta.persistence.*;
 import java.util.List;
-import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

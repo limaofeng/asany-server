@@ -1,8 +1,8 @@
 package cn.asany.pm.range.bean;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
 import java.util.List;
-import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -28,9 +28,11 @@ public class IssueRangeScheme {
   @GeneratedValue(generator = "fantasy-sequence")
   @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
+
   /** 范围方案名称 */
   @Column(name = "NAME", length = 100)
   private String name;
+
   /** 该问题类型方案有哪些问题类型 */
   @ManyToMany(targetEntity = IssueRange.class, fetch = FetchType.LAZY)
   @JoinTable(

@@ -1,8 +1,8 @@
 package cn.asany.security.core.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
 import java.util.List;
-import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -40,18 +40,23 @@ public class Group extends BaseBusEntity implements Tenantable {
   @GeneratedValue(generator = "fantasy-sequence")
   @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
+
   /** 名称 */
   @Column(name = "NAME", length = 50)
   private String name;
+
   /** 显示名称 */
   @Column(name = "DISPLAY_NAME", length = 50)
   private String displayName;
+
   /** 描述 */
   @Column(name = "DESCRIPTION", length = 250)
   private String description;
+
   /** 租户ID */
   @Column(name = "TENANT_ID", length = 24, nullable = false)
   private String tenantId;
+
   /** 组内成员 */
   @OneToMany(
       mappedBy = "group",

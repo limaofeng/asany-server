@@ -1,9 +1,9 @@
 package cn.asany.organization.core.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
 import java.util.List;
 import java.util.Objects;
-import javax.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -25,12 +25,15 @@ public class Team extends BaseBusEntity {
   @GeneratedValue(generator = "fantasy-sequence")
   @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
+
   /** 编码 */
   @Column(name = "CODE", length = 50)
   private String code;
+
   /** 名称 */
   @Column(name = "NAME", length = 50)
   private String name;
+
   /** 所属组织 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(
@@ -40,6 +43,7 @@ public class Team extends BaseBusEntity {
       nullable = false)
   @ToString.Exclude
   private Organization organization;
+
   /** 团队成员 */
   @OneToMany(
       mappedBy = "team",

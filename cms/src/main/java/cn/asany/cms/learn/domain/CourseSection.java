@@ -2,8 +2,8 @@ package cn.asany.cms.learn.domain;
 
 import cn.asany.cms.learn.domain.enums.LessonType;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
 import java.util.List;
-import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -37,6 +37,7 @@ public class CourseSection {
       pkColumnValue = "cms_course_section:id",
       valueColumnName = "gen_value")
   private Long id;
+
   /** 名称 */
   @Column(name = "NAME", length = 50)
   private String name;

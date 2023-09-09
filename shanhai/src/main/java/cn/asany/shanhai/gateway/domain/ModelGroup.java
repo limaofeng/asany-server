@@ -1,12 +1,14 @@
 package cn.asany.shanhai.gateway.domain;
 
+import jakarta.persistence.*;
 import java.util.List;
-import javax.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
-/** @author limaofeng */
+/**
+ * @author limaofeng
+ */
 @Data
 @Builder
 @NoArgsConstructor
@@ -24,15 +26,19 @@ public class ModelGroup extends BaseBusEntity {
   @GeneratedValue(generator = "fantasy-sequence")
   @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
+
   /** 名称 */
   @Column(name = "NAME", length = 100)
   private String name;
+
   /** 描述 */
   @Column(name = "DESCRIPTION", length = 500)
   private String description;
+
   /** 排序 */
   @Column(name = "SORT")
   private Integer sort;
+
   /** 分组明显 */
   @OneToMany(
       mappedBy = "group",

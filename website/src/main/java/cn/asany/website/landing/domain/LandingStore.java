@@ -5,7 +5,7 @@ import cn.asany.base.common.domain.Geolocation;
 import cn.asany.storage.api.FileObject;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.Objects;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.GenericGenerator;

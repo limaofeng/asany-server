@@ -2,7 +2,7 @@ package cn.asany.organization.core.domain;
 
 import cn.asany.storage.api.FileObject;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
@@ -29,22 +29,28 @@ public class TeamMember extends BaseBusEntity {
   @GeneratedValue(generator = "fantasy-sequence")
   @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
+
   /** 名称 */
   @Column(name = "NAME", length = 50)
   private String name;
+
   /** 职位名称 */
   @Column(name = "TITLE", length = 50)
   private String title;
+
   /** 头像 */
   @Type(type = "file")
   @Column(name = "avatar", precision = 500)
   private FileObject avatar;
+
   /** 简介 */
   @Column(name = "INTRODUCTION", length = 500)
   private String introduction;
+
   /** 排序字段 */
   @Column(name = "SORT")
   private Integer sort;
+
   /** 所属团队 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(
@@ -53,6 +59,7 @@ public class TeamMember extends BaseBusEntity {
       updatable = false,
       nullable = false)
   private Team team;
+
   /** 所属组织 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(

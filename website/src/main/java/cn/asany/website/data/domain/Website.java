@@ -5,7 +5,7 @@ import cn.asany.nuwa.app.domain.Application;
 import cn.asany.organization.core.domain.Organization;
 import cn.asany.storage.api.FileObject;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;

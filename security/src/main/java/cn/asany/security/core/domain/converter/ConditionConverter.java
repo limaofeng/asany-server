@@ -2,11 +2,11 @@ package cn.asany.security.core.domain.converter;
 
 import cn.asany.security.auth.graphql.directive.ConditionOperator;
 import cn.asany.security.core.domain.PermissionCondition;
+import jakarta.persistence.AttributeConverter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.persistence.AttributeConverter;
 import org.jfantasy.framework.jackson.JSON;
 import org.jfantasy.framework.util.common.StringUtil;
 

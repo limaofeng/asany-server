@@ -9,7 +9,7 @@ import cn.asany.weixin.framework.message.user.User;
 import cn.asany.weixin.framework.session.WeixinApp;
 import cn.asany.weixin.framework.session.WeixinSession;
 import java.util.List;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 /** 微信签名相关接口 */
 public interface WeixinCoreHelper {

@@ -2,7 +2,7 @@ package cn.asany.cms.article.domain;
 
 import cn.asany.nuwa.app.domain.ApplicationRoute;
 import cn.asany.ui.resources.domain.Component;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Embeddable

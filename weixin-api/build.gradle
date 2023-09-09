@@ -2,9 +2,9 @@ description = '微信 API'
 
 dependencies {
     implementation project(":storage-api")
-    compileOnly "org.projectlombok:lombok:${LIB_LOMBOK_VER}"
-    annotationProcessor "org.projectlombok:lombok:$LIB_LOMBOK_VER"
-    testCompileOnly "org.projectlombok:lombok:${LIB_LOMBOK_VER}"
-    testAnnotationProcessor "org.projectlombok:lombok:$LIB_LOMBOK_VER"
+    compileOnly "org.projectlombok:lombok"
+    annotationProcessor "org.projectlombok:lombok"
+    testCompileOnly "org.projectlombok:lombok"
+    testAnnotationProcessor "org.projectlombok:lombok"
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }

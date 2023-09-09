@@ -5,12 +5,12 @@ import cn.asany.storage.core.engine.virtual.VirtualFileObject;
 import cn.asany.storage.core.engine.virtual.VirtualStorage;
 import cn.asany.storage.data.domain.type.FileObjectCustomType;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Predicate;
-import javax.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.GenericGenerator;
@@ -62,44 +62,56 @@ public class FileDetail extends BaseBusEntity implements Cloneable {
   @GeneratedValue(generator = "fantasy-sequence")
   @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
+
   /** 虚拟文件路径 */
   @Column(name = "PATH", nullable = false, length = 250)
   private String path;
+
   /** 文件类型 */
   @Column(name = "MIME_TYPE", length = 50, nullable = false)
   private String mimeType;
+
   /** 文件名称 */
   @Column(name = "NAME", length = 50, nullable = false)
   private String name;
+
   /** 文件扩展名 */
   @Column(name = "EXTENSION", length = 50)
   private String extension;
+
   /** 是否为文件夹 */
   @Column(name = "IS_DIRECTORY", nullable = false)
   private Boolean isDirectory;
+
   /** 描述 */
   @Column(name = "DESCRIPTION", length = 150)
   private String description;
+
   /** 文件长度 */
   @Column(name = "LENGTH", nullable = false)
   private Long size;
+
   /** 文件MD5码 */
   @Column(name = "MD5", length = 50, nullable = false)
   private String md5;
+
   /** 文件修改时间 */
   @Temporal(TemporalType.TIMESTAMP)
   @Column(name = "UPDATED_AT", insertable = false, updatable = false)
   private Date lastModified;
+
   /** 文件夹 */
   @JoinColumn(name = "PARENT_ID", foreignKey = @ForeignKey(name = "FK_STORAGE_FILEOBJECT_PARENT"))
   @ManyToOne(fetch = FetchType.LAZY)
   @ToString.Exclude
   private FileDetail parentFile;
+
   /** 获取子目录列表 */
   @OneToMany(mappedBy = "parentFile", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
   @OrderBy("createdAt ASC")
   @ToString.Exclude
   private List<FileDetail> children;
+
   /** 文件命名空间 */
   @JoinColumn(
       name = "STORAGE_ID",
@@ -108,13 +120,16 @@ public class FileDetail extends BaseBusEntity implements Cloneable {
   @ManyToOne(fetch = FetchType.LAZY)
   @ToString.Exclude
   private StorageConfig storageConfig;
+
   /** 文件存储路径 */
   @Column(name = "STORE_PATH", nullable = false, length = 250)
   private String storePath;
+
   /** 是否隐藏 */
   @Builder.Default
   @Column(name = "HIDDEN", nullable = false)
   private Boolean hidden = Boolean.FALSE;
+
   /** 所有的缩略图 */
   @OneToMany(mappedBy = "source", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
   @OrderBy("createdAt ASC")

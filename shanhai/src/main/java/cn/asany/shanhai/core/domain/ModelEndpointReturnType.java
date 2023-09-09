@@ -1,7 +1,7 @@
 package cn.asany.shanhai.core.domain;
 
+import jakarta.persistence.*;
 import java.io.Serializable;
-import javax.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -29,14 +29,17 @@ public class ModelEndpointReturnType implements Serializable {
       parameters = {@org.hibernate.annotations.Parameter(name = "property", value = "endpoint")})
   @GeneratedValue(generator = "ModelEndpointReturnTypePkGenerator")
   private Long id;
+
   /** 是否必填 */
   @Builder.Default
   @Column(name = "IS_REQUIRED", length = 1)
   private Boolean required = false;
+
   /** 存储值为列表，而不是单个值 */
   @Builder.Default
   @Column(name = "IS_LIST", length = 1)
   private Boolean list = false;
+
   /** 类型 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(
@@ -44,6 +47,7 @@ public class ModelEndpointReturnType implements Serializable {
       foreignKey = @ForeignKey(name = "FK_MODEL_ENDPOINT_RETURN_TYPE_TID"),
       nullable = false)
   private Model type;
+
   /** 接口 */
   @OneToOne(fetch = FetchType.LAZY, targetEntity = ModelEndpoint.class, mappedBy = "returnType")
   private ModelEndpoint endpoint;

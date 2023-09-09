@@ -7,7 +7,7 @@ import cn.asany.ui.resources.domain.Component;
 import cn.asany.ui.resources.domain.Icon;
 import java.util.List;
 import java.util.Objects;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.Any;

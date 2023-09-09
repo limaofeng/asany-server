@@ -4,10 +4,10 @@ import cn.asany.message.data.util.MessageUtils;
 import cn.asany.message.define.domain.converter.VariableDefinitionListConverter;
 import cn.asany.message.define.domain.toys.VariableDefinition;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
@@ -35,17 +35,21 @@ public class MessageDefinition extends BaseBusEntity {
   @GeneratedValue(generator = "fantasy-sequence")
   @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
+
   /** 名称 */
   @Column(name = "NAME", nullable = false, length = 20)
   private String name;
+
   /** 是否为系统内置 */
   @Builder.Default
   @Column(name = "IS_SYSTEM", updatable = false, length = 1)
   private Boolean system = false;
+
   /** 消息变量 */
   @Column(name = "VARIABLES", nullable = false, columnDefinition = "JSON")
   @Convert(converter = VariableDefinitionListConverter.class)
   private List<VariableDefinition> variables;
+
   /** 与模版之间的变量映射表 (msgDataKey:dataKey) */
   @Convert(converter = MapConverter.class)
   @Column(name = "MAPPING_VARIABLES", columnDefinition = "Text")
@@ -57,6 +61,7 @@ public class MessageDefinition extends BaseBusEntity {
       nullable = false,
       foreignKey = @ForeignKey(name = "FK_MESSAGE_DEFINITION_CHANNEL"))
   private MessageChannelDefinition channel;
+
   /** 模版文件 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(
@@ -64,6 +69,7 @@ public class MessageDefinition extends BaseBusEntity {
       nullable = false,
       foreignKey = @ForeignKey(name = "FK_MESSAGE_DEFINITION_TEMPLATE_ID"))
   private MessageTemplate template;
+
   /** 提醒设置 - 额外的第三方提醒,比如: 短信 / 邮件 / APP_PUSH / WEB_PUSH */
   @OneToMany(
       mappedBy = "messageDefinition",

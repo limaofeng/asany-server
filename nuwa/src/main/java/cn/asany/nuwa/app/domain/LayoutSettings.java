@@ -1,8 +1,8 @@
 package cn.asany.nuwa.app.domain;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
 import java.io.Serializable;
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,6 +24,7 @@ public class LayoutSettings implements Serializable {
   @Builder.Default
   @Column(name = "PURE", length = 1)
   private Boolean pure = false;
+
   /** 隐藏菜单栏 */
   @Builder.Default
   @Column(name = "HIDE_MENU", length = 1)

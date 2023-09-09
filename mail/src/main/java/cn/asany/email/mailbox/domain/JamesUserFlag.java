@@ -1,14 +1,16 @@
 package cn.asany.email.mailbox.domain;
 
+import jakarta.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
-import javax.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.hibernate.Hibernate;
 
-/** @author limaofeng */
+/**
+ * @author limaofeng
+ */
 @Getter
 @Setter
 @RequiredArgsConstructor

@@ -2,8 +2,8 @@ package cn.asany.storage.api.converter;
 
 import cn.asany.storage.api.FileObject;
 import com.fasterxml.jackson.core.type.TypeReference;
+import jakarta.persistence.AttributeConverter;
 import java.util.List;
-import javax.persistence.AttributeConverter;
 import org.jfantasy.framework.jackson.JSON;
 import org.jfantasy.framework.util.common.StringUtil;
 

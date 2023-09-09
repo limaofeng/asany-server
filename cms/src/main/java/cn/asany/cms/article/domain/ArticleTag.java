@@ -4,13 +4,13 @@ import cn.asany.organization.core.domain.Organization;
 import cn.asany.security.core.domain.User;
 import cn.asany.storage.api.FileObject;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.ForeignKey;
+import jakarta.persistence.OrderBy;
+import jakarta.persistence.Table;
 import java.util.List;
-import javax.persistence.*;
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.ForeignKey;
-import javax.persistence.OrderBy;
-import javax.persistence.Table;
 import lombok.*;
 import net.bytebuddy.description.modifier.Ownership;
 import org.hibernate.annotations.*;
@@ -40,28 +40,36 @@ public class ArticleTag extends BaseBusEntity {
   @GeneratedValue(generator = "fantasy-sequence")
   @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
+
   /** 编码 */
   @Column(name = "SLUG", nullable = false, length = 100)
   private String slug;
+
   /** 路径 */
   @IndexEmbedBy(value = Article.class)
   @Column(name = "PATH", length = 500)
   private String path;
+
   /** 名称 */
   @Column(name = "NAME", nullable = false, length = 150)
   private String name;
+
   /** 封面 */
   @Column(name = "IMAGE", length = 500, columnDefinition = "JSON")
   @Type(type = "file")
   private FileObject image;
+
   /** 描述 */
   @Column(name = "DESCRIPTION", length = 400)
   private String description;
+
   /** 排序字段 */
   @Column(name = "SORT")
   private Integer index;
+
   /** SEO 优化字段 */
   @Embedded private ArticleMetadata metadata;
+
   /** 上级栏目 */
   @JsonProperty("parent_id")
   @ManyToOne(fetch = FetchType.LAZY)

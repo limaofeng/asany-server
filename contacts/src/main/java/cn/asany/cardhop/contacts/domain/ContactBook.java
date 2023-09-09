@@ -5,8 +5,8 @@ import cn.asany.cardhop.contacts.domain.enums.ContactBookType;
 import cn.asany.organization.core.domain.Organization;
 import cn.asany.security.core.domain.User;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
 import java.util.List;
-import javax.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.Any;
@@ -55,10 +55,12 @@ public class ContactBook extends BaseBusEntity {
       })
   @JoinColumn(name = "OWNER", insertable = false, updatable = false)
   private Ownership owner;
+
   /** 所有联系人 */
   @OneToMany(mappedBy = "book", fetch = FetchType.LAZY)
   @OrderBy("createdAt DESC")
   private List<Contact> contacts;
+
   /** 联系人分组列表 */
   @OneToMany(mappedBy = "book", fetch = FetchType.LAZY)
   @OrderBy("createdAt ASC")

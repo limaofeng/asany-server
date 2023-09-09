@@ -1,7 +1,7 @@
 package cn.asany.weixin.domain;
 
 import java.io.Serializable;
-import javax.persistence.Column;
+import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

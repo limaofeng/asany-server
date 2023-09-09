@@ -1,6 +1,6 @@
 package cn.asany.sunrise.calendar.domain.toys;
 
-import javax.persistence.Embeddable;
+import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

@@ -7,7 +7,7 @@ import cn.asany.ui.library.OplogDataCollector;
 import cn.asany.ui.library.dao.listener.OplogListener;
 import cn.asany.ui.library.domain.enums.LibraryType;
 import java.util.Set;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Any;
 import org.hibernate.annotations.AnyMetaDef;

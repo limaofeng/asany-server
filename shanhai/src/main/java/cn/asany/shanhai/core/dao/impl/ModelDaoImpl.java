@@ -2,8 +2,8 @@ package cn.asany.shanhai.core.dao.impl;
 
 import cn.asany.shanhai.core.dao.ModelDao;
 import cn.asany.shanhai.core.domain.Model;
+import jakarta.persistence.EntityManager;
 import java.util.List;
-import javax.persistence.EntityManager;
 import org.jfantasy.framework.dao.jpa.ComplexJpaRepository;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.error.IgnoreException;

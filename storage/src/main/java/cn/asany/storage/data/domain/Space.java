@@ -3,9 +3,9 @@ package cn.asany.storage.data.domain;
 import cn.asany.storage.api.FileObject;
 import cn.asany.storage.api.StorageSpace;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
 import java.util.Objects;
 import java.util.Set;
-import javax.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
 import org.jfantasy.framework.dao.BaseBusEntity;
@@ -36,9 +36,11 @@ public class Space extends BaseBusEntity implements StorageSpace {
   @Id
   @Column(name = "ID", nullable = false, updatable = false, length = 50, unique = true)
   private String id;
+
   /** 空间名称 */
   @Column(name = "NAME", length = 250)
   private String name;
+
   /** 目录名称 */
   @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(
@@ -47,6 +49,7 @@ public class Space extends BaseBusEntity implements StorageSpace {
       foreignKey = @ForeignKey(name = "FK_STORAGE_SPACE_FOLDER_ID"))
   @ToString.Exclude
   private FileDetail vFolder;
+
   /** 使用的插件 */
   @Convert(converter = StringSetConverter.class)
   @Column(name = "PLUGINS", length = 250)

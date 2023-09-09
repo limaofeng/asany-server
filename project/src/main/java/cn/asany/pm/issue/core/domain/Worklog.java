@@ -3,10 +3,10 @@ package cn.asany.pm.issue.core.domain;
 import cn.asany.storage.api.FileObject;
 import cn.asany.storage.api.converter.FileObjectsConverter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
-import javax.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.GenericGenerator;
@@ -40,12 +40,15 @@ public class Worklog extends BaseBusEntity {
   @JoinColumn(name = "ISSUE_ID", foreignKey = @ForeignKey(name = "FK_ISSUE_LOG_ISSUE"))
   @ToString.Exclude
   private Issue issue;
+
   /** 日志内容 */
   @Column(name = "CONTENT", length = 50)
   private String content;
+
   /** 填写时间 */
   @Column(name = "LOG_TIME", length = 50)
   private Date logTime;
+
   /** 用户ID */
   @Column(name = "UID", length = 50)
   private Long uid;

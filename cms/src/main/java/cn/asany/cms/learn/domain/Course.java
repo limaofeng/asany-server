@@ -2,8 +2,8 @@ package cn.asany.cms.learn.domain;
 
 import cn.asany.storage.api.FileObject;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
 import java.util.List;
-import javax.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
@@ -31,6 +31,7 @@ public class Course extends BaseBusEntity {
   @GeneratedValue(generator = "fantasy-sequence")
   @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
+
   /** 名称 */
   @Column(name = "NAME", length = 50)
   private String name;
@@ -50,6 +51,7 @@ public class Course extends BaseBusEntity {
   /** 发布日期 */
   @Column(name = "PUBLISH_DATE", length = 200)
   private String publishDate;
+
   /** 简介 */
   @Lob
   @Column(name = "INTRODUCTION")
@@ -65,12 +67,14 @@ public class Course extends BaseBusEntity {
       fetch = FetchType.LAZY,
       cascade = {CascadeType.REMOVE})
   private List<Learner> learners;
+
   /** 章节 */
   @OneToMany(
       mappedBy = "course",
       fetch = FetchType.LAZY,
       cascade = {CascadeType.REMOVE})
   private List<CourseSection> sections;
+
   /** 学习内容 */
   @OneToMany(
       mappedBy = "course",

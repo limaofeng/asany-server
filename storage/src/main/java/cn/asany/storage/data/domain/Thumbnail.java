@@ -1,6 +1,6 @@
 package cn.asany.storage.data.domain;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
@@ -26,9 +26,11 @@ public class Thumbnail extends BaseBusEntity {
   @GeneratedValue(generator = "fantasy-sequence")
   @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
+
   /** 比例 */
   @Column(name = "SIZE", length = 100, nullable = false)
   private String size;
+
   /** 原文件 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(
@@ -37,6 +39,7 @@ public class Thumbnail extends BaseBusEntity {
       foreignKey = @ForeignKey(name = "FK_STORAGE_THUMBNAIL_SOURCE_ID"))
   @ToString.Exclude
   private FileDetail source;
+
   /** 缩略图 */
   @OneToOne(
       fetch = FetchType.LAZY,

@@ -1,6 +1,6 @@
 package cn.asany.im.utils;
 
-import javax.persistence.MappedSuperclass;
+import jakarta.persistence.MappedSuperclass;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.jfantasy.framework.util.common.StringUtil;

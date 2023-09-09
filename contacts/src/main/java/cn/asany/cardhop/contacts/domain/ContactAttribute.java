@@ -1,8 +1,8 @@
 package cn.asany.cardhop.contacts.domain;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import jakarta.persistence.Column;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
@@ -22,6 +22,7 @@ public class ContactAttribute extends BaseBusEntity {
   @GeneratedValue(generator = "fantasy-sequence")
   @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
+
   /**
    * 所有者类型<br>
    * 1.全部<br>
@@ -31,8 +32,10 @@ public class ContactAttribute extends BaseBusEntity {
    * 5.联系薄<br>
    */
   private String ownerType;
+
   /** 所有者 */
   private String owner;
+
   /**
    * 字段应用位置<br>
    * 1.联系人<br>
@@ -41,6 +44,7 @@ public class ContactAttribute extends BaseBusEntity {
    * 4.电话<br>
    */
   private String position;
+
   /** 字段名称 */
   private String name;
 

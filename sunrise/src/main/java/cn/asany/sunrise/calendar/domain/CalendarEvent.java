@@ -6,7 +6,7 @@ import cn.asany.sunrise.calendar.domain.toys.Repeat;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;

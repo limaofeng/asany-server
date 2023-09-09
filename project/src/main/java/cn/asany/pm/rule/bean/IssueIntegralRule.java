@@ -1,7 +1,7 @@
 package cn.asany.pm.rule.bean;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
@@ -25,19 +25,24 @@ public class IssueIntegralRule extends BaseBusEntity {
   @GeneratedValue(generator = "fantasy-sequence")
   @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
+
   /** 条件对应ID */
   @Column(name = "CONDITION_ID")
   private Long conditionId;
+
   /** 分级类别 */
   @Enumerated(EnumType.STRING)
   @Column(name = "CODE", length = 20)
   private IssueIntegralRuleEnum code;
+
   /** 分级名称 */
   @Column(name = "NAME")
   private String name;
+
   /** 是否启用 */
   @Column(name = "ENABLED")
   private Boolean enabled;
+
   /** 分值 */
   @Column(name = "SCORE")
   private Integer score;

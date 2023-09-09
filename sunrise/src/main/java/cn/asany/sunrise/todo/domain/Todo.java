@@ -4,7 +4,7 @@ import cn.asany.sunrise.todo.domain.enums.TodoState;
 import cn.asany.sunrise.todo.domain.toys.When;
 import java.util.Date;
 import java.util.List;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;

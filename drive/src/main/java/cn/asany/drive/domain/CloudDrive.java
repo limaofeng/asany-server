@@ -6,8 +6,8 @@ import cn.asany.organization.core.domain.Organization;
 import cn.asany.organization.employee.domain.Employee;
 import cn.asany.security.core.domain.User;
 import cn.asany.storage.data.domain.Space;
+import jakarta.persistence.*;
 import java.util.Objects;
-import javax.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.Any;
@@ -35,13 +35,16 @@ public class CloudDrive extends BaseBusEntity {
   @GeneratedValue(generator = "fantasy-sequence")
   @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
+
   /** 名称 */
   @Column(name = "NAME", length = 50)
   private String name;
+
   /** 云盘类型 */
   @Enumerated(EnumType.STRING)
   @Column(name = "TYPE", length = 20)
   private CloudDriveType type;
+
   /** 存储位置 */
   @ManyToOne
   @JoinColumn(
@@ -49,6 +52,7 @@ public class CloudDrive extends BaseBusEntity {
       nullable = false,
       foreignKey = @ForeignKey(name = "FK_CLOUD_DRIVE_SPACE"))
   private Space space;
+
   /** 存储空间 */
   @OneToOne(
       fetch = FetchType.LAZY,
@@ -56,12 +60,15 @@ public class CloudDrive extends BaseBusEntity {
   @PrimaryKeyJoinColumn(name = "ID", referencedColumnName = "DRIVE_ID")
   @ToString.Exclude
   private CloudDriveQuota quota;
+
   /** 所有者类型 */
   @Column(name = "OWNER_TYPE", length = 25, nullable = false)
   private String ownerType;
+
   /** 所有者ID */
   @Column(name = "OWNER", nullable = false)
   private Long ownerId;
+
   /** 所有者 */
   @Any(
       metaColumn = @Column(name = "OWNER_TYPE", length = 20, insertable = false, updatable = false),

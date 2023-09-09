@@ -13,8 +13,8 @@
 package cn.asany.email.mailbox.domain;
 
 import com.google.common.base.Objects;
+import jakarta.persistence.Embeddable;
 import java.io.Serializable;
-import javax.persistence.Embeddable;
 
 @Embeddable
 public final class JPAMailboxAnnotationId implements Serializable {

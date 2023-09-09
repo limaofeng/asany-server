@@ -1,6 +1,6 @@
 package cn.asany.security.core.domain;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;

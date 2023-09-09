@@ -1,6 +1,6 @@
 package cn.asany.drive.domain;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
@@ -23,15 +23,19 @@ public class CloudDriveQuota extends BaseBusEntity {
       parameters = {@Parameter(name = "property", value = "cloudDrive")})
   @GeneratedValue(generator = "CloudDriveQuotaPkGenerator")
   private Long id;
+
   /** 文件数 */
   @Column(name = "`COUNT`")
   private Integer count;
+
   /** 已使用 */
   @Column(name = "`USAGE`")
   private Long usage;
+
   /** 总大小 */
   @Column(name = "SIZE")
   private Long size;
+
   /** 云盘 */
   @OneToOne(fetch = FetchType.LAZY, targetEntity = CloudDrive.class, mappedBy = "quota")
   @ToString.Exclude

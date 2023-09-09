@@ -2,9 +2,9 @@ package cn.asany.organization.core.dao.specification;
 
 import cn.asany.organization.employee.domain.Employee;
 import cn.asany.organization.employee.domain.Star;
+import jakarta.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.criteria.*;
 import org.springframework.data.jpa.domain.Specification;
 
 /**

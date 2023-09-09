@@ -1,8 +1,8 @@
 package cn.asany.email.mailbox.domain;
 
 import cn.asany.email.mailbox.component.JPAId;
+import jakarta.persistence.*;
 import java.util.Objects;
-import javax.persistence.*;
 import lombok.*;
 import org.apache.james.mailbox.model.Mailbox;
 import org.apache.james.mailbox.model.MailboxPath;

@@ -8,14 +8,14 @@ import cn.asany.shanhai.gateway.domain.Service;
 import cn.asany.shanhai.gateway.util.GraphQLFieldArgument;
 import cn.asany.shanhai.view.domain.ModelView;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.ForeignKey;
+import jakarta.persistence.OrderBy;
+import jakarta.persistence.Table;
 import java.util.*;
 import java.util.stream.Collectors;
-import javax.persistence.*;
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.ForeignKey;
-import javax.persistence.OrderBy;
-import javax.persistence.Table;
 import lombok.*;
 import org.hibernate.annotations.*;
 import org.hibernate.annotations.Cache;
@@ -82,23 +82,29 @@ public class Model extends BaseBusEntity implements ModelGroupResource {
   @GeneratedValue(generator = "fantasy-sequence")
   @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
+
   /** 编码 用于 HQL 名称及 API 名称 */
   @Column(name = "CODE", length = 50)
   private String code;
+
   /** 类型 */
   @Enumerated(EnumType.STRING)
   @Column(name = "TYPE", length = 20)
   private ModelType type;
+
   /** 名称 */
   @Column(name = "NAME", length = 100)
   private String name;
+
   /** 描述 */
   @Column(name = "DESCRIPTION", length = 500)
   private String description;
+
   /** 状态：草稿、发布 */
   @Enumerated(EnumType.STRING)
   @Column(name = "STATUS", length = 20)
   private ModelStatus status;
+
   /** 实现接口 */
   @ManyToMany(fetch = FetchType.LAZY)
   @LazyCollection(LazyCollectionOption.EXTRA)
@@ -112,6 +118,7 @@ public class Model extends BaseBusEntity implements ModelGroupResource {
       foreignKey = @ForeignKey(name = "FK_MODEL_IMPLEMENT_MID"))
   @ToString.Exclude
   private Set<Model> implementz;
+
   /** UNION 包含的类型 */
   @ManyToMany(fetch = FetchType.LAZY)
   @LazyCollection(LazyCollectionOption.EXTRA)
@@ -133,6 +140,7 @@ public class Model extends BaseBusEntity implements ModelGroupResource {
       fetch = FetchType.LAZY)
   @ToString.Exclude
   private Set<ModelRelation> relations;
+
   /** 标签 */
   @Convert(converter = StringArrayConverter.class)
   @Column(name = "LABELS", columnDefinition = "JSON")
@@ -161,16 +169,19 @@ public class Model extends BaseBusEntity implements ModelGroupResource {
       fetch = FetchType.LAZY)
   @ToString.Exclude
   private Set<ModelEndpoint> endpoints;
+
   /** 元数据 */
   @OneToOne(
       mappedBy = "model",
       cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
   private ModelMetadata metadata;
+
   /** 服务 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "SERVICE_ID", foreignKey = @ForeignKey(name = "FK_MODEL_SID"))
   @ToString.Exclude
   private Service service;
+
   /** 模块 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(

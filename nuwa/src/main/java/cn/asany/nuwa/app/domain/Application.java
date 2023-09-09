@@ -2,9 +2,9 @@ package cn.asany.nuwa.app.domain;
 
 import cn.asany.nuwa.app.domain.enums.ApplicationType;
 import cn.asany.organization.core.domain.Organization;
+import jakarta.persistence.*;
 import java.util.*;
 import java.util.stream.Collectors;
-import javax.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.GenericGenerator;
@@ -98,29 +98,37 @@ public class Application extends BaseBusEntity implements ClientDetails, Tenanta
   @GeneratedValue(generator = "fantasy-sequence")
   @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
+
   /** 应用类型 */
   @Enumerated(EnumType.STRING)
   @Column(name = "TYPE", length = 20, nullable = false)
   private ApplicationType type;
+
   /** 名称 (全英文) */
   @Column(name = "NAME", length = 50)
   private String name;
+
   /** 应用访问地址 */
   @Column(name = "URL")
   private String url;
+
   /** 是否启用 */
   @Builder.Default
   @Column(name = "ENABLED")
   private Boolean enabled = true;
+
   /** 标题 */
   @Column(name = "TITLE")
   private String title;
+
   /** 简介 */
   @Column(name = "DESCRIPTION")
   private String description;
+
   /** LOGO */
   @Column(name = "LOGO")
   private String logo;
+
   /** 支持的路由空间 */
   @ManyToMany(fetch = FetchType.LAZY)
   @JoinTable(
@@ -130,6 +138,7 @@ public class Application extends BaseBusEntity implements ClientDetails, Tenanta
       foreignKey = @ForeignKey(name = "FK_APPLICATION_ROUTESPACE_APPID"))
   @ToString.Exclude
   private List<Routespace> routespaces;
+
   /** 路由 */
   @OneToMany(
       mappedBy = "application",
@@ -137,6 +146,7 @@ public class Application extends BaseBusEntity implements ClientDetails, Tenanta
       fetch = FetchType.LAZY)
   @ToString.Exclude
   private Set<ApplicationRoute> routes;
+
   /** 菜单 */
   @OneToMany(
       mappedBy = "application",
@@ -144,18 +154,22 @@ public class Application extends BaseBusEntity implements ClientDetails, Tenanta
       fetch = FetchType.LAZY)
   @ToString.Exclude
   private Set<ApplicationMenu> menus;
+
   /** 授权回调 URL */
   @Column(name = "CALLBACK_URL", length = 100)
   private String callbackUrl;
+
   /** 客服端 ID */
   @Column(name = "CLIENT_ID", length = 20, updatable = false, nullable = false)
   private String clientId;
+
   /** 客服端密钥 */
   @OrderBy(" createdAt desc ")
   @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
   @JoinColumn(name = "CLIENT_ID", referencedColumnName = "CLIENT_ID", updatable = false)
   @ToString.Exclude
   private List<ClientSecret> clientSecretsAlias;
+
   /** 许可证 */
   @OrderBy(" createdAt desc ")
   @OneToMany(
@@ -164,10 +178,12 @@ public class Application extends BaseBusEntity implements ClientDetails, Tenanta
       fetch = FetchType.LAZY)
   @ToString.Exclude
   private List<Licence> licences;
+
   /** 所有者 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "OWNERSHIP", foreignKey = @ForeignKey(name = "FK_APPLICATION_OWNERSHIP"))
   private Organization ownership;
+
   /** 依赖 */
   @OrderBy(" createdAt desc ")
   @OneToMany(
@@ -176,6 +192,7 @@ public class Application extends BaseBusEntity implements ClientDetails, Tenanta
       fetch = FetchType.LAZY)
   @ToString.Exclude
   private List<ApplicationDependency> dependencies;
+
   /** 租户ID */
   @Column(name = "TENANT_ID", length = 24, nullable = false)
   private String tenantId;

@@ -1,7 +1,7 @@
 package cn.asany.security.core.domain;
 
 import cn.asany.security.core.domain.enums.GranteeType;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.GenericGenerator;
@@ -24,15 +24,19 @@ public class GroupMember extends BaseBusEntity implements Tenantable {
   @GeneratedValue(generator = "fantasy-sequence")
   @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
+
   /** 成员类型 */
   @Column(name = "TYPE", length = 24)
   private GranteeType type;
+
   /** 成员ID */
   @Column(name = "VALUE", length = 24)
   private String value;
+
   /** 租户ID */
   @Column(name = "TENANT_ID", length = 24, nullable = false, updatable = false)
   private String tenantId;
+
   /** 用户组 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(

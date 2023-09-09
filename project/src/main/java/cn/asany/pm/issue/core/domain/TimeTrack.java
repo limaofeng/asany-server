@@ -1,10 +1,10 @@
 package cn.asany.pm.issue.core.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
-import javax.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.GenericGenerator;
@@ -30,6 +30,7 @@ public class TimeTrack extends BaseBusEntity {
   @GeneratedValue(generator = "fantasy-sequence")
   @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
+
   /** 任务 */
   @OneToMany(
       mappedBy = "timeTrack",
@@ -37,15 +38,19 @@ public class TimeTrack extends BaseBusEntity {
       cascade = {CascadeType.REMOVE})
   @ToString.Exclude
   private List<Issue> issues;
+
   /** 预计时长 */
   @Column(name = "ESTIMATED", length = 50)
   private Integer estimated;
+
   /** 剩余时长 */
   @Column(name = "REMAINING", length = 50)
   private Integer remaining;
+
   /** 记录时长 */
   @Column(name = "LOGGED", length = 50)
   private Long logged;
+
   /** 任务开始记录时间 */
   @Column(name = "TRACK_TIME", length = 50)
   private Date trackDate;

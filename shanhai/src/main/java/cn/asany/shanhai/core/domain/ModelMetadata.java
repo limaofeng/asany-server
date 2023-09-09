@@ -1,8 +1,8 @@
 package cn.asany.shanhai.core.domain;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import jakarta.persistence.*;
 import java.io.Serializable;
-import javax.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
@@ -25,6 +25,7 @@ public class ModelMetadata implements Serializable {
       parameters = {@Parameter(name = "property", value = "model")})
   @GeneratedValue(generator = "ModelMetadataPkGenerator")
   private Long id;
+
   /** 数据库名称 */
   @Column(name = "DATABASE_TABLE_NAME", length = 100)
   private String databaseTableName;

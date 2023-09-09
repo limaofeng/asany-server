@@ -3,8 +3,8 @@ package cn.asany.cardhop.contacts.domain;
 import cn.asany.security.core.domain.enums.Sex;
 import cn.asany.storage.api.FileObject;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
 import java.util.List;
-import javax.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.GenericGenerator;
@@ -30,50 +30,64 @@ public class Contact extends BaseBusEntity {
   @GeneratedValue(generator = "fantasy-sequence")
   @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
+
   /** 所属通讯录 */
   @ManyToOne(
       fetch = FetchType.LAZY,
-      cascade = {javax.persistence.CascadeType.REFRESH})
+      cascade = {jakarta.persistence.CascadeType.REFRESH})
   @JoinColumn(name = "BOOK_ID", foreignKey = @ForeignKey(name = "FK_CARDHOP_CONTACT_BOOK"))
   private ContactBook book;
+
   /** 联系人照片 */
   @Type(type = "file")
   @Column(name = "AVATAR", length = 500)
   private FileObject avatar;
+
   /** 姓名 */
   @Column(name = "NAME", length = 20)
   private String name;
+
   /** 性别 */
   @Enumerated(EnumType.STRING)
   @Column(name = "SEX", length = 20)
   private Sex sex;
+
   /** 公司 */
   @Column(name = "COMPANY", length = 200)
   private String company;
+
   /** 部门 */
   @Column(name = "DEPARTMENT", length = 200)
   private String department;
+
   /** 职位 */
   @Column(name = "TITLE", length = 50)
   private String title;
+
   /** 工号 */
   @Column(name = "JOB_NUMBER", length = 200)
   private String jobNumber;
+
   /** 电话列表 */
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "contact", cascade = CascadeType.REMOVE)
   private List<ContactPhoneNumber> phones;
+
   /** 邮箱列表 */
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "contact", cascade = CascadeType.REMOVE)
   private List<ContactEmail> emails;
+
   /** 地址列表 */
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "contact", cascade = CascadeType.REMOVE)
   private List<ContactAddress> addresses;
+
   /** 网址 */
   @Column(name = "WEBSITE", length = 50)
   private String website;
+
   /** 备注 */
   @Column(name = "DESCRIPTION", length = 2000)
   private String description;
+
   /**
    * 所属分组<br>
    * 多个分组以;分割

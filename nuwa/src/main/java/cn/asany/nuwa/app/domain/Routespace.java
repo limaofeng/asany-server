@@ -1,9 +1,9 @@
 package cn.asany.nuwa.app.domain;
 
 import cn.asany.nuwa.template.domain.ApplicationTemplate;
+import jakarta.persistence.*;
 import java.util.List;
 import java.util.Objects;
-import javax.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.LazyCollection;

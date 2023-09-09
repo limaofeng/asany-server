@@ -17,15 +17,14 @@ import cn.asany.organization.relationship.dao.PositionDao;
 import cn.asany.organization.relationship.domain.EmployeePosition;
 import cn.asany.organization.relationship.domain.Position;
 import cn.asany.organization.relationship.service.PositionService;
+import jakarta.persistence.criteria.Join;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import javax.persistence.criteria.Join;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
-import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
 import org.jfantasy.framework.error.ValidationException;
 import org.jfantasy.framework.security.crypto.password.PasswordEncoder;
 import org.jfantasy.framework.spring.mvc.error.NotFoundException;
@@ -143,9 +142,7 @@ public class EmployeeService {
 
   private Optional<EmployeeStatus> getStatus(OrganizationDimension dimension, String code) {
     return this.employeeStatusDao.findOne(
-        PropertyFilter.newFilter()
-            .equal("dimension.id", dimension.getId())
-            .equal("code", code));
+        PropertyFilter.newFilter().equal("dimension.id", dimension.getId()).equal("code", code));
   }
 
   //    /**

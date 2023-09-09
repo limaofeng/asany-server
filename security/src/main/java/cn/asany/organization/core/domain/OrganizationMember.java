@@ -3,7 +3,7 @@ package cn.asany.organization.core.domain;
 import cn.asany.security.core.domain.Role;
 import cn.asany.security.core.domain.User;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
@@ -28,6 +28,7 @@ public class OrganizationMember extends BaseBusEntity {
   @GeneratedValue(generator = "fantasy-sequence")
   @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
+
   /** 角色 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(
@@ -36,6 +37,7 @@ public class OrganizationMember extends BaseBusEntity {
       foreignKey = @ForeignKey(name = "FK_ORGANIZATION_MEMBER_ROLE"))
   @ToString.Exclude
   private Role role;
+
   /** 用户 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(
@@ -45,6 +47,7 @@ public class OrganizationMember extends BaseBusEntity {
       foreignKey = @ForeignKey(name = "FK_ORGANIZATION_MEMBER_USER"))
   @ToString.Exclude
   private User user;
+
   /** 团队ID */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(

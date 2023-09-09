@@ -2,10 +2,10 @@ package cn.asany.email.quota.component;
 
 import cn.asany.email.quota.domain.JamesCurrentQuota;
 import com.google.common.base.Preconditions;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
 import java.util.Optional;
 import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import org.apache.james.backends.jpa.TransactionRunner;
 import org.apache.james.core.quota.QuotaCount;
 import org.apache.james.core.quota.QuotaSize;

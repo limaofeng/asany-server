@@ -1,8 +1,8 @@
 package cn.asany.organization.core.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
 import java.util.Objects;
-import javax.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.GenericGenerator;
@@ -36,12 +36,15 @@ public class EmployeeStatus extends BaseBusEntity {
   @GeneratedValue(generator = "fantasy-sequence")
   @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
+
   /** 编码 */
   @Column(name = "CODE", length = 50, nullable = false)
   private String code;
+
   /** 名称 */
   @Column(name = "NAME", length = 100)
   private String name;
+
   /** 所属组织 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(
@@ -51,6 +54,7 @@ public class EmployeeStatus extends BaseBusEntity {
       nullable = false)
   @ToString.Exclude
   private Organization organization;
+
   /** 所属组织纬度 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(
@@ -60,6 +64,7 @@ public class EmployeeStatus extends BaseBusEntity {
       nullable = false)
   @ToString.Exclude
   private OrganizationDimension dimension;
+
   /** 是否是默认值 */
   @Column(name = "is_default", length = 10)
   private Boolean isDefault;

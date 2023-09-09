@@ -7,9 +7,9 @@ import cn.asany.flowable.core.service.ProcessModelService;
 import graphql.kickstart.tools.GraphQLMutationResolver;
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import graphql.schema.DataFetchingEnvironment;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.Part;
 import java.io.IOException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.Part;
 import lombok.extern.slf4j.Slf4j;
 import org.jfantasy.framework.dao.OrderBy;
 import org.jfantasy.framework.dao.Page;
@@ -42,13 +42,14 @@ public class ProcessModelGraphQLRootResolver
   }
 
   public ProcessModelConnection processModels(
-    ProcessModelWhereInput where, int currentPage, int pageSize, Sort orderBy) {
+      ProcessModelWhereInput where, int currentPage, int pageSize, Sort orderBy) {
     if ("self".equals(where.getUser())) {
       LoginUser loginUser = SpringSecurityUtils.getCurrentUser();
       where.setUser(loginUser.getUid().toString());
     }
     Page<ProcessModel> page =
-        processModelService.findPage(Page.of(currentPage, pageSize, OrderBy.sort(orderBy)), PropertyFilter.newFilter());
+        processModelService.findPage(
+            Page.of(currentPage, pageSize, OrderBy.sort(orderBy)), PropertyFilter.newFilter());
     return Kit.connection(page, ProcessModelConnection.class);
   }
 

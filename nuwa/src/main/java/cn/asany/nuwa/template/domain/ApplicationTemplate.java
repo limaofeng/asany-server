@@ -1,8 +1,8 @@
 package cn.asany.nuwa.template.domain;
 
+import jakarta.persistence.*;
 import java.util.List;
 import java.util.Objects;
-import javax.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.GenericGenerator;
@@ -34,12 +34,15 @@ public class ApplicationTemplate extends BaseBusEntity {
   @GeneratedValue(generator = "fantasy-sequence")
   @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
+
   /** 名称 */
   @Column(name = "NAME", length = 50)
   private String name;
+
   /** 简介 */
   @Column(name = "DESCRIPTION")
   private String description;
+
   /** 路由 */
   @OneToMany(
       mappedBy = "application",
@@ -47,6 +50,7 @@ public class ApplicationTemplate extends BaseBusEntity {
       fetch = FetchType.LAZY)
   @ToString.Exclude
   private List<ApplicationTemplateRoute> routes;
+
   /** 菜单 */
   @OneToMany(
       mappedBy = "application",

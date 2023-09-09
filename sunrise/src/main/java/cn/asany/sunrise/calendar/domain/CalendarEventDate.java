@@ -1,7 +1,7 @@
 package cn.asany.sunrise.calendar.domain;
 
 import java.util.Date;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;

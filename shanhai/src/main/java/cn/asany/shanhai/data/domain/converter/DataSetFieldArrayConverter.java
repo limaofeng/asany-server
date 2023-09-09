@@ -2,8 +2,8 @@ package cn.asany.shanhai.data.domain.converter;
 
 import cn.asany.shanhai.data.domain.toy.DataSetField;
 import com.fasterxml.jackson.core.type.TypeReference;
+import jakarta.persistence.AttributeConverter;
 import java.util.List;
-import javax.persistence.AttributeConverter;
 import org.jfantasy.framework.jackson.JSON;
 import org.jfantasy.framework.util.common.StringUtil;
 

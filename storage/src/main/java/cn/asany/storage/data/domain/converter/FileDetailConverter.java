@@ -1,7 +1,7 @@
 package cn.asany.storage.data.domain.converter;
 
 import cn.asany.storage.data.domain.FileDetail;
-import javax.persistence.AttributeConverter;
+import jakarta.persistence.AttributeConverter;
 import org.jfantasy.framework.jackson.JSON;
 import org.jfantasy.framework.util.common.StringUtil;
 

@@ -2,7 +2,7 @@ package cn.asany.cms.article.domain;
 
 import cn.asany.cms.article.domain.enums.BackgroundType;
 import cn.asany.storage.api.FileObject;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.GenericGenerator;
@@ -28,32 +28,41 @@ public class Banner extends BaseBusEntity {
   @GeneratedValue(generator = "fantasy-sequence")
   @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
+
   /** 标题 */
   @Column(name = "NAME", length = 50)
   private String name;
+
   /** 标题 */
   @Column(name = "TITLE", length = 200)
   private String title;
+
   /** 副标题 */
   @Column(name = "SUBTITLE", length = 200)
   private String subtitle;
+
   /** 描述 */
   @Column(name = "description", length = 500)
   private String description;
+
   /** 是否启用 */
   @Column(name = "ENABLED")
   private Boolean enabled;
+
   /** 媒介 */
   @Column(name = "BACKGROUND_TYPE", length = 20)
   @Enumerated(EnumType.STRING)
   private BackgroundType backgroundType;
+
   /** 媒介 */
   @Column(name = "BACKGROUND", columnDefinition = "TINYTEXT")
   @Type(type = "file")
   private FileObject background;
+
   /** 地址 */
   @Column(name = "URL", length = 100)
   private String url;
+
   /** 按钮文字 */
   @Column(name = "BUTTON_TEXT", length = 100)
   private String buttonText;

@@ -3,7 +3,7 @@ package cn.asany.weixin.domain;
 import cn.asany.weixin.framework.message.user.Sex;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.Objects;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
 import org.jfantasy.framework.dao.BaseBusEntity;

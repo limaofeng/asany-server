@@ -1,7 +1,7 @@
 package cn.asany.security.core.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
@@ -27,11 +27,14 @@ public class Permission extends BaseBusEntity implements Tenantable {
   @GeneratedValue(generator = "fantasy-sequence")
   @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
+
   /** 授权范围 */
   @Column(name = "SCOPE", length = 25, nullable = false)
   private String scope;
+
   /** 授权主体 */
   @Embedded private Grantee grantee;
+
   /** 授权策略 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(
@@ -40,6 +43,7 @@ public class Permission extends BaseBusEntity implements Tenantable {
       updatable = false,
       nullable = false)
   private PermissionPolicy policy;
+
   /** 租户ID */
   @Column(name = "TENANT_ID", length = 24, updatable = false)
   private String tenantId;

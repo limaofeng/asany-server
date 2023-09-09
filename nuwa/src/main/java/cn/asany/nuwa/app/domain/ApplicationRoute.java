@@ -3,10 +3,10 @@ package cn.asany.nuwa.app.domain;
 import cn.asany.nuwa.app.domain.enums.RouteType;
 import cn.asany.ui.resources.domain.Component;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import jakarta.persistence.*;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
-import javax.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.GenericGenerator;
@@ -34,9 +34,11 @@ public class ApplicationRoute extends BaseBusEntity implements SortNode {
   @GeneratedValue(generator = "fantasy-sequence")
   @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
+
   /** 菜单名称 */
   @Column(name = "NAME")
   private String name;
+
   /** 路由所属类型 PC端/M站 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(
@@ -46,19 +48,24 @@ public class ApplicationRoute extends BaseBusEntity implements SortNode {
       nullable = false)
   @ToString.Exclude
   private Routespace space;
+
   /** 路由类型 */
   @Enumerated(EnumType.STRING)
   @Column(name = "TYPE", nullable = false)
   private RouteType type;
+
   /** 层级 */
   @Column(name = "LEVEL")
   private Integer level;
+
   /** 路径 */
   @Column(name = "PATH")
   private String path;
+
   /** 重定向 */
   @Column(name = "REDIRECT")
   private String redirect;
+
   /** 组件 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(
@@ -66,14 +73,17 @@ public class ApplicationRoute extends BaseBusEntity implements SortNode {
       foreignKey = @ForeignKey(name = "FK_APPLICATION_ROUTE_COMPONENT"))
   @ToString.Exclude
   private Component component;
+
   /** 对应的图标 */
   @Column(name = "ICON")
   private String icon;
+
   /** 父路由 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "PID", foreignKey = @ForeignKey(name = "FK_APPLICATION_ROUTE_PID"))
   @ToString.Exclude
   private ApplicationRoute parent;
+
   /** 子路由 */
   @JsonInclude(content = JsonInclude.Include.NON_NULL)
   @OneToMany(
@@ -83,18 +93,23 @@ public class ApplicationRoute extends BaseBusEntity implements SortNode {
   @OrderBy("index ASC")
   @ToString.Exclude
   private List<ApplicationRoute> routes;
+
   /** 访问权限 */
   @Column(name = "access")
   private String access;
+
   /** 必须授权才能访问 */
   @Column(name = "AUTHORIZED")
   private Boolean authorized;
+
   /** 是否启用 */
   @Column(name = "ENABLED")
   private Boolean enabled;
+
   /** 在面包屑中隐藏菜单 */
   @Column(name = "HIDE_IN_BREADCRUMB")
   private Boolean hideInBreadcrumb;
+
   /** 自定义面包屑展示风格 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(
@@ -109,6 +124,7 @@ public class ApplicationRoute extends BaseBusEntity implements SortNode {
     @AttributeOverride(name = "pure", column = @Column(name = "LAYOUT_PURE")),
   })
   private LayoutSettings layout;
+
   /** 应用 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(
@@ -118,6 +134,7 @@ public class ApplicationRoute extends BaseBusEntity implements SortNode {
       nullable = false)
   @ToString.Exclude
   private Application application;
+
   /** 序号 */
   @Column(name = "SORT")
   private Integer index;

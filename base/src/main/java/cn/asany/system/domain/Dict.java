@@ -1,8 +1,8 @@
 package cn.asany.system.domain;
 
+import jakarta.persistence.*;
 import java.util.List;
 import java.util.Objects;
-import javax.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
 import org.jfantasy.framework.dao.BaseBusEntity;
@@ -25,25 +25,33 @@ import org.jfantasy.framework.util.common.ObjectUtil;
 public class Dict extends BaseBusEntity {
 
   public static final String PATH_SEPARATOR = "/";
+
   /** 代码 */
   @Id private String code;
+
   /** 配置类别 */
   @Id private String type;
+
   /** 名称 */
   @Column(name = "NAME", length = 50, nullable = false)
   private String name;
+
   /** 路径 */
   @Column(name = "PATH", nullable = false, length = 200)
   private String path;
+
   /** 排序字段 */
   @Column(name = "SORT", nullable = false)
   private Integer index;
+
   /** 层级 */
   @Column(name = "LEVEL", nullable = false)
   private Integer level;
+
   /** 描述 */
   @Column(name = "DESCRIPTION", length = 200)
   private String description;
+
   /** 上级数据字典 */
   @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
   @JoinColumns(

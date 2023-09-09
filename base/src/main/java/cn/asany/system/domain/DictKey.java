@@ -1,7 +1,7 @@
 package cn.asany.system.domain;
 
+import jakarta.persistence.Column;
 import java.io.Serializable;
-import javax.persistence.Column;
 import lombok.Data;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;

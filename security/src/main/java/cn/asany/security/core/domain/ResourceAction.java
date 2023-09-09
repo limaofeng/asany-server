@@ -2,8 +2,8 @@ package cn.asany.security.core.domain;
 
 import cn.asany.security.core.domain.enums.AccessLevel;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
 import java.util.Set;
-import javax.persistence.*;
 import lombok.*;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
@@ -36,6 +36,7 @@ public class ResourceAction extends BaseBusEntity {
   @Enumerated(EnumType.STRING)
   @Column(name = "ACCESS_LEVEL", length = 20)
   private AccessLevel accessLevel;
+
   /**
    * graphql 接口地址 <br>
    * 格式为: Query.users

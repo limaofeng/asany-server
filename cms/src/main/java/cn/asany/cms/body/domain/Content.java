@@ -2,8 +2,8 @@ package cn.asany.cms.body.domain;
 
 import cn.asany.cms.article.domain.ArticleBody;
 import cn.asany.cms.body.domain.enums.ContentType;
+import jakarta.persistence.*;
 import java.util.Objects;
-import javax.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.GenericGenerator;

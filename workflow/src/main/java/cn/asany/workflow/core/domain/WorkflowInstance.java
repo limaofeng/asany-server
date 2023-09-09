@@ -1,7 +1,7 @@
 package cn.asany.workflow.core.domain;
 
 import cn.asany.workflow.state.domain.State;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
