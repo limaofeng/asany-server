@@ -45,6 +45,7 @@ include ":shanhai",
         ":message",
         ":message-api",
         ":e-commerce",
+        ":factory-screen",
         ":boot"
 
 // 基础
@@ -98,5 +99,7 @@ project(':uptime').projectDir = "$rootDir/uptime" as File
 project(':im').projectDir = "$rootDir/im" as File
 // 项目管理
 project(':project').projectDir = "$rootDir/project" as File
+// 兼职项目
+project(':factory-screen').projectDir = "$rootDir/factory-screen" as File
 // 启动
 project(':boot').projectDir = "$rootDir/boot" as File
