@@ -31,6 +31,7 @@ public class NativeApplication {
 
   private String clientId;
   private String clientSecret;
+  private String clientSecretType;
 
   private Set<String> authorities;
   private List<NuwaRoute> routes;

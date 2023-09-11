@@ -26,6 +26,7 @@ import org.jfantasy.framework.error.ValidationException;
 import org.jfantasy.framework.security.oauth2.core.ClientDetails;
 import org.jfantasy.framework.security.oauth2.core.ClientDetailsService;
 import org.jfantasy.framework.security.oauth2.core.ClientRegistrationException;
+import org.jfantasy.framework.security.oauth2.core.ClientSecretType;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.common.StringUtil;
 import org.springframework.cache.Cache;
@@ -205,12 +206,22 @@ public class ApplicationService implements ClientDetailsService {
         ObjectUtil.defaultValue(
             nativeApplication.getClientSecret(),
             () -> StringUtil.generateNonceString(NONCE_CHARS, 40));
+    ClientSecretType clientSecretType =
+        nativeApplication.getClientSecretType() == null
+            ? ClientSecretType.SESSION
+            : ClientSecretType.valueOf(nativeApplication.getClientSecretType().toUpperCase());
+
+    String tenantId = "1691832353955123200";
 
     // 创建密钥
     List<ClientSecret> clientSecrets = new ArrayList<>();
     ClientSecret clientSecret =
         clientSecretDao.save(
-            ClientSecret.builder().client(clientId).secret(clientSecretStr).build());
+            ClientSecret.builder()
+                .client(clientId)
+                .secret(clientSecretStr)
+                .type(clientSecretType)
+                .build());
     clientSecrets.add(clientSecret);
 
     // 创建应用
@@ -223,6 +234,7 @@ public class ApplicationService implements ClientDetailsService {
             .clientSecretsAlias(clientSecrets)
             .routespaces(Arrays.stream(new Routespace[] {routespace}).collect(Collectors.toList()))
             .routes(new HashSet<>())
+            .tenantId(tenantId)
             .build();
 
     // 生成应用路由

@@ -43,6 +43,22 @@ class ApplicationServiceTest {
   @Autowired private LibraryService libraryService;
 
   @Test
+  void createFactoryScreenAppFromYaml() {
+    InputStream inputStream = ClassLoader.getSystemResourceAsStream("app_screen.yml");
+    // 调基础工具类的方法
+    NativeApplication app = YamlUtils.load(inputStream);
+    assert app.getName().equals("fples");
+    applicationService.deleteApplication(app.getClientId());
+    Application application = applicationService.createApplication(app);
+    log.debug(
+        String.format(
+            "应用 %s 已经创建成功，ClientId = %s ClientSecret = %s",
+            application.getName(),
+            application.getClientId(),
+            application.getClientSecret(ClientSecretType.SESSION)));
+  }
+
+  @Test
   void createApplicationFromYaml() {
     InputStream inputStream = ClassLoader.getSystemResourceAsStream("app.yml");
     // 调基础工具类的方法

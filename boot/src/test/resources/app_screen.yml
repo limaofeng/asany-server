@@ -1,0 +1,17 @@
+name: fples
+title: FactoryScreen
+description: 工厂流水线电子屏
+clientId: dae19885dc94eb73c399
+clientSecret: df310bb1894fbc13da2cd5383127ae1a9423039e
+routes:
+  - path: /login
+    component: cn.asany.ui.admin.fples.SignIn
+  - path: /
+    authorized: true
+    routes:
+      - path: /screens
+        component: cn.asany.ui.admin.fples.ScreenList
+        hideMenu: true
+      - path: /screens/:id
+        component: cn.asany.ui.admin.fples.ScreenView
+        hideMenu: true

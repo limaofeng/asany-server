@@ -12,6 +12,7 @@ import graphql.kickstart.autoconfigure.tools.SchemaDirective;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
+import lombok.extern.slf4j.Slf4j;
 import org.dataloader.DataLoader;
 import org.dataloader.DataLoaderFactory;
 import org.jfantasy.autoconfigure.OAuth2SecurityAutoConfiguration;
@@ -41,8 +42,11 @@ import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionTemplate;
 
 /**
+ * SecurityAutoConfiguration
+ *
  * @author limaofeng
  */
+@Slf4j
 @Configuration
 @EntityScan({"cn.asany.security.*.domain"})
 @ComponentScan({
@@ -69,7 +73,11 @@ public class AsanySecurityAutoConfiguration implements InitializingBean {
   }
 
   @Override
-  public void afterPropertiesSet() {
+  public void afterPropertiesSet() throws SchedulerException {
+    if (!taskScheduler.isStarted()) {
+      log.error("任务调度器未启动");
+      return;
+    }
     transactionTemplate.execute(
         (TransactionCallback<Void>)
             status -> {

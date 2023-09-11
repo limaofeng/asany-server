@@ -6,6 +6,7 @@ import cn.asany.nuwa.app.service.dto.NativeApplication;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
+import org.jfantasy.framework.security.oauth2.core.ClientSecretType;
 import org.jfantasy.framework.util.common.StringUtil;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,12 +33,14 @@ class ApplicationServiceTest {
     log.debug(
         String.format(
             "应用 %s 已经创建成功，ClientId = %s ClientSecret = %s",
-            application.getName(), application.getClientId(), application.getClientSecret()));
+            application.getName(),
+            application.getClientId(),
+            application.getClientSecret(ClientSecretType.SESSION)));
   }
 
   @Test
   void deleteApplication() {
-    List<Application> applications = applicationService.findAll(PropertyFilter.builder().build());
+    List<Application> applications = applicationService.findAll(PropertyFilter.newFilter());
     applications.forEach(item -> applicationService.deleteApplication(item.getId()));
   }
 
