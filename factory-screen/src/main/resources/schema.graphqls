@@ -1,0 +1,38 @@
+
+type FactoryScreen {
+  id: ID!
+  description: String
+  boundIp: String
+  status: String
+  statusImage: String
+  info: String
+  operators: String
+  documents: [File]
+}
+
+input FactoryScreenCreateInput {
+  description: String
+  boundIp: String
+}
+
+input FactoryScreenUpdateInput {
+  description: String
+  boundIp: String
+  status: String
+  statusImage: String
+  info: String
+  operators: String
+  documents: [File]
+}
+
+extend type Query {
+  screens: [FactoryScreen]
+  screen(id: ID!): FactoryScreen
+}
+
+extend type Mutation {
+  validateAdminKey(key: String!): Boolean
+  createScreen(input: FactoryScreenCreateInput!): FactoryScreen
+  updateScreen(id: ID!, input: FactoryScreenUpdateInput!, merge: Boolean = true): FactoryScreen
+  deleteScreen(id: ID!): FactoryScreen
+}
