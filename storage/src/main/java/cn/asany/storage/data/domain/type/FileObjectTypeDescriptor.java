@@ -24,7 +24,7 @@ public class FileObjectTypeDescriptor extends AbstractTypeDescriptor<FileObject>
 
   @Override
   public String toString(FileObject value) {
-    return value.toString();
+    return JSON.serialize(value);
   }
 
   @Override

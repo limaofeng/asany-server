@@ -22,10 +22,11 @@ public class DefaultStorageResolver implements StorageResolver {
   private StorageService storageService;
 
   private final Map<String, Storage> storages = new HashMap<>();
-  private final List<StorageBuilder<?, IStorageConfig>> builders;
+  private final List<StorageBuilder<? extends Storage, ? extends IStorageConfig>> builders;
 
-  public DefaultStorageResolver(List<StorageBuilder<?, IStorageConfig>> builders) {
+  public DefaultStorageResolver(StorageService storageService, List<StorageBuilder<? extends Storage, ? extends IStorageConfig>> builders) {
     this.builders = builders;
+    this.storageService = storageService;
   }
 
   @Override
@@ -34,14 +35,18 @@ public class DefaultStorageResolver implements StorageResolver {
     if (storages.containsKey(id)) {
       return storages.get(id);
     }
+    System.out.println("id = " + id + " storageService = " + storageService);
     StorageConfig config = storageService.get(id);
     return resolve(config.getProperties());
   }
 
   @Override
   public Storage resolve(IStorageConfig config) {
-    for (StorageBuilder<?, IStorageConfig> builder : builders) {
+    //noinspection rawtypes
+    for (StorageBuilder builder : builders) {
+      //noinspection unchecked
       if (builder.supports(config.getClass())) {
+        @SuppressWarnings("unchecked")
         Storage storage = builder.build(config);
         if (storage != null) {
           storages.put(config.getId(), storage);

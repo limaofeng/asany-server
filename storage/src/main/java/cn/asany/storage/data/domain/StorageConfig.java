@@ -2,6 +2,7 @@ package cn.asany.storage.data.domain;
 
 import cn.asany.storage.api.IStorageConfig;
 import cn.asany.storage.core.FileStoreException;
+import cn.asany.storage.core.engine.disk.LocalStorageConfig;
 import cn.asany.storage.core.engine.minio.MinIOStorageConfig;
 import cn.asany.storage.core.engine.oss.OSSStorageConfig;
 import cn.asany.storage.data.domain.enums.StorageType;
@@ -77,6 +78,10 @@ public class StorageConfig extends BaseBusEntity {
             JSON.deserialize(this.getDetails(), OSSStorageConfig.class);
         ossStorageConfig.setId(this.getId());
         return ossStorageConfig;
+      case DISK:
+        LocalStorageConfig localStorageConfig = JSON.deserialize(this.getDetails(), LocalStorageConfig.class);
+        localStorageConfig.setId(this.getId());
+        return localStorageConfig;
       default:
         throw new FileStoreException("不支持的类型");
     }

@@ -14,7 +14,11 @@ public class ScreenUpdateInput {
 
   private FileObject info;
 
-  private List<FileObject> operators;
+  private FileObject operator1;
+
+  private FileObject operator2;
+
+  private FileObject operator3;
 
   private List<FileObject> documents;
 }

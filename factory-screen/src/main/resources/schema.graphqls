@@ -4,9 +4,11 @@ type FactoryScreen {
   description: String
   boundIp: String
   status: String
-  statusImage: String
-  info: String
-  operators: String
+  statusImage: File
+  info: File
+  operator1: File
+  operator2: File
+  operator3: File
   documents: [File]
 }
 
@@ -19,20 +21,22 @@ input FactoryScreenUpdateInput {
   description: String
   boundIp: String
   status: String
-  statusImage: String
-  info: String
-  operators: String
+  statusImage: File
+  info: File
+  operator1: File
+  operator2: File
+  operator3: File
   documents: [File]
 }
 
 extend type Query {
-  screens: [FactoryScreen]
+  screens: [FactoryScreen!]!
   screen(id: ID!): FactoryScreen
 }
 
 extend type Mutation {
   validateAdminKey(key: String!): Boolean
-  createScreen(input: FactoryScreenCreateInput!): FactoryScreen
-  updateScreen(id: ID!, input: FactoryScreenUpdateInput!, merge: Boolean = true): FactoryScreen
-  deleteScreen(id: ID!): FactoryScreen
+  createScreen(input: FactoryScreenCreateInput!): FactoryScreen!
+  updateScreen(id: ID!, input: FactoryScreenUpdateInput!, merge: Boolean = true): FactoryScreen!
+  deleteScreen(id: ID!): FactoryScreen!
 }

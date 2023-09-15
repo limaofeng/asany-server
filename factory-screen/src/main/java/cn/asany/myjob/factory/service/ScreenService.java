@@ -8,6 +8,7 @@ import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ScreenService {
@@ -32,6 +33,7 @@ public class ScreenService {
     return screen;
   }
 
+  @Transactional(rollbackFor = Exception.class)
   public Screen update(Long id, Screen screen, Boolean merge) {
     screen.setId(id);
     return this.screenDao.update(screen, merge);
