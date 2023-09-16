@@ -40,15 +40,15 @@ public class Screen extends BaseBusEntity {
   @Column(name = "INFO_STORE", columnDefinition = "JSON")
   private FileObject info;
 
-  @Convert(converter = FileObjectsConverter.class)
+  @Type(type = "file")
   @Column(name = "OPERATOR1_STORE", columnDefinition = "JSON")
   private FileObject operator1;
 
-  @Convert(converter = FileObjectsConverter.class)
+  @Type(type = "file")
   @Column(name = "OPERATOR2_STORE", columnDefinition = "JSON")
   private FileObject operator2;
 
-  @Convert(converter = FileObjectsConverter.class)
+  @Type(type = "file")
   @Column(name = "OPERATOR3_STORE", columnDefinition = "JSON")
   private FileObject operator3;
 
