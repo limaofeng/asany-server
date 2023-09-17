@@ -30,6 +30,9 @@ input FactoryScreenUpdateInput {
 }
 
 extend type Query {
+  ping: Date
+  getClientIp: String
+  getScreenForIp(ip: String!): FactoryScreen
   screens: [FactoryScreen!]!
   screen(id: ID!): FactoryScreen
 }
@@ -39,4 +42,8 @@ extend type Mutation {
   createScreen(input: FactoryScreenCreateInput!): FactoryScreen!
   updateScreen(id: ID!, input: FactoryScreenUpdateInput!, merge: Boolean = true): FactoryScreen!
   deleteScreen(id: ID!): FactoryScreen!
+}
+
+extend type Subscription  {
+  onUpdateScreen(id: ID): FactoryScreen
 }

@@ -30,7 +30,7 @@ public class Screen extends BaseBusEntity {
   private String status;
 
   @Column(name = "BOUND_IP", unique = true)
-  private String BoundIp;
+  private String boundIp;
 
   @Type(type = "file")
   @Column(name = "STATUS_IMAGE_STORE", columnDefinition = "JSON")

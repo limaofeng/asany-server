@@ -46,4 +46,8 @@ public class ScreenService {
   public Optional<Screen> findById(Long id) {
     return this.screenDao.findById(id);
   }
+
+  public Optional<Screen> findScreenForIp(String ip) {
+    return this.screenDao.findOne(PropertyFilter.newFilter().equal("boundIp", ip));
+  }
 }

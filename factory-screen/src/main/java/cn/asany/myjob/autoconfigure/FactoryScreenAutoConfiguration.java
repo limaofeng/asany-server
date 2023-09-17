@@ -14,6 +14,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
   "cn.asany.myjob.factory.dao",
   "cn.asany.myjob.factory.service",
   "cn.asany.myjob.factory.convert",
+  "cn.asany.myjob.factory.listener",
   "cn.asany.myjob.factory.graphql",
 })
 @EnableJpaRepositories(
