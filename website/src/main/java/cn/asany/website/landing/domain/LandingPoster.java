@@ -1,5 +1,6 @@
 package cn.asany.website.landing.domain;
 
+import cn.asany.base.usertype.FileUserType;
 import cn.asany.storage.api.FileObject;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.Objects;
@@ -31,11 +32,11 @@ public class LandingPoster extends BaseBusEntity {
   @Column(name = "NAME", length = 100, nullable = false)
   private String name;
   /** 海报背景图片 */
-  @Type(type = "file")
+  @Type(FileUserType.class)
   @Column(name = "BACKGROUND", precision = 500)
   private FileObject background;
   /** 海报背景音乐 */
-  @Type(type = "file")
+  @Type(FileUserType.class)
   @Column(name = "MUSIC", precision = 500)
   private FileObject music;
   /** 描述 */

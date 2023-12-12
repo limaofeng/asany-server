@@ -13,18 +13,18 @@ plugins {
     id "com.diffplug.eclipse.apt" version "${PLUGIN_ECLIPSE_APT_VER}"
 }
 
-githook {
-    failOnMissingHooksDir = false
-    createHooksDirIfNotExist = false
-    hooks {
-        "commit-msg" {
-            task = "commitlint -Dmsgfile=\$1"
-        }
-        "pre-commit" {
-            shell = "sh ./gradle/spotless.sh"
-        }
-    }
-}
+//githook {
+//    failOnMissingHooksDir = false
+//    createHooksDirIfNotExist = false
+//    hooks {
+//        "commit-msg" {
+//            task = "commitlint -Dmsgfile=\$1"
+//        }
+//        "pre-commit" {
+//            shell = "sh ./gradle/spotless.sh"
+//        }
+//    }
+//}
 
 allprojects {
     apply plugin: 'java'
@@ -59,6 +59,7 @@ allprojects {
 
     repositories {
         maven { url "https://s01.oss.sonatype.org/content/groups/staging/" }
+        maven { url "https://maven.aliyun.com/repository/central"}
         mavenCentral()
         mavenLocal()
     }

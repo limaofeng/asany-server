@@ -23,10 +23,10 @@ include ":shanhai",
         ":weixin",
         ":openapi",
         ":base",
-        ":flowable",
+//        ":flowable",
         ":contacts",
         ":sunrise",
-        ":mail",
+//        ":mail",
         ":drive",
         ":security",
         ":security-api",
@@ -45,6 +45,7 @@ include ":shanhai",
         ":message",
         ":message-api",
         ":e-commerce",
+        ":factory-screen",
         ":boot"
 
 // 基础
@@ -58,7 +59,7 @@ project(':security').projectDir = "$rootDir/security" as File
 project(':security-api').projectDir = "$rootDir/security-api" as File
 //project(':storage-preview').projectDir = "$rootDir/storage-preview" as File
 // 工作流
-project(':flowable').projectDir = "$rootDir/flowable" as File
+//project(':flowable').projectDir = "$rootDir/flowable" as File
 // 存储服务接口
 project(':storage-api').projectDir = "$rootDir/storage-api" as File
 // 存储服务
@@ -74,7 +75,7 @@ project(':contacts').projectDir = "$rootDir/contacts" as File
 // 日历
 project(':sunrise').projectDir = "$rootDir/sunrise" as File
 // 日历
-project(':mail').projectDir = "$rootDir/mail" as File
+//project(':mail').projectDir = "$rootDir/mail" as File
 // 云盘
 project(':drive').projectDir = "$rootDir/drive" as File
 // 微信
@@ -98,5 +99,7 @@ project(':uptime').projectDir = "$rootDir/uptime" as File
 project(':im').projectDir = "$rootDir/im" as File
 // 项目管理
 project(':project').projectDir = "$rootDir/project" as File
+// 兼职项目
+project(':factory-screen').projectDir = "$rootDir/factory-screen" as File
 // 启动
 project(':boot').projectDir = "$rootDir/boot" as File

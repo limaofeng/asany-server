@@ -6,14 +6,13 @@ import cn.asany.organization.core.domain.Organization;
 import cn.asany.security.core.domain.User;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import java.util.List;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.Any;
-import org.hibernate.annotations.AnyMetaDef;
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.MetaValue;
 import org.jfantasy.framework.dao.BaseBusEntity;
+
+import java.util.List;
 
 /**
  * 通信录(Address Book)
@@ -43,18 +42,18 @@ public class ContactBook extends BaseBusEntity {
   private ContactBookType type;
 
   /** 所有者 */
-  @Any(
-      metaColumn = @Column(name = "OWNER_TYPE", length = 20, insertable = false, updatable = false),
-      fetch = FetchType.LAZY)
-  @AnyMetaDef(
-      idType = "long",
-      metaType = "string",
-      metaValues = {
-        @MetaValue(targetEntity = User.class, value = User.OWNERSHIP_KEY),
-        @MetaValue(targetEntity = Organization.class, value = Organization.OWNERSHIP_KEY)
-      })
-  @JoinColumn(name = "OWNER", insertable = false, updatable = false)
-  private Ownership owner;
+//  @Any(
+//      metaColumn = @Column(name = "OWNER_TYPE", length = 20, insertable = false, updatable = false),
+//      fetch = FetchType.LAZY)
+//  @AnyMetaDef(
+//      idType = "long",
+//      metaType = "string",
+//      metaValues = {
+//        @MetaValue(targetEntity = User.class, value = User.OWNERSHIP_KEY),
+//        @MetaValue(targetEntity = Organization.class, value = Organization.OWNERSHIP_KEY)
+//      })
+//  @JoinColumn(name = "OWNER", insertable = false, updatable = false)
+//  private Ownership owner;
 
   /** 所有联系人 */
   @OneToMany(mappedBy = "book", fetch = FetchType.LAZY)

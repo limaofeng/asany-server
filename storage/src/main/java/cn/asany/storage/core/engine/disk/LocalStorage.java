@@ -68,7 +68,7 @@ public class LocalStorage implements Storage {
   }
 
   private String filterRemotePath(String remotePath) {
-    return StringUtil.defaultValue(remotePath, "").startsWith("/")
+    return remotePath.startsWith("/")
         ? remotePath
         : ("/" + remotePath);
   }

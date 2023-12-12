@@ -3,6 +3,7 @@ package cn.asany.organization.employee.domain;
 import cn.asany.base.common.Ownership;
 import cn.asany.base.common.domain.Email;
 import cn.asany.base.common.domain.Phone;
+import cn.asany.base.usertype.FileUserType;
 import cn.asany.organization.core.domain.EmployeeGroup;
 import cn.asany.organization.core.domain.EmployeeIdentity;
 import cn.asany.organization.core.domain.Organization;
@@ -55,7 +56,7 @@ public class Employee extends BaseBusEntity implements Ownership {
   private Long id;
 
   /** 头像 */
-  @Type(type = "file")
+  @Type(FileUserType.class)
   @Column(name = "avatar", length = 500)
   private FileObject avatar;
 

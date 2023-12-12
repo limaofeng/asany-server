@@ -8,7 +8,7 @@ import java.util.Date;
 import java.util.List;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
-import org.hibernate.query.internal.NativeQueryImpl;
+import org.hibernate.query.sql.internal.NativeQueryImpl;
 import org.jfantasy.framework.dao.hibernate.AliasToBeanResultTransformer;
 import org.jfantasy.framework.dao.jpa.ComplexJpaRepository;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;

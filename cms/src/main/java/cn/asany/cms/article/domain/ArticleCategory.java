@@ -1,5 +1,6 @@
 package cn.asany.cms.article.domain;
 
+import cn.asany.base.usertype.FileUserType;
 import cn.asany.organization.core.domain.Organization;
 import cn.asany.storage.api.FileObject;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -60,7 +61,7 @@ public class ArticleCategory extends BaseBusEntity {
 
   /** 封面 */
   @Column(name = "IMAGE", length = 500, columnDefinition = "JSON")
-  @Type(type = "file")
+  @Type(FileUserType.class)
   private FileObject image;
 
   /** 描述 */

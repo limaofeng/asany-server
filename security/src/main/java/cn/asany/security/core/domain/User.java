@@ -3,6 +3,7 @@ package cn.asany.security.core.domain;
 import cn.asany.base.common.Ownership;
 import cn.asany.base.common.domain.Email;
 import cn.asany.base.common.domain.Phone;
+import cn.asany.base.usertype.FileUserType;
 import cn.asany.security.core.domain.enums.Sex;
 import cn.asany.security.core.domain.enums.UserType;
 import cn.asany.security.core.validators.UsernameCannotRepeatValidator;
@@ -11,7 +12,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import java.util.*;
-import javax.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.Cache;
@@ -84,7 +85,7 @@ public class User extends BaseBusEntity implements Ownership, Tenantable {
   private UserType userType;
 
   /** 头像 */
-  @Type(type = "file")
+  @Type(FileUserType.class)
   @Column(name = "avatar", precision = 500)
   private FileObject avatar;
 

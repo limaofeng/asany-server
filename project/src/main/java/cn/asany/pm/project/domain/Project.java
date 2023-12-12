@@ -1,5 +1,6 @@
 package cn.asany.pm.project.domain;
 
+import cn.asany.base.usertype.FileUserType;
 import cn.asany.storage.api.FileObject;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
@@ -35,7 +36,7 @@ public class Project extends BaseBusEntity {
 
   /** 标志 */
   @Column(name = "LOGO", length = 500, columnDefinition = "JSON")
-  @Type(type = "file")
+  @Type(FileUserType.class)
   private FileObject logo;
 
   /** 项目名称 */

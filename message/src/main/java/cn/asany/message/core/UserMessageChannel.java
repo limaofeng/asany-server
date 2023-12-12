@@ -14,7 +14,6 @@ import org.jfantasy.framework.security.LoginUser;
 import org.jfantasy.framework.security.core.userdetails.UserDetailsService;
 import org.jfantasy.framework.util.HandlebarsTemplateUtils;
 import org.jfantasy.framework.util.common.StringUtil;
-import org.springframework.messaging.MessagingException;
 
 /**
  * WebPush 消息发送者
@@ -40,7 +39,7 @@ public class UserMessageChannel implements MessageChannel {
   }
 
   @Override
-  public void send(Message message) throws MessagingException {
+  public void send(Message message) {
     SimpleMessage simpleMessage = (SimpleMessage) message;
     if (StringUtil.isBlank(simpleMessage.getSubject())) {
       throw new RuntimeException("subject is blank");

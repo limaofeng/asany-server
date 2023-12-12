@@ -1,14 +1,12 @@
 package cn.asany.storage.core.engine.disk;
 
 import cn.asany.storage.core.AbstractStorageConfig;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 
 /** @author limaofeng */
 @Data
 @Builder
+@NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 public class LocalStorageConfig extends AbstractStorageConfig {

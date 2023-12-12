@@ -2,6 +2,7 @@ package cn.asany.organization.core.domain;
 
 import cn.asany.base.common.Ownership;
 import cn.asany.base.common.domain.Address;
+import cn.asany.base.usertype.FileUserType;
 import cn.asany.storage.api.FileObject;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -52,7 +53,7 @@ public class Organization extends BaseBusEntity implements Ownership {
   private String name;
 
   /** 组织 */
-  @Type(type = "file")
+  @Type(FileUserType.class)
   @Column(name = "LOGO", precision = 500)
   private FileObject logo;
 

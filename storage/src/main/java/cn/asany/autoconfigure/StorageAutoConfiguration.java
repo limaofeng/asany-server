@@ -1,6 +1,7 @@
 package cn.asany.autoconfigure;
 
 import cn.asany.storage.api.IStorageConfig;
+import cn.asany.storage.api.Storage;
 import cn.asany.storage.api.StorageBuilder;
 import cn.asany.storage.core.DefaultStorageResolver;
 import cn.asany.storage.core.StorageResolver;
@@ -9,6 +10,7 @@ import cn.asany.storage.core.engine.oss.OSSStorageConfig;
 import cn.asany.storage.data.graphql.directive.FileFormatDirective;
 import cn.asany.storage.data.graphql.scalar.FileCoercing;
 import cn.asany.storage.data.service.AuthTokenService;
+import cn.asany.storage.data.service.StorageService;
 import graphql.kickstart.autoconfigure.tools.SchemaDirective;
 import graphql.kickstart.servlet.apollo.ApolloScalars;
 import graphql.schema.GraphQLScalarType;
@@ -64,8 +66,8 @@ public class StorageAutoConfiguration {
   }
 
   @Bean
-  public StorageResolver storageResolver(List<StorageBuilder<?, IStorageConfig>> builders) {
-    return new DefaultStorageResolver(builders);
+  public StorageResolver storageResolver(StorageService storageService, List<StorageBuilder<? extends Storage, ? extends IStorageConfig>> builders) {
+    return new DefaultStorageResolver(storageService, builders);
   }
 
   @Bean

@@ -1,13 +1,13 @@
-package cn.asany.storage.data.domain.type;
+package cn.asany.base.usertype;
 
 import cn.asany.storage.api.FileObject;
 import org.hibernate.type.AbstractSingleColumnStandardBasicType;
-import org.hibernate.type.descriptor.sql.VarcharTypeDescriptor;
+import org.hibernate.type.descriptor.jdbc.JsonJdbcType;
 
 public class FileObjectCustomType extends AbstractSingleColumnStandardBasicType<FileObject> {
 
   public FileObjectCustomType() {
-    super(VarcharTypeDescriptor.INSTANCE, FileObjectTypeDescriptor.INSTANCE);
+    super(JsonJdbcType.INSTANCE, FileObjectTypeDescriptor.INSTANCE);
   }
 
   @Override

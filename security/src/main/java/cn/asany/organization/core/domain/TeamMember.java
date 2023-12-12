@@ -1,5 +1,6 @@
 package cn.asany.organization.core.domain;
 
+import cn.asany.base.usertype.FileUserType;
 import cn.asany.storage.api.FileObject;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
@@ -39,7 +40,7 @@ public class TeamMember extends BaseBusEntity {
   private String title;
 
   /** 头像 */
-  @Type(type = "file")
+  @Type(FileUserType.class)
   @Column(name = "avatar", precision = 500)
   private FileObject avatar;
 

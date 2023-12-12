@@ -1,5 +1,6 @@
 package cn.asany.cms.article.domain;
 
+import cn.asany.base.usertype.FileUserType;
 import cn.asany.cms.article.domain.enums.BackgroundType;
 import cn.asany.storage.api.FileObject;
 import jakarta.persistence.*;
@@ -56,7 +57,7 @@ public class Banner extends BaseBusEntity {
 
   /** 媒介 */
   @Column(name = "BACKGROUND", columnDefinition = "TINYTEXT")
-  @Type(type = "file")
+  @Type(FileUserType.class)
   private FileObject background;
 
   /** 地址 */

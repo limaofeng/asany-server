@@ -1,5 +1,6 @@
 package cn.asany.shanhai.core.domain;
 
+import cn.asany.base.usertype.FileUserType;
 import cn.asany.storage.api.FileObject;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
@@ -38,7 +39,7 @@ public class Module extends BaseBusEntity {
   private String name;
 
   /** 模块图片 */
-  @Type(type = "file")
+  @Type(FileUserType.class)
   @Column(name = "PICTURE", length = 500)
   private FileObject picture;
 

@@ -2,6 +2,7 @@ package cn.asany.website.landing.domain;
 
 import cn.asany.base.common.domain.Address;
 import cn.asany.base.common.domain.Geolocation;
+import cn.asany.base.usertype.FileUserType;
 import cn.asany.storage.api.FileObject;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.Objects;
@@ -39,7 +40,7 @@ public class LandingStore extends BaseBusEntity {
   /** 门店位置 (经纬坐标) */
   @Embedded private Geolocation location;
   /** 二维码 */
-  @Type(type = "file")
+  @Type(FileUserType.class)
   @Column(name = "QR_CODE", precision = 500)
   private FileObject qrCode;
   /** 门店负责人 */

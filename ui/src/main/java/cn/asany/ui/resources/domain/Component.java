@@ -1,5 +1,6 @@
 package cn.asany.ui.resources.domain;
 
+import cn.asany.base.usertype.FileUserType;
 import cn.asany.storage.api.FileObject;
 import cn.asany.ui.resources.UIResource;
 import cn.asany.ui.resources.domain.converter.ComponentDataConverter;
@@ -49,7 +50,7 @@ public class Component extends BaseBusEntity implements UIResource {
   private ComponentScope scope;
   /** 图片 */
   @Column(name = "IMAGE", length = 500, columnDefinition = "JSON")
-  @Type(type = "file")
+  @Type(FileUserType.class)
   private FileObject image;
   /** 组件类型 */
   @Enumerated(EnumType.STRING)

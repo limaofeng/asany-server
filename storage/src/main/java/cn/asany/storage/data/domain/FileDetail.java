@@ -1,22 +1,24 @@
 package cn.asany.storage.data.domain;
 
-import cn.asany.storage.api.*;
+import cn.asany.base.usertype.FileObjectCustomType;
+import cn.asany.storage.api.FileObject;
+import cn.asany.storage.api.Storage;
+import cn.asany.storage.api.StorageSpace;
 import cn.asany.storage.core.engine.virtual.VirtualFileObject;
 import cn.asany.storage.core.engine.virtual.VirtualStorage;
-import cn.asany.storage.data.domain.type.FileObjectCustomType;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+import lombok.*;
+import org.hibernate.Hibernate;
+import org.jfantasy.framework.dao.BaseBusEntity;
+import org.jfantasy.framework.dao.hibernate.annotations.TableGenerator;
+import org.jfantasy.framework.util.common.ObjectUtil;
+
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Predicate;
-import lombok.*;
-import org.hibernate.Hibernate;
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.TypeDef;
-import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.util.common.ObjectUtil;
 
 /**
  * 文件信息表
@@ -51,7 +53,6 @@ import org.jfantasy.framework.util.common.ObjectUtil;
       "metadata",
       "inputStream"
     })
-@TypeDef(name = "file", typeClass = FileObjectCustomType.class)
 public class FileDetail extends BaseBusEntity implements Cloneable {
 
   public static String NAME_OF_THE_RECYCLE_BIN = "$RECYCLE.BIN";
@@ -59,8 +60,7 @@ public class FileDetail extends BaseBusEntity implements Cloneable {
 
   @Id
   @Column(name = "ID", nullable = false, updatable = false, precision = 22)
-  @GeneratedValue(generator = "fantasy-sequence")
-  @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+  @TableGenerator
   private Long id;
 
   /** 虚拟文件路径 */

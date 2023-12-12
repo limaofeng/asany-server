@@ -11,9 +11,11 @@ import java.util.Objects;
 import lombok.*;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.Any;
-import org.hibernate.annotations.AnyMetaDef;
+//import org.hibernate.annotations.AnyMetaDef;
+import org.hibernate.mapping.Any.MetaValue;
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.MetaValue;
+//import org.hibernate.annotations.MetaValue;
+import org.hibernate.mapping.Any.MetaValue;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
 @Getter
@@ -68,21 +70,6 @@ public class CloudDrive extends BaseBusEntity {
   /** 所有者ID */
   @Column(name = "OWNER", nullable = false)
   private Long ownerId;
-
-  /** 所有者 */
-  @Any(
-      metaColumn = @Column(name = "OWNER_TYPE", length = 20, insertable = false, updatable = false),
-      fetch = FetchType.LAZY)
-  @AnyMetaDef(
-      idType = "long",
-      metaType = "string",
-      metaValues = {
-        @MetaValue(targetEntity = User.class, value = User.OWNERSHIP_KEY),
-        @MetaValue(targetEntity = Employee.class, value = Employee.OWNERSHIP_KEY),
-        @MetaValue(targetEntity = Organization.class, value = Organization.OWNERSHIP_KEY)
-      })
-  @JoinColumn(name = "OWNER", insertable = false, updatable = false)
-  private Ownership owner;
 
   @Override
   public boolean equals(Object o) {

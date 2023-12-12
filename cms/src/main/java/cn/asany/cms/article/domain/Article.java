@@ -1,5 +1,6 @@
 package cn.asany.cms.article.domain;
 
+import cn.asany.base.usertype.FileUserType;
 import cn.asany.cms.article.domain.enums.ArticleBodyType;
 import cn.asany.cms.article.domain.enums.ArticleStatus;
 import cn.asany.cms.body.domain.Content;
@@ -86,7 +87,7 @@ public class Article extends BaseBusEntity {
 
   /** 文章图片 */
   @Column(name = "IMAGE", columnDefinition = "JSON")
-  @Type(type = "file")
+  @Type(FileUserType.class)
   private FileObject image;
 
   /** 附件 */

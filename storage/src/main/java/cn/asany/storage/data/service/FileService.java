@@ -1,4 +1,4 @@
-jepackage cn.asany.storage.data.service;
+package cn.asany.storage.data.service;
 
 import cn.asany.storage.api.FileObject;
 import cn.asany.storage.api.Storage;

@@ -1,5 +1,6 @@
 package cn.asany.cms.article.domain;
 
+import cn.asany.base.usertype.FileUserType;
 import cn.asany.organization.core.domain.Organization;
 import cn.asany.security.core.domain.User;
 import cn.asany.storage.api.FileObject;
@@ -56,7 +57,7 @@ public class ArticleTag extends BaseBusEntity {
 
   /** 封面 */
   @Column(name = "IMAGE", length = 500, columnDefinition = "JSON")
-  @Type(type = "file")
+  @Type(FileUserType.class)
   private FileObject image;
 
   /** 描述 */

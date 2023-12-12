@@ -41,7 +41,7 @@ public class ContactBookGraphQLResolver implements GraphQLResolver<ContactBook> 
   }
 
   public List<ContactGroup> groups(ContactBook book, String namespace) {
-    Ownership ownership = book.getOwner();
+    Ownership ownership = null; // book.getOwner();
 
     IContactsService contactsService = contactsServiceFactory.getService(book.getType());
 

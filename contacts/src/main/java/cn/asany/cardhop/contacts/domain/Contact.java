@@ -1,5 +1,6 @@
 package cn.asany.cardhop.contacts.domain;
 
+import cn.asany.base.usertype.FileUserType;
 import cn.asany.security.core.domain.enums.Sex;
 import cn.asany.storage.api.FileObject;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -39,7 +40,7 @@ public class Contact extends BaseBusEntity {
   private ContactBook book;
 
   /** 联系人照片 */
-  @Type(type = "file")
+  @Type(FileUserType.class)
   @Column(name = "AVATAR", length = 500)
   private FileObject avatar;
 

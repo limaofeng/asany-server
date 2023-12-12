@@ -1,7 +1,7 @@
 package cn.asany.flowable.core.service;
 
 import java.util.List;
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import org.flowable.engine.RepositoryService;
 import org.flowable.engine.repository.ProcessDefinition;
 import org.flowable.engine.repository.ProcessDefinitionQuery;

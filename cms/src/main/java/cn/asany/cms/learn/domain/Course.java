@@ -1,5 +1,6 @@
 package cn.asany.cms.learn.domain;
 
+import cn.asany.base.usertype.FileUserType;
 import cn.asany.storage.api.FileObject;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
@@ -38,7 +39,7 @@ public class Course extends BaseBusEntity {
 
   /** 封面 */
   @Column(name = "COVER", length = 500)
-  @Type(type = "file")
+  @Type(FileUserType.class)
   private FileObject cover;
 
   /** 发布人 */

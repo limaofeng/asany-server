@@ -1,5 +1,6 @@
 package cn.asany.cms.special.domain;
 
+import cn.asany.base.usertype.FileUserType;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import java.util.Date;
@@ -36,7 +37,7 @@ public class Special extends BaseBusEntity {
 
   /** 封面 */
   @Column(name = "COVER", length = 500)
-  @Type(type = "file")
+  @Type(FileUserType.class)
   private FileObject cover;
 
   /** 期刊号 */

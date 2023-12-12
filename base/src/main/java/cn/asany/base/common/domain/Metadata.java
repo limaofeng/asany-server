@@ -1,5 +1,6 @@
 package cn.asany.base.common.domain;
 
+import cn.asany.base.usertype.FileUserType;
 import cn.asany.storage.api.FileObject;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
@@ -16,7 +17,7 @@ import org.hibernate.annotations.Type;
 @AllArgsConstructor
 public class Metadata {
   /** 缩略图 */
-  @Type(type = "file")
+  @Type(value = FileUserType.class)
   @Column(name = "META_THUMB", length = 500)
   private FileObject thumb;
 

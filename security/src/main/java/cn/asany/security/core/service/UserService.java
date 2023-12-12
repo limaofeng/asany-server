@@ -1,6 +1,5 @@
 package cn.asany.security.core.service;
 
-import cn.asany.base.common.domain.Phone;
 import cn.asany.security.core.dao.UserDao;
 import cn.asany.security.core.domain.*;
 import cn.asany.security.core.domain.enums.GranteeType;
@@ -24,7 +23,6 @@ import org.jfantasy.framework.util.common.StringUtil;
 import org.jfantasy.framework.util.reflect.Property;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.MessageSourceAccessor;
-import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -158,12 +156,11 @@ public class UserService {
   }
 
   public Optional<User> findOneByUsername(String username) {
-    return this.userDao.findOne(Example.of(User.builder().username(username).build()));
+    return this.userDao.findOne(PropertyFilter.newFilter().equal("username", username));
   }
 
   public Optional<User> findOneByPhone(String username) {
-    return this.userDao.findOne(
-        Example.of(User.builder().phone(Phone.builder().number(username).build()).build()));
+    return this.userDao.findOne(PropertyFilter.newFilter().equal("phone.number", username));
   }
 
   public Page<User> findPage(Pageable pageable, PropertyFilter filter) {
