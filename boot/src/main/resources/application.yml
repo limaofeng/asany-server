@@ -159,26 +159,26 @@ management:
     elasticsearch:
       enabled: false
 
-cuckoo:
-  rebuild: false
-  elasticsearch:
-    client:
-      url: ${ELASTIC_URL}
-      api-key: ${ELASTIC_API}
-      ssl:
-        certificate-path: ${ELASTIC_CERTIFICATE_PATH}
+# cuckoo:
+#   rebuild: false
+#   elasticsearch:
+#     client:
+#       url: ${ELASTIC_URL}
+#       api-key: ${ELASTIC_API}
+#       ssl:
+#         certificate-path: ${ELASTIC_CERTIFICATE_PATH}
         
-openim:
-  url: ${OPENIM_SERVER}
-  secret: ${OPENIM_SECRET}
-  admin:
-    user: ${OPENIM_ADMIN}        
+# openim:
+#   url: ${OPENIM_SERVER}
+#   secret: ${OPENIM_SECRET}
+#   admin:
+#     user: ${OPENIM_ADMIN}        
 
-sms:
-  provider:
-    aliyun:
-      accessKeyId: ${ALIYUN_ACCESSKEY_ID}
-      accessKeySecret: ${ALIYUN_ACCESSKEY_SECRET}
+# sms:
+#   provider:
+#     aliyun:
+#       accessKeyId: ${ALIYUN_ACCESSKEY_ID}
+#       accessKeySecret: ${ALIYUN_ACCESSKEY_SECRET}
 
 james:
   filesystem:

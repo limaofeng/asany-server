@@ -4,14 +4,14 @@ import cn.asany.storage.api.*;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
 import org.jfantasy.framework.util.common.StreamUtil;
-import org.jfantasy.framework.util.common.StringUtil;
 import org.jfantasy.framework.util.common.file.FileUtil;
 
+@Slf4j
 public class LocalStorage implements Storage {
 
   private final String id;
@@ -20,7 +20,11 @@ public class LocalStorage implements Storage {
   public LocalStorage(String id, String defaultDir) {
     super();
     this.id = id;
-    this.defaultDir = defaultDir;
+    try {
+      this.setDefaultDir(defaultDir);
+    } catch (IOException e) {
+      log.error("设置默认目录失败", e);
+    }
   }
 
   @Override
@@ -68,9 +72,7 @@ public class LocalStorage implements Storage {
   }
 
   private String filterRemotePath(String remotePath) {
-    return remotePath.startsWith("/")
-        ? remotePath
-        : ("/" + remotePath);
+    return remotePath.startsWith("/") ? remotePath : ("/" + remotePath);
   }
 
   private InputStream getInputStream(String remotePath) throws IOException {
@@ -91,16 +93,13 @@ public class LocalStorage implements Storage {
   }
 
   private FileObject root() {
-    FileObject root = retrieveFileItem(File.separator);
-    assert root != null;
-    return root;
+    return retrieveFileItem(File.separator);
   }
 
   private FileObject retrieveFileItem(String absolutePath) {
     final File file = new File(this.defaultDir + absolutePath);
-    if (!file.getAbsolutePath().startsWith(new File(this.defaultDir).getAbsolutePath())
-        || !file.exists()) {
-      return null;
+    if (!file.exists()) {
+      throw new RuntimeException("文件不存在");
     }
     Map<String, Object> metadata = new HashMap<>();
     metadata.put(FileObjectMetadata.CONTENT_TYPE, FileUtil.getMimeType(file));
@@ -139,13 +138,13 @@ public class LocalStorage implements Storage {
   @Override
   public List<FileObject> listFiles(String remotePath) {
     FileObject fileObject = retrieveFileItem(remotePath);
-    return fileObject == null ? Collections.emptyList() : fileObject.listFiles();
+    return fileObject.listFiles();
   }
 
   @Override
   public List<FileObject> listFiles(String remotePath, FileItemFilter fileItemFilter) {
     FileObject fileObject = retrieveFileItem(remotePath);
-    return fileObject == null ? Collections.emptyList() : fileObject.listFiles(fileItemFilter);
+    return fileObject.listFiles(fileItemFilter);
   }
 
   @Override

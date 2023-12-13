@@ -38,16 +38,16 @@ public class CurrentUserGraphQLResolver implements GraphQLResolver<CurrentUser> 
       return this.authService.token(platform, String.valueOf(user.getId()));
     } catch (Exception e) {
       log.error(e.getMessage(), e);
-      if(e instanceof OpenIMServerAPIException) {
-        OpenIMServerAPIException error = (OpenIMServerAPIException)e;
+      if (e instanceof OpenIMServerAPIException) {
+        OpenIMServerAPIException error = (OpenIMServerAPIException) e;
         if (error.getCode() == ErrorCode.RECORD_NOT_FOUND.getCode()) {
           this.userService.userRegister(
-                  UserRegisterRequestBody.builder()
-                          .addUser(
-                                  String.valueOf(user.getId()),
-                                  user.getName(),
-                                  user.getAvatar() != null ? user.getAvatar().getPath() : null)
-                          .build());
+              UserRegisterRequestBody.builder()
+                  .addUser(
+                      String.valueOf(user.getId()),
+                      user.getName(),
+                      user.getAvatar() != null ? user.getAvatar().getPath() : null)
+                  .build());
           return imToken(user, platform);
         }
       }

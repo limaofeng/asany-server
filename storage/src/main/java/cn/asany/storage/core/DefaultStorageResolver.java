@@ -24,7 +24,9 @@ public class DefaultStorageResolver implements StorageResolver {
   private final Map<String, Storage> storages = new HashMap<>();
   private final List<StorageBuilder<? extends Storage, ? extends IStorageConfig>> builders;
 
-  public DefaultStorageResolver(StorageService storageService, List<StorageBuilder<? extends Storage, ? extends IStorageConfig>> builders) {
+  public DefaultStorageResolver(
+      StorageService storageService,
+      List<StorageBuilder<? extends Storage, ? extends IStorageConfig>> builders) {
     this.builders = builders;
     this.storageService = storageService;
   }

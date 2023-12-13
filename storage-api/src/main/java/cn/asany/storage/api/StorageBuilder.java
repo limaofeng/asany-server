@@ -21,5 +21,5 @@ public interface StorageBuilder<T extends Storage, C extends IStorageConfig> {
    * @param clazz 类型
    * @return T
    */
-   T build(C clazz);
+  T build(C clazz);
 }
