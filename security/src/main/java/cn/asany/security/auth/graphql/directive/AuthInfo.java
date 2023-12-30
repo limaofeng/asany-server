@@ -8,6 +8,7 @@ import cn.asany.security.core.domain.enums.AccessLevel;
 import cn.asany.security.core.service.PermissionPolicyService;
 import cn.asany.security.core.service.PermissionService;
 import cn.asany.security.core.service.ResourceTypeService;
+import graphql.kickstart.execution.config.GraphQLSchemaProvider;
 import graphql.kickstart.tools.SchemaParser;
 import graphql.language.TypeDefinition;
 import graphql.schema.GraphQLObjectType;
@@ -46,8 +47,19 @@ public class AuthInfo implements Serializable {
   private PermissionPolicyService permissionPolicyService;
   private ResourceTypeService resourceTypeService;
 
+  private GraphQLSchema getGraphQLSchema() {
+    if(SpringBeanUtils.containsBean(GraphQLSchema.class)){
+      return SpringBeanUtils.getBean(GraphQLSchema.class);
+    }
+    if(SpringBeanUtils.containsBean(GraphQLSchemaProvider.class)) {
+      GraphQLSchemaProvider schemaProvider = SpringBeanUtils.getBean(GraphQLSchemaProvider.class);
+      return schemaProvider.getSchema();
+    }
+    throw new RuntimeException("未找到 GraphQLSchema");
+  }
+
   public void condition(Authentication authentication, Map<String, Object> args) {
-    GraphQLSchema graphQLSchema = SpringBeanUtils.getBean(GraphQLSchema.class);
+    GraphQLSchema graphQLSchema = getGraphQLSchema();
     SchemaParser schemaParser = SpringBeanUtils.getBean(SchemaParser.class);
     Map<TypeDefinition<?>, Class<?>> dictionary =
         ClassUtil.getFieldValue(schemaParser, SchemaParser.class, "dictionary");
