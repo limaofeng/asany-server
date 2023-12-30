@@ -42,8 +42,8 @@ public class AuthDirective implements SchemaDirectiveWiring {
         authInfoService.save(
             name, description, endpoint, accessLevel, new HashSet<>(resourceTypes));
 
-    env.getCodeRegistry()
-        .dataFetcher(parentType, field, new FieldPermissionDataFetcher(env, authInfo));
+//    env.getCodeRegistry()
+//        .dataFetcher(parentType, field, new FieldPermissionDataFetcher(env, authInfo));
     return field;
   }
 }
