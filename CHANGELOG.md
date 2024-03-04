@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.9](https://github.com/limaofeng/asany-server/compare/v0.2.8...v0.2.9) (2024-03-04)
+
+
+### Features
+
+* save files ([0c90fdd](https://github.com/limaofeng/asany-server/commit/0c90fdd5545e32d4ae095049fd4b2a998c16a504))
+* save files ([b29b046](https://github.com/limaofeng/asany-server/commit/b29b0462cb7e6536300c58778e980991cb3ecaef))
+* 完成屏幕维护接口 ([208fc0c](https://github.com/limaofeng/asany-server/commit/208fc0c70f31928346e0702fd2e9624d618ef76a))
+* 更新事件监听，实现修改事件推送 ([c1be9bf](https://github.com/limaofeng/asany-server/commit/c1be9bff2d46e0766b14c335da7946bff4883b6d))
+
+
+### Bug Fixes
+
+* 解决图标库查询问题 ([a060ffc](https://github.com/limaofeng/asany-server/commit/a060ffc3aff541cce7020484cf65c6abe61c5ca8))
+* 解决操作员图片上传问题 ([58d3ac9](https://github.com/limaofeng/asany-server/commit/58d3ac95b02c739df34103a40a14b54e31dd20f8))
+
 ### [0.2.8](https://github.com/limaofeng/asany-server/compare/v0.2.7...v0.2.8) (2023-09-07)
 
 
