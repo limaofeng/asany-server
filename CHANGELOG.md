@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.11](https://github.com/limaofeng/asany-server/compare/v0.2.10...v0.2.11) (2024-03-04)
+
+
+### Features
+
+* update Dockerfile, StorageBuilder, feat: StorageAutoConfiguration, StorageConfig, FactoryScreen, DefaultTypeConverter, DefaultStorageResolver, ScreenUpdateInput, application.yml, and UserGraphQLResolver ([4421f3b](https://github.com/limaofeng/asany-server/commit/4421f3bcb12d44f3b69bc499bdeb2e16672f1892))
+
+
+### Bug Fixes
+
+* 解决网盘BUG ([518abd1](https://github.com/limaofeng/asany-server/commit/518abd1371e5e17cd941f4c91ec5f6b442e824b6))
+* 解决网盘BUG ([f7130f7](https://github.com/limaofeng/asany-server/commit/f7130f712257f5c40e4c237065e092b1f42f78e5))
+
 ### [0.2.10](https://github.com/limaofeng/asany-server/compare/v0.2.9...v0.2.10) (2024-03-04)
 
 ### [0.2.9](https://github.com/limaofeng/asany-server/compare/v0.2.8...v0.2.9) (2024-03-04)
