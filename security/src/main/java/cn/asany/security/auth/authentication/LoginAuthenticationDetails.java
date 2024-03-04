@@ -3,12 +3,14 @@ package cn.asany.security.auth.authentication;
 import cn.asany.security.auth.graphql.types.LoginOptions;
 import cn.asany.security.auth.graphql.types.LoginType;
 import javax.servlet.http.HttpServletRequest;
+import lombok.Getter;
 
 /**
  * 登录详情
  *
  * @author limaofeng
  */
+@Getter
 public class LoginAuthenticationDetails {
   private final LoginType loginType;
   private final LoginOptions options;
@@ -24,17 +26,5 @@ public class LoginAuthenticationDetails {
     this.loginType = loginType;
     this.options = options;
     this.request = request;
-  }
-
-  public LoginType getLoginType() {
-    return loginType;
-  }
-
-  public LoginOptions getOptions() {
-    return options;
-  }
-
-  public HttpServletRequest getRequest() {
-    return request;
   }
 }

@@ -48,10 +48,10 @@ public class AuthInfo implements Serializable {
   private ResourceTypeService resourceTypeService;
 
   private GraphQLSchema getGraphQLSchema() {
-    if(SpringBeanUtils.containsBean(GraphQLSchema.class)){
+    if (SpringBeanUtils.containsBean(GraphQLSchema.class)) {
       return SpringBeanUtils.getBean(GraphQLSchema.class);
     }
-    if(SpringBeanUtils.containsBean(GraphQLSchemaProvider.class)) {
+    if (SpringBeanUtils.containsBean(GraphQLSchemaProvider.class)) {
       GraphQLSchemaProvider schemaProvider = SpringBeanUtils.getBean(GraphQLSchemaProvider.class);
       return schemaProvider.getSchema();
     }

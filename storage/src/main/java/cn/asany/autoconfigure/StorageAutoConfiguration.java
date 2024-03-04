@@ -66,7 +66,9 @@ public class StorageAutoConfiguration {
   }
 
   @Bean
-  public StorageResolver storageResolver(StorageService storageService, List<StorageBuilder<? extends Storage, ? extends IStorageConfig>> builders) {
+  public StorageResolver storageResolver(
+      StorageService storageService,
+      List<StorageBuilder<? extends Storage, ? extends IStorageConfig>> builders) {
     return new DefaultStorageResolver(storageService, builders);
   }
 

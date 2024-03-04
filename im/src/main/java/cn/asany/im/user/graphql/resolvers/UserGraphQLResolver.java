@@ -26,7 +26,7 @@ public class UserGraphQLResolver implements GraphQLResolver<User> {
 
   public String imToken(User user, Platform platform) throws OpenIMServerAPIException {
     try {
-    return this.authService.token(platform, String.valueOf(user.getId()));
+      return this.authService.token(platform, String.valueOf(user.getId()));
     } catch (Exception e) {
       log.error(e.getMessage(), e);
       return "";
@@ -35,7 +35,7 @@ public class UserGraphQLResolver implements GraphQLResolver<User> {
 
   public OnlineStatusDetails onlineStatus(User user) throws OpenIMServerAPIException {
     try {
-    return OpenIMUtils.onlineStatus(authService, userService, user.getId());
+      return OpenIMUtils.onlineStatus(authService, userService, user.getId());
     } catch (Exception e) {
       log.error(e.getMessage(), e);
       return OnlineStatusDetails.builder().status(OnlineStatus.offline).build();

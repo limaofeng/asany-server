@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.jfantasy.framework.util.common.StreamUtil;
-import org.jfantasy.framework.util.common.StringUtil;
 import org.jfantasy.framework.util.common.file.FileUtil;
 
 public class LocalStorage implements Storage {
@@ -68,9 +67,7 @@ public class LocalStorage implements Storage {
   }
 
   private String filterRemotePath(String remotePath) {
-    return remotePath.startsWith("/")
-        ? remotePath
-        : ("/" + remotePath);
+    return remotePath.startsWith("/") ? remotePath : ("/" + remotePath);
   }
 
   private InputStream getInputStream(String remotePath) throws IOException {

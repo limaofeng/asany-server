@@ -26,15 +26,17 @@ public class LoginSuccessListener implements ApplicationListener<LoginSuccessEve
 
     userService.loginSuccess();
 
-    //        AuthenticationDetails details = (AuthenticationDetails) authentication.getDetails();
-    //        LoginUser user = (LoginUser) authentication.getPrincipal();
-    //        if (details.getLoginType() != LoginType.password) {
-    //            return;
-    //        }
-    //        LoginOptions options = details.getOptions();
-    //        if (options.getConnected()) {
-    //            this.employeeService.connected(user.get(DataConstant.FIELD_EMPLOYEE),
+    //    LoginAuthenticationDetails details = (LoginAuthenticationDetails)
+    // authentication.getDetails();
+    //    LoginUser user = (LoginUser) authentication.getPrincipal();
+    //    if (details.getLoginType() != LoginType.password) {
+    //      return;
+    //    }
+    //    LoginOptions options = details.getOptions();
+    //    if (options.getConnected()) {
+    //      this.employeeService.connected(user.get(DataConstant.FIELD_EMPLOYEE),
     // options.getProvider(), options.getSnser());
-    //        }
+    //    }
+
   }
 }

@@ -79,7 +79,8 @@ public class StorageConfig extends BaseBusEntity {
         ossStorageConfig.setId(this.getId());
         return ossStorageConfig;
       case DISK:
-        LocalStorageConfig localStorageConfig = JSON.deserialize(this.getDetails(), LocalStorageConfig.class);
+        LocalStorageConfig localStorageConfig =
+            JSON.deserialize(this.getDetails(), LocalStorageConfig.class);
         localStorageConfig.setId(this.getId());
         return localStorageConfig;
       default:

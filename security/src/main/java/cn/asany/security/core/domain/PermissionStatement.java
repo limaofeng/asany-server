@@ -65,19 +65,4 @@ public class PermissionStatement implements Serializable, Tenantable {
     this.resource = new String[] {resource};
   }
 
-  public void setAction(String action) {
-    this.action = new String[] {action};
-  }
-
-  public void setResource(String resource) {
-    this.resource = new String[] {resource};
-  }
-
-  public void setAction(String[] action) {
-    this.action = action;
-  }
-
-  public void setResource(String[] resource) {
-    this.resource = resource;
-  }
 }
