@@ -9,7 +9,16 @@ type FactoryScreen {
   operator1: File
   operator2: File
   operator3: File
-  documents: [File]
+  document1: File
+  document2: File
+  document3: File
+  document4: File
+  document5: File
+  document6: File
+  document7: File
+  document8: File
+  document9: File
+  document10: File
 }
 
 input FactoryScreenCreateInput {
@@ -26,7 +35,16 @@ input FactoryScreenUpdateInput {
   operator1: File
   operator2: File
   operator3: File
-  documents: [File]
+  document1: File
+  document2: File
+  document3: File
+  document4: File
+  document5: File
+  document6: File
+  document7: File
+  document8: File
+  document9: File
+  document10: File
 }
 
 extend type Query {
