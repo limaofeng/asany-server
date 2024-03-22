@@ -120,15 +120,15 @@ public class EmployeeGraphQLResolver implements GraphQLResolver<Employee> {
     if (StringUtil.isNotBlank(organization)) {
       stream =
           stream.filter(
-              employeePosition -> organization.equals(employeePosition.getOrganization().getId()));
+              employeePosition ->
+                  organization.equals(employeePosition.getOrganization().getCode()));
     }
     if (departmentId != null) {
       stream =
           stream.filter(
               employeePosition -> departmentId.equals(employeePosition.getDepartment().getId()));
     }
-    List<Position> collect =
-        stream.map(employeePosition -> employeePosition.getPosition()).collect(Collectors.toList());
+    List<Position> collect = stream.map(EmployeePosition::getPosition).collect(Collectors.toList());
     return collect.stream().filter(item -> item.getId() != null).collect(Collectors.toList());
   }
 }

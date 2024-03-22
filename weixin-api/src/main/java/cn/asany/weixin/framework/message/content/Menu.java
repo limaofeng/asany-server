@@ -49,7 +49,7 @@ public class Menu {
   private String name;
   private String key;
   private String url;
-  private List<Menu> children = new ArrayList<Menu>();
+  private List<Menu> children = new ArrayList<>();
 
   private Menu(MenuType type, String name) {
     this.type = type;

@@ -18,6 +18,8 @@ import cn.asany.weixin.framework.session.WeixinSession;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import lombok.Getter;
+import lombok.Setter;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.springframework.context.ApplicationContext;
 
@@ -28,31 +30,27 @@ import org.springframework.context.ApplicationContext;
  */
 public class DefaultWeixinSessionFactory implements WeixinSessionFactory {
 
-  private WeixinCoreHelper weixinCoreHelper;
+  @Setter @Getter private WeixinCoreHelper weixinCoreHelper;
 
-  private WeixinAppService weixinAppService;
+  @Setter @Getter private WeixinAppService weixinAppService;
 
   private final ApplicationContext applicationContext;
 
-  private Class<? extends WeixinSession> sessionClass = DefaultWeixinSession.class;
+  @Setter @Getter private Class<? extends WeixinSession> sessionClass = DefaultWeixinSession.class;
 
-  private WeixinHandler messageHandler;
+  @Setter private WeixinHandler messageHandler;
 
-  private WeixinHandler eventHandler;
+  @Setter private WeixinHandler eventHandler;
 
-  private List<WeixinMessageInterceptor> weixinMessageInterceptors = new ArrayList<>();
+  @Setter private List<WeixinMessageInterceptor> weixinMessageInterceptors = new ArrayList<>();
 
-  private Map<EventMessage.EventType, List<WeixinEventListener>> eventListeners =
-      new EnumMap(EventMessage.EventType.class);
+  private final Map<EventMessage.EventType, List<WeixinEventListener>> eventListeners =
+      new EnumMap<>(EventMessage.EventType.class);
 
-  private ConcurrentMap<String, WeixinSession> weiXinSessions = new ConcurrentHashMap<>();
+  private final ConcurrentMap<String, WeixinSession> weiXinSessions = new ConcurrentHashMap<>();
 
   public DefaultWeixinSessionFactory(ApplicationContext applicationContext) {
     this.applicationContext = applicationContext;
-  }
-
-  public WeixinCoreHelper getWeixinCoreHelper() {
-    return this.weixinCoreHelper;
   }
 
   @Override
@@ -70,22 +68,19 @@ public class DefaultWeixinSessionFactory implements WeixinSessionFactory {
     return weiXinSessions.get(appid);
   }
 
-  public WeixinAppService getWeixinAppService() {
-    return this.weixinAppService;
-  }
-
   @Override
-  public WeixinMessage<?> execute(WeixinMessage message) throws WeixinException {
+  public WeixinMessage<?> execute(WeixinMessage<?> message) throws WeixinException {
     List<Object> handler = new ArrayList<>(weixinMessageInterceptors);
     if (message instanceof EventMessage) {
-      applicationContext.publishEvent(new WeixinEventMessageEvent((EventMessage) message)); // 事件推送
+      applicationContext.publishEvent(
+          new WeixinEventMessageEvent((EventMessage<?>) message)); // 事件推送
       final List<WeixinEventListener> listeners =
           ObjectUtil.defaultValue(
-              eventListeners.get(((EventMessage) message).getEventType()),
+              eventListeners.get(((EventMessage<?>) message).getEventType()),
               Collections.<WeixinEventListener>emptyList());
       handler.add(
           new WeixinEventMessageInterceptor(
-              ((EventMessage) message).getEventType(), listeners)); // 添加Event拦截器,用于触发事件
+              ((EventMessage<?>) message).getEventType(), listeners)); // 添加Event拦截器,用于触发事件
       handler.add(this.eventHandler);
     } else {
       applicationContext.publishEvent(new WeixinMessageEvent(message)); // 消息事件推送
@@ -94,35 +89,6 @@ public class DefaultWeixinSessionFactory implements WeixinSessionFactory {
     return new DefaultInvocation(
             WeixinSessionUtils.getCurrentSession(), message, handler.iterator())
         .invoke();
-  }
-
-  public Class<? extends WeixinSession> getSessionClass() {
-    return sessionClass;
-  }
-
-  public void setSessionClass(Class<? extends WeixinSession> sessionClass) {
-    this.sessionClass = sessionClass;
-  }
-
-  public void setWeixinAppService(WeixinAppService weixinAppService) {
-    this.weixinAppService = weixinAppService;
-  }
-
-  public void setWeixinCoreHelper(WeixinCoreHelper weixinCoreHelper) {
-    this.weixinCoreHelper = weixinCoreHelper;
-  }
-
-  public void setEventHandler(WeixinHandler eventHandler) {
-    this.eventHandler = eventHandler;
-  }
-
-  public void setMessageHandler(WeixinHandler messageHandler) {
-    this.messageHandler = messageHandler;
-  }
-
-  public void setWeixinMessageInterceptors(
-      List<WeixinMessageInterceptor> weixinMessageInterceptors) {
-    this.weixinMessageInterceptors = weixinMessageInterceptors;
   }
 
   public void setEventListeners(

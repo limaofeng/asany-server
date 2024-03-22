@@ -116,7 +116,7 @@ input ArticleCategoryUpdateInput {
 
 input ArticleWhereInput {
   # 关键字
-  Keyword: String
+  keyword: String
   # 标签
   tags: [ID]
   # 栏目为空 (没有栏目的文章)
@@ -135,8 +135,6 @@ input ArticleWhereInput {
   status_in: [ArticleStatus]
   # 发布时间
   publishedAt: String
-  # 发布人
-  createdBy: String
   # 用户id
   viewer: ID
   # 创建人 ID
@@ -334,13 +332,13 @@ type ArticleAuthor {
 
 # 文章
 type Article
-@resource(
-  name: "文章"
-  label: "cms:article"
-  description: "文章"
-  sourceTypes: ["cms:article/*", "cms:article/{#id}"]
-  conditions: ["organization.id:StringEquals"]
-) {
+  @resource(
+    name: "文章"
+    label: "cms:article"
+    description: "文章"
+    sourceTypes: ["cms:article/*", "cms:article/{#id}"]
+    conditions: ["organization.id:StringEquals"]
+  ) {
   """
   文章ID
   """
@@ -861,11 +859,11 @@ extend type Query {
     pageSize: Int = 15
     orderBy: OrderBy = "unsorted"
   ): ArticleConnection
-  @authInfo(
-    name: "cms:ArticlesConnection"
-    accessLevel: "List"
-    resourceTypes: ["cms:article/*", "cms:article/{#id}"]
-  )
+    @authInfo(
+      name: "cms:ArticlesConnection"
+      accessLevel: "List"
+      resourceTypes: ["cms:article/*", "cms:article/{#id}"]
+    )
   """
   文章栏目
   """

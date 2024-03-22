@@ -1,6 +1,10 @@
 package cn.asany.weixin.framework.exception;
 
-/** 微信异常 Created by zzzhong on 2014/12/4. */
+/**
+ * 微信异常
+ *
+ * @author limaofeng
+ */
 public class WeixinException extends Exception {
 
   public WeixinException(String message) {

@@ -7,7 +7,7 @@ public class ScopeContext {
 
   private Boolean analysis;
 
-  private static ThreadLocal threadLocal = ThreadLocal.withInitial(() -> new ScopeContext());
+  private static ThreadLocal threadLocal = ThreadLocal.withInitial(ScopeContext::new);
 
   public static void create(ScopeContext scopeContext) {
     threadLocal.set(scopeContext);

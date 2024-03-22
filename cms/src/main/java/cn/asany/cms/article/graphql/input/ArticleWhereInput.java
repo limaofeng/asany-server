@@ -27,7 +27,9 @@ import org.jfantasy.graphql.inputs.WhereInput;
 public class ArticleWhereInput extends WhereInput<ArticleWhereInput, Article> {
 
   public void setKeyword(String keyword) {
-    filter.or(PropertyFilter.newFilter().contains("summary", keyword).contains("title", keyword));
+    filter.or(
+        PropertyFilter.newFilter().contains("summary", keyword),
+        PropertyFilter.newFilter().contains("title", keyword));
   }
 
   public void setTags(List<Long> tags) {

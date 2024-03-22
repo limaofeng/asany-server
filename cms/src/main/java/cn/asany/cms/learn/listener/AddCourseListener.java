@@ -2,6 +2,7 @@ package cn.asany.cms.learn.listener;
 
 import cn.asany.cms.learn.event.CourseCreatedEvent;
 import cn.asany.cms.learn.service.CourseService;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.core.env.Environment;
@@ -16,7 +17,7 @@ public class AddCourseListener implements ApplicationListener<CourseCreatedEvent
   @Autowired private CourseService courseService;
 
   @Override
-  public void onApplicationEvent(CourseCreatedEvent event) {
+  public void onApplicationEvent(@NotNull CourseCreatedEvent event) {
     //        String messageServerUrl = environment.getProperty("COURSE_MESSAGE_SERVER_URL");
     //        long agentId =
     // Long.parseLong(Objects.requireNonNull(environment.getProperty("AGENTID")));

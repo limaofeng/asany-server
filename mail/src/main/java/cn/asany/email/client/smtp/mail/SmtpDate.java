@@ -35,16 +35,14 @@ public final class SmtpDate {
    * cookies are on the fast path.
    */
   private static final ThreadLocal<DateFormat> STANDARD_DATE_FORMAT =
-      new ThreadLocal<DateFormat>() {
-        @Override
-        protected DateFormat initialValue() {
-          // Date format specified by RFC 7231 section 7.1.1.1.
-          DateFormat rfc1123 = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss 'GMT'", Locale.US);
-          rfc1123.setLenient(false);
-          rfc1123.setTimeZone(UTC);
-          return rfc1123;
-        }
-      };
+      ThreadLocal.withInitial(
+          () -> {
+            // Date format specified by RFC 7231 section 7.1.1.1.
+            DateFormat rfc1123 = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss 'GMT'", Locale.US);
+            rfc1123.setLenient(false);
+            rfc1123.setTimeZone(UTC);
+            return rfc1123;
+          });
 
   /** If we fail to parse a date in a non-standard format, try each of these formats in sequence. */
   private static final String[] BROWSER_COMPATIBLE_DATE_FORMAT_STRINGS =
@@ -75,7 +73,7 @@ public final class SmtpDate {
 
   /** Returns the date for {@code value}. Returns null if the value couldn't be parsed. */
   public static Date parse(String value) {
-    if (value.length() == 0) {
+    if (value.isEmpty()) {
       return null;
     }
 

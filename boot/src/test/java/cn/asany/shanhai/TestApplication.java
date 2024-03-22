@@ -2,7 +2,10 @@ package cn.asany.shanhai;
 
 import cn.asany.autoconfigure.EmailAutoConfiguration;
 import cn.asany.autoconfigure.ImapServerAutoConfiguration;
+import cn.asany.autoconfigure.POP3ServerAutoConfiguration;
 import cn.asany.autoconfigure.SmtpServerAutoConfiguration;
+import cn.asany.shanhai.autoconfigure.ModelAutoConfiguration;
+import cn.asany.shanhai.autoconfigure.ShanhaiAutoConfiguration;
 import graphql.kickstart.autoconfigure.tools.GraphQLJavaToolsAutoConfiguration;
 import graphql.kickstart.autoconfigure.web.servlet.GraphQLWebAutoConfiguration;
 import lombok.extern.slf4j.Slf4j;
@@ -57,7 +60,10 @@ import org.springframework.web.client.RestTemplate;
       GraphQLJavaToolsAutoConfiguration.class,
       EmailAutoConfiguration.class,
       SmtpServerAutoConfiguration.class,
-      ImapServerAutoConfiguration.class
+      ImapServerAutoConfiguration.class,
+      POP3ServerAutoConfiguration.class,
+      ModelAutoConfiguration.class,
+      ShanhaiAutoConfiguration.class
     })
 public class TestApplication {
   @Bean

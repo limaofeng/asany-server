@@ -41,6 +41,7 @@ include ":shanhai",
         ":sms",
         ":project",
         ":crm",
+        ":pim",
         ":uptime",
         ":message",
         ":message-api",
@@ -88,6 +89,8 @@ project(':sms').projectDir = "$rootDir/sms" as File
 project(':openapi').projectDir = "$rootDir/openapi" as File
 // 客户关系管理
 project(':crm').projectDir = "$rootDir/crm" as File
+// 产品信息管理
+project(':pim').projectDir = "$rootDir/pim" as File
 // 电子商务
 project(':e-commerce').projectDir = "$rootDir/e-commerce" as File
 // 消息中心

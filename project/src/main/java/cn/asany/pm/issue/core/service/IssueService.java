@@ -297,6 +297,6 @@ public class IssueService {
     // 0)));
     //        return empMap.entrySet().stream().sorted(((o1, o2) ->
     // o1.getValue().compareTo(o2.getValue()))).findFirst().get().getKey();
-    return Long.valueOf(0L);
+    return 0L;
   }
 }

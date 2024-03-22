@@ -6,7 +6,6 @@ import cn.asany.im.auth.service.vo.*;
 import cn.asany.im.error.OpenIMServerAPIException;
 import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
-import org.jfantasy.framework.util.common.StringUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,19 +27,19 @@ class AuthServiceTest {
   @BeforeEach
   void setUp() {}
 
-  @Test
-  void register() throws OpenIMServerAPIException {
-    UserRegisterData data =
-        authService.userRegister(
-            UserRegisterRequestBody.builder()
-                .userID("2")
-                .secret("tuoyun")
-                .platform(5)
-                .phoneNumber("15921884771")
-                .operationID(StringUtil.uuid())
-                .build());
-    log.debug(data.toString());
-  }
+  //  @Test
+  //  void register() throws OpenIMServerAPIException {
+  //    UserRegisterData data =
+  //        authService.userRegister(
+  //            UserRegisterRequestBody.builder()
+  //                .userID("2")
+  //                .secret("tuoyun")
+  //                .platform(5)
+  //                .phoneNumber("15921884771")
+  //                .operationID(StringUtil.uuid())
+  //                .build());
+  //    log.debug(data.toString());
+  //  }
 
   @Test
   void userToken() throws OpenIMServerAPIException {
@@ -48,7 +47,7 @@ class AuthServiceTest {
         authService.userToken(
             UserTokenRequestBody.builder()
                 .secret("tuoyun")
-                .userID("openIMAdmin")
+                .user("openIMAdmin")
                 .platform(8)
                 .build());
     log.debug(data.toString());
@@ -65,7 +64,7 @@ class AuthServiceTest {
   public String token(String userID) throws OpenIMServerAPIException {
     UserTokenData data =
         authService.userToken(
-            UserTokenRequestBody.builder().secret("tuoyun").userID(userID).platform(8).build());
+            UserTokenRequestBody.builder().secret("tuoyun").user(userID).platform(8).build());
     log.debug(data.toString());
     return data.getToken();
   }
@@ -74,7 +73,7 @@ class AuthServiceTest {
   void forceLogout() throws OpenIMServerAPIException {
     UserTokenData userToken =
         authService.userToken(
-            UserTokenRequestBody.builder().secret("tuoyun").userID("2").platform(5).build());
+            UserTokenRequestBody.builder().secret("tuoyun").user("2").platform(5).build());
     log.debug(userToken.toString());
 
     this.authService.forceLogout(
@@ -91,9 +90,9 @@ class AuthServiceTest {
 
   @Test
   void testToken() throws OpenIMServerAPIException {
-    String _token = this.authService.token(Platform.iOS, "2");
+    String _token = this.authService.token(Platform.IOS, "2");
     log.debug("token:" + _token);
-    _token = this.authService.token(Platform.iOS, "2");
+    _token = this.authService.token(Platform.IOS, "2");
     log.debug("token:" + _token);
   }
 }

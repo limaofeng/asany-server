@@ -20,7 +20,6 @@ public interface WeixinSessionFactory {
    * 获取当前的 WeiXinSession
    *
    * @return WeiXinSession
-   * @throws WeixinException
    */
   WeixinSession getCurrentSession() throws WeixinException;
 
@@ -28,7 +27,6 @@ public interface WeixinSessionFactory {
    * 返回一个 WeiXinSession 对象，如果当前不存在，则创建一个新的session对象
    *
    * @return WeiXinSession
-   * @throws WeixinException
    */
   WeixinSession openSession(String appid) throws WeixinException;
 
@@ -45,5 +43,5 @@ public interface WeixinSessionFactory {
    * @param message http response
    * @return WeiXinMessage
    */
-  WeixinMessage<?> execute(WeixinMessage message) throws WeixinException;
+  WeixinMessage<?> execute(WeixinMessage<?> message) throws WeixinException;
 }

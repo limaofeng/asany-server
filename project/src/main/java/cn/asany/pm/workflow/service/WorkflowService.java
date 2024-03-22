@@ -111,7 +111,7 @@ public class WorkflowService {
     WorkflowScheme workflowScheme = null; // issue.getProject().getWorkflowScheme();
 
     if (workflowScheme == null) {
-      workflowScheme = issueWorkflowSchemeDao.findById(Long.valueOf(1)).orElse(null);
+      workflowScheme = issueWorkflowSchemeDao.findById(1L).orElse(null);
     }
 
     // 获取问题工作流

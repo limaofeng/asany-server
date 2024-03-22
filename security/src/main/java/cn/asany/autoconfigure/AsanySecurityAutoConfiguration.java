@@ -7,7 +7,6 @@ import cn.asany.security.core.domain.User;
 import cn.asany.security.core.service.DefaultUserDetailsService;
 import cn.asany.security.core.service.ResourceTypeService;
 import cn.asany.security.core.service.UserService;
-import cn.asany.security.oauth.job.TokenCleanupJob;
 import graphql.kickstart.autoconfigure.tools.SchemaDirective;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -25,7 +24,6 @@ import org.jfantasy.framework.security.crypto.password.PlaintextPasswordEncoder;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.graphql.context.DataLoaderRegistryCustomizer;
 import org.jfantasy.schedule.service.TaskScheduler;
-import org.quartz.SchedulerException;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -37,12 +35,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionTemplate;
 
-/**
- * @author limaofeng
- */
+/** @author limaofeng */
 @Configuration
 @EntityScan({"cn.asany.security.*.domain"})
 @ComponentScan({
@@ -70,18 +65,19 @@ public class AsanySecurityAutoConfiguration implements InitializingBean {
 
   @Override
   public void afterPropertiesSet() {
-    transactionTemplate.execute(
-        (TransactionCallback<Void>)
-            status -> {
-              try {
-                if (!taskScheduler.checkExists(TokenCleanupJob.JOBKEY_TOKEN_CLEANUP)) {
-                  taskScheduler.addJob(TokenCleanupJob.JOBKEY_TOKEN_CLEANUP, TokenCleanupJob.class);
-                }
-              } catch (SchedulerException e) {
-                status.setRollbackOnly();
-              }
-              return null;
-            });
+    //    transactionTemplate.execute(
+    //        (TransactionCallback<Void>)
+    //            status -> {
+    //              try {
+    //                if (!taskScheduler.checkExists(TokenCleanupJob.JOBKEY_TOKEN_CLEANUP)) {
+    //                  taskScheduler.addJob(TokenCleanupJob.JOBKEY_TOKEN_CLEANUP,
+    // TokenCleanupJob.class);
+    //                }
+    //              } catch (SchedulerException e) {
+    //                status.setRollbackOnly();
+    //              }
+    //              return null;
+    //            });
   }
 
   @Bean("asany.PasswordEncoder")

@@ -1,0 +1,11 @@
+description = "产品信息管理"
+
+dependencies {
+    implementation project(":base")
+    implementation project(":security")
+    implementation project(":storage-api")
+    implementation project(":ui")
+    implementation project(":nuwa")
+    implementation project(":cms")
+    implementation project(":crm")
+}

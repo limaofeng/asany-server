@@ -62,8 +62,7 @@ public class MultipartBody extends MailBody {
   @Override
   public void writeBody(BufferedSink sink, TransferSpec spec) throws IOException {
 
-    for (int p = 0, partCount = parts.size(); p < partCount; p++) {
-      Part part = parts.get(p);
+    for (Part part : parts) {
       Headers headers = part.headers;
       MailBody body = part.body;
 

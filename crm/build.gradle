@@ -1,4 +1,4 @@
-description = "活动"
+description = "客户关系管理"
 
 dependencies {
     compileOnly project(":base")

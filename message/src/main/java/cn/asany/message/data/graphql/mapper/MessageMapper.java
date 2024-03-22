@@ -59,10 +59,7 @@ public interface MessageMapper {
   @Named("toMessageVariableValues")
   default Map<String, Object> toMessageVariableValues(List<MessageVariableValueInput> values) {
     Map<String, Object> variables = new HashMap<>(10);
-    values.forEach(
-        value -> {
-          variables.put(value.getName(), value.getValue());
-        });
+    values.forEach(value -> variables.put(value.getName(), value.getValue()));
     return variables;
   }
 }

@@ -29,7 +29,7 @@ public class TemplateDataOfEndpoint {
 
   public List<TemplateDataOfEndpointArgument> getArguments() {
     return endpoint.getArguments().stream()
-        .map(item -> new TemplateDataOfEndpointArgument(item))
+        .map(TemplateDataOfEndpointArgument::new)
         .collect(Collectors.toList());
   }
 

@@ -119,7 +119,7 @@ public class WorkflowSchemeService {
           list.add(state);
         }
       }
-      LinkedHashSet<Status> set = new LinkedHashSet<Status>(list.size());
+      LinkedHashSet<Status> set = new LinkedHashSet<>(list.size());
       set.addAll(list);
       list.clear();
       list.addAll(set);

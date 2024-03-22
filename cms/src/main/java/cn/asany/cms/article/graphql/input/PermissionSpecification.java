@@ -12,6 +12,7 @@ import org.hibernate.query.criteria.internal.CriteriaBuilderImpl;
 import org.hibernate.query.criteria.internal.ParameterRegistry;
 import org.hibernate.query.criteria.internal.compile.RenderingContext;
 import org.hibernate.query.criteria.internal.predicate.AbstractSimplePredicate;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.data.jpa.domain.Specification;
 
 public class PermissionSpecification implements Specification {
@@ -25,13 +26,14 @@ public class PermissionSpecification implements Specification {
   }
 
   @Override
-  public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder builder) {
+  public Predicate toPredicate(
+      @NotNull Root root, @NotNull CriteriaQuery query, @NotNull CriteriaBuilder builder) {
     return new HQLPredicate(builder, this.permission, this.typeValue);
   }
 
   static class HQLPredicate extends AbstractSimplePredicate {
-    private Map<String, String> typeValue;
-    private String permission;
+    private final Map<String, String> typeValue;
+    private final String permission;
 
     public HQLPredicate(CriteriaBuilder builder, String permission, Map<String, String> typeValue) {
       super((CriteriaBuilderImpl) builder);

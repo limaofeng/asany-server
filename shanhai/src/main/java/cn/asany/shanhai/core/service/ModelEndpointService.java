@@ -24,11 +24,7 @@ public class ModelEndpointService {
         item -> {
           Hibernate.initialize(item.getReturnType());
           Hibernate.initialize(item.getReturnType().getType());
-          item.getArguments()
-              .forEach(
-                  arg -> {
-                    Hibernate.initialize(arg.getRealType());
-                  });
+          item.getArguments().forEach(arg -> Hibernate.initialize(arg.getRealType()));
           Hibernate.initialize(item.getDelegate());
         });
     return endpoints;

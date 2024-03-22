@@ -54,7 +54,7 @@ public class ModelResultTransformer implements ResultTransformer {
 
   @Override
   public List<Object> transformList(List list) {
-    List<Object> result = new ArrayList<Object>(list.size());
+    List<Object> result = new ArrayList<>(list.size());
     for (Object entity : list) {
       result.add(convertToEntity(entity));
     }

@@ -8,7 +8,7 @@ public class Template {
   private String templateId;
   private String url;
   private String topColor = "#FF0000";
-  private Map<String, Data> datas = new HashMap<String, Data>();
+  private Map<String, Data> datas = new HashMap<>();
 
   public Template(String templateId, String url) {
     this(templateId, url, "#FF0000");

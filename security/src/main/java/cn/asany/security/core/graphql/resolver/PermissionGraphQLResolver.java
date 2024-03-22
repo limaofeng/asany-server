@@ -20,7 +20,7 @@ public class PermissionGraphQLResolver implements GraphQLResolver<PermissionStat
 
   public List<SecurityScopeObject> grants(PermissionStatement permissionStatement) {
     //    if (ObjectUtils.isEmpty(permission.getGrants())) {
-    return new ArrayList<SecurityScopeObject>();
+    return new ArrayList<>();
     //    }
     //        return securityService.getSecurityScopeObjects(null,
     // false,permission.getGrants().stream().map(item ->

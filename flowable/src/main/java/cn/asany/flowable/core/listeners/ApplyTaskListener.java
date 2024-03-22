@@ -13,7 +13,7 @@ public class ApplyTaskListener implements TaskListener {
 
   @Override
   public void notify(DelegateTask delegateTask) {
-    String assignee = (String) delegateTask.getVariable("assignee ");
+    String assignee = (String) delegateTask.getVariable("assignee");
     // delegateTask.setAssignee(assignee); // 历史表中的assignee还是为null
     // taskService.setAssignee(delegateTask.getId(), startUserId);
     System.out.println(assignee);

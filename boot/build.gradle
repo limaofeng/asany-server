@@ -44,7 +44,8 @@ dependencies {
     implementation project(":project")
     implementation project(":message")
     implementation project(":im")
-    implementation project(":factory-screen")
+    implementation project(":pim")
+    implementation project(":crm")
     implementation "org.flywaydb:flyway-core"
     implementation "org.flywaydb:flyway-mysql"
     compileOnly "org.projectlombok:lombok:${LIB_LOMBOK_VER}"

@@ -145,7 +145,7 @@ public final class SmtpClient implements Session.SessionFactory {
             Integer.MAX_VALUE,
             60L,
             TimeUnit.SECONDS,
-            new SynchronousQueue<Runnable>(),
+            new SynchronousQueue<>(),
             Utils.makeThreadFactory("OkMail", false));
 
     public Builder() {}

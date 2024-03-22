@@ -1,0 +1,277 @@
+type ProductConnection {
+  # 总数据条数
+  totalCount: Int!
+  # 每页显示条数
+  pageSize: Int!
+  # 总页数
+  totalPage: Int!
+  # 当前页
+  currentPage: Int!
+  edges: [ProductEdge!]!
+  pageInfo: PageInfo!
+}
+
+type ProductEdge {
+  cursor: String
+  node: Product!
+}
+
+type Product {
+  id: ID!
+  name: String
+}
+
+type DeviceConnection {
+  # 总数据条数
+  totalCount: Int!
+  # 每页显示条数
+  pageSize: Int!
+  # 总页数
+  totalPage: Int!
+  # 当前页
+  currentPage: Int!
+  edges: [DeviceEdge!]!
+  pageInfo: PageInfo!
+}
+
+type DeviceEdge {
+  cursor: String
+  node: Device!
+}
+
+type Device {
+  id: ID!
+  name: String
+}
+
+input ProductWhereInput {
+  name_contains: String
+}
+
+input DeviceWhereInput {
+  name_contains: String
+}
+
+input ProductCreateInput {
+  name: String
+}
+
+input ProductUpdateInput {
+  name: String
+}
+
+enum DeviceOwnerType {
+  CUSTOMER
+}
+
+input DeviceOwnerInput {
+  id: ID!
+  type: String!
+}
+
+input DeviceCreateInput {
+  """
+  设备SN
+  """
+  sn: String
+  """
+  设备名称
+  """
+  name: String
+  """
+  产品ID
+  """
+  productId: ID!
+  """
+  保修政策ID
+  """
+  warrantyPolicyId: ID!
+  """
+  保修开始日期
+  """
+  warrantyStartDate: Date
+  """
+  保修结束日期
+  """
+  warrantyEndDate: Date
+  """
+  设备所有者
+  """
+  owner: DeviceOwnerInput!
+}
+
+input DeviceUpdateInput {
+  name: String
+}
+
+enum ProductIdType {
+  ID
+  SN
+}
+
+extend type Query {
+  """
+  查询产品列表
+  """
+  productsConnection(
+    """
+    查询条件
+    """
+    where: ProductWhereInput = {}
+    """
+    当前页
+    """
+    page: Int = 1
+    """
+    每页显示条数
+    """
+    pageSize: Int = 15
+    """
+    排序
+    """
+    orderBy: OrderBy = "unsorted"
+  ): ProductConnection!
+  """
+  查询产品列表
+  """
+  products(
+    """
+    查询条件
+    """
+    where: ProductWhereInput = {}
+    """
+    偏移量
+    """
+    offset: Int = 0
+    """
+    每页显示条数
+    """
+    limit: Int = 15
+    """
+    排序
+    """
+    orderBy: OrderBy = "unsorted"
+  ): [Product!]!
+  """
+  查询产品详情
+  """
+  product(
+    """
+    产品ID
+    """
+    id: ID!
+    """
+    产品ID类型
+    """
+    type: ProductIdType = ID
+  ): Product
+  """
+  查询设备列表
+  """
+  devicesConnection(
+    """
+    查询条件
+    """
+    where: DeviceWhereInput = {}
+    """
+    当前页
+    """
+    page: Int = 1
+    """
+    每页显示条数
+    """
+    pageSize: Int = 15
+    """
+    排序
+    """
+    orderBy: OrderBy = "unsorted"
+  ): DeviceConnection!
+  """
+  查询设备列表
+  """
+  devices(
+    """
+    查询条件
+    """
+    where: DeviceWhereInput = {}
+    """
+    偏移量
+    """
+    offset: Int = 0
+    """
+    每页显示条数
+    """
+    limit: Int = 15
+    """
+    排序
+    """
+    orderBy: OrderBy = "unsorted"
+  ): [Device!]!
+  """
+  查询设备详情
+  """
+  device(id: ID!): Device
+}
+
+extend type Mutation {
+  """
+  创建产品
+  """
+  createProduct(
+    """
+    创建产品信息
+    """
+    input: ProductCreateInput!
+  ): Product!
+  """
+  更新产品
+  """
+  updateProduct(
+    """
+    产品ID
+    """
+    id: ID!
+    """
+    更新产品信息
+    """
+    input: ProductUpdateInput!
+    """
+    是否合并更新
+    """
+    merge: Boolean = true
+  ): Product!
+  """
+  删除产品
+  """
+  deleteProduct(id: ID!): Product
+  """
+  创建设备
+  """
+  createDevice(
+    """
+    产品ID
+    """
+    input: DeviceCreateInput!
+  ): Device!
+  """
+  更新设备
+  """
+  updateDevice(
+    """
+    设备ID
+    """
+    id: ID!
+    """
+    更新设备信息
+    """
+    input: DeviceUpdateInput!
+    """
+    是否合并更新
+    """
+    merge: Boolean = true
+  ): Device!
+  """
+  删除设备
+  """
+  deleteDevice(id: ID!): Device
+}

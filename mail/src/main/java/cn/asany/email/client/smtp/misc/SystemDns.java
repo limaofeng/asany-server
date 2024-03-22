@@ -80,13 +80,7 @@ public final class SystemDns implements Dns {
     }
 
     // sort the MX RRs by RR value (lower is preferred)
-    Arrays.sort(
-        pvhn,
-        new Comparator<String[]>() {
-          public int compare(String[] o1, String[] o2) {
-            return (Integer.parseInt(o1[0]) - Integer.parseInt(o2[0]));
-          }
-        });
+    Arrays.sort(pvhn, Comparator.comparingInt(o -> Integer.parseInt(o[0])));
 
     // put sorted host names in an array, get rid of any trailing '.'
     String[] sortedHostNames = new String[pvhn.length];

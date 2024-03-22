@@ -12,10 +12,10 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class AutoReplyTextHandler extends TextWeixinHandler {
 
-  private List<AutoReplyHandler> handlers = new ArrayList<AutoReplyHandler>();
+  private List<AutoReplyHandler> handlers = new ArrayList<>();
 
   @Override
-  protected WeixinMessage handleTextMessage(WeixinSession session, TextMessage message) {
+  protected WeixinMessage<?> handleTextMessage(WeixinSession session, TextMessage message) {
     String keyword = message.getContent();
     for (AutoReplyHandler handler : handlers) {
       if (handler.handle(keyword)) {

@@ -113,8 +113,8 @@ public final class Headers {
     // overhead for '\r\n'.
     long result = namesAndValues.length * 2L;
 
-    for (int i = 0, size = namesAndValues.length; i < size; i++) {
-      result += namesAndValues[i].length();
+    for (String namesAndValue : namesAndValues) {
+      result += namesAndValue.length();
     }
 
     return result;
@@ -178,11 +178,7 @@ public final class Headers {
     Map<String, List<String>> result = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     for (int i = 0, size = size(); i < size; i++) {
       String name = name(i).toLowerCase(Locale.US);
-      List<String> values = result.get(name);
-      if (values == null) {
-        values = new ArrayList<>(2);
-        result.put(name, values);
-      }
+      List<String> values = result.computeIfAbsent(name, k -> new ArrayList<>(2));
       values.add(value(i));
     }
     return result;

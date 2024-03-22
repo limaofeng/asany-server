@@ -51,9 +51,9 @@ public class ConnectInterceptor implements Interceptor {
         throw new IOException("can not find any dns mx record address with host: " + from.host());
       }
 
-      for (int i = 0; i < addresses.size(); i++) {
+      for (InetAddress address : addresses) {
         try {
-          channel = connector.connect(chain.client(), addresses.get(i));
+          channel = connector.connect(chain.client(), address);
           break;
         } catch (IOException ignore) {
         }

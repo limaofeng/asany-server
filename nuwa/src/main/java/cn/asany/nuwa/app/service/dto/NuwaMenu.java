@@ -2,6 +2,7 @@ package cn.asany.nuwa.app.service.dto;
 
 import cn.asany.nuwa.app.domain.enums.MenuType;
 import java.util.List;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -12,6 +13,7 @@ import lombok.NoArgsConstructor;
  */
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class NuwaMenu {
   private String name;
   private MenuType type;

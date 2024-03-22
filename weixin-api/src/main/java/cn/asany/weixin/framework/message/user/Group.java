@@ -15,7 +15,7 @@ public class Group {
     this.id = id;
     this.name = name;
     this.count = count;
-    this.users = new ArrayList<User>((int) count);
+    this.users = new ArrayList<>((int) count);
   }
 
   public long getId() {

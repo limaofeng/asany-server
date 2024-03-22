@@ -11,7 +11,7 @@ public class OpenIdList {
   /** 拉取的OPENID个数，最大值为10000 */
   private int count = -1;
   /** 列表数据，OPENID的列表 */
-  private List<String> openIds = new ArrayList<String>();
+  private List<String> openIds = new ArrayList<>();
   /** 拉取列表的后一个用户的OPENID */
   private String nextOpenId;
 

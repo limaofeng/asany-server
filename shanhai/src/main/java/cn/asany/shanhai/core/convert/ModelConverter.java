@@ -6,12 +6,10 @@ import cn.asany.shanhai.core.domain.ModelField;
 import cn.asany.shanhai.core.graphql.inputs.ModelCreateInput;
 import cn.asany.shanhai.core.graphql.inputs.ModelFieldInput;
 import cn.asany.shanhai.core.graphql.inputs.ModelUpdateInput;
-import cn.asany.shanhai.core.support.model.FieldTypeRegistry;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.mapstruct.*;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * 项目 转换器
@@ -24,8 +22,6 @@ import org.springframework.beans.factory.annotation.Autowired;
     unmappedTargetPolicy = ReportingPolicy.IGNORE,
     nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
 public abstract class ModelConverter {
-
-  @Autowired private FieldTypeRegistry fieldTypeRegistry;
 
   /**
    * 将 ModelCreateInput 转换为 Model

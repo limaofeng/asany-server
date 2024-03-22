@@ -27,44 +27,41 @@ public interface Channel {
   InetAddress address();
 
   ChannelConnector DIRECT =
-      new ChannelConnector() {
-        @Override
-        public Channel connect(SmtpClient client, final InetAddress address) throws IOException {
-          final Socket socket = client.socketFactory().createSocket();
-          socket.connect(
-              new InetSocketAddress(address, client.defaultPort()), (int) client.connectTimeout());
+      (client, address) -> {
+        final Socket socket = client.socketFactory().createSocket();
+        socket.connect(
+            new InetSocketAddress(address, client.defaultPort()), (int) client.connectTimeout());
 
-          final BufferedSink sink = Okio.buffer(Okio.sink(socket));
-          final BufferedSource source = Okio.buffer(Okio.source(socket));
-          sink.timeout().timeout(client.writeTimeout(), TimeUnit.MILLISECONDS);
-          source.timeout().timeout(client.readTimeout(), TimeUnit.MILLISECONDS);
+        final BufferedSink sink = Okio.buffer(Okio.sink(socket));
+        final BufferedSource source = Okio.buffer(Okio.source(socket));
+        sink.timeout().timeout(client.writeTimeout(), TimeUnit.MILLISECONDS);
+        source.timeout().timeout(client.readTimeout(), TimeUnit.MILLISECONDS);
 
-          return new Channel() {
-            @Nonnull
-            @Override
-            public Socket socket() {
-              return socket;
-            }
+        return new Channel() {
+          @Nonnull
+          @Override
+          public Socket socket() {
+            return socket;
+          }
 
-            @Nonnull
-            @Override
-            public BufferedSink sink() {
-              return sink;
-            }
+          @Nonnull
+          @Override
+          public BufferedSink sink() {
+            return sink;
+          }
 
-            @Nonnull
-            @Override
-            public BufferedSource source() {
-              return source;
-            }
+          @Nonnull
+          @Override
+          public BufferedSource source() {
+            return source;
+          }
 
-            @Nonnull
-            @Override
-            public InetAddress address() {
-              return address;
-            }
-          };
-        }
+          @Nonnull
+          @Override
+          public InetAddress address() {
+            return address;
+          }
+        };
       };
 
   /**

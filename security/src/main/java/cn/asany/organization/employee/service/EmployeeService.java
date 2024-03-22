@@ -25,7 +25,6 @@ import javax.persistence.criteria.Join;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
-import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
 import org.jfantasy.framework.error.ValidationException;
 import org.jfantasy.framework.security.crypto.password.PasswordEncoder;
 import org.jfantasy.framework.spring.mvc.error.NotFoundException;
@@ -143,9 +142,7 @@ public class EmployeeService {
 
   private Optional<EmployeeStatus> getStatus(OrganizationDimension dimension, String code) {
     return this.employeeStatusDao.findOne(
-        PropertyFilter.newFilter()
-            .equal("dimension.id", dimension.getId())
-            .equal("code", code));
+        PropertyFilter.newFilter().equal("dimension.id", dimension.getId()).equal("code", code));
   }
 
   //    /**
@@ -692,12 +689,7 @@ public class EmployeeService {
 
   public void batchDelete(List<Long> ids) {
     List<Employee> employeeList =
-        ids.stream()
-            .map(
-                id -> {
-                  return employeeDao.getOne(id);
-                })
-            .collect(Collectors.toList());
+        ids.stream().map(id -> employeeDao.getReferenceById(id)).collect(Collectors.toList());
     this.employeeDao.deleteAll(employeeList);
   }
 
@@ -787,11 +779,7 @@ public class EmployeeService {
   //    }
 
   private List<EmployeePosition> getEmployeePosition(List<EmployeePosition> positions) {
-    positions.stream()
-        .forEach(
-            position -> {
-              position.setDepartment(getDepartment(position));
-            });
+    positions.forEach(position -> position.setDepartment(getDepartment(position)));
     return positions;
   }
 
