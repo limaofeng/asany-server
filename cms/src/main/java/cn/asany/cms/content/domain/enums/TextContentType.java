@@ -1,11 +1,11 @@
-package cn.asany.cms.article.domain.enums;
+package cn.asany.cms.content.domain.enums;
 
 /**
  * 内容存储类型
  *
  * @author limaofeng
  */
-public enum ContentType {
+public enum TextContentType {
   /** HTML */
   HTML,
   /** Markdown 原始文件 */

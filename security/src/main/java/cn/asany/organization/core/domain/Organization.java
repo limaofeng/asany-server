@@ -76,10 +76,4 @@ public class Organization extends BaseBusEntity implements Ownership {
   /** 组织成员 */
   @OneToMany(mappedBy = "organization", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
   private List<OrganizationMember> members;
-
-  @Override
-  @Transient
-  public String getOwnerType() {
-    return OWNERSHIP_KEY;
-  }
 }

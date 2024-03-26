@@ -8,7 +8,6 @@ import java.io.Serializable;
  * @author limaofeng
  */
 public interface Ownership extends Serializable {
-
   /**
    * ID
    *
@@ -22,11 +21,4 @@ public interface Ownership extends Serializable {
    * @return String
    */
   String getName();
-
-  /**
-   * Owner Type
-   *
-   * @return String
-   */
-  String getOwnerType();
 }

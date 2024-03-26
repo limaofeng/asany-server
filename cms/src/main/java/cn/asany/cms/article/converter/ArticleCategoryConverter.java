@@ -73,7 +73,7 @@ public interface ArticleCategoryConverter {
   }
 
   @Named("storeTemplate")
-  default ArticleStoreTemplate storeTemplate(String source) {
+  default ArticleStoreTemplate storeTemplate(Long source) {
     if (source == null) {
       return null;
     }

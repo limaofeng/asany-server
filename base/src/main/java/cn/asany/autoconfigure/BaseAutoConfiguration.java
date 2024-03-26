@@ -1,7 +1,10 @@
 package cn.asany.autoconfigure;
 
+import cn.asany.base.common.Ownership;
 import lombok.extern.slf4j.Slf4j;
+import org.jfantasy.graphql.SchemaParserDictionaryBuilder;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
@@ -17,4 +20,12 @@ import org.springframework.context.annotation.Configuration;
   "cn.asany.base.*.service",
   "cn.asany.base.*.graphql",
 })
-public class BaseAutoConfiguration {}
+public class BaseAutoConfiguration {
+
+  @Bean("base.SchemaParserDictionaryBuilder")
+  public SchemaParserDictionaryBuilder schemaDictionary() {
+    return dictionary -> {
+      dictionary.add("Owner", Ownership.class);
+    };
+  }
+}

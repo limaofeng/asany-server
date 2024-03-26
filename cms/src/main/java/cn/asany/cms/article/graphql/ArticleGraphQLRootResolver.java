@@ -5,6 +5,7 @@ import cn.asany.cms.article.converter.ArticleContext;
 import cn.asany.cms.article.converter.ArticleConverter;
 import cn.asany.cms.article.domain.Article;
 import cn.asany.cms.article.domain.ArticleCategory;
+import cn.asany.cms.article.domain.ArticleStoreTemplate;
 import cn.asany.cms.article.domain.ArticleTag;
 import cn.asany.cms.article.graphql.enums.ArticleChannelStarType;
 import cn.asany.cms.article.graphql.enums.ArticleStarType;
@@ -127,8 +128,12 @@ public class ArticleGraphQLRootResolver implements GraphQLQueryResolver, GraphQL
 
     ArticleCategory category = this.articleCategoryService.getById(input.getCategory());
 
-    String storeTemplateId = category.getStoreTemplate().getId();
-    ArticleContext articleContext = ArticleContext.builder().storeTemplate(storeTemplateId).build();
+    ArticleStoreTemplate storeTemplate = category.getStoreTemplate();
+    ArticleContext articleContext =
+        ArticleContext.builder()
+            .storeTemplate(storeTemplate)
+            .contentType(storeTemplate.getContentType())
+            .build();
 
     Article article = articleConverter.toArticle(input, articleContext);
 
@@ -149,8 +154,13 @@ public class ArticleGraphQLRootResolver implements GraphQLQueryResolver, GraphQL
   public Article updateArticle(Long id, Boolean merge, ArticleUpdateInput input) {
     ArticleCategory category = this.articleCategoryService.getById(input.getCategory());
 
+    ArticleStoreTemplate storeTemplate = category.getStoreTemplate();
+
     ArticleContext articleContext =
-        ArticleContext.builder().storeTemplate(category.getStoreTemplate().getId()).build();
+        ArticleContext.builder()
+            .storeTemplate(storeTemplate)
+            .contentType(storeTemplate.getContentType())
+            .build();
 
     Article article = articleConverter.toArticle(input, articleContext);
     article.setCategory(category);

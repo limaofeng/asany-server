@@ -374,7 +374,7 @@ type Article
   """
   内容
   """
-  body: ArticleBody
+  content: ArticleContent
   """
   body 的 html 格式
   """
@@ -409,31 +409,132 @@ type Article
   validityEndDate: Date
   # 附件
   attachments: [File!]!
+  """
+  收藏
+  """
+  favorites: Int!
+  """
+  点击数
+  """
+  clicks: Int!
+  """
+  阅读数
+  """
+  reads: Int!
+  """
+  点赞数
+  """
+  likes: Int!
   # 统计计数
   #    starrable(starType: ArticleStarType!): Starrable!
   # 权限设置
   #  permissionStatements: Permission
+  """
+  创建人
+  """
   createdBy: Int
+  """
+  修改人
+  """
   updatedBy: Int
+  """
+  创建时间
+  """
   createdAt: Date
+  """
+  修改时间
+  """
   updatedAt: Date
 }
 
 # 文章内容
-interface ArticleBody {
-  id: ID
+interface ArticleContent {
+  id: ID!
 }
 
-enum ArticleContentType {
+enum TextContentType {
   HTML
   MARKDOWN
 }
 
 # html格式内容
-type ArticleContent implements ArticleBody {
-  id: ID
-  type: ArticleContentType
+type TextContent implements ArticleContent {
+  id: ID!
+  type: TextContentType
   text: String
+}
+
+type VideoContent implements ArticleContent {
+  id: ID!
+  url: String
+  video: File
+  title: String
+  description: String
+}
+
+type ImageContentItem {
+  id: ID!
+  """
+  图片
+  """
+  url: String
+  """
+  本地图片对象
+  """
+  image: File
+  """
+  图片标题
+  """
+  title: String
+  """
+  图片描述
+  """
+  description: String
+}
+
+type ImageContent implements ArticleContent {
+  id: ID!
+  """
+  图片集
+  """
+  images: [ImageContentItem!]!
+}
+
+enum DocumentType {
+  PDF
+  DOCX
+  XLSX
+  PPTX
+  TXT
+  OTHER
+}
+
+type DocumentContent implements ArticleContent {
+  id: ID!
+  """
+  文件地址
+  """
+  url: String
+  """
+  文件
+  """
+  document: File
+  """
+  文档类型
+  """
+  type: DocumentType
+  """
+  文件大小
+  """
+  size: Number @fileSize(unit: "bytes")
+  """
+  文件标题
+  """
+  title: String
+  """
+  文件描述
+  """
+  description: String
 }
 
 enum ArticleType {
@@ -525,44 +626,16 @@ input ArticleCreateInput {
 
 input ContentInput {
   # 正文类型
-  type: ArticleContentType
+  type: TextContentType
   # 文本
   text: String
 }
 
-enum ArticleBodyType {
-  """
-  经典
-  """
-  classic
-  """
-  轮播图
-  """
-  banner
-  """
-  产品
-  """
-  product
-  """
-  团队
-  """
-  team
-  """
-  时间线
-  """
-  timeline
-  """
-  奖项
-  """
-  awards
-  """
-  常见问题它
-  """
-  faq
-  """
-  关于
-  """
-  about
+enum ContentType {
+  TEXT
+  VIDEO
+  IMAGE
+  DOCUMENT
 }
 
 input ContentPictureInput {
@@ -673,6 +746,10 @@ type ArticleStoreTemplate {
   名称
   """
   name: String!
+  """
+  内容类型
+  """
+  contentType: ContentType
   """
   排序码
   """

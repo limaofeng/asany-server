@@ -16,10 +16,10 @@ import org.jfantasy.framework.util.common.ClassUtil;
  */
 public class DefaultModuleLoader implements IModuleLoader {
 
-  private final Map<String, IModule> modules = new HashMap<>();
+  private final Map<String, IModule<IModuleProperties>> modules = new HashMap<>();
 
-  public DefaultModuleLoader(List<IModule> modules) {
-    for (IModule module : modules) {
+  public DefaultModuleLoader(List<IModule<IModuleProperties>> modules) {
+    for (IModule<IModuleProperties> module : modules) {
       this.modules.put(module.name(), module);
       Class<IModuleProperties> clazz =
           ClassUtil.getInterfaceGenricType(module.getClass(), IModule.class, 0);

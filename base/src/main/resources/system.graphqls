@@ -93,6 +93,56 @@ input DictWhereInput {
   description: String
 }
 
+input ShortLinkWhereInput {
+  """
+  分类
+  """
+  category: String
+}
+
+type ShortLink {
+  id: ID!
+  """
+  短链接码
+  """
+  code: String!
+  """
+  长链接
+  """
+  url: String
+  """
+  过期时间
+  """
+  expiresAt: Date
+  """
+  分类
+  """
+  category: String!
+  """
+  访问次数
+  """
+  accessCount: Int!
+}
+
+type ShortLinkConnection {
+  totalCount: Int!
+  pageSize: Int!
+  totalPage: Int!
+  currentPage: Int!
+  edges: [ShortLinkEdge!]!
+  pageInfo: PageInfo!
+}
+
+type ShortLinkEdge {
+  cursor: String
+  node: ShortLink
+}
+
+enum ShortLinkIdType {
+  ID
+  CODE
+}
+
 type Query {
   """
   查询数据字典分类
@@ -136,4 +186,64 @@ type Query {
       accessLevel: "Read"
       resourceTypes: ["sys:dict/*", "sys:dict/{#id}"]
     )
+  """
+  查询短链接
+  """
+  shortLink(id: ID!, type: ShortLinkIdType = ID): ShortLink
+  """
+  查询短链接
+  """
+  shortLinksConnection(
+    where: ShortLinkWhereInput = {}
+    page: Int = 1
+    pageSize: Int = 15
+    orderBy: OrderBy = "unsorted"
+  ): ShortLinkConnection!
+}
+
+extend type Mutation {
+  """
+  生成短链接
+  """
+  generateShortLink(
+    """
+    长链接
+    """
+    url: String!
+    """
+    分类
+    """
+    category: String!
+    """
+    过期时间
+    """
+    expiresAt: Date
+  ): ShortLink!
+  """
+  生成短链接
+  """
+  generateEmptyShortLinks(
+    """
+    分类
+    """
+    category: String!
+    """
+    生成数量
+    """
+    count: Int!
+  ): [ShortLink!]!
+}
+
+"""
+所有者
+"""
+interface Owner {
+  """
+  所有者 ID
+  """
+  id: ID!
+  """
+  所有者名称
+  """
+  name: String
 }

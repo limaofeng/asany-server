@@ -21,10 +21,9 @@ public class Product extends BaseBusEntity {
   @GeneratedValue(generator = "fantasy-sequence")
   @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
-
+  /** 产品名称 */
   @Column(name = "NAME", length = 100, nullable = false)
   private String name;
-
   /** 品牌 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "BRAND_ID", foreignKey = @ForeignKey(name = "FK_PIM_PRODUCT_BRAND_ID"))
@@ -35,4 +34,10 @@ public class Product extends BaseBusEntity {
   /** 产品保修策略 */
   @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
   private List<WarrantyPolicy> warrantyPolicies;
+  /** 产品文章 */
+  @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
+  private List<ProductArticle> articles;
+  /** 产品图片 */
+  @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
+  private List<ProductImage> images;
 }

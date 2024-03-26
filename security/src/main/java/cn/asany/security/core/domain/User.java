@@ -176,12 +176,6 @@ public class User extends BaseBusEntity implements Ownership, Tenantable {
     return this.nickname;
   }
 
-  @Override
-  @Transient
-  public String getOwnerType() {
-    return OWNERSHIP_KEY;
-  }
-
   @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
   @Override
   public boolean equals(Object o) {

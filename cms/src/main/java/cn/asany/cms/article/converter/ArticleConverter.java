@@ -1,14 +1,13 @@
 package cn.asany.cms.article.converter;
 
 import cn.asany.cms.article.domain.Article;
-import cn.asany.cms.article.domain.ArticleBody;
 import cn.asany.cms.article.domain.ArticleCategory;
+import cn.asany.cms.article.domain.ArticleContent;
 import cn.asany.cms.article.domain.ArticleFeature;
 import cn.asany.cms.article.graphql.input.ArticleCreateInput;
 import cn.asany.cms.article.graphql.input.ArticleUpdateInput;
 import cn.asany.cms.article.service.ArticleFeatureService;
-import cn.asany.cms.body.service.ArticleBodyService;
-import com.fasterxml.jackson.core.JsonProcessingException;
+import cn.asany.cms.content.service.ArticleContentService;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -29,7 +28,7 @@ import org.mapstruct.*;
 public interface ArticleConverter {
 
   @Mappings({
-    @Mapping(source = "body", target = "body", qualifiedByName = "parseArticleBody"),
+    @Mapping(source = "content", target = "content", qualifiedByName = "parseArticleContent"),
     @Mapping(source = "category", target = "category", qualifiedByName = "parseArticleCategory"),
     @Mapping(source = "tags", target = "tags", ignore = true),
     @Mapping(source = "features", target = "features", qualifiedByName = "parseFeature"),
@@ -39,7 +38,7 @@ public interface ArticleConverter {
   Article toArticle(ArticleCreateInput input, @Context ArticleContext context);
 
   @Mappings({
-    @Mapping(source = "body", target = "body", qualifiedByName = "parseArticleBody"),
+    @Mapping(source = "content", target = "content", qualifiedByName = "parseArticleContent"),
     @Mapping(source = "category", target = "category", qualifiedByName = "parseArticleCategory"),
     @Mapping(source = "tags", target = "tags", ignore = true),
     @Mapping(source = "features", target = "features", qualifiedByName = "parseFeature"),
@@ -53,14 +52,13 @@ public interface ArticleConverter {
     return new Article();
   }
 
-  @Named("parseArticleBody")
-  default ArticleBody parseArticleBody(String bodyInput, @Context ArticleContext context)
-      throws JsonProcessingException {
-    if (bodyInput == null) {
+  @Named("parseArticleContent")
+  default ArticleContent parseArticleContent(String contentInput, @Context ArticleContext context) {
+    if (contentInput == null) {
       return null;
     }
-    ArticleBodyService bodyService = SpringBeanUtils.getBean(ArticleBodyService.class);
-    return bodyService.convert(bodyInput, context.getStoreTemplate());
+    ArticleContentService contentService = SpringBeanUtils.getBean(ArticleContentService.class);
+    return contentService.convert(contentInput, context.getContentType());
   }
 
   @Named("parseArticleCategory")

@@ -5,6 +5,7 @@ import cn.asany.cms.module.dto.ArticleChannelImpObj;
 import java.util.List;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * 内容管理模块
@@ -14,12 +15,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class CmsModuleProperties implements IModuleProperties {
-  private String type;
+  @Setter private String type;
   private List<ArticleChannelImpObj> channels;
-
-  public void setType(String type) {
-    this.type = type;
-  }
 
   @Override
   public String getType() {

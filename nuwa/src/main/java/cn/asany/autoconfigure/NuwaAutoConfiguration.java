@@ -2,6 +2,7 @@ package cn.asany.autoconfigure;
 
 import cn.asany.base.IModule;
 import cn.asany.base.IModuleLoader;
+import cn.asany.base.IModuleProperties;
 import cn.asany.nuwa.module.DefaultModuleLoader;
 import java.util.List;
 import org.jfantasy.framework.dao.jpa.ComplexJpaRepository;
@@ -30,7 +31,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 public class NuwaAutoConfiguration {
 
   @Bean
-  public IModuleLoader moduleLoader(List<IModule> modules) {
+  public IModuleLoader moduleLoader(List<IModule<IModuleProperties>> modules) {
     return new DefaultModuleLoader(modules);
   }
 }

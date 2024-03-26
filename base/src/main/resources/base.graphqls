@@ -132,3 +132,25 @@ input MetadataInput {
   title: String
   description: String
 }
+
+"""
+联系方式
+"""
+type ContactInformation {
+  """
+  姓名
+  """
+  name: String
+  """
+  电话
+  """
+  phone: String
+  """
+  邮件
+  """
+  email: String
+  """
+  地址
+  """
+  address: Address
+}

@@ -1,0 +1,120 @@
+"""
+客户查询条件
+"""
+input CustomerWhereInput {
+  """
+  客户名称
+  """
+  name_contains: String
+}
+
+"""
+客户分页查询
+"""
+type CustomerConnection {
+  """
+  总数
+  """
+  totalCount: Int!
+  """
+  每页大小
+  """
+  pageSize: Int!
+  """
+  总页数
+  """
+  totalPage: Int!
+  """
+  当前页
+  """
+  currentPage: Int!
+  """
+  分页信息
+  """
+  pageInfo: PageInfo!
+  """
+  数据
+  """
+  edges: [CustomerEdge!]!
+}
+
+type CustomerEdge {
+  node: Customer!
+  cursor: String!
+}
+
+"""
+客户门店
+"""
+type CustomerStore {
+  """
+  门店ID
+  """
+  id: ID!
+  """
+  门店编号
+  """
+  no: String!
+  """
+  门店名称
+  """
+  name: String!
+  """
+  开业日期
+  """
+  openingDate: Date
+  """
+  联系电话
+  """
+  phone: String
+  """
+  地址
+  """
+  address: Address
+}
+
+"""
+客户
+"""
+type Customer implements Owner {
+  """
+  客户ID
+  """
+  id: ID!
+  """
+  客户名称
+  """
+  name: String
+  """
+  联系方式
+  """
+  contactInfo: ContactInformation
+  """
+  门店列表
+  """
+  stores: [CustomerStore!]!
+}
+
+extend type Query {
+  """
+  查询客户
+  """
+  customersConnection(
+    """
+    查询条件
+    """
+    where: CustomerWhereInput = {}
+    """
+    页码
+    """
+    currentPage: Int = 1
+    """
+    每页大小
+    """
+    pageSize: Int = 15
+    """
+    排序
+    """
+    orderBy: OrderBy = "unsorted"
+  ): CustomerConnection!
+}

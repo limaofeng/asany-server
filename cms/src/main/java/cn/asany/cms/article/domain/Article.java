@@ -1,8 +1,11 @@
 package cn.asany.cms.article.domain;
 
-import cn.asany.cms.article.domain.enums.ArticleBodyType;
 import cn.asany.cms.article.domain.enums.ArticleStatus;
-import cn.asany.cms.body.domain.Content;
+import cn.asany.cms.content.domain.DocumentContent;
+import cn.asany.cms.content.domain.ImageContent;
+import cn.asany.cms.content.domain.TextContent;
+import cn.asany.cms.content.domain.VideoContent;
+import cn.asany.cms.content.domain.enums.ContentType;
 import cn.asany.cms.permission.domain.Permission;
 import cn.asany.organization.core.domain.Organization;
 import cn.asany.storage.api.FileObject;
@@ -126,29 +129,32 @@ public class Article extends BaseBusEntity {
   private Date publishedAt;
   /** 正文类型 */
   @Enumerated(EnumType.STRING)
-  @Column(name = "STORE_TEMPLATE_ID", length = 25)
-  private ArticleBodyType bodyType;
+  @Column(name = "CONTENT_TYPE", length = 20, updatable = false)
+  private ContentType contentType;
   /** 正文 ID */
-  @Column(name = "BODY_ID")
-  private Long bodyId;
+  @Column(name = "CONTENT_ID")
+  private Long contentId;
   /** 文章正文 */
   @Any(
       metaColumn =
-          @Column(name = "STORE_TEMPLATE_ID", length = 20, insertable = false, updatable = false),
+          @Column(name = "CONTENT_TYPE", length = 20, insertable = false, updatable = false),
       fetch = FetchType.LAZY)
   @AnyMetaDef(
       idType = "long",
       metaType = "string",
-      metaValues = {@MetaValue(targetEntity = Content.class, value = Content.TYPE_KEY)})
-  @JoinColumn(name = "BODY_ID", insertable = false, updatable = false)
-  private ArticleBody body;
+      metaValues = {
+        @MetaValue(targetEntity = TextContent.class, value = "TEXT"),
+        @MetaValue(targetEntity = VideoContent.class, value = "VIDEO"),
+        @MetaValue(targetEntity = ImageContent.class, value = "IMAGE"),
+        @MetaValue(targetEntity = DocumentContent.class, value = "DOCUMENT")
+      })
+  @JoinColumn(name = "CONTENT_ID", insertable = false, updatable = false)
+  private ArticleContent content;
   /** 存储模版 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(
       name = "STORE_TEMPLATE_ID",
-      foreignKey = @ForeignKey(name = "FK_ARTICLE_STORE_TEMPLATE"),
-      insertable = false,
-      updatable = false)
+      foreignKey = @ForeignKey(name = "FK_ARTICLE_STORE_TEMPLATE"))
   private ArticleStoreTemplate storeTemplate;
   /** 所属组织 */
   @ManyToOne(targetEntity = Organization.class, fetch = FetchType.LAZY)
@@ -173,6 +179,24 @@ public class Article extends BaseBusEntity {
   /** 有效期限 结束时间 */
   @Column(name = "VALIDITY_END_DATE")
   private Date validityEndDate;
+
+  // 增加统计信息属性
+  /** 收藏数 */
+  @Builder.Default
+  @Column(name = "FAVORITES", nullable = false)
+  private Long favorites = 0L;
+  /** 点击数 */
+  @Builder.Default
+  @Column(name = "CLICKS", nullable = false)
+  private Long clicks = 0L;
+  /** 阅读数 */
+  @Builder.Default
+  @Column(name = "`READS`", nullable = false)
+  private Long reads = 0L;
+  /** 点赞数 */
+  @Builder.Default
+  @Column(name = "LIKES", nullable = false)
+  private Long likes = 0L;
 
   @Transient private List<Permission> permissions;
 

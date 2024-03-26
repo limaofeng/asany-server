@@ -4,7 +4,6 @@ import javax.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
 @Data
@@ -15,9 +14,7 @@ import org.jfantasy.framework.dao.BaseBusEntity;
 public class AssetType extends BaseBusEntity {
   @Id
   @Column(name = "ID", nullable = false, updatable = false)
-  @GeneratedValue(generator = "fantasy-sequence")
-  @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
-  private Long id;
+  private String id;
 
   @Column(name = "NAME", length = 20, nullable = false)
   private String name;

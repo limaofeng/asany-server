@@ -24,7 +24,7 @@ public class ArticleCategoryInput {
   private PromptType promptType;
   private Boolean isCommentApprove;
   private String approveId;
-  private String storeTemplate;
+  private Long storeTemplate;
   private List<ArticleMetafieldInput> metafields;
   private ArticleMetadataInput metadata;
   private PageComponentInput page;

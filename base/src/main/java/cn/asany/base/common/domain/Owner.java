@@ -20,7 +20,7 @@ public class Owner<T extends Enum<T>> {
   private String id;
   /** 所有者类型 */
   @Enumerated(EnumType.STRING)
-  @Column(name = "OWNER_TYPE", length = 20, nullable = false)
+  @Column(name = "OWNER_TYPE", length = 20)
   private T type;
   /** 所有者名称 */
   @Column(name = "OWNER_NAME", length = 50)

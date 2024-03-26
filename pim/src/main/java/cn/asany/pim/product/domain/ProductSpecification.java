@@ -27,6 +27,9 @@ public class ProductSpecification extends BaseBusEntity {
   private String value;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "PRODUCT_ID", foreignKey = @ForeignKey(name = "FK_PIM_PRODUCT_VARIANT_VID"))
+  @JoinColumn(
+      name = "PRODUCT_ID",
+      foreignKey = @ForeignKey(name = "FK_PIM_PRODUCT_VARIANT_VID"),
+      nullable = false)
   private Product product;
 }

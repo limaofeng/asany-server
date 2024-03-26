@@ -4,13 +4,12 @@ import cn.asany.cms.article.dao.ArticleCategoryDao;
 import cn.asany.cms.article.dao.ArticleDao;
 import cn.asany.cms.article.dao.ArticleMetaFieldDao;
 import cn.asany.cms.article.domain.Article;
-import cn.asany.cms.article.domain.ArticleBody;
 import cn.asany.cms.article.domain.ArticleCategory;
-import cn.asany.cms.article.domain.enums.ArticleBodyType;
+import cn.asany.cms.article.domain.ArticleContent;
 import cn.asany.cms.article.domain.enums.ArticleStatus;
 import cn.asany.cms.article.event.ArticleUpdateEvent;
 import cn.asany.cms.article.graphql.input.PermissionInput;
-import cn.asany.cms.body.service.ArticleBodyService;
+import cn.asany.cms.content.service.ArticleContentService;
 import java.util.*;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Hibernate;
@@ -39,7 +38,7 @@ public class ArticleService {
   private final ArticleTagService tagService;
   private final ArticleDao articleDao;
   private final ArticleCategoryDao articleCategoryDao;
-  private final ArticleBodyService bodyService;
+  private final ArticleContentService contentService;
 
   private final ArticleMetaFieldDao articleMetaFieldDao;
 
@@ -49,14 +48,14 @@ public class ArticleService {
       ApplicationContext applicationContext,
       ArticleFeatureService featureService,
       ArticleTagService tagService,
-      ArticleBodyService bodyService,
+      ArticleContentService contentService,
       ArticleCategoryDao articleCategoryDao,
       ArticleMetaFieldDao articleMetaFieldDao) {
     this.articleDao = articleDao;
     this.applicationContext = applicationContext;
     this.featureService = featureService;
     this.tagService = tagService;
-    this.bodyService = bodyService;
+    this.contentService = contentService;
     this.articleCategoryDao = articleCategoryDao;
     this.articleMetaFieldDao = articleMetaFieldDao;
   }
@@ -180,9 +179,9 @@ public class ArticleService {
    * @param article 文章
    */
   private void saveContentAndSummary(Article article) {
-    ArticleBody body = article.getBody();
-    if (StringUtil.isBlank(article.getSummary()) && ObjectUtil.isNotNull(body)) {
-      String summary = body.generateSummary();
+    ArticleContent content = article.getContent();
+    if (StringUtil.isBlank(article.getSummary()) && ObjectUtil.isNotNull(content)) {
+      String summary = content.generateSummary();
       article.setSummary(summary);
     }
     ArticleCategory category =
@@ -190,19 +189,19 @@ public class ArticleService {
     if (null != article.getId()) {
       // 编辑
       Article oldArticle = this.articleDao.getReferenceById(article.getId());
-      if (StringUtil.isBlank(oldArticle.getBodyId())) {
-        this.bodyService.save(body);
-      } else if (category.getStoreTemplate().getId().equals(oldArticle.getBodyType().name())) {
-        this.bodyService.update(oldArticle.getBody().getId(), body);
+      if (StringUtil.isBlank(oldArticle.getContentId())) {
+        this.contentService.save(content);
+      } else if (category.getStoreTemplate().getContentType() == oldArticle.getContentType()) {
+        this.contentService.update(oldArticle.getContent().getId(), content);
       } else {
-        this.bodyService.deleteById(oldArticle.getBodyId(), oldArticle.getBodyType());
-        this.bodyService.save(body);
+        this.contentService.deleteById(oldArticle.getContentId(), oldArticle.getContentType());
+        this.contentService.save(content);
       }
     } else {
-      this.bodyService.save(body);
+      this.contentService.save(content);
     }
-    article.setBodyId(body.getId());
-    article.setBodyType(ArticleBodyType.valueOf(body.bodyType()));
+    article.setContentId(content.getId());
+    article.setContentType(content.getContentType());
   }
 
   /**
@@ -217,7 +216,7 @@ public class ArticleService {
       return null;
     }
     Article article = optional.get();
-    Hibernate.initialize(article.getBody());
+    Hibernate.initialize(article.getContent());
     return article;
   }
 
@@ -240,7 +239,7 @@ public class ArticleService {
    *
    * @param id 文章 ids
    */
-  public void unpublish(Long id) {
+  public void unPublish(Long id) {
     Article article = this.get(id);
     article.setStatus(ArticleStatus.DRAFT);
     this.articleDao.update(article, true);
@@ -259,8 +258,8 @@ public class ArticleService {
         continue;
       }
       Article article = optional.get();
-      if (article.getBodyId() != null) {
-        this.bodyService.deleteById(article.getBodyId(), article.getBodyType());
+      if (article.getContentId() != null) {
+        this.contentService.deleteById(article.getContentId(), article.getContentType());
       }
       articles.add(optional.get());
     }

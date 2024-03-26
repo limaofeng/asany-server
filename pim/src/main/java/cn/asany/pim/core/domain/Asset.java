@@ -27,14 +27,21 @@ public abstract class Asset extends BaseBusEntity {
   @GeneratedValue(generator = "fantasy-sequence")
   @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
+  /** 资产编号 */
+  @Column(name = "NO", length = 50)
+  private String no;
   /** 资产名称 */
   @Column(name = "NAME", length = 100)
   private String name;
   /** 资产类型 */
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "TYPE_ID", foreignKey = @ForeignKey(name = "FK_PIM_ASSET_TYPE"))
+  @JoinColumn(
+      name = "ASSET_TYPE",
+      foreignKey = @ForeignKey(name = "FK_PIM_ASSET_TYPE"),
+      insertable = false,
+      updatable = false)
   private AssetType type;
-  /** 资产的当前状态，如在用、维修中、已报废等。 */
+  /** 资产的当前状态，如在用1、维修中、已报废等。 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "STATUS_ID", foreignKey = @ForeignKey(name = "FK_PIM_ASSET_STATUS"))
   private AssetStatus status;

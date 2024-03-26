@@ -21,21 +21,20 @@ public class ProductArticle extends BaseBusEntity {
   @GeneratedValue(generator = "fantasy-sequence")
   @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
-
+  /** 关联类型 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(
       name = "LINKAGE_TYPE",
-      foreignKey = @ForeignKey(name = "FK_PIM_PRODUCT_ARTICLE_LINKAGE_TYPE"),
-      nullable = false)
+      foreignKey = @ForeignKey(name = "FK_PIM_PRODUCT_ARTICLE_LINKAGE_TYPE_ID"))
   private ProductLinkageType linkageType;
-
+  /** 产品 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(
       name = "PRODUCT_ID",
       foreignKey = @ForeignKey(name = "FK_PIM_PRODUCT_ARTICLE_PID"),
       nullable = false)
   private Product product;
-
+  /** 文章 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(
       name = "ARTICLE_ID",

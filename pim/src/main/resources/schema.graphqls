@@ -16,9 +16,81 @@ type ProductEdge {
   node: Product!
 }
 
+type ProductSpecification {
+  id: ID!
+  """
+  规格名称
+  """
+  name: String
+  """
+  规格值
+  """
+  value: String
+}
+
+type ProductImage {
+  id: ID!
+  """
+  图片URL
+  """
+  url: String
+  """
+  图片对象
+  """
+  image: File
+  """
+  图片描述
+  """
+  alt: String
+  """
+  标题
+  """
+  title: String
+  """
+  图片描述
+  """
+  description: String
+  """
+  排序
+  """
+  index: Int
+}
+
+"""
+产品
+"""
 type Product {
   id: ID!
+  """
+  产品名称
+  """
   name: String
+  """
+  产品品牌
+  """
+  brand: Brand
+  """
+  产品规格
+  """
+  specifications: [ProductSpecification!]!
+  """
+  产品保修政策
+  """
+  warrantyPolicies: [WarrantyPolicy!]!
+  """
+  产品图片
+  """
+  images: [ProductImage!]!
+  """
+  产品文章
+  """
+  articles(
+    linkageType: String!
+    ArticleWhereInput: ArticleWhereInput = {}
+    offset: Int = 0
+    limit: Int = 15
+    orderBy: OrderBy = "unsorted"
+  ): [Article!]!
 }
 
 type DeviceConnection {
@@ -39,9 +111,160 @@ type DeviceEdge {
   node: Device!
 }
 
+"""
+设备所有者
+"""
+union DeviceOwner = Customer
+
+"""
+资产状态
+"""
+type AssetStatus {
+  """
+  状态ID
+  """
+  id: ID!
+  """
+  状态码
+  """
+  code: String!
+  """
+  状态名称
+  """
+  name: String!
+}
+
+"""
+品牌
+"""
+type Brand {
+  """
+  品牌ID
+  """
+  id: ID!
+  """
+  品牌名称
+  """
+  name: String
+}
+
+"""
+保修卡状态
+"""
+enum WarrantyStatus {
+  """
+  未激活
+  """
+  INACTIVE
+  """
+  已激活
+  """
+  ACTIVE
+  """
+  已过期
+  """
+  EXPIRED
+  """
+  已作废
+  """
+  CANCELED
+}
+
+"""
+保修政策
+"""
+type WarrantyPolicy {
+  id: ID!
+  """
+  保修政策名称
+  """
+  name: String
+  """
+  有效期限，以月为单位
+  """
+  validityPeriodMonths: Int
+}
+
+"""
+保修卡
+"""
+type WarrantyCard {
+  id: ID!
+  """
+  保修开始日期
+  """
+  startDate: Date!
+  """
+  保修结束日期
+  """
+  endDate: Date!
+  """
+  保修卡状态
+  """
+  status: WarrantyStatus
+  """
+  保修政策
+  """
+  policy: WarrantyPolicy!
+}
+
+"""
+设备
+"""
 type Device {
   id: ID!
+  """
+  资产编号
+  """
+  no: String
+  """
+  设备序列号
+  """
+  sn: String
+  """
+  设备名称
+  """
   name: String
+  """
+  设备状态
+  """
+  status: AssetStatus
+  """
+  设备品牌
+  """
+  brand: Brand
+  """
+  产品
+  """
+  product: Product!
+  """
+  保修卡列表
+  """
+  warrantyCards: [WarrantyCard!]!
+  """
+  保修开始日期
+  """
+  warrantyStartDate: Date @dateFormat
+  """
+  保修结束日期
+  """
+  warrantyEndDate: Date @dateFormat
+  """
+  保修状态
+  """
+  warrantyStatus: WarrantyStatus
+  """
+  购买日期
+  """
+  purchaseDate: Date @dateFormat
+  """
+  设备地址
+  """
+  address: Address
+  """
+  设备所有者
+  """
+  owner: DeviceOwner!
 }
 
 input ProductWhereInput {

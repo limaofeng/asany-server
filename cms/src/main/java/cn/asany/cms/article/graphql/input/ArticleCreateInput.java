@@ -24,7 +24,7 @@ public class ArticleCreateInput {
   private ArticleStatus status;
 
   @JsonDeserialize(converter = ArticleBodySourceConverter.class)
-  private String body;
+  private String content;
 
   private String summary;
   private FileObject image;

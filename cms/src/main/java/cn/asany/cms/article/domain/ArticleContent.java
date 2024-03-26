@@ -1,5 +1,6 @@
 package cn.asany.cms.article.domain;
 
+import cn.asany.cms.content.domain.enums.ContentType;
 import java.io.Serializable;
 
 /**
@@ -7,7 +8,7 @@ import java.io.Serializable;
  *
  * @author 李茂峰
  */
-public interface ArticleBody extends Serializable {
+public interface ArticleContent extends Serializable {
 
   Long getId();
 
@@ -15,10 +16,5 @@ public interface ArticleBody extends Serializable {
 
   String generateSummary();
 
-  /**
-   * 返回 Body Type
-   *
-   * @return string
-   */
-  String bodyType();
+  ContentType getContentType();
 }

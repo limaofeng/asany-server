@@ -20,6 +20,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
   "cn.asany.system.convert",
   "cn.asany.system.service",
   "cn.asany.system.graphql",
+  "cn.asany.system.web",
 })
 @EnableJpaRepositories(
     basePackages = "cn.asany.system.dao",

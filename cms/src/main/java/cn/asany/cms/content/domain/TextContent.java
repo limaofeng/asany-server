@@ -1,7 +1,8 @@
-package cn.asany.cms.body.domain;
+package cn.asany.cms.content.domain;
 
-import cn.asany.cms.article.domain.ArticleBody;
-import cn.asany.cms.body.domain.enums.ContentType;
+import cn.asany.cms.article.domain.ArticleContent;
+import cn.asany.cms.content.domain.enums.ContentType;
+import cn.asany.cms.content.domain.enums.TextContentType;
 import java.util.Objects;
 import javax.persistence.*;
 import lombok.*;
@@ -24,10 +25,8 @@ import org.jfantasy.framework.util.htmlcleaner.HtmlCleanerUtil;
 @Builder
 @AllArgsConstructor
 @Entity
-@Table(name = "CMS_CONTENT")
-public class Content extends BaseBusEntity implements ArticleBody {
-
-  public static final String TYPE_KEY = "classic";
+@Table(name = "CMS_TEXT_CONTENT")
+public class TextContent extends BaseBusEntity implements ArticleContent {
 
   @Id
   @Column(name = "ID", nullable = false)
@@ -37,7 +36,7 @@ public class Content extends BaseBusEntity implements ArticleBody {
 
   @Enumerated(EnumType.STRING)
   @Column(name = "TYPE", length = 20, nullable = false)
-  private ContentType type;
+  private TextContentType type;
 
   /** 内容 */
   @Column(name = "`TEXT`", columnDefinition = "mediumtext")
@@ -48,7 +47,7 @@ public class Content extends BaseBusEntity implements ArticleBody {
     if (StringUtil.isBlank(text)) {
       return "";
     }
-    if (type == ContentType.HTML) {
+    if (type == TextContentType.HTML) {
       TagNode node = HtmlCleanerUtil.htmlCleaner(text);
       String contentString = node.getText().toString().trim().replace("\n", "");
       return StringUtil.ellipsis(contentString, 190, "");
@@ -57,15 +56,15 @@ public class Content extends BaseBusEntity implements ArticleBody {
   }
 
   @Override
-  public String bodyType() {
-    return TYPE_KEY;
+  public ContentType getContentType() {
+    return ContentType.TEXT;
   }
 
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-    Content content = (Content) o;
+    TextContent content = (TextContent) o;
     return id != null && Objects.equals(id, content.id);
   }
 

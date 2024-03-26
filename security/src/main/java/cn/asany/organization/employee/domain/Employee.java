@@ -149,11 +149,6 @@ public class Employee extends BaseBusEntity implements Ownership {
     return builder;
   }
 
-  @Override
-  public String getOwnerType() {
-    return OWNERSHIP_KEY;
-  }
-
   public static class EmployeeBuilder {
 
     public EmployeeBuilder addEmail(String label, String emailAddress) {
