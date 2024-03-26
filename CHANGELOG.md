@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.12](https://github.com/limaofeng/asany-server/compare/v0.2.11...v0.2.12) (2024-03-26)
+
+
+### Features
+
+* 添加产品相关 Entity ([f15e4cc](https://github.com/limaofeng/asany-server/commit/f15e4ccec784079f68aba583b5e941c34bdae4b6))
+* 添加设备与工单 Entity ([66394d7](https://github.com/limaofeng/asany-server/commit/66394d7d76fa1d451dda7cb9810143443f614b9e))
+
 ### [0.2.11](https://github.com/limaofeng/asany-server/compare/v0.2.10...v0.2.11) (2024-03-04)
 
 
