@@ -1,6 +1,8 @@
 package cn.asany.pim.core.domain;
 
 import cn.asany.base.common.domain.Address;
+import cn.asany.base.common.domain.ContactInformation;
+import cn.asany.base.common.domain.Geolocation;
 import cn.asany.base.common.domain.Owner;
 import cn.asany.pim.core.domain.enums.DeviceOwnerType;
 import cn.asany.pim.product.domain.Brand;
@@ -64,6 +66,11 @@ public class Device extends PhysicalAsset {
         column = @Column(name = "LOCATION_POSTAL_CODE", length = 10))
   })
   private Address address;
+  /** 门店位置 (经纬坐标) */
+  @Embedded private Geolocation location;
+  /** 设备负责人联系方式 */
+  @Embedded private ContactInformation contactInfo;
+
   /** 所有者 */
   @Embedded private Owner<DeviceOwnerType> owner;
 }

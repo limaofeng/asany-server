@@ -1,6 +1,8 @@
 package cn.asany.crm.core.domain;
 
 import cn.asany.base.common.domain.Address;
+import cn.asany.base.common.domain.ContactInformation;
+import cn.asany.base.common.domain.Geolocation;
 import java.util.Date;
 import javax.persistence.*;
 import lombok.Data;
@@ -42,6 +44,10 @@ public class CustomerStore extends BaseBusEntity {
   private String phone;
   /** 门店地址 */
   @Embedded private Address address;
+  /** 门店位置 (经纬坐标) */
+  @Embedded private Geolocation location;
+  /** 门店联系方式 */
+  @Embedded private ContactInformation contactInfo;
   /** 客户 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "CUSTOMER_ID", foreignKey = @ForeignKey(name = "FK_CUSTOMER_STORE_CUSTOMER"))

@@ -1,6 +1,7 @@
 package cn.asany.crm.core.graphql.input;
 
 import cn.asany.base.common.graphql.input.AddressInput;
+import cn.asany.base.common.graphql.input.ContactInformationInput;
 import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,4 +25,6 @@ public class CustomerStoreCreateInput {
   private String phone;
   /** 门店地址 */
   private AddressInput address;
+  /** 联系方式 */
+  private ContactInformationInput contactInfo;
 }

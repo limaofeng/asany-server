@@ -262,6 +262,10 @@ type Device {
   """
   address: Address
   """
+  联系人信息
+  """
+  contactInfo: ContactInformation
+  """
   设备所有者
   """
   owner: DeviceOwner!

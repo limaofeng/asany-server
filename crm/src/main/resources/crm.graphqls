@@ -103,6 +103,10 @@ type CustomerStore {
   地址
   """
   address: Address
+  """
+  联系人信息
+  """
+  contactInfo: ContactInformation
 }
 
 """
@@ -185,6 +189,10 @@ input CustomerStoreCreateInput {
   地址
   """
   address: AddressInput
+  """
+  联系方式
+  """
+  contactInfo: ContactInformationInput
 }
 
 input CustomerStoreUpdateInput {
@@ -208,6 +216,10 @@ input CustomerStoreUpdateInput {
   地址
   """
   address: AddressInput
+  """
+  联系方式
+  """
+  contactInfo: ContactInformationInput
 }
 
 extend type Query {
