@@ -127,21 +127,6 @@ type Customer implements Owner {
   stores: [CustomerStore!]!
 }
 
-input ContactInformationInput {
-  """
-  联系人
-  """
-  name: String
-  """
-  联系电话
-  """
-  phone: String
-  """
-  电子邮件
-  """
-  email: String
-}
-
 input CustomerStoreWhereInput {
   """
   客户ID
