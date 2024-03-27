@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.14](https://github.com/limaofeng/asany-server/compare/v0.2.13...v0.2.14) (2024-03-27)
+
+
+### Features
+
+* 联系方式添加 address 字段 ([9e4df0d](https://github.com/limaofeng/asany-server/commit/9e4df0d7f38dd98ad8d9897ea9825e82e77011e2))
+
 ### [0.2.13](https://github.com/limaofeng/asany-server/compare/v0.2.12...v0.2.13) (2024-03-27)
 
 
