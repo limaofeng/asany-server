@@ -1,3 +1,9 @@
 package cn.asany.crm.core.graphql.input;
 
-public class CustomerCreateInput {}
+import lombok.Data;
+
+@Data
+public class CustomerCreateInput {
+  private String name;
+  private ContactInformationInput contactInfo;
+}

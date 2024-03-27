@@ -182,7 +182,7 @@ type WarrantyPolicy {
   """
   有效期限，以月为单位
   """
-  validityPeriodMonths: Int
+  duration: Int
 }
 
 """
@@ -434,6 +434,10 @@ extend type Query {
   查询设备详情
   """
   device(id: ID!): Device
+  """
+  查询保修策略列表
+  """
+  warrantyPolicies(productId: ID!): [WarrantyPolicy!]!
 }
 
 extend type Mutation {

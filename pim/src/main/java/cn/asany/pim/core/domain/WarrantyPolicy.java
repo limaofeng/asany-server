@@ -21,8 +21,8 @@ public class WarrantyPolicy extends BaseBusEntity {
   @Column(name = "NAME", length = 20, nullable = false, unique = true)
   private String name;
   /** 有效期限，以月为单位 */
-  @Column(name = "VALIDITY_PERIOD_MONTHS", nullable = false)
-  private Integer validityPeriodMonths;
+  @Column(name = "DURATION", nullable = false)
+  private Integer duration;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(

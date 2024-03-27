@@ -2,11 +2,13 @@ package cn.asany.crm.core.service;
 
 import cn.asany.crm.core.dao.CustomerDao;
 import cn.asany.crm.core.domain.Customer;
+import java.util.List;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -33,5 +35,15 @@ public class CustomerService {
   public Customer update(Long id, Customer customer, Boolean merge) {
     customer.setId(id);
     return this.customerDao.update(customer, merge);
+  }
+
+  public List<Customer> findAll(PropertyFilter filter, int offset, int limit, Sort sort) {
+    return this.customerDao.findAll(filter, offset, limit, sort);
+  }
+
+  public Customer delete(Long id) {
+    Customer customer = this.customerDao.getReferenceById(id);
+    this.customerDao.delete(customer);
+    return customer;
   }
 }

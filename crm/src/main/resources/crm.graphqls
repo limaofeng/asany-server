@@ -43,6 +43,38 @@ type CustomerEdge {
   cursor: String!
 }
 
+type CustomerStoreConnection {
+  """
+  总数
+  """
+  totalCount: Int!
+  """
+  每页大小
+  """
+  pageSize: Int!
+  """
+  总页数
+  """
+  totalPage: Int!
+  """
+  当前页
+  """
+  currentPage: Int!
+  """
+  分页信息
+  """
+  pageInfo: PageInfo!
+  """
+  数据
+  """
+  edges: [CustomerStoreEdge!]!
+}
+
+type CustomerStoreEdge {
+  node: CustomerStore!
+  cursor: String!
+}
+
 """
 客户门店
 """
@@ -95,6 +127,104 @@ type Customer implements Owner {
   stores: [CustomerStore!]!
 }
 
+input ContactInformationInput {
+  """
+  联系人
+  """
+  name: String
+  """
+  联系电话
+  """
+  phone: String
+  """
+  电子邮件
+  """
+  email: String
+}
+
+input CustomerStoreWhereInput {
+  """
+  客户ID
+  """
+  customer: ID
+  """
+  门店名称
+  """
+  name_contains: String
+}
+
+input CustomerCreateInput {
+  """
+  客户名称
+  """
+  name: String
+  """
+  联系方式
+  """
+  contactInfo: ContactInformationInput
+}
+
+input CustomerUpdateInput {
+  """
+  客户名称
+  """
+  name: String
+  """
+  联系方式
+  """
+  contactInfo: ContactInformationInput
+}
+
+input CustomerStoreCreateInput {
+  """
+  客户ID
+  """
+  customer: ID!
+  """
+  门店编号
+  """
+  no: String
+  """
+  门店名称
+  """
+  name: String
+  """
+  开业日期
+  """
+  openingDate: Date
+  """
+  联系电话
+  """
+  phone: String
+  """
+  地址
+  """
+  address: AddressInput
+}
+
+input CustomerStoreUpdateInput {
+  """
+  门店编号
+  """
+  no: String
+  """
+  门店名称
+  """
+  name: String
+  """
+  开业日期
+  """
+  openingDate: Date
+  """
+  联系电话
+  """
+  phone: String
+  """
+  地址
+  """
+  address: AddressInput
+}
+
 extend type Query {
   """
   查询客户
@@ -117,4 +247,153 @@ extend type Query {
     """
     orderBy: OrderBy = "unsorted"
   ): CustomerConnection!
+  """
+  查询客户
+  """
+  customer(
+    """
+    客户ID
+    """
+    id: ID!
+  ): Customer
+  """
+  查询客户列表
+  """
+  customers(
+    """
+    查询条件
+    """
+    where: CustomerWhereInput = {}
+    """
+    偏移量
+    """
+    offset: Int = 0
+    """
+    每页显示条数
+    """
+    limit: Int = 15
+    """
+    排序
+    """
+    orderBy: OrderBy = "unsorted"
+  ): [Customer!]!
+  """
+  查询客户门店
+  """
+  customerStoresConnection(
+    """
+    查询条件
+    """
+    where: CustomerStoreWhereInput = {}
+    """
+    页码
+    """
+    currentPage: Int = 1
+    """
+    每页大小
+    """
+    pageSize: Int = 15
+    """
+    排序
+    """
+    orderBy: OrderBy = "unsorted"
+  ): CustomerStoreConnection!
+  """
+  查询客户门店
+  """
+  customerStores(
+    """
+    查询条件
+    """
+    where: CustomerStoreWhereInput = {}
+    """
+    偏移量
+    """
+    offset: Int = 0
+    """
+    每页显示条数
+    """
+    limit: Int = 15
+    """
+    排序
+    """
+    orderBy: OrderBy = "unsorted"
+  ): [CustomerStore!]!
+  """
+  查询客户门店
+  """
+  customerStore(
+    """
+    门店ID
+    """
+    id: ID!
+  ): CustomerStore
+}
+
+extend type Mutation {
+  """
+  创建客户
+  """
+  createCustomer(input: CustomerCreateInput!): Customer!
+  """
+  更新客户
+  """
+  updateCustomer(
+    """
+    客户ID
+    """
+    id: ID!
+    """
+    客户名称
+    """
+    input: CustomerUpdateInput!
+    """
+    是否合并
+    """
+    merge: Boolean = true
+  ): Customer!
+  """
+  删除客户
+  """
+  deleteCustomer(
+    """
+    客户ID
+    """
+    id: ID!
+  ): Customer!
+  """
+  创建客户门店
+  """
+  createCustomerStore(
+    """
+    input
+    """
+    input: CustomerStoreCreateInput!
+  ): CustomerStore!
+  """
+  更新客户门店
+  """
+  updateCustomerStore(
+    """
+    门店ID
+    """
+    id: ID!
+    """
+    门店名称
+    """
+    input: CustomerStoreUpdateInput!
+    """
+    是否合并
+    """
+    merge: Boolean = true
+  ): CustomerStore!
+  """
+  删除客户门店
+  """
+  deleteCustomerStore(
+    """
+    门店ID
+    """
+    id: ID!
+  ): CustomerStore!
 }

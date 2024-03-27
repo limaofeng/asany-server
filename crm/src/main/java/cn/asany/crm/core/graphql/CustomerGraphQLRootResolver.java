@@ -9,6 +9,7 @@ import cn.asany.crm.core.graphql.type.CustomerConnection;
 import cn.asany.crm.core.service.CustomerService;
 import graphql.kickstart.tools.GraphQLMutationResolver;
 import graphql.kickstart.tools.GraphQLQueryResolver;
+import java.util.List;
 import java.util.Optional;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.graphql.util.Kit;
@@ -38,6 +39,11 @@ public class CustomerGraphQLRootResolver implements GraphQLMutationResolver, Gra
     return Kit.connection(page, CustomerConnection.class);
   }
 
+  public List<Customer> customers(CustomerWhereInput where, int offset, int limit, Sort sort) {
+    PropertyFilter filter = where.toFilter();
+    return customerService.findAll(filter, offset, limit, sort);
+  }
+
   public Optional<Customer> customer(Long id) {
     return customerService.findById(id);
   }
@@ -50,5 +56,9 @@ public class CustomerGraphQLRootResolver implements GraphQLMutationResolver, Gra
   public Customer updateCustomer(Long id, CustomerUpdateInput input, Boolean merge) {
     Customer customer = customerConverter.toCustomer(input);
     return customerService.update(id, customer, merge);
+  }
+
+  public Customer deleteCustomer(Long id) {
+    return customerService.delete(id);
   }
 }

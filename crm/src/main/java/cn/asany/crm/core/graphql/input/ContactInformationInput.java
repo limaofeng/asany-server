@@ -3,7 +3,8 @@ package cn.asany.crm.core.graphql.input;
 import lombok.Data;
 
 @Data
-public class CustomerUpdateInput {
+public class ContactInformationInput {
   private String name;
-  private ContactInformationInput contactInfo;
+  private String phone;
+  private String email;
 }
