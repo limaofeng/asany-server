@@ -7,6 +7,8 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.jfantasy.framework.util.common.StreamUtil;
 import org.jfantasy.framework.util.common.file.FileUtil;
@@ -17,14 +19,11 @@ public class LocalStorage implements Storage {
   private final String id;
   protected String defaultDir;
 
+  @SneakyThrows
   public LocalStorage(String id, String defaultDir) {
     super();
     this.id = id;
-    try {
-      this.setDefaultDir(defaultDir);
-    } catch (IOException e) {
-      log.error("设置默认目录失败", e);
-    }
+    this.setDefaultDir(defaultDir);
   }
 
   @Override

@@ -2,12 +2,15 @@ package cn.asany.storage.core;
 
 import cn.asany.storage.api.*;
 import java.util.Iterator;
+
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class DefaultInvocation implements Invocation {
 
   private final StoragePlugin handler;
+  @Getter
   private final UploadContext context;
   private final Iterator<StoragePlugin> iterator;
 
@@ -28,7 +31,4 @@ public class DefaultInvocation implements Invocation {
     return this.handler.upload(this.context, new DefaultInvocation(this.context, this.iterator));
   }
 
-  public UploadContext getContext() {
-    return context;
-  }
 }
