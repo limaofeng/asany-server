@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.16](https://github.com/limaofeng/asany-server/compare/v0.2.15...v0.2.16) (2024-03-28)
+
+
+### Bug Fixes
+
+* 解决门店查询时 customer 字段错误 ([389296c](https://github.com/limaofeng/asany-server/commit/389296c9ebca64e41a68697de5a1fc690d9c6c72))
+
 ### [0.2.15](https://github.com/limaofeng/asany-server/compare/v0.2.14...v0.2.15) (2024-03-27)
 
 
