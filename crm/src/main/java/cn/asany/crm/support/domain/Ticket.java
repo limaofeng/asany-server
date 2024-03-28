@@ -31,7 +31,7 @@ public class Ticket extends BaseBusEntity {
   /** 问题描述 */
   @Column(name = "DESCRIPTION", length = 200)
   private String description;
-  /** 问题类型 */
+  /** 问题状态 */
   @Enumerated(EnumType.STRING)
   @Column(name = "STATUS", length = 20)
   private TicketStatus status;

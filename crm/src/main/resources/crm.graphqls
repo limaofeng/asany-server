@@ -78,7 +78,7 @@ type CustomerStoreEdge {
 """
 客户门店
 """
-type CustomerStore {
+type CustomerStore implements Owner {
   """
   门店ID
   """

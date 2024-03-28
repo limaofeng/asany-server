@@ -1,12 +1,12 @@
 package cn.asany.crm.core.domain;
 
+import cn.asany.base.common.Ownership;
 import cn.asany.base.common.domain.Address;
 import cn.asany.base.common.domain.ContactInformation;
 import cn.asany.base.common.domain.Geolocation;
 import java.util.Date;
 import javax.persistence.*;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
@@ -19,10 +19,13 @@ import org.jfantasy.framework.dao.BaseBusEntity;
  */
 @Data
 @Entity
+@Builder
 @Table(name = "CRM_CUSTOMER_STORE")
+@NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class CustomerStore extends BaseBusEntity {
+public class CustomerStore extends BaseBusEntity implements Ownership {
 
   @Id
   @Column(name = "ID", nullable = false, updatable = false)

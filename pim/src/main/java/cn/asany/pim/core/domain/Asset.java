@@ -14,7 +14,7 @@ import org.jfantasy.framework.dao.BaseBusEntity;
     name = "PIM_ASSET",
     uniqueConstraints = {
       @UniqueConstraint(
-          columnNames = {"SN"},
+          columnNames = {"PRODUCT_ID", "SN"},
           name = "UK_PIM_ASSET_SN")
     })
 @EqualsAndHashCode(callSuper = true)

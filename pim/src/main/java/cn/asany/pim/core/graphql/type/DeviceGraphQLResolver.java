@@ -3,6 +3,7 @@ package cn.asany.pim.core.graphql.type;
 import cn.asany.base.common.Ownership;
 import cn.asany.base.common.domain.Owner;
 import cn.asany.crm.core.domain.Customer;
+import cn.asany.crm.core.domain.CustomerStore;
 import cn.asany.pim.core.domain.Device;
 import cn.asany.pim.core.domain.WarrantyCard;
 import cn.asany.pim.core.domain.enums.DeviceOwnerType;
@@ -36,7 +37,15 @@ public class DeviceGraphQLResolver implements GraphQLResolver<Device> {
       return null;
     }
     if (deviceOwner.getType() == DeviceOwnerType.CUSTOMER) {
-      return Customer.builder().id(Long.parseLong(deviceOwner.getId())).build();
+      return Customer.builder()
+          .id(Long.parseLong(deviceOwner.getId()))
+          .name(deviceOwner.getName())
+          .build();
+    } else if (deviceOwner.getType() == DeviceOwnerType.CUSTOMER_STORE) {
+      return CustomerStore.builder()
+          .id(Long.parseLong(deviceOwner.getId()))
+          .name(deviceOwner.getName())
+          .build();
     }
     return null;
   }

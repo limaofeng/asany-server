@@ -112,11 +112,6 @@ type DeviceEdge {
 }
 
 """
-设备所有者
-"""
-union DeviceOwner = Customer
-
-"""
 资产状态
 """
 type AssetStatus {
@@ -268,7 +263,7 @@ type Device {
   """
   设备所有者
   """
-  owner: DeviceOwner!
+  owner: Owner!
 }
 
 input ProductWhereInput {
@@ -288,15 +283,36 @@ input ProductUpdateInput {
 }
 
 enum DeviceOwnerType {
+  """
+  客户
+  """
   CUSTOMER
+  """
+  门店
+  """
+  CUSTOMER_STORE
 }
 
+"""
+设备所有者
+"""
 input DeviceOwnerInput {
   id: ID!
-  type: String!
+  """
+  所有者名称
+  """
+  name: String
+  """
+  所有者类型
+  """
+  type: DeviceOwnerType!
 }
 
 input DeviceCreateInput {
+  """
+  设备编号
+  """
+  no: String
   """
   设备SN
   """
@@ -310,6 +326,10 @@ input DeviceCreateInput {
   """
   productId: ID!
   """
+  购买日期
+  """
+  purchaseDate: Date
+  """
   保修政策ID
   """
   warrantyPolicyId: ID!
@@ -322,13 +342,56 @@ input DeviceCreateInput {
   """
   warrantyEndDate: Date
   """
+  设备地址
+  """
+  address: AddressInput
+  """
+  联系人信息
+  """
+  contactInfo: ContactInformationInput
+  """
   设备所有者
   """
   owner: DeviceOwnerInput!
 }
 
 input DeviceUpdateInput {
+  """
+  设备编号
+  """
+  no: String
+  """
+  设备SN
+  """
+  sn: String
+  """
+  设备名称
+  """
   name: String
+  """
+  购买日期
+  """
+  purchaseDate: Date
+  """
+  保修开始日期
+  """
+  warrantyStartDate: Date
+  """
+  保修结束日期
+  """
+  warrantyEndDate: Date
+  """
+  设备地址
+  """
+  address: AddressInput
+  """
+  联系人信息
+  """
+  contactInfo: ContactInformationInput
+  """
+  设备所有者
+  """
+  owner: DeviceOwnerInput
 }
 
 enum ProductIdType {

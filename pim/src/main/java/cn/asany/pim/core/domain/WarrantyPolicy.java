@@ -2,14 +2,16 @@ package cn.asany.pim.core.domain;
 
 import cn.asany.pim.product.domain.Product;
 import javax.persistence.*;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
 @Data
 @Entity
 @Table(name = "PIM_WARRANTY_POLICY")
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 public class WarrantyPolicy extends BaseBusEntity {
   @Id

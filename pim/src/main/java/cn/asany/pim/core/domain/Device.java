@@ -70,7 +70,6 @@ public class Device extends PhysicalAsset {
   @Embedded private Geolocation location;
   /** 设备负责人联系方式 */
   @Embedded private ContactInformation contactInfo;
-
   /** 所有者 */
   @Embedded private Owner<DeviceOwnerType> owner;
 }

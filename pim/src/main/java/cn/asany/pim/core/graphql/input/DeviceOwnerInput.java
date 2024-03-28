@@ -7,4 +7,5 @@ import lombok.Data;
 public class DeviceOwnerInput {
   private String id;
   private DeviceOwnerType type;
+  private String name;
 }
