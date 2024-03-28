@@ -7,4 +7,9 @@ import org.jfantasy.graphql.inputs.WhereInput;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class CustomerStoreWhereInput extends WhereInput<CustomerStoreWhereInput, CustomerStore> {}
+public class CustomerStoreWhereInput extends WhereInput<CustomerStoreWhereInput, CustomerStore> {
+
+  public void setCustomer(Long customerId) {
+    filter.equal("customer.id", customerId);
+  }
+}
