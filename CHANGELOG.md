@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.17](https://github.com/limaofeng/asany-server/compare/v0.2.16...v0.2.17) (2024-03-28)
+
+
+### Features
+
+* 完善设备新增接口 ([3ef2c54](https://github.com/limaofeng/asany-server/commit/3ef2c541a3d522ab4303adf756349f71ba107c3c))
+
+
+### Bug Fixes
+
+* LocalStorage 不捕获异常 ([87fee93](https://github.com/limaofeng/asany-server/commit/87fee939a2d0714e2f3565314d1e408bcea5348b))
+
 ### [0.2.16](https://github.com/limaofeng/asany-server/compare/v0.2.15...v0.2.16) (2024-03-28)
 
 
