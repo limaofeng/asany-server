@@ -14,6 +14,8 @@ public interface TicketConverter {
 
   @Mappings({
     @Mapping(source = "type", target = "type.id"),
+    @Mapping(source = "storeId", target = "store.id"),
+    @Mapping(source = "customerId", target = "customer.id"),
   })
   Ticket toTicket(TicketCreateInput input);
 
