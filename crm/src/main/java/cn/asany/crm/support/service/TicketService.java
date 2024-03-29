@@ -65,11 +65,12 @@ public class TicketService {
     }
 
     ticket.setNo(generateNo(ticket, ticketType.getNumberingTemplate()));
+    ticket.setStatus(TicketStatus.NEW);
 
     Ticket newTicket = this.ticketDao.save(ticket);
     this.ticketStatusLogDao.save(
         TicketStatusLog.builder()
-            .status(TicketStatus.NEW)
+            .status(ticket.getStatus())
             .logTime(DateUtil.now())
             .loggedBy(User.builder().id(ticket.getCreatedBy()).build())
             .ticket(newTicket)
