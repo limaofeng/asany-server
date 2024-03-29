@@ -29,4 +29,7 @@ public class TicketType extends BaseBusEntity {
   @Enumerated(EnumType.STRING)
   @Column(name = "DEFAULT_PRIORITY", length = 20)
   private TicketPriority defaultPriority;
+  /** 编号模板 */
+  @Column(name = "NUMBERING_TEMPLATE", length = 200)
+  private String numberingTemplate;
 }

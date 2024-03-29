@@ -3,10 +3,7 @@ package cn.asany.crm.support.convert;
 import cn.asany.crm.support.domain.Ticket;
 import cn.asany.crm.support.graphql.input.TicketCreateInput;
 import cn.asany.crm.support.graphql.input.TicketUpdateInput;
-import org.mapstruct.Builder;
-import org.mapstruct.Mapper;
-import org.mapstruct.NullValueCheckStrategy;
-import org.mapstruct.ReportingPolicy;
+import org.mapstruct.*;
 
 @Mapper(
     componentModel = "spring",
@@ -14,6 +11,10 @@ import org.mapstruct.ReportingPolicy;
     unmappedTargetPolicy = ReportingPolicy.IGNORE,
     nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
 public interface TicketConverter {
+
+  @Mappings({
+    @Mapping(source = "type", target = "type.id"),
+  })
   Ticket toTicket(TicketCreateInput input);
 
   Ticket toTicket(TicketUpdateInput input);

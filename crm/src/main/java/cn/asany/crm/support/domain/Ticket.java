@@ -6,6 +6,9 @@ import cn.asany.crm.core.domain.CustomerStore;
 import cn.asany.crm.support.domain.enums.TicketPriority;
 import cn.asany.crm.support.domain.enums.TicketStatus;
 import cn.asany.security.core.domain.User;
+import cn.asany.storage.api.FileObject;
+import cn.asany.storage.api.converter.FileObjectsConverter;
+import java.util.List;
 import javax.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
@@ -31,6 +34,10 @@ public class Ticket extends BaseBusEntity {
   /** 问题描述 */
   @Column(name = "DESCRIPTION", length = 200)
   private String description;
+  /** 附件 */
+  @Column(name = "ATTACHMENTS", columnDefinition = "JSON")
+  @Convert(converter = FileObjectsConverter.class)
+  private List<FileObject> attachments;
   /** 问题状态 */
   @Enumerated(EnumType.STRING)
   @Column(name = "STATUS", length = 20)
@@ -69,4 +76,11 @@ public class Ticket extends BaseBusEntity {
       cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
   @PrimaryKeyJoinColumn(name = "ID", referencedColumnName = "TICKET_ID")
   private TicketRating rating;
+
+  @OneToMany(
+      mappedBy = "ticket",
+      fetch = FetchType.LAZY,
+      cascade = {CascadeType.REMOVE})
+  @OrderBy("logTime DESC")
+  private List<TicketStatusLog> logs;
 }

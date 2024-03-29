@@ -107,6 +107,10 @@ type CustomerStore implements Owner {
   联系人信息
   """
   contactInfo: ContactInformation
+  """
+  客户
+  """
+  customer: Customer!
 }
 
 """
@@ -382,6 +386,10 @@ type Ticket {
   """
   description: String
   """
+  附件
+  """
+  attachments: [File!]
+  """
   工单状态
   """
   status: TicketStatus!
@@ -415,17 +423,13 @@ type Ticket {
 """
 input TicketCreateInput {
   """
-  工单编号
-  """
-  no: String
-  """
   工单描述
   """
   description: String
   """
-  工单状态
+  附件
   """
-  status: TicketStatus
+  attachments: [File!]
   """
   工单类型
   """
@@ -457,26 +461,13 @@ input TicketCreateInput {
 """
 input TicketUpdateInput {
   """
-  工单编号
-  """
-  no: String
-  """
   工单描述
   """
   description: String
   """
-  工单状态
-  """
-  status: TicketStatus
-
-  """
   工单优先级
   """
   priority: TicketPriority
-  """
-  处理人ID
-  """
-  assignee: ID
 }
 
 extend type Query {
@@ -639,7 +630,7 @@ extend type Mutation {
   """
   创建客户
   """
-  createCustomer(input: CustomerCreateInput!): Customer!
+  createCustomer(input: CustomerCreateInput!): Customer
   """
   更新客户
   """
@@ -656,7 +647,7 @@ extend type Mutation {
     是否合并
     """
     merge: Boolean = true
-  ): Customer!
+  ): Customer
   """
   删除客户
   """
@@ -665,7 +656,7 @@ extend type Mutation {
     客户ID
     """
     id: ID!
-  ): Customer!
+  ): Customer
   """
   创建客户门店
   """
@@ -674,7 +665,7 @@ extend type Mutation {
     input
     """
     input: CustomerStoreCreateInput!
-  ): CustomerStore!
+  ): CustomerStore
   """
   更新客户门店
   """
@@ -691,7 +682,7 @@ extend type Mutation {
     是否合并
     """
     merge: Boolean = true
-  ): CustomerStore!
+  ): CustomerStore
   """
   删除客户门店
   """
@@ -700,7 +691,7 @@ extend type Mutation {
     门店ID
     """
     id: ID!
-  ): CustomerStore!
+  ): CustomerStore
   """
   创建工单
   """
@@ -709,7 +700,7 @@ extend type Mutation {
     工单信息
     """
     input: TicketCreateInput!
-  ): Ticket!
+  ): Ticket
   """
   更新工单
   """
@@ -726,7 +717,7 @@ extend type Mutation {
     是否合并
     """
     merge: Boolean = true
-  ): Ticket!
+  ): Ticket
   """
   删除工单
   """
@@ -735,5 +726,58 @@ extend type Mutation {
     工单ID
     """
     id: ID!
-  ): Ticket!
+  ): Ticket
+  """
+  工单分配
+  """
+  assignTicket(
+    """
+    工单ID
+    """
+    id: ID!
+    """
+    处理人ID
+    """
+    assignee: ID!
+  ): Ticket
+  """
+  工单解决
+  """
+  resolveTicket(
+    """
+    工单ID
+    """
+    id: ID!
+  ): Ticket
+  """
+  工单重新开启
+  """
+  reopenTicket(
+    """
+    工单ID
+    """
+    id: ID!
+  ): Ticket
+  """
+  工单暂停
+  """
+  suspendTicket(
+    """
+    工单ID
+    """
+    id: ID!
+    """
+    原因
+    """
+    reason: String
+  ): Ticket
+  """
+  工单恢复
+  """
+  resumeTicket(
+    """
+    工单ID
+    """
+    id: ID!
+  ): Ticket
 }

@@ -4,17 +4,20 @@ import cn.asany.crm.support.dao.TicketDao;
 import cn.asany.crm.support.dao.TicketStatusLogDao;
 import cn.asany.crm.support.domain.Ticket;
 import cn.asany.crm.support.domain.TicketStatusLog;
+import cn.asany.crm.support.domain.TicketType;
 import cn.asany.crm.support.domain.enums.TicketStatus;
 import cn.asany.security.core.domain.User;
 import java.util.List;
 import java.util.Optional;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
-import org.jfantasy.framework.security.LoginUser;
-import org.jfantasy.framework.security.SpringSecurityUtils;
+import org.jfantasy.framework.error.ValidationException;
+import org.jfantasy.framework.spring.SpELUtil;
 import org.jfantasy.framework.util.common.DateUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.expression.Expression;
+import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,9 +27,15 @@ public class TicketService {
   private final TicketDao ticketDao;
   private final TicketStatusLogDao ticketStatusLogDao;
 
-  public TicketService(TicketDao ticketDao, TicketStatusLogDao ticketStatusLogDao) {
+  private final TicketTypeService ticketTypeService;
+
+  public TicketService(
+      TicketDao ticketDao,
+      TicketStatusLogDao ticketStatusLogDao,
+      TicketTypeService ticketTypeService) {
     this.ticketDao = ticketDao;
     this.ticketStatusLogDao = ticketStatusLogDao;
+    this.ticketTypeService = ticketTypeService;
   }
 
   @Transactional(readOnly = true)
@@ -46,16 +55,32 @@ public class TicketService {
 
   @Transactional
   public Ticket save(Ticket ticket) {
-    LoginUser user = SpringSecurityUtils.getCurrentUser();
+    TicketType ticketType =
+        ticketTypeService
+            .findById(ticket.getType().getId())
+            .orElseThrow(() -> new ValidationException("Ticket Type not found"));
+
+    if (ticket.getPriority() == null) {
+      ticket.setPriority(ticketType.getDefaultPriority());
+    }
+
+    ticket.setNo(generateNo(ticket, ticketType.getNumberingTemplate()));
+
     Ticket newTicket = this.ticketDao.save(ticket);
     this.ticketStatusLogDao.save(
         TicketStatusLog.builder()
             .status(TicketStatus.NEW)
             .logTime(DateUtil.now())
-            .loggedBy(User.builder().id(user.getUid()).build())
+            .loggedBy(User.builder().id(ticket.getCreatedBy()).build())
             .ticket(newTicket)
             .build());
     return newTicket;
+  }
+
+  private String generateNo(Ticket ticket, String numberingTemplate) {
+    SpelExpressionParser parser = new SpelExpressionParser();
+    Expression expression = parser.parseExpression(numberingTemplate);
+    return expression.getValue(SpELUtil.createEvaluationContext(ticket), String.class);
   }
 
   @Transactional
@@ -143,6 +168,24 @@ public class TicketService {
                       .status(TicketStatus.SUSPENDED)
                       .logTime(DateUtil.now())
                       .loggedBy(User.builder().id(userId).build())
+                      .ticket(ticket)
+                      .build());
+              return ticket;
+            });
+  }
+
+  public Optional<Ticket> resume(Long id, Long uid) {
+    return this.ticketDao
+        .findById(id)
+        .map(
+            ticket -> {
+              ticket.setStatus(TicketStatus.IN_PROGRESS);
+              this.ticketDao.save(ticket);
+              this.ticketStatusLogDao.save(
+                  TicketStatusLog.builder()
+                      .status(TicketStatus.IN_PROGRESS)
+                      .logTime(DateUtil.now())
+                      .loggedBy(User.builder().id(uid).build())
                       .ticket(ticket)
                       .build());
               return ticket;

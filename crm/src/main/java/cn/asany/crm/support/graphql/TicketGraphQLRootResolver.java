@@ -47,7 +47,9 @@ public class TicketGraphQLRootResolver implements GraphQLMutationResolver, Graph
   }
 
   public Ticket createTicket(TicketCreateInput input) {
+    LoginUser user = SpringSecurityUtils.getCurrentUser();
     Ticket ticket = ticketConverter.toTicket(input);
+    ticket.setCreatedBy(user.getUid());
     return this.ticketService.save(ticket);
   }
 
@@ -77,5 +79,10 @@ public class TicketGraphQLRootResolver implements GraphQLMutationResolver, Graph
   public Optional<Ticket> suspendTicket(Long id, String reason) {
     LoginUser user = SpringSecurityUtils.getCurrentUser();
     return this.ticketService.suspend(id, reason, user.getUid());
+  }
+
+  public Optional<Ticket> resumeTicket(Long id) {
+    LoginUser user = SpringSecurityUtils.getCurrentUser();
+    return this.ticketService.resume(id, user.getUid());
   }
 }

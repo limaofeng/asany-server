@@ -7,4 +7,5 @@ import lombok.Data;
 public class TicketTargetInput {
   private Long id;
   private TicketTargetType type;
+  private String name;
 }

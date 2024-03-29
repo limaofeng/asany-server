@@ -1,9 +1,9 @@
-package cn.asany.pim.core.graphql.type;
+package cn.asany.pim.core.graphql.resolver;
 
 import cn.asany.base.common.Ownership;
 import cn.asany.base.common.domain.Owner;
-import cn.asany.crm.core.domain.Customer;
-import cn.asany.crm.core.domain.CustomerStore;
+import cn.asany.crm.core.service.CustomerService;
+import cn.asany.crm.core.service.CustomerStoreService;
 import cn.asany.pim.core.domain.Device;
 import cn.asany.pim.core.domain.WarrantyCard;
 import cn.asany.pim.core.domain.enums.DeviceOwnerType;
@@ -15,6 +15,15 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class DeviceGraphQLResolver implements GraphQLResolver<Device> {
+
+  private final CustomerService customerService;
+  private final CustomerStoreService customerStoreService;
+
+  public DeviceGraphQLResolver(
+      CustomerService customerService, CustomerStoreService customerStoreService) {
+    this.customerService = customerService;
+    this.customerStoreService = customerStoreService;
+  }
 
   public Optional<Date> warrantyStartDate(Device device) {
     return device.getWarrantyCards().stream().map(WarrantyCard::getStartDate).min(Date::compareTo);
@@ -31,22 +40,20 @@ public class DeviceGraphQLResolver implements GraphQLResolver<Device> {
         .orElse(WarrantyStatus.INACTIVE);
   }
 
-  public Ownership owner(Device device) {
+  public Optional<Ownership> owner(Device device) {
     Owner<DeviceOwnerType> deviceOwner = device.getOwner();
     if (deviceOwner == null) {
-      return null;
+      return Optional.empty();
     }
     if (deviceOwner.getType() == DeviceOwnerType.CUSTOMER) {
-      return Customer.builder()
-          .id(Long.parseLong(deviceOwner.getId()))
-          .name(deviceOwner.getName())
-          .build();
+      return customerService
+          .findById(Long.parseLong(deviceOwner.getId()))
+          .map((customer) -> customer);
     } else if (deviceOwner.getType() == DeviceOwnerType.CUSTOMER_STORE) {
-      return CustomerStore.builder()
-          .id(Long.parseLong(deviceOwner.getId()))
-          .name(deviceOwner.getName())
-          .build();
+      return customerStoreService
+          .findById(Long.parseLong(deviceOwner.getId()))
+          .map((store) -> store);
     }
-    return null;
+    throw new IllegalArgumentException("未知的设备所有者类型");
   }
 }

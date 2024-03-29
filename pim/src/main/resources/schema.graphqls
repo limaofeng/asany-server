@@ -263,7 +263,7 @@ type Device {
   """
   设备所有者
   """
-  owner: Owner!
+  owner: Owner
 }
 
 input ProductWhereInput {
