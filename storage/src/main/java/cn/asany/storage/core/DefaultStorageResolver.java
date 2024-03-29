@@ -44,11 +44,8 @@ public class DefaultStorageResolver implements StorageResolver {
 
   @Override
   public Storage resolve(IStorageConfig config) {
-    //noinspection rawtypes
-    for (StorageBuilder builder : builders) {
-      //noinspection unchecked
+    for (@SuppressWarnings("rawtypes") StorageBuilder builder : builders) {
       if (builder.supports(config.getClass())) {
-        @SuppressWarnings("unchecked")
         Storage storage = builder.build(config);
         if (storage != null) {
           storages.put(config.getId(), storage);

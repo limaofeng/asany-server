@@ -39,10 +39,16 @@ public class Ticket extends BaseBusEntity {
   @Enumerated(EnumType.STRING)
   @Column(name = "PRIORITY", length = 20)
   private TicketPriority priority;
+  /** 类型 */
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "TYPE_ID", foreignKey = @ForeignKey(name = "FK_TICKET_TYPE"))
+  private TicketType type;
   /** 分配给 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "ASSIGNEE_ID", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
   private User assignee;
+  /** 目标 */
+  @Embedded private TicketTarget target;
   /** 客户 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "CUSTOMER_ID", foreignKey = @ForeignKey(name = "FK_TICKET_CUSTOMER"))

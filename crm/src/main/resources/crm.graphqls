@@ -222,6 +222,263 @@ input CustomerStoreUpdateInput {
   contactInfo: ContactInformationInput
 }
 
+enum TicketTargetType {
+  DEVICE
+}
+
+input TicketTargetInput {
+  id: ID!
+  type: TicketTargetType
+  name: String
+}
+
+"""
+工单查询条件
+"""
+input TicketWhereInput {
+  """
+  工单编号
+  """
+  no_contains: String
+  """
+  关键字
+  """
+  keyword: String
+  """
+  工单状态
+  """
+  status: TicketStatus
+  """
+  工单状态
+  """
+  status_in: [TicketStatus!]
+  """
+  工单类型
+  """
+  type: ID
+  """
+  工单优先级
+  """
+  priority: TicketPriority
+  """
+  客户ID
+  """
+  customerId: ID
+  """
+  门店ID
+  """
+  storeId: ID
+  """
+  工单目标
+  """
+  target: TicketTargetInput
+  """
+  处理人ID
+  """
+  assignee: ID
+}
+
+"""
+工单分页查询
+"""
+type TicketConnection {
+  """
+  总数
+  """
+  totalCount: Int!
+  """
+  每页大小
+  """
+  pageSize: Int!
+  """
+  总页数
+  """
+  totalPage: Int!
+  """
+  当前页
+  """
+  currentPage: Int!
+  """
+  分页信息
+  """
+  pageInfo: PageInfo!
+  """
+  数据
+  """
+  edges: [TicketEdge!]!
+}
+
+type TicketEdge {
+  node: Ticket!
+  cursor: String!
+}
+
+"""
+工单状态
+"""
+enum TicketStatus {
+  """
+  新建
+  """
+  NEW
+  """
+  进行中
+  """
+  IN_PROGRESS
+  """
+  暂停
+  """
+  SUSPENDED
+  """
+  已解决
+  """
+  RESOLVED
+  """
+  重新开启
+  """
+  REOPEN
+}
+
+enum TicketPriority {
+  """
+  低
+  """
+  LOW
+  """
+  普通
+  """
+  NORMAL
+  """
+  高
+  """
+  HIGH
+  """
+  紧急
+  """
+  URGENT
+}
+
+type TicketType {
+  id: ID!
+  name: String!
+  description: String
+  defaultPriority: TicketPriority!
+}
+
+"""
+工单
+"""
+type Ticket {
+  """
+  工单ID
+  """
+  id: ID!
+  """
+  工单编号
+  """
+  no: String!
+  """
+  工单描述
+  """
+  description: String
+  """
+  工单状态
+  """
+  status: TicketStatus!
+  """
+  工单类型
+  """
+  type: TicketType!
+  """
+  工单优先级
+  """
+  priority: TicketPriority!
+  """
+  客户
+  """
+  customer: Customer!
+  """
+  门店
+  """
+  store: CustomerStore
+  """
+  创建时间
+  """
+  createdAt: Date!
+  """
+  更新时间
+  """
+  updatedAt: Date!
+}
+"""
+工单新增信息
+"""
+input TicketCreateInput {
+  """
+  工单编号
+  """
+  no: String
+  """
+  工单描述
+  """
+  description: String
+  """
+  工单状态
+  """
+  status: TicketStatus
+  """
+  工单类型
+  """
+  type: ID!
+  """
+  工单优先级
+  """
+  priority: TicketPriority
+  """
+  客户ID
+  """
+  customerId: ID!
+  """
+  门店ID
+  """
+  storeId: ID
+  """
+  联系方式
+  """
+  contactInfo: ContactInformationInput
+  """
+  工单目标
+  """
+  target: TicketTargetInput
+}
+
+"""
+工单更新信息
+"""
+input TicketUpdateInput {
+  """
+  工单编号
+  """
+  no: String
+  """
+  工单描述
+  """
+  description: String
+  """
+  工单状态
+  """
+  status: TicketStatus
+
+  """
+  工单优先级
+  """
+  priority: TicketPriority
+  """
+  处理人ID
+  """
+  assignee: ID
+}
+
 extend type Query {
   """
   查询客户
@@ -325,6 +582,57 @@ extend type Query {
     """
     id: ID!
   ): CustomerStore
+  """
+  查询工单
+  """
+  ticketsConnection(
+    """
+    查询条件
+    """
+    where: TicketWhereInput = {}
+    """
+    页码
+    """
+    currentPage: Int = 1
+    """
+    每页大小
+    """
+    pageSize: Int = 15
+    """
+    排序
+    """
+    orderBy: OrderBy = "unsorted"
+  ): TicketConnection!
+  """
+  查询工单
+  """
+  tickets(
+    """
+    查询条件
+    """
+    where: TicketWhereInput = {}
+    """
+    偏移量
+    """
+    offset: Int = 0
+    """
+    每页显示条数
+    """
+    limit: Int = 15
+    """
+    排序
+    """
+    orderBy: OrderBy = "unsorted"
+  ): [Ticket!]!
+  """
+  查询工单
+  """
+  ticket(
+    """
+    工单ID
+    """
+    id: ID!
+  ): Ticket
 }
 
 extend type Mutation {
@@ -393,4 +701,39 @@ extend type Mutation {
     """
     id: ID!
   ): CustomerStore!
+  """
+  创建工单
+  """
+  createTicket(
+    """
+    工单信息
+    """
+    input: TicketCreateInput!
+  ): Ticket!
+  """
+  更新工单
+  """
+  updateTicket(
+    """
+    工单ID
+    """
+    id: ID!
+    """
+    工单信息
+    """
+    input: TicketUpdateInput!
+    """
+    是否合并
+    """
+    merge: Boolean = true
+  ): Ticket!
+  """
+  删除工单
+  """
+  deleteTicket(
+    """
+    工单ID
+    """
+    id: ID!
+  ): Ticket!
 }

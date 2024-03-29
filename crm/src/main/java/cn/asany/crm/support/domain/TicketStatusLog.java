@@ -4,13 +4,15 @@ import cn.asany.crm.support.domain.enums.TicketStatus;
 import cn.asany.security.core.domain.User;
 import java.util.Date;
 import javax.persistence.*;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
 @Data
 @Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "CRM_TICKET_STATUS_LOG")
 @EqualsAndHashCode(callSuper = true)
 public class TicketStatusLog extends BaseBusEntity {
