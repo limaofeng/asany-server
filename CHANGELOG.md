@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.18](https://github.com/limaofeng/asany-server/compare/v0.2.17...v0.2.18) (2024-03-29)
+
+
+### Features
+
+* 工单流水号生成 ([6817cb3](https://github.com/limaofeng/asany-server/commit/6817cb34d967697e91e2483b9d25de483813f164))
+* 添加工单接口 ([e94bdbe](https://github.com/limaofeng/asany-server/commit/e94bdbe0bb6f0a20effb78f7c65c3fe0a0dda15b))
+
 ### [0.2.17](https://github.com/limaofeng/asany-server/compare/v0.2.16...v0.2.17) (2024-03-28)
 
 
