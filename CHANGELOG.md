@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.20](https://github.com/limaofeng/asany-server/compare/v0.2.19...v0.2.20) (2024-03-29)
+
+
+### Bug Fixes
+
+* 解决工单客户与门店保存失败的问题 ([cfc2305](https://github.com/limaofeng/asany-server/commit/cfc2305b94bc6cc885cb5477f48f0222a1ab5b0a))
+
 ### [0.2.19](https://github.com/limaofeng/asany-server/compare/v0.2.18...v0.2.19) (2024-03-29)
 
 
