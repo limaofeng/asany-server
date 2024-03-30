@@ -1,6 +1,6 @@
 package cn.asany.crm.support.graphql.input;
 
-import cn.asany.crm.support.domain.enums.TicketTargetType;
+import cn.asany.base.common.TicketTargetType;
 import lombok.Data;
 
 @Data

@@ -1,4 +1,4 @@
-package cn.asany.crm.support.domain.enums;
+package cn.asany.base.common;
 
 public enum TicketTargetType {
   DEVICE

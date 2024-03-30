@@ -1,6 +1,6 @@
 package cn.asany.crm.support.domain;
 
-import cn.asany.crm.support.domain.enums.TicketTargetType;
+import cn.asany.base.common.TicketTargetType;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.EnumType;
@@ -17,8 +17,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class TicketTarget {
   /** 目标ID */
-  @Column(name = "TARGET_ID", length = 30)
-  private String id;
+  @Column(name = "TARGET_ID")
+  private Long id;
   /** 目标类型 */
   @Enumerated(EnumType.STRING)
   @Column(name = "TARGET_TYPE", length = 20)

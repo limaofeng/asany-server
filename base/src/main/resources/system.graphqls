@@ -247,3 +247,17 @@ interface Owner {
   """
   name: String
 }
+
+"""
+目标
+"""
+interface TicketTarget {
+  """
+  目标 ID
+  """
+  id: ID!
+  """
+  目标名称
+  """
+  name: String
+}

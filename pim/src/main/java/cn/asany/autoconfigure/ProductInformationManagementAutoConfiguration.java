@@ -11,6 +11,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @ComponentScan({
   "cn.asany.pim.*.dao",
   "cn.asany.pim.*.graphql",
+  "cn.asany.pim.*.component",
   "cn.asany.pim.*.convert",
   "cn.asany.pim.*.service",
 })

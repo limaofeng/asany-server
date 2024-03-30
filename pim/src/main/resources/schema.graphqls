@@ -206,7 +206,7 @@ type WarrantyCard {
 """
 设备
 """
-type Device {
+type Device implements TicketTarget {
   id: ID!
   """
   资产编号

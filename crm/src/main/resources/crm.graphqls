@@ -417,6 +417,14 @@ type Ticket {
   更新时间
   """
   updatedAt: Date!
+  """
+  处理人
+  """
+  assignee: User
+  """
+  工单目标
+  """
+  target: TicketTarget
 }
 """
 工单新增信息

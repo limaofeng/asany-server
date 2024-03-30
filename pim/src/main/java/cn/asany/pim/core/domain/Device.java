@@ -1,5 +1,6 @@
 package cn.asany.pim.core.domain;
 
+import cn.asany.base.common.TicketTarget;
 import cn.asany.base.common.domain.Address;
 import cn.asany.base.common.domain.ContactInformation;
 import cn.asany.base.common.domain.Geolocation;
@@ -18,7 +19,7 @@ import lombok.EqualsAndHashCode;
 @Entity
 @DiscriminatorValue("DEVICE")
 @EqualsAndHashCode(callSuper = true)
-public class Device extends PhysicalAsset {
+public class Device extends PhysicalAsset implements TicketTarget {
 
   /** 设备的序列号，通常由制造商提供，具有唯一性 */
   @Column(name = "SN", length = 50)
