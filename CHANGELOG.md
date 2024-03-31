@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.21](https://github.com/limaofeng/asany-server/compare/v0.2.20...v0.2.21) (2024-03-31)
+
+
+### Features
+
+* 工单接口添加状态历史字段 ([e997fb7](https://github.com/limaofeng/asany-server/commit/e997fb73ef4d360a9c432e728e448daeb0c805cc))
+
+
+### Bug Fixes
+
+* 工单的 Target 接口实现 ([a473323](https://github.com/limaofeng/asany-server/commit/a47332387bd1c759e5aa6aeb3a3d895909aae12a))
+
 ### [0.2.20](https://github.com/limaofeng/asany-server/compare/v0.2.19...v0.2.20) (2024-03-29)
 
 
