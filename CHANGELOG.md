@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.22](https://github.com/limaofeng/asany-server/compare/v0.2.21...v0.2.22) (2024-03-31)
+
+
+### Bug Fixes
+
+* 解决本地文件管理器问题 ([55873fe](https://github.com/limaofeng/asany-server/commit/55873fe788c7c245537dfe6c20270d718635b4b9))
+
 ### [0.2.21](https://github.com/limaofeng/asany-server/compare/v0.2.20...v0.2.21) (2024-03-31)
 
 
