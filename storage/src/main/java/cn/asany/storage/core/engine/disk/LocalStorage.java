@@ -3,6 +3,7 @@ package cn.asany.storage.core.engine.disk;
 import cn.asany.storage.api.*;
 import java.io.*;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
@@ -56,7 +57,10 @@ public class LocalStorage implements Storage {
   }
 
   public void setDefaultDir(String defaultDir) throws IOException {
-    FileUtil.mkdir(new File(defaultDir).toPath());
+    Path path = new File(defaultDir).toPath();
+    if (Files.notExists(path)) {
+      Files.createDirectory(path);
+    }
     this.defaultDir = defaultDir;
   }
 
