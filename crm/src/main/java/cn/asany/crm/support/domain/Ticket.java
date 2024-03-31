@@ -82,5 +82,5 @@ public class Ticket extends BaseBusEntity {
       fetch = FetchType.LAZY,
       cascade = {CascadeType.REMOVE})
   @OrderBy("logTime DESC")
-  private List<TicketStatusLog> logs;
+  private List<TicketStatusLog> statusHistory;
 }

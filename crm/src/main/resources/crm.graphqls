@@ -94,7 +94,7 @@ type CustomerStore implements Owner {
   """
   开业日期
   """
-  openingDate: Date
+  openingDate: Date @dateFormat
   """
   联系电话
   """
@@ -369,6 +369,41 @@ type TicketType {
   defaultPriority: TicketPriority!
 }
 
+type TicketStatusChange {
+  id: ID!
+  """
+  工单状态
+  """
+  status: TicketStatus!
+  """
+  变更时间
+  """
+  logTime: Date! @dateFormat
+  """
+  变更人
+  """
+  loggedBy: User!
+  """
+  备注
+  """
+  note: String
+}
+
+type TicketRating {
+  """
+  评分
+  """
+  score: Int!
+  """
+  评价
+  """
+  comment: String
+  """
+  评价时间
+  """
+  createdAt: Date! @dateFormat
+}
+
 """
 工单
 """
@@ -412,11 +447,11 @@ type Ticket {
   """
   创建时间
   """
-  createdAt: Date!
+  createdAt: Date! @dateFormat
   """
   更新时间
   """
-  updatedAt: Date!
+  updatedAt: Date! @dateFormat
   """
   处理人
   """
@@ -425,6 +460,26 @@ type Ticket {
   工单目标
   """
   target: TicketTarget
+  """
+  工单状态历史
+  """
+  statusHistory: [TicketStatusChange!]!
+  """
+  报告人联系方式
+  """
+  contactInfo: ContactInformation
+  """
+  完成时间
+  """
+  completedAt: Date @dateFormat
+  """
+  暂停时间
+  """
+  suspendedAt: Date @dateFormat
+  """
+  服务评价
+  """
+  rating: TicketRating
 }
 """
 工单新增信息

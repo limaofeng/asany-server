@@ -188,11 +188,11 @@ type WarrantyCard {
   """
   保修开始日期
   """
-  startDate: Date!
+  startDate: Date! @dateFormat
   """
   保修结束日期
   """
-  endDate: Date!
+  endDate: Date! @dateFormat
   """
   保修卡状态
   """
