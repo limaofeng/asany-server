@@ -25,7 +25,7 @@ routes:
     component: cn.asany.ui.mobile.wxb.DeviceWikiView
   - path: /c/devices/:id/wiki/:wid
     component: cn.asany.ui.mobile.wxb.DeviceWikiDetailView
-  - path: /c/devices/:id/support/tickets/:id
+  - path: /c/devices/:id/support/tickets/:tid
     component: cn.asany.ui.mobile.wxb.DeviceTicketDetailView
   - path: /
     authorized: false

@@ -11,6 +11,7 @@ import cn.asany.ui.library.service.LibraryService;
 import graphql.execution.ExecutionStepInfo;
 import graphql.kickstart.tools.GraphQLResolver;
 import graphql.schema.DataFetchingEnvironment;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -55,7 +56,10 @@ public class ApplicationGraphQLResolver implements GraphQLResolver<Application> 
         this.routes(
             application, ApplicationRouteFilter.builder().space(space).build(), environment);
     return routes.stream()
-        .filter(item -> "/login".equals(item.getPath()) && item.getLevel() == 1)
+        .filter(
+            item ->
+                Arrays.asList("/login", "/sign-in").contains(item.getPath())
+                    && item.getLevel() == 1)
         .findAny();
   }
 
