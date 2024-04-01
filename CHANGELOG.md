@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.23](https://github.com/limaofeng/asany-server/compare/v0.2.22...v0.2.23) (2024-04-01)
+
+
+### Bug Fixes
+
+* 登录路由匹配修复 ([3d7b9eb](https://github.com/limaofeng/asany-server/commit/3d7b9eb26cc00a2ee6db4c7c01534ba3ba789c6f))
+
 ### [0.2.22](https://github.com/limaofeng/asany-server/compare/v0.2.21...v0.2.22) (2024-03-31)
 
 
