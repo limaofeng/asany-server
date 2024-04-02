@@ -3,6 +3,7 @@ package cn.asany.system.domain;
 import cn.asany.base.common.domain.Owner;
 import cn.asany.system.domain.enums.ShortLinkOwnerType;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
@@ -39,6 +40,9 @@ public class ShortLink extends BaseBusEntity {
   @Builder.Default
   @Column(name = "ACCESS_COUNT", nullable = false)
   private Long accessCount = 0L;
+  /** 元数据 */
+  @OneToMany(mappedBy = "shortLink", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<ShortLinkMetaData> metaDatas;
   /** 所有者 */
   @Embedded private Owner<ShortLinkOwnerType> owner;
 }
