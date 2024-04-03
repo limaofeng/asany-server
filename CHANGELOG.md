@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.24](https://github.com/limaofeng/asany-server/compare/v0.2.23...v0.2.24) (2024-04-03)
+
+
+### Features
+
+* 短链接添加 metadata 字段 ([7861ad7](https://github.com/limaofeng/asany-server/commit/7861ad72ce4f26d92ca2edcc92b144aef7f36246))
+* 添加应用模块配置 ([4f409e0](https://github.com/limaofeng/asany-server/commit/4f409e08785d13c9826c37a8e5d63faf28197214))
+
 ### [0.2.23](https://github.com/limaofeng/asany-server/compare/v0.2.22...v0.2.23) (2024-04-01)
 
 
