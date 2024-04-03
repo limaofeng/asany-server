@@ -15,11 +15,7 @@ public class ApplicationRouteDaoImpl extends ComplexJpaRepository<ApplicationRou
   }
 
   @Override
-  public List<ApplicationRoute> findAllByApplicationAndSpaceWithComponent(
-      Long applicationId, String space) {
-    return this.findAll(
-        PropertyFilter.newFilter()
-            .equal("application.id", applicationId)
-            .equal("space.id", space));
+  public List<ApplicationRoute> findAllByApplicationWithComponent(Long applicationId) {
+    return this.findAll(PropertyFilter.newFilter().equal("application.id", applicationId));
   }
 }

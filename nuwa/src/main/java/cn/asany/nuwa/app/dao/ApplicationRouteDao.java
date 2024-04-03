@@ -12,6 +12,5 @@ public interface ApplicationRouteDao extends JpaRepository<ApplicationRoute, Lon
   @EntityGraph(
       value = "Graph.ApplicationRoute.FetchComponent",
       type = EntityGraph.EntityGraphType.FETCH)
-  List<ApplicationRoute> findAllByApplicationAndSpaceWithComponent(
-      Long applicationId, String space);
+  List<ApplicationRoute> findAllByApplicationWithComponent(Long applicationId);
 }

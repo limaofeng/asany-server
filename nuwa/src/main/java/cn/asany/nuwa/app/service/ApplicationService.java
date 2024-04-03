@@ -45,7 +45,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class ApplicationService implements ClientDetailsService {
 
-  public static final String NONCE_CHARS = "abcdef0123456789";
+  public static final String NONCE_CHARS = "0123456789abcdefghijklmnopqrstuvwxyz";
   public static final String CACHE_KEY = "NUWA";
 
   private final ApplicationDao applicationDao;
@@ -55,7 +55,6 @@ public class ApplicationService implements ClientDetailsService {
   private final ApplicationMenuDao applicationMenuDao;
   private final ApplicationTemplateDao applicationTemplateDao;
   private final ComponentDao componentDao;
-  private final RoutespaceDao routespaceDao;
   private final ApplicationConverter applicationConverter;
   private final IModuleLoader moduleLoader;
   private final CacheManager cacheManager;
@@ -66,7 +65,6 @@ public class ApplicationService implements ClientDetailsService {
       ApplicationDependencyDao applicationDependencyDao,
       ClientSecretDao clientSecretDao,
       ComponentDao componentDao,
-      RoutespaceDao routespaceDao,
       ApplicationConverter applicationConverter,
       ApplicationRouteDao applicationRouteDao,
       ApplicationMenuDao applicationMenuDao,
@@ -75,7 +73,6 @@ public class ApplicationService implements ClientDetailsService {
     this.applicationDao = applicationDao;
     this.clientSecretDao = clientSecretDao;
     this.componentDao = componentDao;
-    this.routespaceDao = routespaceDao;
     this.applicationConverter = applicationConverter;
     this.applicationRouteDao = applicationRouteDao;
     this.applicationMenuDao = applicationMenuDao;
@@ -152,9 +149,8 @@ public class ApplicationService implements ClientDetailsService {
   }
 
   @Transactional
-  public List<ApplicationRoute> findRouteAllByApplicationAndSpaceWithComponent(
-      Long applicationId, String space) {
-    return this.applicationRouteDao.findAllByApplicationAndSpaceWithComponent(applicationId, space);
+  public List<ApplicationRoute> findRouteAllByApplicationWithComponent(Long applicationId) {
+    return this.applicationRouteDao.findAllByApplicationWithComponent(applicationId);
   }
 
   @Transactional(rollbackFor = RuntimeException.class)
@@ -185,20 +181,6 @@ public class ApplicationService implements ClientDetailsService {
 
   public Application createApplication(
       NativeApplication nativeApplication, Optional<ApplicationTemplate> template) {
-
-    if (StringUtil.isBlank(nativeApplication.getRoutespace())) {
-      nativeApplication.setRoutespace(Routespace.DEFAULT_ROUTESPACE_WEB.getId());
-    }
-
-    Optional<Routespace> optionalRoutespace =
-        this.routespaceDao.findByIdWithApplicationTemplate(nativeApplication.getRoutespace());
-
-    if (!optionalRoutespace.isPresent()) {
-      throw new ValidationException("应用路由 Space " + template + "不存在");
-    }
-
-    Routespace routespace = optionalRoutespace.get();
-
     String clientId =
         ObjectUtil.defaultValue(
             nativeApplication.getClientId(), () -> StringUtil.generateNonceString(NONCE_CHARS, 20));
@@ -226,17 +208,16 @@ public class ApplicationService implements ClientDetailsService {
             .description(nativeApplication.getDescription())
             .clientId(clientId)
             .clientSecretsAlias(clientSecrets)
-            .routespaces(Arrays.stream(new Routespace[] {routespace}).collect(Collectors.toList()))
             .tenantId("1691832353955123200")
             .routes(new HashSet<>())
             .build();
 
     // 生成应用路由
-    ApplicationTemplate applicationTemplate = template.orElse(routespace.getApplicationTemplate());
+    ApplicationTemplate applicationTemplate = template.orElse(null);
     if (nativeApplication.getRoutes() != null && !nativeApplication.getRoutes().isEmpty()) {
-      application.setRoutes(getRoutesFromNuwa(nativeApplication.getRoutes(), routespace));
+      application.setRoutes(getRoutesFromNuwa(nativeApplication.getRoutes()));
     } else if (applicationTemplate != null) {
-      application.setRoutes(getRoutesFromTemplate(applicationTemplate, routespace));
+      application.setRoutes(getRoutesFromTemplate(applicationTemplate));
     }
 
     // 生成菜单
@@ -352,8 +333,7 @@ public class ApplicationService implements ClientDetailsService {
     return new HashSet<>(ObjectUtil.flat(menus, "children"));
   }
 
-  private Set<ApplicationRoute> getRoutesFromNuwa(
-      List<NuwaRoute> nuwaRoutes, Routespace routespace) {
+  private Set<ApplicationRoute> getRoutesFromNuwa(List<NuwaRoute> nuwaRoutes) {
     List<Component> components = new ArrayList<>();
     List<ApplicationRoute> routes =
         ObjectUtil.recursive(
@@ -362,7 +342,6 @@ public class ApplicationService implements ClientDetailsService {
               ApplicationRoute route = this.applicationConverter.toRouteFromNuwa(item);
               route.setIndex(context.getIndex());
               route.setLevel(context.getLevel());
-              route.setSpace(routespace);
               route.setType(RouteType.ROUTE);
               route.setEnabled(ObjectUtil.defaultValue(route.getEnabled(), true));
               route.setAuthorized(ObjectUtil.defaultValue(route.getAuthorized(), false));
@@ -383,8 +362,7 @@ public class ApplicationService implements ClientDetailsService {
     return new HashSet<>(ObjectUtil.flat(routes, "routes"));
   }
 
-  private Set<ApplicationRoute> getRoutesFromTemplate(
-      ApplicationTemplate applicationTemplate, Routespace routespace) {
+  private Set<ApplicationRoute> getRoutesFromTemplate(ApplicationTemplate applicationTemplate) {
     List<ApplicationTemplateRoute> templateRoutes =
         ObjectUtil.tree(
             applicationTemplate.getRoutes(),
@@ -405,8 +383,8 @@ public class ApplicationService implements ClientDetailsService {
               }
               return route;
             });
-    List<ApplicationRoute> spaceRoutes = applicationConverter.toRoutes(templateRoutes, routespace);
-    return new HashSet<>(ObjectUtil.flat(spaceRoutes, "routes"));
+    List<ApplicationRoute> routes = applicationConverter.toRoutes(templateRoutes);
+    return new HashSet<>(ObjectUtil.flat(routes, "routes"));
   }
 
   public Optional<ApplicationRoute> getRoute(Long id) {

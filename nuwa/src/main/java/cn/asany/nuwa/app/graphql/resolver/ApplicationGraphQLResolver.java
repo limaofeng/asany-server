@@ -41,20 +41,18 @@ public class ApplicationGraphQLResolver implements GraphQLResolver<Application> 
   }
 
   public Optional<ApplicationRoute> layoutRoute(
-      Application application, String space, DataFetchingEnvironment environment) {
+      Application application, DataFetchingEnvironment environment) {
     List<ApplicationRoute> routes =
-        this.routes(
-            application, ApplicationRouteFilter.builder().space(space).build(), environment);
+        this.routes(application, ApplicationRouteFilter.builder().build(), environment);
     return routes.stream()
         .filter(item -> "/".equals(item.getPath()) && item.getLevel() == 1)
         .findAny();
   }
 
   public Optional<ApplicationRoute> loginRoute(
-      Application application, String space, DataFetchingEnvironment environment) {
+      Application application, DataFetchingEnvironment environment) {
     List<ApplicationRoute> routes =
-        this.routes(
-            application, ApplicationRouteFilter.builder().space(space).build(), environment);
+        this.routes(application, ApplicationRouteFilter.builder().build(), environment);
     return routes.stream()
         .filter(
             item ->
@@ -66,10 +64,8 @@ public class ApplicationGraphQLResolver implements GraphQLResolver<Application> 
   public List<ApplicationRoute> routes(
       Application application, ApplicationRouteFilter filter, DataFetchingEnvironment environment) {
     ExecutionStepInfo parent = environment.getExecutionStepInfo().getParent();
-    String space = filter.getSpace();
     if ("application".equals(parent.getFieldDefinition().getName())) {
-      Stream<ApplicationRoute> stream =
-          application.getRoutes().stream().filter(item -> space.equals(item.getSpace().getId()));
+      Stream<ApplicationRoute> stream = application.getRoutes().stream();
 
       if (filter.getEnabled() != null) {
         stream = stream.filter(item -> filter.getEnabled().equals(item.getEnabled()));
@@ -78,8 +74,7 @@ public class ApplicationGraphQLResolver implements GraphQLResolver<Application> 
       return stream.collect(Collectors.toList());
     }
     List<ApplicationRoute> routes =
-        this.applicationService.findRouteAllByApplicationAndSpaceWithComponent(
-            application.getId(), space);
+        this.applicationService.findRouteAllByApplicationWithComponent(application.getId());
 
     if (filter.getEnabled() != null) {
       return routes.stream()
@@ -130,5 +125,11 @@ public class ApplicationGraphQLResolver implements GraphQLResolver<Application> 
 
   public List<ClientSecret> clientSecrets(Application application) {
     return application.getClientSecretsAlias();
+  }
+
+  public Optional<ApplicationModuleConfiguration> module(Application application, String id) {
+    return application.getModules().stream()
+        .filter(item -> item.getModule().getId().equals(id))
+        .findAny();
   }
 }

@@ -10,7 +10,6 @@ input ApplicationWhereInput {
 }
 
 input RouteWhereInput {
-  space: ID = "web"
   """
   是否启用
   """
@@ -201,10 +200,6 @@ input MenuUpdateInput {
   """
   path: String
   """
-  需要提供的权限
-  """
-  authority: [String]
-  """
   父路由
   """
   parentMenu: ID
@@ -248,8 +243,6 @@ input ApplicationCreateInput {
   name: String!
   # 简介
   description: String
-  # 路由空间
-  routespaces: [String] = ["web"]
 }
 
 input ApplicationUpdateInput {
@@ -265,11 +258,6 @@ input ApplicationUpdateInput {
   path: String
   # 是否启用
   enabled: Boolean
-}
-
-type Routespace {
-  id: ID
-  name: String
 }
 
 enum ClientSecretType {
@@ -398,17 +386,13 @@ type Application {
   """
   menus: [Menu!]!
   """
-  路由命名空间
-  """
-  routespaces: [Routespace]
-  """
   登录路由
   """
-  loginRoute(space: ID = "web"): Route
+  loginRoute: Route
   """
   布局路由
   """
-  layoutRoute(space: ID = "web"): Route
+  layoutRoute: Route
   """
   集成钉钉
   """
@@ -433,11 +417,34 @@ type Application {
   依赖
   """
   dependencies: [ApplicationDependency!]!
+  """
+  模块配置
+  """
+  module(id: ID!): ApplicationModuleConfiguration
+  """
+  应用模块配置
+  """
+  modules: [ApplicationModuleConfiguration!]!
 }
 
-type ApplicationVariable {
-  key: String
-  value: String
+type ApplicationModuleConfiguration {
+  id: ID!
+  """
+  模块名称
+  """
+  name: String
+  """
+  模块描述
+  """
+  description: String
+  """
+  模块配置
+  """
+  configuration: JSON
+  """
+  模块配置值
+  """
+  value(key: String!): String
 }
 
 enum RouteType {
@@ -571,11 +578,7 @@ extend type Query {
   """
   查询单个应用的信息
   """
-  application(
-    id: ID!
-    idType: ApplicationIdType
-    space: ID = "web"
-  ): Application
+  application(id: ID!, idType: ApplicationIdType): Application
   """
   查询路由
   """

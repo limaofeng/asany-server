@@ -7,7 +7,6 @@ import cn.asany.cms.article.event.ArticleCategoryPageUpdateEvent;
 import cn.asany.nuwa.app.domain.Application;
 import cn.asany.nuwa.app.domain.ApplicationRoute;
 import cn.asany.nuwa.app.domain.LayoutSettings;
-import cn.asany.nuwa.app.domain.Routespace;
 import cn.asany.nuwa.app.domain.enums.RouteType;
 import cn.asany.nuwa.app.service.ApplicationService;
 import java.util.List;
@@ -77,7 +76,6 @@ public class PageUpdateListener implements ApplicationListener<ArticleCategoryPa
       route.setAuthorized(false);
       route.setParent(layoutRoute);
       route.setLayout(LayoutSettings.builder().pure(false).hideMenu(false).build());
-      route.setSpace(Routespace.DEFAULT_ROUTESPACE_WEB);
       this.applicationService.addRoute(route);
     } else {
       this.applicationService.clearApplication(application);

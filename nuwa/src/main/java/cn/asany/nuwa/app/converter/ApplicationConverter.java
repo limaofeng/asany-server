@@ -3,7 +3,6 @@ package cn.asany.nuwa.app.converter;
 import cn.asany.nuwa.app.domain.Application;
 import cn.asany.nuwa.app.domain.ApplicationMenu;
 import cn.asany.nuwa.app.domain.ApplicationRoute;
-import cn.asany.nuwa.app.domain.Routespace;
 import cn.asany.nuwa.app.graphql.input.ApplicationCreateInput;
 import cn.asany.nuwa.app.service.dto.NativeApplication;
 import cn.asany.nuwa.app.service.dto.NuwaMenu;
@@ -35,18 +34,15 @@ public interface ApplicationConverter {
    * 路由转换
    *
    * @param routes List<ApplicationTemplateRoute>
-   * @param routespace route space
    * @return ApplicationRoute
    */
   @IterableMapping(elementTargetType = ApplicationRoute.class)
-  List<ApplicationRoute> toRoutes(
-      List<ApplicationTemplateRoute> routes, @Context Routespace routespace);
+  List<ApplicationRoute> toRoutes(List<ApplicationTemplateRoute> routes);
 
   /**
    * 将 ApplicationTemplateRoute 转换为 ApplicationRoute
    *
    * @param route 路由模版
-   * @param routespace 空间
    * @return ApplicationRoute
    */
   @Mappings({
@@ -57,9 +53,8 @@ public interface ApplicationConverter {
     @Mapping(target = "updatedBy", ignore = true),
     @Mapping(target = "updatedAt", ignore = true),
     @Mapping(target = "application", ignore = true),
-    @Mapping(target = "space", source = "id", qualifiedByName = "routespace"),
   })
-  ApplicationRoute toRoute(ApplicationTemplateRoute route, @Context Routespace routespace);
+  ApplicationRoute toRoute(ApplicationTemplateRoute route);
 
   /**
    * 将 NuwaRoute 转为 ApplicationRoute 对象
@@ -82,18 +77,6 @@ public interface ApplicationConverter {
       return new ArrayList<>();
     }
     return JSON.deserialize(blocks, new TypeReference<List<ComponentData>>() {});
-  }
-
-  /**
-   * 路由
-   *
-   * @param route 路由
-   * @param routespace 路由空间
-   * @return Routespace
-   */
-  @Named("routespace")
-  default Routespace routespace(Object route, @Context Routespace routespace) {
-    return routespace;
   }
 
   /**

@@ -15,6 +15,4 @@ public class ApplicationCreateInput {
   private String name;
   /** 简介 */
   private String description;
-
-  private String[] routespaces;
 }

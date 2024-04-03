@@ -27,7 +27,6 @@ public class NativeApplication {
   private String callbackUrl;
   private String setupURL;
   private WebHook webhook;
-  private String routespace;
 
   private String clientId;
   private String clientSecret;

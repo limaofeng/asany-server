@@ -37,15 +37,6 @@ public class ApplicationRoute extends BaseBusEntity implements SortNode {
   /** 菜单名称 */
   @Column(name = "NAME")
   private String name;
-  /** 路由所属类型 PC端/M站 */
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(
-      name = "SPACE",
-      foreignKey = @ForeignKey(name = "FK_APPLICATION_ROUTE_SPACE"),
-      updatable = false,
-      nullable = false)
-  @ToString.Exclude
-  private Routespace space;
   /** 路由类型 */
   @Enumerated(EnumType.STRING)
   @Column(name = "TYPE", nullable = false)

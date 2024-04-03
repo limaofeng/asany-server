@@ -42,6 +42,9 @@ import org.jfantasy.framework.security.oauth2.core.ClientSecretType;
 @NamedEntityGraph(
     name = "Graph.Application.FetchDetails",
     attributeNodes = {
+      @NamedAttributeNode(
+          value = "modules",
+          subgraph = "SubGraph.ApplicationModule.FetchConfiguration"),
       @NamedAttributeNode(value = "menus", subgraph = "SubGraph.ApplicationMenu.FetchComponent"),
       @NamedAttributeNode(value = "routes", subgraph = "SubGraph.ApplicationRoute.FetchComponent"),
     },
@@ -50,13 +53,17 @@ import org.jfantasy.framework.security.oauth2.core.ClientSecretType;
           name = "SubGraph.ApplicationMenu.FetchComponent",
           attributeNodes = {
             @NamedAttributeNode(value = "parent"),
-            //            @NamedAttributeNode(value = "component")
           }),
       @NamedSubgraph(
           name = "SubGraph.ApplicationRoute.FetchComponent",
           attributeNodes = {
-            @NamedAttributeNode(value = "space"),
             @NamedAttributeNode(value = "parent"),
+          }),
+      @NamedSubgraph(
+          name = "SubGraph.ApplicationModule.FetchConfiguration",
+          attributeNodes = {
+            @NamedAttributeNode(value = "module"),
+            @NamedAttributeNode(value = "values"),
           })
     })
 @NamedEntityGraph(
@@ -68,7 +75,6 @@ import org.jfantasy.framework.security.oauth2.core.ClientSecretType;
       @NamedSubgraph(
           name = "SubGraph.ApplicationRoute.FetchComponent",
           attributeNodes = {
-            @NamedAttributeNode(value = "space"),
             @NamedAttributeNode(value = "parent"),
           })
     })
@@ -121,15 +127,6 @@ public class Application extends BaseBusEntity implements ClientDetails, Tenanta
   /** LOGO */
   @Column(name = "LOGO")
   private String logo;
-  /** 支持的路由空间 */
-  @ManyToMany(fetch = FetchType.LAZY)
-  @JoinTable(
-      name = "NUWA_APPLICATION_ROUTESPACE",
-      joinColumns = @JoinColumn(name = "APPLICATION_ID"),
-      inverseJoinColumns = @JoinColumn(name = "ROUTESPACE_ID"),
-      foreignKey = @ForeignKey(name = "FK_APPLICATION_ROUTESPACE_APPID"))
-  @ToString.Exclude
-  private List<Routespace> routespaces;
   /** 路由 */
   @OneToMany(
       mappedBy = "application",
@@ -176,6 +173,13 @@ public class Application extends BaseBusEntity implements ClientDetails, Tenanta
       fetch = FetchType.LAZY)
   @ToString.Exclude
   private List<ApplicationDependency> dependencies;
+
+  @OneToMany(
+      mappedBy = "application",
+      cascade = {CascadeType.REMOVE},
+      fetch = FetchType.LAZY)
+  @ToString.Exclude
+  private List<ApplicationModuleConfiguration> modules;
   /** 租户ID */
   @Column(name = "TENANT_ID", length = 24, nullable = false)
   private String tenantId;

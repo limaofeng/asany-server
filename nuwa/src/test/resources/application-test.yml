@@ -8,10 +8,11 @@ spring:
     name: server
   datasource:
     name: datasource
-    url: jdbc:mysql://dev.local:3306/asany?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&rewriteBatchedStatements=true
+    url: jdbc:mysql://192.168.5.7:3306/asany?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&rewriteBatchedStatements=true
     username: root
-    password: yV2jJxvNs8BD
+    password: 4466KWVGjayXVXft
   redis:
     database: 0
-    host: dev.local
-    password: sOmE_sEcUrE_pAsS
+    host: 192.168.5.7
+    password: AGtVAm6GKHTPaJNK
+    port: 30379

@@ -71,7 +71,7 @@ public class ApplicationGraphQLRootResolver
   }
 
   public Optional<Application> application(
-      String id, ApplicationIdType idType, String space, DataFetchingEnvironment environment) {
+      String id, ApplicationIdType idType, DataFetchingEnvironment environment) {
     idType = ObjectUtil.defaultValue(idType, () -> getDefaultApplicationIdType(id));
     boolean hasFetchRoutes = GraphqlUtil.hasFetchFields(environment, "routes");
     boolean hasFetchMenus = GraphqlUtil.hasFetchFields(environment, "menus");

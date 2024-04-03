@@ -1,6 +1,5 @@
 package cn.asany.nuwa.app.service.dto;
 
-import cn.asany.nuwa.app.domain.Routespace;
 import lombok.Builder;
 import lombok.Data;
 
@@ -13,5 +12,4 @@ import lombok.Data;
 @Builder
 public class NuwaContext {
   @Builder.Default private int level = 1;
-  private Routespace routespace;
 }

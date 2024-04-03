@@ -15,6 +15,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ApplicationRouteFilter {
-  private String space;
   private Boolean enabled;
 }
