@@ -23,7 +23,8 @@ public interface ArticleCategoryDao extends JpaRepository<ArticleCategory, Long>
   @Modifying
   @Query(
       nativeQuery = true,
-      value = "delete from cms_article_category where path like :path% and id != :id")
+      value =
+          "delete from cms_article_category where path like :path% and id != :id ORDER BY `level` DESC")
   void deleteAllByPath(@Param("path") String s, @Param("id") Long id);
 
   @Query(

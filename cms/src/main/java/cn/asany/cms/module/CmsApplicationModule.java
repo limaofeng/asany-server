@@ -8,7 +8,6 @@ import cn.asany.cms.article.service.ArticleCategoryService;
 import cn.asany.organization.core.domain.Organization;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -27,21 +26,14 @@ public class CmsApplicationModule implements IApplicationModule<CmsModulePropert
   }
 
   @Override
-  public Map<String, String> configuration(ModuleConfig<CmsModuleProperties> config) {
+  public Map<String, String> install(ModuleConfig<CmsModuleProperties> config) {
     Map<String, String> configs = new HashMap<>();
 
     CmsModuleProperties properties = config.getProperties();
 
-    Optional<ArticleCategory> categoryOptional =
-        articleCategoryService.findOneBySlug(properties.getRootCategory());
-
     ArticleCategory root =
-        categoryOptional
-            .map(
-                (category) -> {
-                  this.articleCategoryService.clearAll(category.getId());
-                  return category;
-                })
+        articleCategoryService
+            .findOneBySlug(properties.getRootCategory())
             .orElseGet(
                 () ->
                     this.articleCategoryService.save(
@@ -57,5 +49,17 @@ public class CmsApplicationModule implements IApplicationModule<CmsModulePropert
 
     configs.put("rootCategory", root.getSlug());
     return configs;
+  }
+
+  @Override
+  public void uninstall(ModuleConfig<CmsModuleProperties> config) {
+    CmsModuleProperties properties = config.getProperties();
+    articleCategoryService
+        .findOneBySlug(properties.getRootCategory())
+        .map(
+            category -> {
+              this.articleCategoryService.clearAll(category.getId());
+              return category;
+            });
   }
 }

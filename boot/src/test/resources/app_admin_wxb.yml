@@ -10,14 +10,14 @@ menus:
     icon: Duotune/abs045
     path: /crm
     component: cn.asany.ui.admin.crm.CRMSidebar
+  - name: 产品管理
+    icon: Duotune/txt009
+    path: /pim
+    component: cn.asany.ui.admin.pim.PIMSidebar
   - name: 内容管理
     icon: Duotune/txt009
     path: /cms
     component: cn.asany.ui.admin.cms.ArticleSidebar
-  - name: 产品管理
-    icon: Duotune/txt009
-    path: /pim
-    component: cn.asany.ui.admin.cms.PIMSidebar
   - name: 日历
     icon: Duotune/gen014
     path: /calendar
@@ -102,6 +102,26 @@ routes:
         routes:
           - path: /contacts/:id
             component: cn.asany.ui.admin.contacts.ViewContact
+      - path: /crm
+        routes:
+          - path: /crm/contacts
+            component: cn.asany.ui.admin.crm.Contacts
+          - path: /crm/customers
+            component: cn.asany.ui.admin.crm.CustomerListView
+          - path: /crm/customer-stores
+            component: cn.asany.ui.admin.crm.CustomerStoreListView
+      - path: /pim
+        routes:
+          - path: /pim/device-qrcodes
+            component: cn.asany.ui.admin.pim.DeviceQrCodeListView
+          - path: /pim/devices
+            component: cn.asany.ui.admin.pim.DeviceListView
+          - path: /pim/brands
+            component: cn.asany.ui.admin.pim.BrandListView
+          - path: /pim/products
+            component: cn.asany.ui.admin.pim.ProductListView
+          - path: /pim
+            redirect: /pim/devices
       - path: /calendar
         component: cn.asany.ui.admin.calendar.MainCalendar
       - path: /mail

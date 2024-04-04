@@ -31,6 +31,7 @@ import org.jfantasy.framework.security.oauth2.core.ClientDetails;
 import org.jfantasy.framework.security.oauth2.core.ClientDetailsService;
 import org.jfantasy.framework.security.oauth2.core.ClientRegistrationException;
 import org.jfantasy.framework.security.oauth2.core.ClientSecretType;
+import org.jfantasy.framework.util.common.ClassUtil;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.common.StringUtil;
 import org.springframework.cache.Cache;
@@ -257,7 +258,7 @@ public class ApplicationService implements ClientDetailsService {
               .module(ApplicationModule.builder().id(moduleProperties.getType()).build())
               .application(application)
               .values(
-                  module.configuration(
+                  module.install(
                       ModuleConfig.builder()
                           .tenant(tenant.getId())
                           .defaultOrganization(tenant.getDefaultOrganization().getId())
@@ -284,6 +285,12 @@ public class ApplicationService implements ClientDetailsService {
   @Transactional(rollbackFor = Exception.class)
   public void deleteApplication(Long id) {
     Application app = this.applicationDao.getReferenceById(id);
+
+    Tenant tenant =
+        this.tenantService
+            .findById(app.getTenantId())
+            .orElseThrow(() -> new ValidationException("租户不存在"));
+
     // 路由组件
     List<ApplicationRoute> routes =
         this.applicationRouteDao.findAll(
@@ -304,10 +311,27 @@ public class ApplicationService implements ClientDetailsService {
     components.addAll(
         menus.stream().map(ApplicationMenu::getComponent).collect(Collectors.toList()));
 
-    // 删除模块配置
-    this.applicationModuleConfigurationDao.saveAllInBatch(app.getModules());
-
     String clientId = app.getClientId();
+
+    for (ApplicationModuleConfiguration config : app.getModules()) {
+      IApplicationModule<IModuleProperties> module =
+          moduleResolver.resolve(config.getModule().getId());
+      Class<IModuleProperties> propertiesType =
+          ClassUtil.getInterfaceGenricType(module.getClass(), IApplicationModule.class);
+
+      ModuleConfig<IModuleProperties> moduleConfig =
+          ModuleConfig.builder()
+              .tenant(tenant.getId())
+              .defaultOrganization(tenant.getDefaultOrganization().getId())
+              .properties(
+                  ClassUtil.newInstance(
+                      propertiesType,
+                      new Class<?>[] {Map.class},
+                      new Object[] {config.getValues()}))
+              .build();
+
+      module.uninstall(moduleConfig);
+    }
 
     // 删除应用
     this.applicationDao.deleteById(id);

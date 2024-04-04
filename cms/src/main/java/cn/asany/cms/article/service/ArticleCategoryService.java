@@ -428,6 +428,12 @@ public class ArticleCategoryService {
 
   public void clearAll(Long id) {
     ArticleCategory category = this.categoryDao.getReferenceById(id);
+    // 删除栏目下的文章
+    List<Article> articles =
+        this.articleDao.findAll(
+            PropertyFilter.newFilter().startsWith("category.path", category.getPath()));
+    this.articleDao.deleteAll(articles);
+    // 删除栏目
     this.categoryDao.deleteAllByPath(category.getPath(), category.getId());
   }
 }

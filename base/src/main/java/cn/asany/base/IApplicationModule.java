@@ -17,9 +17,17 @@ public interface IApplicationModule<T extends IModuleProperties> {
   String name();
 
   /**
-   * 加载模块
+   * 安装模块
+   *
+   * @param config 模块配置
+   * @return Map
+   */
+  Map<String, String> install(ModuleConfig<T> config);
+
+  /**
+   * 卸载模块
    *
    * @param config 模块配置
    */
-  Map<String, String> configuration(ModuleConfig<T> config);
+  void uninstall(ModuleConfig<T> config);
 }
