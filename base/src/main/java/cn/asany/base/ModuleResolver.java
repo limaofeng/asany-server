@@ -5,13 +5,12 @@ package cn.asany.base;
  *
  * @author limaofeng
  */
-public interface IModuleLoader {
+public interface ModuleResolver {
 
   /**
    * 加载模块
    *
    * @param name 模块
-   * @param module 模块配置
    */
-  void load(String name, IModuleProperties module);
+  IApplicationModule<IModuleProperties> resolve(String name);
 }

@@ -27,7 +27,10 @@ public class ApplicationModule extends BaseBusEntity {
   @ElementCollection
   @CollectionTable(
       name = "NUWA_APPLICATION_MODULE_PARAMETERS",
-      joinColumns = @JoinColumn(name = "MODULE_ID"))
+      joinColumns =
+          @JoinColumn(
+              name = "MODULE_ID",
+              foreignKey = @ForeignKey(name = "FK_APPLICATION_MODULE_PARAMETERS")))
   @Column(name = "NAME", length = 20)
   private Set<String> parameterNames;
 }

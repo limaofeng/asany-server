@@ -9,7 +9,7 @@ import cn.asany.cms.content.domain.VideoContent;
 import cn.asany.cms.content.domain.enums.ContentType;
 import cn.asany.cms.content.service.ArticleContentHandler;
 import cn.asany.cms.content.service.ArticleContentService;
-import cn.asany.cms.module.CmsModule;
+import cn.asany.cms.module.CmsApplicationModule;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.jfantasy.framework.dao.jpa.ComplexJpaRepository;
@@ -62,7 +62,7 @@ public class CmsAutoConfiguration {
   }
 
   @Bean
-  public CmsModule cmsModule() {
-    return new CmsModule();
+  public CmsApplicationModule cmsModule() {
+    return new CmsApplicationModule();
   }
 }

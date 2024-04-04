@@ -1,5 +1,6 @@
 package cn.asany.security.core.domain;
 
+import cn.asany.organization.core.domain.Organization;
 import javax.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
@@ -39,4 +40,8 @@ public class Tenant extends BaseBusEntity {
 
   @OneToOne(mappedBy = "tenant", fetch = FetchType.LAZY)
   private AccessControlSettings accessControlSettings;
+
+  @OneToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "DEFAULT_ORGANIZATION_ID", referencedColumnName = "ID", nullable = false)
+  private Organization defaultOrganization;
 }

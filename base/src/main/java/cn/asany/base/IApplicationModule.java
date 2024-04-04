@@ -1,11 +1,13 @@
 package cn.asany.base;
 
+import java.util.Map;
+
 /**
  * 应用模块
  *
  * @author limaofeng
  */
-public interface IModule<T extends IModuleProperties> {
+public interface IApplicationModule<T extends IModuleProperties> {
 
   /**
    * 模块名称 (唯一)
@@ -17,7 +19,7 @@ public interface IModule<T extends IModuleProperties> {
   /**
    * 加载模块
    *
-   * @param properties
+   * @param config 模块配置
    */
-  void load(T properties);
+  Map<String, String> configuration(ModuleConfig<T> config);
 }

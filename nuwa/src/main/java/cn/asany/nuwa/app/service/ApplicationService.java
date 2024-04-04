@@ -1,7 +1,9 @@
 package cn.asany.nuwa.app.service;
 
-import cn.asany.base.IModuleLoader;
+import cn.asany.base.IApplicationModule;
 import cn.asany.base.IModuleProperties;
+import cn.asany.base.ModuleConfig;
+import cn.asany.base.ModuleResolver;
 import cn.asany.nuwa.app.converter.ApplicationConverter;
 import cn.asany.nuwa.app.dao.*;
 import cn.asany.nuwa.app.domain.*;
@@ -16,6 +18,8 @@ import cn.asany.nuwa.template.dao.ApplicationTemplateDao;
 import cn.asany.nuwa.template.domain.ApplicationTemplate;
 import cn.asany.nuwa.template.domain.ApplicationTemplateMenu;
 import cn.asany.nuwa.template.domain.ApplicationTemplateRoute;
+import cn.asany.security.core.domain.Tenant;
+import cn.asany.security.core.service.TenantService;
 import cn.asany.ui.resources.dao.ComponentDao;
 import cn.asany.ui.resources.domain.Component;
 import cn.asany.ui.resources.domain.enums.ComponentScope;
@@ -54,31 +58,38 @@ public class ApplicationService implements ClientDetailsService {
   private final ApplicationRouteDao applicationRouteDao;
   private final ApplicationMenuDao applicationMenuDao;
   private final ApplicationTemplateDao applicationTemplateDao;
+
+  private final ApplicationModuleConfigurationDao applicationModuleConfigurationDao;
   private final ComponentDao componentDao;
   private final ApplicationConverter applicationConverter;
-  private final IModuleLoader moduleLoader;
+  private final ModuleResolver moduleResolver;
   private final CacheManager cacheManager;
+  private final TenantService tenantService;
 
   public ApplicationService(
       CacheManager cacheManager,
+      TenantService tenantService,
       ApplicationDao applicationDao,
       ApplicationDependencyDao applicationDependencyDao,
       ClientSecretDao clientSecretDao,
+      ApplicationModuleConfigurationDao applicationModuleConfigurationDao,
       ComponentDao componentDao,
       ApplicationConverter applicationConverter,
       ApplicationRouteDao applicationRouteDao,
       ApplicationMenuDao applicationMenuDao,
       ApplicationTemplateDao applicationTemplateDao,
-      IModuleLoader moduleLoader) {
+      ModuleResolver moduleResolver) {
+    this.tenantService = tenantService;
     this.applicationDao = applicationDao;
     this.clientSecretDao = clientSecretDao;
+    this.applicationModuleConfigurationDao = applicationModuleConfigurationDao;
     this.componentDao = componentDao;
     this.applicationConverter = applicationConverter;
     this.applicationRouteDao = applicationRouteDao;
     this.applicationMenuDao = applicationMenuDao;
     this.applicationTemplateDao = applicationTemplateDao;
     this.applicationDependencyDao = applicationDependencyDao;
-    this.moduleLoader = moduleLoader;
+    this.moduleResolver = moduleResolver;
     this.cacheManager = cacheManager;
   }
 
@@ -200,6 +211,11 @@ public class ApplicationService implements ClientDetailsService {
                 .build());
     clientSecrets.add(clientSecret);
 
+    Tenant tenant =
+        this.tenantService
+            .findById("1691832353955123200")
+            .orElseThrow(() -> new ValidationException("租户不存在"));
+
     // 创建应用
     Application application =
         Application.builder()
@@ -208,7 +224,7 @@ public class ApplicationService implements ClientDetailsService {
             .description(nativeApplication.getDescription())
             .clientId(clientId)
             .clientSecretsAlias(clientSecrets)
-            .tenantId("1691832353955123200")
+            .tenantId(tenant.getId())
             .routes(new HashSet<>())
             .build();
 
@@ -230,11 +246,27 @@ public class ApplicationService implements ClientDetailsService {
     // 保存应用
     this.applicationDao.save(application);
 
-    List<IModuleProperties> modules =
+    List<ApplicationModuleConfiguration> modules = new ArrayList<>();
+    List<IModuleProperties> modulePropertiesList =
         ObjectUtil.defaultValue(nativeApplication.getModules(), Collections.emptyList());
-    for (IModuleProperties module : modules) {
-      this.moduleLoader.load(module.getType(), module);
+    for (IModuleProperties moduleProperties : modulePropertiesList) {
+      IApplicationModule<IModuleProperties> module =
+          this.moduleResolver.resolve(moduleProperties.getType());
+      ApplicationModuleConfiguration moduleConfiguration =
+          ApplicationModuleConfiguration.builder()
+              .module(ApplicationModule.builder().id(moduleProperties.getType()).build())
+              .application(application)
+              .values(
+                  module.configuration(
+                      ModuleConfig.builder()
+                          .tenant(tenant.getId())
+                          .defaultOrganization(tenant.getDefaultOrganization().getId())
+                          .properties(moduleProperties)
+                          .build()))
+              .build();
+      modules.add(this.applicationModuleConfigurationDao.save(moduleConfiguration));
     }
+    application.setModules(modules);
 
     return application;
   }
@@ -271,6 +303,9 @@ public class ApplicationService implements ClientDetailsService {
                 .isNotNull("component"));
     components.addAll(
         menus.stream().map(ApplicationMenu::getComponent).collect(Collectors.toList()));
+
+    // 删除模块配置
+    this.applicationModuleConfigurationDao.saveAllInBatch(app.getModules());
 
     String clientId = app.getClientId();
 

@@ -5,6 +5,7 @@ import cn.asany.cms.article.dao.ArticleDao;
 import cn.asany.cms.article.domain.Article;
 import cn.asany.cms.article.domain.ArticleCategory;
 import cn.asany.cms.article.domain.PageComponent;
+import cn.asany.cms.article.domain.enums.ArticleStatus;
 import cn.asany.cms.article.event.ArticleCategoryPageUpdateEvent;
 import cn.asany.ui.resources.domain.Component;
 import cn.asany.ui.resources.domain.enums.ComponentScope;
@@ -108,19 +109,18 @@ public class ArticleCategoryService {
               }
 
               // 暂存文章
-              //              if (item.getArticles() != null) {
-              //                articles.addAll(
-              //                    item.getArticles().stream()
-              //                        .peek(
-              //                            article -> {
-              //                              article.setChannels(new ArrayList<>());
-              //                              article.getChannels().add(item);
-              //                              article.setType(ArticleType.text);
-              //                              article.setCategory(ArticleCategory.news);
-              //                              article.setStatus(ArticleStatus.PUBLISHED);
-              //                            })
-              //                        .collect(Collectors.toList()));
-              //              }
+              if (item.getArticles() != null) {
+                articles.addAll(
+                    item.getArticles().stream()
+                        .peek(
+                            article -> {
+                              article.setCategory(item);
+                              //                  article.setType(ArticleType.text);
+                              article.setOrganization(rootChannel.getOrganization());
+                              article.setStatus(ArticleStatus.PUBLISHED);
+                            })
+                        .collect(Collectors.toList()));
+              }
 
               Optional<ArticleCategory> optional =
                   this.categoryDao.findOne(
@@ -130,7 +130,7 @@ public class ArticleCategoryService {
 
               if (optional.isPresent()) {
                 item.setId(optional.get().getId());
-                //                item.setArticles(optional.get().getArticles());
+                item.setArticles(optional.get().getArticles());
               } else {
                 this.categoryDao.save(item);
               }
@@ -145,6 +145,7 @@ public class ArticleCategoryService {
               item.setParent(parent);
               item.setIndex(index);
               item.setLevel(level);
+              item.setOrganization(rootChannel.getOrganization());
 
               return item;
             });
@@ -423,5 +424,10 @@ public class ArticleCategoryService {
 
   public ArticleCategory getById(Long id) {
     return this.categoryDao.getReferenceById(id);
+  }
+
+  public void clearAll(Long id) {
+    ArticleCategory category = this.categoryDao.getReferenceById(id);
+    this.categoryDao.deleteAllByPath(category.getPath(), category.getId());
   }
 }

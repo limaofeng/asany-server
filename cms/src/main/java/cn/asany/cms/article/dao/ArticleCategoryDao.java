@@ -20,6 +20,12 @@ public interface ArticleCategoryDao extends JpaRepository<ArticleCategory, Long>
   @Query(nativeQuery = true, value = "delete from cms_article_tags where tag_id = :tagId")
   void deleteArticleTags(@Param("tagId") Long tagId);
 
+  @Modifying
+  @Query(
+      nativeQuery = true,
+      value = "delete from cms_article_category where path like :path% and id != :id")
+  void deleteAllByPath(@Param("path") String s, @Param("id") Long id);
+
   @Query(
       nativeQuery = true,
       value = "SELECT application_id FROM website WHERE article_channel_id = :channel_id")

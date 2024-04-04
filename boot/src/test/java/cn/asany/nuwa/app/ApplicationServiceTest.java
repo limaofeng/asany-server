@@ -1,6 +1,5 @@
 package cn.asany.nuwa.app;
 
-import cn.asany.cms.article.service.ArticleCategoryService;
 import cn.asany.cms.module.CmsModuleProperties;
 import cn.asany.nuwa.YamlUtils;
 import cn.asany.nuwa.app.domain.Application;
@@ -39,7 +38,6 @@ class ApplicationServiceTest {
   @Autowired private ApplicationService applicationService;
   @Autowired private ApplicationRouteService applicationRouteService;
   @Autowired private ApplicationMenuService applicationMenuService;
-  @Autowired private ArticleCategoryService channelService;
   @Autowired private LibraryService libraryService;
 
   @Test
@@ -65,7 +63,6 @@ class ApplicationServiceTest {
     YamlUtils.addModuleClass("cms", CmsModuleProperties.class);
     NativeApplication app = YamlUtils.load(inputStream);
     assert app.getName().equals("admin");
-    //    channelService.deleteAll();
     applicationService.deleteApplication(app.getClientId());
     Application application = applicationService.createApplication(app);
     log.debug(
@@ -83,7 +80,6 @@ class ApplicationServiceTest {
     YamlUtils.addModuleClass("cms", CmsModuleProperties.class);
     NativeApplication app = YamlUtils.load(inputStream);
     assert app.getName().equals("admin_wxb");
-    //    channelService.deleteAll();
     applicationService.deleteApplication(app.getClientId());
     Application application = applicationService.createApplication(app);
     log.debug(

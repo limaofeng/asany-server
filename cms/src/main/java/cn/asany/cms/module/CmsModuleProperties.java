@@ -16,6 +16,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class CmsModuleProperties implements IModuleProperties {
   @Setter private String type;
+  @Setter private String rootCategory;
   private List<ArticleChannelImpObj> channels;
 
   @Override

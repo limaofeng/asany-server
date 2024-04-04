@@ -159,11 +159,23 @@ routes:
             redirect: /settings/profile
       - path: /
         component: cn.asany.ui.admin.Home
-#modules:
-#  - type: cms
-#    channels:
-#      - name: IT外包
-#        slug: it-outsourcing
-#        icon: Duotune/com014
-#        children:
-#          - slug: maintenance-service
+modules:
+  - type: cms
+    rootCategory: wxb
+    channels:
+      - name: 产品资料
+        slug: product-data
+        icon: Duotune/com014
+        children:
+          - name: 维护视频
+            slug: product-maintenance-video
+            icon: Duotune/com014
+          - name: 产品手册
+            slug: product-manual
+            icon: Duotune/com014
+          - name: 知识库
+            slug: product-knowledge-base
+            icon: Duotune/com014
+          - name: 维护手册
+            slug: product-maintenance-manual
+            icon: Duotune/com014

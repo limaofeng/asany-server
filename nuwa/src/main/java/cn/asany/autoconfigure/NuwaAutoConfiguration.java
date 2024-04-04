@@ -1,9 +1,9 @@
 package cn.asany.autoconfigure;
 
-import cn.asany.base.IModule;
-import cn.asany.base.IModuleLoader;
+import cn.asany.base.IApplicationModule;
 import cn.asany.base.IModuleProperties;
-import cn.asany.nuwa.module.DefaultModuleLoader;
+import cn.asany.base.ModuleResolver;
+import cn.asany.nuwa.module.DefaultModuleResolver;
 import java.util.List;
 import org.jfantasy.framework.dao.jpa.ComplexJpaRepository;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -31,7 +31,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 public class NuwaAutoConfiguration {
 
   @Bean
-  public IModuleLoader moduleLoader(List<IModule<IModuleProperties>> modules) {
-    return new DefaultModuleLoader(modules);
+  public ModuleResolver moduleResolver(
+      List<IApplicationModule<? extends IModuleProperties>> modules) {
+    return new DefaultModuleResolver(modules);
   }
 }

@@ -43,11 +43,15 @@ public class ApplicationModuleConfiguration extends BaseBusEntity {
       nullable = false)
   private Application application;
 
-  @ElementCollection(fetch = FetchType.EAGER)
+  @ElementCollection(fetch = FetchType.LAZY)
   @MapKeyColumn(name = "PARAM_NAME", length = 20)
   @Column(name = "PARAM_VALUE", length = 100)
   @CollectionTable(
       name = "NUWA_APPLICATION_MODULE_CONFIG_VALUES",
-      joinColumns = @JoinColumn(name = "CONFIG_ID"))
+      joinColumns =
+          @JoinColumn(
+              name = "CONFIG_ID",
+              referencedColumnName = "ID",
+              foreignKey = @ForeignKey(name = "FK_APPLICATION_MODULE_CONFIG_VALUES")))
   private Map<String, String> values;
 }
