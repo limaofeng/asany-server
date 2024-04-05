@@ -44,6 +44,8 @@ public class DeviceGraphQLRootResolver implements GraphQLMutationResolver, Graph
   public Optional<Device> device(String id, DeviceIdType type) {
     if (DeviceIdType.ID == type) {
       return this.deviceService.findById(Long.valueOf(id));
+    }else if (DeviceIdType.NO == type) {
+      return this.deviceService.findByNO(id);
     }
     return this.deviceService.findBySN(id);
   }

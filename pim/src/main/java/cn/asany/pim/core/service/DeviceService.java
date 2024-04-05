@@ -111,4 +111,8 @@ public class DeviceService {
     device.ifPresent(this.deviceDao::delete);
     return device;
   }
+
+  public Optional<Device> findByNO(String id) {
+    return deviceDao.findOneBy("no", id);
+  }
 }

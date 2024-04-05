@@ -410,6 +410,7 @@ enum ProductIdType {
 enum DeviceIdType {
   ID
   SN
+  NO
 }
 
 extend type Query {
