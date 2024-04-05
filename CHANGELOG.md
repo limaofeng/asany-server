@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.28](https://github.com/limaofeng/asany-server/compare/v0.2.27...v0.2.28) (2024-04-05)
+
+
+### Features
+
+* 优化错误提示 ([2e7a07b](https://github.com/limaofeng/asany-server/commit/2e7a07ba602eec8c177a53852b7dbeafd4c1cb9a))
+* 合并修改 ([708e2d2](https://github.com/limaofeng/asany-server/commit/708e2d21fc3374fb1ce47c557d6b63bdee78cbeb))
+* 短链设置 category 用于区分已使用的 ([ff14b2b](https://github.com/limaofeng/asany-server/commit/ff14b2bf3091678c4f3d6e183e9bf6bd4431bd14))
+
 ### [0.2.27](https://github.com/limaofeng/asany-server/compare/v0.2.26...v0.2.27) (2024-04-05)
 
 
