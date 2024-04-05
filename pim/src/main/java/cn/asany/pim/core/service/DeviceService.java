@@ -78,7 +78,10 @@ public class DeviceService {
     device.setWarrantyCards(warrantyCards);
 
     link.setUrl(
-        environment.getProperty("SHORT_DOMAIN_NAME") + "/c/devices/" + device.getId() + "/support");
+        environment.getProperty("MOBILE_APP_BASE_URL")
+            + "/c/devices/"
+            + device.getId()
+            + "/support");
     link.getMetadata().put("device", device.getId().toString());
     this.shortLinkService.update(link.getId(), link, false);
 
