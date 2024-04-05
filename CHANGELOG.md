@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.27](https://github.com/limaofeng/asany-server/compare/v0.2.26...v0.2.27) (2024-04-05)
+
+
+### Bug Fixes
+
+* update device support link URL ([a9d82f3](https://github.com/limaofeng/asany-server/commit/a9d82f3beee4db26f2029055ebcd505ff39bd256))
+
 ### [0.2.26](https://github.com/limaofeng/asany-server/compare/v0.2.25...v0.2.26) (2024-04-05)
 
 
