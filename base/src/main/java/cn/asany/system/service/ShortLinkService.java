@@ -87,7 +87,7 @@ public class ShortLinkService {
   @Transactional
   public int deleteMany(PropertyFilter filter) {
     List<ShortLink> shortLinks = this.shortLinkDao.findAll(filter);
-    this.shortLinkDao.deleteAllInBatch(shortLinks);
+    this.shortLinkDao.deleteAll(shortLinks);
     return shortLinks.size();
   }
 
