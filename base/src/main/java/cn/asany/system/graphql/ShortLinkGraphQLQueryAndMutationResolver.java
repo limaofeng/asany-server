@@ -1,13 +1,14 @@
 package cn.asany.system.graphql;
 
+import cn.asany.system.convert.ShortLinkConverter;
 import cn.asany.system.domain.ShortLink;
+import cn.asany.system.graphql.input.ShortLinkCreateInput;
 import cn.asany.system.graphql.input.ShortLinkWhereInput;
 import cn.asany.system.graphql.type.ShortLinkConnection;
 import cn.asany.system.graphql.type.ShortLinkIdType;
 import cn.asany.system.service.ShortLinkService;
 import graphql.kickstart.tools.GraphQLMutationResolver;
 import graphql.kickstart.tools.GraphQLQueryResolver;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
@@ -22,20 +23,19 @@ public class ShortLinkGraphQLQueryAndMutationResolver
     implements GraphQLQueryResolver, GraphQLMutationResolver {
 
   private final ShortLinkService shortLinkService;
+  private final ShortLinkConverter shortLinkConverter;
 
-  public ShortLinkGraphQLQueryAndMutationResolver(ShortLinkService shortLinkService) {
+  public ShortLinkGraphQLQueryAndMutationResolver(
+      ShortLinkService shortLinkService, ShortLinkConverter shortLinkConverter) {
     this.shortLinkService = shortLinkService;
+    this.shortLinkConverter = shortLinkConverter;
   }
 
-  public ShortLink generateShortLink(String url, String category, Date expiresAt) {
-    return this.shortLinkService.generateShortLink(url, category, expiresAt);
-  }
-
-  public List<ShortLink> generateEmptyShortLinks(String category, int count) {
-    if (count <= 0) {
+  public List<ShortLink> generateShortLinks(List<ShortLinkCreateInput> links) {
+    if (links.isEmpty()) {
       throw new IllegalArgumentException("count must be greater than 0");
     }
-    return shortLinkService.generateEmptyShortLinks(category, count);
+    return shortLinkService.generateShortLinks(shortLinkConverter.toShortLinks(links));
   }
 
   public Optional<ShortLink> shortLink(String id, ShortLinkIdType type) {

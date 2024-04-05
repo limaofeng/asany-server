@@ -122,6 +122,10 @@ type ShortLink {
   访问次数
   """
   accessCount: Int!
+  """
+  元数据
+  """
+  metadata: JSON
 }
 
 type ShortLinkConnection {
@@ -141,6 +145,25 @@ type ShortLinkEdge {
 enum ShortLinkIdType {
   ID
   CODE
+}
+
+input ShortLinkCreateInput {
+  """
+  长链接
+  """
+  url: String
+  """
+  分类
+  """
+  category: String
+  """
+  过期时间
+  """
+  expiresAt: Date
+  """
+  元数据
+  """
+  metadata: JSON
 }
 
 type Query {
@@ -205,33 +228,7 @@ extend type Mutation {
   """
   生成短链接
   """
-  generateShortLink(
-    """
-    长链接
-    """
-    url: String!
-    """
-    分类
-    """
-    category: String!
-    """
-    过期时间
-    """
-    expiresAt: Date
-  ): ShortLink!
-  """
-  生成短链接
-  """
-  generateEmptyShortLinks(
-    """
-    分类
-    """
-    category: String!
-    """
-    生成数量
-    """
-    count: Int!
-  ): [ShortLink!]!
+  generateShortLinks(links: [ShortLinkCreateInput!]!): [ShortLink!]!
 }
 
 """
