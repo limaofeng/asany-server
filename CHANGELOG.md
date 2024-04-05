@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.25](https://github.com/limaofeng/asany-server/compare/v0.2.24...v0.2.25) (2024-04-05)
+
+
+### Features
+
+* ShortLink 返回 metadata ([7c68a22](https://github.com/limaofeng/asany-server/commit/7c68a22b6b968f501ec76fae54b19b715edb66da))
+* 优化应用创建，支持记录应用模块 ([009f1e0](https://github.com/limaofeng/asany-server/commit/009f1e0265baf09919ae3ba60582a1b4a9640412))
+* 修改生成短链接接口 ([5514e63](https://github.com/limaofeng/asany-server/commit/5514e635a019cfb1c7f9a7e10a6589c867d4474a))
+* 合并代码 ([7bb3fc3](https://github.com/limaofeng/asany-server/commit/7bb3fc33b2acd2de29b0a588e7f3db68876f98d9))
+* 完善应用模块安装与卸载 ([75a4729](https://github.com/limaofeng/asany-server/commit/75a472917d65b80810427ed50e50c0ac1a652760))
+* 添加短链接删除逻辑 ([36799b9](https://github.com/limaofeng/asany-server/commit/36799b9f1571e53afcdd6d113b8ac41bcb51601c))
+
+
+### Bug Fixes
+
+* 解决 shortlink metadata could not initialize proxy - no Session  问题 ([5784bae](https://github.com/limaofeng/asany-server/commit/5784bae87752814af0ef926b38fd04d2103ef0f7))
+* 解决 shortlink 批量保存问题 ([8f4f64e](https://github.com/limaofeng/asany-server/commit/8f4f64e2d8447c8d6f1e855e0277897ce3c25924))
+* 解决短链删除问题 ([2cb97b9](https://github.com/limaofeng/asany-server/commit/2cb97b9968975d1ac3bcd579c9cec665a3e48aa2))
+
 ### [0.2.24](https://github.com/limaofeng/asany-server/compare/v0.2.23...v0.2.24) (2024-04-03)
 
 
