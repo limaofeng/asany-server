@@ -5,9 +5,13 @@ import cn.asany.pim.core.domain.Device;
 import cn.asany.pim.core.domain.WarrantyCard;
 import cn.asany.pim.product.domain.Product;
 import cn.asany.pim.product.service.ProductService;
+import cn.asany.system.domain.ShortLink;
+import cn.asany.system.service.ShortLinkService;
 import java.util.List;
 import java.util.Optional;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -22,11 +26,19 @@ public class DeviceService {
 
   private final WarrantyCardService warrantyCardService;
 
+  private final ShortLinkService shortLinkService;
+
+  @Autowired protected Environment environment;
+
   public DeviceService(
-      DeviceDao deviceDao, ProductService productService, WarrantyCardService warrantyCardService) {
+      DeviceDao deviceDao,
+      ProductService productService,
+      WarrantyCardService warrantyCardService,
+      ShortLinkService shortLinkService) {
     this.deviceDao = deviceDao;
     this.productService = productService;
     this.warrantyCardService = warrantyCardService;
+    this.shortLinkService = shortLinkService;
   }
 
   @Transactional(readOnly = true)
@@ -46,6 +58,11 @@ public class DeviceService {
             .findById(device.getProduct().getId())
             .orElseThrow(() -> new IllegalArgumentException("产品不存在"));
 
+    ShortLink link =
+        this.shortLinkService
+            .findByCode(device.getQrcode())
+            .orElseThrow(() -> new IllegalArgumentException("二维码不存在" + device.getQrcode()));
+
     device.setBrand(product.getBrand());
 
     List<WarrantyCard> warrantyCards = device.getWarrantyCards();
@@ -59,6 +76,12 @@ public class DeviceService {
     }
 
     device.setWarrantyCards(warrantyCards);
+
+    link.setUrl(
+        environment.getProperty("SHORT_DOMAIN_NAME") + "/c/devices/" + device.getId() + "/support");
+    link.getMetadata().put("device", device.getId().toString());
+    this.shortLinkService.update(link.getId(), link, false);
+
     return device;
   }
 

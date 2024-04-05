@@ -12,6 +12,8 @@ public class DeviceCreateInput {
   private String sn;
   /** 设备名称 */
   private String name;
+  /** 设备二维码 */
+  private String qrcode;
   /** 设备型号 */
   private Long productId;
   /** 购买日期 */

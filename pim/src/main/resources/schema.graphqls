@@ -221,6 +221,10 @@ type Device implements TicketTarget {
   """
   name: String
   """
+  设备二维码
+  """
+  qrcode: String
+  """
   设备状态
   """
   status: AssetStatus
@@ -321,6 +325,10 @@ input DeviceCreateInput {
   设备名称
   """
   name: String
+  """
+  设备二维码
+  """
+  qrcode: String
   """
   产品ID
   """
