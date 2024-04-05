@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.26](https://github.com/limaofeng/asany-server/compare/v0.2.25...v0.2.26) (2024-04-05)
+
+
+### Features
+
+* 设备关联短链 ([996f877](https://github.com/limaofeng/asany-server/commit/996f8772235678a65f9c917c8949293f3b0d1b92))
+* 设备添加 qrcode 字段 ([90aa18c](https://github.com/limaofeng/asany-server/commit/90aa18cbf86169df2ed016edc9f0fac89c180913))
+
 ### [0.2.25](https://github.com/limaofeng/asany-server/compare/v0.2.24...v0.2.25) (2024-04-05)
 
 
