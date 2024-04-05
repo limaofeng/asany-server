@@ -1,5 +1,6 @@
 package cn.asany.autoconfigure;
 
+import cn.asany.base.common.BatchPayload;
 import cn.asany.base.common.Ownership;
 import cn.asany.base.common.TicketTarget;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +29,7 @@ public class BaseAutoConfiguration {
     return dictionary -> {
       dictionary.add("Owner", Ownership.class);
       dictionary.add("TicketTarget", TicketTarget.class);
+      dictionary.add("BatchPayload", BatchPayload.class);
     };
   }
 }

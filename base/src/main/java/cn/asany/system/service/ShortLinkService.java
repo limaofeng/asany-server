@@ -66,4 +66,20 @@ public class ShortLinkService {
     shortLink.setId(id);
     return this.shortLinkDao.update(shortLink, merge);
   }
+
+  public Optional<ShortLink> delete(Long id) {
+    return this.shortLinkDao
+        .findById(id)
+        .map(
+            item -> {
+              this.shortLinkDao.delete(item);
+              return item;
+            });
+  }
+
+  public int deleteMany(PropertyFilter filter) {
+    List<ShortLink> shortLinks = this.shortLinkDao.findAll(filter);
+    this.shortLinkDao.deleteAllInBatch(shortLinks);
+    return shortLinks.size();
+  }
 }

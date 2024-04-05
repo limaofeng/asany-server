@@ -1,5 +1,6 @@
 package cn.asany.system.graphql;
 
+import cn.asany.base.common.BatchPayload;
 import cn.asany.system.convert.ShortLinkConverter;
 import cn.asany.system.domain.ShortLink;
 import cn.asany.system.graphql.input.ShortLinkCreateInput;
@@ -9,14 +10,15 @@ import cn.asany.system.graphql.type.ShortLinkIdType;
 import cn.asany.system.service.ShortLinkService;
 import graphql.kickstart.tools.GraphQLMutationResolver;
 import graphql.kickstart.tools.GraphQLQueryResolver;
-import java.util.List;
-import java.util.Optional;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.graphql.util.Kit;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.Optional;
 
 @Component
 public class ShortLinkGraphQLQueryAndMutationResolver
@@ -51,5 +53,13 @@ public class ShortLinkGraphQLQueryAndMutationResolver
     Page<ShortLink> page =
         this.shortLinkService.findPage(PageRequest.of(currentPage - 1, pageSize, orderBy), filter);
     return Kit.connection(page, ShortLinkConnection.class);
+  }
+
+  public Optional<ShortLink> deleteShortLink(Long id) {
+    return this.shortLinkService.delete(id);
+  }
+
+  public BatchPayload deleteManyShortLinks(ShortLinkWhereInput where) {
+    return BatchPayload.of(this.shortLinkService.deleteMany(where.toFilter()));
   }
 }
