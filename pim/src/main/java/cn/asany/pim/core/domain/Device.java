@@ -28,6 +28,9 @@ public class Device extends PhysicalAsset implements TicketTarget {
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "BRAND_ID", foreignKey = @ForeignKey(name = "FK_PIM_ASSET_BRAND"))
   private Brand brand;
+  /** 二维码 */
+  @Column(name = "QRCODE", length = 50)
+  private String qrcode;
   /** 型号 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(
