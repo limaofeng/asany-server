@@ -1,5 +1,6 @@
 package cn.asany.system.graphql;
 
+import cn.asany.base.common.BatchPayload;
 import cn.asany.system.domain.ShortLink;
 import cn.asany.system.graphql.input.ShortLinkWhereInput;
 import cn.asany.system.graphql.type.ShortLinkConnection;
@@ -51,5 +52,13 @@ public class ShortLinkGraphQLQueryAndMutationResolver
     Page<ShortLink> page =
         this.shortLinkService.findPage(PageRequest.of(currentPage - 1, pageSize, orderBy), filter);
     return Kit.connection(page, ShortLinkConnection.class);
+  }
+
+  public Optional<ShortLink> deleteShortLink(Long id) {
+    return this.shortLinkService.delete(id);
+  }
+
+  public BatchPayload deleteManyShortLinks(ShortLinkWhereInput where) {
+    return BatchPayload.of(this.shortLinkService.deleteMany(where.toFilter()));
   }
 }

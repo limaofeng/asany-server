@@ -95,6 +95,10 @@ input DictWhereInput {
 
 input ShortLinkWhereInput {
   """
+  短链ID
+  """
+  id_in: [ID!]
+  """
   分类
   """
   category: String
@@ -103,7 +107,7 @@ input ShortLinkWhereInput {
 type ShortLink {
   id: ID!
   """
-  短链接码
+  短链编码
   """
   code: String!
   """
@@ -113,7 +117,11 @@ type ShortLink {
   """
   过期时间
   """
-  expiresAt: Date
+  expiresAt: Date @dateFormat
+  """
+  创建时间
+  """
+  createdAt: Date @dateFormat
   """
   分类
   """
@@ -134,8 +142,8 @@ type ShortLinkConnection {
 }
 
 type ShortLinkEdge {
-  cursor: String
-  node: ShortLink
+  cursor: String!
+  node: ShortLink!
 }
 
 enum ShortLinkIdType {
@@ -232,6 +240,14 @@ extend type Mutation {
     """
     count: Int!
   ): [ShortLink!]!
+  """
+  删除短链接
+  """
+  deleteShortLink(id: ID!): ShortLink
+  """
+  删除短链接
+  """
+  deleteManyShortLinks(where: ShortLinkWhereInput): BatchPayload!
 }
 
 """

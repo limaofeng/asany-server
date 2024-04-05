@@ -173,3 +173,7 @@ input ContactInformationInput {
   """
   address: AddressInput
 }
+
+type BatchPayload {
+  count: Int!
+}
