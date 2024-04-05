@@ -130,6 +130,10 @@ type ShortLink {
   访问次数
   """
   accessCount: Int!
+  """
+  元数据
+  """
+  metadata: JSON
 }
 
 type ShortLinkConnection {
