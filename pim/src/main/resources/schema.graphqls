@@ -407,6 +407,11 @@ enum ProductIdType {
   SN
 }
 
+enum DeviceIdType {
+  ID
+  SN
+}
+
 extend type Query {
   """
   查询产品列表
@@ -508,7 +513,7 @@ extend type Query {
   """
   查询设备详情
   """
-  device(id: ID!): Device
+  device(id: ID!, idType: DeviceIdType = ID): Device
   """
   查询保修策略列表
   """

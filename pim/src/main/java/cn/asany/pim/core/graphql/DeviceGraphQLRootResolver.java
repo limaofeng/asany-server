@@ -6,6 +6,7 @@ import cn.asany.pim.core.graphql.input.DeviceCreateInput;
 import cn.asany.pim.core.graphql.input.DeviceUpdateInput;
 import cn.asany.pim.core.graphql.input.DeviceWhereInput;
 import cn.asany.pim.core.graphql.type.DeviceConnection;
+import cn.asany.pim.core.graphql.type.DeviceIdType;
 import cn.asany.pim.core.service.DeviceService;
 import graphql.kickstart.tools.GraphQLMutationResolver;
 import graphql.kickstart.tools.GraphQLQueryResolver;
@@ -40,8 +41,11 @@ public class DeviceGraphQLRootResolver implements GraphQLMutationResolver, Graph
     return this.deviceService.findAll(where.toFilter(), offset, limit, sort);
   }
 
-  public Optional<Device> device(Long id) {
-    return this.deviceService.findById(id);
+  public Optional<Device> device(String id, DeviceIdType type) {
+    if (DeviceIdType.ID == type) {
+      return this.deviceService.findById(Long.valueOf(id));
+    }
+    return this.deviceService.findBySN(id);
   }
 
   public Device createDevice(DeviceCreateInput input) {

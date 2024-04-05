@@ -94,6 +94,11 @@ public class DeviceService {
     return deviceDao.findById(id);
   }
 
+  @Transactional(readOnly = true)
+  public Optional<Device> findBySN(String sn) {
+    return deviceDao.findOneBy("sn", sn);
+  }
+
   @Transactional
   public Device update(Long id, Device device, Boolean merge) {
     device.setId(id);
