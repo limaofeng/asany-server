@@ -25,14 +25,17 @@ public class ShortLinkService {
     this.shortLinkDao = shortLinkDao;
   }
 
+  @Transactional(readOnly = true)
   public Optional<ShortLink> findByCode(String code) {
     return this.shortLinkDao.findOneBy("code", code);
   }
 
+  @Transactional(readOnly = true)
   public Page<ShortLink> findPage(Pageable pageable, PropertyFilter filter) {
     return this.shortLinkDao.findPage(pageable, filter);
   }
 
+  @Transactional(readOnly = true)
   public Optional<ShortLink> findById(Long id) {
     return this.shortLinkDao.findById(id);
   }
@@ -64,11 +67,13 @@ public class ShortLinkService {
     shortLinkDao.save(shortLink);
   }
 
+  @Transactional
   public ShortLink update(Long id, ShortLink shortLink, boolean merge) {
     shortLink.setId(id);
     return this.shortLinkDao.update(shortLink, merge);
   }
 
+  @Transactional
   public Optional<ShortLink> delete(Long id) {
     return this.shortLinkDao
         .findById(id)
@@ -79,9 +84,11 @@ public class ShortLinkService {
             });
   }
 
+  @Transactional
   public int deleteMany(PropertyFilter filter) {
     List<ShortLink> shortLinks = this.shortLinkDao.findAll(filter);
     this.shortLinkDao.deleteAllInBatch(shortLinks);
     return shortLinks.size();
   }
+
 }

@@ -41,7 +41,7 @@ public class ShortLink extends BaseBusEntity {
   @Column(name = "ACCESS_COUNT", nullable = false)
   private Long accessCount = 0L;
   /** 元数据 */
-  @ElementCollection(fetch = FetchType.LAZY)
+  @ElementCollection(fetch = FetchType.EAGER)
   @MapKeyColumn(name = "NAME", length = 50)
   @Column(name = "VALUE", length = 2048)
   @CollectionTable(
