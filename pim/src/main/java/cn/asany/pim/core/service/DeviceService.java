@@ -80,6 +80,7 @@ public class DeviceService {
     link.setUrl(
         environment.getProperty("SHORT_DOMAIN_NAME") + "/c/devices/" + device.getId() + "/support");
     link.getMetadata().put("device", device.getId().toString());
+    link.setCategory("wxb:device");
     this.shortLinkService.update(link.getId(), link, false);
 
     return device;

@@ -90,5 +90,4 @@ public class ShortLinkService {
     this.shortLinkDao.deleteAll(shortLinks);
     return shortLinks.size();
   }
-
 }
