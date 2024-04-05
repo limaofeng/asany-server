@@ -12,14 +12,17 @@ import cn.asany.pim.product.domain.ProductVariant;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.jfantasy.framework.dao.SoftDeletable;
 
 @Data
 @Entity
 @DiscriminatorValue("DEVICE")
 @EqualsAndHashCode(callSuper = true)
-public class Device extends PhysicalAsset implements TicketTarget {
+public class Device extends PhysicalAsset implements TicketTarget, SoftDeletable {
 
   /** 设备的序列号，通常由制造商提供，具有唯一性 */
   @Column(name = "SN", length = 50)
@@ -76,4 +79,19 @@ public class Device extends PhysicalAsset implements TicketTarget {
   @Embedded private ContactInformation contactInfo;
   /** 所有者 */
   @Embedded private Owner<DeviceOwnerType> owner;
+
+  @JsonIgnore
+  @Column(name = "DELETED")
+  private Boolean deleted;
+
+  @Override
+  public void setDeleted(boolean deleted) {
+    this.deleted = deleted;
+  }
+
+  @Override
+  public boolean isDeleted() {
+    return Boolean.TRUE.equals(deleted);
+  }
+
 }
