@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.29](https://github.com/limaofeng/asany-server/compare/v0.2.28...v0.2.29) (2024-04-05)
+
+
+### Features
+
+* add createdAt field to Device type ([63bd6ac](https://github.com/limaofeng/asany-server/commit/63bd6ac912528995d1510466f8d15b63106acf70))
+* 添加通过 SN 查询设备的接口 ([038879a](https://github.com/limaofeng/asany-server/commit/038879a9ec8e0736d7ce48f4e2e9dbc839a7be3a))
+* 设备 NO 查询 ([3e2e49f](https://github.com/limaofeng/asany-server/commit/3e2e49ff40a978d5b73e25bce851d6ad85463be6))
+* 设备逻辑删除 ([20bb8e3](https://github.com/limaofeng/asany-server/commit/20bb8e36174bdd38c7231dd0e9d3bcad5879cf4a))
+
 ### [0.2.28](https://github.com/limaofeng/asany-server/compare/v0.2.27...v0.2.28) (2024-04-05)
 
 
