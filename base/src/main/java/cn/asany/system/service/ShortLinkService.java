@@ -11,6 +11,7 @@ import org.jfantasy.framework.dao.mybatis.keygen.util.DataBaseKeyGenerator;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ShortLinkService {
@@ -44,8 +45,9 @@ public class ShortLinkService {
     return dataBaseKeyGenerator.nextValue("sys_short_link:id");
   }
 
+  @Transactional
   public List<ShortLink> generateShortLinks(List<ShortLink> shortLinks) {
-    this.shortLinkDao.saveAllInBatch(
+    this.shortLinkDao.updateAllInBatch(
         shortLinks.stream()
             .peek(
                 shortLink -> {

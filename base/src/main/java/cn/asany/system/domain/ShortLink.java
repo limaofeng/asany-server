@@ -50,7 +50,7 @@ public class ShortLink extends BaseBusEntity {
           @JoinColumn(
               name = "SHORT_LINK_ID",
               referencedColumnName = "ID",
-              foreignKey = @ForeignKey(name = "FK_APPLICATION_MODULE_CONFIG_VALUES")))
+              foreignKey = @ForeignKey(name = "FK_SHORT_LINK_META_DATA_SHORT_LINK_ID")))
   private Map<String, String> metadata;
   /** 所有者 */
   @Embedded private Owner<ShortLinkOwnerType> owner;
