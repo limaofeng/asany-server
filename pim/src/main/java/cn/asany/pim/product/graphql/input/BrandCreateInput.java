@@ -1,3 +1,8 @@
 package cn.asany.pim.product.graphql.input;
 
-public class BrandCreateInput {}
+import lombok.Data;
+
+@Data
+public class BrandCreateInput {
+  private String name;
+}

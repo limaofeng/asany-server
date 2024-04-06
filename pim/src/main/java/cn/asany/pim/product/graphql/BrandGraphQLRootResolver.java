@@ -1,5 +1,6 @@
 package cn.asany.pim.product.graphql;
 
+import cn.asany.base.common.BatchPayload;
 import cn.asany.pim.product.convert.BrandConverter;
 import cn.asany.pim.product.domain.Brand;
 import cn.asany.pim.product.graphql.input.BrandCreateInput;
@@ -56,5 +57,13 @@ public class BrandGraphQLRootResolver implements GraphQLMutationResolver, GraphQ
   public Brand updateBrand(String id, BrandUpdateInput input, Boolean merge) {
     Brand brand = brandConverter.toBrand(input);
     return this.brandService.update(id, brand, merge);
+  }
+
+  public Optional<Brand> deleteBrand(String id) {
+    return this.brandService.delete(id);
+  }
+
+  public BatchPayload deleteManyBrands(BrandWhereInput where) {
+    return BatchPayload.of(this.brandService.deleteMany(where.toFilter()));
   }
 }

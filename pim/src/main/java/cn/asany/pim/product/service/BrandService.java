@@ -39,4 +39,20 @@ public class BrandService {
     brand.setId(id);
     return this.brandDao.update(brand, merge);
   }
+
+  public Optional<Brand> delete(String id) {
+    return this.brandDao
+        .findById(id)
+        .map(
+            brand -> {
+              this.brandDao.delete(brand);
+              return brand;
+            });
+  }
+
+  public Integer deleteMany(PropertyFilter filter) {
+    List<Brand> brands = this.brandDao.findAll(filter);
+    this.brandDao.deleteAll(brands);
+    return brands.size();
+  }
 }

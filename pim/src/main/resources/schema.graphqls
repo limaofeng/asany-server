@@ -413,7 +413,88 @@ enum DeviceIdType {
   NO
 }
 
+input BrandWhereInput {
+  name_contains: String
+}
+
+type BrandConnection {
+  # 总数据条数
+  totalCount: Int!
+  # 每页显示条数
+  pageSize: Int!
+  # 总页数
+  totalPage: Int!
+  # 当前页
+  currentPage: Int!
+  edges: [BrandEdge!]!
+  pageInfo: PageInfo!
+}
+
+type BrandEdge {
+  cursor: String!
+  node: Brand!
+}
+
+input BrandCreateInput {
+  name: String
+}
+
+input BrandUpdateInput {
+  name: String
+}
+
 extend type Query {
+  """
+  查询品牌列表
+  """
+  brandsConnection(
+    """
+    查询条件
+    """
+    where: BrandWhereInput = {}
+    """
+    当前页
+    """
+    page: Int = 1
+    """
+    每页显示条数
+    """
+    pageSize: Int = 15
+    """
+    排序
+    """
+    orderBy: OrderBy = "unsorted"
+  ): BrandConnection!
+  """
+  查询品牌列表
+  """
+  brands(
+    """
+    查询条件
+    """
+    where: BrandWhereInput = {}
+    """
+    偏移量
+    """
+    offset: Int = 0
+    """
+    每页显示条数
+    """
+    limit: Int = 15
+    """
+    排序
+    """
+    orderBy: OrderBy = "unsorted"
+  ): [Brand!]!
+  """
+  查询品牌详情
+  """
+  brand(
+    """
+    品牌ID
+    """
+    id: ID!
+  ): Brand
   """
   查询产品列表
   """
@@ -522,6 +603,42 @@ extend type Query {
 }
 
 extend type Mutation {
+  """
+  创建品牌
+  """
+  createBrand(
+    """
+    创建品牌信息
+    """
+    input: BrandCreateInput!
+  ): Brand
+
+  """
+  "
+  更新品牌
+  """
+  updateBrand(
+    """
+    品牌ID
+    """
+    id: ID!
+    """
+    更新品牌信息
+    """
+    input: BrandUpdateInput!
+    """
+    是否合并更新
+    """
+    merge: Boolean = true
+  ): Brand
+  """
+  删除品牌
+  """
+  deleteBrand(id: ID!): Brand
+  """
+  批量删除品牌
+  """
+  deleteManyBrands(where: BrandWhereInput! = {}): BatchPayload!
   """
   创建产品
   """
