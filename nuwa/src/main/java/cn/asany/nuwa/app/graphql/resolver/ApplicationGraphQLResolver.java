@@ -14,6 +14,7 @@ import graphql.schema.DataFetchingEnvironment;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.jfantasy.framework.security.LoginUser;
@@ -119,11 +120,11 @@ public class ApplicationGraphQLResolver implements GraphQLResolver<Application> 
     return library.map(this.libraryConverter::toComponentLibrary);
   }
 
-  public List<Licence> licences(Application application) {
+  public Set<Licence> licences(Application application) {
     return application.getLicences();
   }
 
-  public List<ClientSecret> clientSecrets(Application application) {
+  public Set<ClientSecret> clientSecrets(Application application) {
     return application.getClientSecretsAlias();
   }
 

@@ -170,7 +170,7 @@ public class ApplicationService implements ClientDetailsService {
     Application application = this.applicationConverter.oauthAppToApp(app);
     String clientId = StringUtil.generateNonceString(NONCE_CHARS, 20);
     String clientSecret = StringUtil.generateNonceString(NONCE_CHARS, 40);
-    List<ClientSecret> clientSecrets = new ArrayList<>();
+    Set<ClientSecret> clientSecrets = new HashSet<>();
     clientSecrets.add(ClientSecret.builder().id(1L).client(clientId).secret(clientSecret).build());
     application.setClientId(clientId);
     application.setClientSecretsAlias(clientSecrets);
@@ -202,7 +202,7 @@ public class ApplicationService implements ClientDetailsService {
             () -> StringUtil.generateNonceString(NONCE_CHARS, 40));
 
     // 创建密钥
-    List<ClientSecret> clientSecrets = new ArrayList<>();
+    Set<ClientSecret> clientSecrets = new HashSet<>();
     ClientSecret clientSecret =
         clientSecretDao.save(
             ClientSecret.builder()
@@ -247,7 +247,7 @@ public class ApplicationService implements ClientDetailsService {
     // 保存应用
     this.applicationDao.save(application);
 
-    List<ApplicationModuleConfiguration> modules = new ArrayList<>();
+    Set<ApplicationModuleConfiguration> modules = new HashSet<>();
     List<IModuleProperties> modulePropertiesList =
         ObjectUtil.defaultValue(nativeApplication.getModules(), Collections.emptyList());
     for (IModuleProperties moduleProperties : modulePropertiesList) {

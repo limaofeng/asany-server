@@ -152,7 +152,7 @@ public class Application extends BaseBusEntity implements ClientDetails, Tenanta
   @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
   @JoinColumn(name = "CLIENT_ID", referencedColumnName = "CLIENT_ID", updatable = false)
   @ToString.Exclude
-  private List<ClientSecret> clientSecretsAlias;
+  private Set<ClientSecret> clientSecretsAlias;
   /** 许可证 */
   @OrderBy(" createdAt desc ")
   @OneToMany(
@@ -160,7 +160,7 @@ public class Application extends BaseBusEntity implements ClientDetails, Tenanta
       cascade = {CascadeType.REMOVE},
       fetch = FetchType.LAZY)
   @ToString.Exclude
-  private List<Licence> licences;
+  private Set<Licence> licences;
   /** 所有者 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "OWNERSHIP", foreignKey = @ForeignKey(name = "FK_APPLICATION_OWNERSHIP"))
@@ -172,14 +172,14 @@ public class Application extends BaseBusEntity implements ClientDetails, Tenanta
       cascade = {CascadeType.REMOVE},
       fetch = FetchType.LAZY)
   @ToString.Exclude
-  private List<ApplicationDependency> dependencies;
+  private Set<ApplicationDependency> dependencies;
 
   @OneToMany(
       mappedBy = "application",
       cascade = {CascadeType.REMOVE},
       fetch = FetchType.LAZY)
   @ToString.Exclude
-  private List<ApplicationModuleConfiguration> modules;
+  private Set<ApplicationModuleConfiguration> modules;
   /** 租户ID */
   @Column(name = "TENANT_ID", length = 24, nullable = false)
   private String tenantId;
