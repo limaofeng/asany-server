@@ -91,6 +91,14 @@ type Product {
     limit: Int = 15
     orderBy: OrderBy = "unsorted"
   ): [Article!]!
+  """
+  创建时间
+  """
+  createdAt: Date @dateFormat
+  """
+  修改时间
+  """
+  updatedAt: Date @dateFormat
 }
 
 type DeviceConnection {
@@ -141,6 +149,14 @@ type Brand {
   品牌名称
   """
   name: String
+  """
+  创建时间
+  """
+  createdAt: Date @dateFormat
+  """
+  修改时间
+  """
+  updatedAt: Date @dateFormat
 }
 
 """
