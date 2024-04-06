@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.31](https://github.com/limaofeng/asany-server/compare/v0.2.30...v0.2.31) (2024-04-06)
+
+
+### Features
+
+* 应用模块配置返回 key ([f24891f](https://github.com/limaofeng/asany-server/commit/f24891f162dcd6d21eb4db1389f81c060254fd70))
+
 ### [0.2.30](https://github.com/limaofeng/asany-server/compare/v0.2.29...v0.2.30) (2024-04-06)
 
 
