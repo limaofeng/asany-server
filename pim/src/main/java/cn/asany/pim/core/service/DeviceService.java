@@ -7,6 +7,8 @@ import cn.asany.pim.product.domain.Product;
 import cn.asany.pim.product.service.ProductService;
 import cn.asany.system.domain.ShortLink;
 import cn.asany.system.service.ShortLinkService;
+import java.util.List;
+import java.util.Optional;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -15,9 +17,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.Optional;
 
 @Service
 public class DeviceService {
@@ -109,17 +108,21 @@ public class DeviceService {
   @Transactional
   public Optional<Device> delete(Long id) {
     Optional<Device> device = this.deviceDao.findById(id);
-    device.ifPresent(item -> {
-      item.setSn(item.getSn() + ".deleted." + System.currentTimeMillis());
-      item.setNo(item.getNo() + ".deleted." + System.currentTimeMillis());
-      this.deviceDao.update(item, false);
-      this.shortLinkService.findByCode(item.getQrcode()).ifPresent((link) -> {
-        link.setUrl(null);
-        link.setCategory("unknown");
-        link.getMetadata().remove("device");
-      });
-      this.deviceDao.delete(item);
-    });
+    device.ifPresent(
+        item -> {
+          item.setSn(item.getSn() + ".deleted." + System.currentTimeMillis());
+          item.setNo(item.getNo() + ".deleted." + System.currentTimeMillis());
+          this.deviceDao.update(item, false);
+          this.shortLinkService
+              .findByCode(item.getQrcode())
+              .ifPresent(
+                  (link) -> {
+                    link.setUrl(null);
+                    link.setCategory("unknown");
+                    link.getMetadata().remove("device");
+                  });
+          this.deviceDao.delete(item);
+        });
     return device;
   }
 

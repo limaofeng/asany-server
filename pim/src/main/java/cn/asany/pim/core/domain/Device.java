@@ -9,11 +9,10 @@ import cn.asany.pim.core.domain.enums.DeviceOwnerType;
 import cn.asany.pim.product.domain.Brand;
 import cn.asany.pim.product.domain.Product;
 import cn.asany.pim.product.domain.ProductVariant;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.*;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.jfantasy.framework.dao.SoftDeletable;
@@ -93,5 +92,4 @@ public class Device extends PhysicalAsset implements TicketTarget, SoftDeletable
   public boolean isDeleted() {
     return Boolean.TRUE.equals(deleted);
   }
-
 }
