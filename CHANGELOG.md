@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.30](https://github.com/limaofeng/asany-server/compare/v0.2.29...v0.2.30) (2024-04-06)
+
+
+### Features
+
+* 修复应用返回模块数据问题 ([c6b32c9](https://github.com/limaofeng/asany-server/commit/c6b32c974741b51a6e4933cd92995bacab64af73))
+* 添加品牌相关接口 ([6bd5586](https://github.com/limaofeng/asany-server/commit/6bd5586d0ae389a1a944eea498afe9044018f791))
+
+
+### Bug Fixes
+
+* 解决引用模块显示错误问题 ([b319a87](https://github.com/limaofeng/asany-server/commit/b319a87e31e2804de6ce7e933443c60e25bc8e47))
+
 ### [0.2.29](https://github.com/limaofeng/asany-server/compare/v0.2.28...v0.2.29) (2024-04-05)
 
 
