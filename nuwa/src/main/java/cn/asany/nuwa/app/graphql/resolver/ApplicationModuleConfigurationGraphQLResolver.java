@@ -9,6 +9,10 @@ import org.springframework.stereotype.Component;
 public class ApplicationModuleConfigurationGraphQLResolver
     implements GraphQLResolver<ApplicationModuleConfiguration> {
 
+  public String key(ApplicationModuleConfiguration configuration) {
+    return configuration.getModule().getId();
+  }
+
   public String name(ApplicationModuleConfiguration configuration) {
     return configuration.getModule().getName();
   }

@@ -430,6 +430,10 @@ type Application {
 type ApplicationModuleConfiguration {
   id: ID!
   """
+  模块 Key
+  """
+  key: String!
+  """
   模块名称
   """
   name: String
