@@ -7,6 +7,8 @@ import java.util.Optional;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.jfantasy.framework.spring.SpringBeanUtils;
+import org.jfantasy.framework.util.regexp.RegexpConstant;
+import org.jfantasy.framework.util.regexp.RegexpUtil;
 import org.jfantasy.graphql.inputs.WhereInput;
 
 /**
@@ -16,14 +18,17 @@ import org.jfantasy.graphql.inputs.WhereInput;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class ArticleCategoryWhereInput extends WhereInput<ArticleCategoryWhereInput, ArticleCategory> {
+public class ArticleCategoryWhereInput
+    extends WhereInput<ArticleCategoryWhereInput, ArticleCategory> {
 
   @JsonProperty("parent")
   public void setParent(AcceptArticleCategory acceptArticleCategory) {
     ArticleCategoryService service = SpringBeanUtils.getBean(ArticleCategoryService.class);
     if (acceptArticleCategory.getSubColumns()) {
       Optional<ArticleCategory> channelOptional =
-          service.findById(Long.valueOf(acceptArticleCategory.getId()));
+          RegexpUtil.isMatch(acceptArticleCategory.getId(), RegexpConstant.VALIDATOR_INTEGE)
+              ? service.findById(Long.valueOf(acceptArticleCategory.getId()))
+              : service.findOneBySlug(acceptArticleCategory.getId());
       if (channelOptional.isPresent()) {
         ArticleCategory channel = channelOptional.get();
         this.filter.startsWith("path", channel.getPath()).notEqual("id", channel.getId());
