@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.32](https://github.com/limaofeng/asany-server/compare/v0.2.31...v0.2.32) (2024-04-06)
+
+
+### Bug Fixes
+
+* AcceptArticleCategory id 支持 string ([4065bcf](https://github.com/limaofeng/asany-server/commit/4065bcf31c6d510e2aa3307d91e8347092172afd))
+
 ### [0.2.31](https://github.com/limaofeng/asany-server/compare/v0.2.30...v0.2.31) (2024-04-06)
 
 
