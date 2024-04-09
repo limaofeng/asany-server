@@ -13,6 +13,7 @@ import cn.asany.cms.module.CmsApplicationModule;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.jfantasy.framework.dao.jpa.ComplexJpaRepository;
+import org.jfantasy.framework.search.config.IndexedScan;
 import org.jfantasy.graphql.SchemaParserDictionaryBuilder;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
@@ -26,6 +27,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
  * @author limaofeng
  */
 @Configuration
+@IndexedScan("cn.asany.cms.*.domain")
 @EntityScan({
   "cn.asany.cms.*.domain",
 })

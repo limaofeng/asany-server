@@ -1,5 +1,6 @@
 package cn.asany.storage.api;
 
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -11,7 +12,7 @@ import org.jfantasy.framework.util.common.DateUtil;
  *
  * @author limaofeng
  */
-public class FileObjectMetadata {
+public class FileObjectMetadata implements Serializable {
   public static final String AUTHORIZATION = "Authorization";
   public static final String CACHE_CONTROL = "Cache-Control";
   public static final String CONTENT_DISPOSITION = "Content-Disposition";

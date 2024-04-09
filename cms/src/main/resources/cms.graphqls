@@ -1069,8 +1069,8 @@ type Mutation {
   """
   updateArticle(
     id: ID!
-    merge: Boolean = true
     input: ArticleUpdateInput!
+    merge: Boolean = true
   ): Article
   """
   发布文章

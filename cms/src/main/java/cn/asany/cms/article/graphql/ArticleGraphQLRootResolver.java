@@ -151,7 +151,7 @@ public class ArticleGraphQLRootResolver implements GraphQLQueryResolver, GraphQL
    * @param input 输入对象
    * @return Article
    */
-  public Article updateArticle(Long id, Boolean merge, ArticleUpdateInput input) {
+  public Article updateArticle(Long id, ArticleUpdateInput input, Boolean merge) {
     ArticleCategory category = this.articleCategoryService.getById(input.getCategory());
 
     ArticleStoreTemplate storeTemplate = category.getStoreTemplate();

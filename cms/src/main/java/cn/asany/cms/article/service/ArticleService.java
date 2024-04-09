@@ -152,7 +152,6 @@ public class ArticleService {
       article.setPublishedAt(DateUtil.now());
     }
 
-    boolean needCleanUp = article.getCategory() == null;
     boolean unPublishForScheduled =
         oldArticle.getStatus() == ArticleStatus.SCHEDULED
             && article.getStatus() == ArticleStatus.DRAFT;
@@ -162,12 +161,6 @@ public class ArticleService {
     if (unPublishForScheduled) {
       article.setPublishedAt(null);
     }
-
-    if (needCleanUp) {
-      article.setCategory(null);
-    }
-
-    this.articleDao.update(article);
 
     applicationContext.publishEvent(ArticleUpdateEvent.newInstance(article));
     return article;
