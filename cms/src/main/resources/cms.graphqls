@@ -376,6 +376,10 @@ type Article
   """
   content: ArticleContent
   """
+  正文类型
+  """
+  contentType: ContentType
+  """
   body 的 html 格式
   """
   bodyHtml: String
@@ -425,10 +429,6 @@ type Article
   点赞数
   """
   likes: Int!
-  # 统计计数
-  #    starrable(starType: ArticleStarType!): Starrable!
-  # 权限设置
-  #  permissionStatements: Permission
   """
   创建人
   """
@@ -575,7 +575,7 @@ input ArticleCreateInput {
   """
   文章正文
   """
-  body: JSON
+  content: ArticleContentInput
   """
   摘要
   """
@@ -587,11 +587,11 @@ input ArticleCreateInput {
   """
   文章标签
   """
-  tags: [ID]
+  tags: [ID!]
   """
   功能特征 <br/> 置顶 / 精华
   """
-  features: [String]
+  features: [String!]
   """
   文章栏目
   """
@@ -604,16 +604,18 @@ input ArticleCreateInput {
   发布日期
   """
   publishedAt: String
-  # 授予权限
-  access: [String]
+  """
+  授予权限
+  """
+  access: [String!]
   """
   附件
   """
-  attachments: [File]
+  attachments: [File!]
   """
   附加信息
   """
-  metafields: [ArticleMetafieldInput]
+  metafields: [ArticleMetafieldInput!]
   # 有效期限 true 永久 false 短期
   validity: Boolean
   # 有效期限 开始时间
@@ -621,7 +623,7 @@ input ArticleCreateInput {
   # 有效期限 结束时间
   validityEndDate: Date
   # 作者
-  authors: [ID]
+  authors: [ID!]
 }
 
 input ContentInput {
@@ -653,6 +655,63 @@ input ArticleMetafieldInput {
   description: String
 }
 
+input ImageContentItemInput {
+  url: String
+  image: File
+  alt: String
+  title: String
+  description: String
+  index: Int
+}
+
+"""
+文章内容
+contentType = VIDEO, fields = ["url", "video", "title", "description"]
+contentType = TEXT, fields = ["type", "text"]
+contentType = IMAGE, fields = ["images"]
+contentType = DOCUMENT, fields = ["url", "document", "type", "size", "title", "description"]
+"""
+input ArticleContentInput {
+  id: ID
+  """
+  标题
+  """
+  title: String
+  """
+  描述
+  """
+  description: String
+  """
+  引用地址
+  """
+  url: String
+  """
+  Text 类型：HTML, MARKDOWN
+  Doc 类型：PDF, DOCX, XLSX, PPTX, TXT, OTHER
+  """
+  type: String
+  """
+  文本
+  """
+  text: String
+  """
+  文件大小
+  """
+  size: Int
+  """
+  图片集
+  """
+  images: [ImageContentItemInput!]
+  """
+  视频
+  """
+  video: File
+  """
+  文档
+  """
+  document: File
+}
+
 input ArticleUpdateInput {
   """
   文章标题
@@ -681,7 +740,7 @@ input ArticleUpdateInput {
   """
   特征
   """
-  features: [String]
+  features: [String!]
   """
   文章栏目
   """
@@ -689,7 +748,7 @@ input ArticleUpdateInput {
   """
   文章正文 <br/> 实际内容与 ArticleStoreTemplate 相关
   """
-  body: JSON
+  content: ArticleContentInput
   """
   发布日期
   """
@@ -701,11 +760,11 @@ input ArticleUpdateInput {
   """
   附件
   """
-  attachments: [File]
+  attachments: [File!]
   """
   作者
   """
-  authors: [ID]
+  authors: [ID!]
   # 有效期限 true 永久 false 短期
   validity: Boolean
   # 有效期限 开始时间
@@ -715,7 +774,7 @@ input ArticleUpdateInput {
   """
   附加信息
   """
-  metafields: [ArticleMetafieldInput]
+  metafields: [ArticleMetafieldInput!]
 }
 
 type ArticleStoreTemplateComponents {

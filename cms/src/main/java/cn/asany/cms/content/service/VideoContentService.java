@@ -3,6 +3,8 @@ package cn.asany.cms.content.service;
 import cn.asany.cms.content.dao.VideoContentDao;
 import cn.asany.cms.content.domain.VideoContent;
 import cn.asany.cms.content.domain.enums.ContentType;
+import cn.asany.storage.api.FileObject;
+import java.util.Map;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -32,5 +34,21 @@ public class VideoContentService implements ArticleContentHandler<VideoContent> 
   @Override
   public void delete(Long id) {
     this.videoContentDao.deleteById(id);
+  }
+
+  @Override
+  public VideoContent parse(Map<String, Object> content) {
+    Long id = (Long) content.get("id");
+    String url = (String) content.get("url");
+    String title = (String) content.get("title");
+    String description = (String) content.get("description");
+    FileObject video = (FileObject) content.get("video");
+    return VideoContent.builder()
+        .url(url)
+        .title(title)
+        .description(description)
+        .id(id)
+        .video(video)
+        .build();
   }
 }

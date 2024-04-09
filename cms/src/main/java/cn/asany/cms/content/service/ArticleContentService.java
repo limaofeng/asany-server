@@ -1,11 +1,11 @@
 package cn.asany.cms.content.service;
 
 import cn.asany.cms.article.domain.ArticleContent;
-import cn.asany.cms.content.domain.TextContent;
 import cn.asany.cms.content.domain.enums.ContentType;
+import cn.asany.cms.content.graphql.input.ArticleContentInput;
 import java.util.List;
 import org.jfantasy.framework.error.ValidationException;
-import org.jfantasy.framework.jackson.JSON;
+import org.jfantasy.framework.util.common.ObjectUtil;
 
 public class ArticleContentService {
 
@@ -15,14 +15,12 @@ public class ArticleContentService {
     this.handlers = handlers;
   }
 
-  public ArticleContent convert(String body, ContentType contentType) {
-    if (contentType == ContentType.TEXT) {
-      return JSON.deserialize(body, TextContent.class);
-    }
-    throw new IllegalStateException("Unexpected value: " + body);
+  public ArticleContent convert(ArticleContentInput content, ContentType contentType) {
+    ArticleContentHandler<ArticleContent> handler = getContentHandler(contentType);
+    return handler.parse(ObjectUtil.toMap(content));
   }
 
-  public ArticleContentHandler<ArticleContent> getBodyHandler(ContentType type) {
+  public ArticleContentHandler<ArticleContent> getContentHandler(ContentType type) {
     return this.handlers.stream()
         .filter(item -> item.supports(type))
         .findFirst()
@@ -30,17 +28,17 @@ public class ArticleContentService {
   }
 
   public ArticleContent save(ArticleContent content) {
-    ArticleContentHandler<ArticleContent> handler = getBodyHandler(content.getContentType());
+    ArticleContentHandler<ArticleContent> handler = getContentHandler(content.getContentType());
     return handler.save(content);
   }
 
   public ArticleContent update(Long id, ArticleContent content) {
-    ArticleContentHandler<ArticleContent> handler = getBodyHandler(content.getContentType());
+    ArticleContentHandler<ArticleContent> handler = getContentHandler(content.getContentType());
     return handler.update(id, content);
   }
 
   public void deleteById(Long id, ContentType contentType) {
-    ArticleContentHandler<ArticleContent> handler = getBodyHandler(contentType);
+    ArticleContentHandler<ArticleContent> handler = getContentHandler(contentType);
     handler.delete(id);
   }
 }

@@ -7,6 +7,7 @@ import cn.asany.cms.article.domain.ArticleFeature;
 import cn.asany.cms.article.graphql.input.ArticleCreateInput;
 import cn.asany.cms.article.graphql.input.ArticleUpdateInput;
 import cn.asany.cms.article.service.ArticleFeatureService;
+import cn.asany.cms.content.graphql.input.ArticleContentInput;
 import cn.asany.cms.content.service.ArticleContentService;
 import java.util.List;
 import java.util.Optional;
@@ -53,7 +54,8 @@ public interface ArticleConverter {
   }
 
   @Named("parseArticleContent")
-  default ArticleContent parseArticleContent(String contentInput, @Context ArticleContext context) {
+  default ArticleContent parseArticleContent(
+      ArticleContentInput contentInput, @Context ArticleContext context) {
     if (contentInput == null) {
       return null;
     }

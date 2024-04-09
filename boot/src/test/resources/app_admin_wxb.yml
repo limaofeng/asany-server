@@ -34,7 +34,6 @@ menus:
   - name: 内容管理
     icon: Duotune/txt009
     path: /cms
-    component: cn.asany.ui.admin.cms.ArticleSidebar
   - name: 日历
     icon: Duotune/gen014
     path: /calendar
@@ -91,29 +90,32 @@ routes:
     authorized: true
     component: cn.asany.ui.admin.layout.Demo7
     routes:
-      - path: /cms/my/drafts
-        component: cn.asany.ui.admin.cms.MyDrafts
-      - path: /cms/my/published
-        component: cn.asany.ui.admin.cms.MyPublished
-      - path: /cms/authors
-        component: cn.asany.ui.admin.cms.Authors
-      - path: /cms/channels/:id
-        component: cn.asany.ui.admin.cms.ArticleChannel
-        routes:
-          - path: /cms/channels/:id/articles
-            component: cn.asany.ui.admin.cms.ArticleList
-          - path: /cms/channels/:id/settings
-            component: cn.asany.ui.admin.cms.ArticleChannelSettings
-      - path: /cms/articles/new
-        component: cn.asany.ui.admin.cms.ArticleNew
-        layout: false
-      - path: /cms/articles/:id
-        component: cn.asany.ui.admin.cms.ArticleView
-      - path: /cms/articles/:id/edit
-        component: cn.asany.ui.admin.cms.ArticleEdit
-        layout: false
       - path: /cms
-        redirect: /cms/my/drafts
+        component: cn.asany.ui.admin.cms.Layout
+        hideMenu: true
+        routes:
+          - path: /cms/my/drafts
+            component: cn.asany.ui.admin.cms.MyDrafts
+          - path: /cms/my/published
+            component: cn.asany.ui.admin.cms.MyPublished
+          - path: /cms/authors
+            component: cn.asany.ui.admin.cms.Authors
+          - path: /cms/categories/new
+            component: cn.asany.ui.admin.cms.ArticleChannelNew
+          - path: /cms/categories/:id
+            component: cn.asany.ui.admin.cms.ArticleChannelEdit
+          - path: /cms/categories/:cid/articles/new
+            component: cn.asany.ui.admin.cms.ArticleNew
+          - path: /cms/categories/:cid/articles/:id
+            component: cn.asany.ui.admin.cms.ArticleEdit
+          - path: /cms/categories/:cid/articles
+            component: cn.asany.ui.admin.cms.ArticleList
+#          - path: /cms/articles/:id
+#            component: cn.asany.ui.admin.cms.ArticleView
+#          - path: /cms/articles/:id/edit
+#            component: cn.asany.ui.admin.cms.ArticleEdit
+          - path: /cms
+            redirect: /cms/my/drafts
       - path: /contacts
         component: cn.asany.ui.admin.contacts.MainContacts
         routes:
@@ -199,7 +201,7 @@ routes:
 modules:
   - type: cms
     rootCategory: wxb
-    channels:
+    categories:
       - name: 产品资料
         slug: product-data
         icon: Duotune/com014
@@ -207,12 +209,16 @@ modules:
           - name: 维护视频
             slug: product-maintenance-video
             icon: Duotune/com014
+            storeTemplate: video
           - name: 产品手册
             slug: product-manual
             icon: Duotune/com014
+            storeTemplate: document
           - name: 知识库
             slug: product-knowledge-base
             icon: Duotune/com014
+            storeTemplate: web
           - name: 维护手册
             slug: product-maintenance-manual
             icon: Duotune/com014
+            storeTemplate: picture
