@@ -164,6 +164,7 @@ public class ArticleGraphQLRootResolver implements GraphQLQueryResolver, GraphQL
 
     Article article = articleConverter.toArticle(input, articleContext);
     article.setCategory(category);
+    article.setContentType(storeTemplate.getContentType());
 
     return articleService.update(id, article, merge);
   }
