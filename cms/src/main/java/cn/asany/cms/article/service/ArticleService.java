@@ -156,7 +156,7 @@ public class ArticleService {
         oldArticle.getStatus() == ArticleStatus.SCHEDULED
             && article.getStatus() == ArticleStatus.DRAFT;
 
-    this.articleDao.update(article, merge);
+    article = this.articleDao.update(article, merge);
 
     if (unPublishForScheduled) {
       article.setPublishedAt(null);

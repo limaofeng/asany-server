@@ -24,7 +24,11 @@ public class ImageContent extends BaseBusEntity implements ArticleContent {
   @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
   /** 图片 */
-  @OneToMany(mappedBy = "imageContent", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  @OneToMany(
+      mappedBy = "imageContent",
+      cascade = CascadeType.ALL,
+      fetch = FetchType.LAZY,
+      orphanRemoval = true)
   @OrderBy("index ASC")
   private List<ImageItem> images;
 
