@@ -18,7 +18,7 @@ public class DocumentContentService implements ArticleContentHandler<DocumentCon
 
   @Override
   public boolean supports(ContentType type) {
-    return type == ContentType.VIDEO;
+    return type == ContentType.DOCUMENT;
   }
 
   @Override

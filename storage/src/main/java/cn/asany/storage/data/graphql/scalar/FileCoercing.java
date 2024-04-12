@@ -52,6 +52,7 @@ public class FileCoercing implements Coercing<FileObject, Object> {
           .size(detail.getSize())
           .lastModified(detail.getLastModified())
           .path(detail.getPath())
+          .url("/preview/" + value)
           .build();
     } else if (input instanceof String) {
       IdUtils.FileKey fileKey = IdUtils.parseKey((String) input);
@@ -64,6 +65,7 @@ public class FileCoercing implements Coercing<FileObject, Object> {
           .mimeType(detail.getMimeType())
           .lastModified(detail.getLastModified())
           .path(detail.getPath())
+          .url("/preview/" + input)
           .build();
     }
     throw new ValidationException(String.format("不支持的类型 %s", input.getClass()));
