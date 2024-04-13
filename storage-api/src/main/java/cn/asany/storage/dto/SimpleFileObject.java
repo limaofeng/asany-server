@@ -33,7 +33,7 @@ public class SimpleFileObject implements FileObject, Serializable {
   /** 虚拟文件路径 */
   private String path;
   /** 完整地址 */
-  private String url;
+  @JsonIgnore private String url;
 
   private Storage storage;
 

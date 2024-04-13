@@ -15,6 +15,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jfantasy.framework.error.ValidationException;
 import org.jfantasy.framework.util.common.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 
 /**
  * @author limaofeng
@@ -26,6 +27,8 @@ public class FileCoercing implements Coercing<FileObject, Object> {
 
   @Autowired private FileService fileService;
 
+  @Autowired protected Environment environment;
+
   @Override
   public Object serialize(@NotNull Object input) throws CoercingSerializeException {
     if (!(input instanceof SimpleFileObject)) {
@@ -33,7 +36,8 @@ public class FileCoercing implements Coercing<FileObject, Object> {
     }
     SimpleFileObject fileObject = ((SimpleFileObject) input);
     if (StringUtil.isBlank(fileObject.getUrl())) {
-      fileObject.setUrl("/preview/" + fileObject.getId());
+      fileObject.setUrl(
+          environment.getProperty("STORAGE_BASE_URL") + "/preview/" + fileObject.getId());
     }
     return input;
   }
@@ -52,7 +56,7 @@ public class FileCoercing implements Coercing<FileObject, Object> {
           .size(detail.getSize())
           .lastModified(detail.getLastModified())
           .path(detail.getPath())
-          .url("/preview/" + value)
+          .url(environment.getProperty("STORAGE_BASE_URL") + "/preview/" + value)
           .build();
     } else if (input instanceof String) {
       IdUtils.FileKey fileKey = IdUtils.parseKey((String) input);
@@ -65,7 +69,7 @@ public class FileCoercing implements Coercing<FileObject, Object> {
           .mimeType(detail.getMimeType())
           .lastModified(detail.getLastModified())
           .path(detail.getPath())
-          .url("/preview/" + input)
+          .url(environment.getProperty("STORAGE_BASE_URL") + "/preview/" + input)
           .build();
     }
     throw new ValidationException(String.format("不支持的类型 %s", input.getClass()));
