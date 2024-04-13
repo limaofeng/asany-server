@@ -15,6 +15,6 @@ public class ArticleChannelImpObj {
   private String description;
   private String slug;
   private List<ArticleChannelImpObj> children;
-
-  private List<ArticleImpObj> posts;
+  private String storeTemplate;
+  private List<ArticleImpObj> articles;
 }

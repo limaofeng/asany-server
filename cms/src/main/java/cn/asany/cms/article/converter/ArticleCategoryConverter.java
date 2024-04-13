@@ -31,9 +31,20 @@ public interface ArticleCategoryConverter {
   List<ArticleCategory> toChannels(List<ArticleChannelImpObj> channels);
 
   @Mappings({
-    //    @Mapping(source = "posts", target = "articles"),
+    @Mapping(
+        source = "storeTemplate",
+        target = "storeTemplate",
+        qualifiedByName = "mapToArticleStoreTemplate"),
   })
   ArticleCategory toCategory(ArticleChannelImpObj channel);
+
+  @Named("mapToArticleStoreTemplate")
+  default ArticleStoreTemplate mapToArticleStoreTemplate(String storeTemplate) {
+    if (storeTemplate == null) {
+      return null;
+    }
+    return ArticleStoreTemplate.builder().id(storeTemplate).build();
+  }
 
   @Mappings({
     @Mapping(source = "image", target = "image", qualifiedByName = "toCoverFromString"),
@@ -73,7 +84,7 @@ public interface ArticleCategoryConverter {
   }
 
   @Named("storeTemplate")
-  default ArticleStoreTemplate storeTemplate(Long source) {
+  default ArticleStoreTemplate storeTemplate(String source) {
     if (source == null) {
       return null;
     }

@@ -55,7 +55,7 @@ public abstract class YamlUtils {
       }
       String type = ((ScalarNode) nodeTuple.getValueNode()).getValue();
       try {
-        Class beanType = moduleClasses.get(type);
+        Class<?> beanType = moduleClasses.get(type);
         node.setType(beanType);
         return beanType.newInstance();
       } catch (InstantiationException | IllegalAccessException e) {

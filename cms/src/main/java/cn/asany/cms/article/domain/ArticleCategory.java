@@ -81,8 +81,7 @@ public class ArticleCategory extends BaseBusEntity {
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(
       name = "STORE_TEMPLATE_ID",
-      foreignKey = @ForeignKey(name = "FK_ARTICLE_CATEGORY_STORE_TEMPLATE"),
-      nullable = false)
+      foreignKey = @ForeignKey(name = "FK_ARTICLE_CATEGORY_STORE_TEMPLATE"))
   private ArticleStoreTemplate storeTemplate;
   /** 栏目的附加信息 */
   @OneToMany(mappedBy = "category", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)

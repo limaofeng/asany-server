@@ -3,7 +3,6 @@ package cn.asany.cms.article.domain;
 import cn.asany.cms.content.domain.enums.ContentType;
 import javax.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
 /**
@@ -21,9 +20,7 @@ import org.jfantasy.framework.dao.BaseBusEntity;
 public class ArticleStoreTemplate extends BaseBusEntity {
   @Id
   @Column(name = "ID", nullable = false)
-  @GeneratedValue(generator = "fantasy-sequence")
-  @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
-  private Long id;
+  private String id;
   /** 名称 */
   @Column(name = "NAME", length = 50)
   private String name;

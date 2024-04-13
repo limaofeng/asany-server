@@ -11,28 +11,24 @@ menus:
     path: /crm
     component: cn.asany.ui.admin.crm.CRMSidebar
   - name: 产品管理
-    icon: Duotune/txt009
+    icon: Duotune/gen064
     path: /pim
     component: cn.asany.ui.admin.pim.PIMSidebar
     children:
       - name: 设备管理
         type: SECTION
       - name: 设备
-        icon: Duotune/txt009
         path: /pim/devices
       - name: 设备二维码
-        icon: Duotune/txt009
         path: /pim/device-qrcodes
       - name: 产品管理
         type: SECTION
       - name: 品牌
-        icon: Duotune/txt009
         path: /pim/brands
       - name: 产品
-        icon: Duotune/txt009
         path: /pim/products
   - name: 内容管理
-    icon: Duotune/txt009
+    icon: Duotune/txt001
     path: /cms
   - name: 日历
     icon: Duotune/gen014
@@ -87,10 +83,12 @@ routes:
   - path: /login
     component: cn.asany.ui.admin.authentication.AsideLayoutSignIn
   - path: /
+    name: 首页
     authorized: true
     component: cn.asany.ui.admin.layout.Demo7
     routes:
       - path: /cms
+        name: 内容管理
         component: cn.asany.ui.admin.cms.Layout
         hideMenu: true
         routes:
@@ -117,11 +115,13 @@ routes:
           - path: /cms
             redirect: /cms/my/drafts
       - path: /contacts
+        name: 通讯录
         component: cn.asany.ui.admin.contacts.MainContacts
         routes:
           - path: /contacts/:id
             component: cn.asany.ui.admin.contacts.ViewContact
       - path: /crm
+        name: 客户管理
         routes:
           - path: /crm/contacts
             component: cn.asany.ui.admin.crm.Contacts
@@ -130,48 +130,69 @@ routes:
           - path: /crm/customer-stores
             component: cn.asany.ui.admin.crm.CustomerStoreListView
       - path: /pim
+        name: 产品管理
         routes:
           - path: /pim/device-qrcodes
+            name: 设备二维码
             component: cn.asany.ui.admin.pim.DeviceQrCodeListView
           - path: /pim/devices
+            name: 设备管理
             component: cn.asany.ui.admin.pim.DeviceListView
+            routes:
+              - path: /pim/devices/:id
+                component: cn.asany.ui.admin.pim.DeviceDetailsView
           - path: /pim/brands
+            name: 品牌管理
             component: cn.asany.ui.admin.pim.BrandListView
           - path: /pim/products
+            name: 产品管理
             component: cn.asany.ui.admin.pim.ProductListView
+            routes:
+              - path: /pim/products/new
+                name: 新建产品
+                component: cn.asany.ui.admin.pim.ProductNewView
+              - path: /pim/products/:id
+                name: 产品详情
+                component: cn.asany.ui.admin.pim.ProductEditView
           - path: /pim
             redirect: /pim/devices
       - path: /calendar
+        name: 日历
         component: cn.asany.ui.admin.calendar.MainCalendar
       - path: /mail
-        redirect: /mail/inbox
-      - path: /mail/compose/:id
-        component: cn.asany.ui.admin.mail.Compose
-      - path: /mail/compose
-        component: cn.asany.ui.admin.mail.Compose
-      - path: /mail/:folder
-        component: cn.asany.ui.admin.mail.Mailbox
+        name: 邮箱
         routes:
-          - path: /mail/:folder/:id
-            component: cn.asany.ui.admin.mail.MailMessageDetails
+          - path: /mail/compose/:id
+            component: cn.asany.ui.admin.mail.Compose
+          - path: /mail/compose
+            component: cn.asany.ui.admin.mail.Compose
+          - path: /mail/:folder
+            component: cn.asany.ui.admin.mail.Mailbox
+            routes:
+              - path: /mail/:folder/:id
+                component: cn.asany.ui.admin.mail.MailMessageDetails
+          - path: /mail
+            redirect: /mail/inbox
       - path: /drive
-        redirect: /drive/my-drive
-      - path: /drive/folders
-        redirect: /drive/my-drive
-      - path: /drive/my-drive
-        component: cn.asany.ui.admin.drive.FileList
-      - path: /drive/folders/:id
-        component: cn.asany.ui.admin.drive.FileList
-      - path: /drive/mime-types/:id
-        component: cn.asany.ui.admin.drive.FileList
-      - path: /drive/recent
-        component: cn.asany.ui.admin.drive.DriveRecent
-      - path: /drive/starred
-        component: cn.asany.ui.admin.drive.DriveStarred
-      - path: /drive/trash
-        component: cn.asany.ui.admin.drive.DriveTrash
-      - path: /drive/quota
-        component: cn.asany.ui.admin.drive.DriveQuota
+        routes:
+          - path: /drive/folders
+            redirect: /drive/my-drive
+          - path: /drive/my-drive
+            component: cn.asany.ui.admin.drive.FileList
+          - path: /drive/folders/:id
+            component: cn.asany.ui.admin.drive.FileList
+          - path: /drive/mime-types/:id
+            component: cn.asany.ui.admin.drive.FileList
+          - path: /drive/recent
+            component: cn.asany.ui.admin.drive.DriveRecent
+          - path: /drive/starred
+            component: cn.asany.ui.admin.drive.DriveStarred
+          - path: /drive/trash
+            component: cn.asany.ui.admin.drive.DriveTrash
+          - path: /drive/quota
+            component: cn.asany.ui.admin.drive.DriveQuota
+          - path: /drive
+            redirect: /drive/my-drive
       - path: /storage
         component: cn.asany.ui.admin.storage.CloudStorage
       - path: /settings
@@ -217,7 +238,7 @@ modules:
           - name: 知识库
             slug: product-knowledge-base
             icon: Duotune/com014
-            storeTemplate: web
+            storeTemplate: text
           - name: 维护手册
             slug: product-maintenance-manual
             icon: Duotune/com014

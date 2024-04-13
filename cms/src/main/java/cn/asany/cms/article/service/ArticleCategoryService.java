@@ -115,7 +115,6 @@ public class ArticleCategoryService {
                         .peek(
                             article -> {
                               article.setCategory(item);
-                              //                  article.setType(ArticleType.text);
                               article.setOrganization(rootChannel.getOrganization());
                               article.setStatus(ArticleStatus.PUBLISHED);
                             })

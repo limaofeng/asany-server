@@ -18,7 +18,7 @@ import lombok.Setter;
 public class CmsModuleProperties implements IModuleProperties {
   @Setter private String type;
   @Setter private String rootCategory;
-  private List<ArticleChannelImpObj> channels;
+  private List<ArticleChannelImpObj> categories;
 
   public CmsModuleProperties(Map<String, String> properties) {
     this.rootCategory = properties.get("rootCategory");

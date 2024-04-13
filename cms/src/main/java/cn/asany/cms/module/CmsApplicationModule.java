@@ -45,7 +45,7 @@ public class CmsApplicationModule implements IApplicationModule<CmsModulePropert
                             .build()));
 
     this.articleCategoryService.saveAll(
-        categoryConverter.toChannels(properties.getChannels()), root.getId());
+        categoryConverter.toChannels(properties.getCategories()), root.getId());
 
     configs.put("rootCategory", root.getSlug());
     return configs;
@@ -53,13 +53,13 @@ public class CmsApplicationModule implements IApplicationModule<CmsModulePropert
 
   @Override
   public void uninstall(ModuleConfig<CmsModuleProperties> config) {
-    CmsModuleProperties properties = config.getProperties();
-    articleCategoryService
-        .findOneBySlug(properties.getRootCategory())
-        .map(
-            category -> {
-              this.articleCategoryService.clearAll(category.getId());
-              return category;
-            });
+    //    CmsModuleProperties properties = config.getProperties();
+    //    articleCategoryService
+    //        .findOneBySlug(properties.getRootCategory())
+    //        .map(
+    //            category -> {
+    //              this.articleCategoryService.clearAll(category.getId());
+    //              return category;
+    //            });
   }
 }
