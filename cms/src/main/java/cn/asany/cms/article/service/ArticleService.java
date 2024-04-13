@@ -163,7 +163,7 @@ public class ArticleService {
     }
 
     applicationContext.publishEvent(ArticleUpdateEvent.newInstance(article));
-    return article;
+    return this.articleDao.getReferenceById(article.getId());
   }
 
   /**
