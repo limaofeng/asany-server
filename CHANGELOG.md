@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.33](https://github.com/limaofeng/asany-server/compare/v0.2.32...v0.2.33) (2024-04-13)
+
+
+### Features
+
+* add video document content support ([acdda64](https://github.com/limaofeng/asany-server/commit/acdda64c4c6011013286dded8338dd175639b564))
+* 修改 ArticleStoreTemplate ID 为 String ([d14f71b](https://github.com/limaofeng/asany-server/commit/d14f71b6e712da30bdfc280bbbe90021f2cd5078))
+* 内容管理 ImageContent 支持 ([ec696f6](https://github.com/limaofeng/asany-server/commit/ec696f635f9b1d35f221ed4d29d3e487e993ec72))
+* 内容管理 TextContent 支持 ([d5559a2](https://github.com/limaofeng/asany-server/commit/d5559a2c47af03a2102093c2837f88d9313c2cd3))
+* 完善视频正文保存逻辑 ([4a98a4a](https://github.com/limaofeng/asany-server/commit/4a98a4a0d21ff4de44715f1697f0931c4e58699a))
+* 文件返回 URL ([6f6505c](https://github.com/limaofeng/asany-server/commit/6f6505c7661493ca440ad220f551a29eb202789e))
+* 添加 DocumentContent 处理逻辑 ([319f3ff](https://github.com/limaofeng/asany-server/commit/319f3ff92d00291c971964b104763115af063fb2))
+
+
+### Bug Fixes
+
+* 修复文章保存逻辑 ([19a77ff](https://github.com/limaofeng/asany-server/commit/19a77ffcf40838cb2fbafb719c3e0ed8832d5433))
+
 ### [0.2.32](https://github.com/limaofeng/asany-server/compare/v0.2.31...v0.2.32) (2024-04-06)
 
 
