@@ -2,8 +2,8 @@ package cn.asany.pim.product.domain;
 
 import cn.asany.cms.article.domain.Article;
 import javax.persistence.*;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+
+import lombok.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
@@ -11,6 +11,9 @@ import org.jfantasy.framework.dao.BaseBusEntity;
 
 @Data
 @Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Table(name = "PIM_PRODUCT_ARTICLE")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)

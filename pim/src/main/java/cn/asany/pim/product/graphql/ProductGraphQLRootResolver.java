@@ -10,8 +10,6 @@ import cn.asany.pim.product.graphql.type.ProductIdType;
 import cn.asany.pim.product.service.ProductService;
 import graphql.kickstart.tools.GraphQLMutationResolver;
 import graphql.kickstart.tools.GraphQLQueryResolver;
-import java.util.List;
-import java.util.Optional;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.graphql.util.Kit;
@@ -19,6 +17,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.Optional;
 
 @Component
 public class ProductGraphQLRootResolver implements GraphQLMutationResolver, GraphQLQueryResolver {
@@ -66,5 +67,14 @@ public class ProductGraphQLRootResolver implements GraphQLMutationResolver, Grap
 
   public Optional<Product> deleteProduct(Long id) {
     return this.productService.delete(id);
+  }
+
+
+  public Optional<Product> addArticlesToProduct(Long productId, String linkType, List<Long> articleIds) {
+    return this.productService.addArticlesToProduct(productId, linkType, articleIds);
+  }
+
+  public Optional<Product> removeArticlesFromProduct(Long productId, String linkType, List<Long> articleIds) {
+    return this.productService.removeArticlesFromProduct(productId, linkType, articleIds);
   }
 }

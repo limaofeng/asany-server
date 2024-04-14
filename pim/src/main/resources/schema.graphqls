@@ -690,6 +690,41 @@ extend type Mutation {
   """
   deleteProduct(id: ID!): Product
   """
+  添加文章到产品
+  """
+  addArticlesToProduct(
+    """
+    产品ID
+    """
+    productId: ID!
+    """
+    关联类型
+    """
+    linkageType: String!
+    """
+    文章ID列表
+    """
+    articleIds: [ID!]!
+  ): Product
+  """
+  从产品中移除文章
+  """
+  removeArticlesFromProduct(
+    """
+    产品ID
+    """
+    productId: ID!
+    """
+    关联类型
+    """
+    linkageType: String!
+    """
+    文章ID列表
+    """
+    articleIds: [ID!]!
+  ): Product
+
+  """
   创建设备
   """
   createDevice(
