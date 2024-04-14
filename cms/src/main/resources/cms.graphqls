@@ -117,6 +117,10 @@ input ArticleCategoryUpdateInput {
 input ArticleWhereInput {
   # 关键字
   keyword: String
+  """
+  不包含的文章
+  """
+  id_notIn: [ID!]
   # 标签
   tags: [ID!]
   # 频道
