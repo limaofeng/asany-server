@@ -5,17 +5,20 @@ import cn.asany.cms.article.domain.ArticleCategory;
 import cn.asany.cms.article.service.ArticleCategoryService;
 import cn.asany.cms.article.service.ArticleService;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import org.jfantasy.framework.dao.jpa.PropertyFilter;
+import org.jfantasy.framework.spring.SpringBeanUtils;
+import org.jfantasy.framework.util.regexp.RegexpConstant;
+import org.jfantasy.framework.util.regexp.RegexpUtil;
+import org.jfantasy.graphql.inputs.WhereInput;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import org.jfantasy.framework.dao.jpa.PropertyFilter;
-import org.jfantasy.framework.spring.SpringBeanUtils;
-import org.jfantasy.graphql.inputs.WhereInput;
 
 /**
  * 文件筛选
@@ -38,17 +41,21 @@ public class ArticleWhereInput extends WhereInput<ArticleWhereInput, Article> {
 
   public void setCategory(AcceptArticleCategory acceptArticleCategory) {
     ArticleCategoryService service = SpringBeanUtils.getBean(ArticleCategoryService.class);
+    boolean hasId = RegexpUtil.isMatch(acceptArticleCategory.getId(), RegexpConstant.VALIDATOR_INTEGE);
     if (acceptArticleCategory.getSubColumns()) {
-      Optional<ArticleCategory> channelOptional =
-          service.findById(Long.valueOf(acceptArticleCategory.getId()));
+      Optional<ArticleCategory> channelOptional = hasId ? service.findById(Long.valueOf(acceptArticleCategory.getId())) : service.findOneBySlug(acceptArticleCategory.getId());
       if (channelOptional.isPresent()) {
         ArticleCategory channel = channelOptional.get();
         this.filter.startsWith("category.path", channel.getPath()).notEqual("id", channel.getId());
       } else {
-        this.filter.equal("category.id", acceptArticleCategory.getId());
+        throw new RuntimeException("栏目不存在");
       }
     } else {
-      this.filter.equal("category.id", acceptArticleCategory.getId());
+      if (hasId) {
+        this.filter.equal("category.id", Long.valueOf(acceptArticleCategory.getId()));
+      } else {
+        this.filter.equal("category.slug", acceptArticleCategory.getId());
+      }
     }
   }
 

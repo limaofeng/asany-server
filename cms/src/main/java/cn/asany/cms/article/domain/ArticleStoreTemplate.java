@@ -19,7 +19,7 @@ import org.jfantasy.framework.dao.BaseBusEntity;
 @Table(name = "CMS_ARTICLE_STORE_TEMPLATE")
 public class ArticleStoreTemplate extends BaseBusEntity {
   @Id
-  @Column(name = "ID", nullable = false)
+  @Column(name = "ID", nullable = false, length = 20)
   private String id;
   /** 名称 */
   @Column(name = "NAME", length = 50)
