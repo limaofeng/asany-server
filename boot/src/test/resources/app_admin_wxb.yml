@@ -11,7 +11,7 @@ menus:
     path: /crm
     component: cn.asany.ui.admin.crm.CRMSidebar
   - name: 产品管理
-    icon: Duotune/gen064
+    icon: Duotune/cod009
     path: /pim
     component: cn.asany.ui.admin.pim.PIMSidebar
     children:
@@ -30,6 +30,9 @@ menus:
   - name: 内容管理
     icon: Duotune/txt001
     path: /cms
+  - name: 系统管理
+    icon: Duotune/cod001
+    path: /system
   - name: 日历
     icon: Duotune/gen014
     path: /calendar
@@ -129,6 +132,8 @@ routes:
             component: cn.asany.ui.admin.crm.CustomerListView
           - path: /crm/customer-stores
             component: cn.asany.ui.admin.crm.CustomerStoreListView
+          - path: /crm
+            redirect: /crm/customer-stores
       - path: /pim
         name: 产品管理
         routes:
@@ -138,24 +143,40 @@ routes:
           - path: /pim/devices
             name: 设备管理
             component: cn.asany.ui.admin.pim.DeviceListView
-            routes:
-              - path: /pim/devices/:id
-                component: cn.asany.ui.admin.pim.DeviceDetailsView
+          - path: /pim/devices/:id
+            component: cn.asany.ui.admin.pim.DeviceDetailsView
           - path: /pim/brands
             name: 品牌管理
             component: cn.asany.ui.admin.pim.BrandListView
           - path: /pim/products
             name: 产品管理
             component: cn.asany.ui.admin.pim.ProductListView
-            routes:
-              - path: /pim/products/new
-                name: 新建产品
-                component: cn.asany.ui.admin.pim.ProductNewView
-              - path: /pim/products/:id
-                name: 产品详情
-                component: cn.asany.ui.admin.pim.ProductEditView
+          - path: /pim/products/new
+            name: 新建产品
+            component: cn.asany.ui.admin.pim.ProductNewView
+          - path: /pim/products/:id
+            name: 产品详情
+            component: cn.asany.ui.admin.pim.ProductEditView
           - path: /pim
             redirect: /pim/devices
+      - path: /system
+        name: 系统管理
+        component: cn.asany.ui.admin.system.MainSystem
+        routes:
+          - path: /system/users
+            name: 用户管理
+            component: cn.asany.ui.admin.system.UserListView
+          - path: /system/roles
+            name: 角色管理
+            component: cn.asany.ui.admin.system.RoleListView
+          - path: /system/audit-logs
+            name: 审计日志
+            component: cn.asany.ui.admin.system.AuditLogListView
+          - path: /system/settings
+            name: 系统设置
+            component: cn.asany.ui.admin.system.SettingsView
+          - path: /system
+            redirect: /system/users
       - path: /calendar
         name: 日历
         component: cn.asany.ui.admin.calendar.MainCalendar
@@ -225,21 +246,21 @@ modules:
     categories:
       - name: 产品资料
         slug: product-data
-        icon: Duotune/com014
+        icon: Duotune/arr087
         children:
           - name: 维护视频
             slug: product-maintenance-video
-            icon: Duotune/com014
+            icon: Duotune/soc007
             storeTemplate: video
           - name: 产品手册
             slug: product-manual
-            icon: Duotune/com014
+            icon: Duotune/fil003
             storeTemplate: document
           - name: 知识库
             slug: product-knowledge-base
-            icon: Duotune/com014
+            icon: Duotune/txt010
             storeTemplate: text
           - name: 维护手册
             slug: product-maintenance-manual
-            icon: Duotune/com014
+            icon: Duotune/gen005
             storeTemplate: picture

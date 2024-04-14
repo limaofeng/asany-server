@@ -9,6 +9,8 @@ import cn.asany.cms.article.service.ArticleCategoryService;
 import cn.asany.cms.article.service.ArticleService;
 import cn.asany.cms.permission.domain.Permission;
 import graphql.kickstart.tools.GraphQLResolver;
+
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -75,7 +77,7 @@ public class ArticleCategoryGraphQLResolver implements GraphQLResolver<ArticleCa
             .collect(Collectors.toList());
 
     if (ids.isEmpty()) {
-      return Collections.emptyList();
+      return new ArrayList<>();
     }
 
     List<ArticleCategory> parents =
