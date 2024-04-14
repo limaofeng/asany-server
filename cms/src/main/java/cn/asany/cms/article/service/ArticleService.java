@@ -82,6 +82,10 @@ public class ArticleService {
     return articleDao.findPage(pageable, filter);
   }
 
+  public List<Article> findAll(PropertyFilter filter, int offset, int limit, Sort sort) {
+    return articleDao.findAll(filter, offset, limit, sort);
+  }
+
   public List<Article> findAll(Article article) {
     return articleDao.findAll(Example.of(article));
   }

@@ -118,13 +118,11 @@ input ArticleWhereInput {
   # 关键字
   keyword: String
   # 标签
-  tags: [ID]
-  # 栏目为空 (没有栏目的文章)
-  categories_isEmpty: Boolean
+  tags: [ID!]
   # 频道
   category: AcceptArticleCategory
   # 多个栏目
-  channel_in: [ID]
+  category_in: [ID!]
   # 复杂查询支持
   and: [ArticleWhereInput]
   # 复杂查询支持
@@ -132,7 +130,7 @@ input ArticleWhereInput {
   # 发布状态
   status: ArticleStatus
   # 发布状态
-  status_in: [ArticleStatus]
+  status_in: [ArticleStatus!]
   # 发布时间
   publishedAt: String
   # 用户id
@@ -440,11 +438,11 @@ type Article
   """
   创建时间
   """
-  createdAt: Date
+  createdAt: Date @dateFormat
   """
   修改时间
   """
-  updatedAt: Date
+  updatedAt: Date @dateFormat
 }
 
 # 文章内容
@@ -990,7 +988,7 @@ extend type Query {
   全部文章(分页)
   """
   articlesConnection(
-    where: ArticleWhereInput
+    where: ArticleWhereInput = {}
     page: Int = 1
     pageSize: Int = 15
     orderBy: OrderBy = "unsorted"
@@ -1000,6 +998,15 @@ extend type Query {
       accessLevel: "List"
       resourceTypes: ["cms:article/*", "cms:article/{#id}"]
     )
+  """
+  全部文章
+  """
+  articles(
+    where: ArticleWhereInput = {}
+    offset: Int = 0
+    limit: Int = 15
+    orderBy: OrderBy = "unsorted"
+  ): [Article!]!
   """
   文章栏目
   """

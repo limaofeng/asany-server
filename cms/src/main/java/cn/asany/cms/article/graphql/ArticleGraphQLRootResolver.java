@@ -82,6 +82,19 @@ public class ArticleGraphQLRootResolver implements GraphQLQueryResolver, GraphQL
     return Kit.connection(articleService.findPage(pageable, queryFilter), ArticleConnection.class);
   }
 
+  /**
+   * 查询所有文章
+   *
+   * @param where 过滤
+   * @param offset 偏移量
+   * @param limit 限制
+   * @param orderBy 排序
+   * @return List<Article>
+   */
+  public List<Article> articles(ArticleWhereInput where, int offset, int limit, Sort orderBy) {
+    return articleService.findAll(where.toFilter(), offset, limit, orderBy);
+  }
+
   public List<ArticleTag> articleTags(
       String organization, ArticleCategoryWhereInput where, Sort orderBy) {
     PropertyFilter filter = where.toFilter();

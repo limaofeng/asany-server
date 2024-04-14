@@ -52,20 +52,13 @@ public class ArticleWhereInput extends WhereInput<ArticleWhereInput, Article> {
     }
   }
 
-  public void setChannelCode(String channelCode) {
-    filter.in("channels.code", channelCode);
+  public void setCategorySlug(String code) {
+    filter.in("category.slug", code);
   }
 
-  @JsonProperty(value = "channel_in")
-  public void setChannelIn(List<Long> ids) {
-    filter.in("channels.id", ids);
-  }
-
-  @JsonProperty(value = "channels_isEmpty")
-  public void setChannels_Empty(boolean onOrOff) {
-    if (onOrOff) {
-      filter.isEmpty("channels");
-    }
+  @JsonProperty(value = "category_in")
+  public void setCategoryIn(List<Long> ids) {
+    filter.in("category.id", ids);
   }
 
   @JsonProperty("publishedAt")
