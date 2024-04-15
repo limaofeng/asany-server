@@ -306,12 +306,24 @@ input DeviceWhereInput {
   name_contains: String
 }
 
+input ProductImageInput {
+  url: String
+  image: File
+  alt: String
+  title: String
+  description: String
+}
+
 input ProductCreateInput {
-  name: String
+  brandId: ID!
+  name: String!
+  images: [ProductImageInput!]!
 }
 
 input ProductUpdateInput {
-  name: String
+  brandId: ID!
+  name: String!
+  images: [ProductImageInput!]!
 }
 
 enum DeviceOwnerType {
