@@ -38,6 +38,11 @@ public class Product extends BaseBusEntity {
   @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
   private List<ProductArticle> articles;
   /** 产品图片 */
-  @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
+  @OneToMany(
+      mappedBy = "product",
+      cascade = CascadeType.ALL,
+      fetch = FetchType.LAZY,
+      orphanRemoval = true)
+  @OrderBy("index ASC")
   private List<ProductImage> images;
 }

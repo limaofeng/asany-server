@@ -2,7 +2,6 @@ package cn.asany.pim.product.domain;
 
 import cn.asany.cms.article.domain.Article;
 import javax.persistence.*;
-
 import lombok.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;

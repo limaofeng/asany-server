@@ -2,6 +2,7 @@ package cn.asany.pim.product.domain;
 
 import cn.asany.storage.api.FileObject;
 import cn.asany.storage.api.converter.FileObjectConverter;
+import java.io.Serializable;
 import javax.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
@@ -14,7 +15,7 @@ import org.hibernate.annotations.GenericGenerator;
 @AllArgsConstructor
 @Entity
 @Table(name = "PIM_PRODUCT_IMAGE")
-public class ProductImage {
+public class ProductImage implements Serializable {
 
   @Id
   @Column(name = "ID", nullable = false)
