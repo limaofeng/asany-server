@@ -5,6 +5,7 @@ import lombok.Data;
 
 @Data
 public class ProductImageInput {
+  private Long id;
   private String url;
   private String alt;
   private String title;

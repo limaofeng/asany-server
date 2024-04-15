@@ -307,6 +307,7 @@ input DeviceWhereInput {
 }
 
 input ProductImageInput {
+  id: ID
   url: String
   image: File
   alt: String
