@@ -194,6 +194,14 @@ type WarrantyPolicy {
   有效期限，以月为单位
   """
   duration: Int
+  """
+  创建时间
+  """
+  createdAt: Date @dateFormat
+  """
+  修改时间
+  """
+  updatedAt: Date @dateFormat
 }
 
 """
