@@ -463,6 +463,32 @@ input BrandUpdateInput {
   name: String
 }
 
+input WarrantyPolicyCreateInput {
+  """
+  产品ID
+  """
+  productId: ID!
+  """
+  保修政策名称
+  """
+  name: String!
+  """
+  保修期限
+  """
+  duration: Int!
+}
+
+input WarrantyPolicyUpdateInput {
+  """
+  保修政策名称
+  """
+  name: String
+  """
+  保修期限
+  """
+  duration: Int
+}
+
 extend type Query {
   """
   查询品牌列表
@@ -622,6 +648,11 @@ extend type Query {
   warrantyPolicies(productId: ID!): [WarrantyPolicy!]!
 }
 
+input WarrantyPolicyWhereInput {
+  id_in: [ID!]
+  name_contains: String
+}
+
 extend type Mutation {
   """
   创建品牌
@@ -754,4 +785,39 @@ extend type Mutation {
   删除设备
   """
   deleteDevice(id: ID!): Device
+  """
+  批量删除设备
+  """
+  deleteManyDevices(where: DeviceWhereInput! = {}): BatchPayload!
+  """
+  创建保修政策
+  """
+  createWarrantyPolicy(input: WarrantyPolicyCreateInput!): WarrantyPolicy
+  """
+  更新保修政策
+  """
+  updateWarrantyPolicy(
+    """
+    保修政策ID
+    """
+    id: ID!
+    """
+    更新保修政策信息
+    """
+    input: WarrantyPolicyUpdateInput!
+    """
+    是否合并更新
+    """
+    merge: Boolean = true
+  ): WarrantyPolicy
+  """
+  删除保修政策
+  """
+  deleteWarrantyPolicy(id: ID!): WarrantyPolicy
+  """
+  批量删除保修政策
+  """
+  deleteManyWarrantyPolicies(
+    where: WarrantyPolicyWhereInput! = {}
+  ): BatchPayload!
 }

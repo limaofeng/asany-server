@@ -129,4 +129,10 @@ public class DeviceService {
   public Optional<Device> findByNO(String id) {
     return deviceDao.findOneBy("no", id);
   }
+
+  public Integer deleteMany(PropertyFilter filter) {
+    List<Device> devices = this.deviceDao.findAll(filter);
+    this.deviceDao.deleteAll(devices);
+    return devices.size();
+  }
 }

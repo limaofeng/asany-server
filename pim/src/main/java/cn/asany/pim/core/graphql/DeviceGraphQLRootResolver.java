@@ -1,5 +1,6 @@
 package cn.asany.pim.core.graphql;
 
+import cn.asany.base.common.BatchPayload;
 import cn.asany.pim.core.convert.DeviceConverter;
 import cn.asany.pim.core.domain.Device;
 import cn.asany.pim.core.graphql.input.DeviceCreateInput;
@@ -62,5 +63,9 @@ public class DeviceGraphQLRootResolver implements GraphQLMutationResolver, Graph
 
   public Optional<Device> deleteDevice(Long id) {
     return this.deviceService.delete(id);
+  }
+
+  public BatchPayload deleteManyDevices(DeviceWhereInput where) {
+    return BatchPayload.of(this.deviceService.deleteMany(where.toFilter()));
   }
 }
