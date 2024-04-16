@@ -166,6 +166,12 @@ routes:
           - path: /system/users
             name: 用户管理
             component: cn.asany.ui.admin.system.UserListView
+          - path: /system/users/new
+            name: 新建用户
+            component: cn.asany.ui.admin.system.UserNewView
+          - path: /system/users/:id
+            name: 用户详情
+            component: cn.asany.ui.admin.system.UserEditView
           - path: /system/roles
             name: 角色管理
             component: cn.asany.ui.admin.system.RoleListView

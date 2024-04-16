@@ -21,7 +21,10 @@ public interface UserConverter {
    * @param input 输入
    * @return 菜单
    */
-  @Mappings({})
+  @Mappings({
+    @Mapping(target = "phone", qualifiedByName = "toPhone"),
+    @Mapping(target = "email", qualifiedByName = "toEmail")
+  })
   User toUser(UserCreateInput input);
 
   /**

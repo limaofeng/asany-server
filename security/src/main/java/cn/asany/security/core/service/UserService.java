@@ -193,15 +193,23 @@ public class UserService {
   public User update(Long id, User user, boolean merge) {
     user.setId(id);
     User oldUser = this.userDao.getReferenceById(id);
-    BeanUtil.copyProperties(
-        oldUser,
-        user,
+
+    BeanUtil.PropertyFilter propertyFilter =
         (Property property, Object value, Object _dest) -> {
+          if (Arrays.asList(new String[] {"username"}).contains(property.getName())) {
+            return false;
+          }
           if ("avatar".equals(property.getName())) {
             return true;
           }
+          if ("password".equals(property.getName())) {
+            return StringUtil.isNotBlank(value);
+          }
           return value != null;
-        });
+        };
+
+    BeanUtil.copyProperties(oldUser, user, propertyFilter);
+
     user = this.userDao.update(oldUser, merge);
     return user;
   }

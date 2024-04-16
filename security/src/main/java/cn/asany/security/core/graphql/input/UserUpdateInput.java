@@ -29,4 +29,6 @@ public class UserUpdateInput {
   private String company;
   /** 位置 */
   private String location;
+  /** 密码 */
+  private String password;
 }
