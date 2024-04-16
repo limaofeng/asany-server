@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.34](https://github.com/limaofeng/asany-server/compare/v0.2.33...v0.2.34) (2024-04-16)
+
+
+### Features
+
+*  类型修改 WarrantyPolicy ([09cb59d](https://github.com/limaofeng/asany-server/commit/09cb59d49ac06ee3d9acaa0fb4f3f3f108803c72))
+* add id field to ProductImageInput ([7527c95](https://github.com/limaofeng/asany-server/commit/7527c956f1145bd411685b4f5f37de3b53d25edb))
+* add id_notIn field to ArticleWhereInput ([26ac6e2](https://github.com/limaofeng/asany-server/commit/26ac6e25e750d6f495779982d34a918a90a8f330))
+* add image url ([d77d73b](https://github.com/limaofeng/asany-server/commit/d77d73b92676b638e6d88ede9333f8a14e9ce01b))
+* articles query and update ArticleWhereInput ([f7dd079](https://github.com/limaofeng/asany-server/commit/f7dd0793dd00e19407acde8edefe41a9cd017027))
+* 产品保存是保存产品图片 ([8801a53](https://github.com/limaofeng/asany-server/commit/8801a53fd06d13fd9833b97580ecac6f8fb5bbf2))
+* 优化产品图片保存逻辑 ([036f63f](https://github.com/limaofeng/asany-server/commit/036f63f079bb7cae18aeb0bcd7fb754807ab7e2b))
+* 保修策略新增、修改、删除操作 ([541c9b6](https://github.com/limaofeng/asany-server/commit/541c9b6fb3eba6256cdc87182f3e26395a91b118))
+* 升级框架，解决产品保存问题 ([e042ce4](https://github.com/limaofeng/asany-server/commit/e042ce4ee54bc83eacbb3dadffaf11b61b71e293))
+* 添加 removeArticlesFromProduct 与 addArticlesToProduct 接口 ([42989c9](https://github.com/limaofeng/asany-server/commit/42989c9d0defbbcdd881287ebea8a40fae00dc1b))
+* 用户新增与修改接口优化 ([5c8935c](https://github.com/limaofeng/asany-server/commit/5c8935c28cf6f09af6217bd9a0c8168c9a7258ad))
+* 解决 Collections.emptyList(); 无法 add 的问题 ([b865fee](https://github.com/limaofeng/asany-server/commit/b865fee30da261bc84e618abcb980af0db4d2cca))
+* 解决 Collections.emptyList(); 无法 add 的问题 ([4a7ce4c](https://github.com/limaofeng/asany-server/commit/4a7ce4c22d19d05dd25ff57842c5809930738585))
+
 ### [0.2.33](https://github.com/limaofeng/asany-server/compare/v0.2.32...v0.2.33) (2024-04-13)
 
 
