@@ -28,7 +28,7 @@ extend type Query {
   usersConnection(
     where: UserWhereInput = {}
     # 页码
-    page: Int = 0
+    page: Int = 1
     # 每页显示数据条数
     pageSize: Int = 15
     # 排序
@@ -73,10 +73,16 @@ extend type Mutation {
     accessLevel: "Write"
     resourceTypes: ["ac:user/*", "ac:user/{#id}"]
   )
+
   """
   创建用户
   """
-  createUsers(
+  createUser(input: UserCreateInput): User
+
+  """
+  创建用户
+  """
+  createManyUsers(
     users: [UserCreateInput!]!
     settings: UserSettingsInput!
   ): [User!]!
@@ -106,7 +112,7 @@ extend type Mutation {
   """
   批量删除用户
   """
-  deleteManyUsers(ids: [ID!]!): [User!]!
+  deleteManyUsers(where: UserWhereInput!): BatchPayload!
   @authInfo(
     name: "ac:DeleteManyUsers"
     accessLevel: "Write"
@@ -117,6 +123,12 @@ extend type Mutation {
 input UserCreateInput {
   username: String!
   nickname: String
+  password: String
+  userType: UserType
+  avatar: File
+  phone: String
+  email: String
+  tenantId: ID
 }
 
 input UserSettingsInput {
@@ -125,8 +137,25 @@ input UserSettingsInput {
 }
 
 input UserWhereInput {
+  id_in: [ID!]
   # 昵称模糊查询
-  nickname_like: String
+  nickname_contains: String
+  """
+  用户名
+  """
+  username: String
+  """
+  用户名不等于
+  """
+  username_notEqual: String
+  """
+  手机
+  """
+  phone: String
+  """
+  租户ID
+  """
+  tenantId: ID
 }
 
 type UserEdge {
@@ -158,7 +187,7 @@ enum UserType {
   ADMIN
 }
 
-type User {
+type User implements BaseEntity {
   id: ID
   """
   称号
@@ -168,6 +197,10 @@ type User {
   名称
   """
   name: String
+  """
+  昵称
+  """
+  nickname: String
   """
   登录名
   """
@@ -236,6 +269,14 @@ type User {
   最后登录时间
   """
   lastLoginTime: Date
+  """
+  创建时间
+  """
+  createdAt: Date @dateFormat
+  """
+  修改时间
+  """
+  updatedAt: Date @dateFormat
 }
 
 input UserUpdateInput {
@@ -243,6 +284,10 @@ input UserUpdateInput {
   名称
   """
   name: String
+  """
+  昵称
+  """
+  nickname: String
   """
   头像
   """

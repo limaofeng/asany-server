@@ -1,5 +1,6 @@
 package cn.asany.security.core.graphql;
 
+import cn.asany.base.common.BatchPayload;
 import cn.asany.base.common.domain.Phone;
 import cn.asany.base.common.domain.enums.PhoneNumberStatus;
 import cn.asany.base.sms.CaptchaService;
@@ -157,7 +158,12 @@ public class UserGraphQLRootResolver implements GraphQLMutationResolver, GraphQL
     return this.userService.get(uid);
   }
 
-  public List<User> createUsers(List<UserCreateInput> users, UserSettingsInput settings) {
+  public User createUser(UserCreateInput input) {
+    User user = this.userConverter.toUser(input);
+    return this.userService.save(user);
+  }
+
+  public List<User> createManyUsers(List<UserCreateInput> users, UserSettingsInput settings) {
     LoginUser loginUser = SpringSecurityUtils.getCurrentUser();
     return this.userService.saveAll(
         users.stream()
@@ -180,8 +186,8 @@ public class UserGraphQLRootResolver implements GraphQLMutationResolver, GraphQL
     return this.userService.delete(id);
   }
 
-  public List<User> deleteManyUsers(List<Long> ids) {
-    return this.userService.deleteMany(ids);
+  public BatchPayload deleteManyUsers(UserWhereInput where) {
+    return BatchPayload.of(this.userService.deleteMany(where.toFilter()));
   }
 
   public Boolean changePassword(Long id, String oldPassword, String newPassword) {
