@@ -86,7 +86,7 @@ type Product {
   """
   articles(
     linkageType: String!
-    ArticleWhereInput: ArticleWhereInput = {}
+    where: ArticleWhereInput = {}
     offset: Int = 0
     limit: Int = 15
     orderBy: OrderBy = "unsorted"

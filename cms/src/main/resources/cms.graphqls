@@ -372,7 +372,7 @@ type Article
   """
   发布时间
   """
-  publishedAt: Date
+  publishedAt: Date @dateFormat
   """
   内容
   """

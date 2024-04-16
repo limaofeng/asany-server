@@ -27,9 +27,12 @@ public class ProductArticleService {
       int limit,
       Sort orderBy) {
     PropertyFilter filter =
-        PropertyFilter.newFilter()
-            .equal("product.id", productId)
-            .equal("linkageType.code", linkageType);
+        where
+            .toFilter()
+            .and(
+                PropertyFilter.newFilter()
+                    .equal("product.id", productId)
+                    .equal("linkageType.code", linkageType));
     List<ProductArticle> productArticles =
         this.productArticleDao.findAll(filter, offset, limit, orderBy);
     return productArticles.stream().map(ProductArticle::getArticle).collect(Collectors.toList());

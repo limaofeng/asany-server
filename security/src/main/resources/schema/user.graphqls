@@ -17,11 +17,11 @@ extend type Query {
     # 排序
     orderBy: OrderBy = "unsorted"
   ): [User!]!
-  @authInfo(
-    name: "ac:UserList"
-    accessLevel: "List"
-    resourceTypes: ["ac:user/*", "ac:user/{#id}"]
-  )
+    @authInfo(
+      name: "ac:UserList"
+      accessLevel: "List"
+      resourceTypes: ["ac:user/*", "ac:user/{#id}"]
+    )
   """
   查询用户
   """
@@ -34,20 +34,20 @@ extend type Query {
     # 排序
     orderBy: OrderBy = "unsorted"
   ): UserConnection!
-  @authInfo(
-    name: "ac:UsersConnection"
-    accessLevel: "List"
-    resourceTypes: ["ac:user/*", "ac:user/{#id}"]
-  )
+    @authInfo(
+      name: "ac:UsersConnection"
+      accessLevel: "List"
+      resourceTypes: ["ac:user/*", "ac:user/{#id}"]
+    )
   """
   用户详情
   """
   user(id: ID): User!
-  @authInfo(
-    name: "ac:GetUser"
-    accessLevel: "Read"
-    resourceTypes: ["ac:user/*", "ac:user/{#id}"]
-  )
+    @authInfo(
+      name: "ac:GetUser"
+      accessLevel: "Read"
+      resourceTypes: ["ac:user/*", "ac:user/{#id}"]
+    )
 }
 
 extend type Mutation {
@@ -68,11 +68,11 @@ extend type Mutation {
     """
     newPassword: String!
   ): Boolean!
-  @authInfo(
-    name: "ac:ChangePassword"
-    accessLevel: "Write"
-    resourceTypes: ["ac:user/*", "ac:user/{#id}"]
-  )
+    @authInfo(
+      name: "ac:ChangePassword"
+      accessLevel: "Write"
+      resourceTypes: ["ac:user/*", "ac:user/{#id}"]
+    )
 
   """
   创建用户
@@ -86,38 +86,38 @@ extend type Mutation {
     users: [UserCreateInput!]!
     settings: UserSettingsInput!
   ): [User!]!
-  @authInfo(
-    name: "ac:CreateUsers"
-    accessLevel: "Write"
-    resourceTypes: ["ac:user/*", "ac:user/{#id}"]
-  )
+    @authInfo(
+      name: "ac:CreateUsers"
+      accessLevel: "Write"
+      resourceTypes: ["ac:user/*", "ac:user/{#id}"]
+    )
   """
   更新用户
   """
   updateUser(id: ID!, input: UserUpdateInput!, merge: Boolean = true): User!
-  @authInfo(
-    name: "ac:UpdateUser"
-    accessLevel: "Write"
-    resourceTypes: ["ac:user/*", "ac:user/{#id}"]
-  )
+    @authInfo(
+      name: "ac:UpdateUser"
+      accessLevel: "Write"
+      resourceTypes: ["ac:user/*", "ac:user/{#id}"]
+    )
   """
   删除用户
   """
   deleteUser(id: ID): User!
-  @authInfo(
-    name: "ac:DeleteUser"
-    accessLevel: "Write"
-    resourceTypes: ["ac:user/*", "ac:user/{#id}"]
-  )
+    @authInfo(
+      name: "ac:DeleteUser"
+      accessLevel: "Write"
+      resourceTypes: ["ac:user/*", "ac:user/{#id}"]
+    )
   """
   批量删除用户
   """
   deleteManyUsers(where: UserWhereInput!): BatchPayload!
-  @authInfo(
-    name: "ac:DeleteManyUsers"
-    accessLevel: "Write"
-    resourceTypes: ["ac:user/*", "ac:user/{#id}"]
-  )
+    @authInfo(
+      name: "ac:DeleteManyUsers"
+      accessLevel: "Write"
+      resourceTypes: ["ac:user/*", "ac:user/{#id}"]
+    )
 }
 
 input UserCreateInput {
