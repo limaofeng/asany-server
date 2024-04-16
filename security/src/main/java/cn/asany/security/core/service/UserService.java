@@ -175,11 +175,10 @@ public class UserService {
   }
 
   @Transactional(rollbackFor = Exception.class)
-  public List<User> deleteMany(List<Long> ids) {
-    List<User> users =
-        ids.stream().map(this.userDao::getReferenceById).collect(Collectors.toList());
-    this.userDao.deleteAllInBatch(users);
-    return users;
+  public int deleteMany(PropertyFilter filter) {
+    List<User> users = this.userDao.findAll(filter);
+    this.userDao.deleteAll(users);
+    return users.size();
   }
 
   public void delete(Set<Long> ids) {
