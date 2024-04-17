@@ -198,9 +198,6 @@ public class UserService {
           if (Arrays.asList(new String[] {"username"}).contains(property.getName())) {
             return false;
           }
-          if ("avatar".equals(property.getName())) {
-            return true;
-          }
           if ("password".equals(property.getName())) {
             return StringUtil.isNotBlank(value);
           }
