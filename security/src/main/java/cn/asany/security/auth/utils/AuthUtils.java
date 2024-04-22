@@ -1,6 +1,6 @@
 package cn.asany.security.auth.utils;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import org.jfantasy.framework.security.authentication.Authentication;
 import org.jfantasy.framework.security.oauth2.core.OAuth2Authentication;
 import org.jfantasy.framework.security.oauth2.core.OAuth2AuthenticationDetails;

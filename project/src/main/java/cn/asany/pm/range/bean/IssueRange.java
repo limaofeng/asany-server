@@ -1,8 +1,8 @@
 package cn.asany.pm.range.bean;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
 import java.util.Objects;
-import javax.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.GenericGenerator;
@@ -28,12 +28,15 @@ public class IssueRange extends BaseBusEntity {
   @GeneratedValue(generator = "fantasy-sequence")
   @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
+
   /** 范围编号 */
   @Column(name = "CODE", length = 50)
   private String code;
+
   /** 范围名称 */
   @Column(name = "NAME", length = 50)
   private String name;
+
   /** 范围描述 */
   @Column(name = "DESCRIPTION", length = 200)
   private String description;

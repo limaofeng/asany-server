@@ -11,7 +11,7 @@ import cn.asany.weixin.framework.session.WeixinSession;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * 微信服务号与订阅号

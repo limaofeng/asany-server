@@ -2,7 +2,7 @@ package cn.asany.organization.core.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
@@ -28,12 +28,15 @@ public class DepartmentType extends BaseBusEntity {
   @GeneratedValue(generator = "fantasy-sequence")
   @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
+
   /** 编码 */
   @Column(name = "CODE", length = 20)
   private String code;
+
   /** 名称 */
   @Column(name = "NAME", length = 50)
   private String name;
+
   /** 组织纬度 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(
@@ -42,6 +45,7 @@ public class DepartmentType extends BaseBusEntity {
       updatable = false,
       nullable = false)
   private OrganizationDimension dimension;
+
   /** 组织 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JsonBackReference

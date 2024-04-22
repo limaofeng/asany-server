@@ -1,8 +1,8 @@
 package cn.asany.pm.issue.priority.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
 import java.util.Objects;
-import javax.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.GenericGenerator;
@@ -30,18 +30,23 @@ public class Priority extends BaseBusEntity {
   @GeneratedValue(generator = "fantasy-sequence")
   @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
+
   /** 任务优先级icon */
   @Column(name = "ICON", length = 50)
   private String icon;
+
   /** 任务优先级名称 */
   @Column(name = "NAME", length = 50)
   private String name;
+
   /** 描述 */
   @Column(name = "DESCRIPTION", length = 50)
   private String description;
+
   /** 任务优先级排序 */
   @Column(name = "SORT", length = 50)
   private Integer index;
+
   /** 颜色 */
   @Column(name = "COLOR")
   private String color;

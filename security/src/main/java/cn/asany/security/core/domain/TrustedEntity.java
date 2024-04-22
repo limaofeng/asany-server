@@ -1,6 +1,6 @@
 package cn.asany.security.core.domain;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Data
@@ -17,6 +17,7 @@ public class TrustedEntity {
       updatable = false)
   @ToString.Exclude
   private TrustedEntityType trustedEntityType;
+
   /** 可信实体ID */
   @Column(name = "TRUSTED_ENTITY_ID", length = 32)
   private String TrustedEntityId;

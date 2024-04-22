@@ -1,9 +1,9 @@
 package cn.asany.organization.core.dao.specification;
 
 import cn.asany.base.common.SecurityScope;
+import jakarta.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.criteria.*;
 import lombok.extern.slf4j.Slf4j;
 import org.jfantasy.framework.util.common.StringUtil;
 import org.springframework.data.jpa.domain.Specification;

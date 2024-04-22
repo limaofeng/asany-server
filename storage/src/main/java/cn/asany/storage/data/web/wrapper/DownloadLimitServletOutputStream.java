@@ -2,8 +2,8 @@ package cn.asany.storage.data.web.wrapper;
 
 import cn.asany.storage.data.util.BandwidthLimiter;
 import java.io.IOException;
-import javax.servlet.ServletOutputStream;
-import javax.servlet.WriteListener;
+import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.WriteListener;
 import org.jetbrains.annotations.NotNull;
 
 public class DownloadLimitServletOutputStream extends ServletOutputStream {

@@ -1,10 +1,10 @@
 package cn.asany.shanhai.core.domain;
 
 import cn.asany.shanhai.gateway.domain.ModelGroupResource;
+import jakarta.persistence.*;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
-import javax.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.GenericGenerator;
@@ -45,49 +45,62 @@ public class ModelField extends BaseBusEntity implements ModelGroupResource {
   @GeneratedValue(generator = "fantasy-sequence")
   @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
+
   /** 编码 用于 HQL 名称及 API 名称 */
   @Column(name = "CODE", length = 50)
   private String code;
+
   /** 名称 */
   @Column(name = "NAME", length = 100)
   private String name;
+
   /** 描述 */
   @Column(name = "DESCRIPTION", length = 500)
   private String description;
+
   /** 默认值 */
   @Column(name = "DEFAULT_VALUE", length = 100)
   private String defaultValue;
+
   /** 是否必填 */
   @Builder.Default
   @Column(name = "IS_REQUIRED")
   private Boolean required = false;
+
   /** 是否主键 */
   @Builder.Default
   @Column(name = "IS_PRIMARY_KEY", length = 10, nullable = false)
   private Boolean primaryKey = false;
+
   /** 字段类型 */
   @Column(name = "TYPE", length = 50, nullable = false)
   private String type;
+
   /** 关联的具体字段类型 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "TYPE_ID", foreignKey = @ForeignKey(name = "FK_MODEL_FIELD_TID"))
   @ToString.Exclude
   private Model realType;
+
   /** 是否唯一 */
   @Builder.Default
   @Column(name = "IS_UNIQUE", length = 1)
   private Boolean unique = false;
+
   /** 存储值为列表，而不是单个值 */
   @Builder.Default
   @Column(name = "IS_LIST", length = 1, updatable = false)
   private Boolean list = false;
+
   /** 是否系统字段 */
   @Builder.Default
   @Column(name = "IS_SYSTEM", updatable = false, length = 1)
   private Boolean system = false;
+
   /** 序号 */
   @Column(name = "SORT")
   private Integer sort;
+
   /** 实体 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(
@@ -98,16 +111,19 @@ public class ModelField extends BaseBusEntity implements ModelGroupResource {
   @LazyToOne(LazyToOneOption.NO_PROXY)
   @ToString.Exclude
   private Model model;
+
   /** 元数据 */
   @OneToOne(
       mappedBy = "field",
       cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
   private ModelFieldMetadata metadata;
+
   /** 委派 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "DELEGATE_ID", foreignKey = @ForeignKey(name = "FK_MODEL_FIELD_DID"))
   @ToString.Exclude
   private ModelDelegate delegate;
+
   /** 参数 */
   @OneToMany(
       mappedBy = "field",

@@ -13,8 +13,8 @@
 package cn.asany.email.rrt.domain;
 
 import com.google.common.base.Objects;
+import jakarta.persistence.*;
 import java.io.Serializable;
-import javax.persistence.*;
 import org.apache.james.core.Domain;
 
 /** RecipientRewriteTable class for the James Virtual User Table to be used for JPA persistence. */

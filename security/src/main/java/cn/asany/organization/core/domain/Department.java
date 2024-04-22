@@ -9,9 +9,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import jakarta.persistence.*;
 import java.security.Permission;
 import java.util.List;
-import javax.persistence.*;
 import lombok.*;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -58,54 +58,68 @@ public class Department extends BaseBusEntity {
   @GeneratedValue(generator = "fantasy-sequence")
   @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
+
   /** 简写 */
   @Column(name = "CODE", length = 10)
   private String code;
+
   /** 名称 */
   @Column(name = "NAME", length = 50)
   private String name;
+
   /** 路径 */
   @Column(name = "PATH", length = 50)
   private String path;
+
   /** 排序字段 */
   @Column(name = "SORT")
   private Integer index;
+
   /** 层级 */
   @Column(name = "LEVEL")
   private Integer level;
+
   /** 描述信息 */
   @Column(name = "DESCRIPTION", length = 150)
   private String description;
+
   /** 是否启用 0禁用 1 启用 */
   @Column(name = "ENABLED")
   private Boolean enabled;
+
   /** 部门类型 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "TYPE", foreignKey = @ForeignKey(name = "FK_ORG_DEPARTMENT_TID"))
   private DepartmentType type;
+
   /** 分组人数统计 */
   @Column(name = "COUNT")
   private Long count;
+
   /** 上级部门 */
   @JsonSerialize(using = DepartmentSerializer.class)
   @JsonDeserialize(using = DepartmentDeserializer.class)
   @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
   @JoinColumn(name = "PID", foreignKey = @ForeignKey(name = "FK_AUTH_DEPARTMENT_PID"))
   private Department parent;
+
   /** 下属部门 */
   @JsonInclude(content = JsonInclude.Include.NON_NULL)
   @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
   @OrderBy("sort ASC")
   private List<Department> children;
+
   /** 本部门成员 */
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "department", cascade = CascadeType.REMOVE)
   private List<EmployeePosition> employees;
+
   /** 对应的岗位 */
   @OneToMany(
       mappedBy = "department",
       fetch = FetchType.LAZY,
       cascade = {CascadeType.REMOVE})
   private List<Position> positions;
+
   /** 组织机构 */
   @JsonSerialize(using = OrganizationSerializer.class)
   @ManyToOne(fetch = FetchType.LAZY)
@@ -115,6 +129,7 @@ public class Department extends BaseBusEntity {
       updatable = false,
       nullable = false)
   private Organization organization;
+
   /** 组织纬度 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(

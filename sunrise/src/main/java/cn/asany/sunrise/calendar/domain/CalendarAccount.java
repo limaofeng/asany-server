@@ -2,7 +2,7 @@ package cn.asany.sunrise.calendar.domain;
 
 import cn.asany.security.core.domain.User;
 import cn.asany.sunrise.calendar.domain.enums.CalendarAccountType;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;

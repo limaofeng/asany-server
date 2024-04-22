@@ -1,9 +1,9 @@
 package cn.asany.cms.permission.specification;
 
 import cn.asany.cms.permission.service.SecurityScope;
+import jakarta.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.criteria.*;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.jfantasy.framework.util.common.StringUtil;

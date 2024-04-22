@@ -1,8 +1,8 @@
 package cn.asany.email.domainlist.domain;
 
 import cn.asany.organization.core.domain.Organization;
+import jakarta.persistence.*;
 import java.util.Objects;
-import javax.persistence.*;
 import lombok.*;
 import org.apache.james.core.Domain;
 import org.hibernate.Hibernate;

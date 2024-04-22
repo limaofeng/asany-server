@@ -1,7 +1,7 @@
 package cn.asany.shanhai.core.domain;
 
+import jakarta.persistence.*;
 import java.io.Serializable;
-import javax.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -26,12 +26,15 @@ public class ModelEndpointArgument implements Serializable {
   @GeneratedValue(generator = "fantasy-sequence")
   @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
+
   /** 名称 */
   @Column(name = "NAME", length = 100, nullable = false)
   private String name;
+
   /** 类型 */
   @Column(name = "TYPE", length = 50, nullable = false)
   private String type;
+
   /** 关联的具体字段类型 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(
@@ -39,6 +42,7 @@ public class ModelEndpointArgument implements Serializable {
       foreignKey = @ForeignKey(name = "FK_MODEL_ENDPOINT_ARGUMENT_TID"),
       nullable = false)
   private Model realType;
+
   /** 是否必填 */
   @Builder.Default
   @Column(name = "IS_REQUIRED")
@@ -47,15 +51,19 @@ public class ModelEndpointArgument implements Serializable {
   @Builder.Default
   @Column(name = "IS_LIST", length = 1, updatable = false)
   private Boolean list = false;
+
   /** 排序 */
   @Column(name = "SORT", nullable = false)
   private Integer index;
+
   /** 描述 */
   @Column(name = "DESCRIPTION", length = 200)
   private String description;
+
   /** 默认值 */
   @Column(name = "DEFAULT_VALUE", length = 200)
   private String defaultValue;
+
   /** 接口 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(

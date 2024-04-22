@@ -4,8 +4,8 @@ import cn.asany.storage.api.FileObject;
 import cn.asany.storage.data.util.IdUtils;
 import cn.asany.storage.dto.SimpleFileObject;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
 import java.util.Objects;
-import javax.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.Cache;
@@ -44,20 +44,26 @@ public class MultipartUploadChunk extends BaseBusEntity {
   @GeneratedValue(generator = "fantasy-sequence")
   @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
+
   /** 存储路径 */
   @Column(name = "PATH", nullable = false, updatable = false, length = 250)
   private String path;
+
   /** 文件长度 */
   @Column(name = "LENGTH")
   private Long size;
+
   /** 片段文件的hash值 */
   @Column(name = "HASH")
   private String hash;
+
   /** 当前段数 */
   @Column(name = "PAER_INDEX")
   private Integer index;
+
   /** 存储器中分片的唯一标识 */
   private String etag;
+
   /** 分段上传 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(

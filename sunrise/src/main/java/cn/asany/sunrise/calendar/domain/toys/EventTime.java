@@ -1,7 +1,7 @@
 package cn.asany.sunrise.calendar.domain.toys;
 
 import java.util.Date;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.*;
 
 /**

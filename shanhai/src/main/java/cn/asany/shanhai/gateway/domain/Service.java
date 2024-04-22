@@ -2,8 +2,8 @@ package cn.asany.shanhai.gateway.domain;
 
 import cn.asany.shanhai.gateway.domain.enums.Protocol;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import jakarta.persistence.*;
 import java.net.URL;
-import javax.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.LazyToOne;
@@ -29,25 +29,32 @@ public class Service extends BaseBusEntity {
   @GeneratedValue(generator = "fantasy-sequence")
   @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
+
   /** 编码 */
   @Column(name = "CODE", length = 50, unique = true)
   private String code;
+
   /** 名称 */
   @Column(name = "NAME", length = 50)
   private String name;
+
   /** 描述 */
   @Column(name = "DESCRIPTION", length = 200)
   private String description;
+
   /** 名称 */
   @Enumerated(EnumType.STRING)
   @Column(name = "PROTOCOL", length = 50)
   private Protocol protocol;
+
   /** 地址 */
   @Column(name = "HOST", length = 100)
   private String host;
+
   /** 端口 */
   @Column(name = "PORT", length = 10)
   private Integer port;
+
   /** 路径 */
   @Column(name = "PATH", length = 50)
   private String path;

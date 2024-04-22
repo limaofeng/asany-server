@@ -1,7 +1,7 @@
 package cn.asany.storage.data.domain;
 
+import jakarta.persistence.*;
 import java.util.List;
-import javax.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
@@ -27,36 +27,47 @@ public class MultipartUpload extends BaseBusEntity {
   @GeneratedValue(generator = "fantasy-sequence")
   @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
+
   /** 上传ID */
   @Column(name = "UPLOAD_ID", length = 50, nullable = false)
   private String uploadId;
+
   /** 文件唯一标识值 */
   @Column(name = "HASH", length = 100, nullable = false)
   private String hash;
+
   /** 存储路径 */
   @Column(name = "PATH", nullable = false, updatable = false, length = 250)
   private String path;
+
   /** 存储空间 */
   @Column(name = "SPACE_ID", nullable = false, updatable = false)
   private String space;
+
   /** 存储ID */
   @Column(name = "STORAGE_ID", nullable = false, updatable = false, length = 50)
   private String storage;
+
   /** 文件类型 */
   @Column(name = "MIME_TYPE", length = 50, nullable = false)
   private String mimeType;
+
   /** 文件长度 */
   @Column(name = "SIZE", nullable = false)
   private Long size;
+
   /** 每段大小 */
   @Column(name = "CHUNK_SIZE")
   private Long chunkSize;
+
   /** 总的段数 */
   @Column(name = "CHUNK_LENGTH")
   private Integer chunkLength;
+
   /** 已上传的部分 */
   @Column(name = "UPLOADED_PARTS")
   private Integer uploadedParts;
+
   /** 所有已上传的文件片段 */
   @OneToMany(
       mappedBy = "upload",

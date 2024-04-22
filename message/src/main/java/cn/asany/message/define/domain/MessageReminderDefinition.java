@@ -1,8 +1,8 @@
 package cn.asany.message.define.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
 import java.util.Map;
-import javax.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
@@ -37,10 +37,12 @@ public class MessageReminderDefinition extends BaseBusEntity {
       nullable = false,
       foreignKey = @ForeignKey(name = "FK_MSG_REMINDER_MESSAGE_DEFINITION_ID"))
   private MessageDefinition messageDefinition;
+
   /** 与模版之间的变量映射表 */
   @Convert(converter = MapConverter.class)
   @Column(name = "MAPPING_VARIABLES", columnDefinition = "Text")
   private Map<String, String> mappingVariables;
+
   /** 提醒定义 */
   @ManyToOne(targetEntity = MessageDefinition.class, fetch = FetchType.LAZY)
   @JoinColumn(

@@ -2,8 +2,8 @@ package cn.asany.message.define.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.*;
 import java.util.List;
-import javax.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.jfantasy.framework.dao.BaseBusEntity;
@@ -27,12 +27,15 @@ public class MessageType extends BaseBusEntity {
   @Id
   @Column(name = "ID", nullable = false, updatable = false, length = 32)
   private String id;
+
   /** 消息类型名称 */
   @Column(name = "NAME", nullable = false, length = 150)
   private String name;
+
   /** 消息类型图标 */
   @Column(name = "ICON", nullable = false, length = 32)
   private String icon;
+
   /** 消息类型描述 */
   @Column(name = "DESCRIPTION", length = 400)
   private String description;

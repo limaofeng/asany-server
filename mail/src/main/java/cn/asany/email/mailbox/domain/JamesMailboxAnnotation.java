@@ -1,7 +1,7 @@
 package cn.asany.email.mailbox.domain;
 
+import jakarta.persistence.*;
 import java.util.Objects;
-import javax.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
 

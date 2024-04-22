@@ -1,7 +1,7 @@
 package cn.asany.cms.article.domain;
 
 import cn.asany.organization.employee.domain.Employee;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
@@ -24,13 +24,16 @@ public class ArticleAuthor extends BaseBusEntity {
   @GeneratedValue(generator = "fantasy-sequence")
   @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
+
   /** 名称 */
   @Column(name = "NAME", length = 50)
   private String name;
+
   /** 文章 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "ARTICLE_ID", foreignKey = @ForeignKey(name = "FK_ARTICLE_AUTHOR_AID"))
   private Article article;
+
   /** 对应员工 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "EMPLOYEE_ID", foreignKey = @ForeignKey(name = "FK_ARTICLE_AUTHOR_EID"))

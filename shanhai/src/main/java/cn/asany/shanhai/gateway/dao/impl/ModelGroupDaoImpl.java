@@ -2,8 +2,8 @@ package cn.asany.shanhai.gateway.dao.impl;
 
 import cn.asany.shanhai.gateway.dao.ModelGroupDao;
 import cn.asany.shanhai.gateway.domain.ModelGroup;
+import jakarta.persistence.EntityManager;
 import java.util.List;
-import javax.persistence.EntityManager;
 import org.jfantasy.framework.dao.jpa.ComplexJpaRepository;
 import org.springframework.data.domain.Sort;
 

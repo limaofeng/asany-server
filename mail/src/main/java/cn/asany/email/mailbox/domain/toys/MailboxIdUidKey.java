@@ -1,5 +1,6 @@
 package cn.asany.email.mailbox.domain.toys;
 
+import jakarta.persistence.Embeddable;
 import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
@@ -7,7 +8,6 @@ import java.util.Base64;
 import javax.crypto.Cipher;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESedeKeySpec;
-import javax.persistence.Embeddable;
 import lombok.SneakyThrows;
 import org.jfantasy.framework.util.common.StringUtil;
 

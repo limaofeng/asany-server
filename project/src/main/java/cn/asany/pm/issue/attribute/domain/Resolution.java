@@ -2,8 +2,8 @@ package cn.asany.pm.issue.attribute.domain;
 
 import cn.asany.pm.project.domain.Project;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
 import java.util.Objects;
-import javax.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.GenericGenerator;
@@ -26,12 +26,15 @@ public class Resolution extends BaseBusEntity {
   @GeneratedValue(generator = "fantasy-sequence")
   @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
+
   /** 结果名称 */
   @Column(name = "NAME", length = 50)
   private String name;
+
   /** 结果描述 */
   @Column(name = "DESCRIPTION", length = 250)
   private String description;
+
   /** 排序 */
   @Column(name = "SORT", length = 20)
   private Integer index;

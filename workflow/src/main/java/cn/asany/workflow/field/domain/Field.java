@@ -6,7 +6,7 @@ import org.hibernate.Hibernate;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.Objects;
 
 /**

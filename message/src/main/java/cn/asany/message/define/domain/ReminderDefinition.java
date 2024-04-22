@@ -1,7 +1,7 @@
 package cn.asany.message.define.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
@@ -28,9 +28,11 @@ public class ReminderDefinition extends BaseBusEntity {
   @GeneratedValue(generator = "fantasy-sequence")
   @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
+
   /** 名称 */
   @Column(name = "NAME", nullable = false, length = 20)
   private String name;
+
   /** 模版文件 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(
@@ -38,6 +40,7 @@ public class ReminderDefinition extends BaseBusEntity {
       nullable = false,
       foreignKey = @ForeignKey(name = "FK_REMINDER_DEFINITION_TEMPLATE_ID"))
   private MessageTemplate template;
+
   /** 是否为系统内置 */
   @Builder.Default
   @Column(name = "IS_SYSTEM", updatable = false, length = 1)

@@ -2,8 +2,8 @@ package cn.asany.organization.employee.domain;
 
 import cn.asany.base.common.domain.Address;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
 import java.io.Serializable;
-import javax.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 

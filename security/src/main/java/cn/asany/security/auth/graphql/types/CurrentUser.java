@@ -8,7 +8,7 @@ import cn.asany.security.core.domain.enums.UserType;
 import cn.asany.storage.api.FileObject;
 import java.util.Date;
 import java.util.List;
-import javax.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
 import org.jfantasy.framework.spring.validation.Operation;

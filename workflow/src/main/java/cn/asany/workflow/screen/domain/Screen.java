@@ -3,7 +3,7 @@ package cn.asany.workflow.screen.domain;
 import cn.asany.workflow.core.domain.WorkflowStepTransition;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.List;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

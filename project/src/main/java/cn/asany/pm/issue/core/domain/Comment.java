@@ -3,10 +3,10 @@ package cn.asany.pm.issue.core.domain;
 import cn.asany.storage.api.FileObject;
 import cn.asany.storage.api.converter.FileObjectsConverter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
-import javax.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.GenericGenerator;
@@ -34,17 +34,21 @@ public class Comment extends BaseBusEntity {
   @GeneratedValue(generator = "fantasy-sequence")
   @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
+
   /** 任务id */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "ISSUE_ID", foreignKey = @ForeignKey(name = "FK_ISSUE_ANNOTATE_ISSUE"))
   @ToString.Exclude
   private Issue issue;
+
   /** 用户ID */
   @Column(name = "UID", length = 50)
   private Long uid;
+
   /** 注释内容 */
   @Column(name = "CONTENT", length = 200)
   private String content;
+
   /** 注释时间 */
   @Column(name = "CONTENT_DATE", length = 200)
   private Date contentDate;

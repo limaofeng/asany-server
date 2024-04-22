@@ -1,11 +1,12 @@
 package cn.asany.website.data.domain;
 
+import cn.asany.base.usertype.FileUserType;
 import cn.asany.cms.article.domain.ArticleCategory;
 import cn.asany.nuwa.app.domain.Application;
 import cn.asany.organization.core.domain.Organization;
 import cn.asany.storage.api.FileObject;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
@@ -31,7 +32,7 @@ public class Website extends BaseBusEntity {
   @Column(name = "NAME", length = 100, nullable = false)
   private String name;
   /** 网站 LOGO */
-  @Type(type = "file")
+  @Type(FileUserType.class)
   @Column(name = "LOGO", precision = 500)
   private FileObject logo;
   /** 描述 */

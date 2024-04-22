@@ -2,13 +2,15 @@ package cn.asany.shanhai.core.dao.impl;
 
 import cn.asany.shanhai.core.dao.ModelFieldDao;
 import cn.asany.shanhai.core.domain.ModelField;
+import jakarta.persistence.EntityManager;
 import java.util.Collections;
 import java.util.List;
-import javax.persistence.EntityManager;
 import org.jfantasy.framework.dao.jpa.ComplexJpaRepository;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 
-/** @author limaofeng */
+/**
+ * @author limaofeng
+ */
 public class ModelFieldDaoImpl extends ComplexJpaRepository<ModelField, Long>
     implements ModelFieldDao {
 

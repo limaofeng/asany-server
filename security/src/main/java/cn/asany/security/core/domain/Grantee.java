@@ -1,10 +1,10 @@
 package cn.asany.security.core.domain;
 
 import cn.asany.security.core.domain.enums.GranteeType;
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
+import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,6 +20,7 @@ public class Grantee {
   @Enumerated(EnumType.STRING)
   @Column(name = "GRANTEE_TYPE", length = 10)
   private GranteeType type;
+
   /** 授权主体值 */
   @Column(name = "GRANTEE_ID", length = 24)
   private String value;

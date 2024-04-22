@@ -1,35 +1,30 @@
 import org.gradle.plugins.ide.eclipse.model.SourceFolder
 
-buildscript {
-    dependencies {
-        classpath "org.hibernate:hibernate-gradle-plugin:${PLUGIN_HIBERNATE_VER}"
-    }
-}
-
 plugins {
     id 'java'
     id 'jacoco'
+    id "org.hibernate.orm" version "${PLUGIN_HIBERNATE_VER}"
     id "io.spring.dependency-management" version "${PLUGIN_SPRING_DEPENDENCY_MANAGEMENT_VER}"
     id "org.zeroturnaround.gradle.jrebel" version "${PLUGIN_JREBEL_VER}" apply false
     id 'com.github.kt3k.coveralls' version "${PLUGIN_COVERALLS_VER}"
-    id "com.star-zero.gradle.githook" version "${PLUGIN_GITHOOK_VER}"
+    id "com.star-zero.gradle.githook" version "${PLUGIN_GIT_HOOK_VER}"
     id "ru.netris.commitlint" version "${PLUGIN_COMMITLINT_VER}"
     id "com.diffplug.spotless" version "${PLUGIN_SPOTLESS_VER}"
     id "com.diffplug.eclipse.apt" version "${PLUGIN_ECLIPSE_APT_VER}"
 }
 
-githook {
-    failOnMissingHooksDir = false
-    createHooksDirIfNotExist = false
-    hooks {
-        "commit-msg" {
-            task = "commitlint -Dmsgfile=\$1"
-        }
-        "pre-commit" {
-            shell = "sh ./gradle/spotless.sh"
-        }
-    }
-}
+//githook {
+//    failOnMissingHooksDir = false
+//    createHooksDirIfNotExist = false
+//    hooks {
+//        "commit-msg" {
+//            task = "commitlint -Dmsgfile=\$1"
+//        }
+//        "pre-commit" {
+//            shell = "sh ./gradle/spotless.sh"
+//        }
+//    }
+//}
 
 allprojects {
     apply plugin: 'java'
@@ -64,6 +59,7 @@ allprojects {
 
     repositories {
         maven { url "https://s01.oss.sonatype.org/content/groups/staging/" }
+        maven { url "https://maven.aliyun.com/repository/central"}
         mavenCentral()
         mavenLocal()
     }
@@ -101,20 +97,20 @@ subprojects {
         implementation "org.springframework:spring-web"
         implementation "com.jayway.jsonpath:json-path"
         implementation "com.fasterxml.jackson.core:jackson-databind"
-        implementation "cn.hutool:hutool-all:$LIB_HUTOOL_VAR"
         compileOnly "org.mapstruct:mapstruct:$LIB_MAPSTRUCT_VER"
-        compileOnly "org.projectlombok:lombok:$LIB_LOMBOK_VER"
+        compileOnly "org.projectlombok:lombok"
+        compileOnly "org.springframework.boot:spring-boot-starter-web"
         annotationProcessor "org.mapstruct:mapstruct-processor:$LIB_MAPSTRUCT_VER"
-        annotationProcessor "org.projectlombok:lombok:$LIB_LOMBOK_VER"
+        annotationProcessor "org.projectlombok:lombok:"
         annotationProcessor "org.projectlombok:lombok-mapstruct-binding:${LIB_LOMBOK_MAPSTRUCT_BINDING_VER}"
         annotationProcessor "org.springframework.boot:spring-boot-configuration-processor:$LIB_SPRING_BOOT_VER"
-        testCompileOnly "org.projectlombok:lombok:$LIB_LOMBOK_VER"
+        testCompileOnly "org.projectlombok:lombok"
         testAnnotationProcessor "org.mapstruct:mapstruct-processor:$LIB_MAPSTRUCT_VER"
-        testAnnotationProcessor "org.projectlombok:lombok:$LIB_LOMBOK_VER"
+        testAnnotationProcessor "org.projectlombok:lombok"
         testAnnotationProcessor "org.projectlombok:lombok-mapstruct-binding:${LIB_LOMBOK_MAPSTRUCT_BINDING_VER}"
         testImplementation "com.graphql-java-kickstart:graphql-spring-boot-starter-test:$LIB_GRAPHQL_VER"
-        testImplementation("org.springframework.boot:spring-boot-starter-test")
-        testImplementation("org.springframework.boot:spring-boot-starter-web")
+        testImplementation "org.springframework.boot:spring-boot-starter-test"
+        testImplementation "org.springframework.boot:spring-boot-starter-web"
     }
 
     plugins.withId('java') {

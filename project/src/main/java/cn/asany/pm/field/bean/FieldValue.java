@@ -2,8 +2,8 @@ package cn.asany.pm.field.bean;
 
 import cn.asany.pm.issue.core.domain.Issue;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
 import java.util.Objects;
-import javax.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.GenericGenerator;
@@ -31,16 +31,19 @@ public class FieldValue extends BaseBusEntity {
   @GeneratedValue(generator = "fantasy-sequence")
   @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
+
   /** 对应的问题 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "ISSUE_ID", foreignKey = @ForeignKey(name = "FK_ISSUE_FIELD_VALUE_ISSUE"))
   @ToString.Exclude
   private Issue issue;
+
   /** 对应的字段 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "FIELD_ID", foreignKey = @ForeignKey(name = "FK_ISSUE_FIELD_VALUE_FIELD"))
   @ToString.Exclude
   private Field field;
+
   /** 存储的值 */
   @Column(name = "VALUE", length = 250)
   private String value;

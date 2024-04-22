@@ -1,7 +1,7 @@
 package cn.asany.email.user.domain;
 
+import jakarta.persistence.*;
 import java.util.Set;
-import javax.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;

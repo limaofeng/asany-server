@@ -9,7 +9,8 @@ import cn.asany.storage.data.domain.enums.StorageType;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.List;
 import java.util.Objects;
-import javax.persistence.*;
+
+import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.CacheConcurrencyStrategy;

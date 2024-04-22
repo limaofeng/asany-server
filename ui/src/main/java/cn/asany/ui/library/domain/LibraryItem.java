@@ -5,16 +5,15 @@ import cn.asany.ui.library.dao.listener.OplogListener;
 import cn.asany.ui.resources.UIResource;
 import cn.asany.ui.resources.domain.Component;
 import cn.asany.ui.resources.domain.Icon;
-import java.util.List;
-import java.util.Objects;
-import javax.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
-import org.hibernate.annotations.Any;
-import org.hibernate.annotations.AnyMetaDef;
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.MetaValue;
 import org.jfantasy.framework.dao.BaseBusEntity;
+
+import java.util.List;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -59,19 +58,19 @@ public class LibraryItem extends BaseBusEntity implements OplogDataCollector {
   @Column(name = "RESOURCE_TYPE", length = 10)
   private String resourceType;
 
-  @Any(
-      metaColumn =
-          @Column(name = "RESOURCE_TYPE", length = 10, insertable = false, updatable = false),
-      fetch = FetchType.LAZY)
-  @AnyMetaDef(
-      idType = "long",
-      metaType = "string",
-      metaValues = {
-        @MetaValue(targetEntity = Icon.class, value = Icon.RESOURCE_NAME),
-        @MetaValue(targetEntity = Component.class, value = Component.RESOURCE_NAME)
-      })
-  @JoinColumn(name = "RESOURCE_ID", insertable = false, updatable = false)
-  private UIResource resource;
+//  @Any(
+//      metaColumn =
+//          @Column(name = "RESOURCE_TYPE", length = 10, insertable = false, updatable = false),
+//      fetch = FetchType.LAZY)
+//  @AnyMetaDef(
+//      idType = "long",
+//      metaType = "string",
+//      metaValues = {
+//        @MetaValue(targetEntity = Icon.class, value = Icon.RESOURCE_NAME),
+//        @MetaValue(targetEntity = Component.class, value = Component.RESOURCE_NAME)
+//      })
+//  @JoinColumn(name = "RESOURCE_ID", insertable = false, updatable = false)
+  private transient UIResource resource;
 
   /** 用于级联加载 */
   @ManyToOne(fetch = FetchType.LAZY)
@@ -92,8 +91,9 @@ public class LibraryItem extends BaseBusEntity implements OplogDataCollector {
   @ToString.Exclude
   private Component component;
 
+  @JsonIgnore
   public <T extends UIResource> T getResource(Class<T> resourceClass) {
-    return (T) this.resource;
+    return null; // (T) this.resource;
   }
 
   @Override
@@ -129,4 +129,5 @@ public class LibraryItem extends BaseBusEntity implements OplogDataCollector {
   public int hashCode() {
     return getClass().hashCode();
   }
+
 }

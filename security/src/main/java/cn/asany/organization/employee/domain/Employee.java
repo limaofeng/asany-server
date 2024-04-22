@@ -3,6 +3,7 @@ package cn.asany.organization.employee.domain;
 import cn.asany.base.common.Ownership;
 import cn.asany.base.common.domain.Email;
 import cn.asany.base.common.domain.Phone;
+import cn.asany.base.usertype.FileUserType;
 import cn.asany.organization.core.domain.EmployeeGroup;
 import cn.asany.organization.core.domain.EmployeeIdentity;
 import cn.asany.organization.core.domain.Organization;
@@ -13,10 +14,10 @@ import cn.asany.security.core.domain.enums.Sex;
 import cn.asany.storage.api.FileObject;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import javax.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
@@ -53,28 +54,35 @@ public class Employee extends BaseBusEntity implements Ownership {
   @GeneratedValue(generator = "fantasy-sequence")
   @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
+
   /** 头像 */
-  @Type(type = "file")
+  @Type(FileUserType.class)
   @Column(name = "avatar", length = 500)
   private FileObject avatar;
+
   /** 工号 */
   @Column(name = "JOB_NUMBER", precision = 20)
   private String jobNumber;
+
   /** 名称 */
   @Column(name = "NAME", length = 30)
   private String name;
+
   /** 生日 */
   @Column(name = "BIRTHDAY")
   @Temporal(TemporalType.DATE)
   private Date birthday;
+
   /** 性别 */
   @Enumerated(EnumType.STRING)
   @Column(name = "SEX", length = 10)
   private Sex sex;
+
   /** 邀请状态 */
   @Enumerated(EnumType.STRING)
   @Column(name = "INVITE_STATUS", length = 10)
   private InviteStatus inviteStatus;
+
   /** 组织 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(
@@ -83,12 +91,15 @@ public class Employee extends BaseBusEntity implements Ownership {
       updatable = false,
       nullable = false)
   private Organization organization;
+
   /** 组织内的身份 */
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "employee", cascade = CascadeType.REMOVE)
   private List<EmployeeIdentity> identities;
+
   /** 地址列表 */
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "employee", cascade = CascadeType.REMOVE)
   private List<EmployeeAddress> addresses;
+
   /** 邮箱列表 */
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "employee", cascade = CascadeType.REMOVE)
   private List<EmployeeEmail> emails;

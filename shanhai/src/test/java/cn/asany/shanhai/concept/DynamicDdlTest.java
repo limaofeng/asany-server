@@ -2,12 +2,12 @@ package cn.asany.shanhai.concept;
 
 import cn.asany.shanhai.TestApplication;
 import cn.asany.shanhai.core.support.dao.SystemFieldFillInterceptor;
+import jakarta.persistence.EntityManagerFactory;
 import java.io.ByteArrayInputStream;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.persistence.EntityManagerFactory;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

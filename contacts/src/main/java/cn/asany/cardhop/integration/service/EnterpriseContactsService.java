@@ -51,7 +51,7 @@ public class EnterpriseContactsService implements IContactsService {
 
   @Override
   public List<ContactGroup> getGroups(ContactBook book, String namespace) {
-    Organization organization = (Organization) book.getOwner();
+    Organization organization = null; // (Organization) book.getOwner();
 
     String finalNamespace =
         StringUtil.defaultValue(namespace, () -> ContactGroupNamespace.ENTERPRISE_DEPARTMENT);
@@ -78,7 +78,7 @@ public class EnterpriseContactsService implements IContactsService {
   @Override
   public Page<Contact> findPage(
       ContactBook book, String namespace, Pageable pageable, PropertyFilter filter) {
-    Organization organization = (Organization) book.getOwner();
+    Organization organization = null; // (Organization) book.getOwner();
 
     String finalNamespace =
         StringUtil.defaultValue(namespace, () -> ContactGroupNamespace.ENTERPRISE_DEPARTMENT);

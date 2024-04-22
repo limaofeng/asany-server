@@ -3,8 +3,8 @@ package cn.asany.pm.project.domain;
 import cn.asany.organization.employee.domain.Employee;
 import cn.asany.pm.project.domain.enums.ProjectMemberType;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
 import java.util.Objects;
-import javax.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.GenericGenerator;
@@ -30,13 +30,16 @@ public class ProjectMember extends BaseBusEntity {
   @GeneratedValue(generator = "fantasy-sequence")
   @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
+
   /** 名称（只在 ANONYMOUS 时有效） */
   @Column(name = "NAME", length = 50)
   private String name;
+
   /** 成员类型 */
   @Enumerated(EnumType.STRING)
   @Column(length = 20, nullable = false)
   private ProjectMemberType type;
+
   /** 关联的员工 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(

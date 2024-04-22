@@ -2,8 +2,8 @@ package cn.asany.cms.special.domain;
 
 import cn.asany.cms.special.domain.enums.SubscriberType;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
 import java.util.Date;
-import javax.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.jfantasy.framework.dao.BaseBusEntity;
@@ -37,13 +37,16 @@ public class Subscriber extends BaseBusEntity {
       pkColumnValue = "cms_subscriber:id",
       valueColumnName = "gen_value")
   private Long id;
+
   /** 订阅人名称 */
   @Column(name = "NAME", length = 50, nullable = false)
   private String name;
+
   /** 订阅类型: member／team */
   @Enumerated(EnumType.STRING)
   @Column(name = "TYPE", length = 20, nullable = false, updatable = false)
   private SubscriberType type;
+
   /** 订阅专栏 */
   @ManyToOne
   @JoinColumn(
@@ -56,6 +59,7 @@ public class Subscriber extends BaseBusEntity {
   /** 订阅人关联的用户 */
   @Column(name = "VALUE", nullable = false, updatable = false, length = 32)
   private String value;
+
   /** 到期时间 */
   @Column(name = "EXPIRES", nullable = false)
   @Temporal(TemporalType.TIMESTAMP)

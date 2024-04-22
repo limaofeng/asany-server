@@ -1,8 +1,8 @@
 package cn.asany.security.core.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
 import java.io.Serializable;
-import javax.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
@@ -27,6 +27,7 @@ public class RoleScope extends BaseBusEntity implements Serializable {
   @GeneratedValue(generator = "fantasy-sequence")
   @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
+
   /** 角色使用范围类型 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(
@@ -35,9 +36,11 @@ public class RoleScope extends BaseBusEntity implements Serializable {
       updatable = false)
   @ToString.Exclude
   private RoleScopeType type;
+
   /** 角色使用范围值 */
   @Column(name = "VALUE", length = 32)
   private String value;
+
   /** 角色 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(

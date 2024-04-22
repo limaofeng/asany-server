@@ -2,7 +2,7 @@ package cn.asany.sunrise.calendar.domain.toys;
 
 import cn.asany.sunrise.calendar.domain.enums.Alert;
 import java.util.Date;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

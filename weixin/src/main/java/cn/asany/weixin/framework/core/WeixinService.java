@@ -7,7 +7,7 @@ import cn.asany.weixin.framework.message.content.*;
 import cn.asany.weixin.framework.message.user.OpenIdList;
 import cn.asany.weixin.framework.message.user.User;
 import java.util.List;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 public interface WeixinService {
 

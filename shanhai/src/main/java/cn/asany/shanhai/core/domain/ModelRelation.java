@@ -1,8 +1,8 @@
 package cn.asany.shanhai.core.domain;
 
 import cn.asany.shanhai.core.domain.enums.ModelRelationType;
+import jakarta.persistence.*;
 import java.util.Objects;
-import javax.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.GenericGenerator;
@@ -22,13 +22,16 @@ public class ModelRelation extends BaseBusEntity {
   @GeneratedValue(generator = "fantasy-sequence")
   @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
+
   /** 关系类型 */
   @Enumerated(EnumType.STRING)
   @Column(name = "TYPE", length = 20)
   private ModelRelationType type;
+
   /** 关系类型 SUBJECTION INPUT / SLAVE */
   @Column(name = "RELATION", length = 100)
   private String relation;
+
   /** 当前实体 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(
@@ -37,6 +40,7 @@ public class ModelRelation extends BaseBusEntity {
       nullable = false)
   @ToString.Exclude
   private Model model;
+
   /** 关联实体 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(

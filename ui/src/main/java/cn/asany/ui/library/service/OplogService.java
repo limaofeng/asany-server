@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import javax.transaction.Transactional;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.jfantasy.framework.dao.hibernate.util.HibernateUtils;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;

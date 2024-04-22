@@ -3,7 +3,7 @@ package cn.asany.organization.core.domain;
 import cn.asany.organization.core.domain.enums.OrganizationInviteStatus;
 import cn.asany.security.core.domain.Role;
 import cn.asany.security.core.domain.User;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
@@ -27,10 +27,12 @@ public class OrganizationInvite extends BaseBusEntity {
   @GeneratedValue(generator = "fantasy-sequence")
   @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
+
   /** 状态 */
   @Enumerated(EnumType.STRING)
   @Column(name = "STATUS", nullable = false, length = 20)
   private OrganizationInviteStatus status;
+
   /** 邀请成为的角色 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(
@@ -39,6 +41,7 @@ public class OrganizationInvite extends BaseBusEntity {
       foreignKey = @ForeignKey(name = "FK_ORGANIZATION_INVITE_ROLE"))
   @ToString.Exclude
   private Role role;
+
   /** 用户 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(
@@ -48,6 +51,7 @@ public class OrganizationInvite extends BaseBusEntity {
       foreignKey = @ForeignKey(name = "FK_ORGANIZATION_INVITE_USER"))
   @ToString.Exclude
   private User user;
+
   /** 团队ID */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(

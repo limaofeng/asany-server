@@ -3,7 +3,7 @@ package cn.asany.ui.library.dao.impl;
 import cn.asany.ui.library.dao.LibraryItemDao;
 import cn.asany.ui.library.domain.LibraryItem;
 import java.util.List;
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 import org.jfantasy.framework.dao.jpa.ComplexJpaRepository;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 

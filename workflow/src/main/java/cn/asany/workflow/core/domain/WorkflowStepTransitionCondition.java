@@ -2,7 +2,7 @@ package cn.asany.workflow.core.domain;
 
 import cn.asany.workflow.core.domain.enums.ConditionType;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

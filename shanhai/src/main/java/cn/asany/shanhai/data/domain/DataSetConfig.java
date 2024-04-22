@@ -5,8 +5,8 @@ import cn.asany.shanhai.data.domain.converter.DataSetFilterArrayConverter;
 import cn.asany.shanhai.data.domain.toy.DataSetField;
 import cn.asany.shanhai.data.domain.toy.DataSetFilter;
 import cn.asany.shanhai.data.engine.IDataSetOptions;
+import jakarta.persistence.*;
 import java.util.List;
-import javax.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
@@ -31,9 +31,11 @@ public class DataSetConfig extends BaseBusEntity {
   @GeneratedValue(generator = "fantasy-sequence")
   @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
+
   /** 名称 */
   @Column(name = "NAME", length = 50)
   private String name;
+
   /** 对应的数据源 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(
@@ -43,13 +45,16 @@ public class DataSetConfig extends BaseBusEntity {
       nullable = false)
   @ToString.Exclude
   private DataSourceConfig datasource;
+
   /** 存放配置参数 */
   @Column(name = "CONFIG_STORE", columnDefinition = "JSON")
   private String details;
+
   /** 字段列表 */
   @Column(name = "FIELDS_STORE", columnDefinition = "JSON")
   @Convert(converter = DataSetFieldArrayConverter.class)
   private List<DataSetField> fields;
+
   /** 过滤筛选 */
   @Column(name = "FILTERS_STORE", columnDefinition = "JSON")
   @Convert(converter = DataSetFilterArrayConverter.class)

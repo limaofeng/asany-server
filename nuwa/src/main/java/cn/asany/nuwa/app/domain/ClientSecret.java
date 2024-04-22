@@ -1,9 +1,9 @@
 package cn.asany.nuwa.app.domain;
 
 import cn.asany.security.oauth.domain.AccessToken;
+import jakarta.persistence.*;
 import java.util.List;
 import java.util.Objects;
-import javax.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.GenericGenerator;
@@ -31,16 +31,20 @@ public class ClientSecret extends BaseBusEntity {
   @GeneratedValue(generator = "fantasy-sequence")
   @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
+
   /** 密钥类型 */
   @Column(name = "TYPE", nullable = false, length = 20)
   @Enumerated(EnumType.STRING)
   private ClientSecretType type;
+
   /** 密钥 */
   @Column(name = "SECRET", length = 40, updatable = false)
   private String secret;
+
   /** 客户端 */
   @Column(name = "CLIENT_ID", length = 20, updatable = false, nullable = false)
   private String client;
+
   /** 访问令牌 */
   @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
   @OrderBy("createdAt desc")

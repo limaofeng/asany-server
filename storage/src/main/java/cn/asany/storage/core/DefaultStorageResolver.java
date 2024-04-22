@@ -35,9 +35,8 @@ public class DefaultStorageResolver implements StorageResolver {
   @Transactional(readOnly = true)
   public Storage resolve(String id) {
     if (storages.containsKey(id)) {
-      return storages.get(id);
+        return storages.get(id);
     }
-    System.out.println("id = " + id + " storageService = " + storageService);
     StorageConfig config = storageService.get(id);
     return resolve(config.getProperties());
   }
@@ -46,6 +45,7 @@ public class DefaultStorageResolver implements StorageResolver {
   public Storage resolve(IStorageConfig config) {
     for (@SuppressWarnings("rawtypes") StorageBuilder builder : builders) {
       if (builder.supports(config.getClass())) {
+        @SuppressWarnings("unchecked")
         Storage storage = builder.build(config);
         if (storage != null) {
           storages.put(config.getId(), storage);

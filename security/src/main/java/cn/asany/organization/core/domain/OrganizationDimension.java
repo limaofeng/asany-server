@@ -1,8 +1,8 @@
 package cn.asany.organization.core.domain;
 
+import jakarta.persistence.*;
 import java.util.List;
 import java.util.Objects;
-import javax.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.GenericGenerator;
@@ -34,6 +34,7 @@ public class OrganizationDimension extends BaseBusEntity {
   @GeneratedValue(generator = "fantasy-sequence")
   @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
+
   /** 组织 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(
@@ -42,24 +43,31 @@ public class OrganizationDimension extends BaseBusEntity {
       updatable = false,
       nullable = false)
   private Organization organization;
+
   /** 编码 */
   @Column(name = "CODE", length = 200, nullable = false)
   private String code;
+
   /** 纬度名称 */
   @Column(name = "NAME", length = 50)
   private String name;
+
   /** 排序字段 */
   @Column(name = "SORT")
   private Integer sort;
+
   /** 描述信息 */
   @Column(name = "DESCRIPTION", length = 150)
   private String description;
+
   /** 状态 */
   @OneToMany(mappedBy = "dimension", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
   private List<EmployeeStatus> statuses;
+
   /** 部门 */
   @OneToMany(mappedBy = "dimension", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
   private List<Department> departments;
+
   /** 人数统计 */
   @Column(name = "COUNT")
   private Long count;

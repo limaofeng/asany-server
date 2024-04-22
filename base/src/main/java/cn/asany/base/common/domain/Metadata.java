@@ -1,8 +1,9 @@
 package cn.asany.base.common.domain;
 
+import cn.asany.base.usertype.FileUserType;
 import cn.asany.storage.api.FileObject;
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
+import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,12 +17,14 @@ import org.hibernate.annotations.Type;
 @AllArgsConstructor
 public class Metadata {
   /** 缩略图 */
-  @Type(type = "file")
+  @Type(value = FileUserType.class)
   @Column(name = "META_THUMB", length = 500)
   private FileObject thumb;
+
   /** 标题 */
   @Column(name = "META_TITLE", length = 200)
   private String title;
+
   /** 描述 */
   @Column(name = "META_DESCRIPTION", length = 500)
   private String description;

@@ -3,4 +3,5 @@ description = '项目管理'
 dependencies {
     implementation project(":security")
     implementation project(":storage-api")
+    implementation project(":base")
 }

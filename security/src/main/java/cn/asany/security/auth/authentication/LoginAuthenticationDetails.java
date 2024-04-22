@@ -2,6 +2,7 @@ package cn.asany.security.auth.authentication;
 
 import cn.asany.security.auth.graphql.types.LoginOptions;
 import cn.asany.security.auth.graphql.types.LoginType;
+import jakarta.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import lombok.Getter;
 

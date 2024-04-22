@@ -2,8 +2,8 @@ package cn.asany.nuwa.app.dao.impl;
 
 import cn.asany.nuwa.app.dao.ApplicationRouteDao;
 import cn.asany.nuwa.app.domain.ApplicationRoute;
+import jakarta.persistence.EntityManager;
 import java.util.List;
-import javax.persistence.EntityManager;
 import org.jfantasy.framework.dao.jpa.ComplexJpaRepository;
 import org.jfantasy.framework.dao.jpa.PropertyFilter;
 

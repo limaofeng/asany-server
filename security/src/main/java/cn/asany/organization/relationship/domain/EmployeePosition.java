@@ -9,7 +9,7 @@ import cn.asany.organization.employee.domain.Employee;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
@@ -36,9 +36,11 @@ public class EmployeePosition extends BaseBusEntity {
   @GeneratedValue(generator = "fantasy-sequence")
   @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
+
   /** 是否为主部门 */
   @Column(name = "IS_PRIMARY")
   private Boolean primary;
+
   /** 员工 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(
@@ -47,10 +49,12 @@ public class EmployeePosition extends BaseBusEntity {
       nullable = false,
       updatable = false)
   private Employee employee;
+
   /** 员工所在部门的职位 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "POSITION_ID", foreignKey = @ForeignKey(name = "ORG_EMPLOYEE_POSITION_PID"))
   private Position position;
+
   /** 所在部门 */
   @JsonSerialize(using = DepartmentSerializer.class)
   @JsonDeserialize(using = DepartmentDeserializer.class)
@@ -60,6 +64,7 @@ public class EmployeePosition extends BaseBusEntity {
       foreignKey = @ForeignKey(name = "ORG_EMPLOYEE_POSITION_DID"),
       nullable = false)
   private Department department;
+
   /** 纬度 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(
@@ -68,6 +73,7 @@ public class EmployeePosition extends BaseBusEntity {
       updatable = false,
       nullable = false)
   private OrganizationDimension dimension;
+
   /** 所属组织 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(

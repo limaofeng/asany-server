@@ -4,7 +4,7 @@ import cn.asany.pm.issue.attribute.domain.Status;
 import cn.asany.pm.rule.bean.databind.IssueAppraisalRuleInfoDeserializer;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -41,6 +41,7 @@ public class IssueAppraisalRule {
       name = "ISSUE_APPRAISAL_RULE_INFO_ID",
       foreignKey = @ForeignKey(name = "FK_ISSUE_APPRAISAL_RULE_INFO"))
   private IssueAppraisalRuleInfo appraisalRuleInfo;
+
   /** 是否启用 0禁用 1 启用 */
   @Column(name = "ENABLED")
   private Boolean enabled;

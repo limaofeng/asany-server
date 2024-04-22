@@ -2,8 +2,8 @@ package cn.asany.pm.screen.bean;
 
 import cn.asany.pm.workflow.bean.WorkflowStepTransition;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
 import java.util.List;
-import javax.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
@@ -34,6 +34,7 @@ public class IssueScreen extends BaseBusEntity {
   /** 页面名称 */
   @Column(name = "NAME", length = 50)
   private String name;
+
   /** 页面标题 */
   @Column(name = "TITLE", length = 50)
   private String title;

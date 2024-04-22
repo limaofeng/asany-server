@@ -6,8 +6,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import jakarta.persistence.*;
 import java.util.Objects;
-import javax.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.GenericGenerator;
@@ -62,6 +62,7 @@ public class FieldToScreen extends BaseBusEntity {
   @ManyToOne(fetch = FetchType.LAZY)
   @ToString.Exclude
   private IssueScreenTabPane tabPane;
+
   /** 排序字段 */
   @Column(name = "SORT", length = 22)
   private Long order;

@@ -1,25 +1,25 @@
-package cn.asany.storage.data.domain.type;
+package cn.asany.base.usertype;
 
 import cn.asany.storage.api.FileObject;
 import org.hibernate.type.descriptor.WrapperOptions;
-import org.hibernate.type.descriptor.java.AbstractTypeDescriptor;
+import org.hibernate.type.descriptor.java.AbstractJavaType;
 import org.hibernate.type.descriptor.java.MutableMutabilityPlan;
 import org.jfantasy.framework.jackson.JSON;
 import org.jfantasy.framework.util.common.StringUtil;
 
-public class FileObjectTypeDescriptor extends AbstractTypeDescriptor<FileObject> {
+public class FileObjectTypeDescriptor extends AbstractJavaType<FileObject> {
 
   public static final FileObjectTypeDescriptor INSTANCE = new FileObjectTypeDescriptor();
 
   public FileObjectTypeDescriptor() {
     super(
         FileObject.class,
-        new MutableMutabilityPlan<FileObject>() {
-          @Override
-          protected FileObject deepCopyNotNull(FileObject value) {
-            return value;
-          }
-        });
+      new MutableMutabilityPlan<>() {
+        @Override
+        protected FileObject deepCopyNotNull(FileObject value) {
+          return value;
+        }
+      });
   }
 
   @Override
@@ -27,7 +27,6 @@ public class FileObjectTypeDescriptor extends AbstractTypeDescriptor<FileObject>
     return JSON.serialize(value);
   }
 
-  @Override
   public FileObject fromString(String value) {
     if (StringUtil.isBlank(value)) {
       return null;

@@ -3,11 +3,11 @@ package cn.asany.storage.data.web.wrapper;
 import cn.asany.storage.data.util.BandwidthLimiter;
 import java.io.IOException;
 import java.util.Collection;
-import javax.servlet.ServletException;
-import javax.servlet.ServletInputStream;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletRequestWrapper;
-import javax.servlet.http.Part;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletInputStream;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequestWrapper;
+import jakarta.servlet.http.Part;
 
 public class UploadLimitRequestWrapper extends HttpServletRequestWrapper {
 

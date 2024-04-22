@@ -3,15 +3,16 @@ package cn.asany.security.core.domain;
 import cn.asany.base.common.Ownership;
 import cn.asany.base.common.domain.Email;
 import cn.asany.base.common.domain.Phone;
+import cn.asany.base.usertype.FileUserType;
 import cn.asany.security.core.domain.enums.Sex;
 import cn.asany.security.core.domain.enums.UserType;
 import cn.asany.security.core.validators.UsernameCannotRepeatValidator;
 import cn.asany.storage.api.FileObject;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.*;
 import java.util.*;
-import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.Cache;
@@ -72,6 +73,7 @@ public class User extends BaseBusEntity implements Ownership, Tenantable {
       groups = {Operation.Create.class})
   @Column(name = "USERNAME", length = 20, updatable = false, nullable = false)
   private String username;
+
   /** 登录密码 */
   @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
   @Column(name = "PASSWORD", length = 50, nullable = false)
@@ -81,16 +83,20 @@ public class User extends BaseBusEntity implements Ownership, Tenantable {
   @Enumerated(EnumType.STRING)
   @Column(name = "USER_TYPE", length = 20, nullable = false)
   private UserType userType;
+
   /** 头像 */
-  @Type(type = "file")
+  @Type(FileUserType.class)
   @Column(name = "avatar", precision = 500)
   private FileObject avatar;
+
   /** 用户显示昵称 */
   @Column(name = "NICK_NAME", length = 50)
   private String nickname;
+
   /** 用户显示昵称 */
   @Column(name = "TITLE", length = 50)
   private String title;
+
   /** 用户状态 */
   @OneToOne(
       fetch = FetchType.LAZY,
@@ -98,6 +104,7 @@ public class User extends BaseBusEntity implements Ownership, Tenantable {
   @PrimaryKeyJoinColumn(name = "ID", referencedColumnName = "USER_ID")
   @ToString.Exclude
   private UserStatus status;
+
   /** 电话 */
   @Embedded
   @AttributeOverrides({
@@ -105,6 +112,7 @@ public class User extends BaseBusEntity implements Ownership, Tenantable {
     @AttributeOverride(name = "number", column = @Column(name = "PHONE_NUMBER")),
   })
   private Phone phone;
+
   /** 邮箱 */
   @Embedded
   @AttributeOverrides({
@@ -112,48 +120,62 @@ public class User extends BaseBusEntity implements Ownership, Tenantable {
     @AttributeOverride(name = "address", column = @Column(name = "EMAIL_ADDRESS")),
   })
   private Email email;
+
   /** 生日 */
   @Column(name = "BIRTHDAY")
   @Temporal(TemporalType.DATE)
   private Date birthday;
+
   /** 性别 */
   @Enumerated(EnumType.STRING)
   @Column(name = "SEX", length = 10)
   private Sex sex;
+
   /** 公司 */
   @Column(name = "COMPANY", length = 200)
   private String company;
+
   /** 位置 */
   @Column(name = "LOCATION", length = 200)
   private String location;
+
   /** 自我介绍 */
   @Column(name = "BIO", length = 500)
   private String bio;
+
   /** 是否启用 */
   @Column(name = "ENABLED")
   private Boolean enabled;
+
   /** 未过期 */
   @Column(name = "NON_EXPIRED")
   private Boolean accountNonExpired;
+
   /** 未锁定 */
   @Column(name = "NON_LOCKED")
   private Boolean accountNonLocked;
+
   /** 未失效 */
   @Column(name = "CREDENTIALS_NON_EXPIRED")
   private Boolean credentialsNonExpired;
+
   /** 登陆成功后需要重置密码 */
   @Builder.Default
   @Column(name = "FORCE_PASSWORD_RESET")
   private Boolean forcePasswordReset = Boolean.FALSE;
+
   /** 锁定时间 */
   @Column(name = "LOCK_TIME")
   private Date lockTime;
+
   /** 最后登录时间 */
   @Column(name = "LAST_LOGIN_TIME")
   private Date lastLoginTime;
+
   /** 租户ID */
   @Column(name = "TENANT_ID", length = 24)
   private String tenantId;
+
   /** 用户权限 */
   @Transient private List<Permission> permissions;
 

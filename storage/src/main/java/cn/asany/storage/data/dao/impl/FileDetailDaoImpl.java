@@ -2,8 +2,8 @@ package cn.asany.storage.data.dao.impl;
 
 import cn.asany.storage.data.dao.FileDetailDao;
 import cn.asany.storage.data.domain.FileDetail;
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
 import lombok.extern.slf4j.Slf4j;
 import org.jfantasy.framework.dao.jpa.ComplexJpaRepository;
 import org.jfantasy.framework.error.IgnoreException;

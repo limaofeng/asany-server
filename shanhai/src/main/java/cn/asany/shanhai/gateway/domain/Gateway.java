@@ -1,11 +1,13 @@
 package cn.asany.shanhai.gateway.domain;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
-/** @author limaofeng */
+/**
+ * @author limaofeng
+ */
 @Data
 @Builder
 @NoArgsConstructor

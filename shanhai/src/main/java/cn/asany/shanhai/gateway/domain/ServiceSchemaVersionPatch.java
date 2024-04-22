@@ -4,12 +4,14 @@ import cn.asany.shanhai.gateway.domain.enums.ServiceSchemaVersionPatchStatus;
 import cn.asany.shanhai.gateway.domain.enums.ServiceSchemaVersionPatchType;
 import cn.asany.shanhai.gateway.util.DiffObject;
 import cn.asany.shanhai.gateway.util.GraphQLType;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
-/** @author limaofeng */
+/**
+ * @author limaofeng
+ */
 @Data
 @Builder
 @NoArgsConstructor

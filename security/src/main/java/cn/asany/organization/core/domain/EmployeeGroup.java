@@ -2,8 +2,8 @@ package cn.asany.organization.core.domain;
 
 import cn.asany.organization.employee.domain.Employee;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
 import java.util.List;
-import javax.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
@@ -26,15 +26,19 @@ public class EmployeeGroup extends BaseBusEntity {
   @GeneratedValue(generator = "fantasy-sequence")
   @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
+
   /** 用户组名称 */
   @Column(name = "NAME", length = 50)
   private String name;
+
   /** 是否启用 */
   @Column(name = "ENABLED")
   private Boolean enabled;
+
   /** 描述 */
   @Column(name = "DESCRIPTION", length = 250)
   private String description;
+
   /** 使用范围 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(
@@ -43,6 +47,7 @@ public class EmployeeGroup extends BaseBusEntity {
       updatable = false,
       nullable = false)
   private EmployeeGroupScope scope;
+
   /** 群组成员 */
   @ManyToMany(targetEntity = Employee.class, fetch = FetchType.LAZY)
   @JoinTable(

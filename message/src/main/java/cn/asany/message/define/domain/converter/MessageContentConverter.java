@@ -1,7 +1,7 @@
 package cn.asany.message.define.domain.converter;
 
 import cn.asany.message.define.domain.toys.MessageContent;
-import javax.persistence.AttributeConverter;
+import jakarta.persistence.AttributeConverter;
 
 /**
  * 消息内容转换器

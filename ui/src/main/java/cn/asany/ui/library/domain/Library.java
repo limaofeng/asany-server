@@ -1,19 +1,14 @@
 package cn.asany.ui.library.domain;
 
-import cn.asany.base.common.Ownership;
-import cn.asany.organization.core.domain.Organization;
-import cn.asany.security.core.domain.User;
 import cn.asany.ui.library.OplogDataCollector;
 import cn.asany.ui.library.dao.listener.OplogListener;
 import cn.asany.ui.library.domain.enums.LibraryType;
-import java.util.Set;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.Any;
-import org.hibernate.annotations.AnyMetaDef;
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.MetaValue;
 import org.jfantasy.framework.dao.BaseBusEntity;
+
+import java.util.Set;
 
 @Data
 @Builder
@@ -78,19 +73,19 @@ public class Library extends BaseBusEntity implements OplogDataCollector {
       fetch = FetchType.LAZY)
   private Set<LibraryItem> items;
   /** 所有者 */
-  @Any(
-      metaColumn =
-          @Column(name = "OWNERSHIP_TYPE", length = 10, insertable = false, updatable = false),
-      fetch = FetchType.LAZY)
-  @AnyMetaDef(
-      idType = "long",
-      metaType = "string",
-      metaValues = {
-        @MetaValue(targetEntity = User.class, value = User.OWNERSHIP_KEY),
-        @MetaValue(targetEntity = Organization.class, value = Organization.OWNERSHIP_KEY)
-      })
-  @JoinColumn(name = "OWNERSHIP_ID", insertable = false, updatable = false)
-  private Ownership ownership;
+//  @Any(
+//      metaColumn =
+//          @Column(name = "OWNERSHIP_TYPE", length = 10, insertable = false, updatable = false),
+//      fetch = FetchType.LAZY)
+//  @AnyMetaDef(
+//      idType = "long",
+//      metaType = "string",
+//      metaValues = {
+//        @MetaValue(targetEntity = User.class, value = User.OWNERSHIP_KEY),
+//        @MetaValue(targetEntity = Organization.class, value = Organization.OWNERSHIP_KEY)
+//      })
+//  @JoinColumn(name = "OWNERSHIP_ID", insertable = false, updatable = false)
+//  private Ownership ownership;
 
   @Override
   @Transient

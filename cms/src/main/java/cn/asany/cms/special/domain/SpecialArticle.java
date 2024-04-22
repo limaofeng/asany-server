@@ -1,8 +1,9 @@
 package cn.asany.cms.special.domain;
 
+import cn.asany.base.usertype.FileUserType;
 import cn.asany.cms.article.domain.Article;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import javax.tools.FileObject;
 import lombok.*;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -26,22 +27,28 @@ public class SpecialArticle extends BaseBusEntity {
   @GeneratedValue(generator = "fantasy-sequence")
   @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
+
   /** 期数 */
   @Column(name = "PERIODICAL", nullable = false)
   private String periodical;
+
   /** 标题 */
   @Column(name = "TITLE", nullable = false)
   private String title;
+
   /** 摘要 */
   @Column(name = "SUMMARY", length = 500, nullable = false)
   private String summary;
+
   /** 封面 */
   @Column(name = "COVER", length = 500)
-  @Type(type = "file")
+  @Type(FileUserType.class)
   private FileObject cover;
+
   /** 发布日期 */
   @Column(name = "PUBLISH_DATE", length = 15, nullable = false)
   private String publishDate;
+
   /** 对应的文章 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(
@@ -50,6 +57,7 @@ public class SpecialArticle extends BaseBusEntity {
       updatable = false,
       foreignKey = @ForeignKey(name = "FK_SPECIALARTICLE_SPECIAL"))
   private Special special;
+
   /** 对应的文章 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(

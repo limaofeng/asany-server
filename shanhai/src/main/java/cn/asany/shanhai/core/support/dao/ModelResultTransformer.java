@@ -2,12 +2,12 @@ package cn.asany.shanhai.core.support.dao;
 
 import cn.asany.shanhai.core.domain.ModelField;
 import cn.asany.shanhai.core.support.model.FieldTypeRegistry;
+import jakarta.persistence.AttributeConverter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import javax.persistence.AttributeConverter;
 import lombok.SneakyThrows;
 import org.hibernate.transform.ResultTransformer;
 import org.jfantasy.framework.spring.SpringBeanUtils;

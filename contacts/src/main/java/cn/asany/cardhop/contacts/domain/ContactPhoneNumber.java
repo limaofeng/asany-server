@@ -2,7 +2,7 @@ package cn.asany.cardhop.contacts.domain;
 
 import cn.asany.base.common.domain.Phone;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
@@ -29,14 +29,18 @@ public class ContactPhoneNumber extends BaseBusEntity {
   @GeneratedValue(generator = "fantasy-sequence")
   @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
+
   /** 主号码 */
   @Column(name = "IS_PRIMARY", nullable = false)
   private Boolean primary;
+
   /** 标签 */
   @Column(name = "LABEL", length = 30)
   private String label;
+
   /** 电话 */
   @Embedded private Phone phone;
+
   /** 员工 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(

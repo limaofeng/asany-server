@@ -1,9 +1,10 @@
 package cn.asany.pm.project.domain;
 
+import cn.asany.base.usertype.FileUserType;
 import cn.asany.storage.api.FileObject;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
 import java.util.Objects;
-import javax.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.GenericGenerator;
@@ -32,13 +33,16 @@ public class Project extends BaseBusEntity {
   @GeneratedValue(generator = "fantasy-sequence")
   @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
+
   /** 标志 */
   @Column(name = "LOGO", length = 500, columnDefinition = "JSON")
-  @Type(type = "file")
+  @Type(FileUserType.class)
   private FileObject logo;
+
   /** 项目名称 */
   @Column(name = "NAME", length = 20)
   private String name;
+
   /** 描述 */
   @Column(name = "DESCRIPTION", length = 500)
   private String description;

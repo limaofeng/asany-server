@@ -1,7 +1,7 @@
 package cn.asany.message.data.domain;
 
 import cn.asany.message.data.domain.enums.MessageRecipientType;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
@@ -25,13 +25,16 @@ public class MessageRecipient extends BaseBusEntity {
   @GeneratedValue(generator = "fantasy-sequence")
   @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
+
   /** 收件人类型 */
   @Enumerated(EnumType.STRING)
   @Column(name = "TYPE", nullable = false, length = 20)
   private MessageRecipientType type;
+
   /** 收件人值 */
   @Column(name = "VALUE", nullable = false, length = 50)
   private String value;
+
   /** 消息 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(

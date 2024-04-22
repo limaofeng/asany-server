@@ -2,9 +2,9 @@ package cn.asany.pm.issue.type.domain;
 
 import cn.asany.pm.issue.core.domain.Issue;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
 import java.util.List;
 import java.util.Objects;
-import javax.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.GenericGenerator;
@@ -34,6 +34,7 @@ public class IssueType extends SoftDeletableBaseBusEntity {
   @GeneratedValue(generator = "fantasy-sequence")
   @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
+
   /** 任务id */
   @OneToMany(
       mappedBy = "type",
@@ -41,12 +42,15 @@ public class IssueType extends SoftDeletableBaseBusEntity {
       cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
   @ToString.Exclude
   private List<Issue> issue;
+
   /** 类型名称 例如：工单 */
   @Column(name = "NAME", length = 50)
   private String name;
+
   /** 类型描述 */
   @Column(name = "DESCRIPTION", length = 200)
   private String description;
+
   /** 排序字段 */
   @Column(name = "SORT")
   private Integer sort;

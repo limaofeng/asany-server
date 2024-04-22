@@ -1,7 +1,7 @@
 package cn.asany.organization.core.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
@@ -30,12 +30,15 @@ public class Job extends BaseBusEntity {
   @GeneratedValue(generator = "fantasy-sequence")
   @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
   private Long id;
+
   /** 职务名称 */
   @Column(name = "NAME", nullable = false, length = 50)
   private String name;
+
   /** 职务描述信息 */
   @Column(name = "DESCRIPTION", length = 250)
   private String description;
+
   /** 职务所属组织 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(

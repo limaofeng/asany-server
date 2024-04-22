@@ -2,7 +2,7 @@ package cn.asany.cardhop.contacts.domain;
 
 import cn.asany.base.common.domain.Address;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.GenericGenerator;
