@@ -6,7 +6,7 @@ import cn.asany.autoconfigure.SmtpServerAutoConfiguration;
 import graphql.kickstart.autoconfigure.tools.GraphQLJavaToolsAutoConfiguration;
 import graphql.kickstart.autoconfigure.web.servlet.GraphQLWebAutoConfiguration;
 import lombok.extern.slf4j.Slf4j;
-import org.jfantasy.autoconfigure.GraphQLAutoConfiguration;
+import net.asany.jfantasy.autoconfigure.GraphQLAutoConfiguration;
 import net.asany.jfantasy.framework.dao.jpa.SimpleAnyJpaRepository;
 import org.springframework.boot.actuate.autoconfigure.audit.AuditAutoConfiguration;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;

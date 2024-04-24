@@ -6,11 +6,9 @@ import graphql.kickstart.autoconfigure.tools.GraphQLJavaToolsAutoConfiguration;
 import graphql.kickstart.autoconfigure.web.servlet.GraphQLWebAutoConfiguration;
 import lombok.extern.slf4j.Slf4j;
 import net.asany.jfantasy.framework.dao.jpa.SimpleAnyJpaRepository;
-import net.asany.jfantasy.framework.security.oauth2.DefaultTokenServices;
-import net.asany.jfantasy.framework.security.oauth2.core.ClientDetailsService;
-import net.asany.jfantasy.framework.security.oauth2.core.TokenStore;
-import org.jfantasy.autoconfigure.GraphQLAutoConfiguration;
-import org.jfantasy.autoconfigure.OAuth2ResourceServerAutoConfiguration;
+import net.asany.jfantasy.autoconfigure.GraphQLAutoConfiguration;
+import net.asany.jfantasy.autoconfigure.ResourceServerAutoConfiguration;
+import net.asany.jfantasy.framework.security.auth.core.TokenStore;
 import org.springframework.boot.actuate.autoconfigure.audit.AuditAutoConfiguration;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -21,6 +19,8 @@ import org.springframework.context.annotation.*;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import net.asany.jfantasy.framework.security.auth.oauth2.DefaultTokenServices;
+import net.asany.jfantasy.framework.security.auth.core.ClientDetailsService;
 
 @Slf4j
 @Configuration
@@ -42,7 +42,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @Import({
   AsanySecurityAutoConfiguration.class,
   OrganizationAutoConfiguration.class,
-  OAuth2ResourceServerAutoConfiguration.class
+  ResourceServerAutoConfiguration.class
 })
 @EnableAutoConfiguration(
     exclude = {
@@ -54,12 +54,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
       GraphQLJavaToolsAutoConfiguration.class,
     })
 public class TestApplication {
-
-  @Bean
-  public DefaultTokenServices tokenServices(
-      TokenStore tokenStore, ClientDetailsService clientDetailsService, TaskExecutor taskExecutor) {
-    return new DefaultTokenServices(tokenStore, clientDetailsService, taskExecutor);
-  }
 
   @Bean
   public TestClientDetailsService testClientDetailsService() {

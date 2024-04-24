@@ -6,7 +6,7 @@ import cn.asany.nuwa.app.service.dto.NativeApplication;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
-import net.asany.jfantasy.framework.security.oauth2.core.ClientSecretType;
+import net.asany.jfantasy.framework.security.auth.core.ClientSecretType;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;

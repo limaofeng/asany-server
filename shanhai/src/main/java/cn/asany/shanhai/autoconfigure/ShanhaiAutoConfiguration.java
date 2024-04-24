@@ -15,7 +15,7 @@ import cn.asany.shanhai.data.engine.IDataSourceLoader;
 import cn.asany.shanhai.data.engine.IDataSourceOptions;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
-import org.jfantasy.autoconfigure.GraphQLAutoConfiguration;
+import net.asany.jfantasy.autoconfigure.GraphQLAutoConfiguration;
 import net.asany.jfantasy.framework.dao.jpa.SimpleAnyJpaRepository;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.domain.EntityScan;

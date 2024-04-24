@@ -1,8 +1,8 @@
 package cn.asany.message;
 
-import net.asany.jfantasy.framework.security.oauth2.core.ClientDetails;
-import net.asany.jfantasy.framework.security.oauth2.core.ClientDetailsService;
-import net.asany.jfantasy.framework.security.oauth2.core.ClientRegistrationException;
+import net.asany.jfantasy.framework.security.auth.core.ClientDetails;
+import net.asany.jfantasy.framework.security.auth.core.ClientDetailsService;
+import net.asany.jfantasy.framework.security.auth.core.ClientRegistrationException;
 
 public class TestClientDetailsService implements ClientDetailsService {
   @Override

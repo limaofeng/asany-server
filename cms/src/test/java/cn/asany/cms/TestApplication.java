@@ -6,7 +6,7 @@ import graphql.kickstart.autoconfigure.tools.GraphQLJavaToolsAutoConfiguration;
 import graphql.kickstart.autoconfigure.web.servlet.GraphQLWebAutoConfiguration;
 import lombok.extern.slf4j.Slf4j;
 import net.asany.jfantasy.framework.dao.jpa.SimpleAnyJpaRepository;
-import org.jfantasy.autoconfigure.GraphQLAutoConfiguration;
+import net.asany.jfantasy.autoconfigure.GraphQLAutoConfiguration;
 import org.springframework.boot.actuate.autoconfigure.audit.AuditAutoConfiguration;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
