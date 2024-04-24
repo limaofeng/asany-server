@@ -1,7 +1,7 @@
 package cn.asany.cms.article.dao;
 
 import cn.asany.cms.article.domain.ArticleFeature;
-import org.jfantasy.framework.dao.jpa.JpaRepository;
+import net.asany.jfantasy.framework.dao.jpa.AnyJpaRepository;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -11,4 +11,4 @@ import org.springframework.stereotype.Repository;
  * @date 2022/7/28 9:12 9:12
  */
 @Repository
-public interface ArticleFeatureDao extends JpaRepository<ArticleFeature, Long> {}
+public interface ArticleFeatureDao extends AnyJpaRepository<ArticleFeature, Long> {}

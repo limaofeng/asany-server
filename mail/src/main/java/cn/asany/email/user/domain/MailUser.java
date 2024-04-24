@@ -13,7 +13,7 @@ import java.util.function.Function;
 import lombok.*;
 import org.apache.james.user.api.model.User;
 import org.hibernate.Hibernate;
-import org.jfantasy.framework.dao.BaseBusEntity;
+import net.asany.jfantasy.framework.dao.BaseBusEntity;
 
 /**
  * James User

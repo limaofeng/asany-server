@@ -1,7 +1,7 @@
 package cn.asany.pm.issue.attribute.dao;
 
 import cn.asany.pm.issue.attribute.domain.Status;
-import org.jfantasy.framework.dao.jpa.JpaRepository;
+import net.asany.jfantasy.framework.dao.jpa.AnyJpaRepository;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -11,4 +11,4 @@ import org.springframework.stereotype.Repository;
  * @date 2022/7/28 9:12
  */
 @Repository
-public interface StatusDao extends JpaRepository<Status, Long> {}
+public interface StatusDao extends AnyJpaRepository<Status, Long> {}

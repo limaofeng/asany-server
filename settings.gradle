@@ -18,15 +18,12 @@ buildCache {
 }
 
 rootProject.name = 'sunmao'
-include ":shanhai",
-        ":weixin-api",
+include ":weixin-api",
         ":weixin",
         ":openapi",
         ":base",
-//        ":flowable",
         ":contacts",
         ":sunrise",
-//        ":mail",
         ":drive",
         ":security",
         ":security-api",
@@ -46,7 +43,6 @@ include ":shanhai",
         ":message",
         ":message-api",
         ":e-commerce",
-        ":factory-screen",
         ":boot"
 
 // 基础
@@ -54,7 +50,7 @@ project(':base').projectDir = "$rootDir/base" as File
 // 网站与营销
 project(':website').projectDir = "$rootDir/website" as File
 // 建模
-project(':shanhai').projectDir = "$rootDir/shanhai" as File
+//project(':shanhai').projectDir = "$rootDir/shanhai" as File
 // 组织 / 员工 / 安全 / 登录 / 授权
 project(':security').projectDir = "$rootDir/security" as File
 project(':security-api').projectDir = "$rootDir/security-api" as File
@@ -102,7 +98,5 @@ project(':uptime').projectDir = "$rootDir/uptime" as File
 project(':im').projectDir = "$rootDir/im" as File
 // 项目管理
 project(':project').projectDir = "$rootDir/project" as File
-// 兼职项目
-project(':factory-screen').projectDir = "$rootDir/factory-screen" as File
 // 启动
 project(':boot').projectDir = "$rootDir/boot" as File

@@ -7,7 +7,7 @@ import cn.asany.cms.article.graphql.type.Starrable;
 import cn.asany.cms.article.service.CommentService;
 import graphql.kickstart.tools.GraphQLResolver;
 import java.util.List;
-import org.jfantasy.framework.util.common.ObjectUtil;
+import net.asany.jfantasy.framework.util.common.ObjectUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

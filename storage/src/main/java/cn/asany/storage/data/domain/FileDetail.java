@@ -1,6 +1,5 @@
 package cn.asany.storage.data.domain;
 
-import cn.asany.base.usertype.FileObjectCustomType;
 import cn.asany.storage.api.FileObject;
 import cn.asany.storage.api.Storage;
 import cn.asany.storage.api.StorageSpace;
@@ -8,17 +7,16 @@ import cn.asany.storage.core.engine.virtual.VirtualFileObject;
 import cn.asany.storage.core.engine.virtual.VirtualStorage;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import lombok.*;
-import org.hibernate.Hibernate;
-import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.dao.hibernate.annotations.TableGenerator;
-import org.jfantasy.framework.util.common.ObjectUtil;
-
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Predicate;
+import lombok.*;
+import net.asany.jfantasy.framework.dao.BaseBusEntity;
+import net.asany.jfantasy.framework.dao.hibernate.annotations.TableGenerator;
+import net.asany.jfantasy.framework.util.common.ObjectUtil;
+import org.hibernate.Hibernate;
 
 /**
  * 文件信息表

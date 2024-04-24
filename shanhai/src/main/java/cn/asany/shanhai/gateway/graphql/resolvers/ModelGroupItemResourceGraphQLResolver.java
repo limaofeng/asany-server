@@ -3,8 +3,8 @@ package cn.asany.shanhai.gateway.graphql.resolvers;
 import cn.asany.shanhai.gateway.domain.ModelGroupItem;
 import cn.asany.shanhai.gateway.graphql.enums.ModelGroupItemResourceType;
 import graphql.kickstart.tools.GraphQLResolver;
-import org.jfantasy.framework.util.common.StringUtil;
-import org.jfantasy.framework.util.ognl.OgnlUtil;
+import net.asany.jfantasy.framework.util.common.StringUtil;
+import net.asany.jfantasy.framework.util.ognl.OgnlUtil;
 import org.springframework.stereotype.Component;
 
 /**

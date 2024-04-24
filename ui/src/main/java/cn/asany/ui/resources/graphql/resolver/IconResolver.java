@@ -2,7 +2,7 @@ package cn.asany.ui.resources.graphql.resolver;
 
 import cn.asany.ui.resources.domain.Icon;
 import graphql.kickstart.tools.GraphQLResolver;
-import org.jfantasy.framework.util.common.StringUtil;
+import net.asany.jfantasy.framework.util.common.StringUtil;
 import org.springframework.stereotype.Component;
 
 @Component

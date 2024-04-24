@@ -4,9 +4,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import org.jfantasy.framework.util.common.ObjectUtil;
-import org.jfantasy.framework.util.common.PathUtil;
-import org.jfantasy.framework.util.common.file.FileUtil;
+import net.asany.jfantasy.framework.util.common.ObjectUtil;
+import net.asany.jfantasy.framework.util.common.PathUtil;
+import net.asany.jfantasy.framework.util.common.file.FileUtil;
 import org.junit.jupiter.api.Test;
 
 class EquatorTest {

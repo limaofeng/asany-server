@@ -14,7 +14,7 @@ import graphql.schema.idl.SchemaDirectiveWiring;
 import graphql.schema.visibility.GraphqlFieldVisibility;
 import java.util.List;
 import java.util.Optional;
-import org.jfantasy.graphql.SchemaParserDictionaryBuilder;
+import net.asany.jfantasy.graphql.SchemaParserDictionaryBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;

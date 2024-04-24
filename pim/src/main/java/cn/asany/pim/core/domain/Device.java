@@ -10,12 +10,12 @@ import cn.asany.pim.product.domain.Brand;
 import cn.asany.pim.product.domain.Product;
 import cn.asany.pim.product.domain.ProductVariant;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import java.util.Date;
 import java.util.List;
-import javax.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.jfantasy.framework.dao.SoftDeletable;
+import net.asany.jfantasy.framework.dao.SoftDeletable;
 
 @Data
 @Entity
@@ -26,32 +26,39 @@ public class Device extends PhysicalAsset implements TicketTarget, SoftDeletable
   /** 设备的序列号，通常由制造商提供，具有唯一性 */
   @Column(name = "SN", length = 50)
   private String sn;
+
   /** 品牌 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "BRAND_ID", foreignKey = @ForeignKey(name = "FK_PIM_ASSET_BRAND"))
   private Brand brand;
+
   /** 二维码 */
   @Column(name = "QRCODE", length = 50)
   private String qrcode;
+
   /** 型号 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(
       name = "PRODUCT_ID",
       foreignKey = @ForeignKey(name = "FK_PIM_ASSET_DEVICE_PRODUCT_PID"))
   private Product product;
+
   /** 产品变种 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(
       name = "PRODUCT_VARIANT_ID",
       foreignKey = @ForeignKey(name = "FK_PIM_ASSET_DEVICE_PRODUCT_VARIANT_ID"))
   private ProductVariant productVariant;
+
   /** 购买日期 */
   @Column(name = "PURCHASE_DATE")
   @Temporal(TemporalType.TIMESTAMP)
   private Date purchaseDate;
+
   /** 保修卡 */
   @OneToMany(mappedBy = "device", fetch = FetchType.LAZY)
   private List<WarrantyCard> warrantyCards;
+
   /** 位置 */
   @Embedded
   @AttributeOverrides({
@@ -72,10 +79,13 @@ public class Device extends PhysicalAsset implements TicketTarget, SoftDeletable
         column = @Column(name = "LOCATION_POSTAL_CODE", length = 10))
   })
   private Address address;
+
   /** 门店位置 (经纬坐标) */
   @Embedded private Geolocation location;
+
   /** 设备负责人联系方式 */
   @Embedded private ContactInformation contactInfo;
+
   /** 所有者 */
   @Embedded private Owner<DeviceOwnerType> owner;
 

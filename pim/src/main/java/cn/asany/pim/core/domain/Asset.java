@@ -1,12 +1,12 @@
 package cn.asany.pim.core.domain;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import net.asany.jfantasy.framework.dao.BaseBusEntity;
+import net.asany.jfantasy.framework.dao.hibernate.annotations.TableGenerator;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.GenericGenerator;
-import org.jfantasy.framework.dao.BaseBusEntity;
 
 @Data
 @Entity
@@ -24,15 +24,17 @@ import org.jfantasy.framework.dao.BaseBusEntity;
 public abstract class Asset extends BaseBusEntity {
   @Id
   @Column(name = "ID", nullable = false, updatable = false)
-  @GeneratedValue(generator = "fantasy-sequence")
-  @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+  @TableGenerator
   private Long id;
+
   /** 资产编号 */
   @Column(name = "NO", length = 50)
   private String no;
+
   /** 资产名称 */
   @Column(name = "NAME", length = 100)
   private String name;
+
   /** 资产类型 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(
@@ -41,6 +43,7 @@ public abstract class Asset extends BaseBusEntity {
       insertable = false,
       updatable = false)
   private AssetType type;
+
   /** 资产的当前状态，如在用1、维修中、已报废等。 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "STATUS_ID", foreignKey = @ForeignKey(name = "FK_PIM_ASSET_STATUS"))

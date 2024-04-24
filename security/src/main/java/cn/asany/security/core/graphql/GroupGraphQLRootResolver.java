@@ -12,7 +12,7 @@ import graphql.kickstart.tools.GraphQLQueryResolver;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import org.jfantasy.graphql.util.Kit;
+import net.asany.jfantasy.graphql.util.Kit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;

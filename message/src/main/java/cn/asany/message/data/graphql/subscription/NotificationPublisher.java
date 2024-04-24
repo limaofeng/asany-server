@@ -1,7 +1,7 @@
 package cn.asany.message.data.graphql.subscription;
 
 import cn.asany.message.core.Notification;
-import org.jfantasy.graphql.publishers.BasePublisher;
+import net.asany.jfantasy.graphql.publishers.BasePublisher;
 import org.springframework.stereotype.Component;
 
 /**

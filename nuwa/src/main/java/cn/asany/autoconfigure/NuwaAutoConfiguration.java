@@ -5,7 +5,7 @@ import cn.asany.base.IModuleProperties;
 import cn.asany.base.ModuleResolver;
 import cn.asany.nuwa.module.DefaultModuleResolver;
 import java.util.List;
-import org.jfantasy.framework.dao.jpa.ComplexJpaRepository;
+import net.asany.jfantasy.framework.dao.jpa.SimpleAnyJpaRepository;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -27,7 +27,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 })
 @EnableJpaRepositories(
     basePackages = "cn.asany.nuwa.*.dao",
-    repositoryBaseClass = ComplexJpaRepository.class)
+    repositoryBaseClass = SimpleAnyJpaRepository.class)
 public class NuwaAutoConfiguration {
 
   @Bean

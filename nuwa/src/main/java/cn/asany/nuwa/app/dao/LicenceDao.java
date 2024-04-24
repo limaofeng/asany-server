@@ -1,7 +1,7 @@
 package cn.asany.nuwa.app.dao;
 
 import cn.asany.nuwa.app.domain.Licence;
-import org.jfantasy.framework.dao.jpa.JpaRepository;
+import net.asany.jfantasy.framework.dao.jpa.AnyJpaRepository;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -10,4 +10,4 @@ import org.springframework.stereotype.Repository;
  * @author limaofeng
  */
 @Repository
-public interface LicenceDao extends JpaRepository<Licence, Long> {}
+public interface LicenceDao extends AnyJpaRepository<Licence, Long> {}

@@ -4,8 +4,8 @@ import cn.asany.shanhai.core.domain.ModelFieldMetadata;
 import cn.asany.shanhai.core.support.model.FieldType;
 import cn.asany.storage.api.FileObject;
 import lombok.Data;
-import org.jfantasy.framework.dao.MatchType;
-import org.jfantasy.framework.dao.jpa.PropertyFilter;
+import net.asany.jfantasy.framework.dao.MatchType;
+import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.springframework.stereotype.Component;
 
 /**

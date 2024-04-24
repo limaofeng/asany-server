@@ -2,7 +2,7 @@ package cn.asany.security.auth.authentication;
 
 import lombok.Builder;
 import lombok.Data;
-import org.jfantasy.framework.security.authentication.SimpleAuthenticationToken;
+import net.asany.jfantasy.framework.security.authentication.SimpleAuthenticationToken;
 
 /**
  * 钉钉认证方式
@@ -22,6 +22,7 @@ public class DingtalkAuthenticationToken
   public static class DingtalkCredentials {
     /** 授权码 */
     private String authCode;
+
     /** 通过手机号绑定钉钉用户 */
     private Boolean connected;
   }

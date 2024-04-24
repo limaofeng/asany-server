@@ -1,7 +1,7 @@
 package cn.asany.cms.article.dao;
 
 import cn.asany.cms.article.domain.Article;
-import org.jfantasy.framework.dao.jpa.JpaRepository;
+import net.asany.jfantasy.framework.dao.jpa.AnyJpaRepository;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -10,4 +10,4 @@ import org.springframework.stereotype.Repository;
  * @author limaofeng
  */
 @Repository
-public interface ArticleDao extends JpaRepository<Article, Long> {}
+public interface ArticleDao extends AnyJpaRepository<Article, Long> {}

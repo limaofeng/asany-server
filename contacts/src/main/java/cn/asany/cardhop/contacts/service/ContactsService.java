@@ -8,7 +8,7 @@ import cn.asany.cardhop.contacts.domain.ContactBook;
 import cn.asany.cardhop.contacts.domain.ContactGroup;
 import java.util.List;
 import java.util.Optional;
-import org.jfantasy.framework.dao.jpa.PropertyFilter;
+import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

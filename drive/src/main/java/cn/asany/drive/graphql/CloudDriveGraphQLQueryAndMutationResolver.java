@@ -6,8 +6,8 @@ import cn.asany.drive.service.CloudDriveService;
 import graphql.kickstart.tools.GraphQLMutationResolver;
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import java.util.List;
-import org.jfantasy.framework.security.LoginUser;
-import org.jfantasy.framework.security.SpringSecurityUtils;
+import net.asany.jfantasy.framework.security.LoginUser;
+import net.asany.jfantasy.framework.security.SpringSecurityUtils;
 import org.springframework.stereotype.Component;
 
 @Component

@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import lombok.extern.slf4j.Slf4j;
-import org.jfantasy.framework.util.common.StreamUtil;
+import net.asany.jfantasy.framework.util.common.StreamUtil;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 

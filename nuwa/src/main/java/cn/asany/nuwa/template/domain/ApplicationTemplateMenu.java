@@ -7,10 +7,10 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import lombok.*;
+import net.asany.jfantasy.framework.dao.BaseBusEntity;
+import net.asany.jfantasy.framework.dao.hibernate.annotations.TableGenerator;
+import net.asany.jfantasy.framework.dao.hibernate.converter.StringSetConverter;
 import org.hibernate.Hibernate;
-import org.hibernate.annotations.GenericGenerator;
-import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.dao.hibernate.converter.StringSetConverter;
 
 /**
  * 应用模版 - 菜单
@@ -29,8 +29,7 @@ public class ApplicationTemplateMenu extends BaseBusEntity {
 
   @Id
   @Column(name = "ID")
-  @GeneratedValue(generator = "fantasy-sequence")
-  @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+  @TableGenerator
   private Long id;
 
   /** 菜单名称 */

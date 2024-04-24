@@ -6,8 +6,8 @@ import cn.asany.shanhai.gateway.util.DiffObject;
 import cn.asany.shanhai.gateway.util.GraphQLType;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.GenericGenerator;
-import org.jfantasy.framework.dao.BaseBusEntity;
+import net.asany.jfantasy.framework.dao.hibernate.annotations.TableGenerator;
+import net.asany.jfantasy.framework.dao.BaseBusEntity;
 
 /**
  * @author limaofeng
@@ -23,8 +23,7 @@ public class ServiceSchemaVersionPatch extends BaseBusEntity {
 
   @Id
   @Column(name = "ID")
-  @GeneratedValue(generator = "fantasy-sequence")
-  @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+  @TableGenerator
   private Long id;
 
   @Column(name = "NAME", length = 100)

@@ -17,11 +17,13 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import org.jfantasy.framework.security.LoginUser;
-import org.jfantasy.framework.security.SpringSecurityUtils;
+import net.asany.jfantasy.framework.security.LoginUser;
+import net.asany.jfantasy.framework.security.SpringSecurityUtils;
 import org.springframework.stereotype.Component;
 
-/** @author limaofeng */
+/**
+ * @author limaofeng
+ */
 @Component
 public class ApplicationGraphQLResolver implements GraphQLResolver<Application> {
 

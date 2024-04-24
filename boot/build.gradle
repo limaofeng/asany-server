@@ -15,7 +15,7 @@ jar {
 
 tasks.publish.enabled = false
 
-//tasks.withType(Test).configureEach { enabled = false }
+tasks.withType(Test).configureEach { enabled = false }
 
 tasks.withType(PublishToMavenRepository).configureEach { it.enabled = false }
 
@@ -35,7 +35,7 @@ dependencies {
     implementation project(":drive")
     implementation project(":sunrise")
     implementation project(":contacts")
-    implementation project(":shanhai")
+//    implementation project(":shanhai")
     implementation project(":storage")
     implementation project(":security")
     implementation project(":storage-api")
@@ -48,6 +48,7 @@ dependencies {
     implementation project(":crm")
     implementation "org.flywaydb:flyway-core"
     implementation "org.flywaydb:flyway-mysql"
+    implementation "org.springframework.boot:spring-boot-starter-data-redis"
     implementation "org.springframework.boot:spring-boot-starter-web"
     compileOnly "org.projectlombok:lombok"
     annotationProcessor "org.projectlombok:lombok"

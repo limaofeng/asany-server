@@ -1,10 +1,10 @@
 package cn.asany.shanhai.core.support.model;
 
 import java.util.List;
-import org.jfantasy.framework.dao.OrderBy;
-import org.jfantasy.framework.dao.Page;
-import org.jfantasy.framework.dao.jpa.PropertyFilter;
-import org.jfantasy.framework.util.common.StringUtil;
+import net.asany.jfantasy.framework.dao.OrderBy;
+import net.asany.jfantasy.framework.dao.Page;
+import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
+import net.asany.jfantasy.framework.util.common.StringUtil;
 
 public interface CustomModelService {
 

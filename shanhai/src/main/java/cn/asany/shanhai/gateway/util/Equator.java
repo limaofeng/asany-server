@@ -5,10 +5,10 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import lombok.Builder;
 import lombok.Data;
-import org.jfantasy.framework.util.common.ClassUtil;
-import org.jfantasy.framework.util.common.ObjectUtil;
-import org.jfantasy.framework.util.ognl.OgnlUtil;
-import org.jfantasy.framework.util.reflect.Property;
+import net.asany.jfantasy.framework.util.common.ClassUtil;
+import net.asany.jfantasy.framework.util.common.ObjectUtil;
+import net.asany.jfantasy.framework.util.ognl.OgnlUtil;
+import net.asany.jfantasy.framework.util.reflect.Property;
 
 public class Equator {
 

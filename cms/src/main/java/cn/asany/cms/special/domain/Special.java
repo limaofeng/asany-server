@@ -7,9 +7,9 @@ import java.util.Date;
 import java.util.List;
 import javax.tools.FileObject;
 import lombok.*;
+import net.asany.jfantasy.framework.dao.BaseBusEntity;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Type;
-import org.jfantasy.framework.dao.BaseBusEntity;
 
 /** 专栏／专题 */
 @Data

@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
-import org.jfantasy.framework.util.common.StringUtil;
+import net.asany.jfantasy.framework.util.common.StringUtil;
 import org.springframework.http.HttpHeaders;
 import org.springframework.mock.web.MockPart;
 

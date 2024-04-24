@@ -3,17 +3,15 @@ package cn.asany.cms.content.domain;
 import cn.asany.cms.article.domain.ArticleContent;
 import cn.asany.cms.content.domain.enums.ContentType;
 import cn.asany.cms.content.domain.enums.TextContentType;
-import cn.asany.cms.article.domain.ArticleBody;
-import cn.asany.cms.body.domain.enums.ContentType;
 import jakarta.persistence.*;
 import java.util.Objects;
 import lombok.*;
+import net.asany.jfantasy.framework.dao.BaseBusEntity;
+import net.asany.jfantasy.framework.dao.hibernate.annotations.TableGenerator;
+import net.asany.jfantasy.framework.util.common.StringUtil;
+import net.asany.jfantasy.framework.util.htmlcleaner.HtmlCleanerUtil;
 import org.hibernate.Hibernate;
-import org.hibernate.annotations.GenericGenerator;
 import org.htmlcleaner.TagNode;
-import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.util.common.StringUtil;
-import org.jfantasy.framework.util.htmlcleaner.HtmlCleanerUtil;
 
 /**
  * 文本内容
@@ -32,8 +30,7 @@ public class TextContent extends BaseBusEntity implements ArticleContent {
 
   @Id
   @Column(name = "ID", nullable = false)
-  @GeneratedValue(generator = "fantasy-sequence")
-  @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+  @TableGenerator
   private Long id;
 
   @Enumerated(EnumType.STRING)

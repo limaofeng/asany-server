@@ -1,7 +1,7 @@
 package cn.asany.security.auth.event;
 
-import org.jfantasy.framework.security.authentication.Authentication;
-import org.jfantasy.framework.security.authentication.event.AbstractAuthenticationEvent;
+import net.asany.jfantasy.framework.security.authentication.Authentication;
+import net.asany.jfantasy.framework.security.authentication.event.AbstractAuthenticationEvent;
 
 /**
  * 退出成功

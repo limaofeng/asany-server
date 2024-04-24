@@ -3,8 +3,8 @@ package cn.asany.organization.relationship.dao;
 import cn.asany.organization.core.domain.Job;
 import cn.asany.organization.relationship.domain.Position;
 import java.util.List;
+import net.asany.jfantasy.framework.dao.jpa.AnyJpaRepository;
 import org.apache.ibatis.annotations.Param;
-import org.jfantasy.framework.dao.jpa.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Repository;
  * @date 2022/7/28 9:12 9:12
  */
 @Repository
-public interface PositionDao extends JpaRepository<Position, Long> {
+public interface PositionDao extends AnyJpaRepository<Position, Long> {
 
   @Modifying
   @Query(nativeQuery = true, value = "delete from org_position where job_id=?1")

@@ -1,18 +1,13 @@
 package cn.asany.cardhop.contacts.domain;
 
-import cn.asany.base.common.Ownership;
 import cn.asany.cardhop.contacts.domain.enums.ContactBookType;
-import cn.asany.organization.core.domain.Organization;
-import cn.asany.security.core.domain.User;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+import java.util.List;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.hibernate.annotations.Any;
-import org.hibernate.annotations.GenericGenerator;
-import org.jfantasy.framework.dao.BaseBusEntity;
-
-import java.util.List;
+import net.asany.jfantasy.framework.dao.BaseBusEntity;
+import net.asany.jfantasy.framework.dao.hibernate.annotations.TableGenerator;
 
 /**
  * 通信录(Address Book)
@@ -30,8 +25,7 @@ public class ContactBook extends BaseBusEntity {
 
   @Id
   @Column(name = "ID", nullable = false, updatable = false, precision = 22)
-  @GeneratedValue(generator = "fantasy-sequence")
-  @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+  @TableGenerator
   private Long id;
 
   @Column(name = "NAME", length = 20)
@@ -42,18 +36,19 @@ public class ContactBook extends BaseBusEntity {
   private ContactBookType type;
 
   /** 所有者 */
-//  @Any(
-//      metaColumn = @Column(name = "OWNER_TYPE", length = 20, insertable = false, updatable = false),
-//      fetch = FetchType.LAZY)
-//  @AnyMetaDef(
-//      idType = "long",
-//      metaType = "string",
-//      metaValues = {
-//        @MetaValue(targetEntity = User.class, value = User.OWNERSHIP_KEY),
-//        @MetaValue(targetEntity = Organization.class, value = Organization.OWNERSHIP_KEY)
-//      })
-//  @JoinColumn(name = "OWNER", insertable = false, updatable = false)
-//  private Ownership owner;
+  //  @Any(
+  //      metaColumn = @Column(name = "OWNER_TYPE", length = 20, insertable = false, updatable =
+  // false),
+  //      fetch = FetchType.LAZY)
+  //  @AnyMetaDef(
+  //      idType = "long",
+  //      metaType = "string",
+  //      metaValues = {
+  //        @MetaValue(targetEntity = User.class, value = User.OWNERSHIP_KEY),
+  //        @MetaValue(targetEntity = Organization.class, value = Organization.OWNERSHIP_KEY)
+  //      })
+  //  @JoinColumn(name = "OWNER", insertable = false, updatable = false)
+  //  private Ownership owner;
 
   /** 所有联系人 */
   @OneToMany(mappedBy = "book", fetch = FetchType.LAZY)

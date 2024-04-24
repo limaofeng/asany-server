@@ -9,11 +9,9 @@ import cn.asany.security.core.graphql.types.RoleConnection;
 import cn.asany.security.core.service.RoleService;
 import graphql.kickstart.tools.GraphQLMutationResolver;
 import graphql.kickstart.tools.GraphQLQueryResolver;
-
 import java.util.List;
 import java.util.Optional;
-
-import org.jfantasy.graphql.util.Kit;
+import net.asany.jfantasy.graphql.util.Kit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -32,7 +30,7 @@ public class RoleGraphQLRootResolver implements GraphQLMutationResolver, GraphQL
   private final RoleConverter roleConverter;
 
   public RoleGraphQLRootResolver(
-    RoleService roleService, @Autowired(required = false) RoleConverter roleConverter) {
+      RoleService roleService, @Autowired(required = false) RoleConverter roleConverter) {
     this.roleService = roleService;
     this.roleConverter = roleConverter;
   }
@@ -40,10 +38,10 @@ public class RoleGraphQLRootResolver implements GraphQLMutationResolver, GraphQL
   /**
    * 查询角色
    *
-   * @param where    查询条件
-   * @param page     页码
+   * @param where 查询条件
+   * @param page 页码
    * @param pageSize 页大小
-   * @param orderBy  排序
+   * @param orderBy 排序
    * @return 角色连接
    */
   public RoleConnection roles(RoleWhereInput where, int page, int pageSize, Sort orderBy) {

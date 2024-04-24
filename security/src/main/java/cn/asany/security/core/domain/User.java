@@ -11,20 +11,20 @@ import cn.asany.storage.api.FileObject;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
-import java.util.*;
 import jakarta.validation.constraints.NotEmpty;
+import java.util.*;
 import lombok.*;
+import net.asany.jfantasy.framework.dao.BaseBusEntity;
+import net.asany.jfantasy.framework.dao.Tenantable;
+import net.asany.jfantasy.framework.dao.hibernate.annotations.TableGenerator;
+import net.asany.jfantasy.framework.security.core.GrantedAuthority;
+import net.asany.jfantasy.framework.spring.validation.Operation;
+import net.asany.jfantasy.framework.spring.validation.Use;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.Length;
-import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.dao.Tenantable;
-import org.jfantasy.framework.security.core.GrantedAuthority;
-import org.jfantasy.framework.spring.validation.Operation;
-import org.jfantasy.framework.spring.validation.Use;
 
 /**
  * 用户
@@ -58,8 +58,7 @@ public class User extends BaseBusEntity implements Ownership, Tenantable {
 
   @Id
   @Column(name = "ID", nullable = false, updatable = false, precision = 22)
-  @GeneratedValue(generator = "fantasy-sequence")
-  @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+  @TableGenerator
   private Long id;
 
   /** 用户登录名称 */

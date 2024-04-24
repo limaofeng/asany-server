@@ -17,7 +17,7 @@ import org.apache.james.queue.api.ManageableMailQueue;
 import org.apache.james.queue.api.RawMailQueueItemDecoratorFactory;
 import org.apache.james.queue.memory.MemoryMailQueueFactory;
 import org.apache.james.server.core.filesystem.FileSystemImpl;
-import org.jfantasy.framework.dao.jpa.ComplexJpaRepository;
+import net.asany.jfantasy.framework.dao.jpa.SimpleAnyJpaRepository;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -42,7 +42,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 })
 @EnableJpaRepositories(
     basePackages = "cn.asany.email.*.dao",
-    repositoryBaseClass = ComplexJpaRepository.class)
+    repositoryBaseClass = SimpleAnyJpaRepository.class)
 @EnableConfigurationProperties({JamesProperties.class, FileSystemProperties.class})
 public class EmailAutoConfiguration {
 

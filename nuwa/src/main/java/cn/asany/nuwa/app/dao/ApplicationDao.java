@@ -1,10 +1,9 @@
 package cn.asany.nuwa.app.dao;
 
 import cn.asany.nuwa.app.domain.Application;
-import java.util.List;
 import java.util.Optional;
-import org.jfantasy.framework.dao.jpa.JpaRepository;
-import org.jfantasy.framework.dao.jpa.PropertyFilter;
+import net.asany.jfantasy.framework.dao.jpa.AnyJpaRepository;
+import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.stereotype.Repository;
 
@@ -14,7 +13,7 @@ import org.springframework.stereotype.Repository;
  * @author limaofeng
  */
 @Repository
-public interface ApplicationDao extends JpaRepository<Application, Long> {
+public interface ApplicationDao extends AnyJpaRepository<Application, Long> {
 
   /**
    * 获取应用详情
@@ -24,6 +23,7 @@ public interface ApplicationDao extends JpaRepository<Application, Long> {
    */
   @EntityGraph(value = "Graph.Application.FetchDetails", type = EntityGraph.EntityGraphType.FETCH)
   Optional<Application> findDetailsByClientId(String clientId);
+
   /**
    * 获取应用详情
    *

@@ -2,7 +2,7 @@ package cn.asany.security.oauth.service;
 
 import cn.asany.TestApplication;
 import lombok.extern.slf4j.Slf4j;
-import org.jfantasy.framework.security.oauth2.core.OAuth2AccessToken;
+import net.asany.jfantasy.framework.security.auth.oauth2.core.OAuth2AccessToken;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -28,7 +28,7 @@ import org.hibernate.cfg.AvailableSettings;
 import org.hibernate.internal.CoreLogging;
 import org.hibernate.internal.CoreMessageLogger;
 import org.jboss.logging.Logger;
-import org.jfantasy.framework.util.FantasyClassLoader;
+import net.asany.jfantasy.framework.util.FantasyClassLoader;
 
 /**
  * Standard implementation of the service for interacting with class loaders

@@ -1,7 +1,7 @@
 package cn.asany.security.auth.listener;
 
 import cn.asany.security.core.service.UserService;
-import org.jfantasy.framework.security.authentication.event.AuthenticationFailureBadCredentialsEvent;
+import net.asany.jfantasy.framework.security.authentication.event.AuthenticationFailureBadCredentialsEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 

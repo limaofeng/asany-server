@@ -13,9 +13,9 @@ import graphql.kickstart.tools.GraphQLQueryResolver;
 import graphql.schema.DataFetchingEnvironment;
 import java.util.List;
 import java.util.Optional;
-import org.jfantasy.framework.spring.mvc.error.NotFoundException;
-import org.jfantasy.graphql.context.AuthorizationGraphQLServletContext;
-import org.jfantasy.graphql.util.Kit;
+import net.asany.jfantasy.framework.spring.mvc.error.NotFoundException;
+import net.asany.jfantasy.graphql.security.context.AuthGraphQLServletContext;
+import net.asany.jfantasy.graphql.util.Kit;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -46,7 +46,7 @@ public class ContactsGraphqlApiResolver implements GraphQLQueryResolver, GraphQL
   public Contact contact(String id, DataFetchingEnvironment environment) {
     IdUtils.IdKey idKey = IdUtils.parseKey(id);
 
-    AuthorizationGraphQLServletContext context = environment.getContext();
+    AuthGraphQLServletContext context = environment.getContext();
 
     context.setAttribute("query_contact_token", idKey);
 
@@ -87,7 +87,7 @@ public class ContactsGraphqlApiResolver implements GraphQLQueryResolver, GraphQL
 
     IdUtils.IdKey idKey = IdUtils.parseKey(where.getToken());
 
-    AuthorizationGraphQLServletContext context = environment.getContext();
+    AuthGraphQLServletContext context = environment.getContext();
 
     context.setAttribute("query_contact_token", idKey);
 

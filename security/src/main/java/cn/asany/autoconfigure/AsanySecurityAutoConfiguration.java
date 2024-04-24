@@ -11,19 +11,19 @@ import graphql.kickstart.autoconfigure.tools.SchemaDirective;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
+import net.asany.jfantasy.autoconfigure.SecurityAutoConfiguration;
+import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
+import net.asany.jfantasy.framework.dao.jpa.SimpleAnyJpaRepository;
+import net.asany.jfantasy.framework.security.core.userdetails.UserDetailsService;
+import net.asany.jfantasy.framework.security.crypto.password.DESPasswordEncoder;
+import net.asany.jfantasy.framework.security.crypto.password.MD5PasswordEncoder;
+import net.asany.jfantasy.framework.security.crypto.password.PasswordEncoder;
+import net.asany.jfantasy.framework.security.crypto.password.PlaintextPasswordEncoder;
+import net.asany.jfantasy.framework.util.common.ObjectUtil;
+import net.asany.jfantasy.graphql.context.DataLoaderRegistryCustomizer;
+import net.asany.jfantasy.schedule.service.TaskScheduler;
 import org.dataloader.DataLoader;
 import org.dataloader.DataLoaderFactory;
-import org.jfantasy.autoconfigure.OAuth2SecurityAutoConfiguration;
-import org.jfantasy.framework.dao.jpa.ComplexJpaRepository;
-import org.jfantasy.framework.dao.jpa.PropertyFilter;
-import org.jfantasy.framework.security.core.userdetails.UserDetailsService;
-import org.jfantasy.framework.security.crypto.password.DESPasswordEncoder;
-import org.jfantasy.framework.security.crypto.password.MD5PasswordEncoder;
-import org.jfantasy.framework.security.crypto.password.PasswordEncoder;
-import org.jfantasy.framework.security.crypto.password.PlaintextPasswordEncoder;
-import org.jfantasy.framework.util.common.ObjectUtil;
-import org.jfantasy.graphql.context.DataLoaderRegistryCustomizer;
-import org.jfantasy.schedule.service.TaskScheduler;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -37,7 +37,9 @@ import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.support.TransactionTemplate;
 
-/** @author limaofeng */
+/**
+ * @author limaofeng
+ */
 @Configuration
 @EntityScan({"cn.asany.security.*.domain"})
 @ComponentScan({
@@ -50,8 +52,8 @@ import org.springframework.transaction.support.TransactionTemplate;
 })
 @EnableJpaRepositories(
     basePackages = "cn.asany.security.*.dao",
-    repositoryBaseClass = ComplexJpaRepository.class)
-@AutoConfigureBefore({OAuth2SecurityAutoConfiguration.class})
+    repositoryBaseClass = SimpleAnyJpaRepository.class)
+@AutoConfigureBefore({SecurityAutoConfiguration.class})
 public class AsanySecurityAutoConfiguration implements InitializingBean {
 
   private final TaskScheduler taskScheduler;

@@ -10,8 +10,8 @@ import java.util.List;
 import java.util.Map;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.jfantasy.framework.util.common.StreamUtil;
-import org.jfantasy.framework.util.common.file.FileUtil;
+import net.asany.jfantasy.framework.util.common.StreamUtil;
+import net.asany.jfantasy.framework.util.common.file.FileUtil;
 
 @Slf4j
 public class LocalStorage implements Storage {

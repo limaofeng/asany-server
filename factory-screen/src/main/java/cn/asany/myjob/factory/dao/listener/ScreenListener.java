@@ -6,7 +6,7 @@ import cn.asany.myjob.factory.listener.event.ScreenCreateEvent;
 import org.hibernate.event.spi.EventType;
 import org.hibernate.event.spi.PostInsertEvent;
 import org.hibernate.event.spi.PostUpdateEvent;
-import org.jfantasy.framework.dao.hibernate.listener.AbstractChangedListener;
+import net.asany.jfantasy.framework.dao.hibernate.listener.AbstractChangedListener;
 import org.springframework.stereotype.Component;
 
 @Component("dao.ScreenListener")

@@ -1,8 +1,8 @@
 package cn.asany.security.core.dao;
 
 import cn.asany.security.core.domain.Tenant;
-import org.jfantasy.framework.dao.jpa.JpaRepository;
+import net.asany.jfantasy.framework.dao.jpa.AnyJpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface TenantDao extends JpaRepository<Tenant, String> {}
+public interface TenantDao extends AnyJpaRepository<Tenant, String> {}

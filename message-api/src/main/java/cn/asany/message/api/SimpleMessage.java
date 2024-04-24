@@ -18,18 +18,25 @@ import lombok.ToString;
 public class SimpleMessage implements Message, Serializable {
   /** 消息发送者 */
   private String from;
+
   /** 消息接收者 */
   private String[] to;
+
   /** 消息发送时间 */
   private Date sentDate;
+
   /** 消息主题 */
   private String subject;
+
   /** 消息内容 */
   private String text;
+
   /** 模板参数 */
   private Map<String, Object> templateParams;
+
   /** 附加信息 */
   @ToString.Exclude private Map<String, Object> extra;
+
   /** 消息跳转地址 */
   private String uri;
 
@@ -44,23 +51,29 @@ public class SimpleMessage implements Message, Serializable {
   }
 
   public <T> T getOriginalMessage() {
+    //noinspection unchecked
     return (T) get("originalMessage");
   }
 
   public <T> T getOriginalMessageType() {
+    //noinspection unchecked
     return (T) get("originalMessageType");
   }
 
   public static class SimpleMessageBuilder {
 
-    private Map<String, Object> extra = new HashMap<>();
-
     public SimpleMessageBuilder originalMessage(Object originalMessage) {
+      if (this.extra == null) {
+        this.extra = new HashMap<>();
+      }
       this.extra.put("originalMessage", originalMessage);
       return this;
     }
 
     public SimpleMessageBuilder originalMessageType(Object originalMessageType) {
+      if (this.extra == null) {
+        this.extra = new HashMap<>();
+      }
       this.extra.put("originalMessageType", originalMessageType);
       return this;
     }

@@ -7,9 +7,9 @@ import cn.asany.weixin.framework.factory.WeixinSessionUtils;
 import cn.asany.weixin.framework.message.content.*;
 import java.util.Date;
 import lombok.extern.slf4j.Slf4j;
-import org.jfantasy.framework.util.cglib.CglibUtil;
-import org.jfantasy.framework.util.common.ClassUtil;
-import org.jfantasy.framework.util.common.StringUtil;
+import net.asany.jfantasy.framework.util.cglib.CglibUtil;
+import net.asany.jfantasy.framework.util.common.ClassUtil;
+import net.asany.jfantasy.framework.util.common.StringUtil;
 
 /** 微信消息工厂 */
 @Slf4j
@@ -58,7 +58,7 @@ public class MessageFactory {
               try {
                 if ("getFileItem".equalsIgnoreCase(method.getName())) {
                   FileObject fileItem = (FileObject) methodProxy.invokeSuper(o, objects);
-                  org.jfantasy.framework.util.reflect.MethodProxy _methodProxy =
+                  net.asany.jfantasy.framework.util.reflect.MethodProxy _methodProxy =
                       ClassUtil.getMethodProxy(Media.class, "getId");
                   if (_methodProxy == null) {
                     return null;

@@ -1,10 +1,9 @@
 package cn.asany.cms.article.domain;
 
 import cn.asany.cms.content.domain.enums.ContentType;
-import javax.persistence.*;
 import jakarta.persistence.*;
 import lombok.*;
-import org.jfantasy.framework.dao.BaseBusEntity;
+import net.asany.jfantasy.framework.dao.BaseBusEntity;
 
 /**
  * 文章存储模版
@@ -26,10 +25,12 @@ public class ArticleStoreTemplate extends BaseBusEntity {
   /** 名称 */
   @Column(name = "NAME", length = 50)
   private String name;
+
   /** 内容类型 */
   @Enumerated(EnumType.STRING)
   @Column(name = "CONTENT_TYPE", length = 20)
   private ContentType contentType;
+
   /** 存储类 */
   @Column(name = "STORAGE_CLASS", length = 150)
   private String storageClass;

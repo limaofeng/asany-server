@@ -12,7 +12,7 @@ import cn.asany.cms.learn.domain.enums.LessonScheduleType;
 import cn.asany.cms.learn.graphql.inputs.LessonInput;
 import java.text.NumberFormat;
 import java.util.List;
-import org.jfantasy.framework.dao.jpa.PropertyFilter;
+import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

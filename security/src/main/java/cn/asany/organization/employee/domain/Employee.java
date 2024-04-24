@@ -19,10 +19,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import lombok.*;
-import org.hibernate.annotations.GenericGenerator;
+import net.asany.jfantasy.framework.dao.BaseBusEntity;
+import net.asany.jfantasy.framework.dao.hibernate.annotations.TableGenerator;
+import net.asany.jfantasy.framework.dao.hibernate.converter.StringArrayConverter;
 import org.hibernate.annotations.Type;
-import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.dao.hibernate.converter.StringArrayConverter;
 
 /**
  * 员工
@@ -51,8 +51,7 @@ public class Employee extends BaseBusEntity implements Ownership {
 
   @Id
   @Column(name = "ID", precision = 22)
-  @GeneratedValue(generator = "fantasy-sequence")
-  @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+  @TableGenerator
   private Long id;
 
   /** 头像 */

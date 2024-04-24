@@ -2,9 +2,9 @@ package cn.asany.security.core.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.GenericGenerator;
-import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.dao.Tenantable;
+import net.asany.jfantasy.framework.dao.BaseBusEntity;
+import net.asany.jfantasy.framework.dao.Tenantable;
+import net.asany.jfantasy.framework.dao.hibernate.annotations.TableGenerator;
 
 /** 角色使用范围类型 如： 部门，会议 等 */
 @Getter
@@ -19,8 +19,7 @@ public class RoleScopeType extends BaseBusEntity implements Tenantable {
 
   @Id
   @Column(name = "ID", nullable = false, updatable = false)
-  @GeneratedValue(generator = "fantasy-sequence")
-  @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+  @TableGenerator
   private Long id;
 
   /** 名称 */

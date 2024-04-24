@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.jfantasy.framework.jackson.JSON;
-import org.jfantasy.framework.util.common.StringUtil;
+import net.asany.jfantasy.framework.jackson.JSON;
+import net.asany.jfantasy.framework.util.common.StringUtil;
 
 public class ConditionConverter implements AttributeConverter<List<PermissionCondition>, String> {
 

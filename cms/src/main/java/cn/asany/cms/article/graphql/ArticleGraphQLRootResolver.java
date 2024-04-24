@@ -7,22 +7,18 @@ import cn.asany.cms.article.domain.Article;
 import cn.asany.cms.article.domain.ArticleCategory;
 import cn.asany.cms.article.domain.ArticleStoreTemplate;
 import cn.asany.cms.article.domain.ArticleTag;
-import cn.asany.cms.article.graphql.enums.ArticleChannelStarType;
-import cn.asany.cms.article.graphql.enums.ArticleStarType;
 import cn.asany.cms.article.graphql.input.*;
 import cn.asany.cms.article.graphql.type.ArticleConnection;
 import cn.asany.cms.article.service.ArticleCategoryService;
 import cn.asany.cms.article.service.ArticleService;
 import cn.asany.cms.article.service.ArticleTagService;
-import cn.asany.cms.permission.specification.StarSpecification;
 import cn.asany.organization.core.domain.Organization;
 import graphql.kickstart.tools.GraphQLMutationResolver;
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import java.util.List;
-import org.jfantasy.framework.dao.jpa.JpaDefaultPropertyFilter;
-import org.jfantasy.framework.dao.jpa.PropertyFilter;
-import org.jfantasy.framework.util.common.ObjectUtil;
-import org.jfantasy.graphql.util.Kit;
+import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
+import net.asany.jfantasy.framework.util.common.ObjectUtil;
+import net.asany.jfantasy.graphql.util.Kit;
 import org.springframework.core.env.Environment;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -106,27 +102,6 @@ public class ArticleGraphQLRootResolver implements GraphQLQueryResolver, GraphQL
     } else {
       return articleTagService.findAll(filter);
     }
-  }
-
-  public List<ArticleCategory> starredArticleCategories(
-      Long employee, ArticleChannelStarType starType) {
-    PropertyFilter builder =
-        PropertyFilter.newFilter().and(new StarSpecification(employee, starType.getValue()));
-    return articleCategoryService.findAll(builder);
-  }
-
-  public ArticleConnection starredArticles(
-      Long employee,
-      ArticleStarType starType,
-      ArticleWhereInput where,
-      int page,
-      int pageSize,
-      Sort orderBy) {
-    JpaDefaultPropertyFilter propertyFilter = where.toFilter();
-    propertyFilter.and(new StarSpecification(employee, starType.getValue()));
-    return Kit.connection(
-        articleService.findPage(PageRequest.of(page - 1, pageSize, orderBy), propertyFilter),
-        ArticleConnection.class);
   }
 
   /**
@@ -218,6 +193,7 @@ public class ArticleGraphQLRootResolver implements GraphQLQueryResolver, GraphQL
     ArticleTag articleTag = articleCategoryConverter.toArticle(input);
     return articleTagService.save(articleTag);
   }
+
   /**
    * 更新标签
    *

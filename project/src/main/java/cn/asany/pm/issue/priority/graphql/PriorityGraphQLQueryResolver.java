@@ -4,7 +4,7 @@ import cn.asany.pm.issue.priority.graphql.connection.IssuePriorityConnection;
 import cn.asany.pm.issue.priority.graphql.filter.IssuePriorityWhereInput;
 import cn.asany.pm.issue.priority.service.IssuePriorityService;
 import graphql.kickstart.tools.GraphQLQueryResolver;
-import org.jfantasy.graphql.util.Kit;
+import net.asany.jfantasy.graphql.util.Kit;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -24,7 +24,7 @@ public class PriorityGraphQLQueryResolver implements GraphQLQueryResolver {
 
   /** 查询所有优先级 */
   public IssuePriorityConnection issuePrioritys(
-    IssuePriorityWhereInput where, int page, int pageSize, Sort orderBy) {
+      IssuePriorityWhereInput where, int page, int pageSize, Sort orderBy) {
     Pageable pageable = PageRequest.of(page - 1, pageSize, orderBy);
     return Kit.connection(
         issuePriorityService.findPage(pageable, where.toFilter()), IssuePriorityConnection.class);

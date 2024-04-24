@@ -11,15 +11,15 @@ import cn.asany.cardhop.contacts.utils.IdUtils;
 import graphql.kickstart.tools.GraphQLResolver;
 import graphql.schema.DataFetchingEnvironment;
 import java.util.Optional;
-import org.jfantasy.framework.util.common.ObjectUtil;
-import org.jfantasy.framework.util.common.StringUtil;
-import org.jfantasy.graphql.context.AuthorizationGraphQLServletContext;
+import net.asany.jfantasy.framework.util.common.ObjectUtil;
+import net.asany.jfantasy.framework.util.common.StringUtil;
+import net.asany.jfantasy.graphql.security.context.AuthGraphQLServletContext;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ContactGraphQLResolver implements GraphQLResolver<Contact> {
   public String id(Contact contact, DataFetchingEnvironment environment) {
-    AuthorizationGraphQLServletContext context = environment.getContext();
+    AuthGraphQLServletContext context = environment.getContext();
     IdUtils.IdKey idKey = context.getAttribute("query_contact_token");
     return IdUtils.toKey(idKey.getBook(), idKey.getNamespace(), idKey.getGroup(), contact.getId());
   }

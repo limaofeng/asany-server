@@ -3,8 +3,8 @@ package cn.asany.ui.resources.graphql.type;
 import cn.asany.ui.resources.domain.Component;
 import java.util.List;
 import lombok.*;
-import org.jfantasy.graphql.Edge;
-import org.jfantasy.graphql.types.BaseConnection;
+import net.asany.jfantasy.graphql.Edge;
+import net.asany.jfantasy.graphql.types.BaseConnection;
 
 /**
  * 组件 分页对象

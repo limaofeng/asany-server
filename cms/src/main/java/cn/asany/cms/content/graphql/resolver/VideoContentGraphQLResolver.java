@@ -4,9 +4,9 @@ import cn.asany.cms.content.domain.VideoContent;
 import cn.asany.storage.dto.SimpleFileObject;
 import graphql.kickstart.tools.GraphQLResolver;
 import graphql.schema.DataFetchingEnvironment;
-import org.jfantasy.framework.util.common.StringUtil;
-import org.jfantasy.framework.util.web.WebUtil;
-import org.jfantasy.graphql.context.AuthorizationGraphQLServletContext;
+import net.asany.jfantasy.framework.util.common.StringUtil;
+import net.asany.jfantasy.framework.util.web.WebUtil;
+import net.asany.jfantasy.graphql.security.context.AuthGraphQLServletContext;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -23,7 +23,7 @@ public class VideoContentGraphQLResolver implements GraphQLResolver<VideoContent
     if (url.startsWith("http://") || url.startsWith("https://")) {
       return url;
     }
-    AuthorizationGraphQLServletContext context = environment.getContext();
+    AuthGraphQLServletContext context = environment.getContext();
     return WebUtil.getServerUrl(context.getRequest()) + url;
   }
 }

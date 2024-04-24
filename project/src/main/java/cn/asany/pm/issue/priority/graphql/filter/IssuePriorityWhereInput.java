@@ -1,10 +1,9 @@
 package cn.asany.pm.issue.priority.graphql.filter;
 
 import cn.asany.pm.issue.priority.domain.Priority;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.jfantasy.graphql.inputs.WhereInput;
+import net.asany.jfantasy.graphql.inputs.WhereInput;
 
 /**
  * @author limaofeng@msn.com
@@ -12,5 +11,4 @@ import org.jfantasy.graphql.inputs.WhereInput;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class IssuePriorityWhereInput extends WhereInput<IssuePriorityWhereInput, Priority> {
-}
+public class IssuePriorityWhereInput extends WhereInput<IssuePriorityWhereInput, Priority> {}

@@ -8,7 +8,7 @@ import cn.asany.shanhai.core.support.dao.ModelRepository;
 import cn.asany.shanhai.core.support.graphql.resolvers.DelegateDataFetcher;
 import java.lang.reflect.Constructor;
 import lombok.SneakyThrows;
-import org.jfantasy.framework.util.common.ClassUtil;
+import net.asany.jfantasy.framework.util.common.ClassUtil;
 
 public class ModelDelegateFactory {
 

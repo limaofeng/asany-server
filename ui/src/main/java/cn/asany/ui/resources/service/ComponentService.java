@@ -9,7 +9,7 @@ import cn.asany.ui.resources.domain.enums.ComponentScope;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import org.jfantasy.framework.dao.jpa.PropertyFilter;
+import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
@@ -70,9 +70,7 @@ public class ComponentService {
     if (libraryId != null) {
       Optional<LibraryItem> itemOptional =
           this.libraryItemDao.findOne(
-              PropertyFilter.newFilter()
-                  .equal("library.id", libraryId)
-                  .equal("resourceId", id));
+              PropertyFilter.newFilter().equal("library.id", libraryId).equal("resourceId", id));
       if (itemOptional.isPresent()) {
         LibraryItem item = itemOptional.get();
         item.setTags(tags);

@@ -2,8 +2,7 @@ package cn.asany.pm.issue.attribute.service;
 
 import cn.asany.pm.issue.attribute.dao.StatusDao;
 import cn.asany.pm.issue.attribute.domain.Status;
-import java.util.List;
-import org.jfantasy.framework.dao.jpa.PropertyFilter;
+import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;

@@ -3,8 +3,8 @@ package cn.asany.crm.support.graphql.input;
 import cn.asany.crm.support.domain.Ticket;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.jfantasy.framework.dao.jpa.PropertyFilter;
-import org.jfantasy.graphql.inputs.WhereInput;
+import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
+import net.asany.jfantasy.graphql.inputs.WhereInput;
 
 @Data
 @EqualsAndHashCode(callSuper = true)

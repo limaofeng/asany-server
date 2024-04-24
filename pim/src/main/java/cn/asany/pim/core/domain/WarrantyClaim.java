@@ -1,12 +1,12 @@
 package cn.asany.pim.core.domain;
 
 import cn.asany.pim.core.domain.enums.WarrantyClaimStatus;
+import jakarta.persistence.*;
 import java.util.Date;
-import javax.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.hibernate.annotations.GenericGenerator;
-import org.jfantasy.framework.dao.BaseBusEntity;
+import net.asany.jfantasy.framework.dao.BaseBusEntity;
+import net.asany.jfantasy.framework.dao.hibernate.annotations.TableGenerator;
 
 @Data
 @Entity
@@ -15,8 +15,7 @@ import org.jfantasy.framework.dao.BaseBusEntity;
 public class WarrantyClaim extends BaseBusEntity {
   @Id
   @Column(name = "ID", nullable = false, updatable = false)
-  @GeneratedValue(generator = "fantasy-sequence")
-  @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+  @TableGenerator
   private Long id;
 
   @Column(name = "CN", length = 50, nullable = false)
@@ -25,6 +24,7 @@ public class WarrantyClaim extends BaseBusEntity {
   @Temporal(TemporalType.TIMESTAMP)
   @Column(name = "CLAIM_DATE")
   private Date claimDate;
+
   /** 保修处理状态 */
   @Enumerated(EnumType.STRING)
   @Column(name = "STATUS", length = 20, nullable = false)

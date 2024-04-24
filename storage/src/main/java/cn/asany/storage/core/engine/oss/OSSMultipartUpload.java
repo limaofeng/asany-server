@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
-import org.jfantasy.framework.util.regexp.RegexpUtil;
+import net.asany.jfantasy.framework.util.regexp.RegexpUtil;
 
 public class OSSMultipartUpload implements IMultipartUpload {
 

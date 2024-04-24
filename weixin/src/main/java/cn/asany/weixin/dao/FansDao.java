@@ -2,8 +2,8 @@ package cn.asany.weixin.dao;
 
 import cn.asany.weixin.domain.Fans;
 import cn.asany.weixin.domain.UserKey;
-import org.jfantasy.framework.dao.jpa.JpaRepository;
+import net.asany.jfantasy.framework.dao.jpa.AnyJpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface FansDao extends JpaRepository<Fans, UserKey> {}
+public interface FansDao extends AnyJpaRepository<Fans, UserKey> {}

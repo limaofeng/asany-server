@@ -1,7 +1,7 @@
 package cn.asany.organization.core.dao;
 
 import cn.asany.organization.core.domain.Department;
-import org.jfantasy.framework.dao.jpa.JpaRepository;
+import net.asany.jfantasy.framework.dao.jpa.AnyJpaRepository;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -12,4 +12,4 @@ import org.springframework.stereotype.Repository;
  * @date 2022/7/28 9:12 9:12
  */
 @Repository
-public interface DepartmentDao extends JpaRepository<Department, Long> {}
+public interface DepartmentDao extends AnyJpaRepository<Department, Long> {}

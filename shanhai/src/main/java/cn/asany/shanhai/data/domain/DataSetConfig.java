@@ -8,9 +8,9 @@ import cn.asany.shanhai.data.engine.IDataSetOptions;
 import jakarta.persistence.*;
 import java.util.List;
 import lombok.*;
-import org.hibernate.annotations.GenericGenerator;
-import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.jackson.JSON;
+import net.asany.jfantasy.framework.dao.hibernate.annotations.TableGenerator;
+import net.asany.jfantasy.framework.dao.BaseBusEntity;
+import net.asany.jfantasy.framework.jackson.JSON;
 
 /**
  * 数据集
@@ -28,8 +28,7 @@ import org.jfantasy.framework.jackson.JSON;
 public class DataSetConfig extends BaseBusEntity {
   @Id
   @Column(name = "ID", precision = 22)
-  @GeneratedValue(generator = "fantasy-sequence")
-  @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+  @TableGenerator
   private Long id;
 
   /** 名称 */

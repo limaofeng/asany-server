@@ -3,11 +3,11 @@ package cn.asany.storage.plugin;
 import cn.asany.storage.api.*;
 import cn.asany.storage.data.service.FileService;
 import java.util.UUID;
-import org.jfantasy.framework.util.common.ObjectUtil;
-import org.jfantasy.framework.util.common.StringUtil;
-import org.jfantasy.framework.util.ognl.OgnlUtil;
-import org.jfantasy.framework.util.regexp.RegexpUtil;
-import org.jfantasy.framework.util.web.WebUtil;
+import net.asany.jfantasy.framework.util.common.ObjectUtil;
+import net.asany.jfantasy.framework.util.common.StringUtil;
+import net.asany.jfantasy.framework.util.ognl.OgnlUtil;
+import net.asany.jfantasy.framework.util.regexp.RegexpUtil;
+import net.asany.jfantasy.framework.util.web.WebUtil;
 import org.springframework.stereotype.Component;
 
 @Component

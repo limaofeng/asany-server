@@ -9,7 +9,7 @@ import me.chanjar.weixin.common.exception.WxErrorException;
 import me.chanjar.weixin.common.util.http.URIUtil;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.bean.result.WxMpOAuth2AccessToken;
-import org.jfantasy.framework.util.common.StringUtil;
+import net.asany.jfantasy.framework.util.common.StringUtil;
 
 public class MpOpenapi implements Openapi {
 

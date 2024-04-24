@@ -2,10 +2,10 @@ package cn.asany.sms.dao.listener;
 
 import cn.asany.sms.domain.ShortMessage;
 import cn.asany.sms.event.SendMessageEvent;
+import net.asany.jfantasy.framework.dao.hibernate.listener.AbstractChangedListener;
 import org.hibernate.event.spi.EventType;
 import org.hibernate.event.spi.PostInsertEvent;
 import org.hibernate.event.spi.PostUpdateEvent;
-import org.jfantasy.framework.dao.hibernate.listener.AbstractChangedListener;
 import org.springframework.stereotype.Component;
 
 /**

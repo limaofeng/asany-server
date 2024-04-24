@@ -23,17 +23,17 @@ import graphql.schema.DataFetchingEnvironment;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import org.jfantasy.framework.dao.LimitPageRequest;
-import org.jfantasy.framework.dao.jpa.PropertyFilter;
-import org.jfantasy.framework.security.LoginUser;
-import org.jfantasy.framework.security.SpringSecurityUtils;
-import org.jfantasy.framework.security.authentication.SimpleAuthenticationToken;
-import org.jfantasy.framework.security.oauth2.core.OAuth2AccessToken;
-import org.jfantasy.framework.security.oauth2.core.OAuth2Authentication;
-import org.jfantasy.framework.security.oauth2.core.token.AuthorizationServerTokenServices;
-import org.jfantasy.framework.util.common.ObjectUtil;
-import org.jfantasy.graphql.context.AuthorizationGraphQLServletContext;
-import org.jfantasy.graphql.util.Kit;
+import net.asany.jfantasy.framework.dao.LimitPageRequest;
+import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
+import net.asany.jfantasy.framework.security.LoginUser;
+import net.asany.jfantasy.framework.security.SpringSecurityUtils;
+import net.asany.jfantasy.framework.security.auth.core.token.AuthorizationServerTokenServices;
+import net.asany.jfantasy.framework.security.auth.oauth2.core.OAuth2AccessToken;
+import net.asany.jfantasy.framework.security.auth.oauth2.core.OAuth2Authentication;
+import net.asany.jfantasy.framework.security.authentication.SimpleAuthenticationToken;
+import net.asany.jfantasy.framework.util.common.ObjectUtil;
+import net.asany.jfantasy.graphql.security.context.AuthGraphQLServletContext;
+import net.asany.jfantasy.graphql.util.Kit;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -51,14 +51,14 @@ public class UserGraphQLRootResolver implements GraphQLMutationResolver, GraphQL
 
   private final ApplicationEventPublisher publisher;
 
-  private final AuthorizationServerTokenServices tokenServices;
+  private final AuthorizationServerTokenServices<OAuth2AccessToken> tokenServices;
 
   public UserGraphQLRootResolver(
       UserService userService,
       UserConverter userConverter,
       CaptchaService captchaService,
       ApplicationEventPublisher publisher,
-      AuthorizationServerTokenServices tokenServices) {
+      AuthorizationServerTokenServices<OAuth2AccessToken> tokenServices) {
     this.userService = userService;
     this.userConverter = userConverter;
     this.captchaService = captchaService;
@@ -85,7 +85,7 @@ public class UserGraphQLRootResolver implements GraphQLMutationResolver, GraphQL
       DataFetchingEnvironment environment) {
 
     //noinspection deprecation
-    AuthorizationGraphQLServletContext context = environment.getContext();
+    AuthGraphQLServletContext context = environment.getContext();
 
     if (!this.captchaService.validateResponseForID(
         CaptchaSource.CAPTCHA_CONFIG_ID,

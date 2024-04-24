@@ -4,7 +4,7 @@ import cn.asany.crm.core.dao.CustomerStoreDao;
 import cn.asany.crm.core.domain.CustomerStore;
 import java.util.List;
 import java.util.Optional;
-import org.jfantasy.framework.dao.jpa.PropertyFilter;
+import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;

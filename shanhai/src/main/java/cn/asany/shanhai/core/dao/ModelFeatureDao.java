@@ -1,7 +1,7 @@
 package cn.asany.shanhai.core.dao;
 
 import cn.asany.shanhai.core.domain.ModelFeature;
-import org.jfantasy.framework.dao.jpa.JpaRepository;
+import net.asany.jfantasy.framework.dao.jpa.AnyJpaRepository;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -10,4 +10,4 @@ import org.springframework.stereotype.Repository;
  * @author limaofeng
  */
 @Repository
-public interface ModelFeatureDao extends JpaRepository<ModelFeature, String> {}
+public interface ModelFeatureDao extends AnyJpaRepository<ModelFeature, String> {}

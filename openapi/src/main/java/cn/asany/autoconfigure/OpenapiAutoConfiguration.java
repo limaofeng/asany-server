@@ -2,8 +2,8 @@ package cn.asany.autoconfigure;
 
 import cn.asany.openapi.configs.WeixinConfig;
 import lombok.extern.slf4j.Slf4j;
-import org.jfantasy.framework.dao.jpa.ComplexJpaRepository;
-import org.jfantasy.graphql.SchemaParserDictionaryBuilder;
+import net.asany.jfantasy.framework.dao.jpa.SimpleAnyJpaRepository;
+import net.asany.jfantasy.graphql.SchemaParserDictionaryBuilder;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -26,7 +26,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 })
 @EnableJpaRepositories(
     basePackages = "cn.asany.openapi.dao",
-    repositoryBaseClass = ComplexJpaRepository.class)
+    repositoryBaseClass = SimpleAnyJpaRepository.class)
 public class OpenapiAutoConfiguration {
 
   @Bean

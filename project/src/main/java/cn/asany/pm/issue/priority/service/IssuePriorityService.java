@@ -3,7 +3,7 @@ package cn.asany.pm.issue.priority.service;
 import cn.asany.pm.issue.priority.dao.IssuePriorityDao;
 import cn.asany.pm.issue.priority.domain.Priority;
 import java.util.List;
-import org.jfantasy.framework.dao.jpa.PropertyFilter;
+import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

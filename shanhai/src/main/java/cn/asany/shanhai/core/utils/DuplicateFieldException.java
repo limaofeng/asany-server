@@ -1,6 +1,6 @@
 package cn.asany.shanhai.core.utils;
 
-import org.jfantasy.framework.error.ValidationException;
+import net.asany.jfantasy.framework.error.ValidationException;
 
 public class DuplicateFieldException extends ValidationException {
   public DuplicateFieldException(String type, String name) {

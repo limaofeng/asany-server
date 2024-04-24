@@ -9,7 +9,7 @@ import cn.asany.pm.project.service.ProjectService;
 import graphql.kickstart.tools.GraphQLMutationResolver;
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import java.util.Optional;
-import org.jfantasy.graphql.util.Kit;
+import net.asany.jfantasy.graphql.util.Kit;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;

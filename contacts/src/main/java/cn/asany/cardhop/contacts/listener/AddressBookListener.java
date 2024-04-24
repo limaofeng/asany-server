@@ -1,7 +1,7 @@
 // package cn.asany.cardhop.contacts.listener;
 //
 // import org.jfantasy.contacts.service.AddressBookService;
-// import org.jfantasy.framework.util.common.ClassUtil;
+// import net.asany.jfantasy.framework.util.common.ClassUtil;
 // import org.springframework.beans.factory.annotation.Autowired;
 // import org.springframework.context.ApplicationListener;
 // import org.springframework.security.authentication.event.AuthenticationSuccessEvent;

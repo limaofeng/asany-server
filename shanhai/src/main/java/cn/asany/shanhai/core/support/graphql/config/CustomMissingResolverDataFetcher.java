@@ -6,7 +6,7 @@ import graphql.schema.DataFetchingEnvironment;
 import graphql.schema.GraphQLObjectType;
 import java.util.HashMap;
 import java.util.Map;
-import org.jfantasy.framework.util.ognl.OgnlUtil;
+import net.asany.jfantasy.framework.util.ognl.OgnlUtil;
 
 public class CustomMissingResolverDataFetcher implements DataFetcher<Object> {
 

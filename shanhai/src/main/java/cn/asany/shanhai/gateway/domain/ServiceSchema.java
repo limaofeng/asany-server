@@ -3,10 +3,10 @@ package cn.asany.shanhai.gateway.domain;
 import jakarta.persistence.*;
 import java.util.List;
 import lombok.*;
-import org.hibernate.annotations.GenericGenerator;
+import net.asany.jfantasy.framework.dao.hibernate.annotations.TableGenerator;
 import org.hibernate.annotations.LazyToOne;
 import org.hibernate.annotations.LazyToOneOption;
-import org.jfantasy.framework.dao.BaseBusEntity;
+import net.asany.jfantasy.framework.dao.BaseBusEntity;
 
 /**
  * @author limaofeng

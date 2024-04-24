@@ -1035,24 +1035,6 @@ extend type Query {
   """
   articleStoreTemplates: [ArticleStoreTemplate!]!
   """
-  已加星标的文章频道
-  """
-  starredArticleCategories(
-    uid: ID!
-    starType: ArticleCategoryStarType!
-  ): [ArticleCategory]
-  """
-  已加星标的文章
-  """
-  starredArticles(
-    uid: ID!
-    starType: ArticleStarType!
-    where: ArticleWhereInput = {}
-    page: Int = 1
-    pageSize: Int = 15
-    orderBy: OrderBy = "unsorted"
-  ): ArticleConnection
-  """
   查询所有推荐位
   """
   articleFeatures(

@@ -4,9 +4,9 @@ import jakarta.persistence.*;
 import java.util.List;
 import java.util.Objects;
 import lombok.*;
+import net.asany.jfantasy.framework.dao.BaseBusEntity;
+import net.asany.jfantasy.framework.dao.hibernate.annotations.TableGenerator;
 import org.hibernate.Hibernate;
-import org.hibernate.annotations.GenericGenerator;
-import org.jfantasy.framework.dao.BaseBusEntity;
 
 /**
  * 组织纬度
@@ -31,8 +31,7 @@ public class OrganizationDimension extends BaseBusEntity {
 
   @Id
   @Column(name = "ID")
-  @GeneratedValue(generator = "fantasy-sequence")
-  @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+  @TableGenerator
   private Long id;
 
   /** 组织 */

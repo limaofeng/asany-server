@@ -8,9 +8,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import org.jfantasy.framework.dao.jpa.PropertyFilter;
-import org.jfantasy.framework.util.common.ObjectUtil;
-import org.jfantasy.framework.util.common.StringUtil;
+import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
+import net.asany.jfantasy.framework.util.common.ObjectUtil;
+import net.asany.jfantasy.framework.util.common.StringUtil;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -75,8 +75,7 @@ public class AddressService {
         StringUtil.tokenizeToStringArray(optional.get().getPath(), Dict.PATH_SEPARATOR);
 
     List<Dict> dicts =
-        dictService.findAll(
-            PropertyFilter.newFilter().in("code", allCode).in("type", ALL_TYPE));
+        dictService.findAll(PropertyFilter.newFilter().in("code", allCode).in("type", ALL_TYPE));
 
     for (Dict dict : dicts) {
       switch (dict.getType()) {
@@ -113,8 +112,7 @@ public class AddressService {
             .collect(Collectors.toList());
 
     List<Dict> dicts =
-        dictService.findAll(
-            PropertyFilter.newFilter().in("code", allCode).in("type", ALL_TYPE));
+        dictService.findAll(PropertyFilter.newFilter().in("code", allCode).in("type", ALL_TYPE));
 
     StringBuilder builder = new StringBuilder();
     for (String type : ALL_TYPE) {

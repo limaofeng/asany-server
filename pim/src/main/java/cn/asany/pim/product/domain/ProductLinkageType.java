@@ -1,12 +1,12 @@
 package cn.asany.pim.product.domain;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import net.asany.jfantasy.framework.dao.BaseBusEntity;
+import net.asany.jfantasy.framework.dao.hibernate.annotations.TableGenerator;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.GenericGenerator;
-import org.jfantasy.framework.dao.BaseBusEntity;
 
 @Data
 @Entity
@@ -22,15 +22,17 @@ import org.jfantasy.framework.dao.BaseBusEntity;
 public class ProductLinkageType extends BaseBusEntity {
   @Id
   @Column(name = "ID", nullable = false, updatable = false)
-  @GeneratedValue(generator = "fantasy-sequence")
-  @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+  @TableGenerator
   private Long id;
+
   /** 关联类型编码 */
   @Column(name = "CODE", length = 20, nullable = false)
   private String code;
+
   /** 关联类型名称 */
   @Column(name = "NAME", length = 20, nullable = false)
   private String name;
+
   /** 关联产品 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(

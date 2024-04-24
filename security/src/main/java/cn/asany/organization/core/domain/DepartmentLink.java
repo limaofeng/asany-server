@@ -4,8 +4,8 @@ import cn.asany.organization.core.domain.enums.DepartmentLinkType;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.GenericGenerator;
-import org.jfantasy.framework.dao.BaseBusEntity;
+import net.asany.jfantasy.framework.dao.BaseBusEntity;
+import net.asany.jfantasy.framework.dao.hibernate.annotations.TableGenerator;
 
 /**
  * @author limaofeng
@@ -23,8 +23,7 @@ import org.jfantasy.framework.dao.BaseBusEntity;
 public class DepartmentLink extends BaseBusEntity {
   @Id
   @Column(name = "ID", precision = 22)
-  @GeneratedValue(generator = "fantasy-sequence")
-  @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+  @TableGenerator
   private Long id;
 
   /** 内部部门 */

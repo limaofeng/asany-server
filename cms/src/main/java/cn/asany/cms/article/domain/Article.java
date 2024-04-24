@@ -1,12 +1,7 @@
 package cn.asany.cms.article.domain;
 
 import cn.asany.base.usertype.FileUserType;
-import cn.asany.cms.article.domain.enums.ArticleBodyType;
 import cn.asany.cms.article.domain.enums.ArticleStatus;
-import cn.asany.cms.content.domain.DocumentContent;
-import cn.asany.cms.content.domain.ImageContent;
-import cn.asany.cms.content.domain.TextContent;
-import cn.asany.cms.content.domain.VideoContent;
 import cn.asany.cms.content.domain.enums.ContentType;
 import cn.asany.cms.permission.domain.Permission;
 import cn.asany.organization.core.domain.Organization;
@@ -15,7 +10,6 @@ import cn.asany.storage.api.converter.FileObjectsConverter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
 import jakarta.persistence.ForeignKey;
 import jakarta.persistence.Table;
 import java.util.Date;
@@ -23,13 +17,14 @@ import java.util.List;
 import java.util.Objects;
 import javax.validation.constraints.Null;
 import lombok.*;
+import net.asany.jfantasy.framework.dao.BaseBusEntity;
+import net.asany.jfantasy.framework.dao.hibernate.annotations.TableGenerator;
+import net.asany.jfantasy.framework.search.annotations.IndexProperty;
+import net.asany.jfantasy.framework.search.annotations.Indexed;
+import net.asany.jfantasy.framework.spring.validation.Operation;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.*;
 import org.hibernate.annotations.Cache;
-import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.search.annotations.IndexProperty;
-import org.jfantasy.framework.search.annotations.Indexed;
-import org.jfantasy.framework.spring.validation.Operation;
 
 /**
  * 文章表
@@ -58,8 +53,7 @@ public class Article extends BaseBusEntity {
   @Id
   @Null(groups = Operation.Create.class)
   @Column(name = "ID", nullable = false)
-  @GeneratedValue(generator = "fantasy-sequence")
-  @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+  @TableGenerator
   private Long id;
 
   /** 文章编号，由于文章ID自增，有部分情况需要保证使用一个唯一，且有意义的标示符，定位到唯一的一篇文章 必须保证全局唯一 */
@@ -146,25 +140,11 @@ public class Article extends BaseBusEntity {
   @Enumerated(EnumType.STRING)
   @Column(name = "CONTENT_TYPE", length = 20, updatable = false)
   private ContentType contentType;
+
   /** 正文 ID */
-  @Column(name = "CONTENT_ID")
+  @Column(name = "CONTENT_ID", updatable = false)
   private Long contentId;
-  /** 文章正文 */
-  @Any(
-      metaColumn =
-          @Column(name = "CONTENT_TYPE", length = 20, insertable = false, updatable = false),
-      fetch = FetchType.LAZY)
-  @AnyMetaDef(
-      idType = "long",
-      metaType = "string",
-      metaValues = {
-        @MetaValue(targetEntity = TextContent.class, value = "TEXT"),
-        @MetaValue(targetEntity = VideoContent.class, value = "VIDEO"),
-        @MetaValue(targetEntity = ImageContent.class, value = "IMAGE"),
-        @MetaValue(targetEntity = DocumentContent.class, value = "DOCUMENT")
-      })
-  @JoinColumn(name = "CONTENT_ID", insertable = false, updatable = false)
-  private ArticleContent content;
+
   /** 存储模版 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(
@@ -204,18 +184,23 @@ public class Article extends BaseBusEntity {
   @Builder.Default
   @Column(name = "FAVORITES", nullable = false)
   private Long favorites = 0L;
+
   /** 点击数 */
   @Builder.Default
   @Column(name = "CLICKS", nullable = false)
   private Long clicks = 0L;
+
   /** 阅读数 */
   @Builder.Default
   @Column(name = "`READS`", nullable = false)
   private Long reads = 0L;
+
   /** 点赞数 */
   @Builder.Default
   @Column(name = "LIKES", nullable = false)
   private Long likes = 0L;
+
+  @Transient private ArticleContent content;
 
   @Transient private List<Permission> permissions;
 

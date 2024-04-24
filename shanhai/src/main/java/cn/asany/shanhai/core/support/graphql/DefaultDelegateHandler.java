@@ -2,8 +2,8 @@ package cn.asany.shanhai.core.support.graphql;
 
 import cn.asany.shanhai.core.support.graphql.resolvers.DelegateDataFetcher;
 import graphql.schema.DataFetchingEnvironment;
-import org.jfantasy.framework.util.common.ClassUtil;
-import org.jfantasy.framework.util.reflect.MethodProxy;
+import net.asany.jfantasy.framework.util.common.ClassUtil;
+import net.asany.jfantasy.framework.util.reflect.MethodProxy;
 
 public class DefaultDelegateHandler implements DelegateHandler {
 

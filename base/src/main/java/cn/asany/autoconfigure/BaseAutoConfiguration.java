@@ -4,7 +4,7 @@ import cn.asany.base.common.BatchPayload;
 import cn.asany.base.common.Ownership;
 import cn.asany.base.common.TicketTarget;
 import lombok.extern.slf4j.Slf4j;
-import org.jfantasy.graphql.SchemaParserDictionaryBuilder;
+import net.asany.jfantasy.graphql.SchemaParserDictionaryBuilder;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;

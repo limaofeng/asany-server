@@ -2,7 +2,7 @@ package cn.asany.organization.core.dao;
 
 import cn.asany.organization.core.domain.EmployeeGroup;
 import java.util.List;
-import org.jfantasy.framework.dao.jpa.JpaRepository;
+import net.asany.jfantasy.framework.dao.jpa.AnyJpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Repository;
  * @date 2022/7/28 9:12 9:12
  */
 @Repository
-public interface EmployeeGroupDao extends JpaRepository<EmployeeGroup, Long> {
+public interface EmployeeGroupDao extends AnyJpaRepository<EmployeeGroup, Long> {
 
   @Query(
       nativeQuery = true,

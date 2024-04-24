@@ -7,12 +7,12 @@ import cn.asany.security.oauth.vo.SessionAccessToken;
 import graphql.kickstart.tools.GraphQLMutationResolver;
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import java.util.List;
-import org.jfantasy.framework.security.LoginUser;
-import org.jfantasy.framework.security.SecurityContextHolder;
-import org.jfantasy.framework.security.SpringSecurityUtils;
-import org.jfantasy.framework.security.oauth2.JwtTokenPayload;
-import org.jfantasy.framework.security.oauth2.jwt.JwtUtils;
-import org.jfantasy.framework.security.oauth2.server.authentication.BearerTokenAuthentication;
+import net.asany.jfantasy.framework.security.LoginUser;
+import net.asany.jfantasy.framework.security.SecurityContextHolder;
+import net.asany.jfantasy.framework.security.SpringSecurityUtils;
+import net.asany.jfantasy.framework.security.auth.oauth2.JwtTokenPayload;
+import net.asany.jfantasy.framework.security.auth.oauth2.jwt.JwtUtils;
+import net.asany.jfantasy.framework.security.auth.oauth2.server.authentication.BearerTokenAuthentication;
 import org.springframework.stereotype.Component;
 
 /**

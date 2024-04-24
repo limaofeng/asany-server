@@ -3,7 +3,7 @@ package cn.asany.shanhai.core.domain;
 import jakarta.persistence.*;
 import java.io.Serializable;
 import lombok.*;
-import org.hibernate.annotations.GenericGenerator;
+import net.asany.jfantasy.framework.dao.hibernate.annotations.TableGenerator;
 
 /**
  * 参数
@@ -23,8 +23,7 @@ import org.hibernate.annotations.GenericGenerator;
 public class ModelEndpointArgument implements Serializable {
   @Id
   @Column(name = "ID")
-  @GeneratedValue(generator = "fantasy-sequence")
-  @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+  @TableGenerator
   private Long id;
 
   /** 名称 */

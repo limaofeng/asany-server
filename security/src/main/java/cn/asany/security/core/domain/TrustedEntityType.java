@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import java.util.Objects;
 import lombok.*;
+import net.asany.jfantasy.framework.dao.BaseBusEntity;
 import org.hibernate.Hibernate;
-import org.jfantasy.framework.dao.BaseBusEntity;
 
 /**
  * 角色命名空间

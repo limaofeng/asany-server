@@ -1,6 +1,6 @@
 package cn.asany.message.data.domain.enums;
 
-import org.jfantasy.framework.error.ValidationException;
+import net.asany.jfantasy.framework.error.ValidationException;
 
 /**
  * 消息收件人类型

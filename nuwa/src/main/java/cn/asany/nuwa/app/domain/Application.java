@@ -6,13 +6,14 @@ import jakarta.persistence.*;
 import java.util.*;
 import java.util.stream.Collectors;
 import lombok.*;
+import net.asany.jfantasy.framework.dao.BaseBusEntity;
+import net.asany.jfantasy.framework.dao.Tenantable;
+import net.asany.jfantasy.framework.dao.hibernate.annotations.TableGenerator;
+import net.asany.jfantasy.framework.security.auth.TokenType;
+import net.asany.jfantasy.framework.security.auth.core.ClientDetails;
+import net.asany.jfantasy.framework.security.auth.core.ClientSecretType;
+import net.asany.jfantasy.framework.security.core.GrantedAuthority;
 import org.hibernate.Hibernate;
-import org.hibernate.annotations.GenericGenerator;
-import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.dao.Tenantable;
-import org.jfantasy.framework.security.core.GrantedAuthority;
-import org.jfantasy.framework.security.oauth2.core.ClientDetails;
-import org.jfantasy.framework.security.oauth2.core.ClientSecretType;
 
 /**
  * 应用信息
@@ -101,8 +102,7 @@ public class Application extends BaseBusEntity implements ClientDetails, Tenanta
   /** ID */
   @Id
   @Column(name = "ID")
-  @GeneratedValue(generator = "fantasy-sequence")
-  @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+  @TableGenerator
   private Long id;
 
   /** 应用类型 */
@@ -134,6 +134,7 @@ public class Application extends BaseBusEntity implements ClientDetails, Tenanta
   /** LOGO */
   @Column(name = "LOGO")
   private String logo;
+
   /** 路由 */
   @OneToMany(
       mappedBy = "application",
@@ -164,6 +165,7 @@ public class Application extends BaseBusEntity implements ClientDetails, Tenanta
   @JoinColumn(name = "CLIENT_ID", referencedColumnName = "CLIENT_ID", updatable = false)
   @ToString.Exclude
   private Set<ClientSecret> clientSecretsAlias;
+
   /** 许可证 */
   @OrderBy(" createdAt desc ")
   @OneToMany(
@@ -172,6 +174,7 @@ public class Application extends BaseBusEntity implements ClientDetails, Tenanta
       fetch = FetchType.LAZY)
   @ToString.Exclude
   private Set<Licence> licences;
+
   /** 所有者 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "OWNERSHIP", foreignKey = @ForeignKey(name = "FK_APPLICATION_OWNERSHIP"))
@@ -192,6 +195,7 @@ public class Application extends BaseBusEntity implements ClientDetails, Tenanta
       fetch = FetchType.LAZY)
   @ToString.Exclude
   private Set<ApplicationModuleConfiguration> modules;
+
   /** 租户ID */
   @Column(name = "TENANT_ID", length = 24, nullable = false)
   private String tenantId;
@@ -221,6 +225,16 @@ public class Application extends BaseBusEntity implements ClientDetails, Tenanta
         .filter(item -> item.getType() == type)
         .map(ClientSecret::getSecret)
         .collect(Collectors.toSet());
+  }
+
+  @Override
+  public String getClientSecret(ClientSecretType type) {
+    return ClientDetails.super.getClientSecret(type);
+  }
+
+  @Override
+  public Integer getTokenExpires(TokenType tokenType) {
+    return this.tokenExpires;
   }
 
   @Override

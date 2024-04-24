@@ -5,8 +5,8 @@ import cn.asany.cms.article.service.CommentService;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.jfantasy.framework.spring.SpringBeanUtils;
-import org.jfantasy.graphql.inputs.WhereInput;
+import net.asany.jfantasy.framework.spring.SpringBeanUtils;
+import net.asany.jfantasy.graphql.inputs.WhereInput;
 
 /**
  * 评论筛选
@@ -38,5 +38,4 @@ public class CommentWhereInput extends WhereInput<CommentWhereInput, Comment> {
     Comment comment = SpringBeanUtils.getBeanByType(CommentService.class).get(id);
     this.filter.contains("path", comment.getPath() + "%");
   }
-
 }

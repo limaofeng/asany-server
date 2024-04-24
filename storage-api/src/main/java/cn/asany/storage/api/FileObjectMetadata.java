@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import org.jfantasy.framework.util.common.DateUtil;
+import net.asany.jfantasy.framework.util.common.DateUtil;
 
 /**
  * 文件对象元数据
@@ -35,6 +35,7 @@ public class FileObjectMetadata implements Serializable {
 
   /** 用户自定义的元数据，表示以x-oss-meta-为前缀的请求头。 */
   private final Map<String, Object> userMetadata = new HashMap<>();
+
   /** 非用户自定义的元数据 */
   private final Map<String, Object> metadata = new HashMap<>();
 

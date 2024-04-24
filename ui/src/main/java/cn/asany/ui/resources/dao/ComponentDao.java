@@ -1,7 +1,7 @@
 package cn.asany.ui.resources.dao;
 
 import cn.asany.ui.resources.domain.Component;
-import org.jfantasy.framework.dao.jpa.JpaRepository;
+import net.asany.jfantasy.framework.dao.jpa.AnyJpaRepository;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -10,4 +10,4 @@ import org.springframework.stereotype.Repository;
  * @author limaofeng
  */
 @Repository
-public interface ComponentDao extends JpaRepository<Component, Long> {}
+public interface ComponentDao extends AnyJpaRepository<Component, Long> {}

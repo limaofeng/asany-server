@@ -9,8 +9,8 @@ import cn.asany.shanhai.autoconfigure.ShanhaiAutoConfiguration;
 import graphql.kickstart.autoconfigure.tools.GraphQLJavaToolsAutoConfiguration;
 import graphql.kickstart.autoconfigure.web.servlet.GraphQLWebAutoConfiguration;
 import lombok.extern.slf4j.Slf4j;
+import net.asany.jfantasy.framework.dao.jpa.SimpleAnyJpaRepository;
 import org.jfantasy.autoconfigure.GraphQLAutoConfiguration;
-import org.jfantasy.framework.dao.jpa.ComplexJpaRepository;
 import org.springframework.boot.actuate.autoconfigure.audit.AuditAutoConfiguration;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -48,7 +48,7 @@ import org.springframework.web.client.RestTemplate;
       "cn.asany.*.dao",
       "cn.asany.openapi.dao",
     },
-    repositoryBaseClass = ComplexJpaRepository.class)
+    repositoryBaseClass = SimpleAnyJpaRepository.class)
 @EnableAutoConfiguration(
     exclude = {
       MongoAutoConfiguration.class,

@@ -2,8 +2,8 @@ package cn.asany.flowable.core.graphql.input;
 
 import cn.asany.flowable.core.filters.TaskPropertyFilter;
 import org.flowable.task.api.TaskInfo;
-import org.jfantasy.framework.dao.jpa.PropertyFilter;
-import org.jfantasy.graphql.inputs.WhereInput;
+import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
+import net.asany.jfantasy.graphql.inputs.WhereInput;
 
 /**
  * 任务查询条件

@@ -2,7 +2,7 @@ package cn.asany.weixin.framework.message.user;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.jfantasy.framework.util.common.ObjectUtil;
+import net.asany.jfantasy.framework.util.common.ObjectUtil;
 
 /** 用户分组 */
 public class Group {

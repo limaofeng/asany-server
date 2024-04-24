@@ -3,7 +3,7 @@ package cn.asany.system.web;
 import cn.asany.system.domain.ShortLink;
 import cn.asany.system.service.ShortLinkService;
 import java.util.Optional;
-import org.jfantasy.framework.error.ValidationException;
+import net.asany.jfantasy.framework.error.ValidationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

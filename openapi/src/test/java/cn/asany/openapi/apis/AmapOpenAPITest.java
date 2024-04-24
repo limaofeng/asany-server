@@ -3,12 +3,12 @@ package cn.asany.openapi.apis;
 import static org.junit.jupiter.api.Assertions.*;
 
 import cn.asany.openapi.configs.AmapApiConfig;
-import com.mashape.unirest.http.Unirest;
 import java.util.List;
+import kong.unirest.Unirest;
 import lombok.extern.slf4j.Slf4j;
+import net.asany.jfantasy.framework.jackson.JSON;
+import net.asany.jfantasy.framework.jackson.UnirestObjectMapper;
 import org.apache.commons.lang3.StringUtils;
-import org.jfantasy.framework.jackson.JSON;
-import org.jfantasy.framework.jackson.UnirestObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -19,7 +19,7 @@ class AmapOpenAPITest {
 
   @BeforeEach
   void setUp() {
-    Unirest.setObjectMapper(new UnirestObjectMapper(JSON.getObjectMapper()));
+    Unirest.config().setObjectMapper(new UnirestObjectMapper(JSON.getObjectMapper()));
     api = new AmapOpenAPI(AmapApiConfig.builder().key("724d735795516088493886bf9ce44395").build());
   }
 

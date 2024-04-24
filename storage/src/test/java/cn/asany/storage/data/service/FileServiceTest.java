@@ -6,7 +6,7 @@ import cn.asany.storage.api.Storage;
 import cn.asany.storage.data.domain.FileDetail;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
-import org.jfantasy.framework.dao.jpa.PropertyFilter;
+import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;

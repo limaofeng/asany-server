@@ -13,9 +13,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import org.jfantasy.framework.dao.jpa.PropertyFilter;
-import org.jfantasy.framework.util.common.StringUtil;
-import org.jfantasy.framework.util.common.file.FileUtil;
+import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
+import net.asany.jfantasy.framework.util.common.StringUtil;
+import net.asany.jfantasy.framework.util.common.file.FileUtil;
 
 public class VirtualStorage implements Storage {
 
@@ -107,8 +107,7 @@ public class VirtualStorage implements Storage {
   @Override
   public List<FileObject> listFiles(String remotePath) {
     List<FileDetail> objects =
-        this.fileService.findAll(
-            PropertyFilter.newFilter().equal("parentFile.path", remotePath));
+        this.fileService.findAll(PropertyFilter.newFilter().equal("parentFile.path", remotePath));
     return objects.stream().map(item -> item.toFileObject(this)).collect(Collectors.toList());
   }
 

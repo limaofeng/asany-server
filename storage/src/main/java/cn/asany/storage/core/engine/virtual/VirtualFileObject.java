@@ -11,7 +11,7 @@ import java.io.InputStream;
 import java.util.*;
 import lombok.Builder;
 import lombok.Getter;
-import org.jfantasy.framework.spring.SpringBeanUtils;
+import net.asany.jfantasy.framework.spring.SpringBeanUtils;
 
 @Getter
 @Builder

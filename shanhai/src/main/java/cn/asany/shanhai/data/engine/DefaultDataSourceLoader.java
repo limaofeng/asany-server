@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.jfantasy.framework.util.common.ClassUtil;
+import net.asany.jfantasy.framework.util.common.ClassUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class DefaultDataSourceLoader implements IDataSourceLoader {

@@ -1,8 +1,8 @@
 package cn.asany.shanhai.core.dao;
 
 import cn.asany.shanhai.core.domain.Module;
-import org.jfantasy.framework.dao.jpa.JpaRepository;
+import net.asany.jfantasy.framework.dao.jpa.AnyJpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ModuleDao extends JpaRepository<Module, Long> {}
+public interface ModuleDao extends AnyJpaRepository<Module, Long> {}

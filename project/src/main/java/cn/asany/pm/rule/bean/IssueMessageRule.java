@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.GenericGenerator;
+import net.asany.jfantasy.framework.dao.hibernate.annotations.TableGenerator;
 
 @Data
 @Builder
@@ -19,8 +19,7 @@ public class IssueMessageRule {
   /** 范围ID */
   @Id
   @Column(name = "ID")
-  @GeneratedValue(generator = "fantasy-sequence")
-  @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+  @TableGenerator
   private Long id;
 
   /** 消息规则名称 */

@@ -3,12 +3,12 @@ package cn.asany.website.landing.domain;
 import cn.asany.base.common.domain.Metadata;
 import cn.asany.website.landing.domain.enums.LandingPageStatus;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
 import java.util.Date;
 import java.util.List;
-import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.GenericGenerator;
-import org.jfantasy.framework.dao.BaseBusEntity;
+import net.asany.jfantasy.framework.dao.BaseBusEntity;
+import net.asany.jfantasy.framework.dao.hibernate.annotations.TableGenerator;
 
 @Getter
 @Setter
@@ -43,9 +43,9 @@ import org.jfantasy.framework.dao.BaseBusEntity;
 public class LandingPage extends BaseBusEntity {
   @Id
   @Column(name = "ID", nullable = false, updatable = false, precision = 22)
-  @GeneratedValue(generator = "fantasy-sequence")
-  @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+  @TableGenerator
   private Long id;
+
   /** 名称 */
   @Column(name = "NAME", length = 100, nullable = false)
   private String name;
@@ -84,6 +84,7 @@ public class LandingPage extends BaseBusEntity {
       foreignKey = @ForeignKey(name = "FK_WEBSITE_LANDING_PAGE_STORE_SID"))
   @ToString.Exclude
   private List<LandingStore> stores;
+
   /** 元数据 */
   @Embedded private Metadata metadata;
 }

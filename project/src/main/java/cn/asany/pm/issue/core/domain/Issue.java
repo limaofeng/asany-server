@@ -14,9 +14,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import lombok.*;
+import net.asany.jfantasy.framework.dao.SoftDeletableBaseBusEntity;
+import net.asany.jfantasy.framework.dao.hibernate.annotations.TableGenerator;
 import org.hibernate.Hibernate;
-import org.hibernate.annotations.GenericGenerator;
-import org.jfantasy.framework.dao.SoftDeletableBaseBusEntity;
 
 /**
  * 任务主表
@@ -37,8 +37,7 @@ public class Issue extends SoftDeletableBaseBusEntity {
   /** 任务ID */
   @Id
   @Column(name = "ID")
-  @GeneratedValue(generator = "fantasy-sequence")
-  @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+  @TableGenerator
   private Long id;
 
   /** 任务类型 */

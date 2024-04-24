@@ -4,8 +4,8 @@ import cn.asany.ui.resources.domain.Component;
 import graphql.kickstart.tools.GraphQLResolver;
 import java.util.Collections;
 import java.util.List;
-import org.jfantasy.framework.util.common.ObjectUtil;
-import org.jfantasy.framework.util.common.StringUtil;
+import net.asany.jfantasy.framework.util.common.ObjectUtil;
+import net.asany.jfantasy.framework.util.common.StringUtil;
 
 @org.springframework.stereotype.Component
 public class ComponentResolver implements GraphQLResolver<Component> {

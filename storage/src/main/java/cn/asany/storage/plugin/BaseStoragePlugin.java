@@ -8,9 +8,9 @@ import cn.asany.storage.data.service.FileService;
 import cn.asany.storage.utils.UploadUtils;
 import java.io.File;
 import lombok.SneakyThrows;
-import org.jfantasy.framework.util.common.ObjectUtil;
-import org.jfantasy.framework.util.common.StringUtil;
-import org.jfantasy.framework.util.common.file.FileUtil;
+import net.asany.jfantasy.framework.util.common.ObjectUtil;
+import net.asany.jfantasy.framework.util.common.StringUtil;
+import net.asany.jfantasy.framework.util.common.file.FileUtil;
 import org.springframework.stereotype.Component;
 
 @Component

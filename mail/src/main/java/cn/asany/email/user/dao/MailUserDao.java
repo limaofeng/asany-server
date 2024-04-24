@@ -1,7 +1,7 @@
 package cn.asany.email.user.dao;
 
 import cn.asany.email.user.domain.MailUser;
-import org.jfantasy.framework.dao.jpa.JpaRepository;
+import net.asany.jfantasy.framework.dao.jpa.AnyJpaRepository;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -10,4 +10,4 @@ import org.springframework.stereotype.Repository;
  * @author limaofeng
  */
 @Repository("JamesUserDao")
-public interface MailUserDao extends JpaRepository<MailUser, String> {}
+public interface MailUserDao extends AnyJpaRepository<MailUser, String> {}

@@ -6,11 +6,11 @@ import java.util.Date;
 import java.util.Objects;
 import java.util.Set;
 import lombok.*;
+import net.asany.jfantasy.framework.dao.BaseBusEntity;
+import net.asany.jfantasy.framework.dao.hibernate.annotations.TableGenerator;
+import net.asany.jfantasy.framework.dao.hibernate.converter.StringSetConverter;
+import net.asany.jfantasy.framework.security.auth.TokenType;
 import org.hibernate.Hibernate;
-import org.hibernate.annotations.GenericGenerator;
-import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.dao.hibernate.converter.StringSetConverter;
-import org.jfantasy.framework.security.oauth2.core.TokenType;
 
 /**
  * 访问令牌
@@ -32,8 +32,7 @@ public class AccessToken extends BaseBusEntity {
 
   @Id
   @Column(name = "ID", nullable = false, updatable = false, precision = 22)
-  @GeneratedValue(generator = "fantasy-sequence")
-  @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+  @TableGenerator
   private Long id;
 
   /** 名称 */

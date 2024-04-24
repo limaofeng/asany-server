@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.jfantasy.framework.util.common.StringUtil;
+import net.asany.jfantasy.framework.util.common.StringUtil;
 
 /**
  * 上传选项
@@ -20,10 +20,13 @@ import org.jfantasy.framework.util.common.StringUtil;
 public class UploadOptions {
   /** 上传空间 */
   private String space;
+
   /** 上传目录 */
   private String folder;
+
   /** 启用插件 */
   @Builder.Default private Set<String> plugins = new HashSet<>();
+
   /** 文件名策略 */
   private UploadFileNameStrategy nameStrategy;
 

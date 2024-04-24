@@ -1,6 +1,6 @@
 package cn.asany.base.common.domain;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,12 +16,15 @@ public class ContactInformation {
   /** 联系人姓名 */
   @Column(name = "CONTACT_NAME", length = 50)
   private String name;
+
   /** 邮箱 */
   @Column(name = "CONTACT_EMAIL", length = 50)
   private String email;
+
   /** 电话 */
   @Column(name = "CONTACT_PHONE", length = 20)
   private String phone;
+
   /** 地址 */
   @Embedded
   @AttributeOverrides({

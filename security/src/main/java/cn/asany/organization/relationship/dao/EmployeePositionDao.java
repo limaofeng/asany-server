@@ -1,7 +1,7 @@
 package cn.asany.organization.relationship.dao;
 
 import cn.asany.organization.relationship.domain.EmployeePosition;
-import org.jfantasy.framework.dao.jpa.JpaRepository;
+import net.asany.jfantasy.framework.dao.jpa.AnyJpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
  * @date 2022/7/28 9:12 9:12
  */
 @Repository
-public interface EmployeePositionDao extends JpaRepository<EmployeePosition, Long> {
+public interface EmployeePositionDao extends AnyJpaRepository<EmployeePosition, Long> {
   /**
    * 删除人员职位对应关系 - 根据组织 ID
    *

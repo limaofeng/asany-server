@@ -9,8 +9,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import lombok.SneakyThrows;
-import org.jfantasy.graphql.client.GraphQLResponse;
-import org.jfantasy.graphql.client.GraphQLTemplate;
+import net.asany.jfantasy.graphql.client.GraphQLResponse;
+import net.asany.jfantasy.graphql.client.GraphQLTemplate;
 
 /**
  * 数据源

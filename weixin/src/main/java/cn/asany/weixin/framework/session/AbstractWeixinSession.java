@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import lombok.extern.slf4j.Slf4j;
-import org.jfantasy.framework.error.IgnoreException;
+import net.asany.jfantasy.framework.error.IgnoreException;
 
 /** 微信 session 抽象实现 */
 @Slf4j

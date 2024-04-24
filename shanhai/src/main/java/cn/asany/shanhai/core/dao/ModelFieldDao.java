@@ -2,15 +2,15 @@ package cn.asany.shanhai.core.dao;
 
 import cn.asany.shanhai.core.domain.ModelField;
 import java.util.List;
-import org.jfantasy.framework.dao.jpa.JpaRepository;
-import org.jfantasy.framework.dao.jpa.PropertyFilter;
+import net.asany.jfantasy.framework.dao.jpa.AnyJpaRepository;
+import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 /** @author limaofeng */
 @Repository
-public interface ModelFieldDao extends JpaRepository<ModelField, Long> {
+public interface ModelFieldDao extends AnyJpaRepository<ModelField, Long> {
 
   /**
    * 同时返回 Model 与 Type 对象

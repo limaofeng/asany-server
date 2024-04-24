@@ -1,8 +1,8 @@
 package cn.asany.sms.dao;
 
 import cn.asany.sms.domain.CaptchaConfig;
-import org.jfantasy.framework.dao.jpa.JpaRepository;
+import net.asany.jfantasy.framework.dao.jpa.AnyJpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface CaptchaConfigDao extends JpaRepository<CaptchaConfig, String> {}
+public interface CaptchaConfigDao extends AnyJpaRepository<CaptchaConfig, String> {}

@@ -2,8 +2,8 @@ package cn.asany.pm.issue.core.graphql.input;
 
 import cn.asany.pm.issue.core.domain.Issue;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.jfantasy.framework.util.common.StringUtil;
-import org.jfantasy.graphql.inputs.WhereInput;
+import net.asany.jfantasy.framework.util.common.StringUtil;
+import net.asany.jfantasy.graphql.inputs.WhereInput;
 
 /**
  * 任务筛选

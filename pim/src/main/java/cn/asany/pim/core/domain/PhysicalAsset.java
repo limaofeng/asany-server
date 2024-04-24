@@ -1,7 +1,6 @@
 package cn.asany.pim.core.domain;
 
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
+import jakarta.persistence.*;
 
 @Entity
 @DiscriminatorValue("PHYSICAL")

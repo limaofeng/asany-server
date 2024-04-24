@@ -2,10 +2,10 @@ package cn.asany.cms.article.dao.listener;
 
 import cn.asany.cms.article.domain.Article;
 import cn.asany.cms.article.event.ArticleCreatedEvent;
+import net.asany.jfantasy.framework.dao.hibernate.listener.AbstractChangedListener;
 import org.hibernate.event.spi.EventType;
 import org.hibernate.event.spi.PostInsertEvent;
 import org.hibernate.event.spi.PostUpdateEvent;
-import org.jfantasy.framework.dao.hibernate.listener.AbstractChangedListener;
 import org.springframework.stereotype.Component;
 
 /**

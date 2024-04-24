@@ -1,8 +1,8 @@
 package cn.asany.security.core.validators;
 
 import cn.asany.security.core.service.UserService;
-import org.jfantasy.framework.spring.validation.ValidationException;
-import org.jfantasy.framework.spring.validation.Validator;
+import net.asany.jfantasy.framework.spring.validation.ValidationException;
+import net.asany.jfantasy.framework.spring.validation.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

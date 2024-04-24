@@ -2,11 +2,11 @@ package cn.asany.cms.content.domain;
 
 import cn.asany.cms.article.domain.ArticleContent;
 import cn.asany.cms.content.domain.enums.ContentType;
+import jakarta.persistence.*;
 import java.util.List;
-import javax.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.GenericGenerator;
-import org.jfantasy.framework.dao.BaseBusEntity;
+import net.asany.jfantasy.framework.dao.BaseBusEntity;
+import net.asany.jfantasy.framework.dao.hibernate.annotations.TableGenerator;
 
 @Getter
 @Setter
@@ -20,9 +20,9 @@ public class ImageContent extends BaseBusEntity implements ArticleContent {
 
   @Id
   @Column(name = "ID", nullable = false)
-  @GeneratedValue(generator = "fantasy-sequence")
-  @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+  @TableGenerator
   private Long id;
+
   /** 图片 */
   @OneToMany(
       mappedBy = "imageContent",

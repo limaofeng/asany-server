@@ -4,9 +4,9 @@ import cn.asany.security.auth.error.UnauthorizedException;
 import graphql.schema.*;
 import graphql.schema.idl.SchemaDirectiveWiringEnvironment;
 import java.util.Map;
-import org.jfantasy.framework.security.authentication.Authentication;
-import org.jfantasy.framework.security.authentication.NotAuthenticatedException;
-import org.jfantasy.graphql.context.AuthorizationGraphQLServletContext;
+import net.asany.jfantasy.framework.security.authentication.Authentication;
+import net.asany.jfantasy.framework.security.authentication.NotAuthenticatedException;
+import net.asany.jfantasy.graphql.security.context.AuthGraphQLServletContext;
 
 /**
  * 权限验证
@@ -30,7 +30,7 @@ public class FieldPermissionDataFetcher implements DataFetcher<Object> {
   @Override
   public Object get(DataFetchingEnvironment environment) throws Exception {
     @SuppressWarnings("deprecation")
-    AuthorizationGraphQLServletContext context = environment.getContext();
+    AuthGraphQLServletContext context = environment.getContext();
     Authentication authentication = context.getAuthentication();
 
     if (!authentication.isAuthenticated()) {

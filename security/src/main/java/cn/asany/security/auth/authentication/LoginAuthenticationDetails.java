@@ -3,8 +3,8 @@ package cn.asany.security.auth.authentication;
 import cn.asany.security.auth.graphql.types.LoginOptions;
 import cn.asany.security.auth.graphql.types.LoginType;
 import jakarta.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletRequest;
 import lombok.Getter;
+import net.asany.jfantasy.framework.security.auth.core.AuthenticationDetails;
 
 /**
  * 登录详情
@@ -12,7 +12,7 @@ import lombok.Getter;
  * @author limaofeng
  */
 @Getter
-public class LoginAuthenticationDetails {
+public class LoginAuthenticationDetails implements AuthenticationDetails {
   private final LoginType loginType;
   private final LoginOptions options;
   private HttpServletRequest request;

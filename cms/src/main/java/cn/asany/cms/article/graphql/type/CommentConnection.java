@@ -4,8 +4,8 @@ import cn.asany.cms.article.domain.Comment;
 import java.util.List;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.jfantasy.graphql.Edge;
-import org.jfantasy.graphql.types.BaseConnection;
+import net.asany.jfantasy.graphql.Edge;
+import net.asany.jfantasy.graphql.types.BaseConnection;
 
 @Data
 @EqualsAndHashCode(callSuper = true)

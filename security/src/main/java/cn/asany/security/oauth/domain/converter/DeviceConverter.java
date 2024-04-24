@@ -3,8 +3,8 @@ package cn.asany.security.oauth.domain.converter;
 import cn.asany.security.oauth.domain.ClientDevice;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
-import org.jfantasy.framework.jackson.JSON;
-import org.jfantasy.framework.util.common.StringUtil;
+import net.asany.jfantasy.framework.jackson.JSON;
+import net.asany.jfantasy.framework.util.common.StringUtil;
 
 @Converter
 public class DeviceConverter implements AttributeConverter<ClientDevice, String> {

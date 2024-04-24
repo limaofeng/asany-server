@@ -3,8 +3,8 @@ package cn.asany.email.mailbox.dao;
 import cn.asany.email.mailbox.domain.JamesMailboxMessage;
 import cn.asany.email.mailbox.domain.toys.MailboxIdUidKey;
 import java.util.List;
-import org.jfantasy.framework.dao.jpa.JpaRepository;
-import org.jfantasy.framework.dao.jpa.PropertyFilter;
+import net.asany.jfantasy.framework.dao.jpa.AnyJpaRepository;
+import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -20,7 +20,7 @@ import org.springframework.stereotype.Repository;
  * @author limaofeng
  */
 @Repository
-public interface MailboxMessageDao extends JpaRepository<JamesMailboxMessage, MailboxIdUidKey> {
+public interface MailboxMessageDao extends AnyJpaRepository<JamesMailboxMessage, MailboxIdUidKey> {
 
   @Modifying
   @Query("DELETE FROM MailboxMessage message WHERE message.mailbox.id = :mailboxId")

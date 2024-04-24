@@ -1,8 +1,8 @@
 package cn.asany.pm.rule.dao;
 
 import cn.asany.pm.rule.bean.IssueAppraisalRule;
-import org.jfantasy.framework.dao.jpa.JpaRepository;
+import net.asany.jfantasy.framework.dao.jpa.AnyJpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface IssueAppraisalRuleDao extends JpaRepository<IssueAppraisalRule, Long> {}
+public interface IssueAppraisalRuleDao extends AnyJpaRepository<IssueAppraisalRule, Long> {}

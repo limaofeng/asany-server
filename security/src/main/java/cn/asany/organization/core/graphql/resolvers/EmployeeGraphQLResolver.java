@@ -19,7 +19,7 @@ import graphql.kickstart.tools.GraphQLResolver;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import org.jfantasy.framework.util.common.StringUtil;
+import net.asany.jfantasy.framework.util.common.StringUtil;
 import org.springframework.stereotype.Component;
 
 /**

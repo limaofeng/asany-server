@@ -2,7 +2,7 @@ package cn.asany.sms.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.jfantasy.framework.dao.BaseBusEntity;
+import net.asany.jfantasy.framework.dao.BaseBusEntity;
 
 /**
  * 短信验证码定制方案

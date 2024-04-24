@@ -3,8 +3,8 @@ package cn.asany.pm.issue.core.domain;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.GenericGenerator;
-import org.jfantasy.framework.dao.SoftDeletableBaseBusEntity;
+import net.asany.jfantasy.framework.dao.SoftDeletableBaseBusEntity;
+import net.asany.jfantasy.framework.dao.hibernate.annotations.TableGenerator;
 
 /**
  * @author limaofeng@msn.com
@@ -22,8 +22,7 @@ public class Follow extends SoftDeletableBaseBusEntity {
   /** ID */
   @Id
   @Column(name = "ID")
-  @GeneratedValue(generator = "fantasy-sequence")
-  @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+  @TableGenerator
   private Long id;
 
   /** 任务id */

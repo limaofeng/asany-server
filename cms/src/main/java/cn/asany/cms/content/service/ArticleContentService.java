@@ -4,8 +4,8 @@ import cn.asany.cms.article.domain.ArticleContent;
 import cn.asany.cms.content.domain.enums.ContentType;
 import cn.asany.cms.content.graphql.input.ArticleContentInput;
 import java.util.List;
-import org.jfantasy.framework.error.ValidationException;
-import org.jfantasy.framework.util.common.ObjectUtil;
+import net.asany.jfantasy.framework.error.ValidationException;
+import net.asany.jfantasy.framework.util.common.ObjectUtil;
 
 public class ArticleContentService {
 

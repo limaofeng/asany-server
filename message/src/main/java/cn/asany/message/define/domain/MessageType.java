@@ -5,8 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import java.util.List;
 import lombok.*;
+import net.asany.jfantasy.framework.dao.BaseBusEntity;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.jfantasy.framework.dao.BaseBusEntity;
 
 /**
  * 消息类型

@@ -5,8 +5,8 @@ package cn.asany.workflow.screen.dao;
  * @date 2022/7/28 9:12
  */
 import cn.asany.pm.screen.bean.IssueScreen;
-import org.jfantasy.framework.dao.jpa.JpaRepository;
+import net.asany.jfantasy.framework.dao.jpa.AnyJpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface IssueScreenDao extends JpaRepository<IssueScreen, Long> {}
+public interface IssueScreenDao extends AnyJpaRepository<IssueScreen, Long> {}

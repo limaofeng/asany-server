@@ -3,7 +3,7 @@ package cn.asany.weixin.framework.message.content;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import org.jfantasy.framework.util.common.StringUtil;
+import net.asany.jfantasy.framework.util.common.StringUtil;
 
 /** 微信菜单 */
 public class Menu {

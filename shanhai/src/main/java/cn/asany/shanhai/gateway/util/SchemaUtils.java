@@ -10,9 +10,9 @@ import graphql.language.Document;
 import graphql.schema.idl.SchemaPrinter;
 import java.util.*;
 import lombok.SneakyThrows;
-import org.jfantasy.framework.util.common.ObjectUtil;
-import org.jfantasy.graphql.client.GraphQLResponse;
-import org.jfantasy.graphql.client.GraphQLTemplate;
+import net.asany.jfantasy.framework.util.common.ObjectUtil;
+import net.asany.jfantasy.graphql.client.GraphQLResponse;
+import net.asany.jfantasy.graphql.client.GraphQLTemplate;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.web.client.RestTemplate;
 

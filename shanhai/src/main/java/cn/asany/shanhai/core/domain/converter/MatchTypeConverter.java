@@ -2,10 +2,10 @@ package cn.asany.shanhai.core.domain.converter;
 
 import jakarta.persistence.AttributeConverter;
 import java.util.Arrays;
-import javax.persistence.AttributeConverter;
-import org.jfantasy.framework.dao.MatchType;
-import org.jfantasy.framework.jackson.JSON;
-import org.jfantasy.framework.util.common.StringUtil;
+import jakarta.persistence .AttributeConverter;
+import net.asany.jfantasy.framework.dao.MatchType;
+import net.asany.jfantasy.framework.jackson.JSON;
+import net.asany.jfantasy.framework.util.common.StringUtil;
 
 public class MatchTypeConverter implements AttributeConverter<MatchType[], String> {
 

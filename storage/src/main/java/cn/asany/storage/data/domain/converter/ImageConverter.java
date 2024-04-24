@@ -2,8 +2,8 @@ package cn.asany.storage.data.domain.converter;
 
 import cn.asany.storage.data.domain.Image;
 import jakarta.persistence.AttributeConverter;
-import org.jfantasy.framework.jackson.JSON;
-import org.jfantasy.framework.util.common.StringUtil;
+import net.asany.jfantasy.framework.jackson.JSON;
+import net.asany.jfantasy.framework.util.common.StringUtil;
 
 public class ImageConverter implements AttributeConverter<Image, String> {
 

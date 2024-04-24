@@ -4,15 +4,15 @@ import cn.asany.nuwa.app.dao.ApplicationDao;
 import cn.asany.nuwa.app.domain.Application;
 import jakarta.persistence.EntityManager;
 import java.util.Optional;
-import org.jfantasy.framework.dao.jpa.ComplexJpaRepository;
-import org.jfantasy.framework.dao.jpa.PropertyFilter;
+import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
+import net.asany.jfantasy.framework.dao.jpa.SimpleAnyJpaRepository;
 
 /**
  * 应用 数据存储类
  *
  * @author limaofeng
  */
-public class ApplicationDaoImpl extends ComplexJpaRepository<Application, Long>
+public class ApplicationDaoImpl extends SimpleAnyJpaRepository<Application, Long>
     implements ApplicationDao {
 
   public ApplicationDaoImpl(EntityManager entityManager) {

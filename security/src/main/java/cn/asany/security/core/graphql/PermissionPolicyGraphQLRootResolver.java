@@ -3,7 +3,7 @@ package cn.asany.security.core.graphql;
 import cn.asany.security.core.graphql.input.PermissionPolicyWhereInput;
 import cn.asany.security.core.graphql.types.PermissionPolicyConnection;
 import cn.asany.security.core.service.PermissionPolicyService;
-import org.jfantasy.graphql.util.Kit;
+import net.asany.jfantasy.graphql.util.Kit;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -22,10 +22,10 @@ public class PermissionPolicyGraphQLRootResolver {
   }
 
   public PermissionPolicyConnection policies(
-    PermissionPolicyWhereInput where, int page, int pageSize, Sort orderBy) {
+      PermissionPolicyWhereInput where, int page, int pageSize, Sort orderBy) {
     Pageable pageable = PageRequest.of(page - 1, pageSize, orderBy);
     return Kit.connection(
-      permissionPolicyService.findPage(pageable, where.toFilter()),
-      PermissionPolicyConnection.class);
+        permissionPolicyService.findPage(pageable, where.toFilter()),
+        PermissionPolicyConnection.class);
   }
 }

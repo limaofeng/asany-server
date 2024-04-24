@@ -22,7 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
-import org.jfantasy.framework.error.ValidationException;
+import net.asany.jfantasy.framework.error.ValidationException;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 

@@ -63,7 +63,7 @@ import org.apache.james.smtpserver.netty.OioSMTPServerFactory;
 import org.apache.james.smtpserver.netty.SMTPServerFactory;
 import org.apache.james.user.api.UsersRepository;
 import org.jboss.netty.util.HashedWheelTimer;
-import org.jfantasy.framework.spring.SpringBeanUtils;
+import net.asany.jfantasy.framework.spring.SpringBeanUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ResourceLoader;

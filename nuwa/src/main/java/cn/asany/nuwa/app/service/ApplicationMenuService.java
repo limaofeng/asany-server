@@ -5,10 +5,9 @@ import cn.asany.nuwa.app.domain.ApplicationMenu;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
-import org.jfantasy.framework.dao.jpa.PropertyFilter;
-import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
-import org.jfantasy.framework.util.common.ObjectUtil;
-import org.jfantasy.framework.util.common.SortNodeLoader;
+import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
+import net.asany.jfantasy.framework.util.common.ObjectUtil;
+import net.asany.jfantasy.framework.util.common.SortNodeLoader;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -85,8 +84,7 @@ public class ApplicationMenuService {
       } else {
         filter.equal("parent.id", parentId);
       }
-      return ApplicationMenuService.this.menuDao.findAll(
-          filter, Sort.by("index").ascending());
+      return ApplicationMenuService.this.menuDao.findAll(filter, Sort.by("index").ascending());
     }
 
     @Override

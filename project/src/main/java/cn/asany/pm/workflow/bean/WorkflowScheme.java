@@ -6,9 +6,9 @@ import jakarta.persistence.*;
 import java.util.List;
 import java.util.Objects;
 import lombok.*;
+import net.asany.jfantasy.framework.dao.BaseBusEntity;
+import net.asany.jfantasy.framework.dao.hibernate.annotations.TableGenerator;
 import org.hibernate.Hibernate;
-import org.hibernate.annotations.GenericGenerator;
-import org.jfantasy.framework.dao.BaseBusEntity;
 
 /**
  * 工作流方案
@@ -30,8 +30,7 @@ public class WorkflowScheme extends BaseBusEntity {
   /** 主键ID */
   @Id
   @Column(name = "ID", length = 22)
-  @GeneratedValue(generator = "fantasy-sequence")
-  @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+  @TableGenerator
   private Long id;
 
   /** 工作流方案名称 */

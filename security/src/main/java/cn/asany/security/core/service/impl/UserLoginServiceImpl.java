@@ -3,8 +3,8 @@ package cn.asany.security.core.service.impl; // package cn.asany.security.core.s
 // import net.whir.hos.organization.bean.Employee;
 // import cn.asany.security.core.bean.User;
 // import cn.asany.security.core.service.UserService;
-// import org.jfantasy.framework.security.LoginService;
-// import org.jfantasy.framework.security.LoginUser;
+// import net.asany.jfantasy.framework.security.LoginService;
+// import net.asany.jfantasy.framework.security.LoginUser;
 // import org.springframework.beans.factory.annotation.Autowired;
 // import org.springframework.stereotype.Service;
 //

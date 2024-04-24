@@ -8,8 +8,8 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.jfantasy.framework.dao.jpa.ComplexJpaRepository;
-import org.jfantasy.framework.dao.jpa.PropertyFilter;
+import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
+import net.asany.jfantasy.framework.dao.jpa.SimpleAnyJpaRepository;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -18,7 +18,7 @@ import org.springframework.data.jpa.domain.Specification;
  *
  * @author limaofeng
  */
-public class DictDaoImpl extends ComplexJpaRepository<Dict, DictKey> implements DictDao {
+public class DictDaoImpl extends SimpleAnyJpaRepository<Dict, DictKey> implements DictDao {
 
   public DictDaoImpl(EntityManager entityManager) {
     super(Dict.class, entityManager);

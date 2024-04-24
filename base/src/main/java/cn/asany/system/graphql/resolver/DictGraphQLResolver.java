@@ -6,9 +6,9 @@ import cn.asany.system.service.DictService;
 import graphql.kickstart.tools.GraphQLResolver;
 import java.util.Collections;
 import java.util.List;
-import org.jfantasy.framework.dao.jpa.PropertyFilter;
-import org.jfantasy.framework.util.common.ObjectUtil;
-import org.jfantasy.framework.util.common.StringUtil;
+import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
+import net.asany.jfantasy.framework.util.common.ObjectUtil;
+import net.asany.jfantasy.framework.util.common.StringUtil;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 

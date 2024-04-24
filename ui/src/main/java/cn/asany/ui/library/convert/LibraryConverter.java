@@ -13,7 +13,7 @@ import cn.asany.ui.resources.domain.Component;
 import cn.asany.ui.resources.domain.Icon;
 import java.util.*;
 import java.util.stream.Collectors;
-import org.jfantasy.framework.util.common.ObjectUtil;
+import net.asany.jfantasy.framework.util.common.ObjectUtil;
 import org.mapstruct.*;
 
 @Mapper(

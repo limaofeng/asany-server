@@ -10,7 +10,7 @@ import org.flowable.engine.task.Comment;
 import org.flowable.idm.api.User;
 import org.flowable.task.api.*;
 import org.flowable.task.service.impl.HistoricTaskInstanceQueryProperty;
-import org.jfantasy.framework.dao.jpa.PropertyFilter;
+import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;

@@ -20,7 +20,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import lombok.Getter;
 import lombok.Setter;
-import org.jfantasy.framework.util.common.ObjectUtil;
+import net.asany.jfantasy.framework.util.common.ObjectUtil;
 import org.springframework.context.ApplicationContext;
 
 /**

@@ -6,7 +6,7 @@ import java.util.Objects;
 import lombok.*;
 import org.apache.james.core.Domain;
 import org.hibernate.Hibernate;
-import org.jfantasy.framework.dao.BaseBusEntity;
+import net.asany.jfantasy.framework.dao.BaseBusEntity;
 
 /**
  * James Domain

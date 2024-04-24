@@ -16,7 +16,7 @@ import cn.asany.shanhai.data.engine.IDataSourceOptions;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.jfantasy.autoconfigure.GraphQLAutoConfiguration;
-import org.jfantasy.framework.dao.jpa.ComplexJpaRepository;
+import net.asany.jfantasy.framework.dao.jpa.SimpleAnyJpaRepository;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
@@ -65,7 +65,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
       "cn.asany.shanhai.view.dao",
       "cn.asany.shanhai.gateway.dao"
     },
-    repositoryBaseClass = ComplexJpaRepository.class)
+    repositoryBaseClass = SimpleAnyJpaRepository.class)
 @Slf4j
 @Import({CustomFieldTypeConfig.class})
 public class ShanhaiAutoConfiguration {

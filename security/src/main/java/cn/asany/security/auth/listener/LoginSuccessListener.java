@@ -2,7 +2,7 @@ package cn.asany.security.auth.listener;
 
 import cn.asany.security.auth.event.LoginSuccessEvent;
 import cn.asany.security.core.service.UserService;
-import org.jfantasy.framework.security.authentication.Authentication;
+import net.asany.jfantasy.framework.security.authentication.Authentication;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 

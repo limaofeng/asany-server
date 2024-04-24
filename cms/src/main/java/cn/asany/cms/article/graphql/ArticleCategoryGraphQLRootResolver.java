@@ -9,8 +9,8 @@ import graphql.kickstart.tools.GraphQLMutationResolver;
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import java.util.List;
 import java.util.Optional;
-import org.jfantasy.framework.util.regexp.RegexpConstant;
-import org.jfantasy.framework.util.regexp.RegexpUtil;
+import net.asany.jfantasy.framework.util.regexp.RegexpConstant;
+import net.asany.jfantasy.framework.util.regexp.RegexpUtil;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 

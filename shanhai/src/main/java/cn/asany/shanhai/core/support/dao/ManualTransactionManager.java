@@ -3,7 +3,7 @@ package cn.asany.shanhai.core.support.dao;
 import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.SessionFactory;
-import org.jfantasy.framework.error.ValidationException;
+import net.asany.jfantasy.framework.error.ValidationException;
 
 /**
  * 手动事务管理器

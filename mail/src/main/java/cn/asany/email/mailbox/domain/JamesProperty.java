@@ -7,7 +7,7 @@ import lombok.*;
 import org.apache.james.mailbox.store.mail.model.Property;
 import org.apache.openjpa.persistence.jdbc.Index;
 import org.hibernate.Hibernate;
-import org.hibernate.annotations.GenericGenerator;
+import net.asany.jfantasy.framework.dao.hibernate.annotations.TableGenerator;
 
 /**
  * 属性
@@ -29,8 +29,7 @@ public class JamesProperty implements Property, Serializable {
   /** The system unique key */
   @Id
   @Column(name = "ID", nullable = false, updatable = false, precision = 22)
-  @GeneratedValue(generator = "fantasy-sequence")
-  @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+  @TableGenerator
   private Long id;
 
   @Column(name = "MAILBOX_ID")

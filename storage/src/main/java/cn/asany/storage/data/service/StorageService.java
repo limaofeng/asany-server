@@ -14,12 +14,12 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
+import net.asany.jfantasy.framework.dao.jpa.SimpleAnyJpaRepository;
+import net.asany.jfantasy.framework.spring.SpringBeanUtils;
+import net.asany.jfantasy.framework.util.common.ObjectUtil;
+import net.asany.jfantasy.framework.util.common.toys.CompareResults;
 import org.hibernate.Hibernate;
-import org.jfantasy.framework.dao.jpa.ComplexJpaRepository;
-import org.jfantasy.framework.dao.jpa.PropertyFilter;
-import org.jfantasy.framework.spring.SpringBeanUtils;
-import org.jfantasy.framework.util.common.ObjectUtil;
-import org.jfantasy.framework.util.common.toys.CompareResults;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -142,8 +142,7 @@ public class StorageService {
     public void exec(List<FileObject> fileObjects) {
       boolean isRoot = FileObject.ROOT_PATH.equals(currentFile.getPath());
 
-      PropertyFilter filter =
-          PropertyFilter.newFilter().equal("storageConfig.id", storageId);
+      PropertyFilter filter = PropertyFilter.newFilter().equal("storageConfig.id", storageId);
 
       if (isRoot) {
         filter.isNull("parentFile");
@@ -185,7 +184,7 @@ public class StorageService {
 
     private void delete(FileDetail file) {
       this.deleteBuffer.add(file);
-      if (this.deleteBuffer.size() >= ComplexJpaRepository.BATCH_SIZE) {
+      if (this.deleteBuffer.size() >= SimpleAnyJpaRepository.BATCH_SIZE) {
         fileDetailDao.deleteAll(this.deleteBuffer);
         this.deleteBuffer.clear();
       }
@@ -193,7 +192,7 @@ public class StorageService {
 
     private void insert(FileDetail file) {
       this.saveBuffer.add(file);
-      if (this.saveBuffer.size() >= ComplexJpaRepository.BATCH_SIZE) {
+      if (this.saveBuffer.size() >= SimpleAnyJpaRepository.BATCH_SIZE) {
         fileDetailDao.saveAllInBatch(this.saveBuffer);
         this.saveBuffer.clear();
       }
@@ -226,8 +225,7 @@ public class StorageService {
                 .findOne(
                     PropertyFilter.newFilter()
                         .equal("storageConfig.id", storageId)
-                        .equal("path", path)
-                        )
+                        .equal("path", path))
                 .orElse(null);
       }
       return file;

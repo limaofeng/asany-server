@@ -5,7 +5,7 @@ import cn.asany.shanhai.core.domain.ModelEndpointReturnType;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
-import org.jfantasy.framework.util.common.StringUtil;
+import net.asany.jfantasy.framework.util.common.StringUtil;
 
 @AllArgsConstructor
 public class TemplateDataOfEndpoint {

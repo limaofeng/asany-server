@@ -2,13 +2,13 @@ package cn.asany.ui.library.dao.impl;
 
 import cn.asany.ui.library.dao.LibraryDao;
 import cn.asany.ui.library.domain.Library;
+import jakarta.persistence.EntityManager;
 import java.util.List;
 import java.util.Optional;
-import jakarta.persistence.EntityManager;
-import org.jfantasy.framework.dao.jpa.ComplexJpaRepository;
-import org.jfantasy.framework.dao.jpa.PropertyFilter;
+import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
+import net.asany.jfantasy.framework.dao.jpa.SimpleAnyJpaRepository;
 
-public class LibraryDaoImpl extends ComplexJpaRepository<Library, Long> implements LibraryDao {
+public class LibraryDaoImpl extends SimpleAnyJpaRepository<Library, Long> implements LibraryDao {
 
   public LibraryDaoImpl(EntityManager entityManager) {
     super(Library.class, entityManager);

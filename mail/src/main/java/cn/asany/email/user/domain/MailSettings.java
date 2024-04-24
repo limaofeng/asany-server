@@ -3,8 +3,8 @@ package cn.asany.email.user.domain;
 import jakarta.persistence.*;
 import java.util.Set;
 import lombok.*;
-import org.hibernate.annotations.GenericGenerator;
-import org.jfantasy.framework.dao.BaseBusEntity;
+import net.asany.jfantasy.framework.dao.hibernate.annotations.TableGenerator;
+import net.asany.jfantasy.framework.dao.BaseBusEntity;
 
 /** 邮件设置 */
 @Getter

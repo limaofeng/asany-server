@@ -2,8 +2,8 @@ package cn.asany.cms.article.domain.converter;
 
 import cn.asany.cms.article.domain.ArticleMetadata;
 import jakarta.persistence.AttributeConverter;
-import org.jfantasy.framework.jackson.JSON;
-import org.jfantasy.framework.util.common.StringUtil;
+import net.asany.jfantasy.framework.jackson.JSON;
+import net.asany.jfantasy.framework.util.common.StringUtil;
 
 public class MetaDataConverter implements AttributeConverter<ArticleMetadata, String> {
   @Override

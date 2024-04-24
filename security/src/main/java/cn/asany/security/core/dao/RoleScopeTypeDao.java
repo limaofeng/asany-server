@@ -1,7 +1,7 @@
 package cn.asany.security.core.dao;
 
 import cn.asany.security.core.domain.RoleScopeType;
-import org.jfantasy.framework.dao.jpa.JpaRepository;
+import net.asany.jfantasy.framework.dao.jpa.AnyJpaRepository;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -10,4 +10,4 @@ import org.springframework.stereotype.Repository;
  * @author liumeng
  */
 @Repository
-public interface RoleScopeTypeDao extends JpaRepository<RoleScopeType, String> {}
+public interface RoleScopeTypeDao extends AnyJpaRepository<RoleScopeType, String> {}

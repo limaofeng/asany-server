@@ -3,14 +3,16 @@ package cn.asany.organization.core.service;
 import cn.asany.organization.core.domain.EmployeeStatus;
 import cn.asany.organization.employee.dao.EmployeeStatusDao;
 import java.util.List;
-import org.jfantasy.framework.dao.jpa.PropertyFilter;
+import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/** @Annotation @Author ChenWenJie @Data 2020/7/1 5:49 下午 @Version 1.0 */
+/**
+ * @Annotation @Author ChenWenJie @Data 2020/7/1 5:49 下午 @Version 1.0
+ */
 @Service
 @Transactional
 public class EmployeeStatusService {

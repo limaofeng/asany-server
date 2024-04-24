@@ -2,9 +2,9 @@ package cn.asany.cms.learn.dao.listener;
 
 import cn.asany.cms.learn.domain.Course;
 import cn.asany.cms.learn.event.CourseCreatedEvent;
+import net.asany.jfantasy.framework.dao.hibernate.listener.AbstractChangedListener;
 import org.hibernate.event.spi.EventType;
 import org.hibernate.event.spi.PostInsertEvent;
-import org.jfantasy.framework.dao.hibernate.listener.AbstractChangedListener;
 import org.springframework.stereotype.Component;
 
 /**

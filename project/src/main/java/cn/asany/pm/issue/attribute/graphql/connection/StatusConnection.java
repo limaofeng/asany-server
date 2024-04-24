@@ -3,8 +3,8 @@ package cn.asany.pm.issue.attribute.graphql.connection;
 import cn.asany.pm.issue.attribute.domain.Status;
 import java.util.List;
 import lombok.*;
-import org.jfantasy.graphql.Edge;
-import org.jfantasy.graphql.types.BaseConnection;
+import net.asany.jfantasy.graphql.Edge;
+import net.asany.jfantasy.graphql.types.BaseConnection;
 
 /**
  * 问题状态 分页对象

@@ -5,15 +5,20 @@ import cn.asany.storage.data.domain.FileDetail;
 import cn.asany.storage.data.service.FileService;
 import cn.asany.storage.data.util.IdUtils;
 import cn.asany.storage.dto.SimpleFileObject;
+import graphql.GraphQLContext;
+import graphql.execution.CoercedVariables;
 import graphql.language.StringValue;
+import graphql.language.Value;
 import graphql.schema.Coercing;
 import graphql.schema.CoercingParseLiteralException;
 import graphql.schema.CoercingParseValueException;
 import graphql.schema.CoercingSerializeException;
+import java.util.Locale;
 import lombok.extern.slf4j.Slf4j;
+import net.asany.jfantasy.framework.error.ValidationException;
+import net.asany.jfantasy.framework.util.common.StringUtil;
 import org.jetbrains.annotations.NotNull;
-import org.jfantasy.framework.error.ValidationException;
-import org.jfantasy.framework.util.common.StringUtil;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 
@@ -25,26 +30,30 @@ import org.springframework.core.env.Environment;
 @Slf4j
 public class FileCoercing implements Coercing<FileObject, Object> {
 
-  @Autowired private FileService fileService;
+  private FileService fileService;
 
-  @Autowired protected Environment environment;
+  protected Environment environment;
 
   @Override
-  public Object serialize(@NotNull Object input) throws CoercingSerializeException {
-    if (!(input instanceof SimpleFileObject)) {
-      return input;
+  public @Nullable Object serialize(
+      @NotNull Object dataFetcherResult,
+      @NotNull GraphQLContext graphQLContext,
+      @NotNull Locale locale)
+      throws CoercingSerializeException {
+    if (!(dataFetcherResult instanceof SimpleFileObject fileObject)) {
+      return dataFetcherResult;
     }
-    SimpleFileObject fileObject = ((SimpleFileObject) input);
     if (StringUtil.isBlank(fileObject.getUrl())) {
       fileObject.setUrl(
           environment.getProperty("STORAGE_BASE_URL") + "/preview/" + fileObject.getId());
     }
-    return input;
+    return dataFetcherResult;
   }
 
-  @NotNull
   @Override
-  public FileObject parseValue(@NotNull Object input) throws CoercingParseValueException {
+  public @Nullable FileObject parseValue(
+      @NotNull Object input, @NotNull GraphQLContext graphQLContext, @NotNull Locale locale)
+      throws CoercingParseValueException {
     if (input instanceof StringValue) {
       String value = ((StringValue) input).getValue();
       IdUtils.FileKey fileKey = IdUtils.parseKey(value);
@@ -75,9 +84,21 @@ public class FileCoercing implements Coercing<FileObject, Object> {
     throw new ValidationException(String.format("不支持的类型 %s", input.getClass()));
   }
 
-  @NotNull
   @Override
-  public FileObject parseLiteral(@NotNull Object input) throws CoercingParseLiteralException {
-    return parseValue(input);
+  public FileObject parseLiteral(
+      @NotNull Value<?> input,
+      @NotNull CoercedVariables variables,
+      @NotNull GraphQLContext graphQLContext,
+      @NotNull Locale locale)
+      throws CoercingParseLiteralException {
+    return parseValue(input, graphQLContext, locale);
+  }
+
+  public void setFileService(@Autowired FileService fileService) {
+    this.fileService = fileService;
+  }
+
+  public void setEnvironment(@Autowired Environment environment) {
+    this.environment = environment;
   }
 }

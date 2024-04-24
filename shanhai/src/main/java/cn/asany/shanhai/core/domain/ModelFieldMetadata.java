@@ -7,9 +7,9 @@ import java.io.Serializable;
 import java.util.Objects;
 import lombok.*;
 import org.hibernate.Hibernate;
-import org.hibernate.annotations.GenericGenerator;
+import net.asany.jfantasy.framework.dao.hibernate.annotations.TableGenerator;
 import org.hibernate.annotations.Parameter;
-import org.jfantasy.framework.dao.MatchType;
+import net.asany.jfantasy.framework.dao.MatchType;
 
 /**
  * 字段元数据

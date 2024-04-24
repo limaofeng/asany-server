@@ -3,7 +3,7 @@ package cn.asany.shanhai.core.domain;
 import jakarta.persistence.*;
 import java.io.Serializable;
 import lombok.*;
-import org.hibernate.annotations.GenericGenerator;
+import net.asany.jfantasy.framework.dao.hibernate.annotations.TableGenerator;
 
 /**
  * 接口返回类型

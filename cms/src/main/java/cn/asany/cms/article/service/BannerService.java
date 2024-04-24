@@ -6,7 +6,7 @@ import cn.asany.cms.article.domain.enums.BackgroundType;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import org.jfantasy.framework.dao.jpa.PropertyFilter;
+import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

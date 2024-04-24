@@ -25,15 +25,15 @@ import cn.asany.ui.resources.domain.Component;
 import cn.asany.ui.resources.domain.enums.ComponentScope;
 import java.util.*;
 import java.util.stream.Collectors;
-import org.jfantasy.framework.dao.jpa.PropertyFilter;
-import org.jfantasy.framework.error.ValidationException;
-import org.jfantasy.framework.security.oauth2.core.ClientDetails;
-import org.jfantasy.framework.security.oauth2.core.ClientDetailsService;
-import org.jfantasy.framework.security.oauth2.core.ClientRegistrationException;
-import org.jfantasy.framework.security.oauth2.core.ClientSecretType;
-import org.jfantasy.framework.util.common.ClassUtil;
-import org.jfantasy.framework.util.common.ObjectUtil;
-import org.jfantasy.framework.util.common.StringUtil;
+import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
+import net.asany.jfantasy.framework.error.ValidationException;
+import net.asany.jfantasy.framework.security.auth.core.ClientDetails;
+import net.asany.jfantasy.framework.security.auth.core.ClientDetailsService;
+import net.asany.jfantasy.framework.security.auth.core.ClientRegistrationException;
+import net.asany.jfantasy.framework.security.auth.core.ClientSecretType;
+import net.asany.jfantasy.framework.util.common.ClassUtil;
+import net.asany.jfantasy.framework.util.common.ObjectUtil;
+import net.asany.jfantasy.framework.util.common.StringUtil;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.Cacheable;
@@ -104,7 +104,7 @@ public class ApplicationService implements ClientDetailsService {
     Optional<Application> optional =
         this.applicationDao.findOneWithClientDetails(
             PropertyFilter.newFilter().equal("clientId", clientId).equal("enabled", true));
-    if (!optional.isPresent()) {
+    if (optional.isEmpty()) {
       throw new ClientRegistrationException("[client_id=" + clientId + "]不存在");
     }
     return optional.get();
@@ -208,7 +208,7 @@ public class ApplicationService implements ClientDetailsService {
             ClientSecret.builder()
                 .client(clientId)
                 .secret(clientSecretStr)
-                .type(ClientSecretType.SESSION)
+                .type(ClientSecretType.OAUTH)
                 .build());
     clientSecrets.add(clientSecret);
 

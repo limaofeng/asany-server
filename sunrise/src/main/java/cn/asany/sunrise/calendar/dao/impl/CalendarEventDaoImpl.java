@@ -4,14 +4,14 @@ import cn.asany.sunrise.calendar.dao.CalendarEventDao;
 import cn.asany.sunrise.calendar.domain.CalendarEvent;
 import cn.asany.sunrise.calendar.domain.toys.CalendarEventDateStat;
 import cn.asany.sunrise.calendar.domain.toys.DateRange;
-import java.util.Date;
-import java.util.List;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
+import java.util.Date;
+import java.util.List;
+import net.asany.jfantasy.framework.dao.hibernate.AliasToBeanResultTransformer;
+import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
+import net.asany.jfantasy.framework.dao.jpa.SimpleAnyJpaRepository;
 import org.hibernate.query.sql.internal.NativeQueryImpl;
-import org.jfantasy.framework.dao.hibernate.AliasToBeanResultTransformer;
-import org.jfantasy.framework.dao.jpa.ComplexJpaRepository;
-import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.springframework.data.domain.Sort;
 
 /**
@@ -19,7 +19,7 @@ import org.springframework.data.domain.Sort;
  *
  * @author limaofeng
  */
-public class CalendarEventDaoImpl extends ComplexJpaRepository<CalendarEvent, Long>
+public class CalendarEventDaoImpl extends SimpleAnyJpaRepository<CalendarEvent, Long>
     implements CalendarEventDao {
 
   private static final String DELETE_EVENT_DATES_SQL =

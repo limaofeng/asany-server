@@ -2,10 +2,10 @@ package cn.asany.shanhai.core.support.graphql.resolvers.base.utils;
 
 import java.util.*;
 import java.util.stream.Collectors;
-import org.jfantasy.framework.dao.MatchType;
-import org.jfantasy.framework.dao.jpa.PropertyFilter;
-import org.jfantasy.framework.dao.jpa.PropertyPredicate;
-import org.jfantasy.framework.util.common.ObjectUtil;
+import net.asany.jfantasy.framework.dao.MatchType;
+import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
+import net.asany.jfantasy.framework.dao.jpa.PropertyPredicate;
+import net.asany.jfantasy.framework.util.common.ObjectUtil;
 
 /**
  * 方法参数解析器

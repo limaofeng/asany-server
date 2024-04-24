@@ -2,16 +2,17 @@ package cn.asany.storage.data.service;
 
 import cn.asany.storage.data.dao.SpaceDao;
 import cn.asany.storage.data.domain.Space;
-import java.util.List;
+import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.hibernate.Hibernate;
-import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/** @author limaofeng */
+/**
+ * @author limaofeng
+ */
 @Service
 @Transactional
 public class SpaceService {

@@ -6,7 +6,7 @@ import cn.asany.pm.issue.attribute.graphql.filter.StatusWhereInput;
 import cn.asany.pm.issue.attribute.service.StatusService;
 import graphql.kickstart.tools.GraphQLMutationResolver;
 import graphql.kickstart.tools.GraphQLQueryResolver;
-import org.jfantasy.graphql.util.Kit;
+import net.asany.jfantasy.graphql.util.Kit;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -36,9 +36,11 @@ public class AttributeGraphQLRootResolver implements GraphQLQueryResolver, Graph
    * @param orderBy 排序
    * @return StatusConnection
    */
-  public StatusConnection issueStatuses(StatusWhereInput where, int page, int pageSize, Sort orderBy) {
+  public StatusConnection issueStatuses(
+      StatusWhereInput where, int page, int pageSize, Sort orderBy) {
     Pageable pageable = PageRequest.of(page - 1, pageSize, orderBy);
-    return Kit.connection(statusService.findPage(pageable, where.toFilter()), StatusConnection.class);
+    return Kit.connection(
+        statusService.findPage(pageable, where.toFilter()), StatusConnection.class);
   }
 
   /** 增加任务状态 */

@@ -3,7 +3,7 @@ package cn.asany.openapi.configs;
 import static org.junit.jupiter.api.Assertions.*;
 
 import lombok.extern.slf4j.Slf4j;
-import org.jfantasy.framework.jackson.JSON;
+import net.asany.jfantasy.framework.jackson.JSON;
 import org.junit.jupiter.api.Test;
 
 @Slf4j

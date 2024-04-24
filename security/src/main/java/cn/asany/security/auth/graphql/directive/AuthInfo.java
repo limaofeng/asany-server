@@ -20,14 +20,14 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.jfantasy.framework.dao.DataQueryContext;
-import org.jfantasy.framework.dao.DataQueryContextHolder;
-import org.jfantasy.framework.dao.jpa.PropertyFilter;
-import org.jfantasy.framework.security.LoginUser;
-import org.jfantasy.framework.security.authentication.Authentication;
-import org.jfantasy.framework.spring.SpringBeanUtils;
-import org.jfantasy.framework.util.common.ClassUtil;
-import org.jfantasy.framework.util.regexp.RegexpUtil;
+import net.asany.jfantasy.framework.dao.DataQueryContext;
+import net.asany.jfantasy.framework.dao.DataQueryContextHolder;
+import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
+import net.asany.jfantasy.framework.security.LoginUser;
+import net.asany.jfantasy.framework.security.authentication.Authentication;
+import net.asany.jfantasy.framework.spring.SpringBeanUtils;
+import net.asany.jfantasy.framework.util.common.ClassUtil;
+import net.asany.jfantasy.framework.util.regexp.RegexpUtil;
 
 /**
  * 权限信息

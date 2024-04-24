@@ -5,7 +5,7 @@ import cn.asany.pm.issue.core.graphql.input.IssueWhereInput;
 import cn.asany.pm.issue.core.graphql.type.IssueConnection;
 import cn.asany.pm.issue.core.service.IssueService;
 import graphql.kickstart.tools.GraphQLQueryResolver;
-import org.jfantasy.graphql.util.Kit;
+import net.asany.jfantasy.graphql.util.Kit;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;

@@ -3,7 +3,7 @@ package cn.asany.ui.resources.graphql.input;
 import cn.asany.ui.resources.domain.Component;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.jfantasy.graphql.inputs.WhereInput;
+import net.asany.jfantasy.graphql.inputs.WhereInput;
 
 /**
  * 模型筛选

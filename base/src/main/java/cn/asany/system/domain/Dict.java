@@ -4,9 +4,9 @@ import jakarta.persistence.*;
 import java.util.List;
 import java.util.Objects;
 import lombok.*;
+import net.asany.jfantasy.framework.dao.BaseBusEntity;
+import net.asany.jfantasy.framework.util.common.ObjectUtil;
 import org.hibernate.Hibernate;
-import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.util.common.ObjectUtil;
 
 /**
  * 数据字典类 <br>

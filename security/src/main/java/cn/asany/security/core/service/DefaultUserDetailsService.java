@@ -4,10 +4,10 @@ import cn.asany.security.core.domain.User;
 import cn.asany.security.core.util.UserUtil;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+import net.asany.jfantasy.framework.security.LoginUser;
+import net.asany.jfantasy.framework.security.core.userdetails.UserDetailsService;
+import net.asany.jfantasy.framework.security.core.userdetails.UsernameNotFoundException;
 import org.dataloader.DataLoader;
-import org.jfantasy.framework.security.LoginUser;
-import org.jfantasy.framework.security.core.userdetails.UserDetailsService;
-import org.jfantasy.framework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.context.support.MessageSourceAccessor;
 
 /**

@@ -1,7 +1,7 @@
 package cn.asany.storage.data.dao;
 
 import cn.asany.storage.data.domain.StorageConfig;
-import org.jfantasy.framework.dao.jpa.JpaRepository;
+import net.asany.jfantasy.framework.dao.jpa.AnyJpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
  * @author limaofeng
  */
 @Repository
-public interface StorageConfigDao extends JpaRepository<StorageConfig, String> {
+public interface StorageConfigDao extends AnyJpaRepository<StorageConfig, String> {
 
   /**
    * 存储用量 (单位 字节)

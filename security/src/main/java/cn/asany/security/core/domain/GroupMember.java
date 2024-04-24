@@ -4,9 +4,9 @@ import cn.asany.security.core.domain.enums.GranteeType;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.hibernate.annotations.GenericGenerator;
-import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.dao.Tenantable;
+import net.asany.jfantasy.framework.dao.BaseBusEntity;
+import net.asany.jfantasy.framework.dao.Tenantable;
+import net.asany.jfantasy.framework.dao.hibernate.annotations.TableGenerator;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -21,8 +21,7 @@ import org.jfantasy.framework.dao.Tenantable;
 public class GroupMember extends BaseBusEntity implements Tenantable {
   @Id
   @Column(name = "ID")
-  @GeneratedValue(generator = "fantasy-sequence")
-  @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+  @TableGenerator
   private Long id;
 
   /** 成员类型 */

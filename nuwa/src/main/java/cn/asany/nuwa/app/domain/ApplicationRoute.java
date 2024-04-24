@@ -8,10 +8,10 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 import lombok.*;
+import net.asany.jfantasy.framework.dao.BaseBusEntity;
+import net.asany.jfantasy.framework.dao.hibernate.annotations.TableGenerator;
+import net.asany.jfantasy.framework.util.common.SortNode;
 import org.hibernate.Hibernate;
-import org.hibernate.annotations.GenericGenerator;
-import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.util.common.SortNode;
 
 /**
  * 路由
@@ -31,13 +31,13 @@ import org.jfantasy.framework.util.common.SortNode;
 public class ApplicationRoute extends BaseBusEntity implements SortNode {
   @Id
   @Column(name = "ID")
-  @GeneratedValue(generator = "fantasy-sequence")
-  @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+  @TableGenerator
   private Long id;
 
   /** 菜单名称 */
   @Column(name = "NAME")
   private String name;
+
   /** 路由类型 */
   @Enumerated(EnumType.STRING)
   @Column(name = "TYPE", nullable = false)

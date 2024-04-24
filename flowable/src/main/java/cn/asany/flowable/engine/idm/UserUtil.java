@@ -2,7 +2,7 @@ package cn.asany.flowable.engine.idm;
 
 import org.flowable.idm.api.User;
 import org.flowable.ui.common.model.RemoteUser;
-import org.jfantasy.framework.security.LoginUser;
+import net.asany.jfantasy.framework.security.LoginUser;
 
 /**
  * 用户工具类

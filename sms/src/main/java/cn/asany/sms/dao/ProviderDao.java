@@ -1,7 +1,7 @@
 package cn.asany.sms.dao;
 
 import cn.asany.sms.domain.Provider;
-import org.jfantasy.framework.dao.jpa.JpaRepository;
+import net.asany.jfantasy.framework.dao.jpa.AnyJpaRepository;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -10,4 +10,4 @@ import org.springframework.stereotype.Repository;
  * @author limaofeng
  */
 @Repository
-public interface ProviderDao extends JpaRepository<Provider, String> {}
+public interface ProviderDao extends AnyJpaRepository<Provider, String> {}

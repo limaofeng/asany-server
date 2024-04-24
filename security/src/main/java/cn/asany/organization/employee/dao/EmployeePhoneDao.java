@@ -1,7 +1,7 @@
 package cn.asany.organization.employee.dao;
 
 import cn.asany.organization.employee.domain.EmployeePhoneNumber;
-import org.jfantasy.framework.dao.jpa.JpaRepository;
+import net.asany.jfantasy.framework.dao.jpa.AnyJpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository;
  * @date 2022/7/28 9:12 9:12
  */
 @Repository
-public interface EmployeePhoneDao extends JpaRepository<EmployeePhoneNumber, Long> {
+public interface EmployeePhoneDao extends AnyJpaRepository<EmployeePhoneNumber, Long> {
   /**
    * 删除员工 - 根据组织 ID
    *

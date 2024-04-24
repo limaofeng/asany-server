@@ -5,7 +5,7 @@ import cn.asany.base.common.TicketTargetBuilder;
 import cn.asany.base.common.TicketTargetResolver;
 import cn.asany.crm.support.component.DefaultTicketTargetResolver;
 import java.util.List;
-import org.jfantasy.framework.dao.jpa.ComplexJpaRepository;
+import net.asany.jfantasy.framework.dao.jpa.SimpleAnyJpaRepository;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -22,7 +22,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 })
 @EnableJpaRepositories(
     basePackages = "cn.asany.crm.*.dao",
-    repositoryBaseClass = ComplexJpaRepository.class)
+    repositoryBaseClass = SimpleAnyJpaRepository.class)
 public class CustomerRelationshipManagementAutoConfiguration {
 
   @Bean

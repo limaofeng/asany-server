@@ -1,7 +1,7 @@
 package cn.asany.message.data.dao;
 
 import cn.asany.message.data.domain.UserMessage;
-import org.jfantasy.framework.dao.jpa.JpaRepository;
+import net.asany.jfantasy.framework.dao.jpa.AnyJpaRepository;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -10,4 +10,4 @@ import org.springframework.stereotype.Repository;
  * @author limaofeng
  */
 @Repository
-public interface UserMessageDao extends JpaRepository<UserMessage, Long> {}
+public interface UserMessageDao extends AnyJpaRepository<UserMessage, Long> {}

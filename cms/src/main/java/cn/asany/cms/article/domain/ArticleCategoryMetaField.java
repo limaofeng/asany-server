@@ -2,8 +2,8 @@ package cn.asany.cms.article.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.GenericGenerator;
-import org.jfantasy.framework.dao.BaseBusEntity;
+import net.asany.jfantasy.framework.dao.BaseBusEntity;
+import net.asany.jfantasy.framework.dao.hibernate.annotations.TableGenerator;
 
 @Setter
 @Getter
@@ -20,8 +20,7 @@ import org.jfantasy.framework.dao.BaseBusEntity;
 public class ArticleCategoryMetaField extends BaseBusEntity {
   @Id
   @Column(name = "ID", nullable = false)
-  @GeneratedValue(generator = "fantasy-sequence")
-  @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+  @TableGenerator
   private Long id;
 
   /** 字段 Key */

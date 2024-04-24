@@ -3,8 +3,8 @@ package cn.asany.security.core.graphql.types;
 import cn.asany.security.core.domain.Role;
 import java.util.List;
 import lombok.*;
-import org.jfantasy.graphql.Edge;
-import org.jfantasy.graphql.types.BaseConnection;
+import net.asany.jfantasy.graphql.Edge;
+import net.asany.jfantasy.graphql.types.BaseConnection;
 
 /**
  * 角色查询接口

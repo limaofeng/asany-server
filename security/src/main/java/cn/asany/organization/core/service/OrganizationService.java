@@ -18,11 +18,11 @@ import cn.asany.organization.relationship.dao.PositionDao;
 import cn.asany.organization.relationship.domain.EmployeePosition;
 import cn.asany.organization.relationship.domain.Position;
 import java.util.*;
-import org.jfantasy.framework.dao.OrderBy;
-import org.jfantasy.framework.dao.jpa.PropertyFilter;
-import org.jfantasy.framework.util.common.BeanUtil;
-import org.jfantasy.framework.util.common.ObjectUtil;
-import org.jfantasy.framework.util.reflect.Property;
+import net.asany.jfantasy.framework.dao.OrderBy;
+import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
+import net.asany.jfantasy.framework.util.common.BeanUtil;
+import net.asany.jfantasy.framework.util.common.ObjectUtil;
+import net.asany.jfantasy.framework.util.reflect.Property;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

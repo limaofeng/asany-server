@@ -3,18 +3,15 @@ package cn.asany.openapi.apis;
 import cn.asany.openapi.configs.AmapApiConfig;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.http.exceptions.UnirestException;
-import com.mashape.unirest.request.HttpRequest;
 import java.util.List;
+import kong.unirest.*;
 import lombok.Data;
 import lombok.SneakyThrows;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
-import org.jfantasy.framework.error.ValidationException;
-import org.jfantasy.framework.jackson.JSON;
-import org.jfantasy.framework.util.common.StringUtil;
+import net.asany.jfantasy.framework.error.ValidationException;
+import net.asany.jfantasy.framework.jackson.JSON;
+import net.asany.jfantasy.framework.util.common.StringUtil;
 
 /**
  * amap OpenAPI
@@ -35,7 +32,7 @@ public class AmapOpenAPI {
   public IpResult ip(String ip) {
     String url = BASE_URL + "/ip";
 
-    HttpRequest request =
+    HttpRequest<GetRequest> request =
         Unirest.get(url).queryString("output", "JSON").queryString("key", amap.getKey());
 
     if (StringUtil.isNotBlank(ip)) {
@@ -63,7 +60,7 @@ public class AmapOpenAPI {
   public List<Geocode> geocode_geo(String addr, String city) {
     String url = BASE_URL + "/geocode/geo";
 
-    HttpRequest request =
+    HttpRequest<GetRequest> request =
         Unirest.get(url)
             .queryString("address", addr)
             .queryString("output", "JSON")
@@ -83,8 +80,7 @@ public class AmapOpenAPI {
       throw new ValidationException("调用高德 OpenAPI /geocode/geo 失败");
     }
 
-    return JSON.getObjectMapper()
-        .convertValue(jsonNode.get("geocodes"), new TypeReference<List<Geocode>>() {});
+    return JSON.getObjectMapper().convertValue(jsonNode.get("geocodes"), new TypeReference<>() {});
   }
 
   @Data

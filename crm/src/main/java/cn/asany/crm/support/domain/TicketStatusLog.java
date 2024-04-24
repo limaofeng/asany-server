@@ -2,11 +2,11 @@ package cn.asany.crm.support.domain;
 
 import cn.asany.crm.support.domain.enums.TicketStatus;
 import cn.asany.security.core.domain.User;
+import jakarta.persistence.*;
 import java.util.Date;
-import javax.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.GenericGenerator;
-import org.jfantasy.framework.dao.BaseBusEntity;
+import net.asany.jfantasy.framework.dao.BaseBusEntity;
+import net.asany.jfantasy.framework.dao.hibernate.annotations.TableGenerator;
 
 @Data
 @Entity
@@ -18,8 +18,7 @@ import org.jfantasy.framework.dao.BaseBusEntity;
 public class TicketStatusLog extends BaseBusEntity {
   @Id
   @Column(name = "ID", nullable = false, updatable = false)
-  @GeneratedValue(generator = "fantasy-sequence")
-  @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+  @TableGenerator
   private Long id;
 
   @ManyToOne(fetch = FetchType.LAZY)

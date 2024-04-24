@@ -6,10 +6,8 @@ import cn.asany.cms.learn.domain.enums.LearnerType;
 import cn.asany.cms.learn.service.LearnerService;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.stream.Collectors;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import org.jfantasy.framework.spring.SpringBeanUtils;
-import org.jfantasy.graphql.inputs.WhereInput;
+import net.asany.jfantasy.framework.spring.SpringBeanUtils;
+import net.asany.jfantasy.graphql.inputs.WhereInput;
 
 public class CourseWhereInput extends WhereInput<CourseWhereInput, Course> {
   private Long learner;
@@ -81,5 +79,4 @@ public class CourseWhereInput extends WhereInput<CourseWhereInput, Course> {
             .map(Course::getId)
             .toArray());
   }
-
 }

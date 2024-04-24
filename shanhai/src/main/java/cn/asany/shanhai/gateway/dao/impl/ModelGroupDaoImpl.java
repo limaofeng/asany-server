@@ -4,10 +4,10 @@ import cn.asany.shanhai.gateway.dao.ModelGroupDao;
 import cn.asany.shanhai.gateway.domain.ModelGroup;
 import jakarta.persistence.EntityManager;
 import java.util.List;
-import org.jfantasy.framework.dao.jpa.ComplexJpaRepository;
+import net.asany.jfantasy.framework.dao.jpa.SimpleAnyJpaRepository;
 import org.springframework.data.domain.Sort;
 
-public class ModelGroupDaoImpl extends ComplexJpaRepository<ModelGroup, Long>
+public class ModelGroupDaoImpl extends SimpleAnyJpaRepository<ModelGroup, Long>
     implements ModelGroupDao {
 
   public ModelGroupDaoImpl(EntityManager entityManager) {

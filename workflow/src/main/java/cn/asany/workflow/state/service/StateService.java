@@ -4,7 +4,7 @@ import cn.asany.workflow.state.domain.State;
 import cn.asany.workflow.state.dao.StateDao;
 import java.util.List;
 import org.springframework.data.domain.Pageable;
-import org.jfantasy.framework.dao.jpa.PropertyFilter;
+import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

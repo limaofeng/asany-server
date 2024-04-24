@@ -7,7 +7,7 @@ import io.minio.*;
 import java.io.File;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.jfantasy.framework.util.common.StringUtil;
+import net.asany.jfantasy.framework.util.common.StringUtil;
 
 public class MinIOMultipartUpload implements IMultipartUpload {
 

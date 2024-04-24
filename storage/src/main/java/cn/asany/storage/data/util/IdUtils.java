@@ -7,8 +7,8 @@ import cn.asany.storage.data.service.FileService;
 import cn.asany.storage.data.service.SpaceService;
 import lombok.Builder;
 import lombok.Data;
-import org.jfantasy.framework.spring.SpringBeanUtils;
-import org.jfantasy.framework.util.common.StringUtil;
+import net.asany.jfantasy.framework.spring.SpringBeanUtils;
+import net.asany.jfantasy.framework.util.common.StringUtil;
 
 /**
  * ID 工具类
@@ -69,12 +69,16 @@ public class IdUtils {
   public static class FileKey {
     /** 原始串 */
     private String source;
+
     /** Key 类型 file / space */
     private String type;
+
     /** 存储空间 */
     private Space space;
+
     /** 相对根目录 */
     private FileDetail rootFolder;
+
     /** 文件 */
     private FileDetail file;
   }

@@ -6,9 +6,9 @@ package cn.asany.workflow.core.dao;
  * @date 2022/7/28 9:12
  */
 import cn.asany.pm.workflow.bean.IssueWorkflowStepTransition;
-import org.jfantasy.framework.dao.jpa.JpaRepository;
+import net.asany.jfantasy.framework.dao.jpa.AnyJpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public interface IssueWorkflowStepTransitionDao
-    extends JpaRepository<IssueWorkflowStepTransition, Long> {}
+    extends AnyJpaRepository<IssueWorkflowStepTransition, Long> {}

@@ -5,7 +5,7 @@ import cn.asany.shanhai.core.domain.ModelEndpoint;
 import cn.asany.shanhai.core.support.dao.ModelRepository;
 import cn.asany.shanhai.core.support.graphql.resolvers.QueryFindAllDataFetcher;
 import java.util.List;
-import org.jfantasy.framework.dao.jpa.PropertyFilter;
+import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
 
 /**
  * 查询所有数据

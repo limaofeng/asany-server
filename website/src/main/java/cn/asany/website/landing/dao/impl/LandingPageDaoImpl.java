@@ -2,11 +2,11 @@ package cn.asany.website.landing.dao.impl;
 
 import cn.asany.website.landing.dao.LandingPageDao;
 import cn.asany.website.landing.domain.LandingPage;
-import java.util.Optional;
 import jakarta.persistence.EntityManager;
-import org.jfantasy.framework.dao.jpa.ComplexJpaRepository;
+import java.util.Optional;
+import net.asany.jfantasy.framework.dao.jpa.SimpleAnyJpaRepository;
 
-public class LandingPageDaoImpl extends ComplexJpaRepository<LandingPage, Long>
+public class LandingPageDaoImpl extends SimpleAnyJpaRepository<LandingPage, Long>
     implements LandingPageDao {
   public LandingPageDaoImpl(EntityManager entityManager) {
     super(LandingPage.class, entityManager);

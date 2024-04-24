@@ -8,6 +8,15 @@ spring:
     redis:
       repositories:
         enabled: false
+      port: ${REDIS_PORT}
+      host: ${REDIS_HOST}
+      password: ${REDIS_PASSWORD}
+      timeout: 10000
+      lettuce:
+        cluster:
+          refresh:
+            adaptive: true
+            period: 60s
   servlet:
     multipart:
       max-file-size: 50MB
@@ -46,7 +55,6 @@ spring:
     open-in-view: false
     hibernate:
       ddl-auto: update
-      use-new-id-generator-mappings: true
       naming:
         implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyJpaCompliantImpl
     properties:
@@ -67,16 +75,6 @@ spring:
             factory_class: org.hibernate.cache.ehcache.EhCacheRegionFactory
         ejb:
           identifier_generator_strategy_provider: org.jfantasy.framework.dao.hibernate.spi.CustomIdentifierGeneratorStrategyProvider
-  redis:
-    port: ${REDIS_PORT}
-    host: ${REDIS_HOST}
-    password: ${REDIS_PASSWORD}
-    timeout: 10000
-    lettuce:
-      cluster:
-        refresh:
-          adaptive: true
-          period: 60s
   quartz:
     job-store-type: jdbc
     wait-for-jobs-to-complete-on-shutdown: true
@@ -153,6 +151,12 @@ graphql:
       max-age: 3600
   tools:
     introspection-enabled: true
+  graphiql:
+    subscriptions:
+      reconnect: true
+      timeout: 30
+    endpoint:
+      subscriptions: /subscriptions
 
 management:
   health:

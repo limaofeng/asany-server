@@ -5,7 +5,7 @@ import cn.asany.ui.library.domain.Library;
 import cn.asany.ui.library.domain.enums.LibraryType;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
-import org.jfantasy.framework.dao.jpa.PropertyFilter;
+import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;

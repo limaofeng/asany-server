@@ -14,10 +14,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import org.jfantasy.framework.dao.jpa.PropertyFilter;
-import org.jfantasy.framework.spring.mvc.error.NotFoundException;
-import org.jfantasy.framework.util.common.ClassUtil;
-import org.jfantasy.framework.util.ognl.OgnlUtil;
+import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
+import net.asany.jfantasy.framework.spring.mvc.error.NotFoundException;
+import net.asany.jfantasy.framework.util.common.ClassUtil;
+import net.asany.jfantasy.framework.util.ognl.OgnlUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -37,6 +37,7 @@ public class IssueService {
   //  @Autowired private FieldConfigurationService fieldConfigurationService;
   @Autowired private WorklogService worklogService;
   @Autowired private TimeTrackService timeTrackService;
+
   //  @Autowired private PermissionService permissionService;
   //    @Autowired
   //    private DepartmentService departmentService;

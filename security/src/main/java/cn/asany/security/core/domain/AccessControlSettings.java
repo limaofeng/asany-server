@@ -3,9 +3,9 @@ package cn.asany.security.core.domain;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.GenericGenerator;
-import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.dao.Tenantable;
+import net.asany.jfantasy.framework.dao.BaseBusEntity;
+import net.asany.jfantasy.framework.dao.Tenantable;
+import net.asany.jfantasy.framework.dao.hibernate.annotations.TableGenerator;
 
 /**
  * 访问控制
@@ -23,8 +23,7 @@ import org.jfantasy.framework.dao.Tenantable;
 public class AccessControlSettings extends BaseBusEntity implements Tenantable {
   @Id
   @Column(name = "ID", nullable = false, updatable = false)
-  @GeneratedValue(generator = "fantasy-sequence")
-  @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+  @TableGenerator
   private Long id;
 
   /** 密码规则 */
@@ -33,7 +32,7 @@ public class AccessControlSettings extends BaseBusEntity implements Tenantable {
   //  /** 用户安全设置 */
   //  @Embedded private UserSecuritySettings userSecuritySettings;
   /** 租户ID */
-  @Column(name = "TENANT_ID", length = 24, nullable = false, updatable = false)
+  @Column(name = "TENANT_ID", length = 32, nullable = false, updatable = false)
   private String tenantId;
 
   @OneToOne(fetch = FetchType.LAZY)

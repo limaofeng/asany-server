@@ -7,7 +7,7 @@ import cn.asany.nuwa.YamlUtils;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.jfantasy.framework.util.common.ClassUtil;
+import net.asany.jfantasy.framework.util.common.ClassUtil;
 
 /**
  * 默认模块加载器

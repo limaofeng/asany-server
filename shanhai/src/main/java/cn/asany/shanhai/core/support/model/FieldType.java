@@ -6,7 +6,7 @@ import cn.asany.shanhai.core.domain.enums.ModelType;
 import cn.asany.shanhai.core.support.model.types.FieldTypeFamily;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
-import org.jfantasy.framework.dao.MatchType;
+import net.asany.jfantasy.framework.dao.MatchType;
 
 /**
  * 字段类型

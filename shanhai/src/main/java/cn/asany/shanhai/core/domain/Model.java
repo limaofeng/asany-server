@@ -19,8 +19,8 @@ import java.util.stream.Collectors;
 import lombok.*;
 import org.hibernate.annotations.*;
 import org.hibernate.annotations.Cache;
-import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.dao.hibernate.converter.StringArrayConverter;
+import net.asany.jfantasy.framework.dao.BaseBusEntity;
+import net.asany.jfantasy.framework.dao.hibernate.converter.StringArrayConverter;
 
 /**
  * 模型
@@ -79,8 +79,7 @@ import org.jfantasy.framework.dao.hibernate.converter.StringArrayConverter;
 public class Model extends BaseBusEntity implements ModelGroupResource {
   @Id
   @Column(name = "ID")
-  @GeneratedValue(generator = "fantasy-sequence")
-  @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+  @TableGenerator
   private Long id;
 
   /** 编码 用于 HQL 名称及 API 名称 */

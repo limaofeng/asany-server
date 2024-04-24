@@ -1,8 +1,8 @@
 package cn.asany.cms.article.dao;
 
 import cn.asany.cms.article.domain.ArticleMetaField;
-import org.jfantasy.framework.dao.jpa.JpaRepository;
+import net.asany.jfantasy.framework.dao.jpa.AnyJpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ArticleMetaFieldDao extends JpaRepository<ArticleMetaField, Long> {}
+public interface ArticleMetaFieldDao extends AnyJpaRepository<ArticleMetaField, Long> {}

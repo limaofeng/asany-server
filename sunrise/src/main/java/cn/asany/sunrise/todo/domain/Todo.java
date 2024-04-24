@@ -2,12 +2,12 @@ package cn.asany.sunrise.todo.domain;
 
 import cn.asany.sunrise.todo.domain.enums.TodoState;
 import cn.asany.sunrise.todo.domain.toys.When;
+import jakarta.persistence.*;
 import java.util.Date;
 import java.util.List;
-import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.GenericGenerator;
-import org.jfantasy.framework.dao.BaseBusEntity;
+import net.asany.jfantasy.framework.dao.BaseBusEntity;
+import net.asany.jfantasy.framework.dao.hibernate.annotations.TableGenerator;
 
 /**
  * 待办
@@ -25,32 +25,39 @@ import org.jfantasy.framework.dao.BaseBusEntity;
 public class Todo extends BaseBusEntity {
   @Id
   @Column(name = "ID", nullable = false, updatable = false, precision = 22)
-  @GeneratedValue(generator = "fantasy-sequence")
-  @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+  @TableGenerator
   private Long id;
+
   /** 标题 */
   @Column(name = "TITLE", length = 200)
   private String title;
+
   /** 状态 */
   @Enumerated(EnumType.STRING)
   @Column(name = "STATUS", length = 10, nullable = false)
   private TodoState status;
+
   /** 在完成 */
   @Embedded private When when;
+
   /** 截止时间 */
   @Temporal(TemporalType.TIMESTAMP)
   @Column(name = "DEADLINE")
   private Date deadline;
+
   /** 完成时间 */
   @Temporal(TemporalType.TIMESTAMP)
   @Column(name = "DUE_DATE")
   private Date dueDate;
+
   /** 地点 */
   @Column(name = "LOCATION", length = 100)
   private String location;
+
   /** 说明 */
   @Column(name = "NOTES", columnDefinition = "TEXT")
   private String notes;
+
   /** tags */
   @ElementCollection
   @CollectionTable(

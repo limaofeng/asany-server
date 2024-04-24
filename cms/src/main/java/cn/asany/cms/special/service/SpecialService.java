@@ -6,7 +6,7 @@ import cn.asany.cms.special.dao.SubscriberDao;
 import cn.asany.cms.special.domain.Special;
 import cn.asany.cms.special.domain.SpecialArticle;
 import cn.asany.cms.special.domain.Subscriber;
-import org.jfantasy.framework.dao.jpa.PropertyFilter;
+import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -53,8 +53,7 @@ public class SpecialService {
   }
 
   @Transactional
-  public Page<Subscriber> findSubscriberPager(
-      String id, Pageable pageable, PropertyFilter filter) {
+  public Page<Subscriber> findSubscriberPager(String id, Pageable pageable, PropertyFilter filter) {
     filter.equal("special.id", id);
     return this.subscriberDao.findPage(pageable, filter);
   }

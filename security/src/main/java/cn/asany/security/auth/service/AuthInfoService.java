@@ -8,7 +8,7 @@ import cn.asany.security.core.domain.enums.AccessLevel;
 import cn.asany.security.core.service.*;
 import java.util.Optional;
 import java.util.Set;
-import org.jfantasy.framework.util.common.StringUtil;
+import net.asany.jfantasy.framework.util.common.StringUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

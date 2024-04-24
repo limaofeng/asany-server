@@ -1,6 +1,6 @@
 package cn.asany.security;
 
-import org.jfantasy.framework.security.core.userdetails.UserDetails;
+import net.asany.jfantasy.framework.security.core.userdetails.UserDetails;
 
 /**
  * 用户

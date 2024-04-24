@@ -7,11 +7,11 @@ import jakarta.persistence.*;
 import java.util.List;
 import javax.validation.constraints.Null;
 import lombok.*;
+import net.asany.jfantasy.framework.dao.BaseBusEntity;
+import net.asany.jfantasy.framework.dao.hibernate.annotations.TableGenerator;
+import net.asany.jfantasy.framework.spring.validation.Operation;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.GenericGenerator;
-import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.spring.validation.Operation;
 
 @Setter
 @Getter
@@ -32,8 +32,7 @@ public class Activity extends BaseBusEntity {
   @Id
   @Null(groups = Operation.Create.class)
   @Column(name = "ID", nullable = false)
-  @GeneratedValue(generator = "fantasy-sequence")
-  @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+  @TableGenerator
   private Long id;
 
   @Column(name = "SLUG", length = 200)

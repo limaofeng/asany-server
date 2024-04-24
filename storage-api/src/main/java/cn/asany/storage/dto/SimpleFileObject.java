@@ -22,16 +22,22 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class SimpleFileObject implements FileObject, Serializable {
   private String id;
+
   /** 文件名称 */
   private String name;
+
   /** 是否为目录 */
   private boolean directory;
+
   /** 文件类型 */
   private String mimeType;
+
   /** 文件长度 */
   private long size;
+
   /** 虚拟文件路径 */
   private String path;
+
   /** 完整地址 */
   @JsonIgnore private String url;
 

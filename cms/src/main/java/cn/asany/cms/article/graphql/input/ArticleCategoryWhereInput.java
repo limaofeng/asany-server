@@ -6,10 +6,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Optional;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.jfantasy.framework.spring.SpringBeanUtils;
-import org.jfantasy.framework.util.regexp.RegexpConstant;
-import org.jfantasy.framework.util.regexp.RegexpUtil;
-import org.jfantasy.graphql.inputs.WhereInput;
+import net.asany.jfantasy.framework.spring.SpringBeanUtils;
+import net.asany.jfantasy.framework.util.regexp.RegexpConstant;
+import net.asany.jfantasy.framework.util.regexp.RegexpUtil;
+import net.asany.jfantasy.graphql.inputs.WhereInput;
 
 /**
  * 文章栏目筛选

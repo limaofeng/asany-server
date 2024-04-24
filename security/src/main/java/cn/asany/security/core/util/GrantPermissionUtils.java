@@ -12,8 +12,8 @@
 // import java.util.Optional;
 // import java.util.stream.Collectors;
 // import java.util.stream.Stream;
-// import org.jfantasy.framework.spring.SpringBeanUtils;
-// import org.jfantasy.framework.util.common.StringUtil;
+// import net.asany.jfantasy.framework.spring.SpringBeanUtils;
+// import net.asany.jfantasy.framework.util.common.StringUtil;
 //
 /// **
 // * 授予权限

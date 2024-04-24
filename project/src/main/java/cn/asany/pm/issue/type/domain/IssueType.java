@@ -6,10 +6,10 @@ import jakarta.persistence.*;
 import java.util.List;
 import java.util.Objects;
 import lombok.*;
+import net.asany.jfantasy.framework.dao.SoftDeletableBaseBusEntity;
+import net.asany.jfantasy.framework.dao.hibernate.annotations.TableGenerator;
 import org.hibernate.Hibernate;
-import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Where;
-import org.jfantasy.framework.dao.SoftDeletableBaseBusEntity;
 
 /**
  * 任务类型实体
@@ -31,8 +31,7 @@ public class IssueType extends SoftDeletableBaseBusEntity {
   /** 主键ID */
   @Id
   @Column(name = "ID", length = 22)
-  @GeneratedValue(generator = "fantasy-sequence")
-  @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+  @TableGenerator
   private Long id;
 
   /** 任务id */

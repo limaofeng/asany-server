@@ -1,7 +1,7 @@
 package cn.asany.security.auth.checker;
 
-import org.jfantasy.framework.security.core.userdetails.PostUserDetailsChecker;
-import org.jfantasy.framework.security.core.userdetails.UserDetails;
+import net.asany.jfantasy.framework.security.core.userdetails.PostUserDetailsChecker;
+import net.asany.jfantasy.framework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 /**

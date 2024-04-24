@@ -1,6 +1,6 @@
 package cn.asany.nuwa.app.dao;
 
 import cn.asany.nuwa.app.domain.ClientSecret;
-import org.jfantasy.framework.dao.jpa.JpaRepository;
+import net.asany.jfantasy.framework.dao.jpa.AnyJpaRepository;
 
-public interface ClientSecretDao extends JpaRepository<ClientSecret, Long> {}
+public interface ClientSecretDao extends AnyJpaRepository<ClientSecret, Long> {}

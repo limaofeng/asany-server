@@ -2,9 +2,9 @@ package cn.asany.security.auth.graphql.directive;
 
 import java.util.List;
 import java.util.Map;
-import org.jfantasy.framework.dao.MatchType;
-import org.jfantasy.framework.dao.jpa.PropertyFilter;
-import org.jfantasy.framework.error.ValidationException;
+import net.asany.jfantasy.framework.dao.MatchType;
+import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
+import net.asany.jfantasy.framework.error.ValidationException;
 
 public enum ConditionOperator {
   /** 检查是否相等 */

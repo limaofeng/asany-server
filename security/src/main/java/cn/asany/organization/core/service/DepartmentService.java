@@ -14,8 +14,7 @@ import cn.asany.organization.relationship.service.PositionService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import org.jfantasy.framework.dao.jpa.PropertyFilter;
-import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
+import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
@@ -146,9 +145,7 @@ public class DepartmentService {
 
   public List<Department> findAllByOrgAndDimension(Long orgId, String code) {
     PropertyFilter filter =
-        PropertyFilter.newFilter()
-            .equal("organization.id", orgId)
-            .equal("dimension.code", code);
+        PropertyFilter.newFilter().equal("organization.id", orgId).equal("dimension.code", code);
     Sort sort = Sort.by(Sort.Direction.DESC, "id");
     return this.departmentDao.findAll(filter, sort);
   }
@@ -272,7 +269,6 @@ public class DepartmentService {
     filter.equal("organization.id", organization);
     return this.departmentDao.findAll(filter);
   }
-
 
   public List<Employee> findChildrenDepartmentEmployee(Department department) {
     List<Department> all =

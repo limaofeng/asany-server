@@ -4,11 +4,11 @@ import cn.asany.cms.article.domain.Article;
 import cn.asany.cms.learn.domain.Course;
 import cn.asany.cms.learn.domain.Lesson;
 import java.util.List;
-import org.jfantasy.framework.dao.jpa.JpaRepository;
+import net.asany.jfantasy.framework.dao.jpa.AnyJpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface LessonDao extends JpaRepository<Lesson, Long> {
+public interface LessonDao extends AnyJpaRepository<Lesson, Long> {
 
   /**
    * 查询该课程下所有章节

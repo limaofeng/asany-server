@@ -15,15 +15,15 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import lombok.extern.slf4j.Slf4j;
+import net.asany.jfantasy.framework.security.LoginUser;
+import net.asany.jfantasy.framework.security.SpringSecurityUtils;
+import net.asany.jfantasy.framework.security.auth.oauth2.core.OAuth2AccessToken;
+import net.asany.jfantasy.framework.security.authentication.Authentication;
+import net.asany.jfantasy.framework.util.common.StreamUtil;
+import net.asany.jfantasy.framework.util.ognl.OgnlUtil;
+import net.asany.jfantasy.framework.util.web.WebUtil;
+import net.asany.jfantasy.graphql.security.context.GraphQLContextHolder;
 import org.apache.commons.net.util.Base64;
-import org.jfantasy.framework.security.LoginUser;
-import org.jfantasy.framework.security.SpringSecurityUtils;
-import org.jfantasy.framework.security.authentication.Authentication;
-import org.jfantasy.framework.security.oauth2.core.OAuth2AccessToken;
-import org.jfantasy.framework.util.common.StreamUtil;
-import org.jfantasy.framework.util.ognl.OgnlUtil;
-import org.jfantasy.framework.util.web.WebUtil;
-import org.jfantasy.graphql.context.GraphQLContextHolder;
 
 /**
  * 文件对象格式指令
@@ -90,7 +90,7 @@ public class FileFormatDirective implements SchemaDirectiveWiring {
     Authentication authentication = SpringSecurityUtils.getAuthentication();
     if (authentication != null && authentication.isAuthenticated()) {
       OAuth2AccessToken credentials = (OAuth2AccessToken) authentication.getCredentials();
-      LoginUser user = (LoginUser) authentication.getPrincipal();
+      LoginUser user = authentication.getPrincipal();
       String token =
           this.authTokenService.storeToken(
               AuthToken.builder()

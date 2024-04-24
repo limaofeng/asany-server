@@ -12,9 +12,9 @@ import graphql.kickstart.tools.GraphQLResolver;
 import graphql.language.*;
 import java.util.ArrayList;
 import lombok.SneakyThrows;
-import org.jfantasy.framework.spring.SpringBeanUtils;
-import org.jfantasy.framework.util.common.ObjectUtil;
-import org.jfantasy.framework.util.common.StringUtil;
+import net.asany.jfantasy.framework.spring.SpringBeanUtils;
+import net.asany.jfantasy.framework.util.common.ObjectUtil;
+import net.asany.jfantasy.framework.util.common.StringUtil;
 
 public class GraphQLTypeUtils {
 

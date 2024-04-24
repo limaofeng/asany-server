@@ -3,8 +3,8 @@ package cn.asany.shanhai.core.graphql.types;
 import cn.asany.shanhai.core.domain.Model;
 import java.util.List;
 import lombok.*;
-import org.jfantasy.graphql.Edge;
-import org.jfantasy.graphql.types.BaseConnection;
+import net.asany.jfantasy.graphql.Edge;
+import net.asany.jfantasy.graphql.types.BaseConnection;
 
 /**
  * Model 分页对象

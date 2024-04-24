@@ -7,15 +7,14 @@ import cn.asany.storage.core.engine.minio.MinIOStorageConfig;
 import cn.asany.storage.core.engine.oss.OSSStorageConfig;
 import cn.asany.storage.data.domain.enums.StorageType;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
 import java.util.List;
 import java.util.Objects;
-
-import jakarta.persistence.*;
 import lombok.*;
+import net.asany.jfantasy.framework.dao.BaseBusEntity;
+import net.asany.jfantasy.framework.jackson.JSON;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.jackson.JSON;
 
 /**
  * 文件管理器配置表
@@ -44,19 +43,24 @@ public class StorageConfig extends BaseBusEntity {
   @Id
   @Column(name = "ID", nullable = false, updatable = false, length = 50)
   private String id;
+
   /** 文件管理器名称 */
   @Column(name = "NAME", length = 150, nullable = false)
   private String name;
+
   /** 文件管理器的类型 */
   @Enumerated(EnumType.STRING)
   @Column(name = "TYPE", length = 20, nullable = false, updatable = false)
   private StorageType type;
+
   /** 描述 */
   @Column(name = "DESCRIPTION", length = 250)
   private String description;
+
   /** 单位 MB */
   @Column(name = "QUOTA")
   private Long quota;
+
   /** 存放配置参数 */
   @Column(name = "CONFIG_STORE", columnDefinition = "JSON")
   private String details;

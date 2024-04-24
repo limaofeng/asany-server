@@ -1,7 +1,7 @@
 package cn.asany.security.core.graphql.input;
 
 import cn.asany.security.core.domain.Group;
-import org.jfantasy.graphql.inputs.WhereInput;
+import net.asany.jfantasy.graphql.inputs.WhereInput;
 
 /**
  * 用户组 Where Input

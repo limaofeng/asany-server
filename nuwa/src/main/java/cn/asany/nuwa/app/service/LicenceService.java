@@ -4,7 +4,7 @@ import cn.asany.nuwa.app.dao.LicenceDao;
 import cn.asany.nuwa.app.domain.Licence;
 import cn.asany.nuwa.app.domain.enums.LicenceStatus;
 import java.util.Optional;
-import org.jfantasy.framework.dao.jpa.PropertyFilter;
+import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,7 +28,6 @@ public class LicenceService {
         PropertyFilter.newFilter()
             .equal("application.id", app)
             .equal("ownership.id", org)
-            .equal("status", LicenceStatus.ACTIVE)
-            );
+            .equal("status", LicenceStatus.ACTIVE));
   }
 }

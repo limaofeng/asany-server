@@ -8,8 +8,8 @@ import cn.asany.storage.data.domain.MultipartUpload;
 import cn.asany.storage.data.service.FileService;
 import cn.asany.storage.data.service.MultipartUploadService;
 import cn.asany.storage.data.util.IdUtils;
-import org.jfantasy.framework.util.common.DateUtil;
-import org.jfantasy.framework.util.common.StringUtil;
+import net.asany.jfantasy.framework.util.common.DateUtil;
+import net.asany.jfantasy.framework.util.common.StringUtil;
 import org.springframework.stereotype.Component;
 
 @Component

@@ -11,9 +11,9 @@ import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import org.jfantasy.framework.dao.jpa.PropertyFilter;
-import org.jfantasy.framework.security.oauth2.core.OAuth2AccessToken;
-import org.jfantasy.framework.security.oauth2.core.TokenType;
+import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
+import net.asany.jfantasy.framework.security.auth.TokenType;
+import net.asany.jfantasy.framework.security.auth.oauth2.core.OAuth2AccessToken;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,7 +39,7 @@ public class AccessTokenService {
     PropertyFilter filter =
         PropertyFilter.newFilter()
             .equal("client.id", clientId)
-            .equal("tokenType", TokenType.PERSONAL)
+            .equal("tokenType", TokenType.PERSONAL_ACCESS_TOKEN)
             .equal("user.id", uid);
     List<AccessToken> accessTokens = this.accessTokenDao.findAll(filter);
     return accessTokenConverter.toPersonalAccessTokens(accessTokens);
@@ -122,7 +122,7 @@ public class AccessTokenService {
     PropertyFilter filter =
         PropertyFilter.newFilter()
             .equal("client", clientId)
-            .equal("tokenType", TokenType.SESSION)
+            .equal("tokenType", TokenType.SESSION_ID)
             .equal("user.id", uid);
     List<AccessToken> accessTokens =
         this.accessTokenDao.findAll(filter, Sort.by("issuedAt").descending());

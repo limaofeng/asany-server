@@ -1,7 +1,7 @@
 package cn.asany.email.mailbox.dao;
 
 import cn.asany.email.mailbox.domain.JamesMailbox;
-import org.jfantasy.framework.dao.jpa.JpaRepository;
+import net.asany.jfantasy.framework.dao.jpa.AnyJpaRepository;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -10,4 +10,4 @@ import org.springframework.stereotype.Repository;
  * @author limaofeng
  */
 @Repository
-public interface MailboxDao extends JpaRepository<JamesMailbox, Long> {}
+public interface MailboxDao extends AnyJpaRepository<JamesMailbox, Long> {}

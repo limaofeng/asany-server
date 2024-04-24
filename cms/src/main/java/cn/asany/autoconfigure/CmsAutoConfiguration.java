@@ -12,9 +12,9 @@ import cn.asany.cms.content.service.ArticleContentService;
 import cn.asany.cms.module.CmsApplicationModule;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.jfantasy.framework.dao.jpa.ComplexJpaRepository;
-import org.jfantasy.framework.search.config.IndexedScan;
-import org.jfantasy.graphql.SchemaParserDictionaryBuilder;
+import net.asany.jfantasy.framework.dao.jpa.SimpleAnyJpaRepository;
+import net.asany.jfantasy.framework.search.config.IndexedScan;
+import net.asany.jfantasy.graphql.SchemaParserDictionaryBuilder;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -40,7 +40,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 })
 @EnableJpaRepositories(
     basePackages = "cn.asany.cms.*.dao",
-    repositoryBaseClass = ComplexJpaRepository.class)
+    repositoryBaseClass = SimpleAnyJpaRepository.class)
 public class CmsAutoConfiguration {
 
   @Bean("CMS.SchemaParserDictionaryBuilder")

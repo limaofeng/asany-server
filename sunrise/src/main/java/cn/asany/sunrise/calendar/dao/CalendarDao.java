@@ -2,7 +2,7 @@ package cn.asany.sunrise.calendar.dao;
 
 import cn.asany.sunrise.calendar.domain.Calendar;
 import java.util.List;
-import org.jfantasy.framework.dao.jpa.JpaRepository;
+import net.asany.jfantasy.framework.dao.jpa.AnyJpaRepository;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository;
  * @author limaofeng
  */
 @Repository
-public interface CalendarDao extends JpaRepository<Calendar, Long> {
+public interface CalendarDao extends AnyJpaRepository<Calendar, Long> {
 
   Integer getMaxIndex(@Param("account") Long account);
 

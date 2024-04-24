@@ -6,7 +6,7 @@ import cn.asany.weixin.framework.core.WeixinCoreHelper;
 import cn.asany.weixin.framework.factory.WeixinSessionFactoryBean;
 import cn.asany.weixin.framework.message.EventMessage;
 import cn.asany.weixin.listener.SubscribeListener;
-import org.jfantasy.framework.dao.jpa.ComplexJpaRepository;
+import net.asany.jfantasy.framework.dao.jpa.SimpleAnyJpaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.ApplicationContext;
@@ -29,7 +29,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 })
 @EnableJpaRepositories(
     basePackages = "cn.asany.weixin.dao",
-    repositoryBaseClass = ComplexJpaRepository.class)
+    repositoryBaseClass = SimpleAnyJpaRepository.class)
 public class WeixinAutoConfiguration {
 
   private final ApplicationContext applicationContext;

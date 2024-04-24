@@ -7,8 +7,8 @@ import cn.asany.shanhai.core.support.model.FieldType;
 import cn.asany.shanhai.core.support.model.FieldTypeRegistry;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
-import org.jfantasy.framework.spring.SpringBeanUtils;
-import org.jfantasy.framework.util.common.ObjectUtil;
+import net.asany.jfantasy.framework.spring.SpringBeanUtils;
+import net.asany.jfantasy.framework.util.common.ObjectUtil;
 
 @AllArgsConstructor
 public class TemplateDataOfModelField {

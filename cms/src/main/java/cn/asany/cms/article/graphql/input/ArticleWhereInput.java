@@ -13,11 +13,11 @@ import java.util.List;
 import java.util.Optional;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.jfantasy.framework.dao.jpa.PropertyFilter;
-import org.jfantasy.framework.spring.SpringBeanUtils;
-import org.jfantasy.framework.util.regexp.RegexpConstant;
-import org.jfantasy.framework.util.regexp.RegexpUtil;
-import org.jfantasy.graphql.inputs.WhereInput;
+import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
+import net.asany.jfantasy.framework.spring.SpringBeanUtils;
+import net.asany.jfantasy.framework.util.regexp.RegexpConstant;
+import net.asany.jfantasy.framework.util.regexp.RegexpUtil;
+import net.asany.jfantasy.graphql.inputs.WhereInput;
 
 /**
  * 文件筛选

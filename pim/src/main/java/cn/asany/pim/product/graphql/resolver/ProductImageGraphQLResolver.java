@@ -3,7 +3,7 @@ package cn.asany.pim.product.graphql.resolver;
 import cn.asany.pim.product.domain.ProductImage;
 import cn.asany.storage.dto.SimpleFileObject;
 import graphql.kickstart.tools.GraphQLResolver;
-import org.jfantasy.framework.util.common.StringUtil;
+import net.asany.jfantasy.framework.util.common.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;

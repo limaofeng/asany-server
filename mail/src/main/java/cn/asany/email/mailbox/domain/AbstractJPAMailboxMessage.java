@@ -26,7 +26,7 @@ import org.apache.james.mailbox.store.search.comparator.UidComparator;
 import org.apache.james.mime4j.MimeException;
 import org.apache.openjpa.persistence.jdbc.Index;
 import org.jetbrains.annotations.NotNull;
-import org.jfantasy.framework.dao.BaseBusEntity;
+import net.asany.jfantasy.framework.dao.BaseBusEntity;
 
 /**
  * Abstract Mailbox Message

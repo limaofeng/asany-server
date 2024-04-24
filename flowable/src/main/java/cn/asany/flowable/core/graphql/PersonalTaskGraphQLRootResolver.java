@@ -5,7 +5,7 @@ import cn.asany.flowable.core.service.TaskInfoService;
 import cn.asany.flowable.engine.idm.UserUtil;
 import graphql.kickstart.tools.GraphQLMutationResolver;
 import graphql.kickstart.tools.GraphQLQueryResolver;
-import org.jfantasy.framework.security.SpringSecurityUtils;
+import net.asany.jfantasy.framework.security.SpringSecurityUtils;
 import org.springframework.stereotype.Component;
 
 /**

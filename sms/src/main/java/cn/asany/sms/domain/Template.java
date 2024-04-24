@@ -3,8 +3,8 @@ package cn.asany.sms.domain;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.GenericGenerator;
-import org.jfantasy.framework.dao.BaseBusEntity;
+import net.asany.jfantasy.framework.dao.BaseBusEntity;
+import net.asany.jfantasy.framework.dao.hibernate.annotations.TableGenerator;
 
 @Getter
 @Setter
@@ -13,13 +13,12 @@ import org.jfantasy.framework.dao.BaseBusEntity;
 @AllArgsConstructor
 @Entity(name = "SmsTemplate")
 @Table(name = "SMS_TEMPLATE")
-@GenericGenerator(name = "template_gen", strategy = "fantasy-sequence")
 @JsonIgnoreProperties({"hibernate_lazy_initializer", "handler", "id"})
 public class Template extends BaseBusEntity {
 
   @Id
   @Column(name = "ID", nullable = false, precision = 22)
-  @GeneratedValue(generator = "template_gen")
+  @TableGenerator
   private Long id;
 
   /** 模版名称 */
@@ -31,7 +30,7 @@ public class Template extends BaseBusEntity {
   private String sign;
 
   /** 模板号 */
-  @Column(name = "CODE")
+  @Column(name = "CODE", length = 120)
   private String code;
 
   /** 模版内容 */

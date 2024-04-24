@@ -10,20 +10,19 @@ import cn.asany.storage.data.service.FileService;
 import cn.asany.storage.data.service.MultipartUploadService;
 import cn.asany.storage.data.util.IdUtils;
 import cn.asany.storage.plugin.*;
-import lombok.extern.slf4j.Slf4j;
-import org.jfantasy.framework.util.common.ObjectUtil;
-import org.jfantasy.framework.util.common.StreamUtil;
-import org.jfantasy.framework.util.common.StringUtil;
-import org.jfantasy.framework.util.common.file.FileUtil;
-import org.jfantasy.framework.util.web.WebUtil;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.stream.Collectors;
+import lombok.extern.slf4j.Slf4j;
+import net.asany.jfantasy.framework.util.common.ObjectUtil;
+import net.asany.jfantasy.framework.util.common.StreamUtil;
+import net.asany.jfantasy.framework.util.common.StringUtil;
+import net.asany.jfantasy.framework.util.common.file.FileUtil;
+import net.asany.jfantasy.framework.util.web.WebUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * 文件上传服务
@@ -133,11 +132,11 @@ public class FileUploadService implements UploadService {
       throw new UploadException(e.getMessage());
     } finally {
       if (temp != null) {
-          try {
-              FileUtil.rm(temp);
-          } catch (IOException e) {
-              log.error(e.getMessage(), e);
-          }
+        try {
+          FileUtil.rm(temp);
+        } catch (IOException e) {
+          log.error(e.getMessage(), e);
+        }
       }
     }
   }

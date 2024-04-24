@@ -1,6 +1,6 @@
 package cn.asany.security.core.util;
 
-import org.jfantasy.framework.error.ValidationException;
+import net.asany.jfantasy.framework.error.ValidationException;
 
 /**
  * @author limaofeng

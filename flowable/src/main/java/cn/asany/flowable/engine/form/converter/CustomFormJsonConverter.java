@@ -4,7 +4,7 @@ import cn.asany.flowable.engine.form.model.CustomFormModel;
 import org.flowable.editor.form.converter.FlowableFormJsonException;
 import org.flowable.editor.form.converter.FormJsonConverter;
 import org.flowable.form.model.SimpleFormModel;
-import org.jfantasy.framework.jackson.JSON;
+import net.asany.jfantasy.framework.jackson.JSON;
 
 /**
  * 自定义表单模型转换器

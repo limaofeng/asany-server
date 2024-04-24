@@ -5,12 +5,12 @@ import cn.asany.autoconfigure.OrganizationAutoConfiguration;
 import graphql.kickstart.autoconfigure.tools.GraphQLJavaToolsAutoConfiguration;
 import graphql.kickstart.autoconfigure.web.servlet.GraphQLWebAutoConfiguration;
 import lombok.extern.slf4j.Slf4j;
+import net.asany.jfantasy.framework.dao.jpa.SimpleAnyJpaRepository;
+import net.asany.jfantasy.framework.security.oauth2.DefaultTokenServices;
+import net.asany.jfantasy.framework.security.oauth2.core.ClientDetailsService;
+import net.asany.jfantasy.framework.security.oauth2.core.TokenStore;
 import org.jfantasy.autoconfigure.GraphQLAutoConfiguration;
 import org.jfantasy.autoconfigure.OAuth2ResourceServerAutoConfiguration;
-import org.jfantasy.framework.dao.jpa.ComplexJpaRepository;
-import org.jfantasy.framework.security.oauth2.DefaultTokenServices;
-import org.jfantasy.framework.security.oauth2.core.ClientDetailsService;
-import org.jfantasy.framework.security.oauth2.core.TokenStore;
 import org.springframework.boot.actuate.autoconfigure.audit.AuditAutoConfiguration;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -38,7 +38,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
     basePackages = {
       "cn.asany.message.*.dao",
     },
-    repositoryBaseClass = ComplexJpaRepository.class)
+    repositoryBaseClass = SimpleAnyJpaRepository.class)
 @Import({
   AsanySecurityAutoConfiguration.class,
   OrganizationAutoConfiguration.class,
@@ -57,7 +57,7 @@ public class TestApplication {
 
   @Bean
   public DefaultTokenServices tokenServices(
-    TokenStore tokenStore, ClientDetailsService clientDetailsService, TaskExecutor taskExecutor) {
+      TokenStore tokenStore, ClientDetailsService clientDetailsService, TaskExecutor taskExecutor) {
     return new DefaultTokenServices(tokenStore, clientDetailsService, taskExecutor);
   }
 
@@ -65,5 +65,4 @@ public class TestApplication {
   public TestClientDetailsService testClientDetailsService() {
     return new TestClientDetailsService();
   }
-
 }

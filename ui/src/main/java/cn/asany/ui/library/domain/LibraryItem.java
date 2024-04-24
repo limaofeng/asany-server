@@ -7,13 +7,12 @@ import cn.asany.ui.resources.domain.Component;
 import cn.asany.ui.resources.domain.Icon;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.*;
-import org.hibernate.Hibernate;
-import org.hibernate.annotations.GenericGenerator;
-import org.jfantasy.framework.dao.BaseBusEntity;
-
 import java.util.List;
 import java.util.Objects;
+import lombok.*;
+import net.asany.jfantasy.framework.dao.BaseBusEntity;
+import net.asany.jfantasy.framework.dao.hibernate.annotations.TableGenerator;
+import org.hibernate.Hibernate;
 
 @Getter
 @Setter
@@ -29,8 +28,7 @@ import java.util.Objects;
 public class LibraryItem extends BaseBusEntity implements OplogDataCollector {
   @Id
   @Column(name = "ID")
-  @GeneratedValue(generator = "fantasy-sequence")
-  @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+  @TableGenerator
   private Long id;
 
   @ManyToOne(fetch = FetchType.LAZY)
@@ -58,18 +56,18 @@ public class LibraryItem extends BaseBusEntity implements OplogDataCollector {
   @Column(name = "RESOURCE_TYPE", length = 10)
   private String resourceType;
 
-//  @Any(
-//      metaColumn =
-//          @Column(name = "RESOURCE_TYPE", length = 10, insertable = false, updatable = false),
-//      fetch = FetchType.LAZY)
-//  @AnyMetaDef(
-//      idType = "long",
-//      metaType = "string",
-//      metaValues = {
-//        @MetaValue(targetEntity = Icon.class, value = Icon.RESOURCE_NAME),
-//        @MetaValue(targetEntity = Component.class, value = Component.RESOURCE_NAME)
-//      })
-//  @JoinColumn(name = "RESOURCE_ID", insertable = false, updatable = false)
+  //  @Any(
+  //      metaColumn =
+  //          @Column(name = "RESOURCE_TYPE", length = 10, insertable = false, updatable = false),
+  //      fetch = FetchType.LAZY)
+  //  @AnyMetaDef(
+  //      idType = "long",
+  //      metaType = "string",
+  //      metaValues = {
+  //        @MetaValue(targetEntity = Icon.class, value = Icon.RESOURCE_NAME),
+  //        @MetaValue(targetEntity = Component.class, value = Component.RESOURCE_NAME)
+  //      })
+  //  @JoinColumn(name = "RESOURCE_ID", insertable = false, updatable = false)
   private transient UIResource resource;
 
   /** 用于级联加载 */
@@ -129,5 +127,4 @@ public class LibraryItem extends BaseBusEntity implements OplogDataCollector {
   public int hashCode() {
     return getClass().hashCode();
   }
-
 }

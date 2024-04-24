@@ -4,8 +4,8 @@ import cn.asany.message.core.Notification;
 import graphql.kickstart.tools.GraphQLSubscriptionResolver;
 import graphql.schema.DataFetchingEnvironment;
 import java.util.List;
-import org.jfantasy.framework.security.LoginUser;
-import org.jfantasy.framework.security.SpringSecurityUtils;
+import net.asany.jfantasy.framework.security.LoginUser;
+import net.asany.jfantasy.framework.security.SpringSecurityUtils;
 import org.reactivestreams.Publisher;
 import org.springframework.stereotype.Component;
 

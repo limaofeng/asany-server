@@ -5,9 +5,9 @@ import cn.asany.storage.api.FileObject;
 import graphql.kickstart.tools.GraphQLResolver;
 import java.util.Set;
 import java.util.stream.Collectors;
-import org.jfantasy.framework.security.LoginUser;
-import org.jfantasy.framework.security.core.GrantedAuthority;
-import org.jfantasy.framework.security.oauth2.core.AbstractOAuth2Token;
+import net.asany.jfantasy.framework.security.LoginUser;
+import net.asany.jfantasy.framework.security.auth.core.AbstractAuthToken;
+import net.asany.jfantasy.framework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
 /**
@@ -26,7 +26,7 @@ public class LoginUserGraphQLResolver implements GraphQLResolver<LoginUser> {
   }
 
   public String token(LoginUser user) {
-    AbstractOAuth2Token accessToken = user.getAttribute("token");
+    AbstractAuthToken accessToken = user.getAttribute("token");
     return accessToken != null ? accessToken.getTokenValue() : null;
   }
 

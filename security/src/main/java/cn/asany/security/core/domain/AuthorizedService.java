@@ -2,9 +2,9 @@ package cn.asany.security.core.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import net.asany.jfantasy.framework.dao.BaseBusEntity;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.jfantasy.framework.dao.BaseBusEntity;
 
 /**
  * 服务

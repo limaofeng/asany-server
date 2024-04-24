@@ -1,9 +1,9 @@
 package cn.asany.security.auth.service;
 
 import cn.asany.security.auth.authentication.DingtalkAuthenticationToken;
-import org.jfantasy.framework.security.core.userdetails.SimpleUserDetailsService;
-import org.jfantasy.framework.security.core.userdetails.UserDetails;
-import org.jfantasy.framework.security.core.userdetails.UsernameNotFoundException;
+import net.asany.jfantasy.framework.security.core.userdetails.SimpleUserDetailsService;
+import net.asany.jfantasy.framework.security.core.userdetails.UserDetails;
+import net.asany.jfantasy.framework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
 @Component

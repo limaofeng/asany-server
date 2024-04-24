@@ -8,18 +8,18 @@ import cn.asany.ui.resources.domain.enums.ComponentScope;
 import cn.asany.ui.resources.domain.enums.ComponentType;
 import cn.asany.ui.resources.domain.toy.ComponentData;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
+import jakarta.persistence.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import jakarta.persistence.*;
 import lombok.*;
+import net.asany.jfantasy.framework.dao.BaseBusEntity;
+import net.asany.jfantasy.framework.dao.hibernate.annotations.TableGenerator;
+import net.asany.jfantasy.framework.dao.hibernate.converter.MapConverter;
+import net.asany.jfantasy.framework.util.common.ClassUtil;
 import org.hibernate.Hibernate;
-import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
-import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.dao.hibernate.converter.MapConverter;
-import org.jfantasy.framework.util.common.ClassUtil;
 
 /**
  * 组件
@@ -41,37 +41,45 @@ public class Component extends BaseBusEntity implements UIResource {
 
   @Id
   @Column(name = "ID", length = 50, updatable = false)
-  @GeneratedValue(generator = "fantasy-sequence")
-  @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+  @TableGenerator
   private Long id;
+
   /** 使用范围 */
   @Enumerated(EnumType.STRING)
   @Column(name = "SCOPE", length = 50, nullable = false)
   private ComponentScope scope;
+
   /** 图片 */
   @Column(name = "IMAGE", length = 500, columnDefinition = "JSON")
   @Type(FileUserType.class)
   private FileObject image;
+
   /** 组件类型 */
   @Enumerated(EnumType.STRING)
   @Column(name = "TYPE", length = 50)
   private ComponentType type;
+
   /** 名称 */
   @Column(name = "NAME", length = 150)
   private String name;
+
   /** 名称 */
   @Column(name = "TITLE", length = 150)
   private String title;
+
   /** 描述 */
   @Column(name = "DESCRIPTION")
   private String description;
+
   /** 组件模版 */
   @Column(name = "TEMPLATE")
   private String template;
+
   /** 组件数据 */
   @Convert(converter = ComponentDataConverter.class)
   @Column(name = "BLOCKS", columnDefinition = "JSON")
   private List<ComponentData> blocks;
+
   /** 元数据 */
   @Convert(converter = MapConverter.class)
   @Column(name = "METADATA", columnDefinition = "Text")

@@ -3,8 +3,8 @@ package cn.asany.message.core;
 import cn.asany.message.api.MSChannelConfig;
 import cn.asany.message.api.MessageChannelBuilder;
 import cn.asany.message.data.service.UserMessageService;
-import org.jfantasy.framework.security.LoginUser;
-import org.jfantasy.framework.security.core.userdetails.UserDetailsService;
+import net.asany.jfantasy.framework.security.LoginUser;
+import net.asany.jfantasy.framework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
 /**

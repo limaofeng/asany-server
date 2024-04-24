@@ -1,11 +1,11 @@
 package cn.asany.ui.library.domain;
 
 import cn.asany.ui.library.domain.enums.Operation;
-import java.util.List;
 import jakarta.persistence.*;
+import java.util.List;
 import lombok.*;
-import org.hibernate.annotations.GenericGenerator;
-import org.jfantasy.framework.dao.BaseBusEntity;
+import net.asany.jfantasy.framework.dao.BaseBusEntity;
+import net.asany.jfantasy.framework.dao.hibernate.annotations.TableGenerator;
 
 @Data
 @Builder
@@ -18,8 +18,7 @@ public class Oplog extends BaseBusEntity {
 
   @Id
   @Column(name = "ID")
-  @GeneratedValue(generator = "fantasy-sequence")
-  @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+  @TableGenerator
   private Long id;
 
   @Column(name = "CLAZZ", length = 200)

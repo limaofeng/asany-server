@@ -5,11 +5,11 @@ import cn.asany.storage.data.domain.FileDetail;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import lombok.extern.slf4j.Slf4j;
-import org.jfantasy.framework.dao.jpa.ComplexJpaRepository;
-import org.jfantasy.framework.error.IgnoreException;
+import net.asany.jfantasy.framework.dao.jpa.SimpleAnyJpaRepository;
+import net.asany.jfantasy.framework.error.IgnoreException;
 
 @Slf4j
-public class FileDetailDaoImpl extends ComplexJpaRepository<FileDetail, Long>
+public class FileDetailDaoImpl extends SimpleAnyJpaRepository<FileDetail, Long>
     implements FileDetailDao {
 
   public FileDetailDaoImpl(EntityManager entityManager) {

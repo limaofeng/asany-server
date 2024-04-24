@@ -2,15 +2,17 @@ package cn.asany.autoconfigure;
 
 import cn.asany.ui.library.graphql.type.ILibrary;
 import cn.asany.ui.library.graphql.type.IconLibrary;
-import org.jfantasy.framework.dao.jpa.ComplexJpaRepository;
-import org.jfantasy.graphql.SchemaParserDictionaryBuilder;
+import net.asany.jfantasy.framework.dao.jpa.SimpleAnyJpaRepository;
+import net.asany.jfantasy.graphql.SchemaParserDictionaryBuilder;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
-/** @author limaofeng */
+/**
+ * @author limaofeng
+ */
 @Configuration
 @EntityScan("cn.asany.ui.*.domain")
 @ComponentScan({
@@ -21,7 +23,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 })
 @EnableJpaRepositories(
     basePackages = "cn.asany.ui.*.dao",
-    repositoryBaseClass = ComplexJpaRepository.class)
+    repositoryBaseClass = SimpleAnyJpaRepository.class)
 public class UIAutoConfiguration {
 
   @Bean

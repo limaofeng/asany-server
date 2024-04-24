@@ -14,7 +14,7 @@ import javax.mail.internet.MimeMultipart;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.SneakyThrows;
-import org.jfantasy.framework.spring.validation.ValidationException;
+import net.asany.jfantasy.framework.spring.validation.ValidationException;
 
 @Builder
 @AllArgsConstructor

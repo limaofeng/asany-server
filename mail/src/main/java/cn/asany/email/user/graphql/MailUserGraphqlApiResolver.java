@@ -9,12 +9,12 @@ import graphql.kickstart.tools.GraphQLQueryResolver;
 import java.util.Optional;
 import java.util.Set;
 import org.apache.james.mailbox.exception.MailboxException;
-import org.jfantasy.framework.security.LoginUser;
-import org.jfantasy.framework.security.SpringSecurityUtils;
-import org.jfantasy.framework.util.common.StringUtil;
-import org.jfantasy.framework.util.regexp.RegexpConstant;
-import org.jfantasy.framework.util.regexp.RegexpUtil;
-import org.jfantasy.graphql.UpdateMode;
+import net.asany.jfantasy.framework.security.LoginUser;
+import net.asany.jfantasy.framework.security.SpringSecurityUtils;
+import net.asany.jfantasy.framework.util.common.StringUtil;
+import net.asany.jfantasy.framework.util.regexp.RegexpConstant;
+import net.asany.jfantasy.framework.util.regexp.RegexpUtil;
+import net.asany.jfantasy.graphql.UpdateMode;
 import org.springframework.stereotype.Component;
 
 @Component

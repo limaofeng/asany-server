@@ -4,7 +4,7 @@ import cn.asany.autoconfigure.properties.SmsProviderProperties;
 import cn.asany.sms.provider.ShortMessageServiceProviderFactory;
 import cn.asany.sms.service.MessageService;
 import lombok.extern.slf4j.Slf4j;
-import org.jfantasy.framework.dao.jpa.ComplexJpaRepository;
+import net.asany.jfantasy.framework.dao.jpa.SimpleAnyJpaRepository;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -29,7 +29,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 })
 @EnableJpaRepositories(
     basePackages = "cn.asany.sms.dao",
-    repositoryBaseClass = ComplexJpaRepository.class)
+    repositoryBaseClass = SimpleAnyJpaRepository.class)
 @EnableConfigurationProperties({SmsProviderProperties.class})
 public class SmsAutoConfiguration {
 

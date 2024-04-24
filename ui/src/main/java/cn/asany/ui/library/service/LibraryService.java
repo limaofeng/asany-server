@@ -13,7 +13,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import org.jfantasy.framework.dao.jpa.PropertyFilter;
+import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,9 +44,7 @@ public class LibraryService {
   public List<Library> libraries(PropertyFilter filter, LibraryType type, boolean with) {
     if (LibraryType.ICONS == type) {
       filter.equal("type", LibraryType.ICONS);
-      return with
-          ? this.libraryDao.findAllWithIcon(filter)
-          : this.libraryDao.findAll(filter);
+      return with ? this.libraryDao.findAllWithIcon(filter) : this.libraryDao.findAll(filter);
     }
     return new ArrayList<>();
   }

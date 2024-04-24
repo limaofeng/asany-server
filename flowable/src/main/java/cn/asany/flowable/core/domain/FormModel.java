@@ -7,7 +7,7 @@ import java.util.List;
 import org.flowable.form.model.FormField;
 import org.flowable.form.model.FormOutcome;
 import org.flowable.ui.modeler.domain.Model;
-import org.jfantasy.framework.jackson.JSON;
+import net.asany.jfantasy.framework.jackson.JSON;
 
 /**
  * 表单模型

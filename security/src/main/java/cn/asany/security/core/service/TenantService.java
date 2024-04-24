@@ -5,7 +5,7 @@ import cn.asany.security.core.dao.TenantDao;
 import cn.asany.security.core.domain.AccessControlSettings;
 import cn.asany.security.core.domain.Tenant;
 import java.util.Optional;
-import org.jfantasy.framework.dao.jpa.PropertyFilter;
+import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;

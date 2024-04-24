@@ -4,13 +4,13 @@ import java.io.Serializable;
 import java.util.Arrays;
 import org.hibernate.EmptyInterceptor;
 import org.hibernate.type.Type;
-import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.dao.SoftDeletableBaseBusEntity;
-import org.jfantasy.framework.security.LoginUser;
-import org.jfantasy.framework.security.SpringSecurityUtils;
-import org.jfantasy.framework.util.common.DateUtil;
-import org.jfantasy.framework.util.common.ObjectUtil;
-import org.jfantasy.framework.util.ognl.OgnlUtil;
+import net.asany.jfantasy.framework.dao.BaseBusEntity;
+import net.asany.jfantasy.framework.dao.SoftDeletableBaseBusEntity;
+import net.asany.jfantasy.framework.security.LoginUser;
+import net.asany.jfantasy.framework.security.SpringSecurityUtils;
+import net.asany.jfantasy.framework.util.common.DateUtil;
+import net.asany.jfantasy.framework.util.common.ObjectUtil;
+import net.asany.jfantasy.framework.util.ognl.OgnlUtil;
 
 /**
  * 填充系统默认字段

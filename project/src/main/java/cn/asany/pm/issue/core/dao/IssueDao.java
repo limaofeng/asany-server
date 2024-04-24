@@ -3,7 +3,7 @@ package cn.asany.pm.issue.core.dao;
 import cn.asany.pm.issue.core.domain.Issue;
 import java.util.List;
 import java.util.Map;
-import org.jfantasy.framework.dao.jpa.JpaRepository;
+import net.asany.jfantasy.framework.dao.jpa.AnyJpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
  * @date 2022/7/28 9:12 9:12
  */
 @Repository
-public interface IssueDao extends JpaRepository<Issue, Long> {
+public interface IssueDao extends AnyJpaRepository<Issue, Long> {
 
   @Query(
       nativeQuery = true,

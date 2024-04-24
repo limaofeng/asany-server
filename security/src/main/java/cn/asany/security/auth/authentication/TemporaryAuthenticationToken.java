@@ -1,6 +1,6 @@
 package cn.asany.security.auth.authentication;
 
-import org.jfantasy.framework.security.authentication.SimpleAuthenticationToken;
+import net.asany.jfantasy.framework.security.authentication.SimpleAuthenticationToken;
 
 /**
  * 临时的身份验证令牌

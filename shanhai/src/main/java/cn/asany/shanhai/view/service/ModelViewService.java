@@ -5,7 +5,7 @@ import cn.asany.shanhai.view.domain.ModelView;
 import cn.asany.shanhai.view.domain.enums.ModelViewType;
 import java.util.List;
 import java.util.Optional;
-import org.jfantasy.framework.dao.jpa.PropertyFilter;
+import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 

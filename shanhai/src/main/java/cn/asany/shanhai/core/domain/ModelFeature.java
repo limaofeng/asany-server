@@ -3,7 +3,7 @@ package cn.asany.shanhai.core.domain;
 import jakarta.persistence.*;
 import java.util.List;
 import lombok.*;
-import org.jfantasy.framework.dao.BaseBusEntity;
+import net.asany.jfantasy.framework.dao.BaseBusEntity;
 
 @Data
 @Builder

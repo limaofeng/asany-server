@@ -2,11 +2,11 @@ package cn.asany.storage.data.listener;
 
 import cn.asany.storage.core.StorageResolver;
 import cn.asany.storage.data.domain.StorageConfig;
+import net.asany.jfantasy.framework.dao.hibernate.listener.AbstractChangedListener;
 import org.hibernate.event.spi.EventType;
 import org.hibernate.event.spi.PostDeleteEvent;
 import org.hibernate.event.spi.PostInsertEvent;
 import org.hibernate.event.spi.PostUpdateEvent;
-import org.jfantasy.framework.dao.hibernate.listener.AbstractChangedListener;
 import org.springframework.stereotype.Component;
 
 @Component

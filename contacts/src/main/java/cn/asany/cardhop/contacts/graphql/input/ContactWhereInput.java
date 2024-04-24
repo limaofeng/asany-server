@@ -3,7 +3,7 @@ package cn.asany.cardhop.contacts.graphql.input;
 import cn.asany.cardhop.contacts.domain.Contact;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.jfantasy.graphql.inputs.WhereInput;
+import net.asany.jfantasy.graphql.inputs.WhereInput;
 
 /**
  * 联系人过滤

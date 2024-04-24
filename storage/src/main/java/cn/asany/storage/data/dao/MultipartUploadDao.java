@@ -1,8 +1,8 @@
 package cn.asany.storage.data.dao;
 
 import cn.asany.storage.data.domain.MultipartUpload;
-import org.jfantasy.framework.dao.jpa.JpaRepository;
+import net.asany.jfantasy.framework.dao.jpa.AnyJpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface MultipartUploadDao extends JpaRepository<MultipartUpload, Long> {}
+public interface MultipartUploadDao extends AnyJpaRepository<MultipartUpload, Long> {}

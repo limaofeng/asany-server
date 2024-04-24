@@ -9,7 +9,7 @@ import graphql.kickstart.tools.GraphQLResolver;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-import org.jfantasy.framework.security.core.GrantedAuthority;
+import net.asany.jfantasy.framework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
 /**

@@ -5,8 +5,8 @@ import cn.asany.sunrise.calendar.domain.toys.CalendarEventDateStat;
 import cn.asany.sunrise.calendar.domain.toys.DateRange;
 import java.util.Date;
 import java.util.List;
-import org.jfantasy.framework.dao.jpa.JpaRepository;
-import org.jfantasy.framework.dao.jpa.PropertyFilter;
+import net.asany.jfantasy.framework.dao.jpa.AnyJpaRepository;
+import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.Modifying;
@@ -18,7 +18,7 @@ import org.springframework.stereotype.Repository;
  * @author limaofeng
  */
 @Repository
-public interface CalendarEventDao extends JpaRepository<CalendarEvent, Long> {
+public interface CalendarEventDao extends AnyJpaRepository<CalendarEvent, Long> {
   /**
    * 删除事件
    *
@@ -47,6 +47,7 @@ public interface CalendarEventDao extends JpaRepository<CalendarEvent, Long> {
    * @return List<CalendarEventDateStat>
    */
   List<CalendarEventDateStat> calendarEventDatesByCalendar(Long calendar, Date starts, Date ends);
+
   /**
    * 日历集统计
    *

@@ -2,7 +2,6 @@ package cn.asany.sms.provider;
 
 import cn.asany.base.sms.SMSProviderConfig;
 import cn.asany.base.sms.SendFailedException;
-import cn.asany.base.sms.ShortMessageSendService;
 import cn.asany.base.sms.ShortMessageServiceProvider;
 import com.aliyun.dysmsapi20170525.Client;
 import com.aliyun.dysmsapi20170525.models.SendSmsRequest;
@@ -11,8 +10,8 @@ import com.aliyun.teaopenapi.models.Config;
 import com.aliyun.teautil.models.RuntimeOptions;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
-import org.jfantasy.framework.jackson.JSON;
-import org.jfantasy.framework.util.common.StringUtil;
+import net.asany.jfantasy.framework.jackson.JSON;
+import net.asany.jfantasy.framework.util.common.StringUtil;
 
 /**
  * 阿里云短信发送服务

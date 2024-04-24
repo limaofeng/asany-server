@@ -17,7 +17,7 @@ import cn.asany.storage.api.UploadService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.jfantasy.framework.spring.SpringBeanUtils;
+import net.asany.jfantasy.framework.spring.SpringBeanUtils;
 import org.mapstruct.*;
 
 /**
@@ -177,6 +177,7 @@ public interface NuwaOrganizationConverter {
   default Position toPositionFromName(String name) {
     return Position.builder().name(name).build();
   }
+
   /**
    * 电话转换
    *

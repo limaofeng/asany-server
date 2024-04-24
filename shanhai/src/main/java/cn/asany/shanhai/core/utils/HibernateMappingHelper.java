@@ -3,7 +3,7 @@ package cn.asany.shanhai.core.utils;
 import cn.asany.shanhai.core.domain.Model;
 import com.github.jknack.handlebars.Template;
 import lombok.SneakyThrows;
-import org.jfantasy.framework.util.HandlebarsTemplateUtils;
+import net.asany.jfantasy.framework.util.HandlebarsTemplateUtils;
 import org.springframework.beans.factory.InitializingBean;
 
 public class HibernateMappingHelper implements InitializingBean {

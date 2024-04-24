@@ -8,8 +8,8 @@ import cn.asany.security.core.domain.enums.PermissionPolicyType;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.jfantasy.framework.dao.jpa.PropertyFilter;
-import org.jfantasy.framework.spring.mvc.error.NotFoundException;
+import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
+import net.asany.jfantasy.framework.spring.mvc.error.NotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -25,6 +25,7 @@ public class PermissionPolicyService {
 
   private final PermissionPolicyDao permissionPolicyDao;
   private final PermissionStatementDao permissionStatementDao;
+
   //  private final PermissionService permissionService;
   //  private final GrantPermissionService grantPermissionService;
 

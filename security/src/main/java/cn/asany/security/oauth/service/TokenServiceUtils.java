@@ -4,16 +4,16 @@ import cn.asany.security.oauth.convert.AccessTokenConverter;
 import cn.asany.security.oauth.domain.AccessToken;
 import cn.asany.security.oauth.vo.PersonalAccessToken;
 import java.util.Optional;
-import org.jfantasy.framework.error.ValidationException;
-import org.jfantasy.framework.security.SecurityContextHolder;
-import org.jfantasy.framework.security.authentication.Authentication;
-import org.jfantasy.framework.security.oauth2.DefaultTokenServices;
-import org.jfantasy.framework.security.oauth2.JwtTokenPayload;
-import org.jfantasy.framework.security.oauth2.core.OAuth2AccessToken;
-import org.jfantasy.framework.security.oauth2.core.OAuth2Authentication;
-import org.jfantasy.framework.security.oauth2.core.OAuth2AuthenticationDetails;
-import org.jfantasy.framework.security.oauth2.core.TokenType;
-import org.jfantasy.framework.security.oauth2.jwt.JwtUtils;
+import net.asany.jfantasy.framework.error.ValidationException;
+import net.asany.jfantasy.framework.security.SecurityContextHolder;
+import net.asany.jfantasy.framework.security.auth.TokenType;
+import net.asany.jfantasy.framework.security.auth.oauth2.DefaultTokenServices;
+import net.asany.jfantasy.framework.security.auth.oauth2.JwtTokenPayload;
+import net.asany.jfantasy.framework.security.auth.oauth2.core.OAuth2AccessToken;
+import net.asany.jfantasy.framework.security.auth.oauth2.core.OAuth2Authentication;
+import net.asany.jfantasy.framework.security.auth.oauth2.core.OAuth2AuthenticationDetails;
+import net.asany.jfantasy.framework.security.auth.oauth2.jwt.JwtUtils;
+import net.asany.jfantasy.framework.security.authentication.Authentication;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -36,7 +36,7 @@ public class TokenServiceUtils {
   public PersonalAccessToken createPersonalAccessToken(String clientId, String name) {
     OAuth2AuthenticationDetails oAuth2AuthenticationDetails = new OAuth2AuthenticationDetails();
     oAuth2AuthenticationDetails.setClientId(clientId);
-    oAuth2AuthenticationDetails.setTokenType(TokenType.PERSONAL);
+    oAuth2AuthenticationDetails.setTokenType(TokenType.PERSONAL_ACCESS_TOKEN);
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     OAuth2Authentication oAuth2Authentication =
         new OAuth2Authentication(authentication, oAuth2AuthenticationDetails);
@@ -44,7 +44,7 @@ public class TokenServiceUtils {
     OAuth2AccessToken accessToken = tokenServices.createAccessToken(oAuth2Authentication);
     Optional<AccessToken> optionalAccessToken =
         accessTokenService.getAccessToken(accessToken.getTokenValue());
-    if (!optionalAccessToken.isPresent()) {
+    if (optionalAccessToken.isEmpty()) {
       throw new ValidationException("创建 Token 失败");
     }
     return accessTokenConverter.toPersonalAccessToken(optionalAccessToken.get());
@@ -53,7 +53,7 @@ public class TokenServiceUtils {
   public boolean revokeToken(Long uid, String token) {
     JwtTokenPayload payload = JwtUtils.payload(token);
     OAuth2AccessToken accessToken = this.tokenServices.readAccessToken(token);
-    if (!uid.equals(payload.getUid())) {
+    if (!uid.equals(payload.getUserId())) {
       return false;
     }
     return this.tokenServices.revokeToken(accessToken.getTokenValue());
@@ -65,7 +65,7 @@ public class TokenServiceUtils {
 
     if (accessToken == null
         || !accessToken.getUser().getId().equals(uid)
-        || TokenType.SESSION != accessToken.getTokenType()) {
+        || TokenType.SESSION_ID != accessToken.getTokenType()) {
       return false;
     }
 
@@ -78,7 +78,7 @@ public class TokenServiceUtils {
 
     if (accessToken == null
         || !accessToken.getUser().getId().equals(uid)
-        || TokenType.PERSONAL != accessToken.getTokenType()) {
+        || TokenType.PERSONAL_ACCESS_TOKEN != accessToken.getTokenType()) {
       return false;
     }
 

@@ -8,7 +8,7 @@ import cn.asany.storage.data.service.StorageService;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.jfantasy.framework.jackson.JSON;
+import net.asany.jfantasy.framework.jackson.JSON;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,7 +35,7 @@ public class DefaultStorageResolver implements StorageResolver {
   @Transactional(readOnly = true)
   public Storage resolve(String id) {
     if (storages.containsKey(id)) {
-        return storages.get(id);
+      return storages.get(id);
     }
     StorageConfig config = storageService.get(id);
     return resolve(config.getProperties());
@@ -44,6 +44,7 @@ public class DefaultStorageResolver implements StorageResolver {
   @Override
   public Storage resolve(IStorageConfig config) {
     for (@SuppressWarnings("rawtypes") StorageBuilder builder : builders) {
+      //noinspection unchecked
       if (builder.supports(config.getClass())) {
         @SuppressWarnings("unchecked")
         Storage storage = builder.build(config);

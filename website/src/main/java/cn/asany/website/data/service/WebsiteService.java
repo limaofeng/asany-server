@@ -3,7 +3,7 @@ package cn.asany.website.data.service;
 import cn.asany.website.data.dao.WebsiteDao;
 import cn.asany.website.data.domain.Website;
 import java.util.List;
-import org.jfantasy.framework.dao.jpa.PropertyFilter;
+import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 

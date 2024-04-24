@@ -1,14 +1,14 @@
 package cn.asany.cms.article.dao;
 
 import cn.asany.cms.article.domain.ArticleCategory;
-import org.jfantasy.framework.dao.jpa.JpaRepository;
+import net.asany.jfantasy.framework.dao.jpa.AnyJpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ArticleCategoryDao extends JpaRepository<ArticleCategory, Long> {
+public interface ArticleCategoryDao extends AnyJpaRepository<ArticleCategory, Long> {
 
   @Modifying
   @Query(

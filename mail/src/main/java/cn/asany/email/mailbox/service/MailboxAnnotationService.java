@@ -5,7 +5,7 @@ import cn.asany.email.mailbox.domain.JPAMailboxAnnotationId;
 import cn.asany.email.mailbox.domain.JamesMailboxAnnotation;
 import java.util.List;
 import java.util.Optional;
-import org.jfantasy.framework.dao.jpa.PropertyFilter;
+import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.springframework.stereotype.Service;
 
 @Service

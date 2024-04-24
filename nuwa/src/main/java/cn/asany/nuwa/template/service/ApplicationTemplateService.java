@@ -8,11 +8,11 @@ import cn.asany.nuwa.template.domain.ApplicationTemplateRoute;
 import cn.asany.ui.resources.dao.ComponentDao;
 import cn.asany.ui.resources.domain.Component;
 import cn.asany.ui.resources.domain.enums.ComponentScope;
+import jakarta.transaction.Transactional;
 import java.util.*;
 import java.util.stream.Collectors;
-import javax.transaction.Transactional;
-import org.jfantasy.framework.dao.jpa.PropertyFilter;
-import org.jfantasy.framework.util.common.ObjectUtil;
+import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
+import net.asany.jfantasy.framework.util.common.ObjectUtil;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -42,8 +42,7 @@ public class ApplicationTemplateService {
             PropertyFilter.newFilter()
                 .equal("application.id", applicationId)
                 .equal("component.scope", ComponentScope.ROUTE)
-                .isNotNull("component")
-                );
+                .isNotNull("component"));
     Set<Long> componentIds =
         routes.stream().map(item -> item.getComponent().getId()).collect(Collectors.toSet());
     // 删除应用模版

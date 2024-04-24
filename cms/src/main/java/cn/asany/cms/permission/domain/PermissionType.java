@@ -2,7 +2,7 @@ package cn.asany.cms.permission.domain;
 
 import java.util.List;
 import lombok.*;
-import org.jfantasy.framework.dao.BaseBusEntity;
+import net.asany.jfantasy.framework.dao.BaseBusEntity;
 
 /**
  * @author: guoyong
@@ -23,6 +23,7 @@ public class PermissionType extends BaseBusEntity {
 
   /** 权限分类编码 */
   private String id;
+
   /** 权限分类名称 */
   private String name;
 

@@ -8,16 +8,16 @@ import cn.asany.im.error.OpenIMServerAPIException;
 import cn.asany.im.error.ServerException;
 import cn.asany.im.user.service.vo.*;
 import cn.asany.im.utils.OpenIMUtils;
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.http.exceptions.UnirestException;
 import java.util.Collections;
 import java.util.List;
+import kong.unirest.HttpResponse;
+import kong.unirest.Unirest;
+import kong.unirest.UnirestException;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.jfantasy.framework.jackson.JSON;
-import org.jfantasy.framework.util.common.ObjectUtil;
-import org.jfantasy.framework.util.common.StringUtil;
+import net.asany.jfantasy.framework.jackson.JSON;
+import net.asany.jfantasy.framework.util.common.ObjectUtil;
+import net.asany.jfantasy.framework.util.common.StringUtil;
 import org.springframework.stereotype.Service;
 
 /**
@@ -34,7 +34,6 @@ public class UserService {
   private final String secret;
   private final AdminUser admin;
 
-  @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
   public UserService(String url, String secret, AdminUser admin) {
     this.url = url;
     this.secret = secret;

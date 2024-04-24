@@ -1,8 +1,8 @@
 package cn.asany.security.core.dao;
 
 import cn.asany.security.core.domain.Permission;
-import org.jfantasy.framework.dao.jpa.JpaRepository;
+import net.asany.jfantasy.framework.dao.jpa.AnyJpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface PermissionDao extends JpaRepository<Permission, Long> {}
+public interface PermissionDao extends AnyJpaRepository<Permission, Long> {}

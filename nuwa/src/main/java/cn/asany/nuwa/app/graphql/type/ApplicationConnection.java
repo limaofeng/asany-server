@@ -4,8 +4,8 @@ import cn.asany.nuwa.app.domain.Application;
 import java.util.List;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.jfantasy.graphql.Edge;
-import org.jfantasy.graphql.types.BaseConnection;
+import net.asany.jfantasy.graphql.Edge;
+import net.asany.jfantasy.graphql.types.BaseConnection;
 
 /**
  * 应用分页对象

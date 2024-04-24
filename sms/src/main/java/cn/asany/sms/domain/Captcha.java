@@ -3,8 +3,8 @@ package cn.asany.sms.domain;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
+import net.asany.jfantasy.framework.dao.BaseBusEntity;
 import org.hibernate.annotations.GenericGenerator;
-import org.jfantasy.framework.dao.BaseBusEntity;
 
 /**
  * 短信验证码
@@ -24,8 +24,8 @@ import org.jfantasy.framework.dao.BaseBusEntity;
 public class Captcha extends BaseBusEntity {
 
   @Id
-  @GeneratedValue(generator = "hibernate-uuid")
-  @GenericGenerator(name = "hibernate-uuid", strategy = "uuid")
+  @GeneratedValue(generator = "UUID")
+  @GenericGenerator(name = "UUID")
   @Column(name = "ID", nullable = false, updatable = false, length = 32)
   private String id;
 

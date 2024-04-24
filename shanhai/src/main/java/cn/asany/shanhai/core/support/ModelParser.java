@@ -32,8 +32,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
-import org.jfantasy.framework.dao.mybatis.keygen.util.DataBaseKeyGenerator;
-import org.jfantasy.framework.dao.util.JdbcUtils;
+import net.asany.jfantasy.framework.dao.mybatis.keygen.util.DataBaseKeyGenerator;
+import net.asany.jfantasy.framework.dao.util.JdbcUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StopWatch;
 

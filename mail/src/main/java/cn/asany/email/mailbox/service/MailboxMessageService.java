@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 import org.apache.james.mailbox.DefaultMailboxes;
 import org.apache.james.mailbox.MessageUid;
 import org.apache.james.mailbox.store.mail.model.Property;
-import org.jfantasy.framework.dao.jpa.PropertyFilter;
+import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

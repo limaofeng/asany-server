@@ -1,8 +1,8 @@
 package cn.asany.cms.content.dao;
 
 import cn.asany.cms.content.domain.VideoContent;
-import org.jfantasy.framework.dao.jpa.JpaRepository;
+import net.asany.jfantasy.framework.dao.jpa.AnyJpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface VideoContentDao extends JpaRepository<VideoContent, Long> {}
+public interface VideoContentDao extends AnyJpaRepository<VideoContent, Long> {}

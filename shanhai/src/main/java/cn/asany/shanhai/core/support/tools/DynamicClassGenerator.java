@@ -10,14 +10,14 @@ import graphql.kickstart.tools.GraphQLResolver;
 import java.util.List;
 import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
-import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.util.FantasyClassLoader;
-import org.jfantasy.framework.util.asm.AsmUtil;
-import org.jfantasy.framework.util.asm.MethodInfo;
-import org.jfantasy.framework.util.asm.Property;
-import org.jfantasy.framework.util.common.ClassUtil;
-import org.jfantasy.graphql.inputs.WhereInput;
-import org.jfantasy.graphql.types.BaseConnection;
+import net.asany.jfantasy.framework.dao.BaseBusEntity;
+import net.asany.jfantasy.framework.util.FantasyClassLoader;
+import net.asany.jfantasy.framework.util.asm.AsmUtil;
+import net.asany.jfantasy.framework.util.asm.MethodInfo;
+import net.asany.jfantasy.framework.util.asm.Property;
+import net.asany.jfantasy.framework.util.common.ClassUtil;
+import net.asany.jfantasy.graphql.inputs.WhereInput;
+import net.asany.jfantasy.graphql.types.BaseConnection;
 import org.objectweb.asm.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -578,7 +578,7 @@ public class DynamicClassGenerator {
             + entityClass.getName().replace(".", "/")
             + ";>;",
         Object.class.getName(),
-        new Class[] {org.jfantasy.graphql.Edge.class},
+        new Class[] {net.asany.jfantasy.graphql.Edge.class},
         properties,
         new MethodInfo[] {
           MethodInfo.builder()

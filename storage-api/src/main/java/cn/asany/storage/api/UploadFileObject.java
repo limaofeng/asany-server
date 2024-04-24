@@ -7,7 +7,7 @@ import java.io.InputStream;
 import java.util.Date;
 import java.util.List;
 import lombok.Getter;
-import org.jfantasy.framework.util.common.StringUtil;
+import net.asany.jfantasy.framework.util.common.StringUtil;
 
 /**
  * 文件对象

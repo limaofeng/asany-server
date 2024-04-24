@@ -1,7 +1,7 @@
 package cn.asany.pim.core.dao;
 
 import cn.asany.pim.core.domain.Device;
-import org.jfantasy.framework.dao.jpa.JpaRepository;
+import net.asany.jfantasy.framework.dao.jpa.AnyJpaRepository;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -10,4 +10,4 @@ import org.springframework.stereotype.Repository;
  * @author limaofeng
  */
 @Repository("pim.deviceDao")
-public interface DeviceDao extends JpaRepository<Device, Long> {}
+public interface DeviceDao extends AnyJpaRepository<Device, Long> {}

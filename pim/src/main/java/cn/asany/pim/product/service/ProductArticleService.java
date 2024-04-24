@@ -6,12 +6,12 @@ import cn.asany.pim.product.dao.ProductArticleDao;
 import cn.asany.pim.product.domain.ProductArticle;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.jfantasy.framework.dao.MatchType;
-import org.jfantasy.framework.dao.jpa.JpaDefaultPropertyFilter;
-import org.jfantasy.framework.dao.jpa.PropertyFilter;
-import org.jfantasy.framework.dao.jpa.PropertyPredicate;
-import org.jfantasy.framework.util.common.ObjectUtil;
-import org.jfantasy.framework.util.common.StringUtil;
+import net.asany.jfantasy.framework.dao.MatchType;
+import net.asany.jfantasy.framework.dao.jpa.JpaDefaultPropertyFilter;
+import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
+import net.asany.jfantasy.framework.dao.jpa.PropertyPredicate;
+import net.asany.jfantasy.framework.util.common.ObjectUtil;
+import net.asany.jfantasy.framework.util.common.StringUtil;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 

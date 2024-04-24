@@ -5,11 +5,11 @@ import cn.asany.cms.learn.domain.Learner;
 import cn.asany.cms.learn.domain.Lesson;
 import cn.asany.cms.learn.domain.LessonRecord;
 import java.util.List;
-import org.jfantasy.framework.dao.jpa.JpaRepository;
+import net.asany.jfantasy.framework.dao.jpa.AnyJpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface LessonRecordDao extends JpaRepository<LessonRecord, Long> {
+public interface LessonRecordDao extends AnyJpaRepository<LessonRecord, Long> {
 
   /**
    * 查询某用户的所有学习记录

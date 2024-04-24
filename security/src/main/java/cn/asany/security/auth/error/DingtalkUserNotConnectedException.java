@@ -1,7 +1,7 @@
 package cn.asany.security.auth.error;
 
 import java.util.Map;
-import org.jfantasy.framework.error.ValidationException;
+import net.asany.jfantasy.framework.error.ValidationException;
 
 public class DingtalkUserNotConnectedException extends ValidationException {
 

@@ -6,9 +6,9 @@ import org.flowable.engine.TaskService;
 import org.flowable.task.api.TaskInfoQuery;
 import org.flowable.task.api.TaskQuery;
 import org.flowable.task.api.history.HistoricTaskInstanceQuery;
-import org.jfantasy.framework.dao.MatchType;
-import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
-import org.jfantasy.framework.spring.SpringBeanUtils;
+import net.asany.jfantasy.framework.dao.MatchType;
+import net.asany.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
+import net.asany.jfantasy.framework.spring.SpringBeanUtils;
 
 /**
  * 任务查询过滤器

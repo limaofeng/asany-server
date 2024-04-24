@@ -4,7 +4,7 @@ import cn.asany.cms.learn.domain.Learner;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.jfantasy.graphql.inputs.WhereInput;
+import net.asany.jfantasy.graphql.inputs.WhereInput;
 
 /**
  * 学习者范围查询条件
@@ -46,5 +46,4 @@ public class LearnerScopeWhereInput extends WhereInput<LearnerScopeWhereInput, L
       filter.notEqual("course.learners.learningProgress", COMPLETE);
     }
   }
-
 }

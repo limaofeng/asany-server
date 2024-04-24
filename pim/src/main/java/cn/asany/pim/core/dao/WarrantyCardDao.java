@@ -1,8 +1,8 @@
 package cn.asany.pim.core.dao;
 
 import cn.asany.pim.core.domain.WarrantyCard;
-import org.jfantasy.framework.dao.jpa.JpaRepository;
+import net.asany.jfantasy.framework.dao.jpa.AnyJpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface WarrantyCardDao extends JpaRepository<WarrantyCard, Long> {}
+public interface WarrantyCardDao extends AnyJpaRepository<WarrantyCard, Long> {}

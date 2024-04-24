@@ -3,7 +3,7 @@ package cn.asany.organization.employee.dao;
 import cn.asany.organization.employee.domain.Employee;
 import cn.asany.organization.employee.domain.EmployeeAddress;
 import java.util.List;
-import org.jfantasy.framework.dao.jpa.JpaRepository;
+import net.asany.jfantasy.framework.dao.jpa.AnyJpaRepository;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
  * @date 2022/7/28 9:12 9:12
  */
 @Repository
-public interface EmployeeAddressDao extends JpaRepository<EmployeeAddress, Long> {
+public interface EmployeeAddressDao extends AnyJpaRepository<EmployeeAddress, Long> {
 
   public List<EmployeeAddress> findByEmployeeAndLabel(Employee employee, String label);
 

@@ -1,22 +1,17 @@
 package cn.asany.drive.domain;
 
-import cn.asany.base.common.Ownership;
 import cn.asany.drive.domain.enums.CloudDriveType;
-import cn.asany.organization.core.domain.Organization;
-import cn.asany.organization.employee.domain.Employee;
-import cn.asany.security.core.domain.User;
 import cn.asany.storage.data.domain.Space;
 import jakarta.persistence.*;
 import java.util.Objects;
 import lombok.*;
+import net.asany.jfantasy.framework.dao.BaseBusEntity;
+import net.asany.jfantasy.framework.dao.hibernate.annotations.TableGenerator;
 import org.hibernate.Hibernate;
-import org.hibernate.annotations.Any;
-//import org.hibernate.annotations.AnyMetaDef;
-import org.hibernate.mapping.Any.MetaValue;
-import org.hibernate.annotations.GenericGenerator;
-//import org.hibernate.annotations.MetaValue;
-import org.hibernate.mapping.Any.MetaValue;
-import org.jfantasy.framework.dao.BaseBusEntity;
+
+// import org.hibernate.annotations.AnyMetaDef;
+
+// import org.hibernate.annotations.MetaValue;
 
 @Getter
 @Setter
@@ -34,8 +29,7 @@ import org.jfantasy.framework.dao.BaseBusEntity;
 public class CloudDrive extends BaseBusEntity {
   @Id
   @Column(name = "ID", nullable = false, updatable = false, precision = 22)
-  @GeneratedValue(generator = "fantasy-sequence")
-  @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+  @TableGenerator
   private Long id;
 
   /** 名称 */

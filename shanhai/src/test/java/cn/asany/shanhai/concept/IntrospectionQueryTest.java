@@ -2,8 +2,8 @@ package cn.asany.shanhai.concept;
 
 import cn.asany.shanhai.TestApplication;
 import lombok.extern.slf4j.Slf4j;
-import org.jfantasy.graphql.client.GraphQLClient;
-import org.jfantasy.graphql.client.GraphQLTemplate;
+import net.asany.jfantasy.graphql.client.GraphQLClient;
+import net.asany.jfantasy.graphql.client.GraphQLTemplate;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 

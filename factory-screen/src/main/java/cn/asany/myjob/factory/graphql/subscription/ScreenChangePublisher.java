@@ -1,7 +1,7 @@
 package cn.asany.myjob.factory.graphql.subscription;
 
 import cn.asany.myjob.factory.domain.Screen;
-import org.jfantasy.graphql.publishers.BasePublisher;
+import net.asany.jfantasy.graphql.publishers.BasePublisher;
 import org.springframework.stereotype.Component;
 
 /**

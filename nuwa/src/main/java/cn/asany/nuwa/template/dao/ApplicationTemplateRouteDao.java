@@ -1,9 +1,9 @@
 package cn.asany.nuwa.template.dao;
 
 import cn.asany.nuwa.template.domain.ApplicationTemplateRoute;
-import org.jfantasy.framework.dao.jpa.JpaRepository;
+import net.asany.jfantasy.framework.dao.jpa.AnyJpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ApplicationTemplateRouteDao
-    extends JpaRepository<ApplicationTemplateRoute, Long> {}
+    extends AnyJpaRepository<ApplicationTemplateRoute, Long> {}

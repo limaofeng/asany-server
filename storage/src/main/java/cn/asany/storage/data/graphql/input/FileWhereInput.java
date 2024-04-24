@@ -4,7 +4,7 @@ import cn.asany.storage.data.domain.FileDetail;
 import cn.asany.storage.data.util.IdUtils;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.jfantasy.graphql.inputs.WhereInput;
+import net.asany.jfantasy.graphql.inputs.WhereInput;
 
 @Data
 @EqualsAndHashCode(callSuper = true)

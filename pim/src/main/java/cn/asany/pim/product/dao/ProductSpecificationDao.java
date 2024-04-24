@@ -1,8 +1,8 @@
 package cn.asany.pim.product.dao;
 
 import cn.asany.pim.product.domain.ProductSpecification;
-import org.jfantasy.framework.dao.jpa.JpaRepository;
+import net.asany.jfantasy.framework.dao.jpa.AnyJpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository("pim.productSpecificationDao")
-public interface ProductSpecificationDao extends JpaRepository<ProductSpecification, Long> {}
+public interface ProductSpecificationDao extends AnyJpaRepository<ProductSpecification, Long> {}

@@ -6,12 +6,12 @@ import cn.asany.weixin.framework.message.*;
 import cn.asany.weixin.framework.message.content.*;
 import cn.asany.weixin.framework.message.user.OpenIdList;
 import cn.asany.weixin.framework.message.user.User;
+import jakarta.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.bean.menu.WxMenu;
 import me.chanjar.weixin.common.bean.menu.WxMenuButton;
@@ -22,9 +22,9 @@ import me.chanjar.weixin.cp.bean.*;
 import me.chanjar.weixin.cp.bean.messagebuilder.VideoBuilder;
 import me.chanjar.weixin.cp.bean.outxmlbuilder.NewsBuilder;
 import me.chanjar.weixin.cp.util.xml.XStreamTransformer;
+import net.asany.jfantasy.framework.jackson.JSON;
+import net.asany.jfantasy.framework.util.common.StringUtil;
 import org.apache.commons.lang3.StringUtils;
-import org.jfantasy.framework.jackson.JSON;
-import org.jfantasy.framework.util.common.StringUtil;
 
 @Slf4j
 public class WeixinCpService implements WeixinService {

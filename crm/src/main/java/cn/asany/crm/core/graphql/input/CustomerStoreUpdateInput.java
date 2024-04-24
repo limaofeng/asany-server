@@ -14,12 +14,16 @@ import lombok.NoArgsConstructor;
 public class CustomerStoreUpdateInput {
   /** 门店编号 */
   private String no;
+
   /** 门店名称 */
   private String name;
+
   /** 开业时间 */
   private Date openingDate;
+
   /** 门店电话 */
   private String phone;
+
   /** 门店地址 */
   private AddressInput address;
 }

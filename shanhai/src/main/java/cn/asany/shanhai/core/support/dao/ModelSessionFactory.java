@@ -13,7 +13,7 @@ import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.engine.config.spi.ConfigurationService;
 import org.hibernate.tool.schema.TargetType;
 import org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator;
-import org.jfantasy.framework.util.FantasyClassLoader;
+import net.asany.jfantasy.framework.util.FantasyClassLoader;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 

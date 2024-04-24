@@ -3,8 +3,8 @@ package cn.asany.pm.rule.graphql.connection;
 import cn.asany.pm.rule.bean.IssueIntegralRule;
 import java.util.List;
 import lombok.*;
-import org.jfantasy.graphql.Edge;
-import org.jfantasy.graphql.types.BaseConnection;
+import net.asany.jfantasy.graphql.Edge;
+import net.asany.jfantasy.graphql.types.BaseConnection;
 
 /**
  * Issue Integral Rule Connection

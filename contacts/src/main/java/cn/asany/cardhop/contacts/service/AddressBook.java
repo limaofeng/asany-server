@@ -4,9 +4,9 @@
 // import org.jfantasy.contacts.bean.Group;
 // import org.jfantasy.contacts.bean.Linkman;
 // import org.jfantasy.contacts.listener.AddressBookListener;
-// import org.jfantasy.framework.spring.SpringContextUtil;
-// import org.jfantasy.framework.util.common.BeanUtil;
-// import org.jfantasy.framework.util.common.ObjectUtil;
+// import net.asany.jfantasy.framework.spring.SpringContextUtil;
+// import net.asany.jfantasy.framework.util.common.BeanUtil;
+// import net.asany.jfantasy.framework.util.common.ObjectUtil;
 // import org.jfantasy.security.SpringSecurityUtils;
 // import org.jfantasy.security.userdetails.SimpleUser;
 //

@@ -1,7 +1,7 @@
 package cn.asany.security.core.dao;
 
 import cn.asany.security.core.domain.Group;
-import org.jfantasy.framework.dao.jpa.JpaRepository;
+import net.asany.jfantasy.framework.dao.jpa.AnyJpaRepository;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -10,4 +10,4 @@ import org.springframework.stereotype.Repository;
  * @author limaofeng
  */
 @Repository
-public interface GroupDao extends JpaRepository<Group, Long> {}
+public interface GroupDao extends AnyJpaRepository<Group, Long> {}

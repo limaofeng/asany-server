@@ -5,7 +5,7 @@ import cn.asany.cms.learn.domain.enums.LearnerType;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.jfantasy.graphql.inputs.WhereInput;
+import net.asany.jfantasy.graphql.inputs.WhereInput;
 
 /**
  * 学习者查询条件
@@ -62,5 +62,4 @@ public class LearnerFilter extends WhereInput<LearnerFilter, Learner> {
       filter.notEqual("learningProgress", COMPLETE);
     }
   }
-
 }

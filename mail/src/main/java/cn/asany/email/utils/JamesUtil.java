@@ -29,12 +29,12 @@ import org.apache.james.mime4j.MimeException;
 import org.apache.james.mime4j.dom.MessageBuilder;
 import org.apache.james.mime4j.dom.TextBody;
 import org.bouncycastle.util.encoders.Base64;
-import org.jfantasy.framework.security.LoginUser;
-import org.jfantasy.framework.spring.SpringBeanUtils;
-import org.jfantasy.framework.spring.mvc.error.NotFoundException;
-import org.jfantasy.framework.util.common.StringUtil;
-import org.jfantasy.framework.util.regexp.RegexpConstant;
-import org.jfantasy.framework.util.regexp.RegexpUtil;
+import net.asany.jfantasy.framework.security.LoginUser;
+import net.asany.jfantasy.framework.spring.SpringBeanUtils;
+import net.asany.jfantasy.framework.spring.mvc.error.NotFoundException;
+import net.asany.jfantasy.framework.util.common.StringUtil;
+import net.asany.jfantasy.framework.util.regexp.RegexpConstant;
+import net.asany.jfantasy.framework.util.regexp.RegexpUtil;
 
 public class JamesUtil {
 

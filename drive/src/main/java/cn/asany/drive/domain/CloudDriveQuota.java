@@ -2,9 +2,9 @@ package cn.asany.drive.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import net.asany.jfantasy.framework.dao.BaseBusEntity;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
-import org.jfantasy.framework.dao.BaseBusEntity;
 
 @Getter
 @Setter

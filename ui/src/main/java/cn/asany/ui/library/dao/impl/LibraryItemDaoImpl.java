@@ -2,17 +2,17 @@ package cn.asany.ui.library.dao.impl;
 
 import cn.asany.ui.library.dao.LibraryItemDao;
 import cn.asany.ui.library.domain.LibraryItem;
-import java.util.List;
 import jakarta.persistence.EntityManager;
-import org.jfantasy.framework.dao.jpa.ComplexJpaRepository;
-import org.jfantasy.framework.dao.jpa.PropertyFilter;
+import java.util.List;
+import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
+import net.asany.jfantasy.framework.dao.jpa.SimpleAnyJpaRepository;
 
 /**
  * LibraryItemDaoImpl
  *
  * @author limaofeng
  */
-public class LibraryItemDaoImpl extends ComplexJpaRepository<LibraryItem, Long>
+public class LibraryItemDaoImpl extends SimpleAnyJpaRepository<LibraryItem, Long>
     implements LibraryItemDao {
 
   public LibraryItemDaoImpl(EntityManager entityManager) {

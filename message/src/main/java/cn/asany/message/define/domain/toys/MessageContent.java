@@ -4,8 +4,8 @@ import cn.asany.message.data.util.MessageUtils;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.Map;
-import org.jfantasy.framework.dao.hibernate.util.ReflectionUtils;
-import org.jfantasy.framework.util.HandlebarsTemplateUtils;
+import net.asany.jfantasy.framework.dao.hibernate.util.ReflectionUtils;
+import net.asany.jfantasy.framework.util.HandlebarsTemplateUtils;
 
 /**
  * 消息内容

@@ -3,8 +3,8 @@ package cn.asany.storage.api.converter;
 import cn.asany.storage.api.FileObject;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
-import org.jfantasy.framework.jackson.JSON;
-import org.jfantasy.framework.util.common.StringUtil;
+import net.asany.jfantasy.framework.jackson.JSON;
+import net.asany.jfantasy.framework.util.common.StringUtil;
 
 /**
  * 文件转换

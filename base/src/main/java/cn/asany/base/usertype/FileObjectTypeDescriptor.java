@@ -1,11 +1,11 @@
 package cn.asany.base.usertype;
 
 import cn.asany.storage.api.FileObject;
+import net.asany.jfantasy.framework.jackson.JSON;
+import net.asany.jfantasy.framework.util.common.StringUtil;
 import org.hibernate.type.descriptor.WrapperOptions;
 import org.hibernate.type.descriptor.java.AbstractJavaType;
 import org.hibernate.type.descriptor.java.MutableMutabilityPlan;
-import org.jfantasy.framework.jackson.JSON;
-import org.jfantasy.framework.util.common.StringUtil;
 
 public class FileObjectTypeDescriptor extends AbstractJavaType<FileObject> {
 
@@ -14,12 +14,12 @@ public class FileObjectTypeDescriptor extends AbstractJavaType<FileObject> {
   public FileObjectTypeDescriptor() {
     super(
         FileObject.class,
-      new MutableMutabilityPlan<>() {
-        @Override
-        protected FileObject deepCopyNotNull(FileObject value) {
-          return value;
-        }
-      });
+        new MutableMutabilityPlan<>() {
+          @Override
+          protected FileObject deepCopyNotNull(FileObject value) {
+            return value;
+          }
+        });
   }
 
   @Override

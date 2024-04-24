@@ -1,9 +1,9 @@
 package cn.asany.nuwa.app.domain;
 
+import jakarta.persistence.*;
 import java.util.Set;
-import javax.persistence.*;
 import lombok.*;
-import org.jfantasy.framework.dao.BaseBusEntity;
+import net.asany.jfantasy.framework.dao.BaseBusEntity;
 
 @Setter
 @Getter
@@ -17,9 +17,11 @@ public class ApplicationModule extends BaseBusEntity {
   @Id
   @Column(name = "ID", nullable = false, length = 50)
   private String id;
+
   /** 名称 */
   @Column(name = "NAME", length = 100)
   private String name;
+
   /** 描述 */
   @Column(name = "DESCRIPTION", length = 500)
   private String description;

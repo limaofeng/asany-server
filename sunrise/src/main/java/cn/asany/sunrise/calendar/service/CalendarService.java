@@ -21,12 +21,12 @@ import cn.asany.sunrise.calendar.util.CalendarUtils;
 import java.util.*;
 import java.util.stream.Collectors;
 import lombok.SneakyThrows;
-import org.jfantasy.framework.dao.jpa.PropertyFilter;
-import org.jfantasy.framework.error.ValidationException;
-import org.jfantasy.framework.security.LoginUser;
-import org.jfantasy.framework.util.common.DateUtil;
-import org.jfantasy.framework.util.common.ObjectUtil;
-import org.jfantasy.framework.util.common.StringUtil;
+import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
+import net.asany.jfantasy.framework.error.ValidationException;
+import net.asany.jfantasy.framework.security.LoginUser;
+import net.asany.jfantasy.framework.util.common.DateUtil;
+import net.asany.jfantasy.framework.util.common.ObjectUtil;
+import net.asany.jfantasy.framework.util.common.StringUtil;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -98,8 +98,7 @@ public class CalendarService {
   public List<CalendarEvent> calendarEventsByCalendarSet(Long calendarSet, Date starts, Date ends) {
     PropertyFilter filter = PropertyFilter.newFilter().between("dates.date", starts, ends);
     filter.equal("calendar.calendarSets.id", calendarSet);
-    return this.calendarEventDao.findAllWithDates(
-        filter, Sort.by("datetime.starts").ascending());
+    return this.calendarEventDao.findAllWithDates(filter, Sort.by("datetime.starts").ascending());
   }
 
   public List<CalendarEvent> calendarEventsWithDaysByCalendar(Long calendar, Date date, Long days) {
@@ -129,8 +128,7 @@ public class CalendarService {
   public List<CalendarEvent> calendarEventsByUid(Long uid, Date starts, Date ends) {
     PropertyFilter filter = PropertyFilter.newFilter().between("dates.date", starts, ends);
     filter.equal("calendar.account.owner.id", uid);
-    return this.calendarEventDao.findAllWithDates(
-        filter, Sort.by("datetime.starts").ascending());
+    return this.calendarEventDao.findAllWithDates(filter, Sort.by("datetime.starts").ascending());
   }
 
   /**

@@ -1,10 +1,10 @@
 package cn.asany.nuwa.app.domain;
 
+import jakarta.persistence.*;
 import java.util.Map;
-import javax.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.GenericGenerator;
-import org.jfantasy.framework.dao.BaseBusEntity;
+import net.asany.jfantasy.framework.dao.BaseBusEntity;
+import net.asany.jfantasy.framework.dao.hibernate.annotations.TableGenerator;
 
 @Setter
 @Getter
@@ -23,8 +23,7 @@ public class ApplicationModuleConfiguration extends BaseBusEntity {
 
   @Id
   @Column(name = "ID")
-  @GeneratedValue(generator = "fantasy-sequence")
-  @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+  @TableGenerator
   private Long id;
 
   @ManyToOne(fetch = FetchType.LAZY)

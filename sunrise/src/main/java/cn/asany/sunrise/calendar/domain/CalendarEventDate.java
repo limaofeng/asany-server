@@ -1,10 +1,10 @@
 package cn.asany.sunrise.calendar.domain;
 
-import java.util.Date;
 import jakarta.persistence.*;
+import java.util.Date;
 import lombok.*;
-import org.hibernate.annotations.GenericGenerator;
-import org.jfantasy.framework.dao.BaseBusEntity;
+import net.asany.jfantasy.framework.dao.BaseBusEntity;
+import net.asany.jfantasy.framework.dao.hibernate.annotations.TableGenerator;
 
 /**
  * 事件日期 <br>
@@ -23,13 +23,14 @@ import org.jfantasy.framework.dao.BaseBusEntity;
 public class CalendarEventDate extends BaseBusEntity {
   @Id
   @Column(name = "ID", nullable = false, updatable = false, precision = 22)
-  @GeneratedValue(generator = "fantasy-sequence")
-  @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+  @TableGenerator
   private Long id;
+
   /** 日期 */
   @Temporal(TemporalType.DATE)
   @Column(updatable = false, name = "DATE")
   private Date date;
+
   /** 事件 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(

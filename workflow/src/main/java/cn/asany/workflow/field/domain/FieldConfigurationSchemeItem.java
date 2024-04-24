@@ -4,7 +4,7 @@ import cn.asany.pm.type.bean.IssueType;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import org.hibernate.Hibernate;
-import org.jfantasy.framework.dao.BaseBusEntity;
+import net.asany.jfantasy.framework.dao.BaseBusEntity;
 
 import jakarta.persistence.*;
 import java.util.Objects;

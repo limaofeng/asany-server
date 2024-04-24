@@ -1,7 +1,7 @@
 package cn.asany.organization.employee.dao;
 
 import cn.asany.organization.employee.domain.Employee;
-import org.jfantasy.framework.dao.jpa.JpaRepository;
+import net.asany.jfantasy.framework.dao.jpa.AnyJpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository;
  * @author 李茂峰
  */
 @Repository
-public interface EmployeeDao extends JpaRepository<Employee, Long> {
+public interface EmployeeDao extends AnyJpaRepository<Employee, Long> {
   /**
    * 删除员工 - 根据组织 ID
    *

@@ -3,11 +3,11 @@ package cn.asany.cms.learn.dao;
 import cn.asany.cms.learn.domain.Course;
 import cn.asany.cms.learn.domain.Learner;
 import java.util.List;
-import org.jfantasy.framework.dao.jpa.JpaRepository;
+import net.asany.jfantasy.framework.dao.jpa.AnyJpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface LearnerDao extends JpaRepository<Learner, Long> {
+public interface LearnerDao extends AnyJpaRepository<Learner, Long> {
 
   /**
    * 根据课程查询学习者

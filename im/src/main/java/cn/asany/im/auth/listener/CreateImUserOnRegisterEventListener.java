@@ -5,7 +5,7 @@ import cn.asany.im.error.OpenIMServerAPIException;
 import cn.asany.im.user.service.UserService;
 import cn.asany.security.core.event.RegisterSuccessEvent;
 import lombok.SneakyThrows;
-import org.jfantasy.framework.security.LoginUser;
+import net.asany.jfantasy.framework.security.LoginUser;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 

@@ -7,7 +7,7 @@ import cn.asany.shanhai.core.support.model.IModelFeature;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Data;
-import org.jfantasy.framework.dao.BaseBusEntity;
+import net.asany.jfantasy.framework.dao.BaseBusEntity;
 import org.springframework.stereotype.Component;
 
 /**

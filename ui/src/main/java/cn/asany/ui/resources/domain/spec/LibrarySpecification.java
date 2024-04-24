@@ -1,20 +1,20 @@
-//package cn.asany.ui.resources.domain.spec;
+// package cn.asany.ui.resources.domain.spec;
 //
-//import java.util.ArrayList;
-//import java.util.List;
-//import jakarta.persistence.criteria.CriteriaBuilder;
-//import jakarta.persistence.criteria.CriteriaQuery;
-//import jakarta.persistence.criteria.Predicate;
-//import jakarta.persistence.criteria.Root;
-//import org.hibernate.query.criteria.internal.CriteriaBuilderImpl;
-//import org.hibernate.query.criteria.internal.ParameterRegistry;
-//import org.hibernate.query.criteria.internal.compile.RenderingContext;
-//import org.hibernate.query.criteria.internal.predicate.AbstractSimplePredicate;
-//import org.jetbrains.annotations.NotNull;
-//import org.jfantasy.framework.util.common.StringUtil;
-//import org.springframework.data.jpa.domain.Specification;
+// import java.util.ArrayList;
+// import java.util.List;
+// import jakarta.persistence.criteria.CriteriaBuilder;
+// import jakarta.persistence.criteria.CriteriaQuery;
+// import jakarta.persistence.criteria.Predicate;
+// import jakarta.persistence.criteria.Root;
+// import org.hibernate.query.criteria.internal.CriteriaBuilderImpl;
+// import org.hibernate.query.criteria.internal.ParameterRegistry;
+// import org.hibernate.query.criteria.internal.compile.RenderingContext;
+// import org.hibernate.query.criteria.internal.predicate.AbstractSimplePredicate;
+// import org.jetbrains.annotations.NotNull;
+// import net.asany.jfantasy.framework.util.common.StringUtil;
+// import org.springframework.data.jpa.domain.Specification;
 //
-//public class LibrarySpecification implements Specification {
+// public class LibrarySpecification implements Specification {
 //  private final List<Long> libraries;
 //
 //  public LibrarySpecification(List<Long> libraries) {
@@ -53,4 +53,4 @@
 //    @Override
 //    public void registerParameters(ParameterRegistry registry) {}
 //  }
-//}
+// }

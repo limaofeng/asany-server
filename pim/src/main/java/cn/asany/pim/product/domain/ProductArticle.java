@@ -1,12 +1,12 @@
 package cn.asany.pim.product.domain;
 
 import cn.asany.cms.article.domain.Article;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.*;
+import net.asany.jfantasy.framework.dao.BaseBusEntity;
+import net.asany.jfantasy.framework.dao.hibernate.annotations.TableGenerator;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.GenericGenerator;
-import org.jfantasy.framework.dao.BaseBusEntity;
 
 @Data
 @Entity
@@ -20,15 +20,16 @@ public class ProductArticle extends BaseBusEntity {
 
   @Id
   @Column(name = "ID", nullable = false, updatable = false)
-  @GeneratedValue(generator = "fantasy-sequence")
-  @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+  @TableGenerator
   private Long id;
+
   /** 关联类型 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(
       name = "LINKAGE_TYPE",
       foreignKey = @ForeignKey(name = "FK_PIM_PRODUCT_ARTICLE_LINKAGE_TYPE_ID"))
   private ProductLinkageType linkageType;
+
   /** 产品 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(
@@ -36,6 +37,7 @@ public class ProductArticle extends BaseBusEntity {
       foreignKey = @ForeignKey(name = "FK_PIM_PRODUCT_ARTICLE_PID"),
       nullable = false)
   private Product product;
+
   /** 文章 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(

@@ -5,10 +5,10 @@ import cn.asany.cms.article.domain.enums.BackgroundType;
 import cn.asany.storage.api.FileObject;
 import jakarta.persistence.*;
 import lombok.*;
+import net.asany.jfantasy.framework.dao.BaseBusEntity;
+import net.asany.jfantasy.framework.dao.hibernate.annotations.TableGenerator;
 import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
-import org.jfantasy.framework.dao.BaseBusEntity;
 
 /**
  * 横幅
@@ -26,8 +26,7 @@ import org.jfantasy.framework.dao.BaseBusEntity;
 public class Banner extends BaseBusEntity {
   @Id
   @Column(name = "ID")
-  @GeneratedValue(generator = "fantasy-sequence")
-  @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+  @TableGenerator
   private Long id;
 
   /** 标题 */

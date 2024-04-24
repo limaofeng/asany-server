@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 public class ApplicationCreateInput {
   /** 名称 */
   private String name;
+
   /** 简介 */
   private String description;
 }

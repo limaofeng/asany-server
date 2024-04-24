@@ -16,10 +16,10 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
-import org.jfantasy.framework.util.common.ObjectUtil;
-import org.jfantasy.framework.util.regexp.RegexpConstant;
-import org.jfantasy.framework.util.regexp.RegexpUtil;
-import org.jfantasy.graphql.util.GraphqlUtil;
+import net.asany.jfantasy.framework.util.common.ObjectUtil;
+import net.asany.jfantasy.framework.util.regexp.RegexpConstant;
+import net.asany.jfantasy.framework.util.regexp.RegexpUtil;
+import net.asany.jfantasy.graphql.util.GraphQLUtils;
 import org.springframework.stereotype.Component;
 
 /**
@@ -73,8 +73,8 @@ public class ApplicationGraphQLRootResolver
   public Optional<Application> application(
       String id, ApplicationIdType idType, DataFetchingEnvironment environment) {
     idType = ObjectUtil.defaultValue(idType, () -> getDefaultApplicationIdType(id));
-    boolean hasFetchRoutes = GraphqlUtil.hasFetchFields(environment, "routes");
-    boolean hasFetchMenus = GraphqlUtil.hasFetchFields(environment, "menus");
+    boolean hasFetchRoutes = GraphQLUtils.hasFetchFields(environment, "routes");
+    boolean hasFetchMenus = GraphQLUtils.hasFetchFields(environment, "menus");
     if (ApplicationIdType.CLIENT_ID.equals(idType)) {
       return applicationService.findDetailsByClientId(id, hasFetchRoutes, hasFetchMenus);
     }

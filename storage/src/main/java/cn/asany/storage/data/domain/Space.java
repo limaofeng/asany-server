@@ -7,9 +7,9 @@ import jakarta.persistence.*;
 import java.util.Objects;
 import java.util.Set;
 import lombok.*;
+import net.asany.jfantasy.framework.dao.BaseBusEntity;
+import net.asany.jfantasy.framework.dao.hibernate.converter.StringSetConverter;
 import org.hibernate.Hibernate;
-import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.dao.hibernate.converter.StringSetConverter;
 
 /**
  * 文件上传时，为其指定的上传目录

@@ -2,7 +2,7 @@ package cn.asany.sms.utils;
 
 import java.util.Map;
 import java.util.Set;
-import org.jfantasy.framework.util.common.StringUtil;
+import net.asany.jfantasy.framework.util.common.StringUtil;
 
 /** 处理模板内容工具类 */
 public class TemplateContentUtil {

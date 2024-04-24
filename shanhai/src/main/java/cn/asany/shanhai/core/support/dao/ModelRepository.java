@@ -9,16 +9,16 @@ import org.hibernate.Session;
 import org.hibernate.criterion.*;
 import org.hibernate.internal.CriteriaImpl;
 import org.hibernate.transform.ResultTransformer;
-import org.jfantasy.framework.dao.MatchType;
-import org.jfantasy.framework.dao.OrderBy;
-import org.jfantasy.framework.dao.Page;
-import org.jfantasy.framework.dao.hibernate.util.ReflectionUtils;
-import org.jfantasy.framework.dao.jpa.JpaDefaultPropertyFilter;
-import org.jfantasy.framework.dao.jpa.PropertyFilter;
-import org.jfantasy.framework.dao.jpa.PropertyPredicate;
-import org.jfantasy.framework.error.IgnoreException;
-import org.jfantasy.framework.util.common.ObjectUtil;
-import org.jfantasy.framework.util.ognl.OgnlUtil;
+import net.asany.jfantasy.framework.dao.MatchType;
+import net.asany.jfantasy.framework.dao.OrderBy;
+import net.asany.jfantasy.framework.dao.Page;
+import net.asany.jfantasy.framework.dao.hibernate.util.ReflectionUtils;
+import net.asany.jfantasy.framework.dao.jpa.JpaDefaultPropertyFilter;
+import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
+import net.asany.jfantasy.framework.dao.jpa.PropertyPredicate;
+import net.asany.jfantasy.framework.error.IgnoreException;
+import net.asany.jfantasy.framework.util.common.ObjectUtil;
+import net.asany.jfantasy.framework.util.ognl.OgnlUtil;
 import org.springframework.util.Assert;
 
 public class ModelRepository {
@@ -274,5 +274,8 @@ public class ModelRepository {
       throw ReflectionUtils.convertReflectionExceptionToUnchecked(e);
     }
     return criterion;
+  }
+
+  private class Criteria {
   }
 }

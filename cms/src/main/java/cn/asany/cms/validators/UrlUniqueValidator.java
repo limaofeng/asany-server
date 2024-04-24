@@ -1,11 +1,13 @@
 package cn.asany.cms.validators;
 
-import org.jfantasy.framework.spring.validation.ValidationException;
-import org.jfantasy.framework.spring.validation.Validator;
-import org.jfantasy.framework.util.common.StringUtil;
+import net.asany.jfantasy.framework.spring.validation.ValidationException;
+import net.asany.jfantasy.framework.spring.validation.Validator;
+import net.asany.jfantasy.framework.util.common.StringUtil;
 import org.springframework.stereotype.Component;
 
-/** @author limaofeng */
+/**
+ * @author limaofeng
+ */
 @Component
 public class UrlUniqueValidator implements Validator<String> {
 

@@ -4,11 +4,10 @@ import cn.asany.ui.library.OplogDataCollector;
 import cn.asany.ui.library.dao.listener.OplogListener;
 import cn.asany.ui.library.domain.enums.LibraryType;
 import jakarta.persistence.*;
-import lombok.*;
-import org.hibernate.annotations.GenericGenerator;
-import org.jfantasy.framework.dao.BaseBusEntity;
-
 import java.util.Set;
+import lombok.*;
+import net.asany.jfantasy.framework.dao.BaseBusEntity;
+import net.asany.jfantasy.framework.dao.hibernate.annotations.TableGenerator;
 
 @Data
 @Builder
@@ -52,16 +51,18 @@ import java.util.Set;
 public class Library extends BaseBusEntity implements OplogDataCollector {
   @Id
   @Column(name = "ID")
-  @GeneratedValue(generator = "fantasy-sequence")
-  @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+  @TableGenerator
   private Long id;
+
   /** 类型 */
   @Enumerated(EnumType.STRING)
   @Column(name = "TYPE", length = 20, nullable = false)
   private LibraryType type;
+
   /** 名称 */
   @Column(name = "NAME", length = 60)
   private String name;
+
   /** 描述 */
   @Column(name = "DESCRIPTION")
   private String description;
@@ -72,20 +73,21 @@ public class Library extends BaseBusEntity implements OplogDataCollector {
       cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE},
       fetch = FetchType.LAZY)
   private Set<LibraryItem> items;
+
   /** 所有者 */
-//  @Any(
-//      metaColumn =
-//          @Column(name = "OWNERSHIP_TYPE", length = 10, insertable = false, updatable = false),
-//      fetch = FetchType.LAZY)
-//  @AnyMetaDef(
-//      idType = "long",
-//      metaType = "string",
-//      metaValues = {
-//        @MetaValue(targetEntity = User.class, value = User.OWNERSHIP_KEY),
-//        @MetaValue(targetEntity = Organization.class, value = Organization.OWNERSHIP_KEY)
-//      })
-//  @JoinColumn(name = "OWNERSHIP_ID", insertable = false, updatable = false)
-//  private Ownership ownership;
+  //  @Any(
+  //      metaColumn =
+  //          @Column(name = "OWNERSHIP_TYPE", length = 10, insertable = false, updatable = false),
+  //      fetch = FetchType.LAZY)
+  //  @AnyMetaDef(
+  //      idType = "long",
+  //      metaType = "string",
+  //      metaValues = {
+  //        @MetaValue(targetEntity = User.class, value = User.OWNERSHIP_KEY),
+  //        @MetaValue(targetEntity = Organization.class, value = Organization.OWNERSHIP_KEY)
+  //      })
+  //  @JoinColumn(name = "OWNERSHIP_ID", insertable = false, updatable = false)
+  //  private Ownership ownership;
 
   @Override
   @Transient

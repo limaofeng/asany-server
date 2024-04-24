@@ -4,8 +4,8 @@ import cn.asany.storage.api.FileObject;
 import cn.asany.storage.api.FileObjectMetadata;
 import java.io.File;
 import java.util.Date;
-import org.jfantasy.framework.util.common.StringUtil;
-import org.jfantasy.framework.util.regexp.RegexpUtil;
+import net.asany.jfantasy.framework.util.common.StringUtil;
+import net.asany.jfantasy.framework.util.regexp.RegexpUtil;
 
 /**
  * 抽象文件对象

@@ -5,8 +5,8 @@ package cn.asany.pm.field.dao;
  * @date 2022/7/28 9:12
  */
 import cn.asany.pm.field.bean.Field;
-import org.jfantasy.framework.dao.jpa.JpaRepository;
+import net.asany.jfantasy.framework.dao.jpa.AnyJpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface IssueFieldDao extends JpaRepository<Field, Long> {}
+public interface IssueFieldDao extends AnyJpaRepository<Field, Long> {}

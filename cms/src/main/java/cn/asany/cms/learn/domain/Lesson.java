@@ -4,7 +4,7 @@ import cn.asany.cms.article.domain.Article;
 import cn.asany.cms.learn.domain.enums.LessonType;
 import jakarta.persistence.*;
 import lombok.*;
-import org.jfantasy.framework.dao.BaseBusEntity;
+import net.asany.jfantasy.framework.dao.BaseBusEntity;
 
 /**
  * 课程内容(章节里面的每一小节)

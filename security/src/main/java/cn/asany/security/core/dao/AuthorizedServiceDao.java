@@ -1,7 +1,7 @@
 package cn.asany.security.core.dao;
 
 import cn.asany.security.core.domain.AuthorizedService;
-import org.jfantasy.framework.dao.jpa.JpaRepository;
+import net.asany.jfantasy.framework.dao.jpa.AnyJpaRepository;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -10,4 +10,4 @@ import org.springframework.stereotype.Repository;
  * @author limaofeng
  */
 @Repository
-public interface AuthorizedServiceDao extends JpaRepository<AuthorizedService, String> {}
+public interface AuthorizedServiceDao extends AnyJpaRepository<AuthorizedService, String> {}

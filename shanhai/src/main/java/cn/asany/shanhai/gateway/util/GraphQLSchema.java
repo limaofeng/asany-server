@@ -11,7 +11,7 @@ import graphql.schema.idl.UnExecutableSchemaGenerator;
 import java.beans.Transient;
 import java.util.*;
 import java.util.stream.Collectors;
-import org.jfantasy.framework.util.common.ObjectUtil;
+import net.asany.jfantasy.framework.util.common.ObjectUtil;
 
 public class GraphQLSchema {
 

@@ -14,8 +14,8 @@ import cn.asany.website.landing.service.LandingService;
 import graphql.kickstart.tools.GraphQLMutationResolver;
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import java.util.Optional;
-import org.jfantasy.framework.util.common.ObjectUtil;
-import org.jfantasy.graphql.util.Kit;
+import net.asany.jfantasy.framework.util.common.ObjectUtil;
+import net.asany.jfantasy.graphql.util.Kit;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -60,11 +60,12 @@ public class LandingGraphQLQueryAndMutationResolver
   }
 
   public LandingPageConnection landingPagesConnection(
-    LandingPageWhereInput where, int page, int pageSize, Sort orderBy) {
+      LandingPageWhereInput where, int page, int pageSize, Sort orderBy) {
     where = ObjectUtil.defaultValue(where, new LandingPageWhereInput());
     Pageable pageable = PageRequest.of(page - 1, pageSize, orderBy);
     return Kit.connection(
-        landingService.findLandingPagePager(pageable, where.toFilter()), LandingPageConnection.class);
+        landingService.findLandingPagePager(pageable, where.toFilter()),
+        LandingPageConnection.class);
   }
 
   public LandingPoster createLandingPoster(LandingPosterCreateInput input) {
@@ -86,7 +87,7 @@ public class LandingGraphQLQueryAndMutationResolver
   }
 
   public LandingPosterConnection landingPostersConnection(
-    LandingPosterWhere where, int page, int pageSize, Sort orderBy) {
+      LandingPosterWhere where, int page, int pageSize, Sort orderBy) {
     where = ObjectUtil.defaultValue(where, new LandingPosterWhere());
     Pageable pageable = PageRequest.of(page - 1, pageSize, orderBy);
     return Kit.connection(
@@ -113,7 +114,7 @@ public class LandingGraphQLQueryAndMutationResolver
   }
 
   public LandingStoreConnection landingStoresConnection(
-    LandingStoreWhereInput where, int page, int pageSize, Sort orderBy) {
+      LandingStoreWhereInput where, int page, int pageSize, Sort orderBy) {
     where = ObjectUtil.defaultValue(where, new LandingStoreWhereInput());
     Pageable pageable = PageRequest.of(page - 1, pageSize, orderBy);
     return Kit.connection(

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 import org.hibernate.cfg.AvailableSettings;
-import org.jfantasy.framework.util.FantasyClassLoader;
+import net.asany.jfantasy.framework.util.FantasyClassLoader;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernatePropertiesCustomizer;
 
 public class CustomHibernatePropertiesCustomizer implements HibernatePropertiesCustomizer {

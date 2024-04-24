@@ -9,7 +9,7 @@ import cn.asany.weixin.framework.session.WeixinSession;
 import cn.asany.weixin.service.FansService;
 import java.util.concurrent.Executor;
 import lombok.extern.slf4j.Slf4j;
-import org.jfantasy.framework.spring.SpringBeanUtils;
+import net.asany.jfantasy.framework.spring.SpringBeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Slf4j

@@ -5,8 +5,8 @@ package cn.asany.pm.security.dao;
  * @date 2022/7/28 9:12
  */
 import cn.asany.pm.security.bean.PermissionScheme;
-import org.jfantasy.framework.dao.jpa.JpaRepository;
+import net.asany.jfantasy.framework.dao.jpa.AnyJpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository("issuePermissionSchemeDao")
-public interface PermissionSchemeDao extends JpaRepository<PermissionScheme, Long> {}
+public interface PermissionSchemeDao extends AnyJpaRepository<PermissionScheme, Long> {}

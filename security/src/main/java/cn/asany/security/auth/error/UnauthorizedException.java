@@ -1,6 +1,6 @@
 package cn.asany.security.auth.error;
 
-import org.jfantasy.framework.security.AuthenticationException;
+import net.asany.jfantasy.framework.security.AuthenticationException;
 
 /**
  * 未授权异常

@@ -1,7 +1,7 @@
 package cn.asany.security.core.domain.enums;
 
 import lombok.Getter;
-import org.jfantasy.framework.error.ValidationException;
+import net.asany.jfantasy.framework.error.ValidationException;
 
 /**
  * 被授权者类型

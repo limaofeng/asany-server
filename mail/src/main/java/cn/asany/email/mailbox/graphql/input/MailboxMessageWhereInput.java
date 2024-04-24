@@ -4,7 +4,7 @@ import cn.asany.email.mailbox.domain.JamesMailboxMessage;
 import cn.asany.email.utils.JamesUtil;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.jfantasy.graphql.inputs.WhereInput;
+import net.asany.jfantasy.graphql.inputs.WhereInput;
 
 /**
  * 邮件查询过滤

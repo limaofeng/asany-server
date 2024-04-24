@@ -5,14 +5,14 @@ import cn.asany.email.mailbox.domain.JamesMailboxMessage;
 import cn.asany.email.mailbox.domain.toys.MailboxIdUidKey;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
-import org.jfantasy.framework.dao.jpa.ComplexJpaRepository;
-import org.jfantasy.framework.dao.jpa.PropertyFilter;
-import org.jfantasy.framework.error.IgnoreException;
+import net.asany.jfantasy.framework.dao.jpa.SimpleAnyJpaRepository;
+import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
+import net.asany.jfantasy.framework.error.IgnoreException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public class MailboxMessageDaoImpl
-    extends ComplexJpaRepository<JamesMailboxMessage, MailboxIdUidKey>
+    extends SimpleAnyJpaRepository<JamesMailboxMessage, MailboxIdUidKey>
     implements MailboxMessageDao {
   public MailboxMessageDaoImpl(EntityManager entityManager) {
     super(JamesMailboxMessage.class, entityManager);

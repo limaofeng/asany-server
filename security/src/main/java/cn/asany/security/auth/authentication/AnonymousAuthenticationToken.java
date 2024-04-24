@@ -1,6 +1,6 @@
 package cn.asany.security.auth.authentication;
 
-import org.jfantasy.framework.security.authentication.SimpleAuthenticationToken;
+import net.asany.jfantasy.framework.security.authentication.SimpleAuthenticationToken;
 
 /**
  * 匿名凭证

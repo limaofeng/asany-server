@@ -5,8 +5,8 @@ import jakarta.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
+import net.asany.jfantasy.framework.util.common.StringUtil;
 import org.jetbrains.annotations.NotNull;
-import org.jfantasy.framework.util.common.StringUtil;
 import org.springframework.data.jpa.domain.Specification;
 
 /**

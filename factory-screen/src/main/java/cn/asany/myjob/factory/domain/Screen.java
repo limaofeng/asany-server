@@ -1,11 +1,11 @@
 package cn.asany.myjob.factory.domain;
 
 import cn.asany.storage.api.FileObject;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.GenericGenerator;
+import net.asany.jfantasy.framework.dao.hibernate.annotations.TableGenerator;
 import org.hibernate.annotations.Type;
-import org.jfantasy.framework.dao.BaseBusEntity;
+import net.asany.jfantasy.framework.dao.BaseBusEntity;
 
 @Getter
 @Setter
@@ -17,8 +17,7 @@ import org.jfantasy.framework.dao.BaseBusEntity;
 public class Screen extends BaseBusEntity {
   @Id
   @Column(name = "ID")
-  @GeneratedValue(generator = "fantasy-sequence")
-  @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+  @TableGenerator
   private Long id;
 
   @Column(name = "DESCRIPTION")

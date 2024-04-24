@@ -9,11 +9,11 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import lombok.*;
+import net.asany.jfantasy.framework.dao.BaseBusEntity;
+import net.asany.jfantasy.framework.dao.hibernate.annotations.TableGenerator;
+import net.asany.jfantasy.framework.dao.hibernate.converter.StringSetConverter;
+import net.asany.jfantasy.framework.util.common.SortNode;
 import org.hibernate.Hibernate;
-import org.hibernate.annotations.GenericGenerator;
-import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.dao.hibernate.converter.StringSetConverter;
-import org.jfantasy.framework.util.common.SortNode;
 
 /**
  * 菜单
@@ -32,8 +32,7 @@ public class ApplicationMenu extends BaseBusEntity implements SortNode {
 
   @Id
   @Column(name = "ID")
-  @GeneratedValue(generator = "fantasy-sequence")
-  @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+  @TableGenerator
   private Long id;
 
   /** 菜单名称 */

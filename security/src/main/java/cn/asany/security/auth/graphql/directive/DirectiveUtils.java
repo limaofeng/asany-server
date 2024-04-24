@@ -1,7 +1,7 @@
 package cn.asany.security.auth.graphql.directive;
 
 import graphql.schema.*;
-import org.jfantasy.framework.error.ValidationException;
+import net.asany.jfantasy.framework.error.ValidationException;
 
 public class DirectiveUtils {
 

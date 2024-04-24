@@ -3,7 +3,7 @@ package cn.asany.security.core.util;
 import cn.asany.base.common.domain.enums.EmailStatus;
 import cn.asany.base.common.domain.enums.PhoneNumberStatus;
 import cn.asany.security.core.domain.User;
-import org.jfantasy.framework.security.LoginUser;
+import net.asany.jfantasy.framework.security.LoginUser;
 
 public class UserUtil {
 

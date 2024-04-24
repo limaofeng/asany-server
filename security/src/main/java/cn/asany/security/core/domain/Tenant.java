@@ -1,12 +1,10 @@
 package cn.asany.security.core.domain;
 
 import cn.asany.organization.core.domain.Organization;
-import javax.persistence.*;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Parameter;
-import org.jfantasy.framework.dao.BaseBusEntity;
+import net.asany.jfantasy.framework.dao.BaseBusEntity;
+import net.asany.jfantasy.framework.dao.hibernate.annotations.SnowflakeGenerator;
 
 @Data
 @Builder
@@ -18,15 +16,8 @@ import org.jfantasy.framework.dao.BaseBusEntity;
 public class Tenant extends BaseBusEntity {
 
   @Id
-  @Column(name = "ID")
-  @GeneratedValue(generator = "snowflake")
-  @GenericGenerator(
-      name = "snowflake",
-      strategy = "snowflake",
-      parameters = {
-        @Parameter(name = "workerId", value = "1"),
-        @Parameter(name = "dataCenterId", value = "1")
-      })
+  @Column(name = "ID", length = 32)
+  @SnowflakeGenerator
   private String id;
 
   @Column(name = "DOMAIN", length = 32)

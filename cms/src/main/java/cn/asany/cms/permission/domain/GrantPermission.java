@@ -3,7 +3,7 @@ package cn.asany.cms.permission.domain;
 import cn.asany.cms.permission.domain.enums.SecurityType;
 import jakarta.persistence.Id;
 import lombok.*;
-import org.jfantasy.framework.dao.BaseBusEntity;
+import net.asany.jfantasy.framework.dao.BaseBusEntity;
 
 /**
  * @author limaofeng

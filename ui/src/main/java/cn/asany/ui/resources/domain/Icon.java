@@ -4,15 +4,15 @@ import cn.asany.ui.library.dao.listener.OplogListener;
 import cn.asany.ui.resources.UIResource;
 import cn.asany.ui.resources.domain.enums.IconType;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
+import jakarta.persistence.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.GenericGenerator;
-import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.dao.hibernate.converter.MapConverter;
-import org.jfantasy.framework.util.common.ClassUtil;
+import net.asany.jfantasy.framework.dao.BaseBusEntity;
+import net.asany.jfantasy.framework.dao.hibernate.annotations.TableGenerator;
+import net.asany.jfantasy.framework.dao.hibernate.converter.MapConverter;
+import net.asany.jfantasy.framework.util.common.ClassUtil;
 
 @Data
 @Builder
@@ -29,29 +29,35 @@ public class Icon extends BaseBusEntity implements UIResource {
 
   @Id
   @Column(name = "ID")
-  @GeneratedValue(generator = "fantasy-sequence")
-  @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+  @TableGenerator
   private Long id;
+
   /** 类型 */
   @Enumerated(EnumType.STRING)
   @Column(name = "TYPE", length = 20, nullable = false)
   private IconType type;
+
   /** 编码 */
   @Column(name = "UNICODE", length = 50)
   private String unicode;
+
   /** 名称 */
   @Column(name = "NAME", length = 60)
   private String name;
+
   /** 描述 */
   @Column(name = "DESCRIPTION")
   private String description;
+
   /** 内容 */
   @Column(name = "CONTENT", columnDefinition = "TEXT")
   private String content;
+
   /** 元数据 */
   @Convert(converter = MapConverter.class)
   @Column(name = "METADATA", columnDefinition = "Text")
   private Map<String, String> metadata;
+
   /** 标签 */
   private transient List<String> tags;
 

@@ -1,11 +1,11 @@
 package cn.asany.pim.core.domain;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import net.asany.jfantasy.framework.dao.BaseBusEntity;
+import net.asany.jfantasy.framework.dao.hibernate.annotations.TableGenerator;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.GenericGenerator;
-import org.jfantasy.framework.dao.BaseBusEntity;
 
 /**
  * 资产状态
@@ -20,12 +20,13 @@ import org.jfantasy.framework.dao.BaseBusEntity;
 public class AssetStatus extends BaseBusEntity {
   @Id
   @Column(name = "ID", nullable = false, updatable = false)
-  @GeneratedValue(generator = "fantasy-sequence")
-  @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+  @TableGenerator
   private Long id;
+
   /** 状态编码 */
   @Column(name = "CODE", length = 20, nullable = false)
   private String code;
+
   /** 状态名称 */
   @Column(name = "NAME", length = 20, nullable = false)
   private String name;

@@ -1,6 +1,6 @@
 package cn.asany.security.core.event;
 
-import org.jfantasy.framework.security.LoginUser;
+import net.asany.jfantasy.framework.security.LoginUser;
 import org.springframework.context.ApplicationEvent;
 
 /**
