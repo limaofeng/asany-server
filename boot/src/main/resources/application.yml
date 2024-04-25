@@ -108,33 +108,6 @@ spring:
     password: ${DATABASE_PASSWORD}
     schemas: ${DATABASE_INSTANCE_NAME}
 
-flowable:
-  async-executor-activate: false
-  database-schema-update: false
-  app:
-    deploy-resources: true
-  deploymentName: '"SpringBootAutoDeployment"'
-  form:
-    deploy-resources: true
-    deployment-name: SpringBootAutoDeployment
-    enabled: true
-    resource-location: classpath*:/forms/
-    resource-suffixes: '**.json'
-    servlet:
-      load-on-startup: -1
-      name: Flowable Form Rest API
-      path: /form-api
-  idm:
-    enabled: true
-    password-encoder: spring_bcrypt
-  jpa-enabled: true
-  modeler:
-    app:
-      rest-enabled: true
-  rest:
-    app:
-      authentication-mode: verify-privilege
-
 mybatis:
   configuration:
     log-impl: org.apache.ibatis.logging.log4j2.Log4j2Impl
@@ -183,7 +156,3 @@ sms:
     aliyun:
       accessKeyId: ${ALIYUN_ACCESSKEY_ID}
       accessKeySecret: ${ALIYUN_ACCESSKEY_SECRET}
-
-james:
-  filesystem:
-    workingDirectory: ${JAMES_FILESYSTEM_WORKING_DIRECTORY}
