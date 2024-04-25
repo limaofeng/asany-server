@@ -37,6 +37,7 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 /**
@@ -67,16 +68,16 @@ public class StorageAutoConfiguration {
   }
 
   @Bean
-  public FileCoercing fileCoercing() {
-    return new FileCoercing();
+  public FileCoercing fileCoercing(@Autowired Environment environment) {
+    return new FileCoercing(environment);
   }
 
   @Bean
-  public GraphQLScalarType fileByScalar() {
+  public GraphQLScalarType fileByScalar(@Autowired Environment environment) {
     return GraphQLScalarType.newScalar()
         .name("File")
         .description("文件")
-        .coercing(fileCoercing())
+        .coercing(fileCoercing(environment))
         .build();
   }
 

@@ -17,7 +17,6 @@ package cn.asany.storage.data.graphql.scalar;
 
 import cn.asany.storage.api.FileObject;
 import cn.asany.storage.data.domain.FileDetail;
-import cn.asany.storage.data.service.FileService;
 import cn.asany.storage.data.util.IdUtils;
 import cn.asany.storage.dto.SimpleFileObject;
 import graphql.GraphQLContext;
@@ -34,7 +33,6 @@ import net.asany.jfantasy.framework.error.ValidationException;
 import net.asany.jfantasy.framework.util.common.StringUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 
 /**
@@ -45,9 +43,11 @@ import org.springframework.core.env.Environment;
 @Slf4j
 public class FileCoercing implements Coercing<FileObject, Object> {
 
-  private FileService fileService;
+  protected final Environment environment;
 
-  protected Environment environment;
+  public FileCoercing(Environment environment) {
+    this.environment = environment;
+  }
 
   @Override
   public @Nullable Object serialize(
@@ -107,13 +107,5 @@ public class FileCoercing implements Coercing<FileObject, Object> {
       @NotNull Locale locale)
       throws CoercingParseLiteralException {
     return parseValue(input, graphQLContext, locale);
-  }
-
-  public void setFileService(@Autowired FileService fileService) {
-    this.fileService = fileService;
-  }
-
-  public void setEnvironment(@Autowired Environment environment) {
-    this.environment = environment;
   }
 }
