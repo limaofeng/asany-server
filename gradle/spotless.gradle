@@ -25,11 +25,4 @@ spotless {
 
         licenseHeaderFile "${rootDir}/gradle/LICENSE", 'package '
     }
-    groovyGradle {
-        indentWithTabs(2)
-        indentWithSpaces(4)
-
-        trimTrailingWhitespace()
-        endWithNewline()
-    }
 }
