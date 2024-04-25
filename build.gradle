@@ -157,9 +157,11 @@ subprojects {
         }
 
         reports {
-            xml.enabled true
-            html.enabled false
-            xml.destination file("${buildDir}/reports/Coverage.xml")
+            xml {
+                required.set(true)  // 启用 XML 报告
+                outputLocation.set(file("${buildDir}/reports/Coverage.xml"))
+            }
+            html.required.set(false) // 禁用 HTML 报告
         }
     }
 }
