@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.3.0](https://github.com/limaofeng/asany-server/compare/v0.2.37...v0.3.0) (2024-04-25)
+
+
+### Features
+
+* SpringBoot3 改造 ([c759f07](https://github.com/limaofeng/asany-server/commit/c759f07a14f143cb079a116e18e9b426273a55b7))
+* 升级SpringBoot3 与 jdk17 ([5fc1ed6](https://github.com/limaofeng/asany-server/commit/5fc1ed61d6cb5e5c6d5b589e16622301748b5e90))
+* 升级到 SpringBoot3 ([85ee2c8](https://github.com/limaofeng/asany-server/commit/85ee2c89eae722d7e3cd2c87a0e1844026126847))
+* 编译错误修复 ([0c06e26](https://github.com/limaofeng/asany-server/commit/0c06e263061d01b3b4c39a5a16e4ee02ec700be9))
+* 解决升级springboot3后的相关问题 ([365e35a](https://github.com/limaofeng/asany-server/commit/365e35a2d0578d99b7bf2e483693d83dbec355a0))
+
 ### [0.2.37](https://github.com/limaofeng/asany-server/compare/v0.2.36...v0.2.37) (2024-04-17)
 
 ### [0.2.36](https://github.com/limaofeng/asany-server/compare/v0.2.35...v0.2.36) (2024-04-16)
