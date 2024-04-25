@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.1](https://github.com/limaofeng/asany-server/compare/v0.3.0...v0.3.1) (2024-04-25)
+
+
+### Features
+
+* 修改 FileCoercing 环境变量注入方式 ([aa9aab3](https://github.com/limaofeng/asany-server/commit/aa9aab310ea42f1bfd63ed9c62f1d23f17cdd063))
+
 ## [0.3.0](https://github.com/limaofeng/asany-server/compare/v0.2.37...v0.3.0) (2024-04-25)
 
 
