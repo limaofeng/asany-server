@@ -11,12 +11,6 @@ directive @numberFormat on FIELD_DEFINITION
 """
 directive @fileSize(unit: String!) on FIELD_DEFINITION
 
-enum UpdateMode {
-  ADD
-  REMOVE
-  REPLACE
-}
-
 """
 页信息
 """
