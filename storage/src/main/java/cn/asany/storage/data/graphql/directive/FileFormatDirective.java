@@ -62,13 +62,13 @@ public class FileFormatDirective implements SchemaDirectiveWiring {
           .type(
               GraphQLEnumType.newEnum()
                   .name(DIRECTIVE_NAME)
-                  .description("文件自定在格式")
+                  .description("文件自定义格式")
                   .value(FORMAT_BASE64, FORMAT_BASE64, "仅支持图片")
                   .value(FORMAT_URL, FORMAT_URL, "自动添加上域名")
                   .value(FORMAT_PATH, FORMAT_PATH, "只返回 PATH")
                   .value(FORMAT_ID, FORMAT_ID, "只返回 ID")
                   .build())
-          .description("文件自定在格式");
+          .description("文件自定义格式");
 
   private final AuthTokenService authTokenService;
   private final StorageResolver storageResolver;
