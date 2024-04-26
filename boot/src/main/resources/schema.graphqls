@@ -1,10 +1,4 @@
-"""
-文件格式化
-"""
-directive @fileFormat on FIELD_DEFINITION
-
 scalar JSON
-scalar File
 scalar Number
 
 enum FileSizeUnit {
