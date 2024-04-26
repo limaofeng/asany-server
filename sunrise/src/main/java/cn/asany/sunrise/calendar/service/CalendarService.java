@@ -296,7 +296,7 @@ public class CalendarService {
   @Transactional(rollbackFor = RuntimeException.class)
   public Calendar refresh(Long id) {
     Optional<Calendar> optional = this.calendarDao.findById(id);
-    if (!optional.isPresent()) {
+    if (optional.isEmpty()) {
       throw new ValidationException(String.format("日历[%d]订阅不存在", id));
     }
     Calendar calendar = optional.get();

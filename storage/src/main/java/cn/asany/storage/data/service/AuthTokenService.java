@@ -73,6 +73,7 @@ public class AuthTokenService {
   }
 
   private AuthToken buildAuthToken(String data) {
+    //noinspection rawtypes
     HashMap object = JSON.deserialize(data, HashMap.class);
     return AuthToken.builder()
         .user(Long.valueOf(object.get("user").toString()))

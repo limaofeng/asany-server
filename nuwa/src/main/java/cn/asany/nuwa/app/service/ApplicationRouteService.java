@@ -81,7 +81,7 @@ public class ApplicationRouteService {
 
   public void delete(Long id) {
     Optional<ApplicationRoute> optional = this.routeDao.findById(id);
-    if (!optional.isPresent()) {
+    if (optional.isEmpty()) {
       return;
     }
     this.routeDao.deleteById(id);

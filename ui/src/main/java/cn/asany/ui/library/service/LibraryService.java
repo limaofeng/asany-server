@@ -89,7 +89,7 @@ public class LibraryService {
 
   public void delete(Long id) {
     Optional<Library> optional = this.libraryDao.findByIdWithIcon(id);
-    if (!optional.isPresent()) {
+    if (optional.isEmpty()) {
       return;
     }
     Library library = optional.get();

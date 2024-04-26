@@ -15,6 +15,7 @@
  */
 package cn.asany.nuwa.app;
 
+import cn.asany.boot.TestApplication;
 import cn.asany.cms.module.CmsModuleProperties;
 import cn.asany.nuwa.YamlUtils;
 import cn.asany.nuwa.app.domain.Application;
@@ -25,7 +26,6 @@ import cn.asany.nuwa.app.service.ApplicationMenuService;
 import cn.asany.nuwa.app.service.ApplicationRouteService;
 import cn.asany.nuwa.app.service.ApplicationService;
 import cn.asany.nuwa.app.service.dto.NativeApplication;
-import cn.asany.shanhai.TestApplication;
 import cn.asany.ui.library.service.LibraryService;
 import java.io.InputStream;
 import java.util.ArrayList;

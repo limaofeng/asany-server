@@ -63,7 +63,7 @@ public class IconService {
             PropertyFilter.newFilter()
                 .equal("resourceId", id)
                 .equal("resourceType", Icon.RESOURCE_NAME));
-    if (!optionalIcon.isPresent() || !optionalItem.isPresent()) {
+    if (optionalIcon.isEmpty() || optionalItem.isEmpty()) {
       throw new ValidationException("图标{" + id + "}不存在");
     }
     this.libraryItemDao.delete(optionalItem.get());
@@ -74,7 +74,7 @@ public class IconService {
     long start = System.currentTimeMillis();
 
     Optional<Library> optional = this.libraryDao.findByIdWithIcon(libraryId);
-    if (!optional.isPresent()) {
+    if (optional.isEmpty()) {
       throw new ValidationException("图标库{" + libraryId + "}不正确");
     }
     Library library = optional.get();
@@ -142,14 +142,14 @@ public class IconService {
     returnVal.addAll(itemSaveEntities);
     returnVal.addAll(itemUpdateEntities);
     System.out.println("处理图标:" + icons.size() + "个\t times = " + times);
-    return this.libraryConverter.toIcons(returnVal.stream().collect(Collectors.toSet()));
+    return this.libraryConverter.toIcons(new HashSet<>(returnVal));
   }
 
   public Icon save(Long libraryId, Icon icon) {
     icon.setType(IconType.SVG);
 
     Optional<Library> optional = this.libraryDao.findByIdWithIcon(libraryId);
-    if (!optional.isPresent()) {
+    if (optional.isEmpty()) {
       throw new ValidationException("图标库{" + libraryId + "}不存在");
     }
     Library library = optional.get();
