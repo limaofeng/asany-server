@@ -26,7 +26,6 @@ import cn.asany.ui.library.service.LibraryService;
 import graphql.execution.ExecutionStepInfo;
 import graphql.kickstart.tools.GraphQLResolver;
 import graphql.schema.DataFetchingEnvironment;
-
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -87,7 +86,9 @@ public class ApplicationGraphQLResolver implements GraphQLResolver<Application> 
         stream = stream.filter(item -> filter.getEnabled().equals(item.getEnabled()));
       }
 
-      return stream.sorted(Comparator.comparingInt(ApplicationRoute::getIndex)).collect(Collectors.toList());
+      return stream
+          .sorted(Comparator.comparingInt(ApplicationRoute::getIndex))
+          .collect(Collectors.toList());
     }
     List<ApplicationRoute> routes =
         this.applicationService.findRouteAllByApplicationWithComponent(application.getId());
