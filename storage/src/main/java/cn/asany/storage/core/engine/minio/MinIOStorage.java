@@ -110,7 +110,7 @@ public class MinIOStorage implements Storage {
       return new MinIOFileObject(this, absolutePath, FileObjectMetadata.ROOT);
     }
     Optional<FileObjectMetadata> optional = getObjectMetadata(absolutePath);
-    if (!optional.isPresent()) {
+    if (optional.isEmpty()) {
       return null;
     }
     FileObjectMetadata metadata = optional.get();

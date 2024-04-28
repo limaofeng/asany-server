@@ -66,12 +66,10 @@ public class SimpleMessage implements Message, Serializable {
   }
 
   public <T> T getOriginalMessage() {
-    //noinspection unchecked
     return (T) get("originalMessage");
   }
 
   public <T> T getOriginalMessageType() {
-    //noinspection unchecked
     return (T) get("originalMessageType");
   }
 

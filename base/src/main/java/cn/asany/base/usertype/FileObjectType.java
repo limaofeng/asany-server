@@ -20,21 +20,13 @@ import net.asany.jfantasy.framework.jackson.JSON;
 import net.asany.jfantasy.framework.util.common.StringUtil;
 import org.hibernate.type.descriptor.WrapperOptions;
 import org.hibernate.type.descriptor.java.AbstractJavaType;
-import org.hibernate.type.descriptor.java.MutableMutabilityPlan;
 
-public class FileObjectTypeDescriptor extends AbstractJavaType<FileObject> {
+public class FileObjectType extends AbstractJavaType<FileObject> {
 
-  public static final FileObjectTypeDescriptor INSTANCE = new FileObjectTypeDescriptor();
+  public static final FileObjectType INSTANCE = new FileObjectType();
 
-  public FileObjectTypeDescriptor() {
-    super(
-        FileObject.class,
-        new MutableMutabilityPlan<>() {
-          @Override
-          protected FileObject deepCopyNotNull(FileObject value) {
-            return value;
-          }
-        });
+  public FileObjectType() {
+    super(FileObject.class);
   }
 
   @Override
@@ -42,21 +34,21 @@ public class FileObjectTypeDescriptor extends AbstractJavaType<FileObject> {
     return JSON.serialize(value);
   }
 
-  public FileObject fromString(String value) {
-    if (StringUtil.isBlank(value)) {
+  @Override
+  public FileObject fromString(CharSequence string) {
+    if (StringUtil.isBlank(string.toString())) {
       return null;
     }
-    return JSON.deserialize(value, FileObject.class);
+    return JSON.deserialize(string.toString(), FileObject.class);
   }
 
   @Override
   public <X> X unwrap(FileObject value, Class<X> type, WrapperOptions options) {
-    //noinspection unchecked
     return (X) toString(value);
   }
 
   @Override
   public <X> FileObject wrap(X value, WrapperOptions options) {
-    return fromString((String) value);
+    return fromString((CharSequence) value);
   }
 }

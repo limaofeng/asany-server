@@ -13,18 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.asany.base.usertype;
+package cn.asany.sunrise.calendar.dao;
 
-import cn.asany.storage.api.FileObject;
-import java.util.function.BiConsumer;
-import org.hibernate.type.descriptor.java.BasicJavaType;
-import org.hibernate.type.descriptor.jdbc.JdbcType;
-import org.hibernate.type.descriptor.jdbc.JsonJdbcType;
-import org.hibernate.usertype.BaseUserTypeSupport;
+import cn.asany.sunrise.calendar.domain.toys.CalendarEventDateStat;
+import org.hibernate.query.TupleTransformer;
 
-public class FileUserType extends BaseUserTypeSupport<FileObject> {
+public class CalendarEventDateStatResultTransformer
+    implements TupleTransformer<CalendarEventDateStat> {
   @Override
-  protected void resolve(BiConsumer<BasicJavaType<FileObject>, JdbcType> resolutionConsumer) {
-    resolutionConsumer.accept(FileObjectType.INSTANCE, JsonJdbcType.INSTANCE);
+  public CalendarEventDateStat transformTuple(Object[] tuple, String[] aliases) {
+    return CalendarEventDateStat.builder()
+        .date((java.util.Date) tuple[0])
+        .number((Long) tuple[1])
+        .build();
   }
 }

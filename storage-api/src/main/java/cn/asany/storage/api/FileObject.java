@@ -1,5 +1,21 @@
+/*
+ * Copyright (c) 2024 Asany
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.asany.net/licenses/MIT
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package cn.asany.storage.api;
 
+import cn.asany.storage.databind.DefaultFileObjectDeserializer;
 import cn.asany.storage.databind.DefaultFileObjectSerializer;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -22,7 +38,8 @@ import java.util.List;
  * @version 1.0
  * @since 2013-9-8 下午4:49:25
  */
-@JsonDeserialize(using = DefaultFileObjectSerializer.class)
+@JsonDeserialize(using = DefaultFileObjectDeserializer.class)
+@JsonSerialize(using = DefaultFileObjectSerializer.class)
 public interface FileObject extends Serializable {
 
   String ROOT_PATH = "/";

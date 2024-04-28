@@ -40,6 +40,8 @@ import cn.asany.ui.resources.domain.Component;
 import cn.asany.ui.resources.domain.enums.ComponentScope;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import net.asany.jfantasy.framework.dao.hibernate.util.HibernateUtils;
 import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
 import net.asany.jfantasy.framework.error.ValidationException;
 import net.asany.jfantasy.framework.security.auth.core.ClientDetails;
@@ -137,16 +139,17 @@ public class ApplicationService implements ClientDetailsService {
       condition = "#p1 && #p2")
   public Optional<Application> findDetailsByClientId(
       String id, boolean hasFetchRoutes, boolean hasFetchMenus) {
+    Optional<Application> optional;
     if (hasFetchRoutes && hasFetchMenus) {
-      return this.applicationDao.findDetailsByClientId(id);
+      optional = this.applicationDao.findDetailsByClientId(id);
+    } else if (hasFetchRoutes) {
+      optional = this.applicationDao.findOneWithRoutesByClientId(id);
+    } else if (hasFetchMenus) {
+      optional = this.applicationDao.findOneWithMenusByClientId(id);
+    } else {
+      optional = this.applicationDao.findOneBy("clientId", id);
     }
-    if (hasFetchRoutes) {
-      return this.applicationDao.findOneWithRoutesByClientId(id);
-    }
-    if (hasFetchMenus) {
-      return this.applicationDao.findOneWithMenusByClientId(id);
-    }
-    return this.applicationDao.findOneBy("clientId", id);
+    return optional.map(HibernateUtils::cloneEntity);
   }
 
   @Transactional(readOnly = true)
@@ -200,7 +203,7 @@ public class ApplicationService implements ClientDetailsService {
   @Transactional
   public Application createApplication(NativeApplication nativeApplication, Long template) {
     Optional<ApplicationTemplate> optionalTemplate = this.applicationTemplateDao.findById(template);
-    if (!optionalTemplate.isPresent()) {
+    if (optionalTemplate.isEmpty()) {
       throw new ValidationException("应用模版" + template + "不存在");
     }
     return createApplication(nativeApplication, optionalTemplate);
@@ -291,7 +294,7 @@ public class ApplicationService implements ClientDetailsService {
   public void deleteApplication(String clientId) {
     Optional<Application> application =
         this.applicationDao.findOne(PropertyFilter.newFilter().equal("clientId", clientId));
-    if (!application.isPresent()) {
+    if (application.isEmpty()) {
       return;
     }
     deleteApplication(application.get().getId());
@@ -323,8 +326,7 @@ public class ApplicationService implements ClientDetailsService {
                 .equal("component.scope", ComponentScope.MENU)
                 .equal("application.id", id)
                 .isNotNull("component"));
-    components.addAll(
-        menus.stream().map(ApplicationMenu::getComponent).collect(Collectors.toList()));
+    components.addAll(menus.stream().map(ApplicationMenu::getComponent).toList());
 
     String clientId = app.getClientId();
 

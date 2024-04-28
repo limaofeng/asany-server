@@ -16,6 +16,7 @@
 package cn.asany.sunrise.calendar.dao.impl;
 
 import cn.asany.sunrise.calendar.dao.CalendarEventDao;
+import cn.asany.sunrise.calendar.dao.CalendarEventDateStatResultTransformer;
 import cn.asany.sunrise.calendar.domain.CalendarEvent;
 import cn.asany.sunrise.calendar.domain.toys.CalendarEventDateStat;
 import cn.asany.sunrise.calendar.domain.toys.DateRange;
@@ -23,10 +24,8 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import java.util.Date;
 import java.util.List;
-import net.asany.jfantasy.framework.dao.hibernate.AliasToBeanResultTransformer;
 import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
 import net.asany.jfantasy.framework.dao.jpa.SimpleAnyJpaRepository;
-import org.hibernate.query.sql.internal.NativeQueryImpl;
 import org.springframework.data.domain.Sort;
 
 /**
@@ -109,8 +108,8 @@ public class CalendarEventDaoImpl extends SimpleAnyJpaRepository<CalendarEvent, 
     query.setParameter("starts", starts);
     query.setParameter("ends", ends);
     query
-        .unwrap(NativeQueryImpl.class)
-        .setResultTransformer(new AliasToBeanResultTransformer(CalendarEventDateStat.class));
+        .unwrap(org.hibernate.query.Query.class)
+        .setTupleTransformer(new CalendarEventDateStatResultTransformer());
     return query.getResultList();
   }
 
@@ -122,8 +121,8 @@ public class CalendarEventDaoImpl extends SimpleAnyJpaRepository<CalendarEvent, 
     query.setParameter("starts", starts);
     query.setParameter("ends", ends);
     query
-        .unwrap(NativeQueryImpl.class)
-        .setResultTransformer(new AliasToBeanResultTransformer(CalendarEventDateStat.class));
+        .unwrap(org.hibernate.query.Query.class)
+        .setTupleTransformer(new CalendarEventDateStatResultTransformer());
     return query.getResultList();
   }
 
@@ -133,8 +132,8 @@ public class CalendarEventDaoImpl extends SimpleAnyJpaRepository<CalendarEvent, 
     query.setParameter("starts", starts);
     query.setParameter("ends", ends);
     query
-        .unwrap(NativeQueryImpl.class)
-        .setResultTransformer(new AliasToBeanResultTransformer(CalendarEventDateStat.class));
+        .unwrap(org.hibernate.query.Query.class)
+        .setTupleTransformer(new CalendarEventDateStatResultTransformer());
     return query.getResultList();
   }
 
@@ -153,8 +152,8 @@ public class CalendarEventDaoImpl extends SimpleAnyJpaRepository<CalendarEvent, 
     query.setParameter("date", date);
     query.setParameter("uid", uid);
     query
-        .unwrap(NativeQueryImpl.class)
-        .setResultTransformer(new AliasToBeanResultTransformer(CalendarEventDateStat.class));
+        .unwrap(org.hibernate.query.Query.class)
+        .setTupleTransformer(new CalendarEventDateStatResultTransformer());
     List<CalendarEventDateStat> list = query.getResultList();
     Date end = list.isEmpty() ? date : list.get(0).getDate();
 
@@ -171,8 +170,8 @@ public class CalendarEventDaoImpl extends SimpleAnyJpaRepository<CalendarEvent, 
     query.setParameter("date", date);
     query.setParameter("uid", uid);
     query
-        .unwrap(NativeQueryImpl.class)
-        .setResultTransformer(new AliasToBeanResultTransformer(CalendarEventDateStat.class));
+        .unwrap(org.hibernate.query.Query.class)
+        .setTupleTransformer(new CalendarEventDateStatResultTransformer());
     list = query.getResultList();
     Date start = list.isEmpty() ? date : list.get(0).getDate();
     return DateRange.builder().start(start).end(end).build();
@@ -193,8 +192,8 @@ public class CalendarEventDaoImpl extends SimpleAnyJpaRepository<CalendarEvent, 
     query.setParameter("date", date);
     query.setParameter("calendarSet", calendarSet);
     query
-        .unwrap(NativeQueryImpl.class)
-        .setResultTransformer(new AliasToBeanResultTransformer(CalendarEventDateStat.class));
+        .unwrap(org.hibernate.query.Query.class)
+        .setTupleTransformer(new CalendarEventDateStatResultTransformer());
     List<CalendarEventDateStat> list = query.getResultList();
     Date end = list.isEmpty() ? date : list.get(0).getDate();
 
@@ -211,8 +210,8 @@ public class CalendarEventDaoImpl extends SimpleAnyJpaRepository<CalendarEvent, 
     query.setParameter("date", date);
     query.setParameter("calendarSet", calendarSet);
     query
-        .unwrap(NativeQueryImpl.class)
-        .setResultTransformer(new AliasToBeanResultTransformer(CalendarEventDateStat.class));
+        .unwrap(org.hibernate.query.Query.class)
+        .setTupleTransformer(new CalendarEventDateStatResultTransformer());
     list = query.getResultList();
     Date start = list.isEmpty() ? date : list.get(0).getDate();
     return DateRange.builder().start(start).end(end).build();

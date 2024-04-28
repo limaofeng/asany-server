@@ -69,11 +69,13 @@ import org.hibernate.Hibernate;
           name = "SubGraph.ApplicationMenu.FetchComponent",
           attributeNodes = {
             @NamedAttributeNode(value = "parent"),
+            @NamedAttributeNode(value = "component")
           }),
       @NamedSubgraph(
           name = "SubGraph.ApplicationRoute.FetchComponent",
           attributeNodes = {
             @NamedAttributeNode(value = "parent"),
+            @NamedAttributeNode(value = "component")
           }),
       @NamedSubgraph(
           name = "SubGraph.ApplicationModule.FetchConfiguration",
