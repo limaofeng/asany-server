@@ -279,7 +279,7 @@ public class FileObjectMetadata implements Serializable {
   }
 
   public boolean isDir() {
-    return (boolean) metadata.get(IS_DIR);
+    return (boolean) metadata.getOrDefault(IS_DIR, false);
   }
 
   public static class FileObjectMetadataBuilder {
