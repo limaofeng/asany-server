@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.6](https://github.com/limaofeng/asany-server/compare/v0.3.5...v0.3.6) (2024-04-28)
+
+
+### Bug Fixes
+
+* 获取 isDir 为 Null 的问题 ([b936a6c](https://github.com/limaofeng/asany-server/commit/b936a6c045f2b73aed35b2d05758d39ca6522a63))
+* 解决升级 SpringBoot 后的问题 ([b6d79f7](https://github.com/limaofeng/asany-server/commit/b6d79f7e0cf7b788b71c77c5d555312ef74b1f93))
+
 ### [0.3.5](https://github.com/limaofeng/asany-server/compare/v0.3.4...v0.3.5) (2024-04-26)
 
 
