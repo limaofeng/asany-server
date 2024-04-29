@@ -24,6 +24,8 @@ import cn.asany.ui.resources.domain.enums.ComponentScope;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import net.asany.jfantasy.framework.dao.hibernate.util.HibernateUtils;
 import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -104,6 +106,6 @@ public class ComponentService {
 
   @Cacheable(key = "targetClass  + '.' +  methodName + '#' + #p0", value = CACHE_KEY)
   public Optional<Component> findById(Long id) {
-    return this.componentDao.findById(id);
+    return this.componentDao.findById(id).map(HibernateUtils::cloneEntity);
   }
 }

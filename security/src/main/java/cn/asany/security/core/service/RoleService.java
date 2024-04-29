@@ -26,6 +26,8 @@ import cn.asany.security.core.exception.ValidDataException;
 import cn.asany.security.core.graphql.enums.RoleAssignEntityTypeEnum;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import net.asany.jfantasy.framework.dao.hibernate.util.HibernateUtils;
 import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
 import net.asany.jfantasy.framework.spring.SpringBeanUtils;
 import net.asany.jfantasy.framework.util.common.ObjectUtil;
@@ -79,7 +81,7 @@ public class RoleService {
 
   @Cacheable(key = "'id=' + #p0", value = CACHE_KEY)
   public Optional<Role> findById(Long id) {
-    return this.roleDao.findById(id);
+    return this.roleDao.findById(id).map(HibernateUtils::cloneEntity);
   }
 
   public Optional<Role> findByCode(String role) {

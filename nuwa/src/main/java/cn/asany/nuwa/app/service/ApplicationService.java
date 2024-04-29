@@ -123,7 +123,7 @@ public class ApplicationService implements ClientDetailsService {
     if (optional.isEmpty()) {
       throw new ClientRegistrationException("[client_id=" + clientId + "]不存在");
     }
-    return optional.get();
+    return HibernateUtils.cloneEntity(optional.get());
   }
 
   @Transactional(rollbackFor = RuntimeException.class)
@@ -154,8 +154,8 @@ public class ApplicationService implements ClientDetailsService {
   @Transactional(readOnly = true)
   @Cacheable(key = "targetClass  + '.' +  methodName + '#' + #p0", value = CACHE_KEY)
   public List<ApplicationDependency> findDependencies(Long id) {
-    return this.applicationDependencyDao.findAll(
-        PropertyFilter.newFilter().equal("application.id", id), Sort.by("createdAt").ascending());
+    return HibernateUtils.cloneEntity(this.applicationDependencyDao.findAll(
+        PropertyFilter.newFilter().equal("application.id", id), Sort.by("createdAt").ascending()));
   }
 
   @Transactional(rollbackFor = RuntimeException.class)
@@ -165,16 +165,17 @@ public class ApplicationService implements ClientDetailsService {
       condition = "#p1 && #p2")
   public Optional<Application> findDetailsById(
       Long id, boolean hasFetchRoutes, boolean hasFetchMenus) {
+    Optional<Application> optional;
     if (hasFetchRoutes && hasFetchMenus) {
-      return this.applicationDao.findDetailsById(id);
+      optional = this.applicationDao.findDetailsById(id);
+    }else if (hasFetchRoutes) {
+      optional = this.applicationDao.findOneWithRoutesById(id);
+    }else  if (hasFetchMenus) {
+      optional = this.applicationDao.findOneWithMenusById(id);
+    } else {
+      optional = this.applicationDao.findById(id);
     }
-    if (hasFetchRoutes) {
-      return this.applicationDao.findOneWithRoutesById(id);
-    }
-    if (hasFetchMenus) {
-      return this.applicationDao.findOneWithMenusById(id);
-    }
-    return this.applicationDao.findById(id);
+    return optional.map(HibernateUtils::cloneEntity);
   }
 
   @Transactional

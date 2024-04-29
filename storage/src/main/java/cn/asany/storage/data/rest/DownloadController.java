@@ -199,7 +199,7 @@ public class DownloadController {
       throws IOException {
     Set<String> parentPath = new HashSet<>();
 
-    log.debug("开始查询需要打包的数据:" + Arrays.toString(fileIds));
+    log.debug("开始查询需要打包的数据:{}", Arrays.toString(fileIds));
     List<FileObject> files = new ArrayList<>();
     for (String fid : fileIds) {
       IdUtils.FileKey fileKey = IdUtils.parseKey(fid);
@@ -212,14 +212,13 @@ public class DownloadController {
 
       if (file.isDirectory()) {
         List<FileObject> fileObjects = file.listFiles(new FileItemSelector() {});
-        files.addAll(
-            fileObjects.stream().filter(item -> !item.isDirectory()).collect(Collectors.toList()));
+        files.addAll(fileObjects.stream().filter(item -> !item.isDirectory()).toList());
       } else {
         files.add(file);
       }
     }
 
-    log.debug("查询需要打包的数据:" + Arrays.toString(fileIds) + ", 共" + files.size() + "个文件");
+    log.debug("查询需要打包的数据:{}, 共{}个文件", Arrays.toString(fileIds), files.size());
     String name =
         StringUtil.md5(
             files.stream()
@@ -237,11 +236,11 @@ public class DownloadController {
     FileObject tempZip = storage.getFileItem(tempPath);
 
     if (tempZip != null) {
-      log.debug("打包的数据:" + Arrays.toString(fileIds) + ", 存在缓存,返回缓存数据");
+      log.debug("打包的数据:{}, 存在缓存,返回缓存数据", Arrays.toString(fileIds));
       return tempZip;
     }
 
-    log.debug("打包的数据:" + Arrays.toString(fileIds) + ", 没有缓存,执行打包操作");
+    log.debug("打包的数据:{}, 没有缓存,执行打包操作", Arrays.toString(fileIds));
     Path tmp = FileUtil.tmp();
     OutputStream tempOutput = Files.newOutputStream(tmp);
     // new FileOutputStream(tmp.toFile())
@@ -277,14 +276,14 @@ public class DownloadController {
 
       ZipUtil.compress(files, tempOutput, options);
 
-      log.debug("打包的数据:" + Arrays.toString(fileIds) + ", 完成压缩打包操作");
+      log.debug("打包的数据:{}, 完成压缩打包操作", Arrays.toString(fileIds));
 
       String zipPath = tempFolder.getPath() + filename;
       String showName = "【批量下载】" + files.get(0).getName() + " 等 (" + files.size() + ").zip";
 
       storage.writeFile(zipPath, tmp.toFile(), showName);
 
-      log.debug("打包的数据:" + Arrays.toString(fileIds) + ", 完成压缩包上传操作");
+      log.debug("打包的数据:{}, 完成压缩包上传操作", Arrays.toString(fileIds));
       return storage.getFileItem(zipPath);
     } finally {
       StreamUtil.closeQuietly(tempOutput);

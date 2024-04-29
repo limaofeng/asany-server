@@ -17,6 +17,7 @@ package cn.asany.storage.data.service;
 
 import cn.asany.storage.data.dao.SpaceDao;
 import cn.asany.storage.data.domain.Space;
+import net.asany.jfantasy.framework.dao.hibernate.util.HibernateUtils;
 import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.hibernate.Hibernate;
 import org.springframework.cache.annotation.Cacheable;
@@ -51,7 +52,7 @@ public class SpaceService {
   @Cacheable(key = "targetClass + '#' + #p0", cacheNames = "STORAGE")
   public Space get(String id) {
     Space space = this.spaceDao.getReferenceById(id);
-    return (Space) Hibernate.unproxy(space);
+    return HibernateUtils.cloneEntity((Space) Hibernate.unproxy(space));
   }
 
   public boolean direcroryKeyUnique(String key) {

@@ -17,7 +17,7 @@ buildCache {
     }
 }
 
-rootProject.name = 'sunmao'
+rootProject.name = 'asany-server'
 include ":weixin-api",
         ":weixin",
         ":openapi",

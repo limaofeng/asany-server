@@ -23,6 +23,8 @@ import cn.asany.system.domain.DictType;
 import com.github.stuxuhai.jpinyin.PinyinException;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import net.asany.jfantasy.framework.dao.hibernate.util.HibernateUtils;
 import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
 import net.asany.jfantasy.framework.error.ValidationException;
 import net.asany.jfantasy.framework.spring.mvc.error.NotFoundException;
@@ -109,7 +111,7 @@ public class DictService {
 
   @Cacheable(key = "targetClass + methodName + '#' + #p0.toString()", value = CACHE_KEY)
   public List<Dict> findAll(PropertyFilter filter) {
-    return this.dictDao.findAll(filter);
+    return HibernateUtils.cloneEntity(this.dictDao.findAll(filter));
   }
 
   public List<Dict> findAll(PropertyFilter filter, Sort orderBy) {

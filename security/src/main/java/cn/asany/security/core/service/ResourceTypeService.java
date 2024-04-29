@@ -19,6 +19,8 @@ import cn.asany.security.core.dao.ResourceTypeDao;
 import cn.asany.security.core.domain.AuthorizedService;
 import cn.asany.security.core.domain.ResourceType;
 import java.util.Optional;
+
+import net.asany.jfantasy.framework.dao.hibernate.util.HibernateUtils;
 import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.hibernate.Hibernate;
 import org.springframework.cache.Cache;
@@ -56,7 +58,7 @@ public class ResourceTypeService {
   @Transactional(readOnly = true)
   public Optional<ResourceType> findByResourceName(String resourceName) {
     return this.resourceTypeDao.findOne(
-        PropertyFilter.newFilter().equal("resourceName", resourceName));
+        PropertyFilter.newFilter().equal("resourceName", resourceName)).map(HibernateUtils::cloneEntity);
   }
 
   @Cacheable(key = "targetClass + methodName + '#' + #p0.toString()", value = CACHE_KEY)
@@ -70,7 +72,7 @@ public class ResourceTypeService {
               Hibernate.unproxy(item.getService());
               item.getArns().forEach(Hibernate::unproxy);
               return item;
-            });
+            }).map(HibernateUtils::cloneEntity);
   }
 
   @Transactional(readOnly = true)

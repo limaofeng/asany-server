@@ -31,6 +31,7 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 import lombok.SneakyThrows;
+import net.asany.jfantasy.framework.dao.hibernate.util.HibernateUtils;
 import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
 import net.asany.jfantasy.schedule.service.TaskScheduler;
 import org.hibernate.Hibernate;
@@ -77,7 +78,7 @@ public class ThumbnailService {
         item -> {
           Hibernate.initialize(item.getFile());
           return Hibernate.unproxy(item, Thumbnail.class);
-        });
+        }).map(HibernateUtils::cloneEntity);
   }
 
   @SneakyThrows({UploadException.class})

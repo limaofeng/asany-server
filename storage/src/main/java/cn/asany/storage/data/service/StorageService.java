@@ -29,6 +29,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import net.asany.jfantasy.framework.dao.hibernate.util.HibernateUtils;
 import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
 import net.asany.jfantasy.framework.dao.jpa.SimpleAnyJpaRepository;
 import net.asany.jfantasy.framework.spring.SpringBeanUtils;
@@ -64,7 +65,7 @@ public class StorageService {
 
   @Cacheable(key = "targetClass + '.' + methodName + '#' + #p0", value = "STORAGE")
   public StorageConfig get(String id) {
-    return Hibernate.unproxy(this.storageConfigDao.getReferenceById(id), StorageConfig.class);
+    return HibernateUtils.cloneEntity(Hibernate.unproxy(this.storageConfigDao.getReferenceById(id), StorageConfig.class));
   }
 
   public StorageConfig save(StorageConfig storage) {
