@@ -26,7 +26,6 @@ import cn.asany.security.core.exception.ValidDataException;
 import cn.asany.security.core.graphql.enums.RoleAssignEntityTypeEnum;
 import java.util.*;
 import java.util.stream.Collectors;
-
 import net.asany.jfantasy.framework.dao.hibernate.util.HibernateUtils;
 import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
 import net.asany.jfantasy.framework.spring.SpringBeanUtils;

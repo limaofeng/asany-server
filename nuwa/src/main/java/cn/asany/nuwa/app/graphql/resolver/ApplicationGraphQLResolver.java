@@ -118,18 +118,21 @@ public class ApplicationGraphQLResolver implements GraphQLResolver<Application> 
     return this.licenceService.findOneByActive(application.getId(), orgId);
   }
 
-  public List<ApplicationDependency> dependencies(Application application) {
-    return this.applicationService.findDependencies(application.getId());
+  public Set<ApplicationDependency> dependencies(Application application) {
+    if (application.getDependencies() != null) {
+      return application.getDependencies();
+    }
+    return new HashSet<>(this.applicationService.findDependencies(application.getId()));
   }
 
   public Optional<ComponentLibrary> componentLibrary(Application application) {
-    List<ApplicationDependency> dependencies = this.dependencies(application);
+    List<ApplicationDependency> dependencies = this.dependencies(application).stream().toList();
     Optional<String> libraryId =
         dependencies.stream()
             .filter(item -> item.getName().equals("component.library"))
             .findFirst()
             .map(ApplicationDependency::getValue);
-    if (!libraryId.isPresent()) {
+    if (libraryId.isEmpty()) {
       return Optional.empty();
     }
     Optional<Library> library = libraryService.findById(Long.valueOf(libraryId.get()));

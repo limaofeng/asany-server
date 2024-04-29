@@ -63,6 +63,9 @@ import org.hibernate.Hibernate;
           subgraph = "SubGraph.ApplicationModule.FetchConfiguration"),
       @NamedAttributeNode(value = "menus", subgraph = "SubGraph.ApplicationMenu.FetchComponent"),
       @NamedAttributeNode(value = "routes", subgraph = "SubGraph.ApplicationRoute.FetchComponent"),
+      @NamedAttributeNode(
+          value = "dependencies",
+          subgraph = "SubGraph.ApplicationDependency.FetchAttributes"),
     },
     subgraphs = {
       @NamedSubgraph(
@@ -82,6 +85,12 @@ import org.hibernate.Hibernate;
           attributeNodes = {
             @NamedAttributeNode(value = "module"),
             @NamedAttributeNode(value = "values"),
+          }),
+      @NamedSubgraph(
+          name = "SubGraph.ApplicationDependency.FetchAttributes",
+          attributeNodes = {
+            @NamedAttributeNode(value = "name"),
+            @NamedAttributeNode(value = "value"),
           })
     })
 @NamedEntityGraph(

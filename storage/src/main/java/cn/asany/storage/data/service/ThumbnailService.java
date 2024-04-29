@@ -74,11 +74,13 @@ public class ThumbnailService {
     Optional<Thumbnail> optional =
         this.thumbnailDao.findOne(
             PropertyFilter.newFilter().equal("size", size).equal("source.id", source));
-    return optional.map(
-        item -> {
-          Hibernate.initialize(item.getFile());
-          return Hibernate.unproxy(item, Thumbnail.class);
-        }).map(HibernateUtils::cloneEntity);
+    return optional
+        .map(
+            item -> {
+              Hibernate.initialize(item.getFile());
+              return Hibernate.unproxy(item, Thumbnail.class);
+            })
+        .map(HibernateUtils::cloneEntity);
   }
 
   @SneakyThrows({UploadException.class})

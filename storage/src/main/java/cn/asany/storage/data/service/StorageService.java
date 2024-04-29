@@ -65,7 +65,8 @@ public class StorageService {
 
   @Cacheable(key = "targetClass + '.' + methodName + '#' + #p0", value = "STORAGE")
   public StorageConfig get(String id) {
-    return HibernateUtils.cloneEntity(Hibernate.unproxy(this.storageConfigDao.getReferenceById(id), StorageConfig.class));
+    return HibernateUtils.cloneEntity(
+        Hibernate.unproxy(this.storageConfigDao.getReferenceById(id), StorageConfig.class));
   }
 
   public StorageConfig save(StorageConfig storage) {

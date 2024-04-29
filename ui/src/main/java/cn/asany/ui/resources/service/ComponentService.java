@@ -24,7 +24,6 @@ import cn.asany.ui.resources.domain.enums.ComponentScope;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
 import net.asany.jfantasy.framework.dao.hibernate.util.HibernateUtils;
 import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.springframework.cache.annotation.CacheEvict;

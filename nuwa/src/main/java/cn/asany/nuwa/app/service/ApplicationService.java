@@ -154,8 +154,10 @@ public class ApplicationService implements ClientDetailsService {
   @Transactional(readOnly = true)
   @Cacheable(key = "targetClass  + '.' +  methodName + '#' + #p0", value = CACHE_KEY)
   public List<ApplicationDependency> findDependencies(Long id) {
-    return HibernateUtils.cloneEntity(this.applicationDependencyDao.findAll(
-        PropertyFilter.newFilter().equal("application.id", id), Sort.by("createdAt").ascending()));
+    return HibernateUtils.cloneEntity(
+        this.applicationDependencyDao.findAll(
+            PropertyFilter.newFilter().equal("application.id", id),
+            Sort.by("createdAt").ascending()));
   }
 
   @Transactional(rollbackFor = RuntimeException.class)
@@ -168,9 +170,9 @@ public class ApplicationService implements ClientDetailsService {
     Optional<Application> optional;
     if (hasFetchRoutes && hasFetchMenus) {
       optional = this.applicationDao.findDetailsById(id);
-    }else if (hasFetchRoutes) {
+    } else if (hasFetchRoutes) {
       optional = this.applicationDao.findOneWithRoutesById(id);
-    }else  if (hasFetchMenus) {
+    } else if (hasFetchMenus) {
       optional = this.applicationDao.findOneWithMenusById(id);
     } else {
       optional = this.applicationDao.findById(id);

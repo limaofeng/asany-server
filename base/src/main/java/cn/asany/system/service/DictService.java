@@ -23,7 +23,6 @@ import cn.asany.system.domain.DictType;
 import com.github.stuxuhai.jpinyin.PinyinException;
 import java.util.*;
 import java.util.stream.Collectors;
-
 import net.asany.jfantasy.framework.dao.hibernate.util.HibernateUtils;
 import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
 import net.asany.jfantasy.framework.error.ValidationException;

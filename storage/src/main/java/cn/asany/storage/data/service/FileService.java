@@ -25,7 +25,6 @@ import cn.asany.storage.data.domain.Space;
 import cn.asany.storage.data.domain.StorageConfig;
 import java.io.IOException;
 import java.util.*;
-
 import net.asany.jfantasy.framework.dao.hibernate.util.HibernateUtils;
 import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
 import net.asany.jfantasy.framework.dao.mybatis.keygen.util.DataBaseKeyGenerator;
@@ -208,7 +207,9 @@ public class FileService {
 
   @Cacheable(key = "targetClass + '.' + methodName + '#' + #p0", value = "STORAGE")
   public Optional<FileDetail> findByPath(String path) {
-    return this.fileDetailDao.findOne(PropertyFilter.newFilter().equal("path", path)).map(HibernateUtils::cloneEntity);
+    return this.fileDetailDao
+        .findOne(PropertyFilter.newFilter().equal("path", path))
+        .map(HibernateUtils::cloneEntity);
   }
 
   public boolean exists(String name, Long folder, String storage) {
