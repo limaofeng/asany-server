@@ -210,4 +210,8 @@ public class IconService {
     return libraryConverter.toIcons(
         new HashSet<>(this.libraryItemDao.findAllByTagWithIcon(filter)));
   }
+
+  public Optional<Icon> findById(Long id) {
+    return this.iconDao.findById(id);
+  }
 }

@@ -20,13 +20,16 @@ import cn.asany.ui.library.dao.listener.OplogListener;
 import cn.asany.ui.resources.UIResource;
 import cn.asany.ui.resources.domain.Component;
 import cn.asany.ui.resources.domain.Icon;
+import cn.asany.ui.resources.service.IconService;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import lombok.*;
 import net.asany.jfantasy.framework.dao.BaseBusEntity;
 import net.asany.jfantasy.framework.dao.hibernate.annotations.TableGenerator;
+import net.asany.jfantasy.framework.spring.SpringBeanUtils;
 import org.hibernate.Hibernate;
 
 @Getter
@@ -106,7 +109,13 @@ public class LibraryItem extends BaseBusEntity implements OplogDataCollector {
 
   @JsonIgnore
   public <T extends UIResource> T getResource(Class<T> resourceClass) {
-    return null; // (T) this.resource;
+    if (resourceClass.isAssignableFrom(Icon.class)) {
+      Optional<Icon> optional =
+          SpringBeanUtils.getBean(IconService.class).findById(this.resourceId);
+      //noinspection unchecked
+      return (T) optional.orElseThrow(() -> new RuntimeException("资源不存在"));
+    }
+    throw new RuntimeException("逻辑未实现!");
   }
 
   @Override
