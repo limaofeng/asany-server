@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.7](https://github.com/limaofeng/asany-server/compare/v0.3.6...v0.3.7) (2024-04-29)
+
+
+### Bug Fixes
+
+* hibernate 缓存时，执行克隆 ([a28655e](https://github.com/limaofeng/asany-server/commit/a28655ecf37c7decaaf178c8a1b075f19bbb81ba))
+* hibernate 缓存时，执行克隆 ([4de9c5e](https://github.com/limaofeng/asany-server/commit/4de9c5ed36506a554da426ce512f0c80d814e40b))
+
 ### [0.3.6](https://github.com/limaofeng/asany-server/compare/v0.3.5...v0.3.6) (2024-04-28)
 
 
