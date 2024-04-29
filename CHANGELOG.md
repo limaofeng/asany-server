@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.8](https://github.com/limaofeng/asany-server/compare/v0.3.7...v0.3.8) (2024-04-29)
+
+
+### Bug Fixes
+
+* 简单恢复 LibraryItem.getResource 逻辑 ([d43c02c](https://github.com/limaofeng/asany-server/commit/d43c02c3d7a84540b48a220e1b59d8ced96a1bea))
+
 ### [0.3.7](https://github.com/limaofeng/asany-server/compare/v0.3.6...v0.3.7) (2024-04-29)
 
 
