@@ -125,6 +125,9 @@ public class FileDetail extends BaseBusEntity implements Cloneable {
   @ToString.Exclude
   private List<FileDetail> children;
 
+  @Column(name = "STORAGE_ID", nullable = false, updatable = false, insertable = false, length = 50)
+  private String storageConfigId;
+
   /** 文件命名空间 */
   @JoinColumn(
       name = "STORAGE_ID",
