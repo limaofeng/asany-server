@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.16](https://github.com/limaofeng/asany-server/compare/v0.3.15...v0.3.16) (2024-04-30)
+
+
+### Bug Fixes
+
+* 解决 storage base url 错误问题 ([c3c95c5](https://github.com/limaofeng/asany-server/commit/c3c95c5208f04ffe664188711b39a6e0db505a4b))
+
 ### [0.3.15](https://github.com/limaofeng/asany-server/compare/v0.3.14...v0.3.15) (2024-04-30)
 
 
