@@ -65,7 +65,7 @@ public class MatchFolderPlugin implements StoragePlugin {
     if (!context.isMultipartUpload()) {
       String name = DateUtil.format("yyyyMMdd");
       FileDetail fileDetail = fileService.getFolderOrCreateIt(name, rootFolder.getId());
-      String storageId = fileDetail.getStorageConfig().getId();
+      String storageId = fileDetail.getStorageConfig();
 
       context.setFolder(fileDetail.toFileObject(space));
       context.setStorage(storageResolver.resolve(storageId));

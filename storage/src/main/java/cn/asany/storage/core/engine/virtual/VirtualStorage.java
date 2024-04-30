@@ -69,13 +69,13 @@ public class VirtualStorage implements Storage {
                   "application/zip",
                   size,
                   "",
-                  parentFolder.getStorageConfigId(),
+                  parentFolder.getStorageConfig(),
                   storePath,
                   "",
                   parentFolder.getId());
             });
 
-    Storage innerStorage = this.storageResolver.resolve(fileDetail.getStorageConfigId());
+    Storage innerStorage = this.storageResolver.resolve(fileDetail.getStorageConfig());
 
     innerStorage.writeFile(fileDetail.getStorePath(), file);
 
@@ -158,7 +158,7 @@ public class VirtualStorage implements Storage {
       throw new RuntimeException("只能访问文件");
     }
     return this.storageResolver
-        .resolve(fileDetail.getStorageConfigId())
+        .resolve(fileDetail.getStorageConfig())
         .getFileItem(fileDetail.getStorePath());
   }
 

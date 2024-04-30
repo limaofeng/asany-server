@@ -74,7 +74,7 @@ public class GenerateThumbnailJob implements Job {
 
     FileDetail fileDetail = fileService.getFileById(source);
 
-    Storage storage = storageResolver.resolve(fileDetail.getStorageConfig().getId());
+    Storage storage = storageResolver.resolve(fileDetail.getStorageConfig());
 
     List<Path> temps = new ArrayList<>();
 

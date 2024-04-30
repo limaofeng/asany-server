@@ -186,7 +186,7 @@ public class StorageService {
                 .size(fileObject.getSize())
                 .md5(fileObject.getMetadata().getETag())
                 .parentFile(parentFile)
-                .storageConfig(StorageConfig.builder().id(storageId).build())
+                .storageConfig(storageId)
                 .mimeType(fileObject.getMimeType());
         FileDetail fileDetail = builder.build();
         fileDetail.setCreatedAt(fileObject.lastModified());

@@ -54,7 +54,7 @@ public class FindFolderPlugin implements StoragePlugin {
 
     IdUtils.FileKey fileKey = IdUtils.parseKey(options.getFolder());
     FileDetail fileDetail = fileKey.getFile();
-    String storageId = fileDetail.getStorageConfig().getId();
+    String storageId = fileDetail.getStorageConfig();
     FileObject fileObject = fileKey.getFile().toFileObject(space);
 
     if (!fileObject.getPath().startsWith(rootFolder.getPath())) {

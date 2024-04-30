@@ -161,7 +161,7 @@ public class FileFormatDirective implements SchemaDirectiveWiring {
     String id = OgnlUtil.getInstance().getValue("id", file);
     IdUtils.FileKey fileKey = IdUtils.parseKey(id);
     FileDetail fileDetail = fileKey.getFile();
-    Storage storage = storageResolver.resolve(fileDetail.getStorageConfig().getId());
+    Storage storage = storageResolver.resolve(fileDetail.getStorageConfig());
     // 创建链接
     InputStream is = storage.readFile(fileDetail.getStorePath());
     ByteArrayOutputStream data = new ByteArrayOutputStream();

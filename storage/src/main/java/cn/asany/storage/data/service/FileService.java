@@ -22,7 +22,6 @@ import cn.asany.storage.data.dao.SpaceDao;
 import cn.asany.storage.data.domain.FileDetail;
 import cn.asany.storage.data.domain.FileLabel;
 import cn.asany.storage.data.domain.Space;
-import cn.asany.storage.data.domain.StorageConfig;
 import java.io.IOException;
 import java.util.*;
 import net.asany.jfantasy.framework.dao.hibernate.util.HibernateUtils;
@@ -89,7 +88,7 @@ public class FileService {
     FileDetail fileDetail =
         FileDetail.builder()
             .path(path)
-            .storageConfig(StorageConfig.builder().id(storage).build())
+            .storageConfig(storage)
             .name(fileName)
             .mimeType(contentType)
             .size(length)
@@ -168,7 +167,7 @@ public class FileService {
             .labels(options.getLabels())
             .parentFile(parentFolder)
             .storePath(options.getStorePath())
-            .storage(parentFolder.getStorageConfig().getId())
+            .storage(parentFolder.getStorageConfig())
             .name(name);
 
     FileDetail fileDetail = builder.build();

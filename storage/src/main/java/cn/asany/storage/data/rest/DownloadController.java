@@ -100,7 +100,7 @@ public class DownloadController {
 
     FileDetail thumbFile = fileService.getFileById(thumbnail.getFile().getId());
 
-    Storage storage = storageResolver.resolve(thumbFile.getStorageConfig().getId());
+    Storage storage = storageResolver.resolve(thumbFile.getStorageConfig());
 
     response.setContentType(thumbFile.getMimeType());
     response.setContentLengthLong(thumbFile.getSize());

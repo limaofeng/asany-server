@@ -125,17 +125,17 @@ public class FileDetail extends BaseBusEntity implements Cloneable {
   @ToString.Exclude
   private List<FileDetail> children;
 
-  @Column(name = "STORAGE_ID", nullable = false, updatable = false, insertable = false, length = 50)
-  private String storageConfigId;
+  @Column(name = "STORAGE_ID", nullable = false, updatable = false, length = 50)
+  private String storageConfig;
 
   /** 文件命名空间 */
-  @JoinColumn(
-      name = "STORAGE_ID",
-      nullable = false,
-      foreignKey = @ForeignKey(name = "FK_STORAGE_FILEOBJECT_STORAGE"))
-  @ManyToOne(fetch = FetchType.LAZY)
-  @ToString.Exclude
-  private StorageConfig storageConfig;
+  //  @JoinColumn(
+  //      name = "STORAGE_ID",
+  //      nullable = false,
+  //      foreignKey = @ForeignKey(name = "FK_STORAGE_FILEOBJECT_STORAGE"))
+  //  @ManyToOne(fetch = FetchType.LAZY)
+  //  @ToString.Exclude
+  //  private StorageConfig storageConfig;
 
   /** 文件存储路径 */
   @Column(name = "STORE_PATH", nullable = false, length = 250)
@@ -244,7 +244,7 @@ public class FileDetail extends BaseBusEntity implements Cloneable {
   @Transient
   public FileObject toFileObject(StorageSpace space) {
     VirtualFileObject.VirtualFileObjectBuilder builder = buildVirtualFileObject();
-    builder.storage(space, this.getStorageConfig().getId());
+    builder.storage(space, this.getStorageConfig());
     return builder.build();
   }
 
@@ -258,10 +258,7 @@ public class FileDetail extends BaseBusEntity implements Cloneable {
   public static class FileDetailBuilder {
 
     public FileDetailBuilder storage(String id) {
-      this.storageConfig =
-          StorageConfig.builder()
-              .id(ObjectUtil.defaultValue(id, Storage.DEFAULT_STORAGE_ID))
-              .build();
+      this.storageConfig = ObjectUtil.defaultValue(id, Storage.DEFAULT_STORAGE_ID);
       return this;
     }
   }

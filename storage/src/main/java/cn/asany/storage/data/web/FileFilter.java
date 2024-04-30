@@ -74,7 +74,7 @@ public class FileFilter extends GenericFilterBean {
     Optional<FileDetail> optionalFile = fileService.findByPath(url);
     if (optionalFile.isPresent()) {
       FileDetail file = optionalFile.get();
-      String id = file.getStorageConfig().getId();
+      String id = file.getStorageConfig();
       Storage storage = storageResolver.resolve(id);
       chain.doFilter(request, response);
       return;
@@ -91,7 +91,7 @@ public class FileFilter extends GenericFilterBean {
       }
       // 查找源文件
       FileDetail file = optionalFile.get();
-      String id = file.getStorageConfig().getId();
+      String id = file.getStorageConfig();
       Storage storage = storageResolver.resolve(id);
       FileObject fileObject = null;
       // with(storage.getFileItem(file.getPath()), file.toFileObject(null));
