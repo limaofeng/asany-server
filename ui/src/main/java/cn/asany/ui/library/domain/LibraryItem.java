@@ -119,7 +119,7 @@ public class LibraryItem extends BaseBusEntity implements OplogDataCollector {
   }
 
   @Override
-  public Class getEntityClass() {
+  public Class<?> getEntityClass() {
     if (Icon.RESOURCE_NAME.equals(this.resourceType)) {
       return Icon.class;
     }
