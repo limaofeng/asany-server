@@ -214,7 +214,7 @@ public class FileService {
   public boolean exists(String name, Long folder, String storage) {
     return this.fileDetailDao.exists(
         PropertyFilter.newFilter()
-            .equal("storageConfig.id", storage)
+            .equal("storageConfig", storage)
             .equal("name", name)
             .equal("parentFile.id", folder));
   }
@@ -265,14 +265,14 @@ public class FileService {
         PropertyFilter.newFilter()
             .equal("parentFolder.path", path)
             .equal("isDirectory", true)
-            .equal("storageConfig.id", storage),
+            .equal("storageConfig", storage),
         Sort.by(orderBy));
   }
 
   @Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
   public List<FileDetail> listFileDetail(String path, String storageId, String orderBy) {
     return this.fileDetailDao.findAll(
-        PropertyFilter.newFilter().equal("folder.path", path).equal("storageConfig.id", storageId),
+        PropertyFilter.newFilter().equal("folder.path", path).equal("storageConfig", storageId),
         Sort.by(orderBy));
   }
 
@@ -280,7 +280,7 @@ public class FileService {
   public FileDetail getFileDetailByMd5(String md5, String storageId) {
     List<FileDetail> fileDetails =
         this.fileDetailDao.findAll(
-            PropertyFilter.newFilter().equal("md5", md5).equal("storageConfig.id", storageId));
+            PropertyFilter.newFilter().equal("md5", md5).equal("storageConfig", storageId));
     if (fileDetails.isEmpty()) {
       return null;
     }

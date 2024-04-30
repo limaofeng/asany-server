@@ -141,7 +141,7 @@ public class StorageService {
 
   public Optional<FileDetail> findOneByPath(String id, String path) {
     return this.fileDetailDao.findOne(
-        PropertyFilter.newFilter().equal("storageConfig.id", id).equal("path", path));
+        PropertyFilter.newFilter().equal("storageConfig", id).equal("path", path));
   }
 
   @NoArgsConstructor
@@ -159,7 +159,7 @@ public class StorageService {
     public void exec(List<FileObject> fileObjects) {
       boolean isRoot = FileObject.ROOT_PATH.equals(currentFile.getPath());
 
-      PropertyFilter filter = PropertyFilter.newFilter().equal("storageConfig.id", storageId);
+      PropertyFilter filter = PropertyFilter.newFilter().equal("storageConfig", storageId);
 
       if (isRoot) {
         filter.isNull("parentFile");
@@ -241,7 +241,7 @@ public class StorageService {
             fileDetailDao
                 .findOne(
                     PropertyFilter.newFilter()
-                        .equal("storageConfig.id", storageId)
+                        .equal("storageConfig", storageId)
                         .equal("path", path))
                 .orElse(null);
       }
