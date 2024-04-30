@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.12](https://github.com/limaofeng/asany-server/compare/v0.3.11...v0.3.12) (2024-04-30)
+
+
+### Bug Fixes
+
+* 文件 FileDetail 不直接依赖 storageConfig ([d2e1b0a](https://github.com/limaofeng/asany-server/commit/d2e1b0a36a2d6bbc5173f73ca218af405e5edc10))
+
 ### [0.3.11](https://github.com/limaofeng/asany-server/compare/v0.3.10...v0.3.11) (2024-04-30)
 
 
