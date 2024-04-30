@@ -21,6 +21,7 @@ import cn.asany.cms.content.domain.enums.ContentType;
 import cn.asany.cms.content.domain.enums.DocumentType;
 import cn.asany.storage.api.FileObject;
 import java.util.Map;
+import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -70,5 +71,10 @@ public class DocumentContentService implements ArticleContentHandler<DocumentCon
         .id(id)
         .document(document)
         .build();
+  }
+
+  @Override
+  public Optional<DocumentContent> findById(Long id) {
+    return this.documentContentDao.findById(id);
   }
 }

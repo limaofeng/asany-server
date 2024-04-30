@@ -22,6 +22,7 @@ import cn.asany.cms.content.domain.enums.ContentType;
 import cn.asany.cms.content.graphql.input.ImageContentItemInput;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
@@ -73,5 +74,10 @@ public class ImageContentService implements ArticleContentHandler<ImageContent> 
                 .map(ImageContentItemInput::toImageContentItem)
                 .collect(Collectors.toList()))
         .build();
+  }
+
+  @Override
+  public Optional<ImageContent> findById(Long id) {
+    return this.imageContentDao.findById(id);
   }
 }

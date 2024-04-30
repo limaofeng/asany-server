@@ -19,6 +19,7 @@ import cn.asany.cms.article.domain.ArticleContent;
 import cn.asany.cms.content.domain.enums.ContentType;
 import cn.asany.cms.content.graphql.input.ArticleContentInput;
 import java.util.List;
+import java.util.Optional;
 import net.asany.jfantasy.framework.error.ValidationException;
 import net.asany.jfantasy.framework.util.common.ObjectUtil;
 
@@ -40,6 +41,11 @@ public class ArticleContentService {
         .filter(item -> item.supports(type))
         .findFirst()
         .orElseThrow(() -> new ValidationException("100", type.name() + "没有对应的处理逻辑 "));
+  }
+
+  public Optional<ArticleContent> findById(ContentType contentType, Long contentId) {
+    ArticleContentHandler<ArticleContent> handler = getContentHandler(contentType);
+    return handler.findById(contentId);
   }
 
   public ArticleContent save(ArticleContent content) {

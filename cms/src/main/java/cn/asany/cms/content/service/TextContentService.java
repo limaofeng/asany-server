@@ -20,6 +20,7 @@ import cn.asany.cms.content.domain.TextContent;
 import cn.asany.cms.content.domain.enums.ContentType;
 import cn.asany.cms.content.domain.enums.TextContentType;
 import java.util.Map;
+import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 /**
@@ -62,6 +63,11 @@ public class TextContentService implements ArticleContentHandler<TextContent> {
     TextContentType type = TextContentType.valueOf((String) content.get("type"));
     String text = (String) content.get("text");
     return TextContent.builder().id(id).type(type).text(text).build();
+  }
+
+  @Override
+  public Optional<TextContent> findById(Long id) {
+    return this.textContentDao.findById(id);
   }
 
   public TextContent update(TextContent content) {

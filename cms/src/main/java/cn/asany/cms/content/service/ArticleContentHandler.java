@@ -18,6 +18,7 @@ package cn.asany.cms.content.service;
 import cn.asany.cms.article.domain.ArticleContent;
 import cn.asany.cms.content.domain.enums.ContentType;
 import java.util.Map;
+import java.util.Optional;
 
 public interface ArticleContentHandler<T extends ArticleContent> {
 
@@ -30,4 +31,6 @@ public interface ArticleContentHandler<T extends ArticleContent> {
   void delete(Long id);
 
   T parse(Map<String, Object> content);
+
+  Optional<T> findById(Long id);
 }

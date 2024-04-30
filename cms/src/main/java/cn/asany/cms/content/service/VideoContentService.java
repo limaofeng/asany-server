@@ -20,6 +20,7 @@ import cn.asany.cms.content.domain.VideoContent;
 import cn.asany.cms.content.domain.enums.ContentType;
 import cn.asany.storage.api.FileObject;
 import java.util.Map;
+import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -65,5 +66,10 @@ public class VideoContentService implements ArticleContentHandler<VideoContent> 
         .id(id)
         .video(video)
         .build();
+  }
+
+  @Override
+  public Optional<VideoContent> findById(Long id) {
+    return this.videoContentDao.findById(id);
   }
 }

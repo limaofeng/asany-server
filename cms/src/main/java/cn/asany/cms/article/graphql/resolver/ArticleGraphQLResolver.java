@@ -28,6 +28,7 @@ import cn.asany.security.core.domain.PermissionStatement;
 import graphql.kickstart.tools.GraphQLResolver;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
@@ -60,12 +61,8 @@ public class ArticleGraphQLResolver implements GraphQLResolver<Article> {
     return categories;
   }
 
-  public String bodyHtml(Article article) {
-    return "";
-  }
-
-  public ArticleContent content(Article article) {
-    return article.getContent();
+  public Optional<ArticleContent> content(Article article) {
+    return articleContentService.findById(article.getContentType(), article.getContentId());
   }
 
   public Starrable starrable(final Article article, ArticleStarType starType) {

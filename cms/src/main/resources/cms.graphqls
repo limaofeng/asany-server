@@ -381,10 +381,6 @@ type Article
   正文类型
   """
   contentType: ContentType
-  """
-  body 的 html 格式
-  """
-  bodyHtml: String
   #查询评论
   #    comments(filter: CommentWhereInput, page: Int = 1, pageSize: Int = 15, orderBy: OrderBy = "unsorted"): CommentConnection
   """
