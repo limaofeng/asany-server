@@ -81,7 +81,8 @@ public class StorageConfig extends BaseBusEntity {
   private String details;
 
   /** 文件管理器对应的文件 */
-  @OneToMany(mappedBy = "storageConfig", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+  @JoinColumn(name = "STORAGE_ID", referencedColumnName = "ID")
   @ToString.Exclude
   private List<FileDetail> fileDetails;
 

@@ -128,15 +128,6 @@ public class FileDetail extends BaseBusEntity implements Cloneable {
   @Column(name = "STORAGE_ID", nullable = false, updatable = false, length = 50)
   private String storageConfig;
 
-  /** 文件命名空间 */
-  //  @JoinColumn(
-  //      name = "STORAGE_ID",
-  //      nullable = false,
-  //      foreignKey = @ForeignKey(name = "FK_STORAGE_FILEOBJECT_STORAGE"))
-  //  @ManyToOne(fetch = FetchType.LAZY)
-  //  @ToString.Exclude
-  //  private StorageConfig storageConfig;
-
   /** 文件存储路径 */
   @Column(name = "STORE_PATH", nullable = false, length = 250)
   private String storePath;
