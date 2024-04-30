@@ -16,18 +16,31 @@
 package cn.asany.cms.content.graphql.resolver;
 
 import cn.asany.cms.content.domain.DocumentContent;
+import cn.asany.storage.dto.SimpleFileObject;
 import graphql.kickstart.tools.GraphQLResolver;
 import net.asany.jfantasy.framework.util.common.StringUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 @Component
 public class DocumentContentGraphQLResolver implements GraphQLResolver<DocumentContent> {
 
+  @Autowired protected Environment environment;
+
   public String url(DocumentContent content) {
-    if (StringUtil.isNotBlank(content.getUrl())) {
-      return content.getUrl();
+    String url = content.getUrl();
+    if (content.getDocument() != null) {
+      SimpleFileObject fileObject = ((SimpleFileObject) content.getDocument());
+      url = "/preview/" + fileObject.getId();
     }
-    return content.getDocument().getPath();
+    if (StringUtil.isBlank(url)) {
+      return null;
+    }
+    if (url.startsWith("http://") || url.startsWith("https://")) {
+      return url;
+    }
+    return environment.getProperty("STORAGE_BASE_URL") + url;
   }
 
   public Long size(DocumentContent content) {

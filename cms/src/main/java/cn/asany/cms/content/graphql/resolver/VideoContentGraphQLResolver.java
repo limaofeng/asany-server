@@ -18,15 +18,17 @@ package cn.asany.cms.content.graphql.resolver;
 import cn.asany.cms.content.domain.VideoContent;
 import cn.asany.storage.dto.SimpleFileObject;
 import graphql.kickstart.tools.GraphQLResolver;
-import graphql.schema.DataFetchingEnvironment;
 import net.asany.jfantasy.framework.util.common.StringUtil;
-import net.asany.jfantasy.framework.util.web.WebUtil;
-import net.asany.jfantasy.graphql.security.context.AuthGraphQLServletContext;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 @Component
 public class VideoContentGraphQLResolver implements GraphQLResolver<VideoContent> {
-  public String url(VideoContent content, DataFetchingEnvironment environment) {
+
+  @Autowired protected Environment environment;
+
+  public String url(VideoContent content) {
     String url = content.getUrl();
     if (content.getVideo() != null) {
       SimpleFileObject fileObject = ((SimpleFileObject) content.getVideo());
@@ -38,7 +40,6 @@ public class VideoContentGraphQLResolver implements GraphQLResolver<VideoContent
     if (url.startsWith("http://") || url.startsWith("https://")) {
       return url;
     }
-    AuthGraphQLServletContext context = environment.getContext();
-    return WebUtil.getServerUrl(context.getRequest()) + url;
+    return environment.getProperty("STORAGE_BASE_URL") + url;
   }
 }
