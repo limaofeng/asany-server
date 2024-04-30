@@ -215,8 +215,6 @@ public class Article extends BaseBusEntity {
   @Column(name = "LIKES", nullable = false)
   private Long likes = 0L;
 
-  @Transient private ArticleContent content;
-
   @Transient private List<Permission> permissions;
 
   @Override

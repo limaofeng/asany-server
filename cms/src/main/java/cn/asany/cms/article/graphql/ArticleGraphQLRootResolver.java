@@ -18,15 +18,13 @@ package cn.asany.cms.article.graphql;
 import cn.asany.cms.article.converter.ArticleCategoryConverter;
 import cn.asany.cms.article.converter.ArticleContext;
 import cn.asany.cms.article.converter.ArticleConverter;
-import cn.asany.cms.article.domain.Article;
-import cn.asany.cms.article.domain.ArticleCategory;
-import cn.asany.cms.article.domain.ArticleStoreTemplate;
-import cn.asany.cms.article.domain.ArticleTag;
+import cn.asany.cms.article.domain.*;
 import cn.asany.cms.article.graphql.input.*;
 import cn.asany.cms.article.graphql.type.ArticleConnection;
 import cn.asany.cms.article.service.ArticleCategoryService;
 import cn.asany.cms.article.service.ArticleService;
 import cn.asany.cms.article.service.ArticleTagService;
+import cn.asany.cms.content.service.ArticleContentService;
 import cn.asany.organization.core.domain.Organization;
 import graphql.kickstart.tools.GraphQLMutationResolver;
 import graphql.kickstart.tools.GraphQLQueryResolver;
@@ -54,6 +52,8 @@ public class ArticleGraphQLRootResolver implements GraphQLQueryResolver, GraphQL
   private final ArticleService articleService;
   private final ArticleTagService articleTagService;
   private final ArticleCategoryService articleCategoryService;
+  private final ArticleContentService contentService;
+
   protected final Environment environment;
 
   public ArticleGraphQLRootResolver(
@@ -62,12 +62,14 @@ public class ArticleGraphQLRootResolver implements GraphQLQueryResolver, GraphQL
       ArticleService articleService,
       ArticleTagService articleTagService,
       ArticleCategoryService articleCategoryService,
+      ArticleContentService contentService,
       Environment environment) {
     this.articleCategoryConverter = articleCategoryConverter;
     this.articleConverter = articleConverter;
     this.articleService = articleService;
     this.articleTagService = articleTagService;
     this.articleCategoryService = articleCategoryService;
+    this.contentService = contentService;
     this.environment = environment;
   }
 
@@ -138,12 +140,14 @@ public class ArticleGraphQLRootResolver implements GraphQLQueryResolver, GraphQL
             .contentType(storeTemplate.getContentType())
             .build();
 
-    Article article = articleConverter.toArticle(input, articleContext);
+    Article article = articleConverter.toArticle(input);
+    ArticleContent content =
+        contentService.convert(input.getContent(), storeTemplate.getContentType());
 
     article.setOrganization(Organization.builder().id(organizationId).build());
     article.setCategory(category);
 
-    return articleService.save(article, input.getPermissions());
+    return articleService.save(article, content, input.getPermissions());
   }
 
   /**
@@ -159,17 +163,14 @@ public class ArticleGraphQLRootResolver implements GraphQLQueryResolver, GraphQL
 
     ArticleStoreTemplate storeTemplate = category.getStoreTemplate();
 
-    ArticleContext articleContext =
-        ArticleContext.builder()
-            .storeTemplate(storeTemplate)
-            .contentType(storeTemplate.getContentType())
-            .build();
+    Article article = articleConverter.toArticle(input);
+    ArticleContent content =
+        contentService.convert(input.getContent(), storeTemplate.getContentType());
 
-    Article article = articleConverter.toArticle(input, articleContext);
     article.setCategory(category);
     article.setContentType(storeTemplate.getContentType());
 
-    return articleService.update(id, article, merge);
+    return articleService.update(id, article, content, merge);
   }
 
   /**

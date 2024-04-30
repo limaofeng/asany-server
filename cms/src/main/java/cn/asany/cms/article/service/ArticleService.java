@@ -31,7 +31,6 @@ import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
 import net.asany.jfantasy.framework.util.common.DateUtil;
 import net.asany.jfantasy.framework.util.common.ObjectUtil;
 import net.asany.jfantasy.framework.util.common.StringUtil;
-import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.*;
@@ -112,7 +111,7 @@ public class ArticleService {
    * @return Article
    */
   @Transactional(rollbackFor = RuntimeException.class)
-  public Article save(Article article, List<PermissionInput> permissions) {
+  public Article save(Article article, ArticleContent content, List<PermissionInput> permissions) {
     if (StringUtil.isBlank(article.getSlug())) {
       article.setSlug(null);
     }
@@ -122,7 +121,7 @@ public class ArticleService {
     article.setCategory(category);
 
     // 保存正文
-    saveContentAndSummary(article);
+    saveContentAndSummary(article, content);
 
     if (article.getStatus() == null) {
       article.setStatus(ArticleStatus.DRAFT);
@@ -155,13 +154,13 @@ public class ArticleService {
    * @return 文章内容
    */
   @Transactional(rollbackFor = RuntimeException.class)
-  public Article update(Long id, Article article, boolean merge) {
+  public Article update(Long id, Article article, ArticleContent content, boolean merge) {
     article.setId(id);
     if (StringUtil.isBlank(article.getSlug())) {
       article.setSlug(null);
     }
 
-    saveContentAndSummary(article);
+    saveContentAndSummary(article, content);
 
     Article oldArticle = this.articleDao.getReferenceById(article.getId());
 
@@ -190,8 +189,7 @@ public class ArticleService {
    *
    * @param article 文章
    */
-  private void saveContentAndSummary(Article article) {
-    ArticleContent content = article.getContent();
+  private void saveContentAndSummary(Article article, ArticleContent content) {
     if (StringUtil.isBlank(article.getSummary()) && ObjectUtil.isNotNull(content)) {
       String summary = content.generateSummary();
       article.setSummary(summary);
@@ -204,7 +202,7 @@ public class ArticleService {
       if (StringUtil.isBlank(oldArticle.getContentId())) {
         this.contentService.save(content);
       } else if (category.getStoreTemplate().getContentType() == oldArticle.getContentType()) {
-        this.contentService.update(oldArticle.getContent().getId(), content);
+        this.contentService.update(oldArticle.getContentId(), content);
       } else {
         this.contentService.deleteById(oldArticle.getContentId(), oldArticle.getContentType());
         this.contentService.save(content);
@@ -224,12 +222,7 @@ public class ArticleService {
    */
   public Article get(Long id) {
     Optional<Article> optional = this.articleDao.findById(id);
-    if (!optional.isPresent()) {
-      return null;
-    }
-    Article article = optional.get();
-    Hibernate.initialize(article.getContent());
-    return article;
+    return optional.orElse(null);
   }
 
   /**

@@ -32,6 +32,9 @@ public class ArticleContentService {
   }
 
   public ArticleContent convert(ArticleContentInput content, ContentType contentType) {
+    if (content == null) {
+      return null;
+    }
     ArticleContentHandler<ArticleContent> handler = getContentHandler(contentType);
     return handler.parse(ObjectUtil.toMap(content));
   }
