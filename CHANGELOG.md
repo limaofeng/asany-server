@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.9](https://github.com/limaofeng/asany-server/compare/v0.3.8...v0.3.9) (2024-04-30)
+
+
+### Features
+
+* update JFantasy 20240430.3 ([de772b8](https://github.com/limaofeng/asany-server/commit/de772b8b414ffa4ac95cce15efb3c0e6a1cfa32e))
+
 ### [0.3.8](https://github.com/limaofeng/asany-server/compare/v0.3.7...v0.3.8) (2024-04-29)
 
 
