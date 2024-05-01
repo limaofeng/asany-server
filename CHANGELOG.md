@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.18](https://github.com/limaofeng/asany-server/compare/v0.3.17...v0.3.18) (2024-05-01)
+
+
+### Bug Fixes
+
+* 修复大文件上传,大于(50M)的 ([357334b](https://github.com/limaofeng/asany-server/commit/357334b95630637ffb99b0120fd2162447ea80b4))
+
 ### [0.3.17](https://github.com/limaofeng/asany-server/compare/v0.3.16...v0.3.17) (2024-05-01)
 
 
