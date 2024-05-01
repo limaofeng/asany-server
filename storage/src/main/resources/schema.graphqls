@@ -293,7 +293,7 @@ input MultipartUploadInput {
   """
   存储文件夹
   """
-  folder: ID!
+  folder: ID
   """
   每段大小
   """
