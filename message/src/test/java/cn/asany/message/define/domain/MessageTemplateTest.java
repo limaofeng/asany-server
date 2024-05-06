@@ -39,4 +39,25 @@ class MessageTemplateTest {
             .phones(new String[] {"15921884771"})
             .build());
   }
+
+  @Test
+  void testEMailMessage() throws MessageException {
+    MessageTemplate template = new MessageTemplate();
+    template.setType(TemplateType.EMAIL);
+    template.setName("测试短信");
+    template.setSign("测试");
+    template.setCode("test");
+    template.setContent(MessageContent.of("测试短信内容"));
+
+    MessageChannel channel = messageChannelResolver.resolve("1");
+
+    channel.send(
+      SmsMessage.builder()
+        .signName(template.getSign())
+        .templateCode(template.getCode())
+        .templateParams(new HashMap<>())
+        .phones(new String[] {"15921884771"})
+        .build());
+  }
+
 }
