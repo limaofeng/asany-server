@@ -16,7 +16,6 @@
 package cn.asany.message.core;
 
 import cn.asany.message.api.MSChannelConfig;
-import cn.asany.message.api.Message;
 import cn.asany.message.api.MessageChannel;
 import cn.asany.message.api.SimpleMessage;
 import cn.asany.message.data.domain.UserMessage;
@@ -36,7 +35,7 @@ import net.asany.jfantasy.framework.util.common.StringUtil;
  * @author limaofeng
  */
 @Slf4j
-public class UserMessageChannel implements MessageChannel {
+public class UserMessageChannel implements MessageChannel<SimpleMessage> {
 
   private final UserMessageService userMessageService;
   private final MSChannelConfig config;
@@ -54,26 +53,23 @@ public class UserMessageChannel implements MessageChannel {
   }
 
   @Override
-  public void send(Message message) {
-    SimpleMessage simpleMessage = (SimpleMessage) message;
-    if (StringUtil.isBlank(simpleMessage.getSubject())) {
+  public void send(SimpleMessage message) {
+    if (StringUtil.isBlank(message.getSubject())) {
       throw new RuntimeException("subject is blank");
     }
-    if (StringUtil.isBlank(simpleMessage.getText())) {
+    if (StringUtil.isBlank(message.getText())) {
       throw new RuntimeException("text is blank");
     }
-    for (String recipient : simpleMessage.getTo()) {
+    for (String recipient : message.getTo()) {
       LoginUser loginUser = userDetailsService.loadUserById(Long.valueOf(recipient)).join();
 
       log.info("send message to {}", loginUser.getUsername());
 
-      Map<String, Object> data = new HashMap<>(simpleMessage.getTemplateParams());
+      Map<String, Object> data = new HashMap<>(message.getTemplateParams());
       data.put("user", loginUser);
 
-      String title =
-          HandlebarsTemplateUtils.processTemplateIntoString(simpleMessage.getSubject(), data);
-      String content =
-          HandlebarsTemplateUtils.processTemplateIntoString(simpleMessage.getText(), data);
+      String title = HandlebarsTemplateUtils.processTemplateIntoString(message.getSubject(), data);
+      String content = HandlebarsTemplateUtils.processTemplateIntoString(message.getText(), data);
 
       userMessageService.save(
           UserMessage.builder()
@@ -81,9 +77,9 @@ public class UserMessageChannel implements MessageChannel {
               .user(User.builder().id(Long.valueOf(recipient)).build())
               .title(title)
               .content(content)
-              .type(simpleMessage.getOriginalMessageType())
-              .message(simpleMessage.getOriginalMessage())
-              .uri(simpleMessage.getUri())
+              .type(message.getOriginalMessageType())
+              .message(message.getOriginalMessage())
+              .uri(message.getUri())
               .build());
     }
   }

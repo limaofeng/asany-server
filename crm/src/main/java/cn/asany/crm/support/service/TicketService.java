@@ -28,6 +28,7 @@ import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
 import net.asany.jfantasy.framework.error.ValidationException;
 import net.asany.jfantasy.framework.spring.SpELUtil;
 import net.asany.jfantasy.framework.util.common.DateUtil;
+import org.hibernate.Hibernate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -65,7 +66,14 @@ public class TicketService {
 
   @Transactional(readOnly = true)
   public Optional<Ticket> findById(Long id) {
-    return this.ticketDao.findById(id);
+    return this.ticketDao
+        .findById(id)
+        .map(
+            ticket -> {
+              Hibernate.initialize(ticket.getStore());
+              Hibernate.initialize(ticket.getType());
+              return ticket;
+            });
   }
 
   @Transactional

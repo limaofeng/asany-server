@@ -15,6 +15,7 @@
  */
 package cn.asany.message.define.domain;
 
+import cn.asany.message.api.EmailChannelConfig;
 import cn.asany.message.api.IChannelConfig;
 import cn.asany.message.api.MSChannelConfig;
 import cn.asany.message.api.SMSChannelConfig;
@@ -68,7 +69,7 @@ public class MessageChannelDefinition extends BaseBusEntity {
     if (type == TemplateType.SMS) {
       return JSON.deserialize(config, SMSChannelConfig.class);
     } else if (type == TemplateType.EMAIL) {
-      return JSON.deserialize(config, SMSChannelConfig.class);
+      return JSON.deserialize(config, EmailChannelConfig.class);
     } else if (type == TemplateType.MS) {
       return JSON.deserialize(config, MSChannelConfig.class);
     }

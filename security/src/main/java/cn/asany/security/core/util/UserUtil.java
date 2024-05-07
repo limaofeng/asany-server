@@ -38,6 +38,8 @@ public class UserUtil {
             .accountNonLocked(user.getAccountNonLocked())
             .credentialsNonExpired(user.getCredentialsNonExpired())
             .authorities(user.getAuthorities())
+            .phone(user.getPhone().getNumber())
+            .email(user.getEmail().getAddress())
             .tenantId(user.getTenantId());
 
     if (user.getPhone() != null && user.getPhone().getStatus() == PhoneNumberStatus.VERIFIED) {

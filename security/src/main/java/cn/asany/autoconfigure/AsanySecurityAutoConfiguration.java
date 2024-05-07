@@ -25,6 +25,8 @@ import cn.asany.security.core.service.UserService;
 import graphql.kickstart.autoconfigure.tools.SchemaDirective;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 import net.asany.jfantasy.autoconfigure.SecurityAutoConfiguration;
 import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
@@ -113,6 +115,7 @@ public class AsanySecurityAutoConfiguration implements InitializingBean {
 
   @Bean("user.DataLoader")
   public DataLoader<Long, User> userDataLoader(UserService userService) {
+    Executor executor = Executors.newFixedThreadPool(10);
     return DataLoaderFactory.newDataLoader(
         ids ->
             CompletableFuture.supplyAsync(
@@ -121,7 +124,8 @@ public class AsanySecurityAutoConfiguration implements InitializingBean {
                   return ids.stream()
                       .map(id -> ObjectUtil.find(users, "id", id))
                       .collect(Collectors.toList());
-                }));
+                },
+                executor));
   }
 
   @Bean

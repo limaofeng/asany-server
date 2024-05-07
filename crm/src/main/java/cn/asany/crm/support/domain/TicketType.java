@@ -27,7 +27,7 @@ import net.asany.jfantasy.framework.dao.hibernate.annotations.TableGenerator;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false, of = "id")
 public class TicketType extends BaseBusEntity {
   @Id
   @Column(name = "ID", nullable = false, updatable = false)

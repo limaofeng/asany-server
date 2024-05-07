@@ -18,8 +18,13 @@ package cn.asany.autoconfigure;
 import cn.asany.base.common.BatchPayload;
 import cn.asany.base.common.Ownership;
 import cn.asany.base.common.TicketTarget;
+import cn.asany.system.domain.Dict;
+import cn.asany.system.service.DictService;
 import lombok.extern.slf4j.Slf4j;
+import net.asany.jfantasy.framework.util.HandlebarsTemplateUtils;
 import net.asany.jfantasy.graphql.SchemaParserDictionaryBuilder;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -46,5 +51,17 @@ public class BaseAutoConfiguration {
       dictionary.add("TicketTarget", TicketTarget.class);
       dictionary.add("BatchPayload", BatchPayload.class);
     };
+  }
+
+  @Bean("base.startupRunner")
+  public CommandLineRunner startupRunner(@Autowired DictService dictService) {
+    return args ->
+        HandlebarsTemplateUtils.registerHelper(
+            "dict",
+            (context, options) -> {
+              String type = (String) options.params[0];
+              String value = context.toString();
+              return dictService.findByCode(value, type).map(Dict::getName).orElse(value);
+            });
   }
 }

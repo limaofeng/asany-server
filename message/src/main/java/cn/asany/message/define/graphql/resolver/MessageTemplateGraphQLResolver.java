@@ -13,23 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.asany.message.core;
+package cn.asany.message.define.graphql.resolver;
 
-import cn.asany.message.api.EmailChannelConfig;
-import cn.asany.message.api.MessageChannelBuilder;
+import cn.asany.message.define.domain.MessageTemplate;
+import graphql.kickstart.tools.GraphQLResolver;
 import org.springframework.stereotype.Component;
 
 @Component
-public class EmailMessageChannelBuilder
-    implements MessageChannelBuilder<EmailMessageChannel, EmailChannelConfig> {
-
-  @Override
-  public boolean supports(Class<EmailChannelConfig> clazz) {
-    return EmailChannelConfig.class.isAssignableFrom(clazz);
-  }
-
-  @Override
-  public EmailMessageChannel build(EmailChannelConfig config) {
-    return new EmailMessageChannel(config);
-  }
-}
+public class MessageTemplateGraphQLResolver implements GraphQLResolver<MessageTemplate> {}

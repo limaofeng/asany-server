@@ -15,7 +15,7 @@
  */
 package cn.asany.message.data.domain;
 
-import cn.asany.message.data.domain.enums.MessageRecipientType;
+import cn.asany.message.api.enums.MessageRecipientType;
 import jakarta.persistence.*;
 import lombok.*;
 import net.asany.jfantasy.framework.dao.BaseBusEntity;

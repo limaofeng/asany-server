@@ -38,7 +38,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 @Table(name = "CRM_CUSTOMER_STORE")
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false, of = "no")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class CustomerStore extends BaseBusEntity implements Ownership {
 

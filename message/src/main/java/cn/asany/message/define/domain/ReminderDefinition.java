@@ -55,6 +55,13 @@ public class ReminderDefinition extends BaseBusEntity {
       foreignKey = @ForeignKey(name = "FK_REMINDER_DEFINITION_TEMPLATE_ID"))
   private MessageTemplate template;
 
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(
+      name = "CHANNEL",
+      nullable = false,
+      foreignKey = @ForeignKey(name = "FK_REMINDER_DEFINITION_CHANNEL"))
+  private MessageChannelDefinition channel;
+
   /** 是否为系统内置 */
   @Builder.Default
   @Column(name = "IS_SYSTEM", updatable = false, length = 1)

@@ -59,21 +59,10 @@ public class MessageTemplate extends BaseBusEntity {
   @Column(name = "NAME", nullable = false, length = 50)
   private String name;
 
-  /** 签名 */
-  @Column(name = "SIGN", nullable = false, length = 20)
-  private String sign;
-
   /** 模版中使用的变量 */
   @Column(name = "VARIABLES", nullable = false, columnDefinition = "JSON")
   @Convert(converter = VariableDefinitionListConverter.class)
   private List<VariableDefinition> variables;
-
-  /**
-   * 模板号 type = SMS 时 CODE = cn.asany.sms.domain.Template 的 ID type = EMAIL 时 CODE =
-   * cn.asany.mail.domain.Template 的 ID type = MS 时, 取 content 内容
-   */
-  @Column(name = "CODE", length = 50)
-  private String code;
 
   /** 内容模版 */
   @Column(name = "CONTENT", columnDefinition = "Text")

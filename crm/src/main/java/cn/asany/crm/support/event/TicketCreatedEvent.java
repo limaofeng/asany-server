@@ -13,30 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.asany.message.define.domain.enums;
+package cn.asany.crm.support.event;
 
-import cn.asany.message.api.enums.MessageRecipientType;
+import org.springframework.context.ApplicationEvent;
 
-/**
- * 模版类型
- *
- * @author limaofeng
- */
-public enum TemplateType {
-  /** 短信 */
-  SMS(MessageRecipientType.PHONE),
-  /** 邮件 */
-  EMAIL(MessageRecipientType.EMAIL),
-  /** 消息服务(系统内置消息系统) */
-  MS(MessageRecipientType.USER);
-
-  private final MessageRecipientType recipientType;
-
-  TemplateType(MessageRecipientType r) {
-    this.recipientType = r;
-  }
-
-  public MessageRecipientType getRecipientType() {
-    return recipientType;
+public class TicketCreatedEvent extends ApplicationEvent {
+  public TicketCreatedEvent(Object source) {
+    super(source);
   }
 }

@@ -33,7 +33,7 @@ import org.springframework.stereotype.Component;
 public class DefaultMessageChannelResolver implements MessageChannelResolver {
 
   private final MessageChannelService messageChannelService;
-  private final Map<String, MessageChannel> messageSenderMap = new HashMap<>();
+  private final Map<String, MessageChannel<? extends Message>> messageSenderMap = new HashMap<>();
   private final List<MessageChannelBuilder<?, ?>> builders;
 
   public DefaultMessageChannelResolver(
@@ -43,7 +43,7 @@ public class DefaultMessageChannelResolver implements MessageChannelResolver {
   }
 
   @Override
-  public MessageChannel resolve(String id) throws MessageException {
+  public MessageChannel<? extends Message> resolve(String id) throws MessageException {
     if (messageSenderMap.containsKey(id)) {
       return messageSenderMap.get(id);
     }
@@ -55,13 +55,12 @@ public class DefaultMessageChannelResolver implements MessageChannelResolver {
   }
 
   @Override
-  public MessageChannel resolve(String id, IChannelConfig config) throws MessageException {
+  public MessageChannel<? extends Message> resolve(String id, IChannelConfig config)
+      throws MessageException {
     //noinspection rawtypes
     for (MessageChannelBuilder builder : builders) {
-      //noinspection unchecked
       if (builder.supports(config.getClass())) {
-        //noinspection unchecked
-        MessageChannel sender = builder.build(config);
+        MessageChannel<? extends Message> sender = builder.build(config);
         if (sender != null) {
           messageSenderMap.put(id, sender);
           return sender;

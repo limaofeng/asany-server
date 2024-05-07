@@ -18,6 +18,7 @@ package cn.asany.message.define.domain.toys;
 import cn.asany.message.data.util.MessageUtils;
 import java.io.Serializable;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import net.asany.jfantasy.framework.dao.hibernate.util.ReflectionUtils;
 import net.asany.jfantasy.framework.util.HandlebarsTemplateUtils;
@@ -32,8 +33,14 @@ public class MessageContent implements Serializable {
   public static final String DATA_BOUNDARY = "--MessageContentBoundary--";
   public static final String CONTENT = "content";
   public static final String TITLE = "title";
+  public static final String SMS_CODE = "code";
+  public static final String SMS_SIGN = "sign";
 
   private final Map<String, Object> variables;
+
+  public MessageContent() {
+    this(new HashMap<>());
+  }
 
   public MessageContent(Map<String, Object> variables) {
     this.variables = variables;

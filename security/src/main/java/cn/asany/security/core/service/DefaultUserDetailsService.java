@@ -49,12 +49,12 @@ public class DefaultUserDetailsService implements UserDetailsService<LoginUser> 
   public LoginUser loadUserByUsername(String username) throws UsernameNotFoundException {
     Optional<User> optional = this.userService.findOneByUsername(username);
 
-    if (!optional.isPresent()) {
+    if (optional.isEmpty()) {
       optional = userService.findOneByPhone(username);
     }
 
     // 用户不存在
-    if (!optional.isPresent()) {
+    if (optional.isEmpty()) {
       throw new UsernameNotFoundException(
           this.messages.getMessage(
               "AbstractUserDetailsAuthenticationProvider.badCredentials", "Bad credentials"));

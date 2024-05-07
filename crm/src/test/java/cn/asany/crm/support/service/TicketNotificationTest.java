@@ -13,20 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.asany.message.data.service;
+package cn.asany.crm.support.service;
 
-import cn.asany.message.TestApplication;
+import cn.asany.crm.TestConfiguration;
+import cn.asany.crm.support.domain.Ticket;
 import cn.asany.message.api.MessageService;
 import cn.asany.message.api.util.MessageUtils;
-import cn.asany.message.data.domain.Message;
-import cn.asany.message.data.event.MessageCreateEvent;
 import cn.asany.security.core.domain.User;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
+import net.asany.jfantasy.framework.util.common.ObjectUtil;
 import org.dataloader.DataLoader;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,20 +33,19 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @Slf4j
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(
-    classes = TestApplication.class,
+    classes = TestConfiguration.class,
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
-class DefaultMessageServiceTest {
+public class TicketNotificationTest {
 
   @Autowired private MessageService messageService;
-  @Autowired private ApplicationContext applicationContext;
+  @Autowired private TicketService ticketService;
 
   @Autowired
   @Qualifier("user.DataLoader")
@@ -63,24 +61,11 @@ class DefaultMessageServiceTest {
   }
 
   @Test
-  void send() {
-    Map<String, Object> params = new HashMap<>();
-    params.put("id", "1111");
-    params.put("no", "1231");
-    Map<String, Object> store = new HashMap<>();
-    store.put("name", "测试门店");
-    params.put("store", store);
+  public void testTicketNew() {
+    Ticket ticket = ticketService.findById(11L).orElseThrow();
+    Map<String, Object> params = ObjectUtil.toMap(ticket);
     String msgId =
         messageService.send("ticket.new", params, MessageUtils.formatRecipientFromUser(1L));
     log.info("消息ID: {}", msgId);
-  }
-
-  @Test
-  void trySend() {
-    DefaultMessageService defaultMessageService = (DefaultMessageService) messageService;
-
-    Message message =
-        defaultMessageService.findById(7L).orElseThrow(() -> new RuntimeException("消息不存在"));
-    applicationContext.publishEvent(new MessageCreateEvent(message));
   }
 }

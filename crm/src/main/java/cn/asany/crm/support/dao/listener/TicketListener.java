@@ -13,23 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.asany.message.core;
+package cn.asany.crm.support.dao.listener;
 
-import cn.asany.message.api.EmailChannelConfig;
-import cn.asany.message.api.MessageChannelBuilder;
+import cn.asany.crm.support.domain.Ticket;
+import cn.asany.crm.support.event.TicketCreatedEvent;
+import net.asany.jfantasy.framework.dao.hibernate.listener.AbstractChangedListener;
+import org.hibernate.event.spi.EventType;
+import org.hibernate.event.spi.PostInsertEvent;
 import org.springframework.stereotype.Component;
 
-@Component
-public class EmailMessageChannelBuilder
-    implements MessageChannelBuilder<EmailMessageChannel, EmailChannelConfig> {
+@Component("dao.ticketListener")
+public class TicketListener extends AbstractChangedListener<Ticket> {
 
-  @Override
-  public boolean supports(Class<EmailChannelConfig> clazz) {
-    return EmailChannelConfig.class.isAssignableFrom(clazz);
+  public TicketListener() {
+    super(EventType.POST_COMMIT_INSERT);
   }
 
   @Override
-  public EmailMessageChannel build(EmailChannelConfig config) {
-    return new EmailMessageChannel(config);
+  protected void onPostInsert(Ticket entity, PostInsertEvent event) {
+    this.applicationContext.publishEvent(new TicketCreatedEvent(entity));
   }
 }

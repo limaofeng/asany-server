@@ -58,7 +58,7 @@ public class MessageReminderDefinition extends BaseBusEntity {
   private Map<String, String> mappingVariables;
 
   /** 提醒定义 */
-  @ManyToOne(targetEntity = MessageDefinition.class, fetch = FetchType.LAZY)
+  @ManyToOne(targetEntity = ReminderDefinition.class, fetch = FetchType.LAZY)
   @JoinColumn(
       name = "REMINDER_DEFINITION_ID",
       foreignKey = @ForeignKey(name = "FK_MSG_REMINDER_REMINDER_DEFINITION_ID"))

@@ -20,7 +20,6 @@ import cn.asany.message.define.domain.converter.VariableDefinitionListConverter;
 import cn.asany.message.define.domain.toys.VariableDefinition;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import lombok.*;
@@ -93,18 +92,5 @@ public class MessageDefinition extends BaseBusEntity {
 
   public void validate(Map<String, Object> values) {
     MessageUtils.validate(this.variables, values);
-  }
-
-  public Map<String, Object> toTemplateData(Map<String, Object> values) {
-    Map<String, Object> newValues = new HashMap<>(values);
-    Map<String, String> data = this.getMappingVariables();
-    data.forEach(
-        (key, value) -> {
-          if (newValues.containsKey(key)) {
-            newValues.remove(key);
-            newValues.put(value, newValues.get(key));
-          }
-        });
-    return newValues;
   }
 }

@@ -13,13 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.asany.message;
+package cn.asany.crm;
 
 import graphql.kickstart.autoconfigure.tools.GraphQLJavaToolsAutoConfiguration;
 import graphql.kickstart.autoconfigure.web.servlet.GraphQLWebAutoConfiguration;
 import java.util.List;
-import lombok.extern.slf4j.Slf4j;
 import net.asany.jfantasy.autoconfigure.GraphQLAutoConfiguration;
+import net.asany.jfantasy.framework.security.auth.core.ClientDetails;
+import net.asany.jfantasy.framework.security.auth.core.ClientDetailsService;
+import net.asany.jfantasy.framework.security.auth.core.ClientRegistrationException;
 import net.asany.jfantasy.graphql.context.DataLoaderRegistryCustomizer;
 import org.dataloader.DataLoaderRegistry;
 import org.springframework.boot.actuate.autoconfigure.audit.AuditAutoConfiguration;
@@ -30,11 +32,12 @@ import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
 import org.springframework.boot.autoconfigure.quartz.QuartzAutoConfiguration;
 import org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration;
 import org.springframework.cache.annotation.EnableCaching;
-import org.springframework.context.annotation.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.client.RestTemplate;
 
-@Slf4j
-@EnableCaching
 @Configuration
+@EnableCaching
 @EnableAutoConfiguration(
     exclude = {
       MongoAutoConfiguration.class,
@@ -47,11 +50,20 @@ import org.springframework.context.annotation.*;
       RedisRepositoriesAutoConfiguration.class,
       ElasticsearchRepositoriesAutoConfiguration.class
     })
-public class TestApplication {
+public class TestConfiguration {
+  @Bean
+  public RestTemplate restTemplate() {
+    return new RestTemplate();
+  }
 
   @Bean
-  public TestClientDetailsService testClientDetailsService() {
-    return new TestClientDetailsService();
+  public ClientDetailsService clientDetailsService() {
+    return new ClientDetailsService() {
+      @Override
+      public ClientDetails loadClientByClientId(String s) throws ClientRegistrationException {
+        return null;
+      }
+    };
   }
 
   @Bean

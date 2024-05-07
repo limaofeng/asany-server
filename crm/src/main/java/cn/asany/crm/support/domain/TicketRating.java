@@ -22,7 +22,9 @@ import lombok.EqualsAndHashCode;
 import net.asany.jfantasy.framework.dao.BaseBusEntity;
 import org.hibernate.annotations.GenericGenerator;
 
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(
+    callSuper = true,
+    exclude = {"ticket"})
 @Data
 @Entity
 @Table(name = "CRM_TICKET_RATINGS")

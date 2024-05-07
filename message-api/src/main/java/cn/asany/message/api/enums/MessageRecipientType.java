@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.asany.message.data.domain.enums;
+package cn.asany.message.api.enums;
 
+import lombok.Getter;
 import net.asany.jfantasy.framework.error.ValidationException;
 
 /**
@@ -22,6 +23,7 @@ import net.asany.jfantasy.framework.error.ValidationException;
  *
  * @author limaofeng
  */
+@Getter
 public enum MessageRecipientType {
   /** 用户 */
   USER("user"),
@@ -55,9 +57,5 @@ public enum MessageRecipientType {
       return EMAIL;
     }
     throw new ValidationException("收件人格式错误：" + value);
-  }
-
-  public String getName() {
-    return name;
   }
 }

@@ -15,25 +15,37 @@
  */
 package cn.asany.message.api;
 
-import lombok.AllArgsConstructor;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
 @Builder
-@AllArgsConstructor
-@NoArgsConstructor
-public class EmailChannelConfig implements IChannelConfig {
-  private String host;
-  @Builder.Default private int port = 465;
-  private String username;
-  private String password;
+public class EmailMessage implements Message {
   private String from;
-  private String fromName;
-  @Builder.Default private String protocol = "smtps";
-  @Builder.Default private boolean auth = true;
-  @Builder.Default private boolean starttlsEnable = true;
-  @Builder.Default private String sslTrust = "*";
-  @Builder.Default private boolean sslEnable = true;
+  private Set<String> to;
+  private String subject;
+  private String text;
+  private String uri;
+
+  public static class EmailMessageBuilder {
+
+    public EmailMessageBuilder to(String... to) {
+      if (this.to == null) {
+        this.to = new HashSet<>();
+      }
+      this.to.addAll(Arrays.asList(to));
+      return this;
+    }
+
+    public EmailMessageBuilder to(String to) {
+      if (this.to == null) {
+        this.to = new HashSet<>();
+      }
+      this.to.add(to);
+      return this;
+    }
+  }
 }
