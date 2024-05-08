@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.19](https://github.com/limaofeng/asany-server/compare/v0.3.18...v0.3.19) (2024-05-08)
+
+
+### Features
+
+* ticket 新建时，发送提醒邮件 ([89f41df](https://github.com/limaofeng/asany-server/commit/89f41dfcf661b46d7cc1c84735667cfe1d53d9dd))
+* 消息模块支持邮件提醒 ([0f9564c](https://github.com/limaofeng/asany-server/commit/0f9564cc66064e42dc3cd532024eb891b840c203))
+* 添加 EmailChannelConfig ([cba70cd](https://github.com/limaofeng/asany-server/commit/cba70cdc7c6b5ed9798ecd2649d082a69e26cae3))
+
 ### [0.3.18](https://github.com/limaofeng/asany-server/compare/v0.3.17...v0.3.18) (2024-05-01)
 
 
