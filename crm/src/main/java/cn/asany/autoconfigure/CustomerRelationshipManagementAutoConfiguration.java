@@ -33,7 +33,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
   "cn.asany.crm.*.dao",
   "cn.asany.crm.*.graphql",
   "cn.asany.crm.*.service",
-  "cn.asany.crm.*.convert"
+  "cn.asany.crm.*.convert",
+  "cn.asany.crm.*.listener"
 })
 @EnableJpaRepositories(
     basePackages = "cn.asany.crm.*.dao",

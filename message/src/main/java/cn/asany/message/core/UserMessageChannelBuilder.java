@@ -18,8 +18,7 @@ package cn.asany.message.core;
 import cn.asany.message.api.MSChannelConfig;
 import cn.asany.message.api.MessageChannelBuilder;
 import cn.asany.message.data.service.UserMessageService;
-import net.asany.jfantasy.framework.security.LoginUser;
-import net.asany.jfantasy.framework.security.core.userdetails.UserDetailsService;
+import cn.asany.security.core.service.UserService;
 import org.springframework.stereotype.Component;
 
 /**
@@ -33,12 +32,11 @@ public class UserMessageChannelBuilder
 
   private final UserMessageService userMessageService;
 
-  private final UserDetailsService<LoginUser> userDetailsService;
+  private final UserService userService;
 
-  public UserMessageChannelBuilder(
-      UserMessageService userMessageService, UserDetailsService<LoginUser> userDetailsService) {
+  public UserMessageChannelBuilder(UserMessageService userMessageService, UserService userService) {
     this.userMessageService = userMessageService;
-    this.userDetailsService = userDetailsService;
+    this.userService = userService;
   }
 
   @Override
@@ -48,6 +46,6 @@ public class UserMessageChannelBuilder
 
   @Override
   public UserMessageChannel build(MSChannelConfig config) {
-    return new UserMessageChannel(this.userDetailsService, userMessageService, config);
+    return new UserMessageChannel(this.userService, userMessageService, config);
   }
 }

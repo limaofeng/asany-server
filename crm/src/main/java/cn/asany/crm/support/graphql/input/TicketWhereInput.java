@@ -15,6 +15,7 @@
  */
 package cn.asany.crm.support.graphql.input;
 
+import cn.asany.base.common.TicketTargetType;
 import cn.asany.crm.support.domain.Ticket;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -37,6 +38,10 @@ public class TicketWhereInput extends WhereInput<TicketWhereInput, Ticket> {
 
   public void setStoreId(Long storeId) {
     filter.equal("store.id", storeId);
+  }
+
+  public void setDeviceId(Long deviceId) {
+    filter.equal("target.id", deviceId).equal("target.type", TicketTargetType.DEVICE);
   }
 
   public void setTarget(TicketTargetInput target) {

@@ -19,6 +19,7 @@ import cn.asany.base.common.Ownership;
 import cn.asany.base.common.domain.Address;
 import cn.asany.base.common.domain.ContactInformation;
 import cn.asany.base.common.domain.Geolocation;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import java.util.Date;
 import lombok.*;
@@ -74,6 +75,7 @@ public class CustomerStore extends BaseBusEntity implements Ownership {
   @Embedded private ContactInformation contactInfo;
 
   /** 客户 */
+  @JsonBackReference
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "CUSTOMER_ID", foreignKey = @ForeignKey(name = "FK_CUSTOMER_STORE_CUSTOMER"))
   private Customer customer;

@@ -18,6 +18,8 @@ package cn.asany.message.data.util;
 import cn.asany.message.api.enums.MessageRecipientType;
 import cn.asany.message.data.domain.MessageRecipient;
 import cn.asany.message.define.domain.toys.VariableDefinition;
+import cn.asany.security.core.service.UserService;
+import cn.asany.security.core.util.UserUtil;
 import jakarta.servlet.http.Part;
 import java.io.File;
 import java.io.IOException;
@@ -31,7 +33,6 @@ import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import net.asany.jfantasy.framework.error.ValidationException;
 import net.asany.jfantasy.framework.security.LoginUser;
-import net.asany.jfantasy.framework.security.core.userdetails.UserDetailsService;
 import net.asany.jfantasy.framework.spring.SpringBeanUtils;
 import net.asany.jfantasy.framework.util.common.StringUtil;
 import net.asany.jfantasy.framework.util.ognl.OgnlUtil;
@@ -66,15 +67,18 @@ public class MessageUtils {
     return recipients;
   }
 
-  private static UserDetailsService<LoginUser> getUserDetailsService() {
-    return SpringBeanUtils.getBean(UserDetailsService.class);
+  private static UserService getUserDetailsService() {
+    return SpringBeanUtils.getBean(UserService.class);
   }
 
   public static LoginUser loadUser(MessageRecipientType type, String value) {
-    UserDetailsService<LoginUser> userService = getUserDetailsService();
+    UserService userService = getUserDetailsService();
     return switch (type) {
-      case PHONE -> userService.loadUserByPhone(value);
-      case USER -> userService.loadUserById(Long.valueOf(value)).join();
+      case PHONE -> userService.findOneByPhone(value).map(UserUtil::buildLoginUser).orElseThrow();
+      case USER -> userService
+          .findById(Long.valueOf(value))
+          .map(UserUtil::buildLoginUser)
+          .orElseThrow();
       default -> throw new ValidationException("");
     };
   }

@@ -15,6 +15,10 @@
  */
 package cn.asany.crm.support.service;
 
+import cn.asany.crm.core.dao.CustomerDao;
+import cn.asany.crm.core.dao.CustomerStoreDao;
+import cn.asany.crm.core.domain.Customer;
+import cn.asany.crm.core.domain.CustomerStore;
 import cn.asany.crm.support.dao.TicketDao;
 import cn.asany.crm.support.dao.TicketStatusLogDao;
 import cn.asany.crm.support.domain.Ticket;
@@ -43,15 +47,23 @@ public class TicketService {
   private final TicketDao ticketDao;
   private final TicketStatusLogDao ticketStatusLogDao;
 
+  private final CustomerDao customerDao;
+
+  private final CustomerStoreDao customerStoreDao;
+
   private final TicketTypeService ticketTypeService;
 
   public TicketService(
       TicketDao ticketDao,
       TicketStatusLogDao ticketStatusLogDao,
+      CustomerDao customerDao,
+      CustomerStoreDao customerStoreDao,
       TicketTypeService ticketTypeService) {
     this.ticketDao = ticketDao;
     this.ticketStatusLogDao = ticketStatusLogDao;
     this.ticketTypeService = ticketTypeService;
+    this.customerDao = customerDao;
+    this.customerStoreDao = customerStoreDao;
   }
 
   @Transactional(readOnly = true)
@@ -87,6 +99,14 @@ public class TicketService {
       ticket.setPriority(ticketType.getDefaultPriority());
     }
 
+    CustomerStore store = this.customerStoreDao.getReferenceById(ticket.getStore().getId());
+    Customer customer = this.customerDao.getReferenceById(ticket.getCustomer().getId());
+
+    Hibernate.initialize(customer);
+    Hibernate.initialize(store);
+
+    ticket.setStore(store);
+    ticket.setCustomer(customer);
     ticket.setNo(generateNo(ticket, ticketType.getNumberingTemplate()));
     ticket.setStatus(TicketStatus.NEW);
 
@@ -95,7 +115,6 @@ public class TicketService {
         TicketStatusLog.builder()
             .status(ticket.getStatus())
             .logTime(DateUtil.now())
-            .loggedBy(User.builder().id(ticket.getCreatedBy()).build())
             .ticket(newTicket)
             .build());
     return newTicket;

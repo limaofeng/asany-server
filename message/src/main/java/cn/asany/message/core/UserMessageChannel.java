@@ -21,11 +21,12 @@ import cn.asany.message.api.SimpleMessage;
 import cn.asany.message.data.domain.UserMessage;
 import cn.asany.message.data.service.UserMessageService;
 import cn.asany.security.core.domain.User;
+import cn.asany.security.core.service.UserService;
+import cn.asany.security.core.util.UserUtil;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import net.asany.jfantasy.framework.security.LoginUser;
-import net.asany.jfantasy.framework.security.core.userdetails.UserDetailsService;
 import net.asany.jfantasy.framework.util.HandlebarsTemplateUtils;
 import net.asany.jfantasy.framework.util.common.StringUtil;
 
@@ -40,14 +41,12 @@ public class UserMessageChannel implements MessageChannel<SimpleMessage> {
   private final UserMessageService userMessageService;
   private final MSChannelConfig config;
 
-  private final UserDetailsService<LoginUser> userDetailsService;
+  private final UserService userService;
 
   public UserMessageChannel(
-      UserDetailsService<LoginUser> userDetailsService,
-      UserMessageService userMessageService,
-      MSChannelConfig config) {
+      UserService userService, UserMessageService userMessageService, MSChannelConfig config) {
     this.userMessageService = userMessageService;
-    this.userDetailsService = userDetailsService;
+    this.userService = userService;
     this.config = config;
     log.info("WebPushMessageSender init success, config: {}", config);
   }
@@ -61,7 +60,8 @@ public class UserMessageChannel implements MessageChannel<SimpleMessage> {
       throw new RuntimeException("text is blank");
     }
     for (String recipient : message.getTo()) {
-      LoginUser loginUser = userDetailsService.loadUserById(Long.valueOf(recipient)).join();
+      LoginUser loginUser =
+          userService.findById(Long.valueOf(recipient)).map(UserUtil::buildLoginUser).orElseThrow();
 
       log.info("send message to {}", loginUser.getUsername());
 

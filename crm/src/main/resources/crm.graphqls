@@ -273,6 +273,10 @@ input TicketWhereInput {
   """
   storeId: ID
   """
+  设备ID
+  """
+  deviceId: ID
+  """
   工单目标
   """
   target: TicketTargetInput
@@ -382,7 +386,7 @@ type TicketStatusChange {
   """
   变更人
   """
-  loggedBy: User!
+  loggedBy: User
   """
   备注
   """

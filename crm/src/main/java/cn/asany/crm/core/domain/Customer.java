@@ -17,6 +17,7 @@ package cn.asany.crm.core.domain;
 
 import cn.asany.base.common.Ownership;
 import cn.asany.base.common.domain.ContactInformation;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.util.List;
 import lombok.*;
@@ -53,6 +54,7 @@ public class Customer extends BaseBusEntity implements Ownership {
   @Embedded private ContactInformation contactInfo;
 
   /** 客户门店 */
+  @JsonManagedReference
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "customer", cascade = CascadeType.REMOVE)
   private List<CustomerStore> stores;
 }

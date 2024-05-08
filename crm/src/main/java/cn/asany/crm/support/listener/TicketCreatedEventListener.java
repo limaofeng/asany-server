@@ -19,7 +19,11 @@ import cn.asany.crm.support.domain.Ticket;
 import cn.asany.crm.support.event.TicketCreatedEvent;
 import cn.asany.message.api.MessageService;
 import cn.asany.message.api.util.MessageUtils;
+import cn.asany.security.core.domain.User;
+import cn.asany.security.core.service.UserService;
+import java.util.List;
 import java.util.Map;
+import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
 import net.asany.jfantasy.framework.util.common.ObjectUtil;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
@@ -28,15 +32,25 @@ import org.springframework.stereotype.Component;
 public class TicketCreatedEventListener implements ApplicationListener<TicketCreatedEvent> {
 
   private final MessageService messageService;
+  private final UserService userService;
 
-  public TicketCreatedEventListener(MessageService messageService) {
+  public TicketCreatedEventListener(MessageService messageService, UserService userService) {
     this.messageService = messageService;
+    this.userService = userService;
   }
 
   @Override
   public void onApplicationEvent(TicketCreatedEvent event) {
     Ticket ticket = (Ticket) event.getSource();
     Map<String, Object> params = ObjectUtil.toMap(ticket);
-    messageService.send("ticket.new", params, MessageUtils.formatRecipientFromUser(1L));
+    List<User> userList = userService.findAll(PropertyFilter.newFilter());
+
+    String[] receivers =
+        userList.stream()
+            .filter(u -> u.getEmail() != null && u.getEmail().getAddress() != null)
+            .map(u -> MessageUtils.formatRecipientFromUser(u.getId()))
+            .toArray(String[]::new);
+
+    messageService.send("ticket.new", params, receivers);
   }
 }

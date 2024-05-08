@@ -30,6 +30,7 @@ import org.hibernate.Hibernate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -61,7 +62,7 @@ public class DefaultMessageService implements MessageService {
   }
 
   @Override
-  @Transactional(rollbackFor = RuntimeException.class)
+  @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = RuntimeException.class)
   public String send(String type, Map<String, Object> variables, String... receivers) {
 
     if (receivers.length == 0) {

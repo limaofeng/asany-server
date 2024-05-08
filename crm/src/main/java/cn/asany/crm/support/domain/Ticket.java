@@ -23,6 +23,7 @@ import cn.asany.crm.support.domain.enums.TicketStatus;
 import cn.asany.security.core.domain.User;
 import cn.asany.storage.api.FileObject;
 import cn.asany.storage.api.converter.FileObjectsConverter;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.util.List;
 import lombok.*;
@@ -104,6 +105,7 @@ public class Ticket extends BaseBusEntity {
   @PrimaryKeyJoinColumn(name = "ID", referencedColumnName = "TICKET_ID")
   private TicketRating rating;
 
+  @JsonManagedReference
   @OneToMany(
       mappedBy = "ticket",
       fetch = FetchType.LAZY,

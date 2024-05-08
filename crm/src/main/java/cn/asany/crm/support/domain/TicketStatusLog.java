@@ -17,6 +17,7 @@ package cn.asany.crm.support.domain;
 
 import cn.asany.crm.support.domain.enums.TicketStatus;
 import cn.asany.security.core.domain.User;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import java.util.Date;
 import lombok.*;
@@ -36,6 +37,7 @@ public class TicketStatusLog extends BaseBusEntity {
   @TableGenerator
   private Long id;
 
+  @JsonBackReference
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(
       name = "TICKET_ID",

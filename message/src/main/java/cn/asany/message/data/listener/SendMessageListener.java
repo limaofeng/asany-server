@@ -123,7 +123,7 @@ public class SendMessageListener implements ApplicationListener<MessageCreateEve
                   message);
             }
 
-          } catch (Exception e) {
+          } catch (Throwable e) {
             message.setStatus(MessageStatus.FAILURE);
             message.setFailureReason(e.getMessage());
             log.error(e.getMessage(), e);
@@ -156,8 +156,8 @@ public class SendMessageListener implements ApplicationListener<MessageCreateEve
     TemplateType messageHandlerType = messageChannelDefinition.getType();
     MessageRecipientType recipientType = messageChannelDefinition.getType().getRecipientType();
 
-    MessageChannel<cn.asany.message.api.Message> messageChannel =
-        messageChannelResolver.resolve(String.valueOf(channelId));
+    //noinspection rawtypes
+    MessageChannel messageChannel = messageChannelResolver.resolve(String.valueOf(channelId));
 
     // 解析接收者
     List<String> recipients = new ArrayList<>();

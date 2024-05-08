@@ -64,7 +64,9 @@ public class TicketGraphQLRootResolver implements GraphQLMutationResolver, Graph
   public Ticket createTicket(TicketCreateInput input) {
     LoginUser user = SpringSecurityUtils.getCurrentUser();
     Ticket ticket = ticketConverter.toTicket(input);
-    ticket.setCreatedBy(user.getUid());
+    if (user != null) {
+      ticket.setCreatedBy(user.getUid());
+    }
     return this.ticketService.save(ticket);
   }
 
