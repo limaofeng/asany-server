@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.20](https://github.com/limaofeng/asany-server/compare/v0.3.19...v0.3.20) (2024-05-09)
+
+
+### Bug Fixes
+
+* 微信端路由改 bash 后的相应调整 ([968dca1](https://github.com/limaofeng/asany-server/commit/968dca1466f23ae1acffd20db6ac58a54a64161b))
+
 ### [0.3.19](https://github.com/limaofeng/asany-server/compare/v0.3.18...v0.3.19) (2024-05-08)
 
 
