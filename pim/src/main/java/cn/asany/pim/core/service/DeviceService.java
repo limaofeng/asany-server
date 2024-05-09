@@ -94,7 +94,7 @@ public class DeviceService {
 
     link.setUrl(
         environment.getProperty("MOBILE_APP_BASE_URL")
-            + "/c/devices/"
+            + "/#/c/devices/"
             + device.getId()
             + "/support");
     link.getMetadata().put("device", device.getId().toString());
