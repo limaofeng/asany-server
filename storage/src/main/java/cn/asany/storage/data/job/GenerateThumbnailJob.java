@@ -35,11 +35,7 @@ import net.asany.jfantasy.framework.util.FFmpeg;
 import net.asany.jfantasy.framework.util.Images;
 import net.asany.jfantasy.framework.util.common.StreamUtil;
 import net.asany.jfantasy.framework.util.common.file.FileUtil;
-import org.quartz.Job;
-import org.quartz.JobDataMap;
-import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
-import org.springframework.cache.CacheManager;
+import org.quartz.*;
 
 /**
  * 生成缩略图
@@ -49,20 +45,16 @@ import org.springframework.cache.CacheManager;
 @Slf4j
 public class GenerateThumbnailJob implements Job {
 
+  public static final JobKey JOBKEY_GENERATE_THUMBNAIL = JobKey.jobKey("generate", "thumbnail");
   private final FileService fileService;
   private final StorageResolver storageResolver;
   private final ThumbnailService thumbnailService;
-  private final CacheManager cacheManager;
 
   public GenerateThumbnailJob(
-      FileService fileService,
-      StorageResolver storageResolver,
-      ThumbnailService thumbnailService,
-      CacheManager cacheManager) {
+      FileService fileService, StorageResolver storageResolver, ThumbnailService thumbnailService) {
     this.fileService = fileService;
     this.storageResolver = storageResolver;
     this.thumbnailService = thumbnailService;
-    this.cacheManager = cacheManager;
   }
 
   @SneakyThrows({Exception.class})
@@ -136,7 +128,9 @@ public class GenerateThumbnailJob implements Job {
       throw new JobExecutionException(e.getMessage(), e);
     } finally {
       for (Path temp1 : temps) {
-        FileUtil.rm(temp1);
+        if (temp1 != null && Files.exists(temp1)) {
+          FileUtil.rm(temp1);
+        }
       }
     }
   }

@@ -48,7 +48,7 @@ class MessageTemplateTest {
 
     template.setContent(content);
 
-    MessageChannel<Message> channel = messageChannelResolver.resolve("1");
+    MessageChannel<Message> channel = (MessageChannel<Message>) messageChannelResolver.resolve("1");
 
     channel.send(
         SmsMessage.builder()
@@ -71,7 +71,7 @@ class MessageTemplateTest {
 
     template.setContent(content);
 
-    MessageChannel<Message> channel = messageChannelResolver.resolve("1");
+    MessageChannel<Message> channel = (MessageChannel<Message>) messageChannelResolver.resolve("1");
 
     channel.send(
         SmsMessage.builder()

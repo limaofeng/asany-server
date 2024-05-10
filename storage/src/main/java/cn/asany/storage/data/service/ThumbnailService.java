@@ -23,6 +23,7 @@ import cn.asany.storage.core.engine.virtual.VirtualFileObject;
 import cn.asany.storage.data.dao.ThumbnailDao;
 import cn.asany.storage.data.domain.FileDetail;
 import cn.asany.storage.data.domain.Thumbnail;
+import cn.asany.storage.data.job.GenerateThumbnailJob;
 import cn.asany.storage.utils.UploadUtils;
 import java.io.File;
 import java.util.HashMap;
@@ -52,7 +53,6 @@ public class ThumbnailService {
 
   private static final String THUMBNAIL_CACHE_KEY = "thumbnail";
   private static final String TRIGGER_KEY_THUMBNAIL_GROUP = "thumbnail";
-  public static final JobKey JOBKEY_GENERATE_THUMBNAIL = JobKey.jobKey("generate", "thumbnail");
   public static final String THUMBNAIL_STORAGE_SPACE_KEY = "wg1NcUDz";
 
   private final ThumbnailDao thumbnailDao;
@@ -117,7 +117,7 @@ public class ThumbnailService {
       Map<String, String> data = new HashMap<>(2);
       data.put("source", source.toString());
       data.put("size", size);
-      taskScheduler.scheduleTask(JOBKEY_GENERATE_THUMBNAIL, taskId, data);
+      taskScheduler.scheduleTask(GenerateThumbnailJob.JOBKEY_GENERATE_THUMBNAIL, taskId, data);
     }
     Long thumbnailId = thumbnailFuture.get();
     Thumbnail thumbnail = this.thumbnailDao.getReferenceById(thumbnailId);

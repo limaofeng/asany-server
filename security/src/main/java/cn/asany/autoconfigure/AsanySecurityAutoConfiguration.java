@@ -22,12 +22,14 @@ import cn.asany.security.core.domain.User;
 import cn.asany.security.core.service.DefaultUserDetailsService;
 import cn.asany.security.core.service.ResourceTypeService;
 import cn.asany.security.core.service.UserService;
+import cn.asany.security.oauth.job.TokenCleanupJob;
 import graphql.kickstart.autoconfigure.tools.SchemaDirective;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
+import lombok.extern.slf4j.Slf4j;
 import net.asany.jfantasy.autoconfigure.SecurityAutoConfiguration;
 import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
 import net.asany.jfantasy.framework.dao.jpa.SimpleAnyJpaRepository;
@@ -41,6 +43,7 @@ import net.asany.jfantasy.graphql.context.DataLoaderRegistryCustomizer;
 import net.asany.jfantasy.schedule.service.TaskScheduler;
 import org.dataloader.DataLoader;
 import org.dataloader.DataLoaderFactory;
+import org.quartz.SchedulerException;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -52,11 +55,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionTemplate;
 
 /**
  * @author limaofeng
  */
+@Slf4j
 @Configuration
 @EntityScan({"cn.asany.security.*.domain"})
 @ComponentScan({
@@ -84,33 +89,32 @@ public class AsanySecurityAutoConfiguration implements InitializingBean {
 
   @Override
   public void afterPropertiesSet() {
-    //    transactionTemplate.execute(
-    //        (TransactionCallback<Void>)
-    //            status -> {
-    //              try {
-    //                if (!taskScheduler.checkExists(TokenCleanupJob.JOBKEY_TOKEN_CLEANUP)) {
-    //                  taskScheduler.addJob(TokenCleanupJob.JOBKEY_TOKEN_CLEANUP,
-    // TokenCleanupJob.class);
-    //                }
-    //              } catch (SchedulerException e) {
-    //                status.setRollbackOnly();
-    //              }
-    //              return null;
-    //            });
+    transactionTemplate.execute(
+        (TransactionCallback<Void>)
+            status -> {
+              try {
+                if (!taskScheduler.isStarted()) {
+                  log.warn("TaskScheduler is not started, starting now...");
+                  return null;
+                }
+                if (!taskScheduler.checkExists(TokenCleanupJob.JOBKEY_TOKEN_CLEANUP)) {
+                  taskScheduler.addJob(TokenCleanupJob.JOBKEY_TOKEN_CLEANUP, TokenCleanupJob.class);
+                }
+              } catch (SchedulerException e) {
+                status.setRollbackOnly();
+              }
+              return null;
+            });
   }
 
   @Bean("asany.PasswordEncoder")
   public PasswordEncoder passwordEncoder(Environment environment) {
     String encoder = environment.getProperty("PASSWORD_ENCODER", "plaintext");
-    switch (encoder) {
-      case "des":
-        return new DESPasswordEncoder();
-      case "plaintext":
-        return new PlaintextPasswordEncoder();
-      case "md5":
-      default:
-        return new MD5PasswordEncoder();
-    }
+    return switch (encoder) {
+      case "des" -> new DESPasswordEncoder();
+      case "plaintext" -> new PlaintextPasswordEncoder();
+      default -> new MD5PasswordEncoder();
+    };
   }
 
   @Bean("user.DataLoader")

@@ -9,5 +9,8 @@ dependencies {
     annotationProcessor "org.projectlombok:lombok"
     testCompileOnly "org.projectlombok:lombok"
     testAnnotationProcessor "org.projectlombok:lombok"
+    testImplementation project(":security")
+    testImplementation project(":sms")
+    testImplementation 'org.springframework.boot:spring-boot-starter-data-redis'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }

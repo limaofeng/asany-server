@@ -24,15 +24,19 @@ import cn.asany.storage.core.engine.minio.MinIOStorageConfig;
 import cn.asany.storage.core.engine.oss.OSSStorageConfig;
 import cn.asany.storage.data.graphql.directive.FileFormatDirective;
 import cn.asany.storage.data.graphql.scalar.FileCoercing;
+import cn.asany.storage.data.job.GenerateThumbnailJob;
 import cn.asany.storage.data.service.AuthTokenService;
 import cn.asany.storage.data.service.StorageService;
 import graphql.kickstart.autoconfigure.tools.SchemaDirective;
 import graphql.kickstart.servlet.apollo.ApolloScalars;
 import graphql.schema.GraphQLScalarType;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 import net.asany.jfantasy.framework.dao.jpa.SimpleAnyJpaRepository;
 import net.asany.jfantasy.graphql.SchemaParserDictionaryBuilder;
+import net.asany.jfantasy.schedule.service.TaskScheduler;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -45,6 +49,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
  *
  * @author limaofeng
  */
+@Slf4j
 @Configuration
 @EntityScan("cn.asany.storage.data.domain")
 @ComponentScan({
@@ -102,5 +107,19 @@ public class StorageAutoConfiguration {
       @Autowired AuthTokenService authTokenService, StorageResolver storageResolver) {
     return new SchemaDirective(
         "fileFormat", new FileFormatDirective(authTokenService, storageResolver));
+  }
+
+  @Bean("storage.startupRunner")
+  public CommandLineRunner startupRunner(@Autowired TaskScheduler taskScheduler) {
+    return args -> {
+      if (!taskScheduler.isStarted()) {
+        log.warn("TaskScheduler is not started, starting now...");
+        return;
+      }
+      if (!taskScheduler.checkExists(GenerateThumbnailJob.JOBKEY_GENERATE_THUMBNAIL)) {
+        taskScheduler.addJob(
+            GenerateThumbnailJob.JOBKEY_GENERATE_THUMBNAIL, GenerateThumbnailJob.class);
+      }
+    };
   }
 }
