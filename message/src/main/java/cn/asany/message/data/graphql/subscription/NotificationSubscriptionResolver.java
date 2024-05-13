@@ -41,7 +41,7 @@ public class NotificationSubscriptionResolver implements GraphQLSubscriptionReso
   Publisher<Notification> notification(List<String> types, DataFetchingEnvironment env) {
     LoginUser user = SpringSecurityUtils.getCurrentUser();
     if (user == null) {
-      return notificationPublisher.getPublisher(
+      return notificationPublisher.filter(
           (notification) -> {
             if (types.isEmpty()) {
               return notification.isSystemMessage();
@@ -49,7 +49,7 @@ public class NotificationSubscriptionResolver implements GraphQLSubscriptionReso
             return types.contains(notification.getType().getId()) && notification.isSystemMessage();
           });
     }
-    return notificationPublisher.getPublisher(
+    return notificationPublisher.filter(
         notification -> {
           boolean isMyMessage =
               notification.isSystemMessage() || notification.getUserId().equals(user.getUid());

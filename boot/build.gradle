@@ -48,6 +48,7 @@ dependencies {
     implementation project(":crm")
     implementation "org.flywaydb:flyway-core"
     implementation "org.flywaydb:flyway-mysql"
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
     implementation "org.springframework.boot:spring-boot-starter-data-redis"
     implementation "org.springframework.boot:spring-boot-starter-web"
     compileOnly "org.projectlombok:lombok"

@@ -16,7 +16,7 @@
 package cn.asany.message.data.graphql.subscription;
 
 import cn.asany.message.core.Notification;
-import net.asany.jfantasy.graphql.publishers.BasePublisher;
+import net.asany.jfantasy.graphql.publishers.FluxPublisher;
 import org.springframework.stereotype.Component;
 
 /**
@@ -25,4 +25,4 @@ import org.springframework.stereotype.Component;
  * @author limaofeng
  */
 @Component
-public class NotificationPublisher extends BasePublisher<Notification> {}
+public class NotificationPublisher extends FluxPublisher<Notification> {}
