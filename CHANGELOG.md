@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.22](https://github.com/limaofeng/asany-server/compare/v0.3.21...v0.3.22) (2024-05-13)
+
+
+### Features
+
+* 启用 websocket 订阅 ([6c9960c](https://github.com/limaofeng/asany-server/commit/6c9960c00f390bbb390bdce41b979c638bc5dacf))
+
 ### [0.3.21](https://github.com/limaofeng/asany-server/compare/v0.3.20...v0.3.21) (2024-05-10)
 
 
