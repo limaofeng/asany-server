@@ -28,7 +28,7 @@ routes:
   - path: /c/devices/:id/support/tickets/:tid
     component: cn.asany.ui.mobile.wxb.DeviceTicketDetailView
   - path: /
-    authorized: false
+    authorized: true
     component: cn.asany.ui.mobile.layout.Sticky
     routes:
       - path: /

@@ -228,7 +228,7 @@ public class ApplicationService implements ClientDetailsService {
             ClientSecret.builder()
                 .client(clientId)
                 .secret(clientSecretStr)
-                .type(ClientSecretType.OAUTH)
+                .type(ClientSecretType.SESSION)
                 .build());
     clientSecrets.add(clientSecret);
 
