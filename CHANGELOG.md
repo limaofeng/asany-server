@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.23](https://github.com/limaofeng/asany-server/compare/v0.3.22...v0.3.23) (2024-05-20)
+
+
+### Bug Fixes
+
+* 修复 logout 操作，避免已经退出。但客户端失败的问题 ([33ddc2d](https://github.com/limaofeng/asany-server/commit/33ddc2d9265cc4ddb9c29926bbf9ff45d02a976e))
+
 ### [0.3.22](https://github.com/limaofeng/asany-server/compare/v0.3.21...v0.3.22) (2024-05-13)
 
 
