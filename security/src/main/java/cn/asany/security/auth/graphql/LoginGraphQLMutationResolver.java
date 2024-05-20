@@ -18,17 +18,20 @@ package cn.asany.security.auth.graphql;
 import cn.asany.security.auth.authentication.DingtalkAuthenticationToken;
 import cn.asany.security.auth.authentication.LoginAuthenticationDetails;
 import cn.asany.security.auth.authentication.WeChatAuthenticationToken;
+import cn.asany.security.auth.error.UnauthorizedException;
 import cn.asany.security.auth.event.LoginSuccessEvent;
 import cn.asany.security.auth.event.LogoutSuccessEvent;
 import cn.asany.security.auth.graphql.types.LoginOptions;
 import cn.asany.security.auth.graphql.types.LoginType;
 import cn.asany.security.auth.utils.AuthUtils;
+import cn.asany.security.core.domain.enums.SocialProvider;
 import graphql.kickstart.tools.GraphQLMutationResolver;
 import graphql.schema.DataFetchingEnvironment;
 import lombok.extern.slf4j.Slf4j;
 import net.asany.jfantasy.framework.security.AuthenticationManager;
 import net.asany.jfantasy.framework.security.LoginUser;
 import net.asany.jfantasy.framework.security.SecurityContextHolder;
+import net.asany.jfantasy.framework.security.SpringSecurityUtils;
 import net.asany.jfantasy.framework.security.auth.core.TokenServiceFactory;
 import net.asany.jfantasy.framework.security.auth.core.token.AuthorizationServerTokenServices;
 import net.asany.jfantasy.framework.security.auth.core.token.ConsumerTokenServices;
@@ -114,12 +117,23 @@ public class LoginGraphQLMutationResolver implements GraphQLMutationResolver {
     return loginUser;
   }
 
+  public Boolean bindThirdPartyPlatform(String authCode, SocialProvider platform) {
+    LoginUser loginUser = SpringSecurityUtils.getCurrentUser();
+    if (loginUser == null) {
+      throw new UnauthorizedException("没有登录时，无法绑定第三方平台");
+    }
+    return Boolean.TRUE;
+  }
+
   public Boolean logout() {
-    BearerTokenAuthentication authentication =
-        (BearerTokenAuthentication) SecurityContextHolder.getContext().getAuthentication();
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    if (!authentication.isAuthenticated()) {
+      return Boolean.FALSE;
+    }
+    BearerTokenAuthentication tokenAuthentication = (BearerTokenAuthentication) authentication;
     ConsumerTokenServices consumerTokenServices =
         tokenServiceFactory.getTokenServices(OAuth2AccessToken.class);
-    consumerTokenServices.revokeToken(authentication.getToken().getTokenValue());
+    consumerTokenServices.revokeToken(tokenAuthentication.getToken().getTokenValue());
     publisher.publishEvent(new LogoutSuccessEvent(authentication));
     return Boolean.TRUE;
   }

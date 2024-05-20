@@ -37,6 +37,8 @@ routes:
         component: cn.asany.ui.mobile.wxb.InstallSetupView
       - path: /support/ticket-dashboard
         component: cn.asany.ui.mobile.wxb.TicketDashboardView
+      - path: /support/admin-dashboard
+        component: cn.asany.ui.mobile.wxb.AdminDashboardView
       - path: /support/tickets
         component: cn.asany.ui.mobile.wxb.TicketListView
       - path: /support/tickets/:id

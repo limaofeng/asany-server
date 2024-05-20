@@ -156,14 +156,14 @@ public class AsanySecurityAutoConfiguration implements InitializingBean {
     return new SchemaDirective("resource", new ResourceDirective(resourceTypeService));
   }
 
-  //    @Bean(name = "dingtalk.AuthenticationProvider")
-  //    public SimpleAuthenticationProvider
-  // dingtalkAuthenticationProvider(DingtalkUserDetailsService userDetailsService) {
-  //        SimpleAuthenticationProvider provider = new
-  // SimpleAuthenticationProvider(DingtalkAuthenticationToken.class);
-  //        provider.setUserDetailsService(userDetailsService);
-  //        return provider;
-  //    }
+  //      @Bean(name = "dingTalk.AuthenticationProvider")
+  //      public SimpleAuthenticationProvider
+  //   dingTalkAuthenticationProvider(DingTalkUserDetailsService userDetailsService) {
+  //          SimpleAuthenticationProvider provider = new
+  //   SimpleAuthenticationProvider(DingTalkAuthenticationToken.class);
+  ////          provider.setUserDetailsService(userDetailsService);
+  //          return provider;
+  //      }
 
   //    @Bean(name = "WeChat.AuthenticationProvider")
   //    public SimpleAuthenticationProvider weChatAuthenticationProvider(WeChatUserDetailsService

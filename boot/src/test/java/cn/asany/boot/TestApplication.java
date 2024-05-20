@@ -19,7 +19,7 @@ import graphql.kickstart.autoconfigure.tools.GraphQLJavaToolsAutoConfiguration;
 import graphql.kickstart.autoconfigure.web.servlet.GraphQLWebAutoConfiguration;
 import lombok.extern.slf4j.Slf4j;
 import net.asany.jfantasy.autoconfigure.GraphQLAutoConfiguration;
-import net.asany.jfantasy.autoconfigure.SecurityAutoConfiguration;
+import net.asany.jfantasy.autoconfigure.SearchAutoConfiguration;
 import net.asany.jfantasy.graphql.autoconfigure.GraphQLSecurityAutoConfiguration;
 import org.springframework.boot.actuate.autoconfigure.audit.AuditAutoConfiguration;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -48,8 +48,8 @@ import org.springframework.web.client.RestTemplate;
       GraphQLAutoConfiguration.class,
       GraphQLWebAutoConfiguration.class,
       GraphQLJavaToolsAutoConfiguration.class,
-      SecurityAutoConfiguration.class,
-      GraphQLSecurityAutoConfiguration.class
+      GraphQLSecurityAutoConfiguration.class,
+      SearchAutoConfiguration.class
     })
 public class TestApplication {
   @Bean

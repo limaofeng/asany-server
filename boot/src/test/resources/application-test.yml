@@ -12,8 +12,9 @@ spring:
     url: jdbc:mysql://${DATABASE_HOST}/${DATABASE_INSTANCE_NAME}?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&rewriteBatchedStatements=true
     username: ${DATABASE_USERNAME}
     password: ${DATABASE_PASSWORD}
-  redis:
-    database: 0
-    port: ${REDIS_PORT}
-    host: ${REDIS_HOST}
-    password: ${REDIS_PASSWORD}
+  data:
+    redis:
+      database: 0
+      port: ${REDIS_PORT}
+      host: ${REDIS_HOST}
+      password: ${REDIS_PASSWORD}

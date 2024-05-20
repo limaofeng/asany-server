@@ -5,11 +5,15 @@ enum WeixinType {
   enterprise
 }
 
+enum WeixinAuth2Scope {
+  base
+  userinfo
+}
+
 type WeixinSignature {
   appid: String!
   timestamp: Int!
   noncestr: String!
-
   signature: String!
   url: String!
 }
@@ -19,8 +23,17 @@ type WeixinJsapi {
   signature(url: String): WeixinSignature!
 }
 
+type WeixinOpenapi {
+  getAuthorizationUrl(
+    redirectUri: String!
+    scope: WeixinAuth2Scope!
+    state: String
+  ): String!
+}
+
 type Weixin {
   id: String!
   type: WeixinType!
   jsapi: WeixinJsapi!
+  openapi: WeixinOpenapi!
 }

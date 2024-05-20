@@ -22,7 +22,7 @@ import net.asany.jfantasy.framework.security.core.userdetails.UsernameNotFoundEx
 import org.springframework.stereotype.Component;
 
 @Component
-public class DingtalkUserDetailsService
+public class DingTalkUserDetailsService
     implements SimpleUserDetailsService<DingtalkAuthenticationToken.DingtalkCredentials> {
 
   //    @Autowired
