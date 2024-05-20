@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.24](https://github.com/limaofeng/asany-server/compare/v0.3.23...v0.3.24) (2024-05-20)
+
+
+### Bug Fixes
+
+* 修复创建应用时，密钥类型错误问题 ([b6b6c70](https://github.com/limaofeng/asany-server/commit/b6b6c70d4741c9e1256fdeceaeaf98bee046bf91))
+
 ### [0.3.23](https://github.com/limaofeng/asany-server/compare/v0.3.22...v0.3.23) (2024-05-20)
 
 
