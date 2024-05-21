@@ -455,6 +455,7 @@ enum DeviceIdType {
 }
 
 input BrandWhereInput {
+  id_in: [ID!]
   name_contains: String
 }
 
