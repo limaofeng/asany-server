@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.27](https://github.com/limaofeng/asany-server/compare/v0.3.26...v0.3.27) (2024-05-21)
+
+
+### Bug Fixes
+
+* 解决品牌查询时 description 字段缺失 ([5f8c8f5](https://github.com/limaofeng/asany-server/commit/5f8c8f5ae17ce208059a24ed914171a529a779a2))
+
 ### [0.3.26](https://github.com/limaofeng/asany-server/compare/v0.3.25...v0.3.26) (2024-05-21)
 
 
