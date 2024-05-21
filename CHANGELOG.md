@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.26](https://github.com/limaofeng/asany-server/compare/v0.3.25...v0.3.26) (2024-05-21)
+
+
+### Features
+
+* 为 BrandWhereInput 添加 id_in ([b843dc2](https://github.com/limaofeng/asany-server/commit/b843dc25e3daa704df15cab614d4a3fd5f2dfc23))
+
 ### [0.3.25](https://github.com/limaofeng/asany-server/compare/v0.3.24...v0.3.25) (2024-05-21)
 
 
