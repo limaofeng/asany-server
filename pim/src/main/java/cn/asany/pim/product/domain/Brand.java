@@ -33,4 +33,7 @@ public class Brand extends BaseBusEntity {
 
   @Column(name = "NAME", length = 20, nullable = false)
   private String name;
+
+  @Column(name = "DESCRIPTION", length = 200)
+  private String description;
 }

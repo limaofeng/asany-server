@@ -20,4 +20,5 @@ import lombok.Data;
 @Data
 public class BrandUpdateInput {
   private String name;
+  private String description;
 }

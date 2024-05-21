@@ -477,11 +477,14 @@ type BrandEdge {
 }
 
 input BrandCreateInput {
+  id: String!
   name: String
+  description: String
 }
 
 input BrandUpdateInput {
   name: String
+  description: String
 }
 
 input WarrantyPolicyCreateInput {
