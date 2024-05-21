@@ -150,6 +150,10 @@ type Brand {
   """
   name: String
   """
+  品牌描述
+  """
+  description: String
+  """
   创建时间
   """
   createdAt: Date @dateFormat
