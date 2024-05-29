@@ -682,6 +682,10 @@ input WarrantyPolicyWhereInput {
   name_contains: String
 }
 
+extend type CustomerStore {
+  deviceCount: Int!
+}
+
 extend type Mutation {
   """
   创建品牌

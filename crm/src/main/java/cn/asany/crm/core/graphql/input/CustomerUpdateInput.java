@@ -16,10 +16,12 @@
 package cn.asany.crm.core.graphql.input;
 
 import cn.asany.base.common.graphql.input.ContactInformationInput;
+import cn.asany.crm.core.domain.enums.CustomerTicketStrategy;
 import lombok.Data;
 
 @Data
 public class CustomerUpdateInput {
   private String name;
   private ContactInformationInput contactInfo;
+  private CustomerTicketStrategy ticketStrategy;
 }

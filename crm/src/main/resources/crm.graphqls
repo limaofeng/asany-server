@@ -113,6 +113,12 @@ type CustomerStore implements Owner {
   customer: Customer!
 }
 
+enum  CustomerTicketStrategy {
+  NONE
+  AUTO
+  ASSIGN
+}
+
 """
 客户
 """
@@ -133,6 +139,10 @@ type Customer implements Owner {
   门店列表
   """
   stores: [CustomerStore!]!
+  """
+  工单策略
+  """
+  ticketStrategy: CustomerTicketStrategy
 }
 
 input CustomerStoreWhereInput {
@@ -166,6 +176,10 @@ input CustomerUpdateInput {
   联系方式
   """
   contactInfo: ContactInformationInput
+  """
+  工单策略
+  """
+  ticketStrategy: CustomerTicketStrategy = AUTO
 }
 
 input CustomerStoreCreateInput {

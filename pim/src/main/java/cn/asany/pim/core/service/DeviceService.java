@@ -24,6 +24,8 @@ import cn.asany.system.domain.ShortLink;
 import cn.asany.system.service.ShortLinkService;
 import java.util.List;
 import java.util.Optional;
+
+import net.asany.jfantasy.framework.dao.jpa.JpaDefaultPropertyFilter;
 import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -149,5 +151,9 @@ public class DeviceService {
     List<Device> devices = this.deviceDao.findAll(filter);
     this.deviceDao.deleteAll(devices);
     return devices.size();
+  }
+
+  public long count(PropertyFilter filter) {
+    return this.deviceDao.count(filter);
   }
 }

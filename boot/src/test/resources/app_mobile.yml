@@ -67,6 +67,12 @@ routes:
         component: cn.asany.ui.mobile.wxb.CustomerStoreCreateView
       - path: /support/customers/:id/stores/:sid/edit
         component: cn.asany.ui.mobile.wxb.CustomerStoreEditView
+      - path: /support/customer-stores
+        component: cn.asany.ui.mobile.wxb.CustomerStoreListView
+      - path: /support/customer-stores/create
+        component: cn.asany.ui.mobile.wxb.CustomerStoreCreateView
+      - path: /support/customer-stores/:id/edit
+        component: cn.asany.ui.mobile.wxb.CustomerStoreEditView
       - path: /support/products
         component: cn.asany.ui.mobile.wxb.ProductListView
       - path: /support/products/:id/warranty-policies

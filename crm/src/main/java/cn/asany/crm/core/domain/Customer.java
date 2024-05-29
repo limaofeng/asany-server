@@ -17,6 +17,7 @@ package cn.asany.crm.core.domain;
 
 import cn.asany.base.common.Ownership;
 import cn.asany.base.common.domain.ContactInformation;
+import cn.asany.crm.core.domain.enums.CustomerTicketStrategy;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.util.List;
@@ -57,4 +58,10 @@ public class Customer extends BaseBusEntity implements Ownership {
   @JsonManagedReference
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "customer", cascade = CascadeType.REMOVE)
   private List<CustomerStore> stores;
+
+  @Builder.Default
+  @Enumerated(EnumType.STRING)
+  @Column(name = "TICKET_STRATEGY", length = 10)
+  private CustomerTicketStrategy ticketStrategy = CustomerTicketStrategy.AUTO;
+
 }
