@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.28](https://github.com/limaofeng/asany-server/compare/v0.3.27...v0.3.28) (2024-05-29)
+
+
+### Features
+
+* 客户与门店编辑功能 ([1963074](https://github.com/limaofeng/asany-server/commit/196307471f154bc87c28815cecf4856ea1930dba))
+
 ### [0.3.27](https://github.com/limaofeng/asany-server/compare/v0.3.26...v0.3.27) (2024-05-21)
 
 
