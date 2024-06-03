@@ -126,12 +126,18 @@ routes:
       - path: /crm
         name: 客户管理
         routes:
-          - path: /crm/contacts
-            component: cn.asany.ui.admin.crm.Contacts
           - path: /crm/customers
+            name: 客户管理
             component: cn.asany.ui.admin.crm.CustomerListView
           - path: /crm/customer-stores
+            name: 门店管理
             component: cn.asany.ui.admin.crm.CustomerStoreListView
+          - path: /crm/customer-stores/:id
+            name: 门店新增
+            component: cn.asany.ui.admin.crm.CustomerStoreNewView
+          - path: /crm/customer-stores/:id
+            name: 门店详情
+            component: cn.asany.ui.admin.crm.CustomerStoreDetailsView
           - path: /crm
             redirect: /crm/customer-stores
       - path: /pim

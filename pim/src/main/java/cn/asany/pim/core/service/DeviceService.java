@@ -22,18 +22,16 @@ import cn.asany.pim.product.domain.Product;
 import cn.asany.pim.product.service.ProductService;
 import cn.asany.system.domain.ShortLink;
 import cn.asany.system.service.ShortLinkService;
-import java.util.List;
-import java.util.Optional;
-
-import net.asany.jfantasy.framework.dao.jpa.JpaDefaultPropertyFilter;
 import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class DeviceService {
@@ -45,17 +43,19 @@ public class DeviceService {
 
   private final ShortLinkService shortLinkService;
 
-  @Autowired protected Environment environment;
+  protected final Environment environment;
 
   public DeviceService(
-      DeviceDao deviceDao,
-      ProductService productService,
-      WarrantyCardService warrantyCardService,
-      ShortLinkService shortLinkService) {
+    DeviceDao deviceDao,
+    ProductService productService,
+    WarrantyCardService warrantyCardService,
+    ShortLinkService shortLinkService,
+    Environment environment) {
     this.deviceDao = deviceDao;
     this.productService = productService;
     this.warrantyCardService = warrantyCardService;
     this.shortLinkService = shortLinkService;
+    this.environment = environment;
   }
 
   @Transactional(readOnly = true)
