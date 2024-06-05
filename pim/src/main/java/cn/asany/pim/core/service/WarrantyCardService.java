@@ -31,4 +31,8 @@ public class WarrantyCardService {
   public void save(WarrantyCard warrantyCard) {
     this.warrantyCardDao.save(warrantyCard);
   }
+
+  public void update(WarrantyCard warrantyCard) {
+    this.warrantyCardDao.update(warrantyCard);
+  }
 }

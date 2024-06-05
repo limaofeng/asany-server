@@ -22,6 +22,8 @@ import cn.asany.pim.product.domain.Product;
 import cn.asany.pim.product.service.ProductService;
 import cn.asany.system.domain.ShortLink;
 import cn.asany.system.service.ShortLinkService;
+import java.util.List;
+import java.util.Optional;
 import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.springframework.core.env.Environment;
 import org.springframework.data.domain.Page;
@@ -29,9 +31,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.Optional;
 
 @Service
 public class DeviceService {
@@ -46,11 +45,11 @@ public class DeviceService {
   protected final Environment environment;
 
   public DeviceService(
-    DeviceDao deviceDao,
-    ProductService productService,
-    WarrantyCardService warrantyCardService,
-    ShortLinkService shortLinkService,
-    Environment environment) {
+      DeviceDao deviceDao,
+      ProductService productService,
+      WarrantyCardService warrantyCardService,
+      ShortLinkService shortLinkService,
+      Environment environment) {
     this.deviceDao = deviceDao;
     this.productService = productService;
     this.warrantyCardService = warrantyCardService;
@@ -106,6 +105,37 @@ public class DeviceService {
     return device;
   }
 
+  @Transactional
+  public Device update(Long id, Device device, Boolean merge) {
+    device.setId(id);
+
+    Device old = this.deviceDao.getReferenceById(id);
+
+    if (!old.getWarrantyCards().isEmpty()) {
+      List<WarrantyCard> warrantyCards = device.getWarrantyCards();
+      WarrantyCard warrantyCard = old.getWarrantyCards().get(0);
+      WarrantyCard warrantyCard1 = warrantyCards.get(0);
+
+      warrantyCard.setPolicy(warrantyCard1.getPolicy());
+      warrantyCard.setStatus(warrantyCard1.getStatus());
+      warrantyCard.setStartDate(warrantyCard1.getStartDate());
+      warrantyCard.setEndDate(warrantyCard1.getEndDate());
+      this.warrantyCardService.update(warrantyCard);
+      warrantyCards.clear();
+      warrantyCards.add(warrantyCard);
+      device.setWarrantyCards(warrantyCards);
+    } else {
+      List<WarrantyCard> warrantyCards = device.getWarrantyCards();
+      for (WarrantyCard warrantyCard : warrantyCards) {
+        warrantyCard.setDevice(device);
+        this.warrantyCardService.save(warrantyCard);
+      }
+      device.setWarrantyCards(warrantyCards);
+    }
+
+    return deviceDao.update(device, merge);
+  }
+
   @Transactional(readOnly = true)
   public Optional<Device> findById(Long id) {
     return deviceDao.findById(id);
@@ -114,12 +144,6 @@ public class DeviceService {
   @Transactional(readOnly = true)
   public Optional<Device> findBySN(String sn) {
     return deviceDao.findOneBy("sn", sn);
-  }
-
-  @Transactional
-  public Device update(Long id, Device device, Boolean merge) {
-    device.setId(id);
-    return deviceDao.update(device, merge);
   }
 
   @Transactional

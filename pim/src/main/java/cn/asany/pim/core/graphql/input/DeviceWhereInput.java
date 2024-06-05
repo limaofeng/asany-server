@@ -15,7 +15,35 @@
  */
 package cn.asany.pim.core.graphql.input;
 
+import cn.asany.crm.core.domain.CustomerStore;
+import cn.asany.crm.core.service.CustomerStoreService;
 import cn.asany.pim.core.domain.Device;
+import cn.asany.pim.core.domain.enums.DeviceOwnerType;
+import java.util.List;
+import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
+import net.asany.jfantasy.framework.spring.SpringBeanUtils;
 import net.asany.jfantasy.graphql.inputs.WhereInput;
+import org.springframework.data.domain.Sort;
 
-public class DeviceWhereInput extends WhereInput<DeviceWhereInput, Device> {}
+public class DeviceWhereInput extends WhereInput<DeviceWhereInput, Device> {
+
+  public void setCustomer(Long id) {
+    CustomerStoreService storeService = SpringBeanUtils.getBean(CustomerStoreService.class);
+    List<CustomerStore> stores =
+        storeService.findAll(
+            PropertyFilter.newFilter().equal("customer.id", id), 0, 1000, Sort.unsorted());
+    this.filter.and(
+        PropertyFilter.newFilter()
+            .equal("owner.type", DeviceOwnerType.CUSTOMER_STORE)
+            .in(
+                "owner.id",
+                stores.stream()
+                    .map(item -> item.getId().toString())
+                    .toList()
+                    .toArray(new String[0])));
+  }
+
+  public void setCustomerStore(String id) {
+    this.filter.equal("owner.type", DeviceOwnerType.CUSTOMER_STORE).equal("owner.id", id);
+  }
+}

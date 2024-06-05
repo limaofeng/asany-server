@@ -307,7 +307,10 @@ input ProductWhereInput {
 }
 
 input DeviceWhereInput {
+  id_in: [ID!]
   name_contains: String
+  customer: ID
+  customerStore: ID
 }
 
 input ProductImageInput {
@@ -425,6 +428,10 @@ input DeviceUpdateInput {
   购买日期
   """
   purchaseDate: Date
+  """
+  保修政策ID
+  """
+  warrantyPolicyId: ID!
   """
   保修开始日期
   """

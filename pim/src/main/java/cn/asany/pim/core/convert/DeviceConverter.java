@@ -38,10 +38,29 @@ public interface DeviceConverter {
   })
   Device toDevice(DeviceCreateInput input);
 
+  @Mappings({})
   Device toDevice(DeviceUpdateInput input);
 
   @AfterMapping
   default void customizeMapping(@MappingTarget Device target, DeviceCreateInput source) {
+    List<WarrantyCard> warrantyCards = new ArrayList<>();
+    WarrantyCard warrantyCard = new WarrantyCard();
+    warrantyCard.setPolicy(WarrantyPolicy.builder().id(source.getWarrantyPolicyId()).build());
+    warrantyCard.setStartDate(source.getWarrantyStartDate());
+    warrantyCard.setEndDate(source.getWarrantyEndDate());
+
+    if (source.getWarrantyEndDate().before(new Date())) {
+      warrantyCard.setStatus(WarrantyStatus.EXPIRED);
+    } else {
+      warrantyCard.setStatus(WarrantyStatus.ACTIVE);
+    }
+
+    warrantyCards.add(warrantyCard);
+    target.setWarrantyCards(warrantyCards);
+  }
+
+  @AfterMapping
+  default void customizeMapping(@MappingTarget Device target, DeviceUpdateInput source) {
     List<WarrantyCard> warrantyCards = new ArrayList<>();
     WarrantyCard warrantyCard = new WarrantyCard();
     warrantyCard.setPolicy(WarrantyPolicy.builder().id(source.getWarrantyPolicyId()).build());

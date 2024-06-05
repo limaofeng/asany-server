@@ -63,5 +63,4 @@ public class Customer extends BaseBusEntity implements Ownership {
   @Enumerated(EnumType.STRING)
   @Column(name = "TICKET_STRATEGY", length = 10)
   private CustomerTicketStrategy ticketStrategy = CustomerTicketStrategy.AUTO;
-
 }

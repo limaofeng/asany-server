@@ -113,7 +113,7 @@ type CustomerStore implements Owner {
   customer: Customer!
 }
 
-enum  CustomerTicketStrategy {
+enum CustomerTicketStrategy {
   NONE
   AUTO
   ASSIGN
