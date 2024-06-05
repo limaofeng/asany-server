@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.30](https://github.com/limaofeng/asany-server/compare/v0.3.29...v0.3.30) (2024-06-05)
+
+
+### Features
+
+* 设备编 ([bb6a9e2](https://github.com/limaofeng/asany-server/commit/bb6a9e23bc5876b112a3f712aa4fa87f40c7c315))
+
 ### [0.3.29](https://github.com/limaofeng/asany-server/compare/v0.3.28...v0.3.29) (2024-06-03)
 
 
