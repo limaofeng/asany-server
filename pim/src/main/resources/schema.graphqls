@@ -300,6 +300,18 @@ type Device implements TicketTarget {
   创建时间
   """
   createdAt: Date @dateFormat
+  """
+  创建人
+  """
+  createdBy: ID
+  """
+  最后修改时间
+  """
+  updatedAt: Date @dateFormat
+  """
+  最后修改人
+  """
+  updatedBy: ID
 }
 
 input ProductWhereInput {
@@ -309,6 +321,8 @@ input ProductWhereInput {
 input DeviceWhereInput {
   id_in: [ID!]
   name_contains: String
+  createdBy: ID
+  updatedBy: ID
   customer: ID
   customerStore: ID
 }
