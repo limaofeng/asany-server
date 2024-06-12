@@ -325,6 +325,9 @@ input DeviceWhereInput {
   updatedBy: ID
   customer: ID
   customerStore: ID
+  sn: String
+  no: String
+  product: ID
 }
 
 input ProductImageInput {

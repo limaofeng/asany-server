@@ -46,4 +46,8 @@ public class DeviceWhereInput extends WhereInput<DeviceWhereInput, Device> {
   public void setCustomerStore(String id) {
     this.filter.equal("owner.type", DeviceOwnerType.CUSTOMER_STORE).equal("owner.id", id);
   }
+
+  public void setProduct(String id) {
+    this.filter.equal("product.id", id);
+  }
 }
