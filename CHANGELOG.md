@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.33](https://github.com/limaofeng/asany-server/compare/v0.3.32...v0.3.33) (2024-06-13)
+
+
+### Bug Fixes
+
+* 修复产品图片保存BUG ([02e363e](https://github.com/limaofeng/asany-server/commit/02e363e1db3fada96cf9a93d848a29c968b4b563))
+
 ### [0.3.32](https://github.com/limaofeng/asany-server/compare/v0.3.31...v0.3.32) (2024-06-12)
 
 
