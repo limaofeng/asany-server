@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.34](https://github.com/limaofeng/asany-server/compare/v0.3.33...v0.3.34) (2024-06-13)
+
+
+### Features
+
+* 文章创建BUG解决 ([1b7c99a](https://github.com/limaofeng/asany-server/commit/1b7c99adec11038596133fbbecb20bb84f809bb7))
+
+
+### Bug Fixes
+
+* 修复删除文章时，存在引用的Bug ([441450b](https://github.com/limaofeng/asany-server/commit/441450b48850f73c75f782aaa3e5dd20c082d277))
+
 ### [0.3.33](https://github.com/limaofeng/asany-server/compare/v0.3.32...v0.3.33) (2024-06-13)
 
 
