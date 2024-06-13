@@ -18,8 +18,8 @@ package cn.asany.cms.content.service;
 import cn.asany.cms.content.dao.VideoContentDao;
 import cn.asany.cms.content.domain.VideoContent;
 import cn.asany.cms.content.domain.enums.ContentType;
+import cn.asany.cms.content.graphql.input.ArticleContentInput;
 import cn.asany.storage.api.FileObject;
-import java.util.Map;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
 
@@ -53,12 +53,12 @@ public class VideoContentService implements ArticleContentHandler<VideoContent> 
   }
 
   @Override
-  public VideoContent parse(Map<String, Object> content) {
-    Long id = (Long) content.get("id");
-    String url = (String) content.get("url");
-    String title = (String) content.get("title");
-    String description = (String) content.get("description");
-    FileObject video = (FileObject) content.get("video");
+  public VideoContent parse(ArticleContentInput content) {
+    Long id = content.getId();
+    String url = content.getUrl();
+    String title = content.getTitle();
+    String description = content.getDescription();
+    FileObject video = content.getVideo();
     return VideoContent.builder()
         .url(url)
         .title(title)

@@ -19,9 +19,9 @@ import cn.asany.cms.content.dao.ImageContentDao;
 import cn.asany.cms.content.domain.ImageContent;
 import cn.asany.cms.content.domain.ImageItem;
 import cn.asany.cms.content.domain.enums.ContentType;
+import cn.asany.cms.content.graphql.input.ArticleContentInput;
 import cn.asany.cms.content.graphql.input.ImageContentItemInput;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -64,9 +64,9 @@ public class ImageContentService implements ArticleContentHandler<ImageContent> 
   }
 
   @Override
-  public ImageContent parse(Map<String, Object> content) {
-    Long id = (Long) content.get("id");
-    List<ImageContentItemInput> images = (List<ImageContentItemInput>) content.get("images");
+  public ImageContent parse(ArticleContentInput content) {
+    Long id = content.getId();
+    List<ImageContentItemInput> images = content.getImages();
     return ImageContent.builder()
         .id(id)
         .images(

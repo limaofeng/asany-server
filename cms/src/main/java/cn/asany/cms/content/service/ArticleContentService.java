@@ -21,7 +21,6 @@ import cn.asany.cms.content.graphql.input.ArticleContentInput;
 import java.util.List;
 import java.util.Optional;
 import net.asany.jfantasy.framework.error.ValidationException;
-import net.asany.jfantasy.framework.util.common.ObjectUtil;
 
 public class ArticleContentService {
 
@@ -36,7 +35,7 @@ public class ArticleContentService {
       return null;
     }
     ArticleContentHandler<ArticleContent> handler = getContentHandler(contentType);
-    return handler.parse(ObjectUtil.toMap(content));
+    return handler.parse(content);
   }
 
   public ArticleContentHandler<ArticleContent> getContentHandler(ContentType type) {

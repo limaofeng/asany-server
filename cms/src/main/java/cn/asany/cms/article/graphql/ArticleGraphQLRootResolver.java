@@ -16,7 +16,6 @@
 package cn.asany.cms.article.graphql;
 
 import cn.asany.cms.article.converter.ArticleCategoryConverter;
-import cn.asany.cms.article.converter.ArticleContext;
 import cn.asany.cms.article.converter.ArticleConverter;
 import cn.asany.cms.article.domain.*;
 import cn.asany.cms.article.graphql.input.*;
@@ -134,11 +133,6 @@ public class ArticleGraphQLRootResolver implements GraphQLQueryResolver, GraphQL
     ArticleCategory category = this.articleCategoryService.getById(input.getCategory());
 
     ArticleStoreTemplate storeTemplate = category.getStoreTemplate();
-    ArticleContext articleContext =
-        ArticleContext.builder()
-            .storeTemplate(storeTemplate)
-            .contentType(storeTemplate.getContentType())
-            .build();
 
     Article article = articleConverter.toArticle(input);
     ArticleContent content =

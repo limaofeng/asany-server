@@ -19,7 +19,7 @@ import cn.asany.cms.content.dao.TextContentDao;
 import cn.asany.cms.content.domain.TextContent;
 import cn.asany.cms.content.domain.enums.ContentType;
 import cn.asany.cms.content.domain.enums.TextContentType;
-import java.util.Map;
+import cn.asany.cms.content.graphql.input.ArticleContentInput;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
 
@@ -58,10 +58,10 @@ public class TextContentService implements ArticleContentHandler<TextContent> {
   }
 
   @Override
-  public TextContent parse(Map<String, Object> content) {
-    Long id = (Long) content.get("id");
-    TextContentType type = TextContentType.valueOf((String) content.get("type"));
-    String text = (String) content.get("text");
+  public TextContent parse(ArticleContentInput content) {
+    Long id = content.getId();
+    TextContentType type = TextContentType.valueOf(content.getType());
+    String text = content.getText();
     return TextContent.builder().id(id).type(type).text(text).build();
   }
 

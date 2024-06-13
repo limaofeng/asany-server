@@ -19,8 +19,8 @@ import cn.asany.cms.content.dao.DocumentContentDao;
 import cn.asany.cms.content.domain.DocumentContent;
 import cn.asany.cms.content.domain.enums.ContentType;
 import cn.asany.cms.content.domain.enums.DocumentType;
+import cn.asany.cms.content.graphql.input.ArticleContentInput;
 import cn.asany.storage.api.FileObject;
-import java.util.Map;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
 
@@ -54,14 +54,14 @@ public class DocumentContentService implements ArticleContentHandler<DocumentCon
   }
 
   @Override
-  public DocumentContent parse(Map<String, Object> content) {
-    Long id = (Long) content.get("id");
-    String url = (String) content.get("url");
-    DocumentType type = DocumentType.valueOf((String) content.get("type"));
-    Long size = (Long) content.get("size");
-    String title = (String) content.get("title");
-    String description = (String) content.get("description");
-    FileObject document = (FileObject) content.get("video");
+  public DocumentContent parse(ArticleContentInput content) {
+    Long id = content.getId();
+    String url = content.getUrl();
+    DocumentType type = DocumentType.valueOf(content.getType());
+    Long size = content.getSize();
+    String title = content.getTitle();
+    String description = content.getDescription();
+    FileObject document = content.getDocument();
     return DocumentContent.builder()
         .url(url)
         .type(type)
