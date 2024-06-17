@@ -19,6 +19,7 @@ import cn.asany.openapi.configs.AmapApiConfig;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import kong.unirest.*;
 import lombok.Data;
 import lombok.SneakyThrows;
@@ -27,6 +28,8 @@ import lombok.extern.slf4j.Slf4j;
 import net.asany.jfantasy.framework.error.ValidationException;
 import net.asany.jfantasy.framework.jackson.JSON;
 import net.asany.jfantasy.framework.util.common.StringUtil;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 
 /**
  * amap OpenAPI
@@ -36,15 +39,27 @@ import net.asany.jfantasy.framework.util.common.StringUtil;
 @Slf4j
 public class AmapOpenAPI {
   private static final String BASE_URL = "https://restapi.amap.com/v3";
+  public static final String CACHE_KEY = "OPENAPI_AMAP";
+
+  private final StringRedisTemplate redisTemplate;
+  private final ValueOperations<String, String> valueOperations;
 
   private final AmapApiConfig amap;
 
-  public AmapOpenAPI(AmapApiConfig amap) {
+  public AmapOpenAPI(StringRedisTemplate redisTemplate, AmapApiConfig amap) {
+    this.redisTemplate = redisTemplate;
+    this.valueOperations = redisTemplate.opsForValue();
     this.amap = amap;
   }
 
   @SneakyThrows(UnirestException.class)
   public IpResult ip(String ip) {
+
+    String cacheKey = CACHE_KEY + ":ip:" + ip;
+    if (Boolean.TRUE.equals(redisTemplate.hasKey(cacheKey))) {
+      return JSON.deserialize(redisTemplate.boundValueOps(cacheKey).get(), IpResult.class);
+    }
+
     String url = BASE_URL + "/ip";
 
     HttpRequest<GetRequest> request =
@@ -55,15 +70,16 @@ public class AmapOpenAPI {
     }
 
     HttpResponse<String> response = request.asString();
-    String body = response.getBody();
-
-    IpResult result = JSON.deserialize(body.replace("[]", "null"), IpResult.class);
+    String body = response.getBody().replace("[]", "null");
+    IpResult result = JSON.deserialize(body, IpResult.class);
 
     if ("0".equals(result.getStatus())) {
       log.error("调用高德 OpenAPI /geocode/geo 失败,  响应结果为:" + body);
       throw new ValidationException("调用高德 OpenAPI /geocode/geo 失败");
     }
 
+    valueOperations.set(cacheKey, body);
+    redisTemplate.expire(cacheKey, 7, TimeUnit.DAYS);
     return result;
   }
 

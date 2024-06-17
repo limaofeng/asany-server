@@ -26,6 +26,7 @@ import net.asany.jfantasy.framework.jackson.UnirestObjectMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.data.redis.core.StringRedisTemplate;
 
 @Slf4j
 class AmapOpenAPITest {
@@ -35,7 +36,10 @@ class AmapOpenAPITest {
   @BeforeEach
   void setUp() {
     Unirest.config().setObjectMapper(new UnirestObjectMapper(JSON.getObjectMapper()));
-    api = new AmapOpenAPI(AmapApiConfig.builder().key("724d735795516088493886bf9ce44395").build());
+    StringRedisTemplate redisTemplate = new StringRedisTemplate();
+    api =
+        new AmapOpenAPI(
+            redisTemplate, AmapApiConfig.builder().key("724d735795516088493886bf9ce44395").build());
   }
 
   @Test
