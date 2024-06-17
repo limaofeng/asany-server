@@ -135,6 +135,15 @@ management:
   health:
     elasticsearch:
       enabled: false
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: always
+      probes:
+        enabled: true
 
 cuckoo:
   rebuild: false
