@@ -74,7 +74,7 @@ public class AmapOpenAPI {
     IpResult result = JSON.deserialize(body, IpResult.class);
 
     if ("0".equals(result.getStatus())) {
-      log.error("调用高德 OpenAPI /geocode/geo 失败,  响应结果为:" + body);
+      log.error("调用高德 OpenAPI /ip 失败,  响应结果为:{}", body);
       throw new ValidationException("调用高德 OpenAPI /geocode/geo 失败");
     }
 
@@ -107,7 +107,7 @@ public class AmapOpenAPI {
     JsonNode jsonNode = JSON.deserialize(body.replace("[]", "null"));
 
     if ("0".equals(jsonNode.get("status").asText())) {
-      log.error("调用高德 OpenAPI /geocode/geo 失败,  响应结果为:" + body);
+      log.error("调用高德 OpenAPI /geocode/geo 失败,  响应结果为:{}", body);
       throw new ValidationException("调用高德 OpenAPI /geocode/geo 失败");
     }
 
