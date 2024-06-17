@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.35](https://github.com/limaofeng/asany-server/compare/v0.3.34...v0.3.35) (2024-06-17)
+
+
+### Features
+
+* 优化高德IP定位接口。缓存下结果，避免同一IP多次调用 ([a5100c4](https://github.com/limaofeng/asany-server/commit/a5100c41a2588404ecf86362f3ccd94199162388))
+
 ### [0.3.34](https://github.com/limaofeng/asany-server/compare/v0.3.33...v0.3.34) (2024-06-13)
 
 
