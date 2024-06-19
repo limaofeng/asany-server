@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.37](https://github.com/limaofeng/asany-server/compare/v0.3.36...v0.3.37) (2024-06-19)
+
+
+### Bug Fixes
+
+* 修复 im user_token 中 token 会立即过期的问题 ([ba5971d](https://github.com/limaofeng/asany-server/commit/ba5971d3c1f34c4dfa63c187aa5ae9d531a51a1f))
+
 ### [0.3.36](https://github.com/limaofeng/asany-server/compare/v0.3.35...v0.3.36) (2024-06-17)
 
 ### [0.3.35](https://github.com/limaofeng/asany-server/compare/v0.3.34...v0.3.35) (2024-06-17)
