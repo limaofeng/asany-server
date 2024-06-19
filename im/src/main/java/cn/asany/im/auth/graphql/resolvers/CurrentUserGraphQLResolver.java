@@ -53,8 +53,7 @@ public class CurrentUserGraphQLResolver implements GraphQLResolver<CurrentUser> 
       return this.authService.token(platform, String.valueOf(user.getId()));
     } catch (Exception e) {
       log.error(e.getMessage(), e);
-      if (e instanceof OpenIMServerAPIException) {
-        OpenIMServerAPIException error = (OpenIMServerAPIException) e;
+      if (e instanceof OpenIMServerAPIException error) {
         if (error.getCode() == ErrorCode.RECORD_NOT_FOUND.getCode()) {
           this.userService.userRegister(
               UserRegisterRequestBody.builder()

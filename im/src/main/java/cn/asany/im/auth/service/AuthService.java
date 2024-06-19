@@ -21,9 +21,7 @@ import cn.asany.im.auth.service.vo.*;
 import cn.asany.im.error.OpenIMServerAPIException;
 import cn.asany.im.error.ServerException;
 import cn.asany.im.utils.OpenIMUtils;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.Date;
+import java.util.concurrent.TimeUnit;
 import kong.unirest.HttpResponse;
 import kong.unirest.Unirest;
 import kong.unirest.UnirestException;
@@ -135,10 +133,8 @@ public class AuthService {
     log.debug(data.toString());
     String token = data.getToken();
 
-    Date expireAt = Date.from(Instant.now().plus(data.getExpiredTime(), ChronoUnit.SECONDS));
-
     this.valueOperations.set(cacheKey, token);
-    redisTemplate.expireAt(cacheKey, expireAt);
+    redisTemplate.expire(cacheKey, data.getExpireTimeSeconds(), TimeUnit.SECONDS);
 
     return token;
   }
