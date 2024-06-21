@@ -1,5 +1,21 @@
+/*
+ * Copyright (c) 2024 Asany
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.asany.net/licenses/MIT
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package cn.asany.security.core.graphql;
 
+import cn.asany.base.common.BatchPayload;
 import cn.asany.base.common.domain.Phone;
 import cn.asany.base.common.domain.enums.PhoneNumberStatus;
 import cn.asany.base.sms.CaptchaService;
@@ -22,17 +38,17 @@ import graphql.schema.DataFetchingEnvironment;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import org.jfantasy.framework.dao.LimitPageRequest;
-import org.jfantasy.framework.dao.jpa.PropertyFilter;
-import org.jfantasy.framework.security.LoginUser;
-import org.jfantasy.framework.security.SpringSecurityUtils;
-import org.jfantasy.framework.security.authentication.SimpleAuthenticationToken;
-import org.jfantasy.framework.security.oauth2.core.OAuth2AccessToken;
-import org.jfantasy.framework.security.oauth2.core.OAuth2Authentication;
-import org.jfantasy.framework.security.oauth2.core.token.AuthorizationServerTokenServices;
-import org.jfantasy.framework.util.common.ObjectUtil;
-import org.jfantasy.graphql.context.AuthorizationGraphQLServletContext;
-import org.jfantasy.graphql.util.Kit;
+import net.asany.jfantasy.framework.dao.LimitPageRequest;
+import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
+import net.asany.jfantasy.framework.security.LoginUser;
+import net.asany.jfantasy.framework.security.SpringSecurityUtils;
+import net.asany.jfantasy.framework.security.auth.core.token.AuthorizationServerTokenServices;
+import net.asany.jfantasy.framework.security.auth.oauth2.core.OAuth2AccessToken;
+import net.asany.jfantasy.framework.security.auth.oauth2.core.OAuth2Authentication;
+import net.asany.jfantasy.framework.security.authentication.SimpleAuthenticationToken;
+import net.asany.jfantasy.framework.util.common.ObjectUtil;
+import net.asany.jfantasy.graphql.security.context.AuthGraphQLServletContext;
+import net.asany.jfantasy.graphql.util.Kit;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -50,14 +66,14 @@ public class UserGraphQLRootResolver implements GraphQLMutationResolver, GraphQL
 
   private final ApplicationEventPublisher publisher;
 
-  private final AuthorizationServerTokenServices tokenServices;
+  private final AuthorizationServerTokenServices<OAuth2AccessToken> tokenServices;
 
   public UserGraphQLRootResolver(
       UserService userService,
       UserConverter userConverter,
       CaptchaService captchaService,
       ApplicationEventPublisher publisher,
-      AuthorizationServerTokenServices tokenServices) {
+      AuthorizationServerTokenServices<OAuth2AccessToken> tokenServices) {
     this.userService = userService;
     this.userConverter = userConverter;
     this.captchaService = captchaService;
@@ -84,7 +100,7 @@ public class UserGraphQLRootResolver implements GraphQLMutationResolver, GraphQL
       DataFetchingEnvironment environment) {
 
     //noinspection deprecation
-    AuthorizationGraphQLServletContext context = environment.getContext();
+    AuthGraphQLServletContext context = environment.getContext();
 
     if (!this.captchaService.validateResponseForID(
         CaptchaSource.CAPTCHA_CONFIG_ID,
@@ -157,7 +173,12 @@ public class UserGraphQLRootResolver implements GraphQLMutationResolver, GraphQL
     return this.userService.get(uid);
   }
 
-  public List<User> createUsers(List<UserCreateInput> users, UserSettingsInput settings) {
+  public User createUser(UserCreateInput input) {
+    User user = this.userConverter.toUser(input);
+    return this.userService.save(user);
+  }
+
+  public List<User> createManyUsers(List<UserCreateInput> users, UserSettingsInput settings) {
     LoginUser loginUser = SpringSecurityUtils.getCurrentUser();
     return this.userService.saveAll(
         users.stream()
@@ -180,8 +201,8 @@ public class UserGraphQLRootResolver implements GraphQLMutationResolver, GraphQL
     return this.userService.delete(id);
   }
 
-  public List<User> deleteManyUsers(List<Long> ids) {
-    return this.userService.deleteMany(ids);
+  public BatchPayload deleteManyUsers(UserWhereInput where) {
+    return BatchPayload.of(this.userService.deleteMany(where.toFilter()));
   }
 
   public Boolean changePassword(Long id, String oldPassword, String newPassword) {

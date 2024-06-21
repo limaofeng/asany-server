@@ -1,3 +1,18 @@
+/*
+ * Copyright (c) 2024 Asany
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.asany.net/licenses/MIT
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package cn.asany.nuwa.app.domain;
 
 import cn.asany.nuwa.app.domain.enums.ApplicationType;
@@ -6,13 +21,14 @@ import jakarta.persistence.*;
 import java.util.*;
 import java.util.stream.Collectors;
 import lombok.*;
+import net.asany.jfantasy.framework.dao.BaseBusEntity;
+import net.asany.jfantasy.framework.dao.Tenantable;
+import net.asany.jfantasy.framework.dao.hibernate.annotations.TableGenerator;
+import net.asany.jfantasy.framework.security.auth.TokenType;
+import net.asany.jfantasy.framework.security.auth.core.ClientDetails;
+import net.asany.jfantasy.framework.security.auth.core.ClientSecretType;
+import net.asany.jfantasy.framework.security.core.GrantedAuthority;
 import org.hibernate.Hibernate;
-import org.hibernate.annotations.GenericGenerator;
-import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.dao.Tenantable;
-import org.jfantasy.framework.security.core.GrantedAuthority;
-import org.jfantasy.framework.security.oauth2.core.ClientDetails;
-import org.jfantasy.framework.security.oauth2.core.ClientSecretType;
 
 /**
  * 应用信息
@@ -42,21 +58,39 @@ import org.jfantasy.framework.security.oauth2.core.ClientSecretType;
 @NamedEntityGraph(
     name = "Graph.Application.FetchDetails",
     attributeNodes = {
+      @NamedAttributeNode(
+          value = "modules",
+          subgraph = "SubGraph.ApplicationModule.FetchConfiguration"),
       @NamedAttributeNode(value = "menus", subgraph = "SubGraph.ApplicationMenu.FetchComponent"),
       @NamedAttributeNode(value = "routes", subgraph = "SubGraph.ApplicationRoute.FetchComponent"),
+      @NamedAttributeNode(
+          value = "dependencies",
+          subgraph = "SubGraph.ApplicationDependency.FetchAttributes"),
     },
     subgraphs = {
       @NamedSubgraph(
           name = "SubGraph.ApplicationMenu.FetchComponent",
           attributeNodes = {
             @NamedAttributeNode(value = "parent"),
-            //            @NamedAttributeNode(value = "component")
+            @NamedAttributeNode(value = "component")
           }),
       @NamedSubgraph(
           name = "SubGraph.ApplicationRoute.FetchComponent",
           attributeNodes = {
-            @NamedAttributeNode(value = "space"),
             @NamedAttributeNode(value = "parent"),
+            @NamedAttributeNode(value = "component")
+          }),
+      @NamedSubgraph(
+          name = "SubGraph.ApplicationModule.FetchConfiguration",
+          attributeNodes = {
+            @NamedAttributeNode(value = "module"),
+            @NamedAttributeNode(value = "values"),
+          }),
+      @NamedSubgraph(
+          name = "SubGraph.ApplicationDependency.FetchAttributes",
+          attributeNodes = {
+            @NamedAttributeNode(value = "name"),
+            @NamedAttributeNode(value = "value"),
           })
     })
 @NamedEntityGraph(
@@ -68,7 +102,6 @@ import org.jfantasy.framework.security.oauth2.core.ClientSecretType;
       @NamedSubgraph(
           name = "SubGraph.ApplicationRoute.FetchComponent",
           attributeNodes = {
-            @NamedAttributeNode(value = "space"),
             @NamedAttributeNode(value = "parent"),
           })
     })
@@ -95,8 +128,7 @@ public class Application extends BaseBusEntity implements ClientDetails, Tenanta
   /** ID */
   @Id
   @Column(name = "ID")
-  @GeneratedValue(generator = "fantasy-sequence")
-  @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+  @TableGenerator
   private Long id;
 
   /** 应用类型 */
@@ -129,16 +161,6 @@ public class Application extends BaseBusEntity implements ClientDetails, Tenanta
   @Column(name = "LOGO")
   private String logo;
 
-  /** 支持的路由空间 */
-  @ManyToMany(fetch = FetchType.LAZY)
-  @JoinTable(
-      name = "NUWA_APPLICATION_ROUTESPACE",
-      joinColumns = @JoinColumn(name = "APPLICATION_ID"),
-      inverseJoinColumns = @JoinColumn(name = "ROUTESPACE_ID"),
-      foreignKey = @ForeignKey(name = "FK_APPLICATION_ROUTESPACE_APPID"))
-  @ToString.Exclude
-  private List<Routespace> routespaces;
-
   /** 路由 */
   @OneToMany(
       mappedBy = "application",
@@ -168,7 +190,7 @@ public class Application extends BaseBusEntity implements ClientDetails, Tenanta
   @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
   @JoinColumn(name = "CLIENT_ID", referencedColumnName = "CLIENT_ID", updatable = false)
   @ToString.Exclude
-  private List<ClientSecret> clientSecretsAlias;
+  private Set<ClientSecret> clientSecretsAlias;
 
   /** 许可证 */
   @OrderBy(" createdAt desc ")
@@ -177,7 +199,7 @@ public class Application extends BaseBusEntity implements ClientDetails, Tenanta
       cascade = {CascadeType.REMOVE},
       fetch = FetchType.LAZY)
   @ToString.Exclude
-  private List<Licence> licences;
+  private Set<Licence> licences;
 
   /** 所有者 */
   @ManyToOne(fetch = FetchType.LAZY)
@@ -191,7 +213,14 @@ public class Application extends BaseBusEntity implements ClientDetails, Tenanta
       cascade = {CascadeType.REMOVE},
       fetch = FetchType.LAZY)
   @ToString.Exclude
-  private List<ApplicationDependency> dependencies;
+  private Set<ApplicationDependency> dependencies;
+
+  @OneToMany(
+      mappedBy = "application",
+      cascade = {CascadeType.REMOVE},
+      fetch = FetchType.LAZY)
+  @ToString.Exclude
+  private Set<ApplicationModuleConfiguration> modules;
 
   /** 租户ID */
   @Column(name = "TENANT_ID", length = 24, nullable = false)
@@ -222,6 +251,16 @@ public class Application extends BaseBusEntity implements ClientDetails, Tenanta
         .filter(item -> item.getType() == type)
         .map(ClientSecret::getSecret)
         .collect(Collectors.toSet());
+  }
+
+  @Override
+  public String getClientSecret(ClientSecretType type) {
+    return ClientDetails.super.getClientSecret(type);
+  }
+
+  @Override
+  public Integer getTokenExpires(TokenType tokenType) {
+    return this.tokenExpires;
   }
 
   @Override

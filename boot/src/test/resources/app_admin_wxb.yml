@@ -1,0 +1,278 @@
+name: admin_wxb
+title: 维修管理后台
+description: 维修管理后台
+clientId: jdc7t953mea633v9mzkc
+clientSecret: zm2nwpj0p2yiq9wci7ao62oo8rx9s9lmlz4gpkrr
+menus:
+  - name: 仪表盘
+    icon: Duotune/gen025
+  - name: 客户管理
+    icon: Duotune/abs045
+    path: /crm
+    component: cn.asany.ui.admin.crm.CRMSidebar
+  - name: 产品管理
+    icon: Duotune/cod009
+    path: /pim
+    component: cn.asany.ui.admin.pim.PIMSidebar
+    children:
+      - name: 设备管理
+        type: SECTION
+      - name: 设备
+        path: /pim/devices
+      - name: 设备二维码
+        path: /pim/device-qrcodes
+      - name: 产品管理
+        type: SECTION
+      - name: 品牌
+        path: /pim/brands
+      - name: 产品
+        path: /pim/products
+  - name: 内容管理
+    icon: Duotune/txt001
+    path: /cms
+  - name: 系统管理
+    icon: Duotune/cod001
+    path: /system
+  - name: 日历
+    icon: Duotune/gen014
+    path: /calendar
+    component: cn.asany.ui.admin.calendar.Sidebar
+  - name: 云盘
+    icon: Duotune/fil020
+    path: /drive
+    component: cn.asany.ui.admin.drive.Sidebar
+  - name: 邮箱
+    icon: Duotune/com011
+    path: /mail
+    component: cn.asany.ui.admin.mail.Sidebar
+  - name: 个人中心
+    icon: Duotune/abs026
+    path: /settings
+    component: cn.asany.ui.admin.user.UserSettingsSidebar
+    hideInMenu: true
+    children:
+      - name: 用户资料
+        icon: Bootstrap/person
+        path: /settings/profile
+      - name: 账号
+        icon: Bootstrap/gear
+        path: /settings/account
+      - name: 偏好设置
+        icon: Bootstrap/brush
+        path: /settings/preferences
+      - name: 通知
+        icon: Bootstrap/bell
+        path: /settings/notifications
+      - type: SEPARATOR
+      - name: 访问
+        type: SECTION
+      - name: 电子邮件
+        icon: Bootstrap/envelope
+        path: /settings/emails
+      - name: 密码和身份验证
+        icon: Bootstrap/shield-lock
+        path: /settings/security
+      - name: 组织机构
+        icon: Bootstrap/building
+        path: /settings/organizations
+      - name: 密码和身份验证
+        icon: Bootstrap/building
+        path: /settings/sessions
+        hideInMenu: true
+        children:
+          - name: 会话详情
+            path: /settings/sessions/:id
+routes:
+  - path: /login
+    component: cn.asany.ui.admin.authentication.AsideLayoutSignIn
+  - path: /
+    name: 首页
+    authorized: true
+    component: cn.asany.ui.admin.layout.Demo7
+    routes:
+      - path: /cms
+        name: 内容管理
+        component: cn.asany.ui.admin.cms.Layout
+        hideMenu: true
+        routes:
+          - path: /cms/my/drafts
+            component: cn.asany.ui.admin.cms.MyDrafts
+          - path: /cms/my/published
+            component: cn.asany.ui.admin.cms.MyPublished
+          - path: /cms/authors
+            component: cn.asany.ui.admin.cms.Authors
+          - path: /cms/categories/new
+            component: cn.asany.ui.admin.cms.ArticleChannelNew
+          - path: /cms/categories/:id
+            component: cn.asany.ui.admin.cms.ArticleChannelEdit
+          - path: /cms/categories/:cid/articles/new
+            component: cn.asany.ui.admin.cms.ArticleNew
+          - path: /cms/categories/:cid/articles/:id
+            component: cn.asany.ui.admin.cms.ArticleEdit
+          - path: /cms/categories/:cid/articles
+            component: cn.asany.ui.admin.cms.ArticleList
+#          - path: /cms/articles/:id
+#            component: cn.asany.ui.admin.cms.ArticleView
+#          - path: /cms/articles/:id/edit
+#            component: cn.asany.ui.admin.cms.ArticleEdit
+          - path: /cms
+            redirect: /cms/my/drafts
+      - path: /contacts
+        name: 通讯录
+        component: cn.asany.ui.admin.contacts.MainContacts
+        routes:
+          - path: /contacts/:id
+            component: cn.asany.ui.admin.contacts.ViewContact
+      - path: /crm
+        name: 客户管理
+        routes:
+          - path: /crm/customers
+            name: 客户管理
+            component: cn.asany.ui.admin.crm.CustomerListView
+          - path: /crm/customer-stores
+            name: 门店管理
+            component: cn.asany.ui.admin.crm.CustomerStoreListView
+          - path: /crm/customer-stores/:id
+            name: 门店新增
+            component: cn.asany.ui.admin.crm.CustomerStoreNewView
+          - path: /crm/customer-stores/:id
+            name: 门店详情
+            component: cn.asany.ui.admin.crm.CustomerStoreDetailsView
+          - path: /crm
+            redirect: /crm/customer-stores
+      - path: /pim
+        name: 产品管理
+        routes:
+          - path: /pim/device-qrcodes
+            name: 设备二维码
+            component: cn.asany.ui.admin.pim.DeviceQrCodeListView
+          - path: /pim/devices
+            name: 设备管理
+            component: cn.asany.ui.admin.pim.DeviceListView
+          - path: /pim/devices/:id
+            component: cn.asany.ui.admin.pim.DeviceDetailsView
+          - path: /pim/brands
+            name: 品牌管理
+            component: cn.asany.ui.admin.pim.BrandListView
+          - path: /pim/products
+            name: 产品管理
+            component: cn.asany.ui.admin.pim.ProductListView
+          - path: /pim/products/new
+            name: 新建产品
+            component: cn.asany.ui.admin.pim.ProductNewView
+          - path: /pim/products/:id
+            name: 产品详情
+            component: cn.asany.ui.admin.pim.ProductEditView
+          - path: /pim
+            redirect: /pim/devices
+      - path: /system
+        name: 系统管理
+        component: cn.asany.ui.admin.system.MainSystem
+        routes:
+          - path: /system/users
+            name: 用户管理
+            component: cn.asany.ui.admin.system.UserListView
+          - path: /system/users/new
+            name: 新建用户
+            component: cn.asany.ui.admin.system.UserNewView
+          - path: /system/users/:id
+            name: 用户详情
+            component: cn.asany.ui.admin.system.UserEditView
+          - path: /system/roles
+            name: 角色管理
+            component: cn.asany.ui.admin.system.RoleListView
+          - path: /system/audit-logs
+            name: 审计日志
+            component: cn.asany.ui.admin.system.AuditLogListView
+          - path: /system/settings
+            name: 系统设置
+            component: cn.asany.ui.admin.system.SettingsView
+          - path: /system
+            redirect: /system/users
+      - path: /calendar
+        name: 日历
+        component: cn.asany.ui.admin.calendar.MainCalendar
+      - path: /mail
+        name: 邮箱
+        routes:
+          - path: /mail/compose/:id
+            component: cn.asany.ui.admin.mail.Compose
+          - path: /mail/compose
+            component: cn.asany.ui.admin.mail.Compose
+          - path: /mail/:folder
+            component: cn.asany.ui.admin.mail.Mailbox
+            routes:
+              - path: /mail/:folder/:id
+                component: cn.asany.ui.admin.mail.MailMessageDetails
+          - path: /mail
+            redirect: /mail/inbox
+      - path: /drive
+        routes:
+          - path: /drive/folders
+            redirect: /drive/my-drive
+          - path: /drive/my-drive
+            component: cn.asany.ui.admin.drive.FileList
+          - path: /drive/folders/:id
+            component: cn.asany.ui.admin.drive.FileList
+          - path: /drive/mime-types/:id
+            component: cn.asany.ui.admin.drive.FileList
+          - path: /drive/recent
+            component: cn.asany.ui.admin.drive.DriveRecent
+          - path: /drive/starred
+            component: cn.asany.ui.admin.drive.DriveStarred
+          - path: /drive/trash
+            component: cn.asany.ui.admin.drive.DriveTrash
+          - path: /drive/quota
+            component: cn.asany.ui.admin.drive.DriveQuota
+          - path: /drive
+            redirect: /drive/my-drive
+      - path: /storage
+        component: cn.asany.ui.admin.storage.CloudStorage
+      - path: /settings
+        routes:
+          - path: /settings/profile
+            component: cn.asany.ui.admin.user.settings.Profile
+          - path: /settings/account
+            component: cn.asany.ui.admin.user.settings.Account
+          - path: /settings/preferences
+            component: cn.asany.ui.admin.user.settings.Preferences
+          - path: /settings/notifications
+            component: cn.asany.ui.admin.user.settings.Notifications
+          - path: /settings/emails
+            component: cn.asany.ui.admin.user.settings.Emails
+          - path: /settings/security
+            component: cn.asany.ui.admin.user.settings.Security
+          - path: /settings/organizations
+            component: cn.asany.ui.admin.user.settings.Organizations
+          - path: /settings/sessions/:id
+            component: cn.asany.ui.admin.user.settings.SessionDetails
+          - path: /settings/sessions
+            redirect: /settings/security
+          - path: /settings
+            redirect: /settings/profile
+      - path: /
+        component: cn.asany.ui.admin.Home
+modules:
+  - type: cms
+    rootCategory: wxb
+    categories:
+      - name: 产品资料
+        slug: product-data
+        icon: Duotune/arr087
+        children:
+          - name: 维护视频
+            slug: product-maintenance-video
+            icon: Duotune/soc007
+            storeTemplate: video
+          - name: 产品手册
+            slug: product-manual
+            icon: Duotune/fil003
+            storeTemplate: document
+          - name: 知识库
+            slug: product-knowledge-base
+            icon: Duotune/txt010
+            storeTemplate: text
+          - name: 维护手册
+            slug: product-maintenance-manual
+            icon: Duotune/gen005
+            storeTemplate: picture

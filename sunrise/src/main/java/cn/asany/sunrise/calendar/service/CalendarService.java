@@ -1,3 +1,18 @@
+/*
+ * Copyright (c) 2024 Asany
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.asany.net/licenses/MIT
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package cn.asany.sunrise.calendar.service;
 
 import cn.asany.security.core.domain.User;
@@ -21,12 +36,12 @@ import cn.asany.sunrise.calendar.util.CalendarUtils;
 import java.util.*;
 import java.util.stream.Collectors;
 import lombok.SneakyThrows;
-import org.jfantasy.framework.dao.jpa.PropertyFilter;
-import org.jfantasy.framework.error.ValidationException;
-import org.jfantasy.framework.security.LoginUser;
-import org.jfantasy.framework.util.common.DateUtil;
-import org.jfantasy.framework.util.common.ObjectUtil;
-import org.jfantasy.framework.util.common.StringUtil;
+import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
+import net.asany.jfantasy.framework.error.ValidationException;
+import net.asany.jfantasy.framework.security.LoginUser;
+import net.asany.jfantasy.framework.util.common.DateUtil;
+import net.asany.jfantasy.framework.util.common.ObjectUtil;
+import net.asany.jfantasy.framework.util.common.StringUtil;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -98,8 +113,7 @@ public class CalendarService {
   public List<CalendarEvent> calendarEventsByCalendarSet(Long calendarSet, Date starts, Date ends) {
     PropertyFilter filter = PropertyFilter.newFilter().between("dates.date", starts, ends);
     filter.equal("calendar.calendarSets.id", calendarSet);
-    return this.calendarEventDao.findAllWithDates(
-        filter, Sort.by("datetime.starts").ascending());
+    return this.calendarEventDao.findAllWithDates(filter, Sort.by("datetime.starts").ascending());
   }
 
   public List<CalendarEvent> calendarEventsWithDaysByCalendar(Long calendar, Date date, Long days) {
@@ -129,8 +143,7 @@ public class CalendarService {
   public List<CalendarEvent> calendarEventsByUid(Long uid, Date starts, Date ends) {
     PropertyFilter filter = PropertyFilter.newFilter().between("dates.date", starts, ends);
     filter.equal("calendar.account.owner.id", uid);
-    return this.calendarEventDao.findAllWithDates(
-        filter, Sort.by("datetime.starts").ascending());
+    return this.calendarEventDao.findAllWithDates(filter, Sort.by("datetime.starts").ascending());
   }
 
   /**
@@ -283,7 +296,7 @@ public class CalendarService {
   @Transactional(rollbackFor = RuntimeException.class)
   public Calendar refresh(Long id) {
     Optional<Calendar> optional = this.calendarDao.findById(id);
-    if (!optional.isPresent()) {
+    if (optional.isEmpty()) {
       throw new ValidationException(String.format("日历[%d]订阅不存在", id));
     }
     Calendar calendar = optional.get();

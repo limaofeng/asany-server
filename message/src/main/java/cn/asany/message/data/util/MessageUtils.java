@@ -1,8 +1,25 @@
+/*
+ * Copyright (c) 2024 Asany
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.asany.net/licenses/MIT
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package cn.asany.message.data.util;
 
+import cn.asany.message.api.enums.MessageRecipientType;
 import cn.asany.message.data.domain.MessageRecipient;
-import cn.asany.message.data.domain.enums.MessageRecipientType;
 import cn.asany.message.define.domain.toys.VariableDefinition;
+import cn.asany.security.core.service.UserService;
+import cn.asany.security.core.util.UserUtil;
 import jakarta.servlet.http.Part;
 import java.io.File;
 import java.io.IOException;
@@ -14,7 +31,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
-import org.jfantasy.framework.util.common.StringUtil;
+import net.asany.jfantasy.framework.error.ValidationException;
+import net.asany.jfantasy.framework.security.LoginUser;
+import net.asany.jfantasy.framework.spring.SpringBeanUtils;
+import net.asany.jfantasy.framework.util.common.StringUtil;
+import net.asany.jfantasy.framework.util.ognl.OgnlUtil;
 import org.springframework.http.HttpHeaders;
 import org.springframework.mock.web.MockPart;
 
@@ -25,30 +46,6 @@ import org.springframework.mock.web.MockPart;
  */
 @Slf4j
 public class MessageUtils {
-
-  /**
-   * 格式化收件人
-   *
-   * @param phone 手机号
-   * @return 格式化后的收件人
-   */
-  public static String formatRecipientFromPhone(String phone) {
-    return MessageRecipientType.PHONE.getName() + MessageRecipientType.DELIMITER + phone;
-  }
-
-  public static String formatRecipientFromUser(Long userId) {
-    return MessageRecipientType.USER.getName() + MessageRecipientType.DELIMITER + userId;
-  }
-
-  /**
-   * 格式化收件人
-   *
-   * @param email 邮箱
-   * @return 格式化后的收件人
-   */
-  public static String formatRecipientFromEmail(String email) {
-    return MessageRecipientType.EMAIL.getName() + MessageRecipientType.DELIMITER + email;
-  }
 
   public static String formatRecipient(MessageRecipient recipient) {
     return recipient.getType().getName() + MessageRecipientType.DELIMITER + recipient.getValue();
@@ -70,14 +67,34 @@ public class MessageUtils {
     return recipients;
   }
 
+  private static UserService getUserDetailsService() {
+    return SpringBeanUtils.getBean(UserService.class);
+  }
+
+  public static LoginUser loadUser(MessageRecipientType type, String value) {
+    UserService userService = getUserDetailsService();
+    return switch (type) {
+      case PHONE -> userService.findOneByPhone(value).map(UserUtil::buildLoginUser).orElseThrow();
+      case USER -> userService
+          .findById(Long.valueOf(value))
+          .map(UserUtil::buildLoginUser)
+          .orElseThrow();
+      default -> throw new ValidationException("");
+    };
+  }
+
   public static List<String> parseRecipientEmail(MessageRecipientType type, String value) {
     List<String> recipients = new ArrayList<>();
-    if (type == MessageRecipientType.EMAIL) {
-      recipients.add(value);
-      return recipients;
-    } else {
-      log.error("收件人类型错误：{}, 无法解析到邮箱", type + MessageRecipientType.DELIMITER + value);
-    }
+    recipients.add(
+        switch (type) {
+          case EMAIL -> value;
+          case USER -> {
+            LoginUser loginUser = loadUser(type, value);
+            yield loginUser.getName() + "<" + loginUser.getEmail() + ">";
+          }
+          default -> throw new ValidationException(
+              "收件人类型错误：{}, 无法解析到邮箱", type + MessageRecipientType.DELIMITER + value);
+        });
     return recipients;
   }
 
@@ -103,12 +120,11 @@ public class MessageUtils {
 
   public static void validate(List<VariableDefinition> variables, Map<String, Object> values) {
     List<String> fields = new ArrayList<>();
-    variables.forEach(
-        def -> {
-          if (def.isRequired() && !values.containsKey(def.getName())) {
-            fields.add(def.getName());
-          }
-        });
+    for (VariableDefinition def : variables) {
+      if (def.isRequired() && !values.containsKey(def.getName())) {
+        fields.add(def.getName());
+      }
+    }
     if (!fields.isEmpty()) {
       throw new RuntimeException("缺少必要的参数：" + fields);
     }
@@ -174,9 +190,8 @@ public class MessageUtils {
       Object fieldValue = entry.getValue();
 
       multipartBuilder.append("--").append(boundary).append("\r\n");
-      if (fieldValue instanceof Part) {
+      if (fieldValue instanceof Part part) {
         // 处理 Part 对象
-        Part part = (Part) fieldValue;
         String fileName = part.getSubmittedFileName();
         multipartBuilder
             .append("Content-Disposition: form-data; name=\"")
@@ -198,9 +213,8 @@ public class MessageUtils {
           log.error("Failed to read part: " + part, e);
           throw new RuntimeException(e);
         }
-      } else if (fieldValue instanceof File) {
+      } else if (fieldValue instanceof File file) {
         // 处理文件字段
-        File file = (File) fieldValue;
         multipartBuilder
             .append("Content-Disposition: form-data; name=\"")
             .append(fieldName)
@@ -329,5 +343,17 @@ public class MessageUtils {
       }
     }
     return contentBuilder.toString().getBytes();
+  }
+
+  public static Map<String, Object> toData(
+      Map<String, Object> values, Map<String, String> mappings) {
+    Map<String, Object> newValues = new HashMap<>(values);
+    for (Map.Entry<String, String> entry : mappings.entrySet()) {
+      Object value = OgnlUtil.getInstance().getValue(entry.getValue(), newValues);
+      if (value != null) {
+        newValues.put(entry.getKey(), value);
+      }
+    }
+    return newValues;
   }
 }

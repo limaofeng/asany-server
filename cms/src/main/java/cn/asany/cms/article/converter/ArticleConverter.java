@@ -1,18 +1,30 @@
+/*
+ * Copyright (c) 2024 Asany
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.asany.net/licenses/MIT
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package cn.asany.cms.article.converter;
 
 import cn.asany.cms.article.domain.Article;
-import cn.asany.cms.article.domain.ArticleBody;
 import cn.asany.cms.article.domain.ArticleCategory;
 import cn.asany.cms.article.domain.ArticleFeature;
 import cn.asany.cms.article.graphql.input.ArticleCreateInput;
 import cn.asany.cms.article.graphql.input.ArticleUpdateInput;
 import cn.asany.cms.article.service.ArticleFeatureService;
-import cn.asany.cms.body.service.ArticleBodyService;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import org.jfantasy.framework.spring.SpringBeanUtils;
+import net.asany.jfantasy.framework.spring.SpringBeanUtils;
 import org.mapstruct.*;
 
 /**
@@ -29,38 +41,26 @@ import org.mapstruct.*;
 public interface ArticleConverter {
 
   @Mappings({
-    @Mapping(source = "body", target = "body", qualifiedByName = "parseArticleBody"),
     @Mapping(source = "category", target = "category", qualifiedByName = "parseArticleCategory"),
     @Mapping(source = "tags", target = "tags", ignore = true),
     @Mapping(source = "features", target = "features", qualifiedByName = "parseFeature"),
     @Mapping(target = "permissions", ignore = true),
     @Mapping(target = "organization", ignore = true)
   })
-  Article toArticle(ArticleCreateInput input, @Context ArticleContext context);
+  Article toArticle(ArticleCreateInput input);
 
   @Mappings({
-    @Mapping(source = "body", target = "body", qualifiedByName = "parseArticleBody"),
     @Mapping(source = "category", target = "category", qualifiedByName = "parseArticleCategory"),
     @Mapping(source = "tags", target = "tags", ignore = true),
     @Mapping(source = "features", target = "features", qualifiedByName = "parseFeature"),
     @Mapping(target = "permissions", ignore = true),
     @Mapping(target = "organization", ignore = true)
   })
-  Article toArticle(ArticleUpdateInput input, @Context ArticleContext context);
+  Article toArticle(ArticleUpdateInput input);
 
   @ObjectFactory
   default Article toUserAddressList(ArticleCreateInput input, @TargetType Class<Article> type) {
     return new Article();
-  }
-
-  @Named("parseArticleBody")
-  default ArticleBody parseArticleBody(String bodyInput, @Context ArticleContext context)
-      throws JsonProcessingException {
-    if (bodyInput == null) {
-      return null;
-    }
-    ArticleBodyService bodyService = SpringBeanUtils.getBean(ArticleBodyService.class);
-    return bodyService.convert(bodyInput, context.getStoreTemplate());
   }
 
   @Named("parseArticleCategory")

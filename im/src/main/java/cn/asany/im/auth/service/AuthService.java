@@ -1,3 +1,18 @@
+/*
+ * Copyright (c) 2024 Asany
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.asany.net/licenses/MIT
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package cn.asany.im.auth.service;
 
 import cn.asany.autoconfigure.properties.OpenIMProperties.AdminUser;
@@ -6,16 +21,14 @@ import cn.asany.im.auth.service.vo.*;
 import cn.asany.im.error.OpenIMServerAPIException;
 import cn.asany.im.error.ServerException;
 import cn.asany.im.utils.OpenIMUtils;
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.http.exceptions.UnirestException;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.Date;
+import java.util.concurrent.TimeUnit;
+import kong.unirest.HttpResponse;
+import kong.unirest.Unirest;
+import kong.unirest.UnirestException;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.jfantasy.framework.jackson.JSON;
-import org.jfantasy.framework.util.common.StringUtil;
+import net.asany.jfantasy.framework.jackson.JSON;
+import net.asany.jfantasy.framework.util.common.StringUtil;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 
@@ -120,10 +133,8 @@ public class AuthService {
     log.debug(data.toString());
     String token = data.getToken();
 
-    Date expireAt = Date.from(Instant.now().plus(data.getExpiredTime(), ChronoUnit.SECONDS));
-
     this.valueOperations.set(cacheKey, token);
-    redisTemplate.expireAt(cacheKey, expireAt);
+    redisTemplate.expire(cacheKey, data.getExpireTimeSeconds(), TimeUnit.SECONDS);
 
     return token;
   }

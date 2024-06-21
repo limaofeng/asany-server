@@ -1,3 +1,18 @@
+/*
+ * Copyright (c) 2024 Asany
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.asany.net/licenses/MIT
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package cn.asany.security.auth.graphql.directive;
 
 import cn.asany.security.core.domain.PermissionCondition;
@@ -8,6 +23,7 @@ import cn.asany.security.core.domain.enums.AccessLevel;
 import cn.asany.security.core.service.PermissionPolicyService;
 import cn.asany.security.core.service.PermissionService;
 import cn.asany.security.core.service.ResourceTypeService;
+import graphql.kickstart.execution.config.GraphQLSchemaProvider;
 import graphql.kickstart.tools.SchemaParser;
 import graphql.language.TypeDefinition;
 import graphql.schema.GraphQLObjectType;
@@ -19,14 +35,14 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.jfantasy.framework.dao.DataQueryContext;
-import org.jfantasy.framework.dao.DataQueryContextHolder;
-import org.jfantasy.framework.dao.jpa.PropertyFilter;
-import org.jfantasy.framework.security.LoginUser;
-import org.jfantasy.framework.security.authentication.Authentication;
-import org.jfantasy.framework.spring.SpringBeanUtils;
-import org.jfantasy.framework.util.common.ClassUtil;
-import org.jfantasy.framework.util.regexp.RegexpUtil;
+import net.asany.jfantasy.framework.dao.DataQueryContext;
+import net.asany.jfantasy.framework.dao.DataQueryContextHolder;
+import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
+import net.asany.jfantasy.framework.security.LoginUser;
+import net.asany.jfantasy.framework.security.authentication.Authentication;
+import net.asany.jfantasy.framework.spring.SpringBeanUtils;
+import net.asany.jfantasy.framework.util.common.ClassUtil;
+import net.asany.jfantasy.framework.util.regexp.RegexpUtil;
 
 /**
  * 权限信息
@@ -46,8 +62,19 @@ public class AuthInfo implements Serializable {
   private PermissionPolicyService permissionPolicyService;
   private ResourceTypeService resourceTypeService;
 
+  private GraphQLSchema getGraphQLSchema() {
+    if (SpringBeanUtils.containsBean(GraphQLSchema.class)) {
+      return SpringBeanUtils.getBean(GraphQLSchema.class);
+    }
+    if (SpringBeanUtils.containsBean(GraphQLSchemaProvider.class)) {
+      GraphQLSchemaProvider schemaProvider = SpringBeanUtils.getBean(GraphQLSchemaProvider.class);
+      return schemaProvider.getSchema();
+    }
+    throw new RuntimeException("未找到 GraphQLSchema");
+  }
+
   public void condition(Authentication authentication, Map<String, Object> args) {
-    GraphQLSchema graphQLSchema = SpringBeanUtils.getBean(GraphQLSchema.class);
+    GraphQLSchema graphQLSchema = getGraphQLSchema();
     SchemaParser schemaParser = SpringBeanUtils.getBean(SchemaParser.class);
     Map<TypeDefinition<?>, Class<?>> dictionary =
         ClassUtil.getFieldValue(schemaParser, SchemaParser.class, "dictionary");

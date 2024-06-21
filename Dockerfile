@@ -1,4 +1,4 @@
-FROM limaofeng/java:8
+FROM limaofeng/java17
 
 ARG version_number=0
 
@@ -20,4 +20,24 @@ EXPOSE 8080
 
 ENV VERSION_NUMBER=$version_number
 
-ENTRYPOINT java -server -Duser.timezone=Asia/Shanghai -Dfile.encoding=UTF-8 -Xmx2G -Xms512m -Xmn600M -XX:PermSize=50M -XX:MaxPermSize=50M -Xss256K -XX:+DisableExplicitGC -XX:SurvivorRatio=1 -XX:+UseConcMarkSweepGC -XX:+UseParNewGC -XX:+CMSParallelRemarkEnabled -XX:+UseCMSCompactAtFullCollection -XX:CMSFullGCsBeforeCompaction=0 -XX:+CMSClassUnloadingEnabled -XX:LargePageSizeInBytes=128M -XX:+UseFastAccessorMethods -XX:+UseCMSInitiatingOccupancyOnly -XX:CMSInitiatingOccupancyFraction=80 -XX:SoftRefLRUPolicyMSPerMB=0 -Xnoagent -Dspring.profiles.active=prod -Djava.security.egd=file:/dev/./urandom -jar /app/app.jar
+ENTRYPOINT java -server \
+           -Duser.timezone=Asia/Shanghai \
+           -Dfile.encoding=UTF-8 \
+           -Xmx2G \
+           -Xms512M \
+           -Xmn600M \
+           -XX:MetaspaceSize=50M \
+           -XX:MaxMetaspaceSize=256M \
+           -Xss256K \
+           -XX:+DisableExplicitGC \
+           -XX:SurvivorRatio=1 \
+           -XX:+UseG1GC \
+           -XX:+UnlockExperimentalVMOptions \
+           -XX:G1NewSizePercent=20 \
+           -XX:G1MaxNewSizePercent=60 \
+           -XX:G1MixedGCCountTarget=4 \
+           -XX:SoftRefLRUPolicyMSPerMB=0 \
+           -Xnoagent \
+           -Dspring.profiles.active=prod \
+           -Djava.security.egd=file:/dev/./urandom \
+           -jar /app/app.jar

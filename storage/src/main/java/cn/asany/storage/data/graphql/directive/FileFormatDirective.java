@@ -1,3 +1,18 @@
+/*
+ * Copyright (c) 2024 Asany
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.asany.net/licenses/MIT
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package cn.asany.storage.data.graphql.directive;
 
 import cn.asany.storage.api.FileObject;
@@ -15,15 +30,15 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import lombok.extern.slf4j.Slf4j;
+import net.asany.jfantasy.framework.security.LoginUser;
+import net.asany.jfantasy.framework.security.SpringSecurityUtils;
+import net.asany.jfantasy.framework.security.auth.oauth2.core.OAuth2AccessToken;
+import net.asany.jfantasy.framework.security.authentication.Authentication;
+import net.asany.jfantasy.framework.util.common.StreamUtil;
+import net.asany.jfantasy.framework.util.ognl.OgnlUtil;
+import net.asany.jfantasy.framework.util.web.WebUtil;
+import net.asany.jfantasy.graphql.security.context.GraphQLContextHolder;
 import org.apache.commons.net.util.Base64;
-import org.jfantasy.framework.security.LoginUser;
-import org.jfantasy.framework.security.SpringSecurityUtils;
-import org.jfantasy.framework.security.authentication.Authentication;
-import org.jfantasy.framework.security.oauth2.core.OAuth2AccessToken;
-import org.jfantasy.framework.util.common.StreamUtil;
-import org.jfantasy.framework.util.ognl.OgnlUtil;
-import org.jfantasy.framework.util.web.WebUtil;
-import org.jfantasy.graphql.context.GraphQLContextHolder;
 
 /**
  * 文件对象格式指令
@@ -47,13 +62,13 @@ public class FileFormatDirective implements SchemaDirectiveWiring {
           .type(
               GraphQLEnumType.newEnum()
                   .name(DIRECTIVE_NAME)
-                  .description("文件自定在格式")
+                  .description("文件自定义格式")
                   .value(FORMAT_BASE64, FORMAT_BASE64, "仅支持图片")
                   .value(FORMAT_URL, FORMAT_URL, "自动添加上域名")
                   .value(FORMAT_PATH, FORMAT_PATH, "只返回 PATH")
                   .value(FORMAT_ID, FORMAT_ID, "只返回 ID")
                   .build())
-          .description("文件自定在格式");
+          .description("文件自定义格式");
 
   private final AuthTokenService authTokenService;
   private final StorageResolver storageResolver;
@@ -90,7 +105,7 @@ public class FileFormatDirective implements SchemaDirectiveWiring {
     Authentication authentication = SpringSecurityUtils.getAuthentication();
     if (authentication != null && authentication.isAuthenticated()) {
       OAuth2AccessToken credentials = (OAuth2AccessToken) authentication.getCredentials();
-      LoginUser user = (LoginUser) authentication.getPrincipal();
+      LoginUser user = authentication.getPrincipal();
       String token =
           this.authTokenService.storeToken(
               AuthToken.builder()
@@ -146,7 +161,7 @@ public class FileFormatDirective implements SchemaDirectiveWiring {
     String id = OgnlUtil.getInstance().getValue("id", file);
     IdUtils.FileKey fileKey = IdUtils.parseKey(id);
     FileDetail fileDetail = fileKey.getFile();
-    Storage storage = storageResolver.resolve(fileDetail.getStorageConfig().getId());
+    Storage storage = storageResolver.resolve(fileDetail.getStorageConfig());
     // 创建链接
     InputStream is = storage.readFile(fileDetail.getStorePath());
     ByteArrayOutputStream data = new ByteArrayOutputStream();

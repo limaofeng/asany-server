@@ -1,7 +1,7 @@
 package cn.asany.workflow.field.dao;
 
 import cn.asany.pm.field.bean.IssueFieldConfigurationScheme;
-import org.jfantasy.framework.dao.jpa.JpaRepository;
+import net.asany.jfantasy.framework.dao.jpa.AnyJpaRepository;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -11,4 +11,4 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface IssueFieldConfigurationSchemeDao
-    extends JpaRepository<IssueFieldConfigurationScheme, Long> {}
+    extends AnyJpaRepository<IssueFieldConfigurationScheme, Long> {}

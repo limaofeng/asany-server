@@ -1,3 +1,18 @@
+/*
+ * Copyright (c) 2024 Asany
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.asany.net/licenses/MIT
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package cn.asany.cms.article.graphql.input;
 
 import cn.asany.cms.article.domain.Article;
@@ -13,9 +28,11 @@ import java.util.List;
 import java.util.Optional;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.jfantasy.framework.dao.jpa.PropertyFilter;
-import org.jfantasy.framework.spring.SpringBeanUtils;
-import org.jfantasy.graphql.inputs.WhereInput;
+import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
+import net.asany.jfantasy.framework.spring.SpringBeanUtils;
+import net.asany.jfantasy.framework.util.regexp.RegexpConstant;
+import net.asany.jfantasy.framework.util.regexp.RegexpUtil;
+import net.asany.jfantasy.graphql.inputs.WhereInput;
 
 /**
  * 文件筛选
@@ -27,7 +44,9 @@ import org.jfantasy.graphql.inputs.WhereInput;
 public class ArticleWhereInput extends WhereInput<ArticleWhereInput, Article> {
 
   public void setKeyword(String keyword) {
-    filter.or(PropertyFilter.newFilter().contains("summary", keyword).contains("title", keyword));
+    filter.or(
+        PropertyFilter.newFilter().contains("summary", keyword),
+        PropertyFilter.newFilter().contains("title", keyword));
   }
 
   public void setTags(List<Long> tags) {
@@ -36,34 +55,35 @@ public class ArticleWhereInput extends WhereInput<ArticleWhereInput, Article> {
 
   public void setCategory(AcceptArticleCategory acceptArticleCategory) {
     ArticleCategoryService service = SpringBeanUtils.getBean(ArticleCategoryService.class);
+    boolean hasId =
+        RegexpUtil.isMatch(acceptArticleCategory.getId(), RegexpConstant.VALIDATOR_INTEGE);
     if (acceptArticleCategory.getSubColumns()) {
       Optional<ArticleCategory> channelOptional =
-          service.findById(Long.valueOf(acceptArticleCategory.getId()));
+          hasId
+              ? service.findById(Long.valueOf(acceptArticleCategory.getId()))
+              : service.findOneBySlug(acceptArticleCategory.getId());
       if (channelOptional.isPresent()) {
         ArticleCategory channel = channelOptional.get();
         this.filter.startsWith("category.path", channel.getPath()).notEqual("id", channel.getId());
       } else {
-        this.filter.equal("category.id", acceptArticleCategory.getId());
+        throw new RuntimeException("栏目不存在");
       }
     } else {
-      this.filter.equal("category.id", acceptArticleCategory.getId());
+      if (hasId) {
+        this.filter.equal("category.id", Long.valueOf(acceptArticleCategory.getId()));
+      } else {
+        this.filter.equal("category.slug", acceptArticleCategory.getId());
+      }
     }
   }
 
-  public void setChannelCode(String channelCode) {
-    filter.in("channels.code", channelCode);
+  public void setCategorySlug(String code) {
+    filter.in("category.slug", code);
   }
 
-  @JsonProperty(value = "channel_in")
-  public void setChannelIn(List<Long> ids) {
-    filter.in("channels.id", ids);
-  }
-
-  @JsonProperty(value = "channels_isEmpty")
-  public void setChannels_Empty(boolean onOrOff) {
-    if (onOrOff) {
-      filter.isEmpty("channels");
-    }
+  @JsonProperty(value = "category_in")
+  public void setCategoryIn(List<Long> ids) {
+    filter.in("category.id", ids);
   }
 
   @JsonProperty("publishedAt")

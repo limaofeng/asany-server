@@ -1,15 +1,30 @@
+/*
+ * Copyright (c) 2024 Asany
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.asany.net/licenses/MIT
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package cn.asany.im;
 
 import graphql.kickstart.autoconfigure.tools.GraphQLJavaToolsAutoConfiguration;
 import graphql.kickstart.autoconfigure.web.servlet.GraphQLWebAutoConfiguration;
 import lombok.extern.slf4j.Slf4j;
-import org.jfantasy.autoconfigure.GraphQLAutoConfiguration;
-import org.jfantasy.framework.dao.jpa.ComplexJpaRepository;
-import org.jfantasy.framework.security.oauth2.DefaultTokenServices;
-import org.jfantasy.framework.security.oauth2.core.ClientDetails;
-import org.jfantasy.framework.security.oauth2.core.ClientDetailsService;
-import org.jfantasy.framework.security.oauth2.core.ClientRegistrationException;
-import org.jfantasy.framework.security.oauth2.core.TokenStore;
+import net.asany.jfantasy.autoconfigure.GraphQLAutoConfiguration;
+import net.asany.jfantasy.framework.dao.jpa.SimpleAnyJpaRepository;
+import net.asany.jfantasy.framework.security.auth.core.ClientDetails;
+import net.asany.jfantasy.framework.security.auth.core.ClientDetailsService;
+import net.asany.jfantasy.framework.security.auth.core.ClientRegistrationException;
+import net.asany.jfantasy.framework.security.auth.core.TokenStore;
+import net.asany.jfantasy.framework.security.auth.oauth2.DefaultTokenServices;
 import org.springframework.boot.actuate.autoconfigure.audit.AuditAutoConfiguration;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
@@ -37,7 +52,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
           type = FilterType.ASSIGNABLE_TYPE,
           value = {JpaRepository.class})
     },
-    repositoryBaseClass = ComplexJpaRepository.class)
+    repositoryBaseClass = SimpleAnyJpaRepository.class)
 @EnableAutoConfiguration(
     exclude = {
       MongoAutoConfiguration.class,

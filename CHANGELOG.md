@@ -2,6 +2,545 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.38](https://github.com/limaofeng/asany-server/compare/v0.3.37...v0.3.38) (2024-06-21)
+
+
+### Features
+
+* token 不刷新 ([67d0993](https://github.com/limaofeng/asany-server/commit/67d099329b2d321314a9a36689e34e2933b22966))
+
+### [0.3.37](https://github.com/limaofeng/asany-server/compare/v0.3.36...v0.3.37) (2024-06-19)
+
+
+### Bug Fixes
+
+* 修复 im user_token 中 token 会立即过期的问题 ([ba5971d](https://github.com/limaofeng/asany-server/commit/ba5971d3c1f34c4dfa63c187aa5ae9d531a51a1f))
+
+### [0.3.36](https://github.com/limaofeng/asany-server/compare/v0.3.35...v0.3.36) (2024-06-17)
+
+### [0.3.35](https://github.com/limaofeng/asany-server/compare/v0.3.34...v0.3.35) (2024-06-17)
+
+
+### Features
+
+* 优化高德IP定位接口。缓存下结果，避免同一IP多次调用 ([a5100c4](https://github.com/limaofeng/asany-server/commit/a5100c41a2588404ecf86362f3ccd94199162388))
+
+### [0.3.34](https://github.com/limaofeng/asany-server/compare/v0.3.33...v0.3.34) (2024-06-13)
+
+
+### Features
+
+* 文章创建BUG解决 ([1b7c99a](https://github.com/limaofeng/asany-server/commit/1b7c99adec11038596133fbbecb20bb84f809bb7))
+
+
+### Bug Fixes
+
+* 修复删除文章时，存在引用的Bug ([441450b](https://github.com/limaofeng/asany-server/commit/441450b48850f73c75f782aaa3e5dd20c082d277))
+
+### [0.3.33](https://github.com/limaofeng/asany-server/compare/v0.3.32...v0.3.33) (2024-06-13)
+
+
+### Bug Fixes
+
+* 修复产品图片保存BUG ([02e363e](https://github.com/limaofeng/asany-server/commit/02e363e1db3fada96cf9a93d848a29c968b4b563))
+
+### [0.3.32](https://github.com/limaofeng/asany-server/compare/v0.3.31...v0.3.32) (2024-06-12)
+
+
+### Features
+
+* 设备支持 sn, no, product 查询 ([a976995](https://github.com/limaofeng/asany-server/commit/a976995fe7a94c5dcc63000e58e873fbd144e587))
+
+### [0.3.31](https://github.com/limaofeng/asany-server/compare/v0.3.30...v0.3.31) (2024-06-07)
+
+
+### Features
+
+* 设备接口返回创建与修改信息，并支持查询 ([3fad748](https://github.com/limaofeng/asany-server/commit/3fad748b4776f0939b7b45002391a822b2950882))
+
+### [0.3.30](https://github.com/limaofeng/asany-server/compare/v0.3.29...v0.3.30) (2024-06-05)
+
+
+### Features
+
+* 设备编 ([bb6a9e2](https://github.com/limaofeng/asany-server/commit/bb6a9e23bc5876b112a3f712aa4fa87f40c7c315))
+
+### [0.3.29](https://github.com/limaofeng/asany-server/compare/v0.3.28...v0.3.29) (2024-06-03)
+
+
+### Bug Fixes
+
+* 修复被删除的设备依然可以查询到 ([0dc9483](https://github.com/limaofeng/asany-server/commit/0dc9483a7ff2a5a78c562745e74290ef393d9dda))
+
+### [0.3.28](https://github.com/limaofeng/asany-server/compare/v0.3.27...v0.3.28) (2024-05-29)
+
+
+### Features
+
+* 客户与门店编辑功能 ([1963074](https://github.com/limaofeng/asany-server/commit/196307471f154bc87c28815cecf4856ea1930dba))
+
+### [0.3.27](https://github.com/limaofeng/asany-server/compare/v0.3.26...v0.3.27) (2024-05-21)
+
+
+### Bug Fixes
+
+* 解决品牌查询时 description 字段缺失 ([5f8c8f5](https://github.com/limaofeng/asany-server/commit/5f8c8f5ae17ce208059a24ed914171a529a779a2))
+
+### [0.3.26](https://github.com/limaofeng/asany-server/compare/v0.3.25...v0.3.26) (2024-05-21)
+
+
+### Features
+
+* 为 BrandWhereInput 添加 id_in ([b843dc2](https://github.com/limaofeng/asany-server/commit/b843dc25e3daa704df15cab614d4a3fd5f2dfc23))
+
+### [0.3.25](https://github.com/limaofeng/asany-server/compare/v0.3.24...v0.3.25) (2024-05-21)
+
+
+### Features
+
+* 品牌添加 description 字段 ([6462255](https://github.com/limaofeng/asany-server/commit/6462255b8331e30ebf413497d122e58a4bdd52d7))
+
+### [0.3.24](https://github.com/limaofeng/asany-server/compare/v0.3.23...v0.3.24) (2024-05-20)
+
+
+### Bug Fixes
+
+* 修复创建应用时，密钥类型错误问题 ([b6b6c70](https://github.com/limaofeng/asany-server/commit/b6b6c70d4741c9e1256fdeceaeaf98bee046bf91))
+
+### [0.3.23](https://github.com/limaofeng/asany-server/compare/v0.3.22...v0.3.23) (2024-05-20)
+
+
+### Bug Fixes
+
+* 修复 logout 操作，避免已经退出。但客户端失败的问题 ([33ddc2d](https://github.com/limaofeng/asany-server/commit/33ddc2d9265cc4ddb9c29926bbf9ff45d02a976e))
+
+### [0.3.22](https://github.com/limaofeng/asany-server/compare/v0.3.21...v0.3.22) (2024-05-13)
+
+
+### Features
+
+* 启用 websocket 订阅 ([6c9960c](https://github.com/limaofeng/asany-server/commit/6c9960c00f390bbb390bdce41b979c638bc5dacf))
+
+### [0.3.21](https://github.com/limaofeng/asany-server/compare/v0.3.20...v0.3.21) (2024-05-10)
+
+
+### Features
+
+* 恢复视频生成缩略图的功能 ([590acad](https://github.com/limaofeng/asany-server/commit/590acad76ba00be8217644fdbcbe573214d60dfd))
+
+### [0.3.20](https://github.com/limaofeng/asany-server/compare/v0.3.19...v0.3.20) (2024-05-09)
+
+
+### Bug Fixes
+
+* 微信端路由改 bash 后的相应调整 ([968dca1](https://github.com/limaofeng/asany-server/commit/968dca1466f23ae1acffd20db6ac58a54a64161b))
+
+### [0.3.19](https://github.com/limaofeng/asany-server/compare/v0.3.18...v0.3.19) (2024-05-08)
+
+
+### Features
+
+* ticket 新建时，发送提醒邮件 ([89f41df](https://github.com/limaofeng/asany-server/commit/89f41dfcf661b46d7cc1c84735667cfe1d53d9dd))
+* 消息模块支持邮件提醒 ([0f9564c](https://github.com/limaofeng/asany-server/commit/0f9564cc66064e42dc3cd532024eb891b840c203))
+* 添加 EmailChannelConfig ([cba70cd](https://github.com/limaofeng/asany-server/commit/cba70cdc7c6b5ed9798ecd2649d082a69e26cae3))
+
+### [0.3.18](https://github.com/limaofeng/asany-server/compare/v0.3.17...v0.3.18) (2024-05-01)
+
+
+### Bug Fixes
+
+* 修复大文件上传,大于(50M)的 ([357334b](https://github.com/limaofeng/asany-server/commit/357334b95630637ffb99b0120fd2162447ea80b4))
+
+### [0.3.17](https://github.com/limaofeng/asany-server/compare/v0.3.16...v0.3.17) (2024-05-01)
+
+
+### Bug Fixes
+
+* 上传时，folder 不必填 ([de3c81e](https://github.com/limaofeng/asany-server/commit/de3c81eccf5d73ee98f8f2738fa57cfa57d1250c))
+
+### [0.3.16](https://github.com/limaofeng/asany-server/compare/v0.3.15...v0.3.16) (2024-04-30)
+
+
+### Bug Fixes
+
+* 解决 storage base url 错误问题 ([c3c95c5](https://github.com/limaofeng/asany-server/commit/c3c95c5208f04ffe664188711b39a6e0db505a4b))
+
+### [0.3.15](https://github.com/limaofeng/asany-server/compare/v0.3.14...v0.3.15) (2024-04-30)
+
+
+### Bug Fixes
+
+* 解决文章保存BUG ([c3b8ad0](https://github.com/limaofeng/asany-server/commit/c3b8ad0e7e34f2bc69f9253fd3d930180caeb1d8))
+
+### [0.3.14](https://github.com/limaofeng/asany-server/compare/v0.3.13...v0.3.14) (2024-04-30)
+
+
+### Bug Fixes
+
+* 解决文件上传问题 ([6254744](https://github.com/limaofeng/asany-server/commit/625474487c3251ba5e5d073053343869430dd8d1))
+
+### [0.3.13](https://github.com/limaofeng/asany-server/compare/v0.3.12...v0.3.13) (2024-04-30)
+
+
+### Bug Fixes
+
+* 解决启动问题 ([77d47e7](https://github.com/limaofeng/asany-server/commit/77d47e7f8be4b1343532e004739f373b42d4e215))
+
+### [0.3.12](https://github.com/limaofeng/asany-server/compare/v0.3.11...v0.3.12) (2024-04-30)
+
+
+### Bug Fixes
+
+* 文件 FileDetail 不直接依赖 storageConfig ([d2e1b0a](https://github.com/limaofeng/asany-server/commit/d2e1b0a36a2d6bbc5173f73ca218af405e5edc10))
+
+### [0.3.11](https://github.com/limaofeng/asany-server/compare/v0.3.10...v0.3.11) (2024-04-30)
+
+
+### Bug Fixes
+
+* 解决文章 ArticleContent 查询问题 ([cee684f](https://github.com/limaofeng/asany-server/commit/cee684f8a816ef3a9a23ee3b6be96ab7090c2b39))
+
+### [0.3.10](https://github.com/limaofeng/asany-server/compare/v0.3.9...v0.3.10) (2024-04-30)
+
+
+### Bug Fixes
+
+* 修复文件预览接口问题 ([e3f654f](https://github.com/limaofeng/asany-server/commit/e3f654f8ae1aa2cd2d9632e22e4d3f8fc93112ac))
+
+### [0.3.9](https://github.com/limaofeng/asany-server/compare/v0.3.8...v0.3.9) (2024-04-30)
+
+
+### Features
+
+* update JFantasy 20240430.3 ([de772b8](https://github.com/limaofeng/asany-server/commit/de772b8b414ffa4ac95cce15efb3c0e6a1cfa32e))
+
+### [0.3.8](https://github.com/limaofeng/asany-server/compare/v0.3.7...v0.3.8) (2024-04-29)
+
+
+### Bug Fixes
+
+* 简单恢复 LibraryItem.getResource 逻辑 ([d43c02c](https://github.com/limaofeng/asany-server/commit/d43c02c3d7a84540b48a220e1b59d8ced96a1bea))
+
+### [0.3.7](https://github.com/limaofeng/asany-server/compare/v0.3.6...v0.3.7) (2024-04-29)
+
+
+### Bug Fixes
+
+* hibernate 缓存时，执行克隆 ([a28655e](https://github.com/limaofeng/asany-server/commit/a28655ecf37c7decaaf178c8a1b075f19bbb81ba))
+* hibernate 缓存时，执行克隆 ([4de9c5e](https://github.com/limaofeng/asany-server/commit/4de9c5ed36506a554da426ce512f0c80d814e40b))
+
+### [0.3.6](https://github.com/limaofeng/asany-server/compare/v0.3.5...v0.3.6) (2024-04-28)
+
+
+### Bug Fixes
+
+* 获取 isDir 为 Null 的问题 ([b936a6c](https://github.com/limaofeng/asany-server/commit/b936a6c045f2b73aed35b2d05758d39ca6522a63))
+* 解决升级 SpringBoot 后的问题 ([b6d79f7](https://github.com/limaofeng/asany-server/commit/b6d79f7e0cf7b788b71c77c5d555312ef74b1f93))
+
+### [0.3.5](https://github.com/limaofeng/asany-server/compare/v0.3.4...v0.3.5) (2024-04-26)
+
+
+### Bug Fixes
+
+* update enum UpdateMode and LIB_JFAN_VER version ([d300373](https://github.com/limaofeng/asany-server/commit/d300373f7868129a951554c83fd3e2591707a563))
+
+### [0.3.4](https://github.com/limaofeng/asany-server/compare/v0.3.3...v0.3.4) (2024-04-26)
+
+### [0.3.3](https://github.com/limaofeng/asany-server/compare/v0.3.2...v0.3.3) (2024-04-26)
+
+### [0.3.3](https://github.com/limaofeng/asany-server/compare/v0.3.2...v0.3.3) (2024-04-26)
+
+### [0.3.3](https://github.com/limaofeng/asany-server/compare/v0.3.2...v0.3.3) (2024-04-26)
+
+### [0.3.2](https://github.com/limaofeng/asany-server/compare/v0.3.1...v0.3.2) (2024-04-26)
+
+### [0.3.1](https://github.com/limaofeng/asany-server/compare/v0.3.0...v0.3.1) (2024-04-25)
+
+
+### Features
+
+* 修改 FileCoercing 环境变量注入方式 ([aa9aab3](https://github.com/limaofeng/asany-server/commit/aa9aab310ea42f1bfd63ed9c62f1d23f17cdd063))
+
+## [0.3.0](https://github.com/limaofeng/asany-server/compare/v0.2.37...v0.3.0) (2024-04-25)
+
+
+### Features
+
+* SpringBoot3 改造 ([c759f07](https://github.com/limaofeng/asany-server/commit/c759f07a14f143cb079a116e18e9b426273a55b7))
+* 升级SpringBoot3 与 jdk17 ([5fc1ed6](https://github.com/limaofeng/asany-server/commit/5fc1ed61d6cb5e5c6d5b589e16622301748b5e90))
+* 升级到 SpringBoot3 ([85ee2c8](https://github.com/limaofeng/asany-server/commit/85ee2c89eae722d7e3cd2c87a0e1844026126847))
+* 编译错误修复 ([0c06e26](https://github.com/limaofeng/asany-server/commit/0c06e263061d01b3b4c39a5a16e4ee02ec700be9))
+* 解决升级springboot3后的相关问题 ([365e35a](https://github.com/limaofeng/asany-server/commit/365e35a2d0578d99b7bf2e483693d83dbec355a0))
+
+### [0.2.37](https://github.com/limaofeng/asany-server/compare/v0.2.36...v0.2.37) (2024-04-17)
+
+### [0.2.36](https://github.com/limaofeng/asany-server/compare/v0.2.35...v0.2.36) (2024-04-16)
+
+
+### Features
+
+* 产品文章查询临时解决方案 ([dda0791](https://github.com/limaofeng/asany-server/commit/dda07911d9837680a42b942a572b17ec8ae1503e))
+
+### [0.2.35](https://github.com/limaofeng/asany-server/compare/v0.2.34...v0.2.35) (2024-04-16)
+
+
+### Features
+
+* 用户更新接口优化 ([59e6f62](https://github.com/limaofeng/asany-server/commit/59e6f6266c1cb186e068a90197ba6fa5cd53552a))
+* 用户更新接口优化 ([4f7524d](https://github.com/limaofeng/asany-server/commit/4f7524d114534564f2c988a13b8a6ca276769f1f))
+
+### [0.2.34](https://github.com/limaofeng/asany-server/compare/v0.2.33...v0.2.34) (2024-04-16)
+
+
+### Features
+
+*  类型修改 WarrantyPolicy ([09cb59d](https://github.com/limaofeng/asany-server/commit/09cb59d49ac06ee3d9acaa0fb4f3f3f108803c72))
+* add id field to ProductImageInput ([7527c95](https://github.com/limaofeng/asany-server/commit/7527c956f1145bd411685b4f5f37de3b53d25edb))
+* add id_notIn field to ArticleWhereInput ([26ac6e2](https://github.com/limaofeng/asany-server/commit/26ac6e25e750d6f495779982d34a918a90a8f330))
+* add image url ([d77d73b](https://github.com/limaofeng/asany-server/commit/d77d73b92676b638e6d88ede9333f8a14e9ce01b))
+* articles query and update ArticleWhereInput ([f7dd079](https://github.com/limaofeng/asany-server/commit/f7dd0793dd00e19407acde8edefe41a9cd017027))
+* 产品保存是保存产品图片 ([8801a53](https://github.com/limaofeng/asany-server/commit/8801a53fd06d13fd9833b97580ecac6f8fb5bbf2))
+* 优化产品图片保存逻辑 ([036f63f](https://github.com/limaofeng/asany-server/commit/036f63f079bb7cae18aeb0bcd7fb754807ab7e2b))
+* 保修策略新增、修改、删除操作 ([541c9b6](https://github.com/limaofeng/asany-server/commit/541c9b6fb3eba6256cdc87182f3e26395a91b118))
+* 升级框架，解决产品保存问题 ([e042ce4](https://github.com/limaofeng/asany-server/commit/e042ce4ee54bc83eacbb3dadffaf11b61b71e293))
+* 添加 removeArticlesFromProduct 与 addArticlesToProduct 接口 ([42989c9](https://github.com/limaofeng/asany-server/commit/42989c9d0defbbcdd881287ebea8a40fae00dc1b))
+* 用户新增与修改接口优化 ([5c8935c](https://github.com/limaofeng/asany-server/commit/5c8935c28cf6f09af6217bd9a0c8168c9a7258ad))
+* 解决 Collections.emptyList(); 无法 add 的问题 ([b865fee](https://github.com/limaofeng/asany-server/commit/b865fee30da261bc84e618abcb980af0db4d2cca))
+* 解决 Collections.emptyList(); 无法 add 的问题 ([4a7ce4c](https://github.com/limaofeng/asany-server/commit/4a7ce4c22d19d05dd25ff57842c5809930738585))
+
+### [0.2.33](https://github.com/limaofeng/asany-server/compare/v0.2.32...v0.2.33) (2024-04-13)
+
+
+### Features
+
+* add video document content support ([acdda64](https://github.com/limaofeng/asany-server/commit/acdda64c4c6011013286dded8338dd175639b564))
+* 修改 ArticleStoreTemplate ID 为 String ([d14f71b](https://github.com/limaofeng/asany-server/commit/d14f71b6e712da30bdfc280bbbe90021f2cd5078))
+* 内容管理 ImageContent 支持 ([ec696f6](https://github.com/limaofeng/asany-server/commit/ec696f635f9b1d35f221ed4d29d3e487e993ec72))
+* 内容管理 TextContent 支持 ([d5559a2](https://github.com/limaofeng/asany-server/commit/d5559a2c47af03a2102093c2837f88d9313c2cd3))
+* 完善视频正文保存逻辑 ([4a98a4a](https://github.com/limaofeng/asany-server/commit/4a98a4a0d21ff4de44715f1697f0931c4e58699a))
+* 文件返回 URL ([6f6505c](https://github.com/limaofeng/asany-server/commit/6f6505c7661493ca440ad220f551a29eb202789e))
+* 添加 DocumentContent 处理逻辑 ([319f3ff](https://github.com/limaofeng/asany-server/commit/319f3ff92d00291c971964b104763115af063fb2))
+
+
+### Bug Fixes
+
+* 修复文章保存逻辑 ([19a77ff](https://github.com/limaofeng/asany-server/commit/19a77ffcf40838cb2fbafb719c3e0ed8832d5433))
+
+### [0.2.32](https://github.com/limaofeng/asany-server/compare/v0.2.31...v0.2.32) (2024-04-06)
+
+
+### Bug Fixes
+
+* AcceptArticleCategory id 支持 string ([4065bcf](https://github.com/limaofeng/asany-server/commit/4065bcf31c6d510e2aa3307d91e8347092172afd))
+
+### [0.2.31](https://github.com/limaofeng/asany-server/compare/v0.2.30...v0.2.31) (2024-04-06)
+
+
+### Features
+
+* 应用模块配置返回 key ([f24891f](https://github.com/limaofeng/asany-server/commit/f24891f162dcd6d21eb4db1389f81c060254fd70))
+
+### [0.2.30](https://github.com/limaofeng/asany-server/compare/v0.2.29...v0.2.30) (2024-04-06)
+
+
+### Features
+
+* 修复应用返回模块数据问题 ([c6b32c9](https://github.com/limaofeng/asany-server/commit/c6b32c974741b51a6e4933cd92995bacab64af73))
+* 添加品牌相关接口 ([6bd5586](https://github.com/limaofeng/asany-server/commit/6bd5586d0ae389a1a944eea498afe9044018f791))
+
+
+### Bug Fixes
+
+* 解决引用模块显示错误问题 ([b319a87](https://github.com/limaofeng/asany-server/commit/b319a87e31e2804de6ce7e933443c60e25bc8e47))
+
+### [0.2.29](https://github.com/limaofeng/asany-server/compare/v0.2.28...v0.2.29) (2024-04-05)
+
+
+### Features
+
+* add createdAt field to Device type ([63bd6ac](https://github.com/limaofeng/asany-server/commit/63bd6ac912528995d1510466f8d15b63106acf70))
+* 添加通过 SN 查询设备的接口 ([038879a](https://github.com/limaofeng/asany-server/commit/038879a9ec8e0736d7ce48f4e2e9dbc839a7be3a))
+* 设备 NO 查询 ([3e2e49f](https://github.com/limaofeng/asany-server/commit/3e2e49ff40a978d5b73e25bce851d6ad85463be6))
+* 设备逻辑删除 ([20bb8e3](https://github.com/limaofeng/asany-server/commit/20bb8e36174bdd38c7231dd0e9d3bcad5879cf4a))
+
+### [0.2.28](https://github.com/limaofeng/asany-server/compare/v0.2.27...v0.2.28) (2024-04-05)
+
+
+### Features
+
+* 优化错误提示 ([2e7a07b](https://github.com/limaofeng/asany-server/commit/2e7a07ba602eec8c177a53852b7dbeafd4c1cb9a))
+* 合并修改 ([708e2d2](https://github.com/limaofeng/asany-server/commit/708e2d21fc3374fb1ce47c557d6b63bdee78cbeb))
+* 短链设置 category 用于区分已使用的 ([ff14b2b](https://github.com/limaofeng/asany-server/commit/ff14b2bf3091678c4f3d6e183e9bf6bd4431bd14))
+
+### [0.2.27](https://github.com/limaofeng/asany-server/compare/v0.2.26...v0.2.27) (2024-04-05)
+
+
+### Bug Fixes
+
+* update device support link URL ([a9d82f3](https://github.com/limaofeng/asany-server/commit/a9d82f3beee4db26f2029055ebcd505ff39bd256))
+
+### [0.2.26](https://github.com/limaofeng/asany-server/compare/v0.2.25...v0.2.26) (2024-04-05)
+
+
+### Features
+
+* 设备关联短链 ([996f877](https://github.com/limaofeng/asany-server/commit/996f8772235678a65f9c917c8949293f3b0d1b92))
+* 设备添加 qrcode 字段 ([90aa18c](https://github.com/limaofeng/asany-server/commit/90aa18cbf86169df2ed016edc9f0fac89c180913))
+
+### [0.2.25](https://github.com/limaofeng/asany-server/compare/v0.2.24...v0.2.25) (2024-04-05)
+
+
+### Features
+
+* ShortLink 返回 metadata ([7c68a22](https://github.com/limaofeng/asany-server/commit/7c68a22b6b968f501ec76fae54b19b715edb66da))
+* 优化应用创建，支持记录应用模块 ([009f1e0](https://github.com/limaofeng/asany-server/commit/009f1e0265baf09919ae3ba60582a1b4a9640412))
+* 修改生成短链接接口 ([5514e63](https://github.com/limaofeng/asany-server/commit/5514e635a019cfb1c7f9a7e10a6589c867d4474a))
+* 合并代码 ([7bb3fc3](https://github.com/limaofeng/asany-server/commit/7bb3fc33b2acd2de29b0a588e7f3db68876f98d9))
+* 完善应用模块安装与卸载 ([75a4729](https://github.com/limaofeng/asany-server/commit/75a472917d65b80810427ed50e50c0ac1a652760))
+* 添加短链接删除逻辑 ([36799b9](https://github.com/limaofeng/asany-server/commit/36799b9f1571e53afcdd6d113b8ac41bcb51601c))
+
+
+### Bug Fixes
+
+* 解决 shortlink metadata could not initialize proxy - no Session  问题 ([5784bae](https://github.com/limaofeng/asany-server/commit/5784bae87752814af0ef926b38fd04d2103ef0f7))
+* 解决 shortlink 批量保存问题 ([8f4f64e](https://github.com/limaofeng/asany-server/commit/8f4f64e2d8447c8d6f1e855e0277897ce3c25924))
+* 解决短链删除问题 ([2cb97b9](https://github.com/limaofeng/asany-server/commit/2cb97b9968975d1ac3bcd579c9cec665a3e48aa2))
+
+### [0.2.24](https://github.com/limaofeng/asany-server/compare/v0.2.23...v0.2.24) (2024-04-03)
+
+
+### Features
+
+* 短链接添加 metadata 字段 ([7861ad7](https://github.com/limaofeng/asany-server/commit/7861ad72ce4f26d92ca2edcc92b144aef7f36246))
+* 添加应用模块配置 ([4f409e0](https://github.com/limaofeng/asany-server/commit/4f409e08785d13c9826c37a8e5d63faf28197214))
+
+### [0.2.23](https://github.com/limaofeng/asany-server/compare/v0.2.22...v0.2.23) (2024-04-01)
+
+
+### Bug Fixes
+
+* 登录路由匹配修复 ([3d7b9eb](https://github.com/limaofeng/asany-server/commit/3d7b9eb26cc00a2ee6db4c7c01534ba3ba789c6f))
+
+### [0.2.22](https://github.com/limaofeng/asany-server/compare/v0.2.21...v0.2.22) (2024-03-31)
+
+
+### Bug Fixes
+
+* 解决本地文件管理器问题 ([55873fe](https://github.com/limaofeng/asany-server/commit/55873fe788c7c245537dfe6c20270d718635b4b9))
+
+### [0.2.21](https://github.com/limaofeng/asany-server/compare/v0.2.20...v0.2.21) (2024-03-31)
+
+
+### Features
+
+* 工单接口添加状态历史字段 ([e997fb7](https://github.com/limaofeng/asany-server/commit/e997fb73ef4d360a9c432e728e448daeb0c805cc))
+
+
+### Bug Fixes
+
+* 工单的 Target 接口实现 ([a473323](https://github.com/limaofeng/asany-server/commit/a47332387bd1c759e5aa6aeb3a3d895909aae12a))
+
+### [0.2.20](https://github.com/limaofeng/asany-server/compare/v0.2.19...v0.2.20) (2024-03-29)
+
+
+### Bug Fixes
+
+* 解决工单客户与门店保存失败的问题 ([cfc2305](https://github.com/limaofeng/asany-server/commit/cfc2305b94bc6cc885cb5477f48f0222a1ab5b0a))
+
+### [0.2.19](https://github.com/limaofeng/asany-server/compare/v0.2.18...v0.2.19) (2024-03-29)
+
+
+### Features
+
+* 解决工单状态未初始化的问题 ([35d0120](https://github.com/limaofeng/asany-server/commit/35d0120821898a7aa4094b981614a4c5c0ceee77))
+
+### [0.2.18](https://github.com/limaofeng/asany-server/compare/v0.2.17...v0.2.18) (2024-03-29)
+
+
+### Features
+
+* 工单流水号生成 ([6817cb3](https://github.com/limaofeng/asany-server/commit/6817cb34d967697e91e2483b9d25de483813f164))
+* 添加工单接口 ([e94bdbe](https://github.com/limaofeng/asany-server/commit/e94bdbe0bb6f0a20effb78f7c65c3fe0a0dda15b))
+
+### [0.2.17](https://github.com/limaofeng/asany-server/compare/v0.2.16...v0.2.17) (2024-03-28)
+
+
+### Features
+
+* 完善设备新增接口 ([3ef2c54](https://github.com/limaofeng/asany-server/commit/3ef2c541a3d522ab4303adf756349f71ba107c3c))
+
+
+### Bug Fixes
+
+* LocalStorage 不捕获异常 ([87fee93](https://github.com/limaofeng/asany-server/commit/87fee939a2d0714e2f3565314d1e408bcea5348b))
+
+### [0.2.16](https://github.com/limaofeng/asany-server/compare/v0.2.15...v0.2.16) (2024-03-28)
+
+
+### Bug Fixes
+
+* 解决门店查询时 customer 字段错误 ([389296c](https://github.com/limaofeng/asany-server/commit/389296c9ebca64e41a68697de5a1fc690d9c6c72))
+
+### [0.2.15](https://github.com/limaofeng/asany-server/compare/v0.2.14...v0.2.15) (2024-03-27)
+
+
+### Features
+
+* 为门店添加联系人字段 ([8babfb9](https://github.com/limaofeng/asany-server/commit/8babfb9e51d840b9021c68438648dc9811a97038))
+
+### [0.2.14](https://github.com/limaofeng/asany-server/compare/v0.2.13...v0.2.14) (2024-03-27)
+
+
+### Features
+
+* 联系方式添加 address 字段 ([9e4df0d](https://github.com/limaofeng/asany-server/commit/9e4df0d7f38dd98ad8d9897ea9825e82e77011e2))
+
+### [0.2.13](https://github.com/limaofeng/asany-server/compare/v0.2.12...v0.2.13) (2024-03-27)
+
+
+### Features
+
+* 添加客户与客户门店接口 ([443e0e4](https://github.com/limaofeng/asany-server/commit/443e0e49373a26b8c1390fa6ed3816581789c712))
+
+### [0.2.12](https://github.com/limaofeng/asany-server/compare/v0.2.11...v0.2.12) (2024-03-26)
+
+
+### Features
+
+* 添加产品相关 Entity ([f15e4cc](https://github.com/limaofeng/asany-server/commit/f15e4ccec784079f68aba583b5e941c34bdae4b6))
+* 添加设备与工单 Entity ([66394d7](https://github.com/limaofeng/asany-server/commit/66394d7d76fa1d451dda7cb9810143443f614b9e))
+
+### [0.2.11](https://github.com/limaofeng/asany-server/compare/v0.2.10...v0.2.11) (2024-03-04)
+
+
+### Features
+
+* update Dockerfile, StorageBuilder, feat: StorageAutoConfiguration, StorageConfig, FactoryScreen, DefaultTypeConverter, DefaultStorageResolver, ScreenUpdateInput, application.yml, and UserGraphQLResolver ([4421f3b](https://github.com/limaofeng/asany-server/commit/4421f3bcb12d44f3b69bc499bdeb2e16672f1892))
+
+
+### Bug Fixes
+
+* 解决网盘BUG ([518abd1](https://github.com/limaofeng/asany-server/commit/518abd1371e5e17cd941f4c91ec5f6b442e824b6))
+* 解决网盘BUG ([f7130f7](https://github.com/limaofeng/asany-server/commit/f7130f712257f5c40e4c237065e092b1f42f78e5))
+
+### [0.2.10](https://github.com/limaofeng/asany-server/compare/v0.2.9...v0.2.10) (2024-03-04)
+
+### [0.2.9](https://github.com/limaofeng/asany-server/compare/v0.2.8...v0.2.9) (2024-03-04)
+
+
+### Features
+
+* save files ([0c90fdd](https://github.com/limaofeng/asany-server/commit/0c90fdd5545e32d4ae095049fd4b2a998c16a504))
+* save files ([b29b046](https://github.com/limaofeng/asany-server/commit/b29b0462cb7e6536300c58778e980991cb3ecaef))
+* 完成屏幕维护接口 ([208fc0c](https://github.com/limaofeng/asany-server/commit/208fc0c70f31928346e0702fd2e9624d618ef76a))
+* 更新事件监听，实现修改事件推送 ([c1be9bf](https://github.com/limaofeng/asany-server/commit/c1be9bff2d46e0766b14c335da7946bff4883b6d))
+
+
+### Bug Fixes
+
+* 解决图标库查询问题 ([a060ffc](https://github.com/limaofeng/asany-server/commit/a060ffc3aff541cce7020484cf65c6abe61c5ca8))
+* 解决操作员图片上传问题 ([58d3ac9](https://github.com/limaofeng/asany-server/commit/58d3ac95b02c739df34103a40a14b54e31dd20f8))
+
 ### [0.2.8](https://github.com/limaofeng/asany-server/compare/v0.2.7...v0.2.8) (2023-09-07)
 
 

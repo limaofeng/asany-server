@@ -8,8 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.data.domain.Pageable;
-import org.jfantasy.framework.dao.jpa.PropertyFilter;
-import org.jfantasy.graphql.util.Kit;
+import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
+import net.asany.jfantasy.graphql.util.Kit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

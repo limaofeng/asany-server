@@ -3,8 +3,8 @@ package cn.asany.workflow.field.domain;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import org.hibernate.Hibernate;
-import org.hibernate.annotations.GenericGenerator;
-import org.jfantasy.framework.dao.BaseBusEntity;
+import net.asany.jfantasy.framework.dao.hibernate.annotations.TableGenerator;
+import net.asany.jfantasy.framework.dao.BaseBusEntity;
 
 import jakarta.persistence.*;
 import java.util.Objects;
@@ -27,8 +27,7 @@ import java.util.Objects;
 public class Field extends BaseBusEntity {
   @Id
   @Column(name = "ID", nullable = false, updatable = false)
-  @GeneratedValue(generator = "fantasy-sequence")
-  @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+  @TableGenerator
   private Long id;
 
   @Column(name = "NAME", length = 50, nullable = false)

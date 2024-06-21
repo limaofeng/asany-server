@@ -5,8 +5,8 @@ package cn.asany.workflow.screen.dao;
  * @date 2022/7/28 9:12
  */
 import cn.asany.pm.screen.bean.FieldToScreen;
-import org.jfantasy.framework.dao.jpa.JpaRepository;
+import net.asany.jfantasy.framework.dao.jpa.AnyJpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface FieldToScreenDao extends JpaRepository<FieldToScreen, Long> {}
+public interface FieldToScreenDao extends AnyJpaRepository<FieldToScreen, Long> {}

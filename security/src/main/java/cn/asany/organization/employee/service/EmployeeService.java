@@ -1,3 +1,18 @@
+/*
+ * Copyright (c) 2024 Asany
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.asany.net/licenses/MIT
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package cn.asany.organization.employee.service;
 
 import cn.asany.base.common.domain.enums.EmailStatus;
@@ -23,12 +38,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
+import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
+import net.asany.jfantasy.framework.error.ValidationException;
+import net.asany.jfantasy.framework.security.crypto.password.PasswordEncoder;
+import net.asany.jfantasy.framework.spring.mvc.error.NotFoundException;
+import net.asany.jfantasy.framework.util.common.ObjectUtil;
 import org.apache.commons.lang3.ObjectUtils;
-import org.jfantasy.framework.dao.jpa.PropertyFilter;
-import org.jfantasy.framework.error.ValidationException;
-import org.jfantasy.framework.security.crypto.password.PasswordEncoder;
-import org.jfantasy.framework.spring.mvc.error.NotFoundException;
-import org.jfantasy.framework.util.common.ObjectUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
@@ -689,12 +704,7 @@ public class EmployeeService {
 
   public void batchDelete(List<Long> ids) {
     List<Employee> employeeList =
-        ids.stream()
-            .map(
-                id -> {
-                  return employeeDao.getOne(id);
-                })
-            .collect(Collectors.toList());
+        ids.stream().map(id -> employeeDao.getReferenceById(id)).collect(Collectors.toList());
     this.employeeDao.deleteAll(employeeList);
   }
 
@@ -784,11 +794,7 @@ public class EmployeeService {
   //    }
 
   private List<EmployeePosition> getEmployeePosition(List<EmployeePosition> positions) {
-    positions.stream()
-        .forEach(
-            position -> {
-              position.setDepartment(getDepartment(position));
-            });
+    positions.forEach(position -> position.setDepartment(getDepartment(position)));
     return positions;
   }
 

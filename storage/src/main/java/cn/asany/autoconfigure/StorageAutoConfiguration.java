@@ -1,3 +1,18 @@
+/*
+ * Copyright (c) 2024 Asany
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.asany.net/licenses/MIT
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package cn.asany.autoconfigure;
 
 import cn.asany.storage.api.IStorageConfig;
@@ -9,19 +24,24 @@ import cn.asany.storage.core.engine.minio.MinIOStorageConfig;
 import cn.asany.storage.core.engine.oss.OSSStorageConfig;
 import cn.asany.storage.data.graphql.directive.FileFormatDirective;
 import cn.asany.storage.data.graphql.scalar.FileCoercing;
+import cn.asany.storage.data.job.GenerateThumbnailJob;
 import cn.asany.storage.data.service.AuthTokenService;
 import cn.asany.storage.data.service.StorageService;
 import graphql.kickstart.autoconfigure.tools.SchemaDirective;
 import graphql.kickstart.servlet.apollo.ApolloScalars;
 import graphql.schema.GraphQLScalarType;
 import java.util.List;
-import org.jfantasy.framework.dao.jpa.ComplexJpaRepository;
-import org.jfantasy.graphql.SchemaParserDictionaryBuilder;
+import lombok.extern.slf4j.Slf4j;
+import net.asany.jfantasy.framework.dao.jpa.SimpleAnyJpaRepository;
+import net.asany.jfantasy.graphql.SchemaParserDictionaryBuilder;
+import net.asany.jfantasy.schedule.service.TaskScheduler;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 /**
@@ -29,6 +49,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
  *
  * @author limaofeng
  */
+@Slf4j
 @Configuration
 @EntityScan("cn.asany.storage.data.domain")
 @ComponentScan({
@@ -43,7 +64,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 })
 @EnableJpaRepositories(
     basePackages = "cn.asany.storage.*.dao",
-    repositoryBaseClass = ComplexJpaRepository.class)
+    repositoryBaseClass = SimpleAnyJpaRepository.class)
 public class StorageAutoConfiguration {
 
   @Bean
@@ -52,21 +73,23 @@ public class StorageAutoConfiguration {
   }
 
   @Bean
-  public FileCoercing fileCoercing() {
-    return new FileCoercing();
+  public FileCoercing fileCoercing(@Autowired Environment environment) {
+    return new FileCoercing(environment);
   }
 
   @Bean
-  public GraphQLScalarType fileByScalar() {
+  public GraphQLScalarType fileByScalar(@Autowired Environment environment) {
     return GraphQLScalarType.newScalar()
         .name("File")
         .description("文件")
-        .coercing(fileCoercing())
+        .coercing(fileCoercing(environment))
         .build();
   }
 
   @Bean
-  public StorageResolver storageResolver(StorageService storageService, List<StorageBuilder<? extends Storage, ? extends IStorageConfig>> builders) {
+  public StorageResolver storageResolver(
+      StorageService storageService,
+      List<StorageBuilder<? extends Storage, ? extends IStorageConfig>> builders) {
     return new DefaultStorageResolver(storageService, builders);
   }
 
@@ -84,5 +107,19 @@ public class StorageAutoConfiguration {
       @Autowired AuthTokenService authTokenService, StorageResolver storageResolver) {
     return new SchemaDirective(
         "fileFormat", new FileFormatDirective(authTokenService, storageResolver));
+  }
+
+  @Bean("storage.startupRunner")
+  public CommandLineRunner startupRunner(@Autowired TaskScheduler taskScheduler) {
+    return args -> {
+      if (!taskScheduler.isStarted()) {
+        log.warn("TaskScheduler is not started, starting now...");
+        return;
+      }
+      if (!taskScheduler.checkExists(GenerateThumbnailJob.JOBKEY_GENERATE_THUMBNAIL)) {
+        taskScheduler.addJob(
+            GenerateThumbnailJob.JOBKEY_GENERATE_THUMBNAIL, GenerateThumbnailJob.class);
+      }
+    };
   }
 }

@@ -1,3 +1,18 @@
+/*
+ * Copyright (c) 2024 Asany
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.asany.net/licenses/MIT
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package cn.asany.nuwa.app.graphql.resolver;
 
 import cn.asany.nuwa.app.domain.*;
@@ -11,15 +26,16 @@ import cn.asany.ui.library.service.LibraryService;
 import graphql.execution.ExecutionStepInfo;
 import graphql.kickstart.tools.GraphQLResolver;
 import graphql.schema.DataFetchingEnvironment;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import org.jfantasy.framework.security.LoginUser;
-import org.jfantasy.framework.security.SpringSecurityUtils;
+import net.asany.jfantasy.framework.security.LoginUser;
+import net.asany.jfantasy.framework.security.SpringSecurityUtils;
 import org.springframework.stereotype.Component;
 
-/** @author limaofeng */
+/**
+ * @author limaofeng
+ */
 @Component
 public class ApplicationGraphQLResolver implements GraphQLResolver<Application> {
 
@@ -40,42 +56,42 @@ public class ApplicationGraphQLResolver implements GraphQLResolver<Application> 
   }
 
   public Optional<ApplicationRoute> layoutRoute(
-      Application application, String space, DataFetchingEnvironment environment) {
+      Application application, DataFetchingEnvironment environment) {
     List<ApplicationRoute> routes =
-        this.routes(
-            application, ApplicationRouteFilter.builder().space(space).build(), environment);
+        this.routes(application, ApplicationRouteFilter.builder().build(), environment);
     return routes.stream()
         .filter(item -> "/".equals(item.getPath()) && item.getLevel() == 1)
         .findAny();
   }
 
   public Optional<ApplicationRoute> loginRoute(
-      Application application, String space, DataFetchingEnvironment environment) {
+      Application application, DataFetchingEnvironment environment) {
     List<ApplicationRoute> routes =
-        this.routes(
-            application, ApplicationRouteFilter.builder().space(space).build(), environment);
+        this.routes(application, ApplicationRouteFilter.builder().build(), environment);
     return routes.stream()
-        .filter(item -> "/login".equals(item.getPath()) && item.getLevel() == 1)
+        .filter(
+            item ->
+                Arrays.asList("/login", "/sign-in").contains(item.getPath())
+                    && item.getLevel() == 1)
         .findAny();
   }
 
   public List<ApplicationRoute> routes(
       Application application, ApplicationRouteFilter filter, DataFetchingEnvironment environment) {
     ExecutionStepInfo parent = environment.getExecutionStepInfo().getParent();
-    String space = filter.getSpace();
     if ("application".equals(parent.getFieldDefinition().getName())) {
-      Stream<ApplicationRoute> stream =
-          application.getRoutes().stream().filter(item -> space.equals(item.getSpace().getId()));
+      Stream<ApplicationRoute> stream = application.getRoutes().stream();
 
       if (filter.getEnabled() != null) {
         stream = stream.filter(item -> filter.getEnabled().equals(item.getEnabled()));
       }
 
-      return stream.collect(Collectors.toList());
+      return stream
+          .sorted(Comparator.comparingInt(ApplicationRoute::getIndex))
+          .collect(Collectors.toList());
     }
     List<ApplicationRoute> routes =
-        this.applicationService.findRouteAllByApplicationAndSpaceWithComponent(
-            application.getId(), space);
+        this.applicationService.findRouteAllByApplicationWithComponent(application.getId());
 
     if (filter.getEnabled() != null) {
       return routes.stream()
@@ -102,29 +118,38 @@ public class ApplicationGraphQLResolver implements GraphQLResolver<Application> 
     return this.licenceService.findOneByActive(application.getId(), orgId);
   }
 
-  public List<ApplicationDependency> dependencies(Application application) {
-    return this.applicationService.findDependencies(application.getId());
+  public Set<ApplicationDependency> dependencies(Application application) {
+    if (application.getDependencies() != null) {
+      return application.getDependencies();
+    }
+    return new HashSet<>(this.applicationService.findDependencies(application.getId()));
   }
 
   public Optional<ComponentLibrary> componentLibrary(Application application) {
-    List<ApplicationDependency> dependencies = this.dependencies(application);
+    List<ApplicationDependency> dependencies = this.dependencies(application).stream().toList();
     Optional<String> libraryId =
         dependencies.stream()
             .filter(item -> item.getName().equals("component.library"))
             .findFirst()
             .map(ApplicationDependency::getValue);
-    if (!libraryId.isPresent()) {
+    if (libraryId.isEmpty()) {
       return Optional.empty();
     }
     Optional<Library> library = libraryService.findById(Long.valueOf(libraryId.get()));
     return library.map(this.libraryConverter::toComponentLibrary);
   }
 
-  public List<Licence> licences(Application application) {
+  public Set<Licence> licences(Application application) {
     return application.getLicences();
   }
 
-  public List<ClientSecret> clientSecrets(Application application) {
+  public Set<ClientSecret> clientSecrets(Application application) {
     return application.getClientSecretsAlias();
+  }
+
+  public Optional<ApplicationModuleConfiguration> module(Application application, String id) {
+    return application.getModules().stream()
+        .filter(item -> item.getModule().getId().equals(id))
+        .findAny();
   }
 }

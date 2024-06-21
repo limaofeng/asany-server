@@ -1,3 +1,18 @@
+/*
+ * Copyright (c) 2024 Asany
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.asany.net/licenses/MIT
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package cn.asany.security.core.domain;
 
 import cn.asany.security.core.domain.converter.ConditionConverter;
@@ -7,9 +22,9 @@ import jakarta.persistence.*;
 import java.io.Serializable;
 import java.util.List;
 import lombok.*;
-import org.hibernate.annotations.GenericGenerator;
-import org.jfantasy.framework.dao.Tenantable;
-import org.jfantasy.framework.dao.hibernate.converter.StringArrayConverter;
+import net.asany.jfantasy.framework.dao.Tenantable;
+import net.asany.jfantasy.framework.dao.hibernate.annotations.TableGenerator;
+import net.asany.jfantasy.framework.dao.hibernate.converter.StringArrayConverter;
 
 /**
  * 权限策略声明
@@ -29,8 +44,7 @@ public class PermissionStatement implements Serializable, Tenantable {
 
   @Id
   @Column(name = "ID", nullable = false, updatable = false, precision = 22)
-  @GeneratedValue(generator = "fantasy-sequence")
-  @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+  @TableGenerator
   private Long id;
 
   @Enumerated(EnumType.STRING)
@@ -45,7 +59,7 @@ public class PermissionStatement implements Serializable, Tenantable {
   @Convert(converter = StringArrayConverter.class)
   private String[] resource;
 
-  @Column(name = "CONDITION", columnDefinition = "JSON")
+  @Column(name = "`CONDITION`", columnDefinition = "JSON")
   @Convert(converter = ConditionConverter.class)
   private List<PermissionCondition> condition;
 
@@ -63,21 +77,5 @@ public class PermissionStatement implements Serializable, Tenantable {
     this.effect = effect;
     this.action = new String[] {action};
     this.resource = new String[] {resource};
-  }
-
-  public void setAction(String action) {
-    this.action = new String[] {action};
-  }
-
-  public void setResource(String resource) {
-    this.resource = new String[] {resource};
-  }
-
-  public void setAction(String[] action) {
-    this.action = action;
-  }
-
-  public void setResource(String[] resource) {
-    this.resource = resource;
   }
 }

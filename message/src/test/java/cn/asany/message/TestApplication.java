@@ -1,69 +1,65 @@
+/*
+ * Copyright (c) 2024 Asany
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.asany.net/licenses/MIT
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package cn.asany.message;
 
-import cn.asany.autoconfigure.AsanySecurityAutoConfiguration;
-import cn.asany.autoconfigure.OrganizationAutoConfiguration;
 import graphql.kickstart.autoconfigure.tools.GraphQLJavaToolsAutoConfiguration;
 import graphql.kickstart.autoconfigure.web.servlet.GraphQLWebAutoConfiguration;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
-import org.jfantasy.autoconfigure.GraphQLAutoConfiguration;
-import org.jfantasy.autoconfigure.OAuth2ResourceServerAutoConfiguration;
-import org.jfantasy.framework.dao.jpa.ComplexJpaRepository;
-import org.jfantasy.framework.security.oauth2.DefaultTokenServices;
-import org.jfantasy.framework.security.oauth2.core.ClientDetailsService;
-import org.jfantasy.framework.security.oauth2.core.TokenStore;
+import net.asany.jfantasy.autoconfigure.GraphQLAutoConfiguration;
+import net.asany.jfantasy.graphql.context.DataLoaderRegistryCustomizer;
+import org.dataloader.DataLoaderRegistry;
 import org.springframework.boot.actuate.autoconfigure.audit.AuditAutoConfiguration;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.boot.autoconfigure.data.elasticsearch.ElasticsearchRepositoriesAutoConfiguration;
+import org.springframework.boot.autoconfigure.data.redis.RedisRepositoriesAutoConfiguration;
 import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
 import org.springframework.boot.autoconfigure.quartz.QuartzAutoConfiguration;
+import org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.*;
-import org.springframework.core.task.TaskExecutor;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @Slf4j
-@Configuration
-@ComponentScan({"cn.asany.message.*.service"})
-@EntityScan({
-  "cn.asany.*.*.domain",
-})
 @EnableCaching
-@EnableJpaRepositories(
-    includeFilters = {
-      @ComponentScan.Filter(
-          type = FilterType.ASSIGNABLE_TYPE,
-          value = {JpaRepository.class})
-    },
-    basePackages = {
-      "cn.asany.message.*.dao",
-    },
-    repositoryBaseClass = ComplexJpaRepository.class)
-@Import({
-  AsanySecurityAutoConfiguration.class,
-  OrganizationAutoConfiguration.class,
-  OAuth2ResourceServerAutoConfiguration.class
-})
+@Configuration
 @EnableAutoConfiguration(
     exclude = {
       MongoAutoConfiguration.class,
       QuartzAutoConfiguration.class,
+      WebMvcAutoConfiguration.class,
       AuditAutoConfiguration.class,
       GraphQLAutoConfiguration.class,
       GraphQLWebAutoConfiguration.class,
       GraphQLJavaToolsAutoConfiguration.class,
+      RedisRepositoriesAutoConfiguration.class,
+      ElasticsearchRepositoriesAutoConfiguration.class
     })
 public class TestApplication {
-
-  @Bean
-  public DefaultTokenServices tokenServices(
-    TokenStore tokenStore, ClientDetailsService clientDetailsService, TaskExecutor taskExecutor) {
-    return new DefaultTokenServices(tokenStore, clientDetailsService, taskExecutor);
-  }
 
   @Bean
   public TestClientDetailsService testClientDetailsService() {
     return new TestClientDetailsService();
   }
 
+  @Bean
+  public DataLoaderRegistry dataLoaderRegistry(List<DataLoaderRegistryCustomizer> customizers) {
+    DataLoaderRegistry registry = DataLoaderRegistry.newRegistry().build();
+    for (DataLoaderRegistryCustomizer customizer : customizers) {
+      customizer.customize(registry);
+    }
+    return registry;
+  }
 }

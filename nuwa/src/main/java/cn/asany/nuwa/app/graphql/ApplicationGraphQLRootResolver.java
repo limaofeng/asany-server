@@ -1,3 +1,18 @@
+/*
+ * Copyright (c) 2024 Asany
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.asany.net/licenses/MIT
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package cn.asany.nuwa.app.graphql;
 
 import cn.asany.nuwa.YamlUtils;
@@ -16,10 +31,10 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
-import org.jfantasy.framework.util.common.ObjectUtil;
-import org.jfantasy.framework.util.regexp.RegexpConstant;
-import org.jfantasy.framework.util.regexp.RegexpUtil;
-import org.jfantasy.graphql.util.GraphqlUtil;
+import net.asany.jfantasy.framework.util.common.ObjectUtil;
+import net.asany.jfantasy.framework.util.regexp.RegexpConstant;
+import net.asany.jfantasy.framework.util.regexp.RegexpUtil;
+import net.asany.jfantasy.graphql.util.GraphQLUtils;
 import org.springframework.stereotype.Component;
 
 /**
@@ -56,7 +71,8 @@ public class ApplicationGraphQLRootResolver
   }
 
   public Application updateApplication(Long id, ApplicationCreateInput input, Boolean merge) {
-    return new Application();
+    return applicationService.updateApplication(
+        id, applicationConverter.toNativeApplication(input), merge);
   }
 
   public Boolean deleteApplication(Long id) {
@@ -71,10 +87,10 @@ public class ApplicationGraphQLRootResolver
   }
 
   public Optional<Application> application(
-      String id, ApplicationIdType idType, String space, DataFetchingEnvironment environment) {
+      String id, ApplicationIdType idType, DataFetchingEnvironment environment) {
     idType = ObjectUtil.defaultValue(idType, () -> getDefaultApplicationIdType(id));
-    boolean hasFetchRoutes = GraphqlUtil.hasFetchFields(environment, "routes");
-    boolean hasFetchMenus = GraphqlUtil.hasFetchFields(environment, "menus");
+    boolean hasFetchRoutes = GraphQLUtils.hasFetchFields(environment, "routes");
+    boolean hasFetchMenus = GraphQLUtils.hasFetchFields(environment, "menus");
     if (ApplicationIdType.CLIENT_ID.equals(idType)) {
       return applicationService.findDetailsByClientId(id, hasFetchRoutes, hasFetchMenus);
     }

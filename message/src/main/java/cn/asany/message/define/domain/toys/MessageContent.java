@@ -1,11 +1,27 @@
+/*
+ * Copyright (c) 2024 Asany
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.asany.net/licenses/MIT
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package cn.asany.message.define.domain.toys;
 
 import cn.asany.message.data.util.MessageUtils;
 import java.io.Serializable;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
-import org.jfantasy.framework.dao.hibernate.util.ReflectionUtils;
-import org.jfantasy.framework.util.HandlebarsTemplateUtils;
+import net.asany.jfantasy.framework.dao.hibernate.util.ReflectionUtils;
+import net.asany.jfantasy.framework.util.HandlebarsTemplateUtils;
 
 /**
  * 消息内容
@@ -17,8 +33,14 @@ public class MessageContent implements Serializable {
   public static final String DATA_BOUNDARY = "--MessageContentBoundary--";
   public static final String CONTENT = "content";
   public static final String TITLE = "title";
+  public static final String SMS_CODE = "code";
+  public static final String SMS_SIGN = "sign";
 
   private final Map<String, Object> variables;
+
+  public MessageContent() {
+    this(new HashMap<>());
+  }
 
   public MessageContent(Map<String, Object> variables) {
     this.variables = variables;

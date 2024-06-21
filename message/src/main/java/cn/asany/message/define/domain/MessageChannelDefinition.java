@@ -1,5 +1,21 @@
+/*
+ * Copyright (c) 2024 Asany
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.asany.net/licenses/MIT
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package cn.asany.message.define.domain;
 
+import cn.asany.message.api.EmailChannelConfig;
 import cn.asany.message.api.IChannelConfig;
 import cn.asany.message.api.MSChannelConfig;
 import cn.asany.message.api.SMSChannelConfig;
@@ -7,10 +23,10 @@ import cn.asany.message.define.domain.enums.TemplateType;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
+import net.asany.jfantasy.framework.dao.BaseBusEntity;
+import net.asany.jfantasy.framework.dao.hibernate.annotations.TableGenerator;
+import net.asany.jfantasy.framework.jackson.JSON;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.GenericGenerator;
-import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.jackson.JSON;
 
 /**
  * 消息通道定义
@@ -30,8 +46,7 @@ public class MessageChannelDefinition extends BaseBusEntity {
 
   @Id
   @Column(name = "ID", nullable = false, updatable = false, precision = 22)
-  @GeneratedValue(generator = "fantasy-sequence")
-  @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+  @TableGenerator
   private Long id;
 
   @Column(name = "NAME", nullable = false, length = 20)
@@ -54,7 +69,7 @@ public class MessageChannelDefinition extends BaseBusEntity {
     if (type == TemplateType.SMS) {
       return JSON.deserialize(config, SMSChannelConfig.class);
     } else if (type == TemplateType.EMAIL) {
-      return JSON.deserialize(config, SMSChannelConfig.class);
+      return JSON.deserialize(config, EmailChannelConfig.class);
     } else if (type == TemplateType.MS) {
       return JSON.deserialize(config, MSChannelConfig.class);
     }

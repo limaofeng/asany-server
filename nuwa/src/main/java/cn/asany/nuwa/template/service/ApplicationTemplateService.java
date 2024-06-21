@@ -1,3 +1,18 @@
+/*
+ * Copyright (c) 2024 Asany
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.asany.net/licenses/MIT
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package cn.asany.nuwa.template.service;
 
 import cn.asany.nuwa.app.domain.enums.RouteType;
@@ -8,11 +23,11 @@ import cn.asany.nuwa.template.domain.ApplicationTemplateRoute;
 import cn.asany.ui.resources.dao.ComponentDao;
 import cn.asany.ui.resources.domain.Component;
 import cn.asany.ui.resources.domain.enums.ComponentScope;
+import jakarta.transaction.Transactional;
 import java.util.*;
 import java.util.stream.Collectors;
-import javax.transaction.Transactional;
-import org.jfantasy.framework.dao.jpa.PropertyFilter;
-import org.jfantasy.framework.util.common.ObjectUtil;
+import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
+import net.asany.jfantasy.framework.util.common.ObjectUtil;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -42,8 +57,7 @@ public class ApplicationTemplateService {
             PropertyFilter.newFilter()
                 .equal("application.id", applicationId)
                 .equal("component.scope", ComponentScope.ROUTE)
-                .isNotNull("component")
-                );
+                .isNotNull("component"));
     Set<Long> componentIds =
         routes.stream().map(item -> item.getComponent().getId()).collect(Collectors.toSet());
     // 删除应用模版

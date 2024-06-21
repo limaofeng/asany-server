@@ -1,10 +1,25 @@
+/*
+ * Copyright (c) 2024 Asany
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.asany.net/licenses/MIT
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package cn.asany.security.core.domain;
 
+import cn.asany.organization.core.domain.Organization;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Parameter;
-import org.jfantasy.framework.dao.BaseBusEntity;
+import net.asany.jfantasy.framework.dao.BaseBusEntity;
+import net.asany.jfantasy.framework.dao.hibernate.annotations.SnowflakeGenerator;
 
 @Data
 @Builder
@@ -16,15 +31,8 @@ import org.jfantasy.framework.dao.BaseBusEntity;
 public class Tenant extends BaseBusEntity {
 
   @Id
-  @Column(name = "ID")
-  @GeneratedValue(generator = "snowflake")
-  @GenericGenerator(
-      name = "snowflake",
-      strategy = "snowflake",
-      parameters = {
-        @Parameter(name = "workerId", value = "1"),
-        @Parameter(name = "dataCenterId", value = "1")
-      })
+  @Column(name = "ID", length = 32)
+  @SnowflakeGenerator
   private String id;
 
   @Column(name = "DOMAIN", length = 32)
@@ -39,4 +47,8 @@ public class Tenant extends BaseBusEntity {
 
   @OneToOne(mappedBy = "tenant", fetch = FetchType.LAZY)
   private AccessControlSettings accessControlSettings;
+
+  @OneToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "DEFAULT_ORGANIZATION_ID", referencedColumnName = "ID", nullable = false)
+  private Organization defaultOrganization;
 }

@@ -132,3 +132,48 @@ input MetadataInput {
   title: String
   description: String
 }
+
+"""
+联系方式
+"""
+type ContactInformation {
+  """
+  姓名
+  """
+  name: String
+  """
+  电话
+  """
+  phone: String
+  """
+  邮件
+  """
+  email: String
+  """
+  地址
+  """
+  address: Address
+}
+
+input ContactInformationInput {
+  """
+  联系人
+  """
+  name: String
+  """
+  联系电话
+  """
+  phone: String
+  """
+  电子邮件
+  """
+  email: String
+  """
+  地址
+  """
+  address: AddressInput
+}
+
+type BatchPayload {
+  count: Int!
+}

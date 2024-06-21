@@ -1,30 +1,49 @@
+/*
+ * Copyright (c) 2024 Asany
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.asany.net/licenses/MIT
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package cn.asany.security.auth.graphql;
 
 import cn.asany.security.auth.authentication.DingtalkAuthenticationToken;
 import cn.asany.security.auth.authentication.LoginAuthenticationDetails;
 import cn.asany.security.auth.authentication.WeChatAuthenticationToken;
+import cn.asany.security.auth.error.UnauthorizedException;
 import cn.asany.security.auth.event.LoginSuccessEvent;
 import cn.asany.security.auth.event.LogoutSuccessEvent;
 import cn.asany.security.auth.graphql.types.LoginOptions;
 import cn.asany.security.auth.graphql.types.LoginType;
 import cn.asany.security.auth.utils.AuthUtils;
+import cn.asany.security.core.domain.enums.SocialProvider;
 import graphql.kickstart.tools.GraphQLMutationResolver;
 import graphql.schema.DataFetchingEnvironment;
 import lombok.extern.slf4j.Slf4j;
-import org.jfantasy.framework.security.AuthenticationManager;
-import org.jfantasy.framework.security.LoginUser;
-import org.jfantasy.framework.security.SecurityContextHolder;
-import org.jfantasy.framework.security.authentication.AbstractAuthenticationToken;
-import org.jfantasy.framework.security.authentication.Authentication;
-import org.jfantasy.framework.security.authentication.BadCredentialsException;
-import org.jfantasy.framework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.jfantasy.framework.security.oauth2.core.OAuth2AccessToken;
-import org.jfantasy.framework.security.oauth2.core.OAuth2Authentication;
-import org.jfantasy.framework.security.oauth2.core.token.AuthorizationServerTokenServices;
-import org.jfantasy.framework.security.oauth2.core.token.ConsumerTokenServices;
-import org.jfantasy.framework.security.oauth2.server.authentication.BearerTokenAuthentication;
-import org.jfantasy.framework.util.common.ObjectUtil;
-import org.jfantasy.graphql.context.AuthorizationGraphQLServletContext;
+import net.asany.jfantasy.framework.security.AuthenticationManager;
+import net.asany.jfantasy.framework.security.LoginUser;
+import net.asany.jfantasy.framework.security.SecurityContextHolder;
+import net.asany.jfantasy.framework.security.SpringSecurityUtils;
+import net.asany.jfantasy.framework.security.auth.core.TokenServiceFactory;
+import net.asany.jfantasy.framework.security.auth.core.token.AuthorizationServerTokenServices;
+import net.asany.jfantasy.framework.security.auth.core.token.ConsumerTokenServices;
+import net.asany.jfantasy.framework.security.auth.oauth2.core.OAuth2AccessToken;
+import net.asany.jfantasy.framework.security.auth.oauth2.core.OAuth2Authentication;
+import net.asany.jfantasy.framework.security.auth.oauth2.server.authentication.BearerTokenAuthentication;
+import net.asany.jfantasy.framework.security.authentication.AbstractAuthenticationToken;
+import net.asany.jfantasy.framework.security.authentication.Authentication;
+import net.asany.jfantasy.framework.security.authentication.BadCredentialsException;
+import net.asany.jfantasy.framework.security.authentication.UsernamePasswordAuthenticationToken;
+import net.asany.jfantasy.framework.util.common.ObjectUtil;
+import net.asany.jfantasy.graphql.security.context.AuthGraphQLServletContext;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
@@ -39,18 +58,15 @@ import org.springframework.stereotype.Component;
 public class LoginGraphQLMutationResolver implements GraphQLMutationResolver {
 
   private final AuthenticationManager authenticationManager;
-  private final AuthorizationServerTokenServices tokenServices;
-  private final ConsumerTokenServices consumerTokenServices;
+  private final TokenServiceFactory tokenServiceFactory;
   private final ApplicationEventPublisher publisher;
 
   public LoginGraphQLMutationResolver(
       AuthenticationManager authenticationManager,
-      ConsumerTokenServices consumerTokenServices,
-      AuthorizationServerTokenServices tokenServices,
+      TokenServiceFactory tokenServiceFactory,
       ApplicationEventPublisher publisher) {
     this.authenticationManager = authenticationManager;
-    this.consumerTokenServices = consumerTokenServices;
-    this.tokenServices = tokenServices;
+    this.tokenServiceFactory = tokenServiceFactory;
     this.publisher = publisher;
   }
 
@@ -76,7 +92,8 @@ public class LoginGraphQLMutationResolver implements GraphQLMutationResolver {
       LoginOptions options,
       DataFetchingEnvironment environment) {
 
-    AuthorizationGraphQLServletContext context = environment.getContext();
+    //noinspection deprecation
+    AuthGraphQLServletContext context = environment.getContext();
 
     Authentication token =
         buildAuthenticationToken(
@@ -87,21 +104,36 @@ public class LoginGraphQLMutationResolver implements GraphQLMutationResolver {
     if (!authentication.isAuthenticated()) {
       throw new BadCredentialsException("Bad credentials");
     }
-    LoginUser loginUser = (LoginUser) authentication.getPrincipal();
+    LoginUser loginUser = authentication.getPrincipal();
 
     OAuth2Authentication auth2 =
         AuthUtils.buildOAuth2(clientId, context.getRequest(), authentication);
 
+    AuthorizationServerTokenServices<OAuth2AccessToken> tokenServices =
+        tokenServiceFactory.getTokenServices(OAuth2AccessToken.class);
     OAuth2AccessToken accessToken = tokenServices.createAccessToken(auth2);
     loginUser.setAttribute("token", accessToken);
     publisher.publishEvent(new LoginSuccessEvent(authentication));
     return loginUser;
   }
 
+  public Boolean bindThirdPartyPlatform(String authCode, SocialProvider platform) {
+    LoginUser loginUser = SpringSecurityUtils.getCurrentUser();
+    if (loginUser == null) {
+      throw new UnauthorizedException("没有登录时，无法绑定第三方平台");
+    }
+    return Boolean.TRUE;
+  }
+
   public Boolean logout() {
-    BearerTokenAuthentication authentication =
-        (BearerTokenAuthentication) SecurityContextHolder.getContext().getAuthentication();
-    consumerTokenServices.revokeToken(authentication.getToken().getTokenValue());
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    if (!authentication.isAuthenticated()) {
+      return Boolean.FALSE;
+    }
+    BearerTokenAuthentication tokenAuthentication = (BearerTokenAuthentication) authentication;
+    ConsumerTokenServices consumerTokenServices =
+        tokenServiceFactory.getTokenServices(OAuth2AccessToken.class);
+    consumerTokenServices.revokeToken(tokenAuthentication.getToken().getTokenValue());
     publisher.publishEvent(new LogoutSuccessEvent(authentication));
     return Boolean.TRUE;
   }
@@ -113,82 +145,32 @@ public class LoginGraphQLMutationResolver implements GraphQLMutationResolver {
       String authCode,
       String tmpAuthCode,
       LoginOptions options,
-      AuthorizationGraphQLServletContext context) {
+      AuthGraphQLServletContext context) {
 
     options = ObjectUtil.defaultValue(options, LoginOptions.builder().build());
     LoginAuthenticationDetails details =
         new LoginAuthenticationDetails(loginType, options, context.getRequest());
-    AbstractAuthenticationToken authentication;
-
-    switch (loginType) {
-      case password:
-        authentication = new UsernamePasswordAuthenticationToken(username, password);
-        break;
-      case dingtalk:
-        authentication =
-            new DingtalkAuthenticationToken(
-                DingtalkAuthenticationToken.DingtalkCredentials.builder()
-                    .authCode(authCode)
-                    .connected(options.getConnected())
-                    .build());
-        break;
-      case WeChatCP:
-      case WeChatPM:
-        authentication =
-            new WeChatAuthenticationToken(
-                WeChatAuthenticationToken.WeChatCredentials
-                    .builder() /*.type(Oauth2.MobileType.WeChatCP)*/
-                    .authCode(authCode)
-                    .connected(options.getConnected())
-                    .build());
-        break;
-        /*.type(Oauth2.MobileType.WeChatPM)*/
-      default:
-        throw new IllegalStateException("Unexpected AuthenticationToken By: " + loginType);
-    }
+    AbstractAuthenticationToken authentication =
+        switch (loginType) {
+          case password -> new UsernamePasswordAuthenticationToken(username, password);
+          case dingtalk -> new DingtalkAuthenticationToken(
+              DingtalkAuthenticationToken.DingtalkCredentials.builder()
+                  .authCode(authCode)
+                  .connected(options.getConnected())
+                  .build());
+          case WeChatCP, WeChatPM -> new WeChatAuthenticationToken(
+              WeChatAuthenticationToken.WeChatCredentials
+                  .builder() /*.type(Oauth2.MobileType.WeChatCP)*/
+                  .authCode(authCode)
+                  .connected(options.getConnected())
+                  .build());
+            /*.type(Oauth2.MobileType.WeChatPM)*/
+          default -> throw new IllegalStateException(
+              "Unexpected AuthenticationToken By: " + loginType);
+        };
 
     authentication.setDetails(details);
 
     return authentication;
   }
 }
-
-//        options = ObjectUtil.defaultValue(options, LoginOptions.builder().build());
-//        switch (loginType) {
-//            case dingtalk:
-//                return loginByDingtalk(authCode, options);
-//            case WeChatCP:
-//                return mobileLogin(Oauth2.MobileType.WeChatCP, authCode);
-//            case WeChatPM:
-//                return mobileLogin(Oauth2.MobileType.WeChatPM, authCode);
-//            case single:
-//                Employee model = employeeService.findOneBySN(singleCode);
-//                if (model == null) {
-//                    return null;
-//                }
-//                return loginService.toLoginUser(model);
-//            case tourist:
-//                return touristLogin();
-//            default:
-//                LoginUser user = loginService.login(username, password);
-//                if (StringUtil.isNotBlank(options)) {
-//                    syncEmployeeDao.save(SyncEmployee.builder().mobile(user.getPhone())
-//                        .mobileId(options.getSnser())
-//                        .locId(user.getUid())
-//                        .status(SyncStatus.over)
-//                        .baseId(options.getPlatform()).build());
-//                }
-//                if ("ezoffice".equals(user.getType())) {
-//                    Optional<Employee> optional = employeeService.getByLink(LinkType.ezoffice,
-// user.getUid());
-//                    if (optional.isPresent()) {
-//                        return loginService.toLoginUser(optional.get());
-//                    }
-//                    return null;
-//                }
-//                if (options.getConnected()) {
-//                    this.employeeService.connected(user.get(DataConstant.FIELD_EMPLOYEE),
-// options.getProvider(), options.getSnser());
-//                }
-//                return user;
-//        }

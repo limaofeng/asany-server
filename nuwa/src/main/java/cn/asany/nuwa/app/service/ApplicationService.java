@@ -1,7 +1,24 @@
+/*
+ * Copyright (c) 2024 Asany
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.asany.net/licenses/MIT
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package cn.asany.nuwa.app.service;
 
-import cn.asany.base.IModuleLoader;
+import cn.asany.base.IApplicationModule;
 import cn.asany.base.IModuleProperties;
+import cn.asany.base.ModuleConfig;
+import cn.asany.base.ModuleResolver;
 import cn.asany.nuwa.app.converter.ApplicationConverter;
 import cn.asany.nuwa.app.dao.*;
 import cn.asany.nuwa.app.domain.*;
@@ -16,18 +33,23 @@ import cn.asany.nuwa.template.dao.ApplicationTemplateDao;
 import cn.asany.nuwa.template.domain.ApplicationTemplate;
 import cn.asany.nuwa.template.domain.ApplicationTemplateMenu;
 import cn.asany.nuwa.template.domain.ApplicationTemplateRoute;
+import cn.asany.security.core.domain.Tenant;
+import cn.asany.security.core.service.TenantService;
 import cn.asany.ui.resources.dao.ComponentDao;
 import cn.asany.ui.resources.domain.Component;
 import cn.asany.ui.resources.domain.enums.ComponentScope;
 import java.util.*;
 import java.util.stream.Collectors;
-import org.jfantasy.framework.dao.jpa.PropertyFilter;
-import org.jfantasy.framework.error.ValidationException;
-import org.jfantasy.framework.security.oauth2.core.ClientDetails;
-import org.jfantasy.framework.security.oauth2.core.ClientDetailsService;
-import org.jfantasy.framework.security.oauth2.core.ClientRegistrationException;
-import org.jfantasy.framework.util.common.ObjectUtil;
-import org.jfantasy.framework.util.common.StringUtil;
+import net.asany.jfantasy.framework.dao.hibernate.util.HibernateUtils;
+import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
+import net.asany.jfantasy.framework.error.ValidationException;
+import net.asany.jfantasy.framework.security.auth.core.ClientDetails;
+import net.asany.jfantasy.framework.security.auth.core.ClientDetailsService;
+import net.asany.jfantasy.framework.security.auth.core.ClientRegistrationException;
+import net.asany.jfantasy.framework.security.auth.core.ClientSecretType;
+import net.asany.jfantasy.framework.util.common.ClassUtil;
+import net.asany.jfantasy.framework.util.common.ObjectUtil;
+import net.asany.jfantasy.framework.util.common.StringUtil;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.Cacheable;
@@ -44,7 +66,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class ApplicationService implements ClientDetailsService {
 
-  public static final String NONCE_CHARS = "abcdef0123456789";
+  public static final String NONCE_CHARS = "0123456789abcdefghijklmnopqrstuvwxyz";
   public static final String CACHE_KEY = "NUWA";
 
   private final ApplicationDao applicationDao;
@@ -53,34 +75,38 @@ public class ApplicationService implements ClientDetailsService {
   private final ApplicationRouteDao applicationRouteDao;
   private final ApplicationMenuDao applicationMenuDao;
   private final ApplicationTemplateDao applicationTemplateDao;
+
+  private final ApplicationModuleConfigurationDao applicationModuleConfigurationDao;
   private final ComponentDao componentDao;
-  private final RoutespaceDao routespaceDao;
   private final ApplicationConverter applicationConverter;
-  private final IModuleLoader moduleLoader;
+  private final ModuleResolver moduleResolver;
   private final CacheManager cacheManager;
+  private final TenantService tenantService;
 
   public ApplicationService(
       CacheManager cacheManager,
+      TenantService tenantService,
       ApplicationDao applicationDao,
       ApplicationDependencyDao applicationDependencyDao,
       ClientSecretDao clientSecretDao,
+      ApplicationModuleConfigurationDao applicationModuleConfigurationDao,
       ComponentDao componentDao,
-      RoutespaceDao routespaceDao,
       ApplicationConverter applicationConverter,
       ApplicationRouteDao applicationRouteDao,
       ApplicationMenuDao applicationMenuDao,
       ApplicationTemplateDao applicationTemplateDao,
-      IModuleLoader moduleLoader) {
+      ModuleResolver moduleResolver) {
+    this.tenantService = tenantService;
     this.applicationDao = applicationDao;
     this.clientSecretDao = clientSecretDao;
+    this.applicationModuleConfigurationDao = applicationModuleConfigurationDao;
     this.componentDao = componentDao;
-    this.routespaceDao = routespaceDao;
     this.applicationConverter = applicationConverter;
     this.applicationRouteDao = applicationRouteDao;
     this.applicationMenuDao = applicationMenuDao;
     this.applicationTemplateDao = applicationTemplateDao;
     this.applicationDependencyDao = applicationDependencyDao;
-    this.moduleLoader = moduleLoader;
+    this.moduleResolver = moduleResolver;
     this.cacheManager = cacheManager;
   }
 
@@ -94,10 +120,10 @@ public class ApplicationService implements ClientDetailsService {
     Optional<Application> optional =
         this.applicationDao.findOneWithClientDetails(
             PropertyFilter.newFilter().equal("clientId", clientId).equal("enabled", true));
-    if (!optional.isPresent()) {
+    if (optional.isEmpty()) {
       throw new ClientRegistrationException("[client_id=" + clientId + "]不存在");
     }
-    return optional.get();
+    return HibernateUtils.cloneEntity(optional.get());
   }
 
   @Transactional(rollbackFor = RuntimeException.class)
@@ -113,13 +139,13 @@ public class ApplicationService implements ClientDetailsService {
   public Optional<Application> findDetailsByClientId(
       String id, boolean hasFetchRoutes, boolean hasFetchMenus) {
     if (hasFetchRoutes && hasFetchMenus) {
-      return this.applicationDao.findDetailsByClientId(id);
+      return this.applicationDao.findDetailsByClientId(id).map(HibernateUtils::cloneEntity);
     }
     if (hasFetchRoutes) {
-      return this.applicationDao.findOneWithRoutesByClientId(id);
+      return this.applicationDao.findOneWithRoutesByClientId(id).map(HibernateUtils::cloneEntity);
     }
     if (hasFetchMenus) {
-      return this.applicationDao.findOneWithMenusByClientId(id);
+      return this.applicationDao.findOneWithMenusByClientId(id).map(HibernateUtils::cloneEntity);
     }
     return this.applicationDao.findOneBy("clientId", id);
   }
@@ -127,8 +153,10 @@ public class ApplicationService implements ClientDetailsService {
   @Transactional(readOnly = true)
   @Cacheable(key = "targetClass  + '.' +  methodName + '#' + #p0", value = CACHE_KEY)
   public List<ApplicationDependency> findDependencies(Long id) {
-    return this.applicationDependencyDao.findAll(
-        PropertyFilter.newFilter().equal("application.id", id), Sort.by("createdAt").ascending());
+    return HibernateUtils.cloneEntity(
+        this.applicationDependencyDao.findAll(
+            PropertyFilter.newFilter().equal("application.id", id),
+            Sort.by("createdAt").ascending()));
   }
 
   @Transactional(rollbackFor = RuntimeException.class)
@@ -139,21 +167,20 @@ public class ApplicationService implements ClientDetailsService {
   public Optional<Application> findDetailsById(
       Long id, boolean hasFetchRoutes, boolean hasFetchMenus) {
     if (hasFetchRoutes && hasFetchMenus) {
-      return this.applicationDao.findDetailsById(id);
+      return this.applicationDao.findDetailsById(id).map(HibernateUtils::cloneEntity);
     }
     if (hasFetchRoutes) {
-      return this.applicationDao.findOneWithRoutesById(id);
+      return this.applicationDao.findOneWithRoutesById(id).map(HibernateUtils::cloneEntity);
     }
     if (hasFetchMenus) {
-      return this.applicationDao.findOneWithMenusById(id);
+      return this.applicationDao.findOneWithMenusById(id).map(HibernateUtils::cloneEntity);
     }
     return this.applicationDao.findById(id);
   }
 
   @Transactional
-  public List<ApplicationRoute> findRouteAllByApplicationAndSpaceWithComponent(
-      Long applicationId, String space) {
-    return this.applicationRouteDao.findAllByApplicationAndSpaceWithComponent(applicationId, space);
+  public List<ApplicationRoute> findRouteAllByApplicationWithComponent(Long applicationId) {
+    return this.applicationRouteDao.findAllByApplicationWithComponent(applicationId);
   }
 
   @Transactional(rollbackFor = RuntimeException.class)
@@ -161,7 +188,7 @@ public class ApplicationService implements ClientDetailsService {
     Application application = this.applicationConverter.oauthAppToApp(app);
     String clientId = StringUtil.generateNonceString(NONCE_CHARS, 20);
     String clientSecret = StringUtil.generateNonceString(NONCE_CHARS, 40);
-    List<ClientSecret> clientSecrets = new ArrayList<>();
+    Set<ClientSecret> clientSecrets = new HashSet<>();
     clientSecrets.add(ClientSecret.builder().id(1L).client(clientId).secret(clientSecret).build());
     application.setClientId(clientId);
     application.setClientSecretsAlias(clientSecrets);
@@ -173,10 +200,15 @@ public class ApplicationService implements ClientDetailsService {
     return createApplication(nativeApplication, Optional.empty());
   }
 
+  public Application updateApplication(
+      Long id, NativeApplication nativeApplication, Boolean merge) {
+    return null;
+  }
+
   @Transactional
   public Application createApplication(NativeApplication nativeApplication, Long template) {
     Optional<ApplicationTemplate> optionalTemplate = this.applicationTemplateDao.findById(template);
-    if (!optionalTemplate.isPresent()) {
+    if (optionalTemplate.isEmpty()) {
       throw new ValidationException("应用模版" + template + "不存在");
     }
     return createApplication(nativeApplication, optionalTemplate);
@@ -184,20 +216,6 @@ public class ApplicationService implements ClientDetailsService {
 
   public Application createApplication(
       NativeApplication nativeApplication, Optional<ApplicationTemplate> template) {
-
-    if (StringUtil.isBlank(nativeApplication.getRoutespace())) {
-      nativeApplication.setRoutespace(Routespace.DEFAULT_ROUTESPACE_WEB.getId());
-    }
-
-    Optional<Routespace> optionalRoutespace =
-        this.routespaceDao.findByIdWithApplicationTemplate(nativeApplication.getRoutespace());
-
-    if (!optionalRoutespace.isPresent()) {
-      throw new ValidationException("应用路由 Space " + template + "不存在");
-    }
-
-    Routespace routespace = optionalRoutespace.get();
-
     String clientId =
         ObjectUtil.defaultValue(
             nativeApplication.getClientId(), () -> StringUtil.generateNonceString(NONCE_CHARS, 20));
@@ -207,11 +225,20 @@ public class ApplicationService implements ClientDetailsService {
             () -> StringUtil.generateNonceString(NONCE_CHARS, 40));
 
     // 创建密钥
-    List<ClientSecret> clientSecrets = new ArrayList<>();
+    Set<ClientSecret> clientSecrets = new HashSet<>();
     ClientSecret clientSecret =
         clientSecretDao.save(
-            ClientSecret.builder().client(clientId).secret(clientSecretStr).build());
+            ClientSecret.builder()
+                .client(clientId)
+                .secret(clientSecretStr)
+                .type(ClientSecretType.SESSION)
+                .build());
     clientSecrets.add(clientSecret);
+
+    Tenant tenant =
+        this.tenantService
+            .findById("1691832353955123200")
+            .orElseThrow(() -> new ValidationException("租户不存在"));
 
     // 创建应用
     Application application =
@@ -221,16 +248,16 @@ public class ApplicationService implements ClientDetailsService {
             .description(nativeApplication.getDescription())
             .clientId(clientId)
             .clientSecretsAlias(clientSecrets)
-            .routespaces(Arrays.stream(new Routespace[] {routespace}).collect(Collectors.toList()))
+            .tenantId(tenant.getId())
             .routes(new HashSet<>())
             .build();
 
     // 生成应用路由
-    ApplicationTemplate applicationTemplate = template.orElse(routespace.getApplicationTemplate());
+    ApplicationTemplate applicationTemplate = template.orElse(null);
     if (nativeApplication.getRoutes() != null && !nativeApplication.getRoutes().isEmpty()) {
-      application.setRoutes(getRoutesFromNuwa(nativeApplication.getRoutes(), routespace));
+      application.setRoutes(getRoutesFromNuwa(nativeApplication.getRoutes()));
     } else if (applicationTemplate != null) {
-      application.setRoutes(getRoutesFromTemplate(applicationTemplate, routespace));
+      application.setRoutes(getRoutesFromTemplate(applicationTemplate));
     }
 
     // 生成菜单
@@ -243,11 +270,27 @@ public class ApplicationService implements ClientDetailsService {
     // 保存应用
     this.applicationDao.save(application);
 
-    List<IModuleProperties> modules =
+    Set<ApplicationModuleConfiguration> modules = new HashSet<>();
+    List<IModuleProperties> modulePropertiesList =
         ObjectUtil.defaultValue(nativeApplication.getModules(), Collections.emptyList());
-    for (IModuleProperties module : modules) {
-      this.moduleLoader.load(module.getType(), module);
+    for (IModuleProperties moduleProperties : modulePropertiesList) {
+      IApplicationModule<IModuleProperties> module =
+          this.moduleResolver.resolve(moduleProperties.getType());
+      ApplicationModuleConfiguration moduleConfiguration =
+          ApplicationModuleConfiguration.builder()
+              .module(ApplicationModule.builder().id(moduleProperties.getType()).build())
+              .application(application)
+              .values(
+                  module.install(
+                      ModuleConfig.builder()
+                          .tenant(tenant.getId())
+                          .defaultOrganization(tenant.getDefaultOrganization().getId())
+                          .properties(moduleProperties)
+                          .build()))
+              .build();
+      modules.add(this.applicationModuleConfigurationDao.save(moduleConfiguration));
     }
+    application.setModules(modules);
 
     return application;
   }
@@ -256,7 +299,7 @@ public class ApplicationService implements ClientDetailsService {
   public void deleteApplication(String clientId) {
     Optional<Application> application =
         this.applicationDao.findOne(PropertyFilter.newFilter().equal("clientId", clientId));
-    if (!application.isPresent()) {
+    if (application.isEmpty()) {
       return;
     }
     deleteApplication(application.get().getId());
@@ -265,6 +308,12 @@ public class ApplicationService implements ClientDetailsService {
   @Transactional(rollbackFor = Exception.class)
   public void deleteApplication(Long id) {
     Application app = this.applicationDao.getReferenceById(id);
+
+    Tenant tenant =
+        this.tenantService
+            .findById(app.getTenantId())
+            .orElseThrow(() -> new ValidationException("租户不存在"));
+
     // 路由组件
     List<ApplicationRoute> routes =
         this.applicationRouteDao.findAll(
@@ -282,10 +331,29 @@ public class ApplicationService implements ClientDetailsService {
                 .equal("component.scope", ComponentScope.MENU)
                 .equal("application.id", id)
                 .isNotNull("component"));
-    components.addAll(
-        menus.stream().map(ApplicationMenu::getComponent).collect(Collectors.toList()));
+    components.addAll(menus.stream().map(ApplicationMenu::getComponent).toList());
 
     String clientId = app.getClientId();
+
+    for (ApplicationModuleConfiguration config : app.getModules()) {
+      IApplicationModule<IModuleProperties> module =
+          moduleResolver.resolve(config.getModule().getId());
+      Class<IModuleProperties> propertiesType =
+          ClassUtil.getInterfaceGenricType(module.getClass(), IApplicationModule.class);
+
+      ModuleConfig<IModuleProperties> moduleConfig =
+          ModuleConfig.builder()
+              .tenant(tenant.getId())
+              .defaultOrganization(tenant.getDefaultOrganization().getId())
+              .properties(
+                  ClassUtil.newInstance(
+                      propertiesType,
+                      new Class<?>[] {Map.class},
+                      new Object[] {config.getValues()}))
+              .build();
+
+      module.uninstall(moduleConfig);
+    }
 
     // 删除应用
     this.applicationDao.deleteById(id);
@@ -346,8 +414,7 @@ public class ApplicationService implements ClientDetailsService {
     return new HashSet<>(ObjectUtil.flat(menus, "children"));
   }
 
-  private Set<ApplicationRoute> getRoutesFromNuwa(
-      List<NuwaRoute> nuwaRoutes, Routespace routespace) {
+  private Set<ApplicationRoute> getRoutesFromNuwa(List<NuwaRoute> nuwaRoutes) {
     List<Component> components = new ArrayList<>();
     List<ApplicationRoute> routes =
         ObjectUtil.recursive(
@@ -356,7 +423,6 @@ public class ApplicationService implements ClientDetailsService {
               ApplicationRoute route = this.applicationConverter.toRouteFromNuwa(item);
               route.setIndex(context.getIndex());
               route.setLevel(context.getLevel());
-              route.setSpace(routespace);
               route.setType(RouteType.ROUTE);
               route.setEnabled(ObjectUtil.defaultValue(route.getEnabled(), true));
               route.setAuthorized(ObjectUtil.defaultValue(route.getAuthorized(), false));
@@ -377,8 +443,7 @@ public class ApplicationService implements ClientDetailsService {
     return new HashSet<>(ObjectUtil.flat(routes, "routes"));
   }
 
-  private Set<ApplicationRoute> getRoutesFromTemplate(
-      ApplicationTemplate applicationTemplate, Routespace routespace) {
+  private Set<ApplicationRoute> getRoutesFromTemplate(ApplicationTemplate applicationTemplate) {
     List<ApplicationTemplateRoute> templateRoutes =
         ObjectUtil.tree(
             applicationTemplate.getRoutes(),
@@ -399,8 +464,8 @@ public class ApplicationService implements ClientDetailsService {
               }
               return route;
             });
-    List<ApplicationRoute> spaceRoutes = applicationConverter.toRoutes(templateRoutes, routespace);
-    return new HashSet<>(ObjectUtil.flat(spaceRoutes, "routes"));
+    List<ApplicationRoute> routes = applicationConverter.toRoutes(templateRoutes);
+    return new HashSet<>(ObjectUtil.flat(routes, "routes"));
   }
 
   public Optional<ApplicationRoute> getRoute(Long id) {

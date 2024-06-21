@@ -1,3 +1,18 @@
+/*
+ * Copyright (c) 2024 Asany
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.asany.net/licenses/MIT
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package cn.asany.sunrise.calendar.dao;
 
 import cn.asany.sunrise.calendar.domain.CalendarEvent;
@@ -5,8 +20,8 @@ import cn.asany.sunrise.calendar.domain.toys.CalendarEventDateStat;
 import cn.asany.sunrise.calendar.domain.toys.DateRange;
 import java.util.Date;
 import java.util.List;
-import org.jfantasy.framework.dao.jpa.JpaRepository;
-import org.jfantasy.framework.dao.jpa.PropertyFilter;
+import net.asany.jfantasy.framework.dao.jpa.AnyJpaRepository;
+import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.Modifying;
@@ -18,7 +33,7 @@ import org.springframework.stereotype.Repository;
  * @author limaofeng
  */
 @Repository
-public interface CalendarEventDao extends JpaRepository<CalendarEvent, Long> {
+public interface CalendarEventDao extends AnyJpaRepository<CalendarEvent, Long> {
   /**
    * 删除事件
    *
@@ -47,6 +62,7 @@ public interface CalendarEventDao extends JpaRepository<CalendarEvent, Long> {
    * @return List<CalendarEventDateStat>
    */
   List<CalendarEventDateStat> calendarEventDatesByCalendar(Long calendar, Date starts, Date ends);
+
   /**
    * 日历集统计
    *

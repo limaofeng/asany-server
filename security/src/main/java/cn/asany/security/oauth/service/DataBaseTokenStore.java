@@ -1,3 +1,18 @@
+/*
+ * Copyright (c) 2024 Asany
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.asany.net/licenses/MIT
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package cn.asany.security.oauth.service;
 
 import cn.asany.openapi.apis.AmapOpenAPI;
@@ -12,16 +27,16 @@ import java.util.Date;
 import java.util.Optional;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.jfantasy.framework.security.authentication.Authentication;
-import org.jfantasy.framework.security.oauth2.JwtTokenPayload;
-import org.jfantasy.framework.security.oauth2.core.AbstractTokenStore;
-import org.jfantasy.framework.security.oauth2.core.OAuth2AccessToken;
-import org.jfantasy.framework.security.oauth2.core.OAuth2AuthenticationDetails;
-import org.jfantasy.framework.security.oauth2.jwt.JwtUtils;
-import org.jfantasy.framework.util.common.ObjectUtil;
-import org.jfantasy.framework.util.common.StringUtil;
-import org.jfantasy.framework.util.web.WebUtil;
-import org.jfantasy.schedule.service.TaskScheduler;
+import net.asany.jfantasy.framework.security.auth.core.AbstractTokenStore;
+import net.asany.jfantasy.framework.security.auth.oauth2.JwtTokenPayload;
+import net.asany.jfantasy.framework.security.auth.oauth2.core.OAuth2AccessToken;
+import net.asany.jfantasy.framework.security.auth.oauth2.core.OAuth2AuthenticationDetails;
+import net.asany.jfantasy.framework.security.auth.oauth2.jwt.JwtUtils;
+import net.asany.jfantasy.framework.security.authentication.Authentication;
+import net.asany.jfantasy.framework.util.common.ObjectUtil;
+import net.asany.jfantasy.framework.util.common.StringUtil;
+import net.asany.jfantasy.framework.util.web.WebUtil;
+import net.asany.jfantasy.schedule.service.TaskScheduler;
 import org.quartz.*;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
@@ -34,7 +49,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Slf4j
 @Service
-public class DataBaseTokenStore extends AbstractTokenStore {
+public class DataBaseTokenStore extends AbstractTokenStore<OAuth2AccessToken> {
 
   private final AccessTokenService accessTokenService;
   private final OpenAPIService openAPIService;
@@ -46,7 +61,7 @@ public class DataBaseTokenStore extends AbstractTokenStore {
       AccessTokenService accessTokenService,
       OpenAPIService openApiService,
       TaskScheduler taskScheduler) {
-    super(redisTemplate);
+    super(redisTemplate, "token");
     this.accessTokenService = accessTokenService;
     this.openAPIService = openApiService;
     this.taskScheduler = taskScheduler;
@@ -63,7 +78,7 @@ public class DataBaseTokenStore extends AbstractTokenStore {
     AccessTokenClientDetails clientDetails = new AccessTokenClientDetails();
 
     if (request != null) {
-      String ip = WebUtil.getRealIpAddress(request);
+      String ip = WebUtil.getClientIP(request);
       AmapOpenAPI.IpResult ipResult = null;
 
       if (ip != null) {
@@ -93,19 +108,18 @@ public class DataBaseTokenStore extends AbstractTokenStore {
     }
 
     // 如果已经存在，更新最后使用时间及位置信息
-    if (!optionalAccessToken.isPresent()) {
+    if (optionalAccessToken.isEmpty()) {
       JwtTokenPayload payload = JwtUtils.payload(token.getTokenValue());
 
       clientDetails.setLastIp(clientDetails.getIp());
       clientDetails.setLastLocation(clientDetails.getLocation());
 
-      OAuth2AuthenticationDetails details =
-          (OAuth2AuthenticationDetails) authentication.getDetails();
+      OAuth2AuthenticationDetails details = authentication.getDetails();
 
       AccessToken accessToken =
           this.accessTokenService.createAccessToken(
               ObjectUtil.defaultValue(authentication.getName(), payload::getName),
-              payload.getUid(),
+              payload.getUserId(),
               payload.getClientId(),
               details.getClientSecret(),
               token,

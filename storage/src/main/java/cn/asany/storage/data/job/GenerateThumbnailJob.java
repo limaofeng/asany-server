@@ -1,3 +1,18 @@
+/*
+ * Copyright (c) 2024 Asany
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.asany.net/licenses/MIT
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package cn.asany.storage.data.job;
 
 import cn.asany.storage.api.Storage;
@@ -16,15 +31,11 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.jfantasy.framework.util.FFmpeg;
-import org.jfantasy.framework.util.Images;
-import org.jfantasy.framework.util.common.StreamUtil;
-import org.jfantasy.framework.util.common.file.FileUtil;
-import org.quartz.Job;
-import org.quartz.JobDataMap;
-import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
-import org.springframework.cache.CacheManager;
+import net.asany.jfantasy.framework.util.FFmpeg;
+import net.asany.jfantasy.framework.util.Images;
+import net.asany.jfantasy.framework.util.common.StreamUtil;
+import net.asany.jfantasy.framework.util.common.file.FileUtil;
+import org.quartz.*;
 
 /**
  * 生成缩略图
@@ -34,20 +45,16 @@ import org.springframework.cache.CacheManager;
 @Slf4j
 public class GenerateThumbnailJob implements Job {
 
+  public static final JobKey JOBKEY_GENERATE_THUMBNAIL = JobKey.jobKey("generate", "thumbnail");
   private final FileService fileService;
   private final StorageResolver storageResolver;
   private final ThumbnailService thumbnailService;
-  private final CacheManager cacheManager;
 
   public GenerateThumbnailJob(
-      FileService fileService,
-      StorageResolver storageResolver,
-      ThumbnailService thumbnailService,
-      CacheManager cacheManager) {
+      FileService fileService, StorageResolver storageResolver, ThumbnailService thumbnailService) {
     this.fileService = fileService;
     this.storageResolver = storageResolver;
     this.thumbnailService = thumbnailService;
-    this.cacheManager = cacheManager;
   }
 
   @SneakyThrows({Exception.class})
@@ -59,7 +66,7 @@ public class GenerateThumbnailJob implements Job {
 
     FileDetail fileDetail = fileService.getFileById(source);
 
-    Storage storage = storageResolver.resolve(fileDetail.getStorageConfig().getId());
+    Storage storage = storageResolver.resolve(fileDetail.getStorageConfig());
 
     List<Path> temps = new ArrayList<>();
 
@@ -121,7 +128,9 @@ public class GenerateThumbnailJob implements Job {
       throw new JobExecutionException(e.getMessage(), e);
     } finally {
       for (Path temp1 : temps) {
-        FileUtil.rm(temp1);
+        if (temp1 != null && Files.exists(temp1)) {
+          FileUtil.rm(temp1);
+        }
       }
     }
   }

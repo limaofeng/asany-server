@@ -1,9 +1,23 @@
+/*
+ * Copyright (c) 2024 Asany
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.asany.net/licenses/MIT
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package cn.asany.cms.article.domain;
 
 import cn.asany.base.usertype.FileUserType;
-import cn.asany.cms.article.domain.enums.ArticleBodyType;
 import cn.asany.cms.article.domain.enums.ArticleStatus;
-import cn.asany.cms.body.domain.Content;
+import cn.asany.cms.content.domain.enums.ContentType;
 import cn.asany.cms.permission.domain.Permission;
 import cn.asany.organization.core.domain.Organization;
 import cn.asany.storage.api.FileObject;
@@ -11,7 +25,6 @@ import cn.asany.storage.api.converter.FileObjectsConverter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
 import jakarta.persistence.ForeignKey;
 import jakarta.persistence.Table;
 import java.util.Date;
@@ -19,13 +32,14 @@ import java.util.List;
 import java.util.Objects;
 import javax.validation.constraints.Null;
 import lombok.*;
+import net.asany.jfantasy.framework.dao.BaseBusEntity;
+import net.asany.jfantasy.framework.dao.hibernate.annotations.TableGenerator;
+import net.asany.jfantasy.framework.search.annotations.IndexProperty;
+import net.asany.jfantasy.framework.search.annotations.Indexed;
+import net.asany.jfantasy.framework.spring.validation.Operation;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.*;
 import org.hibernate.annotations.Cache;
-import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.search.annotations.IndexProperty;
-import org.jfantasy.framework.search.annotations.Indexed;
-import org.jfantasy.framework.spring.validation.Operation;
 
 /**
  * 文章表
@@ -54,8 +68,7 @@ public class Article extends BaseBusEntity {
   @Id
   @Null(groups = Operation.Create.class)
   @Column(name = "ID", nullable = false)
-  @GeneratedValue(generator = "fantasy-sequence")
-  @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+  @TableGenerator
   private Long id;
 
   /** 文章编号，由于文章ID自增，有部分情况需要保证使用一个唯一，且有意义的标示符，定位到唯一的一篇文章 必须保证全局唯一 */
@@ -140,32 +153,18 @@ public class Article extends BaseBusEntity {
 
   /** 正文类型 */
   @Enumerated(EnumType.STRING)
-  @Column(name = "STORE_TEMPLATE_ID", length = 25)
-  private ArticleBodyType bodyType;
+  @Column(name = "CONTENT_TYPE", length = 20, updatable = false)
+  private ContentType contentType;
 
   /** 正文 ID */
-  @Column(name = "BODY_ID")
-  private Long bodyId;
-
-  /** 文章正文 */
-  @Any(
-      metaColumn =
-          @Column(name = "STORE_TEMPLATE_ID", length = 20, insertable = false, updatable = false),
-      fetch = FetchType.LAZY)
-  @AnyMetaDef(
-      idType = "long",
-      metaType = "string",
-      metaValues = {@MetaValue(targetEntity = Content.class, value = Content.TYPE_KEY)})
-  @JoinColumn(name = "BODY_ID", insertable = false, updatable = false)
-  private ArticleBody body;
+  @Column(name = "CONTENT_ID", updatable = false)
+  private Long contentId;
 
   /** 存储模版 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(
       name = "STORE_TEMPLATE_ID",
-      foreignKey = @ForeignKey(name = "FK_ARTICLE_STORE_TEMPLATE"),
-      insertable = false,
-      updatable = false)
+      foreignKey = @ForeignKey(name = "FK_ARTICLE_STORE_TEMPLATE"))
   private ArticleStoreTemplate storeTemplate;
 
   /** 所属组织 */
@@ -194,6 +193,27 @@ public class Article extends BaseBusEntity {
   /** 有效期限 结束时间 */
   @Column(name = "VALIDITY_END_DATE")
   private Date validityEndDate;
+
+  // 增加统计信息属性
+  /** 收藏数 */
+  @Builder.Default
+  @Column(name = "FAVORITES", nullable = false)
+  private Long favorites = 0L;
+
+  /** 点击数 */
+  @Builder.Default
+  @Column(name = "CLICKS", nullable = false)
+  private Long clicks = 0L;
+
+  /** 阅读数 */
+  @Builder.Default
+  @Column(name = "`READS`", nullable = false)
+  private Long reads = 0L;
+
+  /** 点赞数 */
+  @Builder.Default
+  @Column(name = "LIKES", nullable = false)
+  private Long likes = 0L;
 
   @Transient private List<Permission> permissions;
 

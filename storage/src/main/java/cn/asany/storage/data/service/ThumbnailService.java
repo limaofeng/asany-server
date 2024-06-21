@@ -1,3 +1,18 @@
+/*
+ * Copyright (c) 2024 Asany
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.asany.net/licenses/MIT
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package cn.asany.storage.data.service;
 
 import cn.asany.storage.api.FileObject;
@@ -8,6 +23,7 @@ import cn.asany.storage.core.engine.virtual.VirtualFileObject;
 import cn.asany.storage.data.dao.ThumbnailDao;
 import cn.asany.storage.data.domain.FileDetail;
 import cn.asany.storage.data.domain.Thumbnail;
+import cn.asany.storage.data.job.GenerateThumbnailJob;
 import cn.asany.storage.utils.UploadUtils;
 import java.io.File;
 import java.util.HashMap;
@@ -16,9 +32,10 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 import lombok.SneakyThrows;
+import net.asany.jfantasy.framework.dao.hibernate.util.HibernateUtils;
+import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
+import net.asany.jfantasy.schedule.service.TaskScheduler;
 import org.hibernate.Hibernate;
-import org.jfantasy.framework.dao.jpa.PropertyFilter;
-import org.jfantasy.schedule.service.TaskScheduler;
 import org.quartz.*;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
@@ -36,7 +53,6 @@ public class ThumbnailService {
 
   private static final String THUMBNAIL_CACHE_KEY = "thumbnail";
   private static final String TRIGGER_KEY_THUMBNAIL_GROUP = "thumbnail";
-  public static final JobKey JOBKEY_GENERATE_THUMBNAIL = JobKey.jobKey("generate", "thumbnail");
   public static final String THUMBNAIL_STORAGE_SPACE_KEY = "wg1NcUDz";
 
   private final ThumbnailDao thumbnailDao;
@@ -58,11 +74,13 @@ public class ThumbnailService {
     Optional<Thumbnail> optional =
         this.thumbnailDao.findOne(
             PropertyFilter.newFilter().equal("size", size).equal("source.id", source));
-    return optional.map(
-        item -> {
-          Hibernate.initialize(item.getFile());
-          return Hibernate.unproxy(item, Thumbnail.class);
-        });
+    return optional
+        .map(
+            item -> {
+              Hibernate.initialize(item.getFile());
+              return Hibernate.unproxy(item, Thumbnail.class);
+            })
+        .map(HibernateUtils::cloneEntity);
   }
 
   @SneakyThrows({UploadException.class})
@@ -99,7 +117,7 @@ public class ThumbnailService {
       Map<String, String> data = new HashMap<>(2);
       data.put("source", source.toString());
       data.put("size", size);
-      taskScheduler.scheduleTask(JOBKEY_GENERATE_THUMBNAIL, taskId, data);
+      taskScheduler.scheduleTask(GenerateThumbnailJob.JOBKEY_GENERATE_THUMBNAIL, taskId, data);
     }
     Long thumbnailId = thumbnailFuture.get();
     Thumbnail thumbnail = this.thumbnailDao.getReferenceById(thumbnailId);

@@ -1,3 +1,18 @@
+/*
+ * Copyright (c) 2024 Asany
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.asany.net/licenses/MIT
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package cn.asany.pm.screen.bean;
 
 import cn.asany.pm.screen.bean.screenbind.ScreenDeserializer;
@@ -9,8 +24,8 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.persistence.*;
 import java.util.List;
 import lombok.*;
-import org.hibernate.annotations.GenericGenerator;
-import org.jfantasy.framework.dao.BaseBusEntity;
+import net.asany.jfantasy.framework.dao.BaseBusEntity;
+import net.asany.jfantasy.framework.dao.hibernate.annotations.TableGenerator;
 
 /**
  * @author limaofeng@msn.com @ClassName: PageField @Description: 页面域(这里用一句话描述这个类的作用)
@@ -28,8 +43,7 @@ public class IssueScreenTabPane extends BaseBusEntity {
 
   @Id
   @Column(name = "ID", length = 22)
-  @GeneratedValue(generator = "fantasy-sequence")
-  @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+  @TableGenerator
   private Long id;
 
   /** 名称 */

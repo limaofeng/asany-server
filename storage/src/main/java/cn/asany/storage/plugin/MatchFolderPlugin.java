@@ -1,3 +1,18 @@
+/*
+ * Copyright (c) 2024 Asany
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.asany.net/licenses/MIT
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package cn.asany.storage.plugin;
 
 import cn.asany.storage.api.*;
@@ -8,8 +23,8 @@ import cn.asany.storage.data.domain.MultipartUpload;
 import cn.asany.storage.data.service.FileService;
 import cn.asany.storage.data.service.MultipartUploadService;
 import cn.asany.storage.data.util.IdUtils;
-import org.jfantasy.framework.util.common.DateUtil;
-import org.jfantasy.framework.util.common.StringUtil;
+import net.asany.jfantasy.framework.util.common.DateUtil;
+import net.asany.jfantasy.framework.util.common.StringUtil;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -50,7 +65,7 @@ public class MatchFolderPlugin implements StoragePlugin {
     if (!context.isMultipartUpload()) {
       String name = DateUtil.format("yyyyMMdd");
       FileDetail fileDetail = fileService.getFolderOrCreateIt(name, rootFolder.getId());
-      String storageId = fileDetail.getStorageConfig().getId();
+      String storageId = fileDetail.getStorageConfig();
 
       context.setFolder(fileDetail.toFileObject(space));
       context.setStorage(storageResolver.resolve(storageId));

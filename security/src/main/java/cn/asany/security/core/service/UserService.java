@@ -1,3 +1,18 @@
+/*
+ * Copyright (c) 2024 Asany
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.asany.net/licenses/MIT
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package cn.asany.security.core.service;
 
 import cn.asany.security.core.dao.UserDao;
@@ -12,15 +27,15 @@ import java.util.*;
 import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.jfantasy.framework.dao.jpa.PropertyFilter;
-import org.jfantasy.framework.error.ValidationException;
-import org.jfantasy.framework.security.LoginUser;
-import org.jfantasy.framework.security.core.GrantedAuthority;
-import org.jfantasy.framework.security.core.SimpleGrantedAuthority;
-import org.jfantasy.framework.security.crypto.password.PasswordEncoder;
-import org.jfantasy.framework.util.common.BeanUtil;
-import org.jfantasy.framework.util.common.StringUtil;
-import org.jfantasy.framework.util.reflect.Property;
+import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
+import net.asany.jfantasy.framework.error.ValidationException;
+import net.asany.jfantasy.framework.security.LoginUser;
+import net.asany.jfantasy.framework.security.core.GrantedAuthority;
+import net.asany.jfantasy.framework.security.core.authority.SimpleGrantedAuthority;
+import net.asany.jfantasy.framework.security.crypto.password.PasswordEncoder;
+import net.asany.jfantasy.framework.util.common.BeanUtil;
+import net.asany.jfantasy.framework.util.common.StringUtil;
+import net.asany.jfantasy.framework.util.reflect.Property;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.data.domain.Page;
@@ -175,11 +190,10 @@ public class UserService {
   }
 
   @Transactional(rollbackFor = Exception.class)
-  public List<User> deleteMany(List<Long> ids) {
-    List<User> users =
-        ids.stream().map(this.userDao::getReferenceById).collect(Collectors.toList());
-    this.userDao.deleteAllInBatch(users);
-    return users;
+  public int deleteMany(PropertyFilter filter) {
+    List<User> users = this.userDao.findAll(filter);
+    this.userDao.deleteAll(users);
+    return users.size();
   }
 
   public void delete(Set<Long> ids) {
@@ -193,15 +207,20 @@ public class UserService {
   public User update(Long id, User user, boolean merge) {
     user.setId(id);
     User oldUser = this.userDao.getReferenceById(id);
-    BeanUtil.copyProperties(
-        oldUser,
-        user,
+
+    BeanUtil.PropertyFilter propertyFilter =
         (Property property, Object value, Object _dest) -> {
-          if ("avatar".equals(property.getName())) {
-            return true;
+          if (Arrays.asList(new String[] {"username"}).contains(property.getName())) {
+            return false;
+          }
+          if ("password".equals(property.getName())) {
+            return StringUtil.isNotBlank(value);
           }
           return value != null;
-        });
+        };
+
+    BeanUtil.copyProperties(oldUser, user, propertyFilter);
+
     user = this.userDao.update(oldUser, merge);
     return user;
   }

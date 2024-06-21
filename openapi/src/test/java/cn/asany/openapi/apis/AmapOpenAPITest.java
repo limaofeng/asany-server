@@ -1,16 +1,32 @@
+/*
+ * Copyright (c) 2024 Asany
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.asany.net/licenses/MIT
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package cn.asany.openapi.apis;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import cn.asany.openapi.configs.AmapApiConfig;
-import com.mashape.unirest.http.Unirest;
 import java.util.List;
+import kong.unirest.Unirest;
 import lombok.extern.slf4j.Slf4j;
+import net.asany.jfantasy.framework.jackson.JSON;
+import net.asany.jfantasy.framework.jackson.UnirestObjectMapper;
 import org.apache.commons.lang3.StringUtils;
-import org.jfantasy.framework.jackson.JSON;
-import org.jfantasy.framework.jackson.UnirestObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.data.redis.core.StringRedisTemplate;
 
 @Slf4j
 class AmapOpenAPITest {
@@ -19,8 +35,11 @@ class AmapOpenAPITest {
 
   @BeforeEach
   void setUp() {
-    Unirest.setObjectMapper(new UnirestObjectMapper(JSON.getObjectMapper()));
-    api = new AmapOpenAPI(AmapApiConfig.builder().key("724d735795516088493886bf9ce44395").build());
+    Unirest.config().setObjectMapper(new UnirestObjectMapper(JSON.getObjectMapper()));
+    StringRedisTemplate redisTemplate = new StringRedisTemplate();
+    api =
+        new AmapOpenAPI(
+            redisTemplate, AmapApiConfig.builder().key("724d735795516088493886bf9ce44395").build());
   }
 
   @Test

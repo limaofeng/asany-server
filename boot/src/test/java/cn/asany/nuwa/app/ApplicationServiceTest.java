@@ -1,6 +1,21 @@
+/*
+ * Copyright (c) 2024 Asany
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.asany.net/licenses/MIT
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package cn.asany.nuwa.app;
 
-import cn.asany.cms.article.service.ArticleCategoryService;
+import cn.asany.boot.TestApplication;
 import cn.asany.cms.module.CmsModuleProperties;
 import cn.asany.nuwa.YamlUtils;
 import cn.asany.nuwa.app.domain.Application;
@@ -11,16 +26,15 @@ import cn.asany.nuwa.app.service.ApplicationMenuService;
 import cn.asany.nuwa.app.service.ApplicationRouteService;
 import cn.asany.nuwa.app.service.ApplicationService;
 import cn.asany.nuwa.app.service.dto.NativeApplication;
-import cn.asany.shanhai.TestApplication;
 import cn.asany.ui.library.service.LibraryService;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
-import org.jfantasy.framework.dao.jpa.PropertyFilter;
-import org.jfantasy.framework.security.oauth2.core.ClientSecretType;
-import org.jfantasy.framework.util.common.StringUtil;
+import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
+import net.asany.jfantasy.framework.security.auth.core.ClientSecretType;
+import net.asany.jfantasy.framework.util.common.StringUtil;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +53,6 @@ class ApplicationServiceTest {
   @Autowired private ApplicationService applicationService;
   @Autowired private ApplicationRouteService applicationRouteService;
   @Autowired private ApplicationMenuService applicationMenuService;
-  @Autowired private ArticleCategoryService channelService;
   @Autowired private LibraryService libraryService;
 
   @Test
@@ -65,7 +78,23 @@ class ApplicationServiceTest {
     YamlUtils.addModuleClass("cms", CmsModuleProperties.class);
     NativeApplication app = YamlUtils.load(inputStream);
     assert app.getName().equals("admin");
-    //    channelService.deleteAll();
+    applicationService.deleteApplication(app.getClientId());
+    Application application = applicationService.createApplication(app);
+    log.debug(
+        String.format(
+            "应用 %s 已经创建成功，ClientId = %s ClientSecret = %s",
+            application.getName(),
+            application.getClientId(),
+            application.getClientSecret(ClientSecretType.OAUTH)));
+  }
+
+  @Test
+  void createWxbAdminApplicationFromYaml() {
+    InputStream inputStream = ClassLoader.getSystemResourceAsStream("app_admin_wxb.yml");
+    // 调基础工具类的方法
+    YamlUtils.addModuleClass("cms", CmsModuleProperties.class);
+    NativeApplication app = YamlUtils.load(inputStream);
+    assert app.getName().equals("admin_wxb");
     applicationService.deleteApplication(app.getClientId());
     Application application = applicationService.createApplication(app);
     log.debug(

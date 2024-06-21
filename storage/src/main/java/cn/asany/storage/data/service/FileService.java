@@ -1,3 +1,18 @@
+/*
+ * Copyright (c) 2024 Asany
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.asany.net/licenses/MIT
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package cn.asany.storage.data.service;
 
 import cn.asany.storage.api.FileObject;
@@ -7,16 +22,16 @@ import cn.asany.storage.data.dao.SpaceDao;
 import cn.asany.storage.data.domain.FileDetail;
 import cn.asany.storage.data.domain.FileLabel;
 import cn.asany.storage.data.domain.Space;
-import cn.asany.storage.data.domain.StorageConfig;
 import java.io.IOException;
 import java.util.*;
+import net.asany.jfantasy.framework.dao.hibernate.util.HibernateUtils;
+import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
+import net.asany.jfantasy.framework.dao.mybatis.keygen.util.DataBaseKeyGenerator;
+import net.asany.jfantasy.framework.error.ValidationException;
+import net.asany.jfantasy.framework.util.common.StringUtil;
+import net.asany.jfantasy.framework.util.regexp.RegexpUtil;
+import net.asany.jfantasy.framework.util.web.WebUtil;
 import org.hibernate.Hibernate;
-import org.jfantasy.framework.dao.jpa.PropertyFilter;
-import org.jfantasy.framework.dao.mybatis.keygen.util.DataBaseKeyGenerator;
-import org.jfantasy.framework.error.ValidationException;
-import org.jfantasy.framework.util.common.StringUtil;
-import org.jfantasy.framework.util.regexp.RegexpUtil;
-import org.jfantasy.framework.util.web.WebUtil;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.Cacheable;
@@ -73,7 +88,7 @@ public class FileService {
     FileDetail fileDetail =
         FileDetail.builder()
             .path(path)
-            .storageConfig(StorageConfig.builder().id(storage).build())
+            .storageConfig(storage)
             .name(fileName)
             .mimeType(contentType)
             .size(length)
@@ -108,7 +123,7 @@ public class FileService {
   @Cacheable(key = "targetClass + '.' + methodName + '#' + #p0", value = "STORAGE")
   public FileDetail getFileById(Long id) {
     FileDetail fileDetail = this.fileDetailDao.getReferenceById(id);
-    return Hibernate.unproxy(fileDetail, FileDetail.class);
+    return HibernateUtils.cloneEntity(Hibernate.unproxy(fileDetail, FileDetail.class));
   }
 
   public void delete(Long id) {
@@ -152,7 +167,7 @@ public class FileService {
             .labels(options.getLabels())
             .parentFile(parentFolder)
             .storePath(options.getStorePath())
-            .storage(parentFolder.getStorageConfig().getId())
+            .storage(parentFolder.getStorageConfig())
             .name(name);
 
     FileDetail fileDetail = builder.build();
@@ -191,13 +206,15 @@ public class FileService {
 
   @Cacheable(key = "targetClass + '.' + methodName + '#' + #p0", value = "STORAGE")
   public Optional<FileDetail> findByPath(String path) {
-    return this.fileDetailDao.findOne(PropertyFilter.newFilter().equal("path", path));
+    return this.fileDetailDao
+        .findOne(PropertyFilter.newFilter().equal("path", path))
+        .map(HibernateUtils::cloneEntity);
   }
 
   public boolean exists(String name, Long folder, String storage) {
     return this.fileDetailDao.exists(
         PropertyFilter.newFilter()
-            .equal("storageConfig.id", storage)
+            .equal("storageConfig", storage)
             .equal("name", name)
             .equal("parentFile.id", folder));
   }
@@ -248,14 +265,14 @@ public class FileService {
         PropertyFilter.newFilter()
             .equal("parentFolder.path", path)
             .equal("isDirectory", true)
-            .equal("storageConfig.id", storage),
+            .equal("storageConfig", storage),
         Sort.by(orderBy));
   }
 
   @Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
   public List<FileDetail> listFileDetail(String path, String storageId, String orderBy) {
     return this.fileDetailDao.findAll(
-        PropertyFilter.newFilter().equal("folder.path", path).equal("storageConfig.id", storageId),
+        PropertyFilter.newFilter().equal("folder.path", path).equal("storageConfig", storageId),
         Sort.by(orderBy));
   }
 
@@ -263,7 +280,7 @@ public class FileService {
   public FileDetail getFileDetailByMd5(String md5, String storageId) {
     List<FileDetail> fileDetails =
         this.fileDetailDao.findAll(
-            PropertyFilter.newFilter().equal("md5", md5).equal("storageConfig.id", storageId));
+            PropertyFilter.newFilter().equal("md5", md5).equal("storageConfig", storageId));
     if (fileDetails.isEmpty()) {
       return null;
     }

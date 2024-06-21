@@ -1,3 +1,10 @@
+"""
+文件格式化
+"""
+directive @fileFormat on FIELD_DEFINITION
+
+scalar File
+
 interface StorageProperties {
   id: ID
 }
@@ -286,7 +293,7 @@ input MultipartUploadInput {
   """
   存储文件夹
   """
-  folder: ID!
+  folder: ID
   """
   每段大小
   """

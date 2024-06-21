@@ -1,5 +1,5 @@
 name: mobile
-title: 移动端
+title: 报修系统
 description: 移动端
 clientId: bd93206fe6d5b7eca678
 clientSecret: 9c38cc70af383d70f117a69750a4c3c0bac97492
@@ -11,13 +11,69 @@ menus:
     path: /website
     component: cn.asany.ui.mobile.website.Sidebar
 routes:
-  - path: /login
-    component: cn.asany.ui.mobile.authentication.AsideLayoutSignIn
-  - path: /lps/:id
-    component: cn.asany.ui.mobile.landingpage.PageView
+  - path: /sign-in
+    component: cn.asany.ui.mobile.authentication.SignInView
+  - path: /qrcodes/:id
+    component: cn.asany.ui.mobile.wxb.QRCodeView
+  - path: /c/devices/:id/support
+    component: cn.asany.ui.mobile.wxb.DeviceSupportView
+  - path: /c/devices/:id/support/create-ticket
+    component: cn.asany.ui.mobile.wxb.TicketCreateView
+  - path: /c/devices/:id/support/tickets
+    component: cn.asany.ui.mobile.wxb.DeviceTicketListView
+  - path: /c/devices/:id/wiki
+    component: cn.asany.ui.mobile.wxb.DeviceWikiView
+  - path: /c/devices/:id/wiki/:wid
+    component: cn.asany.ui.mobile.wxb.DeviceWikiDetailView
+  - path: /c/devices/:id/support/tickets/:tid
+    component: cn.asany.ui.mobile.wxb.DeviceTicketDetailView
   - path: /
     authorized: true
     component: cn.asany.ui.mobile.layout.Sticky
     routes:
       - path: /
         component: cn.asany.ui.mobile.Home
+      - path: /support/install-setup
+        component: cn.asany.ui.mobile.wxb.InstallSetupView
+      - path: /support/ticket-dashboard
+        component: cn.asany.ui.mobile.wxb.TicketDashboardView
+      - path: /support/admin-dashboard
+        component: cn.asany.ui.mobile.wxb.AdminDashboardView
+      - path: /support/tickets
+        component: cn.asany.ui.mobile.wxb.TicketListView
+      - path: /support/tickets/:id
+        component: cn.asany.ui.mobile.wxb.TicketDetailView
+      - path: /support/tickets/:id/statuses
+        component: cn.asany.ui.mobile.wxb.TicketStatusView
+      - path: /support/task-dashboard
+        component: cn.asany.ui.mobile.wxb.TaskDashboardView
+      - path: /support/my-tickets
+        component: cn.asany.ui.mobile.wxb.MyTicketListView
+      - path: /support/my-tasks
+        component: cn.asany.ui.mobile.wxb.MyTaskListView
+      - path: /support/tasks/:id
+        component: cn.asany.ui.mobile.wxb.TaskDetailView
+      - path: /settings
+        component: cn.asany.ui.mobile.settings.SettingsView
+      - path: /profile/edit
+        component: cn.asany.ui.mobile.settings.ProfileEditView
+      - path: /support/customers
+        component: cn.asany.ui.mobile.wxb.CustomerListView
+      - path: /support/customers/create
+        component: cn.asany.ui.mobile.wxb.CustomerCreateView
+      - path: /support/customers/:id/edit
+        component: cn.asany.ui.mobile.wxb.CustomerEditView
+      - path: /support/customers/:id/stores/create
+        component: cn.asany.ui.mobile.wxb.CustomerStoreCreateView
+      - path: /support/customers/:id/stores/:sid/edit
+        component: cn.asany.ui.mobile.wxb.CustomerStoreEditView
+      - path: /support/customer-stores
+        component: cn.asany.ui.mobile.wxb.CustomerStoreListView
+      - path: /support/customer-stores/create
+        component: cn.asany.ui.mobile.wxb.CustomerStoreCreateView
+      - path: /support/customer-stores/:id/edit
+        component: cn.asany.ui.mobile.wxb.CustomerStoreEditView
+      - path: /support/products
+        component: cn.asany.ui.mobile.wxb.ProductListView
+      - path: /support/products/:id/warranty-policies
+        component: cn.asany.ui.mobile.wxb.ProductWarrantyPolicyListView

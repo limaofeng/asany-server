@@ -1,16 +1,34 @@
+/*
+ * Copyright (c) 2024 Asany
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.asany.net/licenses/MIT
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package cn.asany.cms.article.graphql.resolver;
 
 import cn.asany.cms.article.domain.Article;
-import cn.asany.cms.article.domain.ArticleBody;
 import cn.asany.cms.article.domain.ArticleCategory;
+import cn.asany.cms.article.domain.ArticleContent;
+import cn.asany.cms.article.domain.ArticleInteraction;
 import cn.asany.cms.article.graphql.enums.ArticleStarType;
 import cn.asany.cms.article.graphql.input.CommentWhereInput;
 import cn.asany.cms.article.graphql.type.CommentConnection;
 import cn.asany.cms.article.graphql.type.Starrable;
+import cn.asany.cms.content.service.ArticleContentService;
 import cn.asany.security.core.domain.PermissionStatement;
 import graphql.kickstart.tools.GraphQLResolver;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
@@ -23,10 +41,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class ArticleGraphQLResolver implements GraphQLResolver<Article> {
 
+  private final ArticleContentService articleContentService;
   private final ArticleCategoryGraphQLResolver articleCategoryGraphQLResolver;
 
-  public ArticleGraphQLResolver(ArticleCategoryGraphQLResolver articleCategoryGraphQLResolver) {
+  public ArticleGraphQLResolver(
+      ArticleCategoryGraphQLResolver articleCategoryGraphQLResolver,
+      ArticleContentService articleContentService) {
     this.articleCategoryGraphQLResolver = articleCategoryGraphQLResolver;
+    this.articleContentService = articleContentService;
   }
 
   public List<ArticleCategory> categories(Article article) {
@@ -39,12 +61,8 @@ public class ArticleGraphQLResolver implements GraphQLResolver<Article> {
     return categories;
   }
 
-  public String bodyHtml(Article article) {
-    return "";
-  }
-
-  public ArticleBody body(Article article) {
-    return article.getBody();
+  public Optional<ArticleContent> content(Article article) {
+    return articleContentService.findById(article.getContentType(), article.getContentId());
   }
 
   public Starrable starrable(final Article article, ArticleStarType starType) {
@@ -101,7 +119,7 @@ public class ArticleGraphQLResolver implements GraphQLResolver<Article> {
   //    }
 
   public CommentConnection comments(
-    Article article, CommentWhereInput where, int page, int pageSize, Sort orderBy) {
+      Article article, CommentWhereInput where, int page, int pageSize, Sort orderBy) {
     CommentConnection comments = new CommentConnection();
     //    if (article.getCategory() == ArticleCategory.news) {
     //      comments =
@@ -124,6 +142,10 @@ public class ArticleGraphQLResolver implements GraphQLResolver<Article> {
     // orderBy);
     //    }
     return comments;
+  }
+
+  public List<ArticleInteraction> interactionRecords(Article article) {
+    return new ArrayList<>();
   }
 
   public PermissionStatement permissions(Article article) {

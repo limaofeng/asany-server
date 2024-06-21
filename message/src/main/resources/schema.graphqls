@@ -70,9 +70,7 @@ type MessageTemplate {
   id: ID!
   type: TemplateType!
   name: String!
-  sign: String
   variables: [VariableDefinition!]!
-  code: String
   content: String
 }
 
@@ -81,8 +79,8 @@ type Message {
 }
 
 input MessageVariableValueInput {
-    name: String!
-    value: String!
+  name: String!
+  value: String!
 }
 
 input MessageCreateInput {

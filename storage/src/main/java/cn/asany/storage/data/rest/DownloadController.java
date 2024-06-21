@@ -1,3 +1,18 @@
+/*
+ * Copyright (c) 2024 Asany
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.asany.net/licenses/MIT
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package cn.asany.storage.data.rest;
 
 import cn.asany.storage.api.FileItemSelector;
@@ -25,10 +40,10 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
-import org.jfantasy.framework.util.common.StreamUtil;
-import org.jfantasy.framework.util.common.StringUtil;
-import org.jfantasy.framework.util.common.file.FileUtil;
-import org.jfantasy.framework.util.web.ServletUtils;
+import net.asany.jfantasy.framework.util.common.StreamUtil;
+import net.asany.jfantasy.framework.util.common.StringUtil;
+import net.asany.jfantasy.framework.util.common.file.FileUtil;
+import net.asany.jfantasy.framework.util.web.ServletUtils;
 import org.springframework.http.CacheControl;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -85,7 +100,7 @@ public class DownloadController {
 
     FileDetail thumbFile = fileService.getFileById(thumbnail.getFile().getId());
 
-    Storage storage = storageResolver.resolve(thumbFile.getStorageConfig().getId());
+    Storage storage = storageResolver.resolve(thumbFile.getStorageConfig());
 
     response.setContentType(thumbFile.getMimeType());
     response.setContentLengthLong(thumbFile.getSize());
@@ -106,21 +121,21 @@ public class DownloadController {
       HttpServletResponse response)
       throws IOException {
 
-    String[] fidlist = StringUtil.tokenizeToStringArray(fidlistString, ",");
+    String[] fileIds = StringUtil.tokenizeToStringArray(fidlistString, ",");
 
-    if (fidlist.length == 0) {
+    if (fileIds.length == 0) {
       response.sendError(404, "请求的文件不存在");
       return;
     }
 
-    IdUtils.FileKey firstFileKey = IdUtils.parseKey(fidlist[0]);
+    IdUtils.FileKey firstFileKey = IdUtils.parseKey(fileIds[0]);
     Space space = firstFileKey.getSpace();
 
     VirtualStorage storage = new VirtualStorage(space, storageResolver, fileService);
 
     FileObject fileObject =
-        fidlist.length > 1
-            ? compressPacking(space, storage, fidlist)
+        fileIds.length > 1
+            ? compressPacking(space, storage, fileIds)
             : storage.getFileItem(firstFileKey.getFile().toFileObject(storage).getPath());
 
     response.setContentType(fileObject.getMimeType());
@@ -180,13 +195,13 @@ public class DownloadController {
     }
   }
 
-  public FileObject compressPacking(Space space, VirtualStorage storage, String[] fidlist)
+  public FileObject compressPacking(Space space, VirtualStorage storage, String[] fileIds)
       throws IOException {
     Set<String> parentPath = new HashSet<>();
 
-    log.debug("开始查询需要打包的数据:" + Arrays.toString(fidlist));
+    log.debug("开始查询需要打包的数据:{}", Arrays.toString(fileIds));
     List<FileObject> files = new ArrayList<>();
-    for (String fid : fidlist) {
+    for (String fid : fileIds) {
       IdUtils.FileKey fileKey = IdUtils.parseKey(fid);
       FileObject file = fileKey.getFile().toFileObject(storage);
 
@@ -197,14 +212,13 @@ public class DownloadController {
 
       if (file.isDirectory()) {
         List<FileObject> fileObjects = file.listFiles(new FileItemSelector() {});
-        files.addAll(
-            fileObjects.stream().filter(item -> !item.isDirectory()).collect(Collectors.toList()));
+        files.addAll(fileObjects.stream().filter(item -> !item.isDirectory()).toList());
       } else {
         files.add(file);
       }
     }
 
-    log.debug("查询需要打包的数据:" + Arrays.toString(fidlist) + ", 共" + files.size() + "个文件");
+    log.debug("查询需要打包的数据:{}, 共{}个文件", Arrays.toString(fileIds), files.size());
     String name =
         StringUtil.md5(
             files.stream()
@@ -222,11 +236,11 @@ public class DownloadController {
     FileObject tempZip = storage.getFileItem(tempPath);
 
     if (tempZip != null) {
-      log.debug("打包的数据:" + Arrays.toString(fidlist) + ", 存在缓存,返回缓存数据");
+      log.debug("打包的数据:{}, 存在缓存,返回缓存数据", Arrays.toString(fileIds));
       return tempZip;
     }
 
-    log.debug("打包的数据:" + Arrays.toString(fidlist) + ", 没有缓存,执行打包操作");
+    log.debug("打包的数据:{}, 没有缓存,执行打包操作", Arrays.toString(fileIds));
     Path tmp = FileUtil.tmp();
     OutputStream tempOutput = Files.newOutputStream(tmp);
     // new FileOutputStream(tmp.toFile())
@@ -262,14 +276,14 @@ public class DownloadController {
 
       ZipUtil.compress(files, tempOutput, options);
 
-      log.debug("打包的数据:" + Arrays.toString(fidlist) + ", 完成压缩打包操作");
+      log.debug("打包的数据:{}, 完成压缩打包操作", Arrays.toString(fileIds));
 
       String zipPath = tempFolder.getPath() + filename;
       String showName = "【批量下载】" + files.get(0).getName() + " 等 (" + files.size() + ").zip";
 
       storage.writeFile(zipPath, tmp.toFile(), showName);
 
-      log.debug("打包的数据:" + Arrays.toString(fidlist) + ", 完成压缩包上传操作");
+      log.debug("打包的数据:{}, 完成压缩包上传操作", Arrays.toString(fileIds));
       return storage.getFileItem(zipPath);
     } finally {
       StreamUtil.closeQuietly(tempOutput);

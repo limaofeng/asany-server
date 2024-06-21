@@ -1,16 +1,31 @@
+/*
+ * Copyright (c) 2024 Asany
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.asany.net/licenses/MIT
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package cn.asany.sunrise.calendar.domain;
 
 import cn.asany.sunrise.calendar.domain.toys.EventTime;
 import cn.asany.sunrise.calendar.domain.toys.Remind;
 import cn.asany.sunrise.calendar.domain.toys.Repeat;
+import jakarta.persistence.*;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
-import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.GenericGenerator;
-import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.util.common.DateUtil;
+import net.asany.jfantasy.framework.dao.BaseBusEntity;
+import net.asany.jfantasy.framework.dao.hibernate.annotations.TableGenerator;
+import net.asany.jfantasy.framework.util.common.DateUtil;
 
 /**
  * 日历事件
@@ -41,27 +56,34 @@ public class CalendarEvent extends BaseBusEntity {
 
   @Id
   @Column(name = "ID", nullable = false, updatable = false, precision = 22)
-  @GeneratedValue(generator = "fantasy-sequence")
-  @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+  @TableGenerator
   private Long id;
+
   /** 标题 */
   @Column(name = "TITLE", length = 200)
   private String title;
+
   /** 时间时间 */
   @Embedded private EventTime datetime;
+
   /** 循环设置 */
   @Embedded private Repeat repeat;
+
   /** 提醒 */
   @Embedded private Remind remind;
+
   /** 说明 */
   @Column(name = "NOTES", columnDefinition = "TEXT")
   private String notes;
+
   /** 地点 */
   @Column(name = "LOCATION", length = 100)
   private String location;
+
   /** 链接 */
   @Column(name = "URL", length = 120)
   private String url;
+
   /** 日历 */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(

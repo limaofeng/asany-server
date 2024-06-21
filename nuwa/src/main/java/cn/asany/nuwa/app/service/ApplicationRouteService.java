@@ -1,15 +1,28 @@
+/*
+ * Copyright (c) 2024 Asany
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.asany.net/licenses/MIT
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package cn.asany.nuwa.app.service;
 
 import cn.asany.nuwa.app.dao.ApplicationRouteDao;
 import cn.asany.nuwa.app.domain.ApplicationRoute;
-import cn.asany.nuwa.app.domain.Routespace;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
-import org.jfantasy.framework.dao.jpa.PropertyFilter;
-import org.jfantasy.framework.dao.jpa.PropertyFilterBuilder;
-import org.jfantasy.framework.util.common.ObjectUtil;
-import org.jfantasy.framework.util.common.SortNodeLoader;
+import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
+import net.asany.jfantasy.framework.util.common.ObjectUtil;
+import net.asany.jfantasy.framework.util.common.SortNodeLoader;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -31,10 +44,6 @@ public class ApplicationRouteService {
 
   public ApplicationRoute create(ApplicationRoute route) {
     ObjectUtil.resort(route, sortNodeLoader, this.routeDao::update);
-
-    if (route.getSpace() == null) {
-      route.setSpace(Routespace.DEFAULT_ROUTESPACE_WEB);
-    }
 
     if (route.getEnabled() == null) {
       route.setEnabled(Boolean.FALSE);
@@ -72,7 +81,7 @@ public class ApplicationRouteService {
 
   public void delete(Long id) {
     Optional<ApplicationRoute> optional = this.routeDao.findById(id);
-    if (!optional.isPresent()) {
+    if (optional.isEmpty()) {
       return;
     }
     this.routeDao.deleteById(id);
@@ -99,8 +108,7 @@ public class ApplicationRouteService {
       } else {
         filter.equal("parent.id", parentId);
       }
-      return ApplicationRouteService.this.routeDao.findAll(
-          filter, Sort.by("index").ascending());
+      return ApplicationRouteService.this.routeDao.findAll(filter, Sort.by("index").ascending());
     }
 
     @Override

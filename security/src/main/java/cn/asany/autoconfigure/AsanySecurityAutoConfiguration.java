@@ -1,3 +1,18 @@
+/*
+ * Copyright (c) 2024 Asany
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.asany.net/licenses/MIT
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package cn.asany.autoconfigure;
 
 import cn.asany.security.auth.graphql.directive.AuthDirective;
@@ -11,20 +26,23 @@ import cn.asany.security.oauth.job.TokenCleanupJob;
 import graphql.kickstart.autoconfigure.tools.SchemaDirective;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
+import lombok.extern.slf4j.Slf4j;
+import net.asany.jfantasy.autoconfigure.SecurityAutoConfiguration;
+import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
+import net.asany.jfantasy.framework.dao.jpa.SimpleAnyJpaRepository;
+import net.asany.jfantasy.framework.security.core.userdetails.UserDetailsService;
+import net.asany.jfantasy.framework.security.crypto.password.DESPasswordEncoder;
+import net.asany.jfantasy.framework.security.crypto.password.MD5PasswordEncoder;
+import net.asany.jfantasy.framework.security.crypto.password.PasswordEncoder;
+import net.asany.jfantasy.framework.security.crypto.password.PlaintextPasswordEncoder;
+import net.asany.jfantasy.framework.util.common.ObjectUtil;
+import net.asany.jfantasy.graphql.context.DataLoaderRegistryCustomizer;
+import net.asany.jfantasy.schedule.service.TaskScheduler;
 import org.dataloader.DataLoader;
 import org.dataloader.DataLoaderFactory;
-import org.jfantasy.autoconfigure.OAuth2SecurityAutoConfiguration;
-import org.jfantasy.framework.dao.jpa.ComplexJpaRepository;
-import org.jfantasy.framework.dao.jpa.PropertyFilter;
-import org.jfantasy.framework.security.core.userdetails.UserDetailsService;
-import org.jfantasy.framework.security.crypto.password.DESPasswordEncoder;
-import org.jfantasy.framework.security.crypto.password.MD5PasswordEncoder;
-import org.jfantasy.framework.security.crypto.password.PasswordEncoder;
-import org.jfantasy.framework.security.crypto.password.PlaintextPasswordEncoder;
-import org.jfantasy.framework.util.common.ObjectUtil;
-import org.jfantasy.graphql.context.DataLoaderRegistryCustomizer;
-import org.jfantasy.schedule.service.TaskScheduler;
 import org.quartz.SchedulerException;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +61,7 @@ import org.springframework.transaction.support.TransactionTemplate;
 /**
  * @author limaofeng
  */
+@Slf4j
 @Configuration
 @EntityScan({"cn.asany.security.*.domain"})
 @ComponentScan({
@@ -55,8 +74,8 @@ import org.springframework.transaction.support.TransactionTemplate;
 })
 @EnableJpaRepositories(
     basePackages = "cn.asany.security.*.dao",
-    repositoryBaseClass = ComplexJpaRepository.class)
-@AutoConfigureBefore({OAuth2SecurityAutoConfiguration.class})
+    repositoryBaseClass = SimpleAnyJpaRepository.class)
+@AutoConfigureBefore({SecurityAutoConfiguration.class})
 public class AsanySecurityAutoConfiguration implements InitializingBean {
 
   private final TaskScheduler taskScheduler;
@@ -74,6 +93,10 @@ public class AsanySecurityAutoConfiguration implements InitializingBean {
         (TransactionCallback<Void>)
             status -> {
               try {
+                if (!taskScheduler.isStarted()) {
+                  log.warn("TaskScheduler is not started, starting now...");
+                  return null;
+                }
                 if (!taskScheduler.checkExists(TokenCleanupJob.JOBKEY_TOKEN_CLEANUP)) {
                   taskScheduler.addJob(TokenCleanupJob.JOBKEY_TOKEN_CLEANUP, TokenCleanupJob.class);
                 }
@@ -87,19 +110,16 @@ public class AsanySecurityAutoConfiguration implements InitializingBean {
   @Bean("asany.PasswordEncoder")
   public PasswordEncoder passwordEncoder(Environment environment) {
     String encoder = environment.getProperty("PASSWORD_ENCODER", "plaintext");
-    switch (encoder) {
-      case "des":
-        return new DESPasswordEncoder();
-      case "plaintext":
-        return new PlaintextPasswordEncoder();
-      case "md5":
-      default:
-        return new MD5PasswordEncoder();
-    }
+    return switch (encoder) {
+      case "des" -> new DESPasswordEncoder();
+      case "plaintext" -> new PlaintextPasswordEncoder();
+      default -> new MD5PasswordEncoder();
+    };
   }
 
   @Bean("user.DataLoader")
   public DataLoader<Long, User> userDataLoader(UserService userService) {
+    Executor executor = Executors.newFixedThreadPool(10);
     return DataLoaderFactory.newDataLoader(
         ids ->
             CompletableFuture.supplyAsync(
@@ -108,7 +128,8 @@ public class AsanySecurityAutoConfiguration implements InitializingBean {
                   return ids.stream()
                       .map(id -> ObjectUtil.find(users, "id", id))
                       .collect(Collectors.toList());
-                }));
+                },
+                executor));
   }
 
   @Bean
@@ -135,14 +156,14 @@ public class AsanySecurityAutoConfiguration implements InitializingBean {
     return new SchemaDirective("resource", new ResourceDirective(resourceTypeService));
   }
 
-  //    @Bean(name = "dingtalk.AuthenticationProvider")
-  //    public SimpleAuthenticationProvider
-  // dingtalkAuthenticationProvider(DingtalkUserDetailsService userDetailsService) {
-  //        SimpleAuthenticationProvider provider = new
-  // SimpleAuthenticationProvider(DingtalkAuthenticationToken.class);
-  //        provider.setUserDetailsService(userDetailsService);
-  //        return provider;
-  //    }
+  //      @Bean(name = "dingTalk.AuthenticationProvider")
+  //      public SimpleAuthenticationProvider
+  //   dingTalkAuthenticationProvider(DingTalkUserDetailsService userDetailsService) {
+  //          SimpleAuthenticationProvider provider = new
+  //   SimpleAuthenticationProvider(DingTalkAuthenticationToken.class);
+  ////          provider.setUserDetailsService(userDetailsService);
+  //          return provider;
+  //      }
 
   //    @Bean(name = "WeChat.AuthenticationProvider")
   //    public SimpleAuthenticationProvider weChatAuthenticationProvider(WeChatUserDetailsService

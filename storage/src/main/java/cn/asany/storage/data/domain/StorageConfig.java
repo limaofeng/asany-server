@@ -1,3 +1,18 @@
+/*
+ * Copyright (c) 2024 Asany
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.asany.net/licenses/MIT
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package cn.asany.storage.data.domain;
 
 import cn.asany.storage.api.IStorageConfig;
@@ -7,15 +22,14 @@ import cn.asany.storage.core.engine.minio.MinIOStorageConfig;
 import cn.asany.storage.core.engine.oss.OSSStorageConfig;
 import cn.asany.storage.data.domain.enums.StorageType;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
 import java.util.List;
 import java.util.Objects;
-
-import jakarta.persistence.*;
 import lombok.*;
+import net.asany.jfantasy.framework.dao.BaseBusEntity;
+import net.asany.jfantasy.framework.jackson.JSON;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.jackson.JSON;
 
 /**
  * 文件管理器配置表
@@ -67,7 +81,8 @@ public class StorageConfig extends BaseBusEntity {
   private String details;
 
   /** 文件管理器对应的文件 */
-  @OneToMany(mappedBy = "storageConfig", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+  @JoinColumn(name = "STORAGE_ID", referencedColumnName = "ID")
   @ToString.Exclude
   private List<FileDetail> fileDetails;
 
@@ -85,7 +100,8 @@ public class StorageConfig extends BaseBusEntity {
         ossStorageConfig.setId(this.getId());
         return ossStorageConfig;
       case DISK:
-        LocalStorageConfig localStorageConfig = JSON.deserialize(this.getDetails(), LocalStorageConfig.class);
+        LocalStorageConfig localStorageConfig =
+            JSON.deserialize(this.getDetails(), LocalStorageConfig.class);
         localStorageConfig.setId(this.getId());
         return localStorageConfig;
       default:

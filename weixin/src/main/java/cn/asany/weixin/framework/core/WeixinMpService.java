@@ -27,8 +27,8 @@ import me.chanjar.weixin.mp.bean.result.WxMpUserList;
 import me.chanjar.weixin.mp.builder.outxml.MusicBuilder;
 import me.chanjar.weixin.mp.builder.outxml.NewsBuilder;
 import org.apache.commons.lang3.StringUtils;
-import org.jfantasy.framework.jackson.JSON;
-import org.jfantasy.framework.util.common.StringUtil;
+import net.asany.jfantasy.framework.jackson.JSON;
+import net.asany.jfantasy.framework.util.common.StringUtil;
 
 import jakarta.servlet.http.HttpServletRequest;
 import java.io.File;

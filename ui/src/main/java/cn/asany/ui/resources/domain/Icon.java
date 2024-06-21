@@ -1,18 +1,33 @@
+/*
+ * Copyright (c) 2024 Asany
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.asany.net/licenses/MIT
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package cn.asany.ui.resources.domain;
 
 import cn.asany.ui.library.dao.listener.OplogListener;
 import cn.asany.ui.resources.UIResource;
 import cn.asany.ui.resources.domain.enums.IconType;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
+import jakarta.persistence.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.GenericGenerator;
-import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.dao.hibernate.converter.MapConverter;
-import org.jfantasy.framework.util.common.ClassUtil;
+import net.asany.jfantasy.framework.dao.BaseBusEntity;
+import net.asany.jfantasy.framework.dao.hibernate.annotations.TableGenerator;
+import net.asany.jfantasy.framework.dao.hibernate.converter.MapConverter;
+import net.asany.jfantasy.framework.util.common.ClassUtil;
 
 @Data
 @Builder
@@ -29,29 +44,35 @@ public class Icon extends BaseBusEntity implements UIResource {
 
   @Id
   @Column(name = "ID")
-  @GeneratedValue(generator = "fantasy-sequence")
-  @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+  @TableGenerator
   private Long id;
+
   /** 类型 */
   @Enumerated(EnumType.STRING)
   @Column(name = "TYPE", length = 20, nullable = false)
   private IconType type;
+
   /** 编码 */
   @Column(name = "UNICODE", length = 50)
   private String unicode;
+
   /** 名称 */
   @Column(name = "NAME", length = 60)
   private String name;
+
   /** 描述 */
   @Column(name = "DESCRIPTION")
   private String description;
+
   /** 内容 */
   @Column(name = "CONTENT", columnDefinition = "TEXT")
   private String content;
+
   /** 元数据 */
   @Convert(converter = MapConverter.class)
   @Column(name = "METADATA", columnDefinition = "Text")
   private Map<String, String> metadata;
+
   /** 标签 */
   private transient List<String> tags;
 

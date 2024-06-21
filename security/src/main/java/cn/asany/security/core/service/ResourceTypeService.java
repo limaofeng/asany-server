@@ -1,11 +1,27 @@
+/*
+ * Copyright (c) 2024 Asany
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.asany.net/licenses/MIT
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package cn.asany.security.core.service;
 
 import cn.asany.security.core.dao.ResourceTypeDao;
 import cn.asany.security.core.domain.AuthorizedService;
 import cn.asany.security.core.domain.ResourceType;
 import java.util.Optional;
+import net.asany.jfantasy.framework.dao.hibernate.util.HibernateUtils;
+import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.hibernate.Hibernate;
-import org.jfantasy.framework.dao.jpa.PropertyFilter;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheEvict;
@@ -40,8 +56,9 @@ public class ResourceTypeService {
   @Cacheable(key = "targetClass + methodName + '#' + #p0.toString()", value = CACHE_KEY)
   @Transactional(readOnly = true)
   public Optional<ResourceType> findByResourceName(String resourceName) {
-    return this.resourceTypeDao.findOne(
-        PropertyFilter.newFilter().equal("resourceName", resourceName));
+    return this.resourceTypeDao
+        .findOne(PropertyFilter.newFilter().equal("resourceName", resourceName))
+        .map(HibernateUtils::cloneEntity);
   }
 
   @Cacheable(key = "targetClass + methodName + '#' + #p0.toString()", value = CACHE_KEY)
@@ -55,7 +72,8 @@ public class ResourceTypeService {
               Hibernate.unproxy(item.getService());
               item.getArns().forEach(Hibernate::unproxy);
               return item;
-            });
+            })
+        .map(HibernateUtils::cloneEntity);
   }
 
   @Transactional(readOnly = true)

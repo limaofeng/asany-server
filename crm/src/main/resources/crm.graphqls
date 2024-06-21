@@ -1,0 +1,864 @@
+"""
+客户查询条件
+"""
+input CustomerWhereInput {
+  """
+  客户名称
+  """
+  name_contains: String
+}
+
+"""
+客户分页查询
+"""
+type CustomerConnection {
+  """
+  总数
+  """
+  totalCount: Int!
+  """
+  每页大小
+  """
+  pageSize: Int!
+  """
+  总页数
+  """
+  totalPage: Int!
+  """
+  当前页
+  """
+  currentPage: Int!
+  """
+  分页信息
+  """
+  pageInfo: PageInfo!
+  """
+  数据
+  """
+  edges: [CustomerEdge!]!
+}
+
+type CustomerEdge {
+  node: Customer!
+  cursor: String!
+}
+
+type CustomerStoreConnection {
+  """
+  总数
+  """
+  totalCount: Int!
+  """
+  每页大小
+  """
+  pageSize: Int!
+  """
+  总页数
+  """
+  totalPage: Int!
+  """
+  当前页
+  """
+  currentPage: Int!
+  """
+  分页信息
+  """
+  pageInfo: PageInfo!
+  """
+  数据
+  """
+  edges: [CustomerStoreEdge!]!
+}
+
+type CustomerStoreEdge {
+  node: CustomerStore!
+  cursor: String!
+}
+
+"""
+客户门店
+"""
+type CustomerStore implements Owner {
+  """
+  门店ID
+  """
+  id: ID!
+  """
+  门店编号
+  """
+  no: String!
+  """
+  门店名称
+  """
+  name: String!
+  """
+  开业日期
+  """
+  openingDate: Date @dateFormat
+  """
+  联系电话
+  """
+  phone: String
+  """
+  地址
+  """
+  address: Address
+  """
+  联系人信息
+  """
+  contactInfo: ContactInformation
+  """
+  客户
+  """
+  customer: Customer!
+}
+
+enum CustomerTicketStrategy {
+  NONE
+  AUTO
+  ASSIGN
+}
+
+"""
+客户
+"""
+type Customer implements Owner {
+  """
+  客户ID
+  """
+  id: ID!
+  """
+  客户名称
+  """
+  name: String
+  """
+  联系方式
+  """
+  contactInfo: ContactInformation
+  """
+  门店列表
+  """
+  stores: [CustomerStore!]!
+  """
+  工单策略
+  """
+  ticketStrategy: CustomerTicketStrategy
+}
+
+input CustomerStoreWhereInput {
+  """
+  客户ID
+  """
+  customer: ID
+  """
+  门店名称
+  """
+  name_contains: String
+}
+
+input CustomerCreateInput {
+  """
+  客户名称
+  """
+  name: String
+  """
+  联系方式
+  """
+  contactInfo: ContactInformationInput
+}
+
+input CustomerUpdateInput {
+  """
+  客户名称
+  """
+  name: String
+  """
+  联系方式
+  """
+  contactInfo: ContactInformationInput
+  """
+  工单策略
+  """
+  ticketStrategy: CustomerTicketStrategy = AUTO
+}
+
+input CustomerStoreCreateInput {
+  """
+  客户ID
+  """
+  customer: ID!
+  """
+  门店编号
+  """
+  no: String
+  """
+  门店名称
+  """
+  name: String
+  """
+  开业日期
+  """
+  openingDate: Date
+  """
+  联系电话
+  """
+  phone: String
+  """
+  地址
+  """
+  address: AddressInput
+  """
+  联系方式
+  """
+  contactInfo: ContactInformationInput
+}
+
+input CustomerStoreUpdateInput {
+  """
+  门店编号
+  """
+  no: String
+  """
+  门店名称
+  """
+  name: String
+  """
+  开业日期
+  """
+  openingDate: Date
+  """
+  联系电话
+  """
+  phone: String
+  """
+  地址
+  """
+  address: AddressInput
+  """
+  联系方式
+  """
+  contactInfo: ContactInformationInput
+}
+
+enum TicketTargetType {
+  DEVICE
+}
+
+input TicketTargetInput {
+  id: ID!
+  type: TicketTargetType
+  name: String
+}
+
+"""
+工单查询条件
+"""
+input TicketWhereInput {
+  """
+  工单编号
+  """
+  no_contains: String
+  """
+  关键字
+  """
+  keyword: String
+  """
+  工单状态
+  """
+  status: TicketStatus
+  """
+  工单状态
+  """
+  status_in: [TicketStatus!]
+  """
+  工单类型
+  """
+  type: ID
+  """
+  工单优先级
+  """
+  priority: TicketPriority
+  """
+  客户ID
+  """
+  customerId: ID
+  """
+  门店ID
+  """
+  storeId: ID
+  """
+  设备ID
+  """
+  deviceId: ID
+  """
+  工单目标
+  """
+  target: TicketTargetInput
+  """
+  处理人ID
+  """
+  assignee: ID
+}
+
+"""
+工单分页查询
+"""
+type TicketConnection {
+  """
+  总数
+  """
+  totalCount: Int!
+  """
+  每页大小
+  """
+  pageSize: Int!
+  """
+  总页数
+  """
+  totalPage: Int!
+  """
+  当前页
+  """
+  currentPage: Int!
+  """
+  分页信息
+  """
+  pageInfo: PageInfo!
+  """
+  数据
+  """
+  edges: [TicketEdge!]!
+}
+
+type TicketEdge {
+  node: Ticket!
+  cursor: String!
+}
+
+"""
+工单状态
+"""
+enum TicketStatus {
+  """
+  新建
+  """
+  NEW
+  """
+  进行中
+  """
+  IN_PROGRESS
+  """
+  暂停
+  """
+  SUSPENDED
+  """
+  已解决
+  """
+  RESOLVED
+  """
+  重新开启
+  """
+  REOPEN
+}
+
+enum TicketPriority {
+  """
+  低
+  """
+  LOW
+  """
+  普通
+  """
+  NORMAL
+  """
+  高
+  """
+  HIGH
+  """
+  紧急
+  """
+  URGENT
+}
+
+type TicketType {
+  id: ID!
+  name: String!
+  description: String
+  defaultPriority: TicketPriority!
+}
+
+type TicketStatusChange {
+  id: ID!
+  """
+  工单状态
+  """
+  status: TicketStatus!
+  """
+  变更时间
+  """
+  logTime: Date! @dateFormat
+  """
+  变更人
+  """
+  loggedBy: User
+  """
+  备注
+  """
+  note: String
+}
+
+type TicketRating {
+  """
+  评分
+  """
+  score: Int!
+  """
+  评价
+  """
+  comment: String
+  """
+  评价时间
+  """
+  createdAt: Date! @dateFormat
+}
+
+"""
+工单
+"""
+type Ticket {
+  """
+  工单ID
+  """
+  id: ID!
+  """
+  工单编号
+  """
+  no: String!
+  """
+  工单描述
+  """
+  description: String
+  """
+  附件
+  """
+  attachments: [File!]
+  """
+  工单状态
+  """
+  status: TicketStatus!
+  """
+  工单类型
+  """
+  type: TicketType!
+  """
+  工单优先级
+  """
+  priority: TicketPriority!
+  """
+  客户
+  """
+  customer: Customer!
+  """
+  门店
+  """
+  store: CustomerStore
+  """
+  创建时间
+  """
+  createdAt: Date! @dateFormat
+  """
+  更新时间
+  """
+  updatedAt: Date! @dateFormat
+  """
+  处理人
+  """
+  assignee: User
+  """
+  工单目标
+  """
+  target: TicketTarget
+  """
+  工单状态历史
+  """
+  statusHistory: [TicketStatusChange!]!
+  """
+  报告人联系方式
+  """
+  contactInfo: ContactInformation
+  """
+  完成时间
+  """
+  completedAt: Date @dateFormat
+  """
+  暂停时间
+  """
+  suspendedAt: Date @dateFormat
+  """
+  服务评价
+  """
+  rating: TicketRating
+}
+"""
+工单新增信息
+"""
+input TicketCreateInput {
+  """
+  工单描述
+  """
+  description: String
+  """
+  附件
+  """
+  attachments: [File!]
+  """
+  工单类型
+  """
+  type: ID!
+  """
+  工单优先级
+  """
+  priority: TicketPriority
+  """
+  客户ID
+  """
+  customerId: ID!
+  """
+  门店ID
+  """
+  storeId: ID
+  """
+  联系方式
+  """
+  contactInfo: ContactInformationInput
+  """
+  工单目标
+  """
+  target: TicketTargetInput
+}
+
+"""
+工单更新信息
+"""
+input TicketUpdateInput {
+  """
+  工单描述
+  """
+  description: String
+  """
+  工单优先级
+  """
+  priority: TicketPriority
+}
+
+extend type Query {
+  """
+  查询客户
+  """
+  customersConnection(
+    """
+    查询条件
+    """
+    where: CustomerWhereInput = {}
+    """
+    页码
+    """
+    currentPage: Int = 1
+    """
+    每页大小
+    """
+    pageSize: Int = 15
+    """
+    排序
+    """
+    orderBy: OrderBy = "unsorted"
+  ): CustomerConnection!
+  """
+  查询客户
+  """
+  customer(
+    """
+    客户ID
+    """
+    id: ID!
+  ): Customer
+  """
+  查询客户列表
+  """
+  customers(
+    """
+    查询条件
+    """
+    where: CustomerWhereInput = {}
+    """
+    偏移量
+    """
+    offset: Int = 0
+    """
+    每页显示条数
+    """
+    limit: Int = 15
+    """
+    排序
+    """
+    orderBy: OrderBy = "unsorted"
+  ): [Customer!]!
+  """
+  查询客户门店
+  """
+  customerStoresConnection(
+    """
+    查询条件
+    """
+    where: CustomerStoreWhereInput = {}
+    """
+    页码
+    """
+    currentPage: Int = 1
+    """
+    每页大小
+    """
+    pageSize: Int = 15
+    """
+    排序
+    """
+    orderBy: OrderBy = "unsorted"
+  ): CustomerStoreConnection!
+  """
+  查询客户门店
+  """
+  customerStores(
+    """
+    查询条件
+    """
+    where: CustomerStoreWhereInput = {}
+    """
+    偏移量
+    """
+    offset: Int = 0
+    """
+    每页显示条数
+    """
+    limit: Int = 15
+    """
+    排序
+    """
+    orderBy: OrderBy = "unsorted"
+  ): [CustomerStore!]!
+  """
+  查询客户门店
+  """
+  customerStore(
+    """
+    门店ID
+    """
+    id: ID!
+  ): CustomerStore
+  """
+  查询工单
+  """
+  ticketsConnection(
+    """
+    查询条件
+    """
+    where: TicketWhereInput = {}
+    """
+    页码
+    """
+    currentPage: Int = 1
+    """
+    每页大小
+    """
+    pageSize: Int = 15
+    """
+    排序
+    """
+    orderBy: OrderBy = "unsorted"
+  ): TicketConnection!
+  """
+  查询工单
+  """
+  tickets(
+    """
+    查询条件
+    """
+    where: TicketWhereInput = {}
+    """
+    偏移量
+    """
+    offset: Int = 0
+    """
+    每页显示条数
+    """
+    limit: Int = 15
+    """
+    排序
+    """
+    orderBy: OrderBy = "unsorted"
+  ): [Ticket!]!
+  """
+  查询工单
+  """
+  ticket(
+    """
+    工单ID
+    """
+    id: ID!
+  ): Ticket
+}
+
+extend type Mutation {
+  """
+  创建客户
+  """
+  createCustomer(input: CustomerCreateInput!): Customer
+  """
+  更新客户
+  """
+  updateCustomer(
+    """
+    客户ID
+    """
+    id: ID!
+    """
+    客户名称
+    """
+    input: CustomerUpdateInput!
+    """
+    是否合并
+    """
+    merge: Boolean = true
+  ): Customer
+  """
+  删除客户
+  """
+  deleteCustomer(
+    """
+    客户ID
+    """
+    id: ID!
+  ): Customer
+  """
+  创建客户门店
+  """
+  createCustomerStore(
+    """
+    input
+    """
+    input: CustomerStoreCreateInput!
+  ): CustomerStore
+  """
+  更新客户门店
+  """
+  updateCustomerStore(
+    """
+    门店ID
+    """
+    id: ID!
+    """
+    门店名称
+    """
+    input: CustomerStoreUpdateInput!
+    """
+    是否合并
+    """
+    merge: Boolean = true
+  ): CustomerStore
+  """
+  删除客户门店
+  """
+  deleteCustomerStore(
+    """
+    门店ID
+    """
+    id: ID!
+  ): CustomerStore
+  """
+  创建工单
+  """
+  createTicket(
+    """
+    工单信息
+    """
+    input: TicketCreateInput!
+  ): Ticket
+  """
+  更新工单
+  """
+  updateTicket(
+    """
+    工单ID
+    """
+    id: ID!
+    """
+    工单信息
+    """
+    input: TicketUpdateInput!
+    """
+    是否合并
+    """
+    merge: Boolean = true
+  ): Ticket
+  """
+  删除工单
+  """
+  deleteTicket(
+    """
+    工单ID
+    """
+    id: ID!
+  ): Ticket
+  """
+  工单分配
+  """
+  assignTicket(
+    """
+    工单ID
+    """
+    id: ID!
+    """
+    处理人ID
+    """
+    assignee: ID!
+  ): Ticket
+  """
+  工单解决
+  """
+  resolveTicket(
+    """
+    工单ID
+    """
+    id: ID!
+  ): Ticket
+  """
+  工单重新开启
+  """
+  reopenTicket(
+    """
+    工单ID
+    """
+    id: ID!
+  ): Ticket
+  """
+  工单暂停
+  """
+  suspendTicket(
+    """
+    工单ID
+    """
+    id: ID!
+    """
+    原因
+    """
+    reason: String
+  ): Ticket
+  """
+  工单恢复
+  """
+  resumeTicket(
+    """
+    工单ID
+    """
+    id: ID!
+  ): Ticket
+}

@@ -1,3 +1,18 @@
+/*
+ * Copyright (c) 2024 Asany
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.asany.net/licenses/MIT
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package cn.asany.cms.article.listener;
 
 import cn.asany.cms.article.dao.ArticleCategoryDao;
@@ -7,15 +22,14 @@ import cn.asany.cms.article.event.ArticleCategoryPageUpdateEvent;
 import cn.asany.nuwa.app.domain.Application;
 import cn.asany.nuwa.app.domain.ApplicationRoute;
 import cn.asany.nuwa.app.domain.LayoutSettings;
-import cn.asany.nuwa.app.domain.Routespace;
 import cn.asany.nuwa.app.domain.enums.RouteType;
 import cn.asany.nuwa.app.service.ApplicationService;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
-import org.jfantasy.framework.util.common.ObjectUtil;
-import org.jfantasy.framework.util.common.StringUtil;
+import net.asany.jfantasy.framework.util.common.ObjectUtil;
+import net.asany.jfantasy.framework.util.common.StringUtil;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
@@ -77,7 +91,6 @@ public class PageUpdateListener implements ApplicationListener<ArticleCategoryPa
       route.setAuthorized(false);
       route.setParent(layoutRoute);
       route.setLayout(LayoutSettings.builder().pure(false).hideMenu(false).build());
-      route.setSpace(Routespace.DEFAULT_ROUTESPACE_WEB);
       this.applicationService.addRoute(route);
     } else {
       this.applicationService.clearApplication(application);

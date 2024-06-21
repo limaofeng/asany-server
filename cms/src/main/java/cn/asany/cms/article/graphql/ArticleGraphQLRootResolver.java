@@ -1,27 +1,36 @@
+/*
+ * Copyright (c) 2024 Asany
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.asany.net/licenses/MIT
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package cn.asany.cms.article.graphql;
 
 import cn.asany.cms.article.converter.ArticleCategoryConverter;
-import cn.asany.cms.article.converter.ArticleContext;
 import cn.asany.cms.article.converter.ArticleConverter;
-import cn.asany.cms.article.domain.Article;
-import cn.asany.cms.article.domain.ArticleCategory;
-import cn.asany.cms.article.domain.ArticleTag;
-import cn.asany.cms.article.graphql.enums.ArticleChannelStarType;
-import cn.asany.cms.article.graphql.enums.ArticleStarType;
+import cn.asany.cms.article.domain.*;
 import cn.asany.cms.article.graphql.input.*;
 import cn.asany.cms.article.graphql.type.ArticleConnection;
 import cn.asany.cms.article.service.ArticleCategoryService;
 import cn.asany.cms.article.service.ArticleService;
 import cn.asany.cms.article.service.ArticleTagService;
-import cn.asany.cms.permission.specification.StarSpecification;
+import cn.asany.cms.content.service.ArticleContentService;
 import cn.asany.organization.core.domain.Organization;
 import graphql.kickstart.tools.GraphQLMutationResolver;
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import java.util.List;
-import org.jfantasy.framework.dao.jpa.JpaDefaultPropertyFilter;
-import org.jfantasy.framework.dao.jpa.PropertyFilter;
-import org.jfantasy.framework.util.common.ObjectUtil;
-import org.jfantasy.graphql.util.Kit;
+import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
+import net.asany.jfantasy.framework.util.common.ObjectUtil;
+import net.asany.jfantasy.graphql.util.Kit;
 import org.springframework.core.env.Environment;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -42,6 +51,8 @@ public class ArticleGraphQLRootResolver implements GraphQLQueryResolver, GraphQL
   private final ArticleService articleService;
   private final ArticleTagService articleTagService;
   private final ArticleCategoryService articleCategoryService;
+  private final ArticleContentService contentService;
+
   protected final Environment environment;
 
   public ArticleGraphQLRootResolver(
@@ -50,12 +61,14 @@ public class ArticleGraphQLRootResolver implements GraphQLQueryResolver, GraphQL
       ArticleService articleService,
       ArticleTagService articleTagService,
       ArticleCategoryService articleCategoryService,
+      ArticleContentService contentService,
       Environment environment) {
     this.articleCategoryConverter = articleCategoryConverter;
     this.articleConverter = articleConverter;
     this.articleService = articleService;
     this.articleTagService = articleTagService;
     this.articleCategoryService = articleCategoryService;
+    this.contentService = contentService;
     this.environment = environment;
   }
 
@@ -81,6 +94,19 @@ public class ArticleGraphQLRootResolver implements GraphQLQueryResolver, GraphQL
     return Kit.connection(articleService.findPage(pageable, queryFilter), ArticleConnection.class);
   }
 
+  /**
+   * 查询所有文章
+   *
+   * @param where 过滤
+   * @param offset 偏移量
+   * @param limit 限制
+   * @param orderBy 排序
+   * @return List<Article>
+   */
+  public List<Article> articles(ArticleWhereInput where, int offset, int limit, Sort orderBy) {
+    return articleService.findAll(where.toFilter(), offset, limit, orderBy);
+  }
+
   public List<ArticleTag> articleTags(
       String organization, ArticleCategoryWhereInput where, Sort orderBy) {
     PropertyFilter filter = where.toFilter();
@@ -92,27 +118,6 @@ public class ArticleGraphQLRootResolver implements GraphQLQueryResolver, GraphQL
     } else {
       return articleTagService.findAll(filter);
     }
-  }
-
-  public List<ArticleCategory> starredArticleCategories(
-      Long employee, ArticleChannelStarType starType) {
-    PropertyFilter builder =
-        PropertyFilter.newFilter().and(new StarSpecification(employee, starType.getValue()));
-    return articleCategoryService.findAll(builder);
-  }
-
-  public ArticleConnection starredArticles(
-      Long employee,
-      ArticleStarType starType,
-      ArticleWhereInput where,
-      int page,
-      int pageSize,
-      Sort orderBy) {
-    JpaDefaultPropertyFilter propertyFilter = where.toFilter();
-    propertyFilter.and(new StarSpecification(employee, starType.getValue()));
-    return Kit.connection(
-        articleService.findPage(PageRequest.of(page - 1, pageSize, orderBy), propertyFilter),
-        ArticleConnection.class);
   }
 
   /**
@@ -127,15 +132,16 @@ public class ArticleGraphQLRootResolver implements GraphQLQueryResolver, GraphQL
 
     ArticleCategory category = this.articleCategoryService.getById(input.getCategory());
 
-    String storeTemplateId = category.getStoreTemplate().getId();
-    ArticleContext articleContext = ArticleContext.builder().storeTemplate(storeTemplateId).build();
+    ArticleStoreTemplate storeTemplate = category.getStoreTemplate();
 
-    Article article = articleConverter.toArticle(input, articleContext);
+    Article article = articleConverter.toArticle(input);
+    ArticleContent content =
+        contentService.convert(input.getContent(), storeTemplate.getContentType());
 
     article.setOrganization(Organization.builder().id(organizationId).build());
     article.setCategory(category);
 
-    return articleService.save(article, input.getPermissions());
+    return articleService.save(article, content, input.getPermissions());
   }
 
   /**
@@ -146,16 +152,19 @@ public class ArticleGraphQLRootResolver implements GraphQLQueryResolver, GraphQL
    * @param input 输入对象
    * @return Article
    */
-  public Article updateArticle(Long id, Boolean merge, ArticleUpdateInput input) {
+  public Article updateArticle(Long id, ArticleUpdateInput input, Boolean merge) {
     ArticleCategory category = this.articleCategoryService.getById(input.getCategory());
 
-    ArticleContext articleContext =
-        ArticleContext.builder().storeTemplate(category.getStoreTemplate().getId()).build();
+    ArticleStoreTemplate storeTemplate = category.getStoreTemplate();
 
-    Article article = articleConverter.toArticle(input, articleContext);
+    Article article = articleConverter.toArticle(input);
+    ArticleContent content =
+        contentService.convert(input.getContent(), storeTemplate.getContentType());
+
     article.setCategory(category);
+    article.setContentType(storeTemplate.getContentType());
 
-    return articleService.update(id, article, merge);
+    return articleService.update(id, article, content, merge);
   }
 
   /**
@@ -194,6 +203,7 @@ public class ArticleGraphQLRootResolver implements GraphQLQueryResolver, GraphQL
     ArticleTag articleTag = articleCategoryConverter.toArticle(input);
     return articleTagService.save(articleTag);
   }
+
   /**
    * 更新标签
    *

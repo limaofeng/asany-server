@@ -1,3 +1,18 @@
+/*
+ * Copyright (c) 2024 Asany
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.asany.net/licenses/MIT
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package cn.asany.ui.resources.service;
 
 import cn.asany.ui.library.convert.LibraryConverter;
@@ -11,10 +26,10 @@ import cn.asany.ui.resources.domain.Icon;
 import cn.asany.ui.resources.domain.enums.IconType;
 import java.util.*;
 import java.util.stream.Collectors;
-import org.jfantasy.framework.dao.jpa.PropertyFilter;
-import org.jfantasy.framework.error.ValidationException;
-import org.jfantasy.framework.util.common.ObjectUtil;
-import org.jfantasy.framework.util.common.StringUtil;
+import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
+import net.asany.jfantasy.framework.error.ValidationException;
+import net.asany.jfantasy.framework.util.common.ObjectUtil;
+import net.asany.jfantasy.framework.util.common.StringUtil;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -48,7 +63,7 @@ public class IconService {
             PropertyFilter.newFilter()
                 .equal("resourceId", id)
                 .equal("resourceType", Icon.RESOURCE_NAME));
-    if (!optionalIcon.isPresent() || !optionalItem.isPresent()) {
+    if (optionalIcon.isEmpty() || optionalItem.isEmpty()) {
       throw new ValidationException("图标{" + id + "}不存在");
     }
     this.libraryItemDao.delete(optionalItem.get());
@@ -59,7 +74,7 @@ public class IconService {
     long start = System.currentTimeMillis();
 
     Optional<Library> optional = this.libraryDao.findByIdWithIcon(libraryId);
-    if (!optional.isPresent()) {
+    if (optional.isEmpty()) {
       throw new ValidationException("图标库{" + libraryId + "}不正确");
     }
     Library library = optional.get();
@@ -127,14 +142,14 @@ public class IconService {
     returnVal.addAll(itemSaveEntities);
     returnVal.addAll(itemUpdateEntities);
     System.out.println("处理图标:" + icons.size() + "个\t times = " + times);
-    return this.libraryConverter.toIcons(returnVal.stream().collect(Collectors.toSet()));
+    return this.libraryConverter.toIcons(new HashSet<>(returnVal));
   }
 
   public Icon save(Long libraryId, Icon icon) {
     icon.setType(IconType.SVG);
 
     Optional<Library> optional = this.libraryDao.findByIdWithIcon(libraryId);
-    if (!optional.isPresent()) {
+    if (optional.isEmpty()) {
       throw new ValidationException("图标库{" + libraryId + "}不存在");
     }
     Library library = optional.get();
@@ -193,6 +208,10 @@ public class IconService {
 
   public Set<Icon> findAll(PropertyFilter filter) {
     return libraryConverter.toIcons(
-      new HashSet<>(this.libraryItemDao.findAllByTagWithIcon(filter)));
+        new HashSet<>(this.libraryItemDao.findAllByTagWithIcon(filter)));
+  }
+
+  public Optional<Icon> findById(Long id) {
+    return this.iconDao.findById(id);
   }
 }

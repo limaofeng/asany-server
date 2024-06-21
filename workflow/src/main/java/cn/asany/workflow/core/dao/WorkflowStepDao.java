@@ -7,8 +7,8 @@ package cn.asany.workflow.core.dao;
  */
 
 import cn.asany.workflow.core.domain.WorkflowStep;
-import org.jfantasy.framework.dao.jpa.JpaRepository;
+import net.asany.jfantasy.framework.dao.jpa.AnyJpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface WorkflowStepDao extends JpaRepository<WorkflowStep, Long> {}
+public interface WorkflowStepDao extends AnyJpaRepository<WorkflowStep, Long> {}

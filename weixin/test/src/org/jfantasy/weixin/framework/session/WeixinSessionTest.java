@@ -1,6 +1,6 @@
 package cn.asany.weixin.framework.session;
 
-import org.jfantasy.framework.jackson.JSON;
+import net.asany.jfantasy.framework.jackson.JSON;
 import cn.asany.weixin.ApplicationTest;
 import cn.asany.weixin.framework.core.Openapi;
 import cn.asany.weixin.framework.factory.WeixinSessionFactory;

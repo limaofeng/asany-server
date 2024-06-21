@@ -1,3 +1,18 @@
+/*
+ * Copyright (c) 2024 Asany
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.asany.net/licenses/MIT
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package cn.asany.security.oauth.service;
 
 import cn.asany.security.core.domain.User;
@@ -11,9 +26,9 @@ import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import org.jfantasy.framework.dao.jpa.PropertyFilter;
-import org.jfantasy.framework.security.oauth2.core.OAuth2AccessToken;
-import org.jfantasy.framework.security.oauth2.core.TokenType;
+import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
+import net.asany.jfantasy.framework.security.auth.TokenType;
+import net.asany.jfantasy.framework.security.auth.oauth2.core.OAuth2AccessToken;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,7 +54,7 @@ public class AccessTokenService {
     PropertyFilter filter =
         PropertyFilter.newFilter()
             .equal("client.id", clientId)
-            .equal("tokenType", TokenType.PERSONAL)
+            .equal("tokenType", TokenType.PERSONAL_ACCESS_TOKEN)
             .equal("user.id", uid);
     List<AccessToken> accessTokens = this.accessTokenDao.findAll(filter);
     return accessTokenConverter.toPersonalAccessTokens(accessTokens);
@@ -122,7 +137,7 @@ public class AccessTokenService {
     PropertyFilter filter =
         PropertyFilter.newFilter()
             .equal("client", clientId)
-            .equal("tokenType", TokenType.SESSION)
+            .equal("tokenType", TokenType.SESSION_ID)
             .equal("user.id", uid);
     List<AccessToken> accessTokens =
         this.accessTokenDao.findAll(filter, Sort.by("issuedAt").descending());

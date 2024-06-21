@@ -1,3 +1,18 @@
+/*
+ * Copyright (c) 2024 Asany
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.asany.net/licenses/MIT
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package cn.asany.storage.core.engine.virtual;
 
 import cn.asany.storage.api.*;
@@ -13,9 +28,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import org.jfantasy.framework.dao.jpa.PropertyFilter;
-import org.jfantasy.framework.util.common.StringUtil;
-import org.jfantasy.framework.util.common.file.FileUtil;
+import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
+import net.asany.jfantasy.framework.util.common.StringUtil;
+import net.asany.jfantasy.framework.util.common.file.FileUtil;
 
 public class VirtualStorage implements Storage {
 
@@ -54,13 +69,13 @@ public class VirtualStorage implements Storage {
                   "application/zip",
                   size,
                   "",
-                  parentFolder.getStorageConfig().getId(),
+                  parentFolder.getStorageConfig(),
                   storePath,
                   "",
                   parentFolder.getId());
             });
 
-    Storage innerStorage = this.storageResolver.resolve(fileDetail.getStorageConfig().getId());
+    Storage innerStorage = this.storageResolver.resolve(fileDetail.getStorageConfig());
 
     innerStorage.writeFile(fileDetail.getStorePath(), file);
 
@@ -107,8 +122,7 @@ public class VirtualStorage implements Storage {
   @Override
   public List<FileObject> listFiles(String remotePath) {
     List<FileDetail> objects =
-        this.fileService.findAll(
-            PropertyFilter.newFilter().equal("parentFile.path", remotePath));
+        this.fileService.findAll(PropertyFilter.newFilter().equal("parentFile.path", remotePath));
     return objects.stream().map(item -> item.toFileObject(this)).collect(Collectors.toList());
   }
 
@@ -144,7 +158,7 @@ public class VirtualStorage implements Storage {
       throw new RuntimeException("只能访问文件");
     }
     return this.storageResolver
-        .resolve(fileDetail.getStorageConfig().getId())
+        .resolve(fileDetail.getStorageConfig())
         .getFileItem(fileDetail.getStorePath());
   }
 

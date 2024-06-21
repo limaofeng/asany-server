@@ -1,3 +1,18 @@
+/*
+ * Copyright (c) 2024 Asany
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.asany.net/licenses/MIT
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package cn.asany.im.auth.graphql.resolvers;
 
 import cn.asany.im.auth.graphql.type.OnlineStatus;
@@ -37,17 +52,16 @@ public class CurrentUserGraphQLResolver implements GraphQLResolver<CurrentUser> 
     try {
       return this.authService.token(platform, String.valueOf(user.getId()));
     } catch (Exception e) {
-      log.error(e.getMessage(), e);
-      if(e instanceof OpenIMServerAPIException) {
-        OpenIMServerAPIException error = (OpenIMServerAPIException)e;
+      log.error(e.getMessage());
+      if (e instanceof OpenIMServerAPIException error) {
         if (error.getCode() == ErrorCode.RECORD_NOT_FOUND.getCode()) {
           this.userService.userRegister(
-                  UserRegisterRequestBody.builder()
-                          .addUser(
-                                  String.valueOf(user.getId()),
-                                  user.getName(),
-                                  user.getAvatar() != null ? user.getAvatar().getPath() : null)
-                          .build());
+              UserRegisterRequestBody.builder()
+                  .addUser(
+                      String.valueOf(user.getId()),
+                      user.getName(),
+                      user.getAvatar() != null ? user.getAvatar().getPath() : null)
+                  .build());
           return imToken(user, platform);
         }
       }
@@ -59,7 +73,7 @@ public class CurrentUserGraphQLResolver implements GraphQLResolver<CurrentUser> 
     try {
       return OpenIMUtils.onlineStatus(authService, userService, user.getId());
     } catch (Exception e) {
-      log.error(e.getMessage(), e);
+      log.error(e.getMessage());
       return OnlineStatusDetails.builder().status(OnlineStatus.offline).build();
     }
   }

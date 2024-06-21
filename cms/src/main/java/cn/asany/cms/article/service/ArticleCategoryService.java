@@ -1,3 +1,18 @@
+/*
+ * Copyright (c) 2024 Asany
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.asany.net/licenses/MIT
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package cn.asany.cms.article.service;
 
 import cn.asany.cms.article.dao.ArticleCategoryDao;
@@ -5,6 +20,7 @@ import cn.asany.cms.article.dao.ArticleDao;
 import cn.asany.cms.article.domain.Article;
 import cn.asany.cms.article.domain.ArticleCategory;
 import cn.asany.cms.article.domain.PageComponent;
+import cn.asany.cms.article.domain.enums.ArticleStatus;
 import cn.asany.cms.article.event.ArticleCategoryPageUpdateEvent;
 import cn.asany.ui.resources.domain.Component;
 import cn.asany.ui.resources.domain.enums.ComponentScope;
@@ -14,11 +30,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
+import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
+import net.asany.jfantasy.framework.util.PinyinUtils;
+import net.asany.jfantasy.framework.util.common.ObjectUtil;
+import net.asany.jfantasy.framework.util.common.StringUtil;
 import org.apache.commons.collections.CollectionUtils;
-import org.jfantasy.framework.dao.jpa.PropertyFilter;
-import org.jfantasy.framework.util.PinyinUtils;
-import org.jfantasy.framework.util.common.ObjectUtil;
-import org.jfantasy.framework.util.common.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.Example;
@@ -108,19 +124,17 @@ public class ArticleCategoryService {
               }
 
               // 暂存文章
-              //              if (item.getArticles() != null) {
-              //                articles.addAll(
-              //                    item.getArticles().stream()
-              //                        .peek(
-              //                            article -> {
-              //                              article.setChannels(new ArrayList<>());
-              //                              article.getChannels().add(item);
-              //                              article.setType(ArticleType.text);
-              //                              article.setCategory(ArticleCategory.news);
-              //                              article.setStatus(ArticleStatus.PUBLISHED);
-              //                            })
-              //                        .collect(Collectors.toList()));
-              //              }
+              if (item.getArticles() != null) {
+                articles.addAll(
+                    item.getArticles().stream()
+                        .peek(
+                            article -> {
+                              article.setCategory(item);
+                              article.setOrganization(rootChannel.getOrganization());
+                              article.setStatus(ArticleStatus.PUBLISHED);
+                            })
+                        .collect(Collectors.toList()));
+              }
 
               Optional<ArticleCategory> optional =
                   this.categoryDao.findOne(
@@ -130,7 +144,7 @@ public class ArticleCategoryService {
 
               if (optional.isPresent()) {
                 item.setId(optional.get().getId());
-                //                item.setArticles(optional.get().getArticles());
+                item.setArticles(optional.get().getArticles());
               } else {
                 this.categoryDao.save(item);
               }
@@ -145,6 +159,7 @@ public class ArticleCategoryService {
               item.setParent(parent);
               item.setIndex(index);
               item.setLevel(level);
+              item.setOrganization(rootChannel.getOrganization());
 
               return item;
             });
@@ -423,5 +438,16 @@ public class ArticleCategoryService {
 
   public ArticleCategory getById(Long id) {
     return this.categoryDao.getReferenceById(id);
+  }
+
+  public void clearAll(Long id) {
+    ArticleCategory category = this.categoryDao.getReferenceById(id);
+    // 删除栏目下的文章
+    List<Article> articles =
+        this.articleDao.findAll(
+            PropertyFilter.newFilter().startsWith("category.path", category.getPath()));
+    this.articleDao.deleteAll(articles);
+    // 删除栏目
+    this.categoryDao.deleteAllByPath(category.getPath(), category.getId());
   }
 }

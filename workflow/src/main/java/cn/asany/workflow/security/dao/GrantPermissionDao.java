@@ -5,8 +5,8 @@ package cn.asany.workflow.security.dao;
  * @date 2022/7/28 9:12
  */
 import cn.asany.pm.security.bean.GrantPermission;
-import org.jfantasy.framework.dao.jpa.JpaRepository;
+import net.asany.jfantasy.framework.dao.jpa.AnyJpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository("issueGrantPermissionDao")
-public interface GrantPermissionDao extends JpaRepository<GrantPermission, Long> {}
+public interface GrantPermissionDao extends AnyJpaRepository<GrantPermission, Long> {}

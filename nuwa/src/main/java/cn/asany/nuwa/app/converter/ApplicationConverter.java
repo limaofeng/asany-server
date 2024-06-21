@@ -1,9 +1,23 @@
+/*
+ * Copyright (c) 2024 Asany
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.asany.net/licenses/MIT
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package cn.asany.nuwa.app.converter;
 
 import cn.asany.nuwa.app.domain.Application;
 import cn.asany.nuwa.app.domain.ApplicationMenu;
 import cn.asany.nuwa.app.domain.ApplicationRoute;
-import cn.asany.nuwa.app.domain.Routespace;
 import cn.asany.nuwa.app.graphql.input.ApplicationCreateInput;
 import cn.asany.nuwa.app.service.dto.NativeApplication;
 import cn.asany.nuwa.app.service.dto.NuwaMenu;
@@ -15,8 +29,8 @@ import cn.asany.ui.resources.domain.toy.ComponentData;
 import com.fasterxml.jackson.core.type.TypeReference;
 import java.util.ArrayList;
 import java.util.List;
-import org.jfantasy.framework.jackson.JSON;
-import org.jfantasy.framework.util.common.StringUtil;
+import net.asany.jfantasy.framework.jackson.JSON;
+import net.asany.jfantasy.framework.util.common.StringUtil;
 import org.mapstruct.*;
 
 /**
@@ -35,18 +49,15 @@ public interface ApplicationConverter {
    * 路由转换
    *
    * @param routes List<ApplicationTemplateRoute>
-   * @param routespace route space
    * @return ApplicationRoute
    */
   @IterableMapping(elementTargetType = ApplicationRoute.class)
-  List<ApplicationRoute> toRoutes(
-      List<ApplicationTemplateRoute> routes, @Context Routespace routespace);
+  List<ApplicationRoute> toRoutes(List<ApplicationTemplateRoute> routes);
 
   /**
    * 将 ApplicationTemplateRoute 转换为 ApplicationRoute
    *
    * @param route 路由模版
-   * @param routespace 空间
    * @return ApplicationRoute
    */
   @Mappings({
@@ -57,9 +68,8 @@ public interface ApplicationConverter {
     @Mapping(target = "updatedBy", ignore = true),
     @Mapping(target = "updatedAt", ignore = true),
     @Mapping(target = "application", ignore = true),
-    @Mapping(target = "space", source = "id", qualifiedByName = "routespace"),
   })
-  ApplicationRoute toRoute(ApplicationTemplateRoute route, @Context Routespace routespace);
+  ApplicationRoute toRoute(ApplicationTemplateRoute route);
 
   /**
    * 将 NuwaRoute 转为 ApplicationRoute 对象
@@ -82,18 +92,6 @@ public interface ApplicationConverter {
       return new ArrayList<>();
     }
     return JSON.deserialize(blocks, new TypeReference<List<ComponentData>>() {});
-  }
-
-  /**
-   * 路由
-   *
-   * @param route 路由
-   * @param routespace 路由空间
-   * @return Routespace
-   */
-  @Named("routespace")
-  default Routespace routespace(Object route, @Context Routespace routespace) {
-    return routespace;
   }
 
   /**

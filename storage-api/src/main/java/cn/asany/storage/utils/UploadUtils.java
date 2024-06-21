@@ -1,3 +1,18 @@
+/*
+ * Copyright (c) 2024 Asany
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.asany.net/licenses/MIT
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package cn.asany.storage.utils;
 
 import cn.asany.storage.api.FileObject;
@@ -5,18 +20,16 @@ import cn.asany.storage.api.FileObjectMetadata;
 import cn.asany.storage.api.UploadFileObject;
 import jakarta.servlet.http.Part;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
+import java.security.MessageDigest;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import net.asany.jfantasy.framework.util.common.ClassUtil;
+import net.asany.jfantasy.framework.util.common.file.FileUtil;
 import org.apache.catalina.core.ApplicationPart;
 import org.apache.tomcat.util.http.fileupload.disk.DiskFileItem;
-import org.jfantasy.framework.error.IgnoreException;
-import org.jfantasy.framework.util.common.ClassUtil;
-import org.jfantasy.framework.util.common.StreamUtil;
-import org.jfantasy.framework.util.common.file.FileUtil;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.util.DigestUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -68,16 +81,22 @@ public class UploadUtils {
             .build());
   }
 
+  @SneakyThrows
   public static String md5(File file) {
-    InputStream input = null;
-    try {
-      input = Files.newInputStream(file.toPath());
-      return DigestUtils.md5DigestAsHex(input);
-    } catch (IOException e) {
-      log.error(e.getMessage());
-      throw new IgnoreException(e);
-    } finally {
-      StreamUtil.closeQuietly(input);
+    MessageDigest digest = MessageDigest.getInstance("MD5");
+    try (FileInputStream fis = new FileInputStream(file)) {
+      byte[] byteArray = new byte[8192]; // 8KB buffer size
+      int bytesCount;
+      // Read file data and update in message digest
+      while ((bytesCount = fis.read(byteArray)) != -1) {
+        digest.update(byteArray, 0, bytesCount);
+      }
     }
+    // Convert the byte array into hex format
+    StringBuilder sb = new StringBuilder();
+    for (byte b : digest.digest()) {
+      sb.append(String.format("%02x", b));
+    }
+    return sb.toString();
   }
 }

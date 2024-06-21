@@ -1,17 +1,33 @@
+/*
+ * Copyright (c) 2024 Asany
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.asany.net/licenses/MIT
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package cn.asany.storage.api;
 
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import org.jfantasy.framework.util.common.DateUtil;
+import net.asany.jfantasy.framework.util.common.DateUtil;
 
 /**
  * 文件对象元数据
  *
  * @author limaofeng
  */
-public class FileObjectMetadata {
+public class FileObjectMetadata implements Serializable {
   public static final String AUTHORIZATION = "Authorization";
   public static final String CACHE_CONTROL = "Cache-Control";
   public static final String CONTENT_DISPOSITION = "Content-Disposition";
@@ -34,6 +50,7 @@ public class FileObjectMetadata {
 
   /** 用户自定义的元数据，表示以x-oss-meta-为前缀的请求头。 */
   private final Map<String, Object> userMetadata = new HashMap<>();
+
   /** 非用户自定义的元数据 */
   private final Map<String, Object> metadata = new HashMap<>();
 
@@ -262,7 +279,7 @@ public class FileObjectMetadata {
   }
 
   public boolean isDir() {
-    return (boolean) metadata.get(IS_DIR);
+    return (boolean) metadata.getOrDefault(IS_DIR, false);
   }
 
   public static class FileObjectMetadataBuilder {

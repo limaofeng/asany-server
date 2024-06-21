@@ -17,37 +17,37 @@ extend type Query {
     # 排序
     orderBy: OrderBy = "unsorted"
   ): [User!]!
-  @authInfo(
-    name: "ac:UserList"
-    accessLevel: "List"
-    resourceTypes: ["ac:user/*", "ac:user/{#id}"]
-  )
+    @authInfo(
+      name: "ac:UserList"
+      accessLevel: "List"
+      resourceTypes: ["ac:user/*", "ac:user/{#id}"]
+    )
   """
   查询用户
   """
   usersConnection(
     where: UserWhereInput = {}
     # 页码
-    page: Int = 0
+    page: Int = 1
     # 每页显示数据条数
     pageSize: Int = 15
     # 排序
     orderBy: OrderBy = "unsorted"
   ): UserConnection!
-  @authInfo(
-    name: "ac:UsersConnection"
-    accessLevel: "List"
-    resourceTypes: ["ac:user/*", "ac:user/{#id}"]
-  )
+    @authInfo(
+      name: "ac:UsersConnection"
+      accessLevel: "List"
+      resourceTypes: ["ac:user/*", "ac:user/{#id}"]
+    )
   """
   用户详情
   """
   user(id: ID): User!
-  @authInfo(
-    name: "ac:GetUser"
-    accessLevel: "Read"
-    resourceTypes: ["ac:user/*", "ac:user/{#id}"]
-  )
+    @authInfo(
+      name: "ac:GetUser"
+      accessLevel: "Read"
+      resourceTypes: ["ac:user/*", "ac:user/{#id}"]
+    )
 }
 
 extend type Mutation {
@@ -68,55 +68,67 @@ extend type Mutation {
     """
     newPassword: String!
   ): Boolean!
-  @authInfo(
-    name: "ac:ChangePassword"
-    accessLevel: "Write"
-    resourceTypes: ["ac:user/*", "ac:user/{#id}"]
-  )
+    @authInfo(
+      name: "ac:ChangePassword"
+      accessLevel: "Write"
+      resourceTypes: ["ac:user/*", "ac:user/{#id}"]
+    )
+
   """
   创建用户
   """
-  createUsers(
+  createUser(input: UserCreateInput): User
+
+  """
+  创建用户
+  """
+  createManyUsers(
     users: [UserCreateInput!]!
     settings: UserSettingsInput!
   ): [User!]!
-  @authInfo(
-    name: "ac:CreateUsers"
-    accessLevel: "Write"
-    resourceTypes: ["ac:user/*", "ac:user/{#id}"]
-  )
+    @authInfo(
+      name: "ac:CreateUsers"
+      accessLevel: "Write"
+      resourceTypes: ["ac:user/*", "ac:user/{#id}"]
+    )
   """
   更新用户
   """
   updateUser(id: ID!, input: UserUpdateInput!, merge: Boolean = true): User!
-  @authInfo(
-    name: "ac:UpdateUser"
-    accessLevel: "Write"
-    resourceTypes: ["ac:user/*", "ac:user/{#id}"]
-  )
+    @authInfo(
+      name: "ac:UpdateUser"
+      accessLevel: "Write"
+      resourceTypes: ["ac:user/*", "ac:user/{#id}"]
+    )
   """
   删除用户
   """
   deleteUser(id: ID): User!
-  @authInfo(
-    name: "ac:DeleteUser"
-    accessLevel: "Write"
-    resourceTypes: ["ac:user/*", "ac:user/{#id}"]
-  )
+    @authInfo(
+      name: "ac:DeleteUser"
+      accessLevel: "Write"
+      resourceTypes: ["ac:user/*", "ac:user/{#id}"]
+    )
   """
   批量删除用户
   """
-  deleteManyUsers(ids: [ID!]!): [User!]!
-  @authInfo(
-    name: "ac:DeleteManyUsers"
-    accessLevel: "Write"
-    resourceTypes: ["ac:user/*", "ac:user/{#id}"]
-  )
+  deleteManyUsers(where: UserWhereInput!): BatchPayload!
+    @authInfo(
+      name: "ac:DeleteManyUsers"
+      accessLevel: "Write"
+      resourceTypes: ["ac:user/*", "ac:user/{#id}"]
+    )
 }
 
 input UserCreateInput {
   username: String!
   nickname: String
+  password: String
+  userType: UserType
+  avatar: File
+  phone: String
+  email: String
+  tenantId: ID
 }
 
 input UserSettingsInput {
@@ -125,8 +137,25 @@ input UserSettingsInput {
 }
 
 input UserWhereInput {
+  id_in: [ID!]
   # 昵称模糊查询
-  nickname_like: String
+  nickname_contains: String
+  """
+  用户名
+  """
+  username: String
+  """
+  用户名不等于
+  """
+  username_notEqual: String
+  """
+  手机
+  """
+  phone: String
+  """
+  租户ID
+  """
+  tenantId: ID
 }
 
 type UserEdge {
@@ -158,7 +187,7 @@ enum UserType {
   ADMIN
 }
 
-type User {
+type User implements BaseEntity {
   id: ID
   """
   称号
@@ -168,6 +197,10 @@ type User {
   名称
   """
   name: String
+  """
+  昵称
+  """
+  nickname: String
   """
   登录名
   """
@@ -236,6 +269,14 @@ type User {
   最后登录时间
   """
   lastLoginTime: Date
+  """
+  创建时间
+  """
+  createdAt: Date @dateFormat
+  """
+  修改时间
+  """
+  updatedAt: Date @dateFormat
 }
 
 input UserUpdateInput {
@@ -243,6 +284,10 @@ input UserUpdateInput {
   名称
   """
   name: String
+  """
+  昵称
+  """
+  nickname: String
   """
   头像
   """

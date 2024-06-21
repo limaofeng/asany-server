@@ -1,8 +1,0 @@
-mutation {
-    createModel(input: {
-        code: "",
-        name: "name"
-    }){
-        id
-    }
-}

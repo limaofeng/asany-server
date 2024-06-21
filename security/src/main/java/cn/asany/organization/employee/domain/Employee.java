@@ -1,3 +1,18 @@
+/*
+ * Copyright (c) 2024 Asany
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.asany.net/licenses/MIT
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package cn.asany.organization.employee.domain;
 
 import cn.asany.base.common.Ownership;
@@ -19,10 +34,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import lombok.*;
-import org.hibernate.annotations.GenericGenerator;
+import net.asany.jfantasy.framework.dao.BaseBusEntity;
+import net.asany.jfantasy.framework.dao.hibernate.annotations.TableGenerator;
+import net.asany.jfantasy.framework.dao.hibernate.converter.StringArrayConverter;
 import org.hibernate.annotations.Type;
-import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.dao.hibernate.converter.StringArrayConverter;
 
 /**
  * 员工
@@ -51,8 +66,7 @@ public class Employee extends BaseBusEntity implements Ownership {
 
   @Id
   @Column(name = "ID", precision = 22)
-  @GeneratedValue(generator = "fantasy-sequence")
-  @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+  @TableGenerator
   private Long id;
 
   /** 头像 */
@@ -158,11 +172,6 @@ public class Employee extends BaseBusEntity implements Ownership {
     builder.name(user.getName());
     builder.user(user);
     return builder;
-  }
-
-  @Override
-  public String getOwnerType() {
-    return OWNERSHIP_KEY;
   }
 
   public static class EmployeeBuilder {

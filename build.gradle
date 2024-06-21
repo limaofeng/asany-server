@@ -1,40 +1,40 @@
 import org.gradle.plugins.ide.eclipse.model.SourceFolder
 
 plugins {
-    id 'java'
-    id 'jacoco'
+    id "java"
+    id "jacoco"
     id "org.hibernate.orm" version "${PLUGIN_HIBERNATE_VER}"
     id "io.spring.dependency-management" version "${PLUGIN_SPRING_DEPENDENCY_MANAGEMENT_VER}"
     id "org.zeroturnaround.gradle.jrebel" version "${PLUGIN_JREBEL_VER}" apply false
-    id 'com.github.kt3k.coveralls' version "${PLUGIN_COVERALLS_VER}"
+    id "com.github.kt3k.coveralls" version "${PLUGIN_COVERALLS_VER}"
     id "com.star-zero.gradle.githook" version "${PLUGIN_GIT_HOOK_VER}"
     id "ru.netris.commitlint" version "${PLUGIN_COMMITLINT_VER}"
     id "com.diffplug.spotless" version "${PLUGIN_SPOTLESS_VER}"
     id "com.diffplug.eclipse.apt" version "${PLUGIN_ECLIPSE_APT_VER}"
 }
 
-//githook {
-//    failOnMissingHooksDir = false
-//    createHooksDirIfNotExist = false
-//    hooks {
-//        "commit-msg" {
-//            task = "commitlint -Dmsgfile=\$1"
-//        }
-//        "pre-commit" {
-//            shell = "sh ./gradle/spotless.sh"
-//        }
-//    }
-//}
+githook {
+    failOnMissingHooksDir = false
+    createHooksDirIfNotExist = false
+    hooks {
+        "commit-msg" {
+            task = "commitlint -Dmsgfile=\$1"
+        }
+        "pre-commit" {
+            shell = "sh ./gradle/spotless.sh"
+        }
+    }
+}
 
 allprojects {
-    apply plugin: 'java'
-    apply plugin: 'idea'
-    apply plugin: 'eclipse'
+    apply plugin: "java"
+    apply plugin: "idea"
+    apply plugin: "eclipse"
     apply plugin: "com.diffplug.eclipse.apt"
 
-    group = 'cn.asany.chaos'
-    version = System.getenv().getOrDefault('RELEASE_VERSION', 'v0.0.0').replaceAll(/^v/, "")
-    status = 'integration'
+    group = "cn.asany.chaos"
+    version = System.getenv().getOrDefault("RELEASE_VERSION", "v0.0.0").replaceAll(/^v/, "")
+    status = "integration"
 
     idea {
         module {
@@ -47,19 +47,19 @@ allprojects {
     eclipse {
         jdt {
             apt {
-                genSrcDir = file('build/generated/sources/annotationProcessor/java/main')
-                genTestSrcDir = file('build/generated_tests')
+                genSrcDir = file("build/generated/sources/annotationProcessor/java/main")
+                genTestSrcDir = file("build/generated_tests")
             }
         }
         classpath {
-            file.beforeMerged { cp -> cp.entries.add(new SourceFolder('build/generated/sources/annotationProcessor/java/main/', null))
+            file.beforeMerged { cp -> cp.entries.add(new SourceFolder("build/generated/sources/annotationProcessor/java/main/", null))
             }
         }
     }
 
     repositories {
         maven { url "https://s01.oss.sonatype.org/content/groups/staging/" }
-        maven { url "https://maven.aliyun.com/repository/central"}
+        maven { url "https://maven.aliyun.com/repository/central" }
         mavenCentral()
         mavenLocal()
     }
@@ -68,19 +68,25 @@ allprojects {
 subprojects {
     apply from: "$rootDir/gradle/spotless.gradle"
 
-    apply plugin: 'io.spring.dependency-management'
-    apply plugin: 'maven-publish'
-    apply plugin: 'signing'
+    apply plugin: "io.spring.dependency-management"
+    apply plugin: "maven-publish"
+    apply plugin: "signing"
 
-    sourceCompatibility = project.property('SOURCE_COMPATIBILITY')
-    targetCompatibility = project.property('TARGET_COMPATIBILITY')
+    java {
+        sourceCompatibility = project.property('SOURCE_COMPATIBILITY')
+        targetCompatibility = project.property('TARGET_COMPATIBILITY')
 
-    [compileJava, compileTestJava, javadoc]*.options*.encoding = 'UTF-8'
+        [compileJava, compileTestJava, javadoc]*.options*.encoding = 'UTF-8'
 
-    compileJava.dependsOn(processResources)
+        compileJava.dependsOn(processResources)
+    }
 
-    manifest {
-        attributes 'provider': 'gradle'
+    jar {
+        manifest {
+            attributes(
+              'provider': 'gradle'
+            )
+        }
     }
 
     dependencyManagement {
@@ -100,8 +106,9 @@ subprojects {
         compileOnly "org.mapstruct:mapstruct:$LIB_MAPSTRUCT_VER"
         compileOnly "org.projectlombok:lombok"
         compileOnly "org.springframework.boot:spring-boot-starter-web"
+        compileOnly "org.jetbrains:annotations:24.0.0"
         annotationProcessor "org.mapstruct:mapstruct-processor:$LIB_MAPSTRUCT_VER"
-        annotationProcessor "org.projectlombok:lombok:"
+        annotationProcessor "org.projectlombok:lombok"
         annotationProcessor "org.projectlombok:lombok-mapstruct-binding:${LIB_LOMBOK_MAPSTRUCT_BINDING_VER}"
         annotationProcessor "org.springframework.boot:spring-boot-configuration-processor:$LIB_SPRING_BOOT_VER"
         testCompileOnly "org.projectlombok:lombok"
@@ -133,6 +140,7 @@ subprojects {
         ignoreFailures = true
     }
 
+    //noinspection GroovyAssignabilityCheck
     tasks.register("codeCoverageReport", JacocoReport) {
         subprojects { subproject ->
             subproject.plugins.withType(JacocoPlugin).configureEach {
@@ -149,9 +157,11 @@ subprojects {
         }
 
         reports {
-            xml.enabled true
-            html.enabled false
-            xml.destination file("${buildDir}/reports/Coverage.xml")
+            xml {
+                required.set(true)  // 启用 XML 报告
+                outputLocation.set(file("${buildDir}/reports/Coverage.xml"))
+            }
+            html.required.set(false) // 禁用 HTML 报告
         }
     }
 }

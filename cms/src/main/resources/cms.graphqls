@@ -116,15 +116,17 @@ input ArticleCategoryUpdateInput {
 
 input ArticleWhereInput {
   # 关键字
-  Keyword: String
+  keyword: String
+  """
+  不包含的文章
+  """
+  id_notIn: [ID!]
   # 标签
-  tags: [ID]
-  # 栏目为空 (没有栏目的文章)
-  categories_isEmpty: Boolean
+  tags: [ID!]
   # 频道
   category: AcceptArticleCategory
   # 多个栏目
-  channel_in: [ID]
+  category_in: [ID!]
   # 复杂查询支持
   and: [ArticleWhereInput]
   # 复杂查询支持
@@ -132,11 +134,9 @@ input ArticleWhereInput {
   # 发布状态
   status: ArticleStatus
   # 发布状态
-  status_in: [ArticleStatus]
+  status_in: [ArticleStatus!]
   # 发布时间
   publishedAt: String
-  # 发布人
-  createdBy: String
   # 用户id
   viewer: ID
   # 创建人 ID
@@ -334,13 +334,13 @@ type ArticleAuthor {
 
 # 文章
 type Article
-@resource(
-  name: "文章"
-  label: "cms:article"
-  description: "文章"
-  sourceTypes: ["cms:article/*", "cms:article/{#id}"]
-  conditions: ["organization.id:StringEquals"]
-) {
+  @resource(
+    name: "文章"
+    label: "cms:article"
+    description: "文章"
+    sourceTypes: ["cms:article/*", "cms:article/{#id}"]
+    conditions: ["organization.id:StringEquals"]
+  ) {
   """
   文章ID
   """
@@ -372,15 +372,15 @@ type Article
   """
   发布时间
   """
-  publishedAt: Date
+  publishedAt: Date @dateFormat
   """
   内容
   """
-  body: ArticleBody
+  content: ArticleContent
   """
-  body 的 html 格式
+  正文类型
   """
-  bodyHtml: String
+  contentType: ContentType
   #查询评论
   #    comments(filter: CommentWhereInput, page: Int = 1, pageSize: Int = 15, orderBy: OrderBy = "unsorted"): CommentConnection
   """
@@ -411,31 +411,128 @@ type Article
   validityEndDate: Date
   # 附件
   attachments: [File!]!
-  # 统计计数
-  #    starrable(starType: ArticleStarType!): Starrable!
-  # 权限设置
-  #  permissionStatements: Permission
+  """
+  收藏
+  """
+  favorites: Int!
+  """
+  点击数
+  """
+  clicks: Int!
+  """
+  阅读数
+  """
+  reads: Int!
+  """
+  点赞数
+  """
+  likes: Int!
+  """
+  创建人
+  """
   createdBy: Int
+  """
+  修改人
+  """
   updatedBy: Int
-  createdAt: Date
-  updatedAt: Date
+  """
+  创建时间
+  """
+  createdAt: Date @dateFormat
+  """
+  修改时间
+  """
+  updatedAt: Date @dateFormat
 }
 
 # 文章内容
-interface ArticleBody {
-  id: ID
+interface ArticleContent {
+  id: ID!
 }
 
-enum ArticleContentType {
+enum TextContentType {
   HTML
   MARKDOWN
 }
 
 # html格式内容
-type ArticleContent implements ArticleBody {
-  id: ID
-  type: ArticleContentType
+type TextContent implements ArticleContent {
+  id: ID!
+  type: TextContentType
   text: String
+}
+
+type VideoContent implements ArticleContent {
+  id: ID!
+  url: String
+  video: File
+  title: String
+  description: String
+}
+
+type ImageContentItem {
+  id: ID!
+  """
+  图片
+  """
+  url: String
+  """
+  本地图片对象
+  """
+  image: File
+  """
+  图片标题
+  """
+  title: String
+  """
+  图片描述
+  """
+  description: String
+}
+
+type ImageContent implements ArticleContent {
+  id: ID!
+  """
+  图片集
+  """
+  images: [ImageContentItem!]!
+}
+
+enum DocumentType {
+  PDF
+  DOCX
+  XLSX
+  PPTX
+  TXT
+  OTHER
+}
+
+type DocumentContent implements ArticleContent {
+  id: ID!
+  """
+  文件地址
+  """
+  url: String
+  """
+  文件
+  """
+  document: File
+  """
+  文档类型
+  """
+  type: DocumentType
+  """
+  文件大小
+  """
+  size: Number @fileSize(unit: "bytes")
+  """
+  文件标题
+  """
+  title: String
+  """
+  文件描述
+  """
+  description: String
 }
 
 enum ArticleType {
@@ -476,7 +573,7 @@ input ArticleCreateInput {
   """
   文章正文
   """
-  body: JSON
+  content: ArticleContentInput
   """
   摘要
   """
@@ -488,11 +585,11 @@ input ArticleCreateInput {
   """
   文章标签
   """
-  tags: [ID]
+  tags: [ID!]
   """
   功能特征 <br/> 置顶 / 精华
   """
-  features: [String]
+  features: [String!]
   """
   文章栏目
   """
@@ -505,16 +602,18 @@ input ArticleCreateInput {
   发布日期
   """
   publishedAt: String
-  # 授予权限
-  access: [String]
+  """
+  授予权限
+  """
+  access: [String!]
   """
   附件
   """
-  attachments: [File]
+  attachments: [File!]
   """
   附加信息
   """
-  metafields: [ArticleMetafieldInput]
+  metafields: [ArticleMetafieldInput!]
   # 有效期限 true 永久 false 短期
   validity: Boolean
   # 有效期限 开始时间
@@ -522,49 +621,21 @@ input ArticleCreateInput {
   # 有效期限 结束时间
   validityEndDate: Date
   # 作者
-  authors: [ID]
+  authors: [ID!]
 }
 
 input ContentInput {
   # 正文类型
-  type: ArticleContentType
+  type: TextContentType
   # 文本
   text: String
 }
 
-enum ArticleBodyType {
-  """
-  经典
-  """
-  classic
-  """
-  轮播图
-  """
-  banner
-  """
-  产品
-  """
-  product
-  """
-  团队
-  """
-  team
-  """
-  时间线
-  """
-  timeline
-  """
-  奖项
-  """
-  awards
-  """
-  常见问题它
-  """
-  faq
-  """
-  关于
-  """
-  about
+enum ContentType {
+  TEXT
+  VIDEO
+  IMAGE
+  DOCUMENT
 }
 
 input ContentPictureInput {
@@ -580,6 +651,63 @@ input ArticleMetafieldInput {
   namespace: String!
   value: String
   description: String
+}
+
+input ImageContentItemInput {
+  url: String
+  image: File
+  alt: String
+  title: String
+  description: String
+  index: Int
+}
+
+"""
+文章内容
+contentType = VIDEO, fields = ["url", "video", "title", "description"]
+contentType = TEXT, fields = ["type", "text"]
+contentType = IMAGE, fields = ["images"]
+contentType = DOCUMENT, fields = ["url", "document", "type", "size", "title", "description"]
+"""
+input ArticleContentInput {
+  id: ID
+  """
+  标题
+  """
+  title: String
+  """
+  描述
+  """
+  description: String
+  """
+  引用地址
+  """
+  url: String
+  """
+  Text 类型：HTML, MARKDOWN
+  Doc 类型：PDF, DOCX, XLSX, PPTX, TXT, OTHER
+  """
+  type: String
+  """
+  文本
+  """
+  text: String
+  """
+  文件大小
+  """
+  size: Int
+  """
+  图片集
+  """
+  images: [ImageContentItemInput!]
+  """
+  视频
+  """
+  video: File
+  """
+  文档
+  """
+  document: File
 }
 
 input ArticleUpdateInput {
@@ -610,7 +738,7 @@ input ArticleUpdateInput {
   """
   特征
   """
-  features: [String]
+  features: [String!]
   """
   文章栏目
   """
@@ -618,7 +746,7 @@ input ArticleUpdateInput {
   """
   文章正文 <br/> 实际内容与 ArticleStoreTemplate 相关
   """
-  body: JSON
+  content: ArticleContentInput
   """
   发布日期
   """
@@ -630,11 +758,11 @@ input ArticleUpdateInput {
   """
   附件
   """
-  attachments: [File]
+  attachments: [File!]
   """
   作者
   """
-  authors: [ID]
+  authors: [ID!]
   # 有效期限 true 永久 false 短期
   validity: Boolean
   # 有效期限 开始时间
@@ -644,7 +772,7 @@ input ArticleUpdateInput {
   """
   附加信息
   """
-  metafields: [ArticleMetafieldInput]
+  metafields: [ArticleMetafieldInput!]
 }
 
 type ArticleStoreTemplateComponents {
@@ -675,6 +803,10 @@ type ArticleStoreTemplate {
   名称
   """
   name: String!
+  """
+  内容类型
+  """
+  contentType: ContentType
   """
   排序码
   """
@@ -856,16 +988,25 @@ extend type Query {
   全部文章(分页)
   """
   articlesConnection(
-    where: ArticleWhereInput
+    where: ArticleWhereInput = {}
     page: Int = 1
     pageSize: Int = 15
     orderBy: OrderBy = "unsorted"
   ): ArticleConnection
-  @authInfo(
-    name: "cms:ArticlesConnection"
-    accessLevel: "List"
-    resourceTypes: ["cms:article/*", "cms:article/{#id}"]
-  )
+    @authInfo(
+      name: "cms:ArticlesConnection"
+      accessLevel: "List"
+      resourceTypes: ["cms:article/*", "cms:article/{#id}"]
+    )
+  """
+  全部文章
+  """
+  articles(
+    where: ArticleWhereInput = {}
+    offset: Int = 0
+    limit: Int = 15
+    orderBy: OrderBy = "unsorted"
+  ): [Article!]!
   """
   文章栏目
   """
@@ -889,24 +1030,6 @@ extend type Query {
   查询文章存储模版
   """
   articleStoreTemplates: [ArticleStoreTemplate!]!
-  """
-  已加星标的文章频道
-  """
-  starredArticleCategories(
-    uid: ID!
-    starType: ArticleCategoryStarType!
-  ): [ArticleCategory]
-  """
-  已加星标的文章
-  """
-  starredArticles(
-    uid: ID!
-    starType: ArticleStarType!
-    where: ArticleWhereInput = {}
-    page: Int = 1
-    pageSize: Int = 15
-    orderBy: OrderBy = "unsorted"
-  ): ArticleConnection
   """
   查询所有推荐位
   """
@@ -935,8 +1058,8 @@ type Mutation {
   """
   updateArticle(
     id: ID!
-    merge: Boolean = true
     input: ArticleUpdateInput!
+    merge: Boolean = true
   ): Article
   """
   发布文章

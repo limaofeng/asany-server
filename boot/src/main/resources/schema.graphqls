@@ -1,7 +1,4 @@
-directive @fileFormat on FIELD_DEFINITION
-
 scalar JSON
-scalar File
 scalar Number
 
 enum FileSizeUnit {

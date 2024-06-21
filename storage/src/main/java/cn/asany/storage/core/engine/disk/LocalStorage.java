@@ -1,26 +1,51 @@
+/*
+ * Copyright (c) 2024 Asany
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.asany.net/licenses/MIT
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package cn.asany.storage.core.engine.disk;
 
 import cn.asany.storage.api.*;
+import cn.asany.storage.utils.UploadUtils;
 import java.io.*;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.jfantasy.framework.util.common.StreamUtil;
-import org.jfantasy.framework.util.common.StringUtil;
-import org.jfantasy.framework.util.common.file.FileUtil;
+import java.util.Properties;
+import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
+import net.asany.jfantasy.framework.util.common.StreamUtil;
+import net.asany.jfantasy.framework.util.common.file.FileUtil;
+import org.springframework.core.io.FileUrlResource;
+import org.springframework.core.io.support.PropertiesLoaderUtils;
 
+@Slf4j
 public class LocalStorage implements Storage {
 
   private final String id;
   protected String defaultDir;
 
+  private final IMultipartUpload multipartUpload;
+
+  @SneakyThrows
   public LocalStorage(String id, String defaultDir) {
     super();
     this.id = id;
-    this.defaultDir = defaultDir;
+    this.setDefaultDir(defaultDir);
+    this.multipartUpload = new LocalMultipartUpload(defaultDir);
   }
 
   @Override
@@ -54,7 +79,10 @@ public class LocalStorage implements Storage {
   }
 
   public void setDefaultDir(String defaultDir) throws IOException {
-    FileUtil.mkdir(new File(defaultDir).toPath());
+    Path path = new File(defaultDir).toPath();
+    if (Files.notExists(path)) {
+      Files.createDirectory(path);
+    }
     this.defaultDir = defaultDir;
   }
 
@@ -68,9 +96,7 @@ public class LocalStorage implements Storage {
   }
 
   private String filterRemotePath(String remotePath) {
-    return remotePath.startsWith("/")
-        ? remotePath
-        : ("/" + remotePath);
+    return remotePath.startsWith("/") ? remotePath : ("/" + remotePath);
   }
 
   private InputStream getInputStream(String remotePath) throws IOException {
@@ -91,22 +117,36 @@ public class LocalStorage implements Storage {
   }
 
   private FileObject root() {
-    FileObject root = retrieveFileItem(File.separator);
-    assert root != null;
-    return root;
+    return retrieveFileItem(File.separator);
   }
 
+  @SneakyThrows
   private FileObject retrieveFileItem(String absolutePath) {
     final File file = new File(this.defaultDir + absolutePath);
-    if (!file.getAbsolutePath().startsWith(new File(this.defaultDir).getAbsolutePath())
-        || !file.exists()) {
+    if (!file.exists()) {
       return null;
     }
+    if (file.isDirectory()) {
+      return new LocalFileObject(this, file);
+    }
+    Path metadataPath = Path.of(file.toPath().toAbsolutePath() + ".metadata");
+    if (Files.notExists(metadataPath)) {
+      try (BufferedWriter writer = new BufferedWriter(new FileWriter(metadataPath.toFile()))) {
+        String md5 = UploadUtils.md5(file);
+        writer.write(FileObjectMetadata.CONTENT_MD5 + ": " + md5 + "\n");
+        writer.write(FileObjectMetadata.ETAG + ": " + md5 + "\n");
+        writer.write(FileObjectMetadata.CONTENT_LENGTH + ": " + file.length() + "\n");
+        writer.write(FileObjectMetadata.CONTENT_TYPE + ": " + FileUtil.getMimeType(file) + "\n");
+      }
+    }
     Map<String, Object> metadata = new HashMap<>();
-    metadata.put(FileObjectMetadata.CONTENT_TYPE, FileUtil.getMimeType(file));
-    return file.isDirectory()
-        ? new LocalFileObject(this, file)
-        : new LocalFileObject(this, file, new FileObjectMetadata(metadata));
+    Properties properties =
+        PropertiesLoaderUtils.loadProperties(
+            new FileUrlResource(metadataPath.toAbsolutePath().toString()));
+    for (Map.Entry<Object, Object> entity : properties.entrySet()) {
+      metadata.put(entity.getKey().toString(), entity.getValue());
+    }
+    return new LocalFileObject(this, file, new FileObjectMetadata(metadata));
   }
 
   FileObject retrieveFileItem(final File file) {
@@ -139,13 +179,15 @@ public class LocalStorage implements Storage {
   @Override
   public List<FileObject> listFiles(String remotePath) {
     FileObject fileObject = retrieveFileItem(remotePath);
-    return fileObject == null ? Collections.emptyList() : fileObject.listFiles();
+    assert fileObject != null;
+    return fileObject.listFiles();
   }
 
   @Override
   public List<FileObject> listFiles(String remotePath, FileItemFilter fileItemFilter) {
     FileObject fileObject = retrieveFileItem(remotePath);
-    return fileObject == null ? Collections.emptyList() : fileObject.listFiles(fileItemFilter);
+    assert fileObject != null;
+    return fileObject.listFiles(fileItemFilter);
   }
 
   @Override
@@ -156,5 +198,10 @@ public class LocalStorage implements Storage {
   @Override
   public void removeFile(String remotePath) throws IOException {
     FileUtil.rm(Paths.get(this.defaultDir + remotePath));
+  }
+
+  @Override
+  public IMultipartUpload multipartUpload() {
+    return this.multipartUpload;
   }
 }

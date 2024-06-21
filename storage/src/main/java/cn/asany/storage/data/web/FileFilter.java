@@ -1,3 +1,18 @@
+/*
+ * Copyright (c) 2024 Asany
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.asany.net/licenses/MIT
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package cn.asany.storage.data.web;
 
 import cn.asany.storage.api.FileObject;
@@ -5,21 +20,21 @@ import cn.asany.storage.api.Storage;
 import cn.asany.storage.core.StorageResolver;
 import cn.asany.storage.data.domain.FileDetail;
 import cn.asany.storage.data.service.FileService;
-import java.io.*;
-import java.util.Optional;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.jfantasy.framework.util.common.ClassUtil;
-import org.jfantasy.framework.util.common.ObjectUtil;
-import org.jfantasy.framework.util.common.StreamUtil;
-import org.jfantasy.framework.util.common.StringUtil;
-import org.jfantasy.framework.util.regexp.RegexpUtil;
-import org.jfantasy.framework.util.web.ServletUtils;
-import org.jfantasy.framework.util.web.WebUtil;
+import java.io.*;
+import java.util.Optional;
+import net.asany.jfantasy.framework.util.common.ClassUtil;
+import net.asany.jfantasy.framework.util.common.ObjectUtil;
+import net.asany.jfantasy.framework.util.common.StreamUtil;
+import net.asany.jfantasy.framework.util.common.StringUtil;
+import net.asany.jfantasy.framework.util.regexp.RegexpUtil;
+import net.asany.jfantasy.framework.util.web.ServletUtils;
+import net.asany.jfantasy.framework.util.web.WebUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.filter.GenericFilterBean;
 
@@ -59,7 +74,7 @@ public class FileFilter extends GenericFilterBean {
     Optional<FileDetail> optionalFile = fileService.findByPath(url);
     if (optionalFile.isPresent()) {
       FileDetail file = optionalFile.get();
-      String id = file.getStorageConfig().getId();
+      String id = file.getStorageConfig();
       Storage storage = storageResolver.resolve(id);
       chain.doFilter(request, response);
       return;
@@ -76,7 +91,7 @@ public class FileFilter extends GenericFilterBean {
       }
       // 查找源文件
       FileDetail file = optionalFile.get();
-      String id = file.getStorageConfig().getId();
+      String id = file.getStorageConfig();
       Storage storage = storageResolver.resolve(id);
       FileObject fileObject = null;
       // with(storage.getFileItem(file.getPath()), file.toFileObject(null));

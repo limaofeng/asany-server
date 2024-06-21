@@ -1,0 +1,880 @@
+type ProductConnection {
+  # 总数据条数
+  totalCount: Int!
+  # 每页显示条数
+  pageSize: Int!
+  # 总页数
+  totalPage: Int!
+  # 当前页
+  currentPage: Int!
+  edges: [ProductEdge!]!
+  pageInfo: PageInfo!
+}
+
+type ProductEdge {
+  cursor: String
+  node: Product!
+}
+
+type ProductSpecification {
+  id: ID!
+  """
+  规格名称
+  """
+  name: String
+  """
+  规格值
+  """
+  value: String
+}
+
+type ProductImage {
+  id: ID!
+  """
+  图片URL
+  """
+  url: String
+  """
+  图片对象
+  """
+  image: File
+  """
+  图片描述
+  """
+  alt: String
+  """
+  标题
+  """
+  title: String
+  """
+  图片描述
+  """
+  description: String
+  """
+  排序
+  """
+  index: Int
+}
+
+"""
+产品
+"""
+type Product {
+  id: ID!
+  """
+  产品名称
+  """
+  name: String
+  """
+  产品品牌
+  """
+  brand: Brand
+  """
+  产品规格
+  """
+  specifications: [ProductSpecification!]!
+  """
+  产品保修政策
+  """
+  warrantyPolicies: [WarrantyPolicy!]!
+  """
+  产品图片
+  """
+  images: [ProductImage!]!
+  """
+  产品文章
+  """
+  articles(
+    linkageType: String!
+    where: ArticleWhereInput = {}
+    offset: Int = 0
+    limit: Int = 15
+    orderBy: OrderBy = "unsorted"
+  ): [Article!]!
+  """
+  创建时间
+  """
+  createdAt: Date @dateFormat
+  """
+  修改时间
+  """
+  updatedAt: Date @dateFormat
+}
+
+type DeviceConnection {
+  # 总数据条数
+  totalCount: Int!
+  # 每页显示条数
+  pageSize: Int!
+  # 总页数
+  totalPage: Int!
+  # 当前页
+  currentPage: Int!
+  edges: [DeviceEdge!]!
+  pageInfo: PageInfo!
+}
+
+type DeviceEdge {
+  cursor: String
+  node: Device!
+}
+
+"""
+资产状态
+"""
+type AssetStatus {
+  """
+  状态ID
+  """
+  id: ID!
+  """
+  状态码
+  """
+  code: String!
+  """
+  状态名称
+  """
+  name: String!
+}
+
+"""
+品牌
+"""
+type Brand {
+  """
+  品牌ID
+  """
+  id: ID!
+  """
+  品牌名称
+  """
+  name: String
+  """
+  品牌描述
+  """
+  description: String
+  """
+  创建时间
+  """
+  createdAt: Date @dateFormat
+  """
+  修改时间
+  """
+  updatedAt: Date @dateFormat
+}
+
+"""
+保修卡状态
+"""
+enum WarrantyStatus {
+  """
+  未激活
+  """
+  INACTIVE
+  """
+  已激活
+  """
+  ACTIVE
+  """
+  已过期
+  """
+  EXPIRED
+  """
+  已作废
+  """
+  CANCELED
+}
+
+"""
+保修政策
+"""
+type WarrantyPolicy {
+  id: ID!
+  """
+  保修政策名称
+  """
+  name: String
+  """
+  有效期限，以月为单位
+  """
+  duration: Int
+  """
+  创建时间
+  """
+  createdAt: Date @dateFormat
+  """
+  修改时间
+  """
+  updatedAt: Date @dateFormat
+}
+
+"""
+保修卡
+"""
+type WarrantyCard {
+  id: ID!
+  """
+  保修开始日期
+  """
+  startDate: Date! @dateFormat
+  """
+  保修结束日期
+  """
+  endDate: Date! @dateFormat
+  """
+  保修卡状态
+  """
+  status: WarrantyStatus
+  """
+  保修政策
+  """
+  policy: WarrantyPolicy!
+}
+
+"""
+设备
+"""
+type Device implements TicketTarget {
+  id: ID!
+  """
+  资产编号
+  """
+  no: String
+  """
+  设备序列号
+  """
+  sn: String
+  """
+  设备名称
+  """
+  name: String
+  """
+  设备二维码
+  """
+  qrcode: String
+  """
+  设备状态
+  """
+  status: AssetStatus
+  """
+  设备品牌
+  """
+  brand: Brand
+  """
+  产品
+  """
+  product: Product!
+  """
+  保修卡列表
+  """
+  warrantyCards: [WarrantyCard!]!
+  """
+  保修开始日期
+  """
+  warrantyStartDate: Date @dateFormat
+  """
+  保修结束日期
+  """
+  warrantyEndDate: Date @dateFormat
+  """
+  保修状态
+  """
+  warrantyStatus: WarrantyStatus
+  """
+  购买日期
+  """
+  purchaseDate: Date @dateFormat
+  """
+  设备地址
+  """
+  address: Address
+  """
+  联系人信息
+  """
+  contactInfo: ContactInformation
+  """
+  设备所有者
+  """
+  owner: Owner
+  """
+  创建时间
+  """
+  createdAt: Date @dateFormat
+  """
+  创建人
+  """
+  createdBy: ID
+  """
+  最后修改时间
+  """
+  updatedAt: Date @dateFormat
+  """
+  最后修改人
+  """
+  updatedBy: ID
+}
+
+input ProductWhereInput {
+  name_contains: String
+}
+
+input DeviceWhereInput {
+  id_in: [ID!]
+  name_contains: String
+  createdBy: ID
+  updatedBy: ID
+  customer: ID
+  customerStore: ID
+  sn: String
+  no: String
+  product: ID
+}
+
+input ProductImageInput {
+  id: ID
+  url: String
+  image: File
+  alt: String
+  title: String
+  description: String
+}
+
+input ProductCreateInput {
+  brandId: ID!
+  name: String!
+  images: [ProductImageInput!]!
+}
+
+input ProductUpdateInput {
+  brandId: ID!
+  name: String!
+  images: [ProductImageInput!]!
+}
+
+enum DeviceOwnerType {
+  """
+  客户
+  """
+  CUSTOMER
+  """
+  门店
+  """
+  CUSTOMER_STORE
+}
+
+"""
+设备所有者
+"""
+input DeviceOwnerInput {
+  id: ID!
+  """
+  所有者名称
+  """
+  name: String
+  """
+  所有者类型
+  """
+  type: DeviceOwnerType!
+}
+
+input DeviceCreateInput {
+  """
+  设备编号
+  """
+  no: String
+  """
+  设备SN
+  """
+  sn: String
+  """
+  设备名称
+  """
+  name: String
+  """
+  设备二维码
+  """
+  qrcode: String
+  """
+  产品ID
+  """
+  productId: ID!
+  """
+  购买日期
+  """
+  purchaseDate: Date
+  """
+  保修政策ID
+  """
+  warrantyPolicyId: ID!
+  """
+  保修开始日期
+  """
+  warrantyStartDate: Date
+  """
+  保修结束日期
+  """
+  warrantyEndDate: Date
+  """
+  设备地址
+  """
+  address: AddressInput
+  """
+  联系人信息
+  """
+  contactInfo: ContactInformationInput
+  """
+  设备所有者
+  """
+  owner: DeviceOwnerInput!
+}
+
+input DeviceUpdateInput {
+  """
+  设备编号
+  """
+  no: String
+  """
+  设备SN
+  """
+  sn: String
+  """
+  设备名称
+  """
+  name: String
+  """
+  购买日期
+  """
+  purchaseDate: Date
+  """
+  保修政策ID
+  """
+  warrantyPolicyId: ID!
+  """
+  保修开始日期
+  """
+  warrantyStartDate: Date
+  """
+  保修结束日期
+  """
+  warrantyEndDate: Date
+  """
+  设备地址
+  """
+  address: AddressInput
+  """
+  联系人信息
+  """
+  contactInfo: ContactInformationInput
+  """
+  设备所有者
+  """
+  owner: DeviceOwnerInput
+}
+
+enum ProductIdType {
+  ID
+  SN
+}
+
+enum DeviceIdType {
+  ID
+  SN
+  NO
+}
+
+input BrandWhereInput {
+  id_in: [ID!]
+  name_contains: String
+}
+
+type BrandConnection {
+  # 总数据条数
+  totalCount: Int!
+  # 每页显示条数
+  pageSize: Int!
+  # 总页数
+  totalPage: Int!
+  # 当前页
+  currentPage: Int!
+  edges: [BrandEdge!]!
+  pageInfo: PageInfo!
+}
+
+type BrandEdge {
+  cursor: String!
+  node: Brand!
+}
+
+input BrandCreateInput {
+  id: String!
+  name: String
+  description: String
+}
+
+input BrandUpdateInput {
+  name: String
+  description: String
+}
+
+input WarrantyPolicyCreateInput {
+  """
+  产品ID
+  """
+  productId: ID!
+  """
+  保修政策名称
+  """
+  name: String!
+  """
+  保修期限
+  """
+  duration: Int!
+}
+
+input WarrantyPolicyUpdateInput {
+  """
+  保修政策名称
+  """
+  name: String
+  """
+  保修期限
+  """
+  duration: Int
+}
+
+extend type Query {
+  """
+  查询品牌列表
+  """
+  brandsConnection(
+    """
+    查询条件
+    """
+    where: BrandWhereInput = {}
+    """
+    当前页
+    """
+    page: Int = 1
+    """
+    每页显示条数
+    """
+    pageSize: Int = 15
+    """
+    排序
+    """
+    orderBy: OrderBy = "unsorted"
+  ): BrandConnection!
+  """
+  查询品牌列表
+  """
+  brands(
+    """
+    查询条件
+    """
+    where: BrandWhereInput = {}
+    """
+    偏移量
+    """
+    offset: Int = 0
+    """
+    每页显示条数
+    """
+    limit: Int = 15
+    """
+    排序
+    """
+    orderBy: OrderBy = "unsorted"
+  ): [Brand!]!
+  """
+  查询品牌详情
+  """
+  brand(
+    """
+    品牌ID
+    """
+    id: ID!
+  ): Brand
+  """
+  查询产品列表
+  """
+  productsConnection(
+    """
+    查询条件
+    """
+    where: ProductWhereInput = {}
+    """
+    当前页
+    """
+    page: Int = 1
+    """
+    每页显示条数
+    """
+    pageSize: Int = 15
+    """
+    排序
+    """
+    orderBy: OrderBy = "unsorted"
+  ): ProductConnection!
+  """
+  查询产品列表
+  """
+  products(
+    """
+    查询条件
+    """
+    where: ProductWhereInput = {}
+    """
+    偏移量
+    """
+    offset: Int = 0
+    """
+    每页显示条数
+    """
+    limit: Int = 15
+    """
+    排序
+    """
+    orderBy: OrderBy = "unsorted"
+  ): [Product!]!
+  """
+  查询产品详情
+  """
+  product(
+    """
+    产品ID
+    """
+    id: ID!
+    """
+    产品ID类型
+    """
+    type: ProductIdType = ID
+  ): Product
+  """
+  查询设备列表
+  """
+  devicesConnection(
+    """
+    查询条件
+    """
+    where: DeviceWhereInput = {}
+    """
+    当前页
+    """
+    page: Int = 1
+    """
+    每页显示条数
+    """
+    pageSize: Int = 15
+    """
+    排序
+    """
+    orderBy: OrderBy = "unsorted"
+  ): DeviceConnection!
+  """
+  查询设备列表
+  """
+  devices(
+    """
+    查询条件
+    """
+    where: DeviceWhereInput = {}
+    """
+    偏移量
+    """
+    offset: Int = 0
+    """
+    每页显示条数
+    """
+    limit: Int = 15
+    """
+    排序
+    """
+    orderBy: OrderBy = "unsorted"
+  ): [Device!]!
+  """
+  查询设备详情
+  """
+  device(id: ID!, idType: DeviceIdType = ID): Device
+  """
+  查询保修策略列表
+  """
+  warrantyPolicies(productId: ID!): [WarrantyPolicy!]!
+}
+
+input WarrantyPolicyWhereInput {
+  id_in: [ID!]
+  name_contains: String
+}
+
+extend type CustomerStore {
+  deviceCount: Int!
+}
+
+extend type Mutation {
+  """
+  创建品牌
+  """
+  createBrand(
+    """
+    创建品牌信息
+    """
+    input: BrandCreateInput!
+  ): Brand
+
+  """
+  "
+  更新品牌
+  """
+  updateBrand(
+    """
+    品牌ID
+    """
+    id: ID!
+    """
+    更新品牌信息
+    """
+    input: BrandUpdateInput!
+    """
+    是否合并更新
+    """
+    merge: Boolean = true
+  ): Brand
+  """
+  删除品牌
+  """
+  deleteBrand(id: ID!): Brand
+  """
+  批量删除品牌
+  """
+  deleteManyBrands(where: BrandWhereInput! = {}): BatchPayload!
+  """
+  创建产品
+  """
+  createProduct(
+    """
+    创建产品信息
+    """
+    input: ProductCreateInput!
+  ): Product!
+  """
+  更新产品
+  """
+  updateProduct(
+    """
+    产品ID
+    """
+    id: ID!
+    """
+    更新产品信息
+    """
+    input: ProductUpdateInput!
+    """
+    是否合并更新
+    """
+    merge: Boolean = true
+  ): Product!
+  """
+  删除产品
+  """
+  deleteProduct(id: ID!): Product
+  """
+  添加文章到产品
+  """
+  addArticlesToProduct(
+    """
+    产品ID
+    """
+    productId: ID!
+    """
+    关联类型
+    """
+    linkageType: String!
+    """
+    文章ID列表
+    """
+    articleIds: [ID!]!
+  ): Product
+  """
+  从产品中移除文章
+  """
+  removeArticlesFromProduct(
+    """
+    产品ID
+    """
+    productId: ID!
+    """
+    关联类型
+    """
+    linkageType: String!
+    """
+    文章ID列表
+    """
+    articleIds: [ID!]!
+  ): Product
+
+  """
+  创建设备
+  """
+  createDevice(
+    """
+    产品ID
+    """
+    input: DeviceCreateInput!
+  ): Device!
+  """
+  更新设备
+  """
+  updateDevice(
+    """
+    设备ID
+    """
+    id: ID!
+    """
+    更新设备信息
+    """
+    input: DeviceUpdateInput!
+    """
+    是否合并更新
+    """
+    merge: Boolean = true
+  ): Device!
+  """
+  删除设备
+  """
+  deleteDevice(id: ID!): Device
+  """
+  批量删除设备
+  """
+  deleteManyDevices(where: DeviceWhereInput! = {}): BatchPayload!
+  """
+  创建保修政策
+  """
+  createWarrantyPolicy(input: WarrantyPolicyCreateInput!): WarrantyPolicy
+  """
+  更新保修政策
+  """
+  updateWarrantyPolicy(
+    """
+    保修政策ID
+    """
+    id: ID!
+    """
+    更新保修政策信息
+    """
+    input: WarrantyPolicyUpdateInput!
+    """
+    是否合并更新
+    """
+    merge: Boolean = true
+  ): WarrantyPolicy
+  """
+  删除保修政策
+  """
+  deleteWarrantyPolicy(id: ID!): WarrantyPolicy
+  """
+  批量删除保修政策
+  """
+  deleteManyWarrantyPolicies(
+    where: WarrantyPolicyWhereInput! = {}
+  ): BatchPayload!
+}

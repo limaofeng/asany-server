@@ -1,3 +1,18 @@
+/*
+ * Copyright (c) 2024 Asany
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.asany.net/licenses/MIT
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package cn.asany.message.define.domain;
 
 import cn.asany.message.data.util.MessageUtils;
@@ -11,9 +26,9 @@ import jakarta.persistence.*;
 import java.util.List;
 import java.util.Map;
 import lombok.*;
+import net.asany.jfantasy.framework.dao.BaseBusEntity;
+import net.asany.jfantasy.framework.dao.hibernate.annotations.TableGenerator;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.GenericGenerator;
-import org.jfantasy.framework.dao.BaseBusEntity;
 
 /**
  * 消息模版
@@ -32,8 +47,7 @@ import org.jfantasy.framework.dao.BaseBusEntity;
 public class MessageTemplate extends BaseBusEntity {
   @Id
   @Column(name = "ID", nullable = false, updatable = false, precision = 22)
-  @GeneratedValue(generator = "fantasy-sequence")
-  @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+  @TableGenerator
   private Long id;
 
   /** 模版类型 */
@@ -45,21 +59,10 @@ public class MessageTemplate extends BaseBusEntity {
   @Column(name = "NAME", nullable = false, length = 50)
   private String name;
 
-  /** 签名 */
-  @Column(name = "SIGN", nullable = false, length = 20)
-  private String sign;
-
   /** 模版中使用的变量 */
   @Column(name = "VARIABLES", nullable = false, columnDefinition = "JSON")
   @Convert(converter = VariableDefinitionListConverter.class)
   private List<VariableDefinition> variables;
-
-  /**
-   * 模板号 type = SMS 时 CODE = cn.asany.sms.domain.Template 的 ID type = EMAIL 时 CODE =
-   * cn.asany.mail.domain.Template 的 ID type = MS 时, 取 content 内容
-   */
-  @Column(name = "CODE", length = 50)
-  private String code;
 
   /** 内容模版 */
   @Column(name = "CONTENT", columnDefinition = "Text")

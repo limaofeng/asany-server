@@ -13,7 +13,7 @@ spotless {
     format 'styling', {
         target 'src/*/resources/**/*.graphqls'
 
-        prettier('2.4.1').config(['tabWidth': 2])
+        prettier('3.0.2').config(['tabWidth': 2])
     }
     java {
         target 'src/*/java/**/*.java'
@@ -21,7 +21,8 @@ spotless {
         removeUnusedImports()
         indentWithTabs(2)
         indentWithSpaces(4)
-
         googleJavaFormat()
+
+        licenseHeaderFile "${rootDir}/gradle/LICENSE", 'package '
     }
 }

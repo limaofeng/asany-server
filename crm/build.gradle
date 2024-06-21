@@ -1,4 +1,4 @@
-description = "活动"
+description = "客户关系管理"
 
 dependencies {
     compileOnly project(":base")
@@ -7,6 +7,16 @@ dependencies {
     compileOnly project(":cms")
     compileOnly project(":nuwa")
     compileOnly project(":storage-api")
+    compileOnly project(":message-api")
     testImplementation project(":storage")
+    testImplementation project(":security")
+    testImplementation project(":sms")
+    testImplementation project(":base")
+    testImplementation project(":message")
+    testImplementation project(":message-api")
     testImplementation "com.alibaba:easyexcel:${LIB_EASYEXCEL_VER}"
+    testCompileOnly "org.projectlombok:lombok"
+    testAnnotationProcessor "org.projectlombok:lombok"
+    testImplementation "org.springframework.boot:spring-boot-starter-data-redis"
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }

@@ -1,23 +1,36 @@
+/*
+ * Copyright (c) 2024 Asany
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.asany.net/licenses/MIT
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package cn.asany.cms.article.service;
 
 import cn.asany.cms.article.dao.ArticleCategoryDao;
 import cn.asany.cms.article.dao.ArticleDao;
 import cn.asany.cms.article.dao.ArticleMetaFieldDao;
 import cn.asany.cms.article.domain.Article;
-import cn.asany.cms.article.domain.ArticleBody;
 import cn.asany.cms.article.domain.ArticleCategory;
-import cn.asany.cms.article.domain.enums.ArticleBodyType;
+import cn.asany.cms.article.domain.ArticleContent;
 import cn.asany.cms.article.domain.enums.ArticleStatus;
 import cn.asany.cms.article.event.ArticleUpdateEvent;
 import cn.asany.cms.article.graphql.input.PermissionInput;
-import cn.asany.cms.body.service.ArticleBodyService;
+import cn.asany.cms.content.service.ArticleContentService;
 import java.util.*;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.Hibernate;
-import org.jfantasy.framework.dao.jpa.PropertyFilter;
-import org.jfantasy.framework.util.common.DateUtil;
-import org.jfantasy.framework.util.common.ObjectUtil;
-import org.jfantasy.framework.util.common.StringUtil;
+import net.asany.jfantasy.framework.dao.jpa.PropertyFilter;
+import net.asany.jfantasy.framework.util.common.DateUtil;
+import net.asany.jfantasy.framework.util.common.ObjectUtil;
+import net.asany.jfantasy.framework.util.common.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.*;
@@ -39,7 +52,7 @@ public class ArticleService {
   private final ArticleTagService tagService;
   private final ArticleDao articleDao;
   private final ArticleCategoryDao articleCategoryDao;
-  private final ArticleBodyService bodyService;
+  private final ArticleContentService contentService;
 
   private final ArticleMetaFieldDao articleMetaFieldDao;
 
@@ -49,14 +62,14 @@ public class ArticleService {
       ApplicationContext applicationContext,
       ArticleFeatureService featureService,
       ArticleTagService tagService,
-      ArticleBodyService bodyService,
+      ArticleContentService contentService,
       ArticleCategoryDao articleCategoryDao,
       ArticleMetaFieldDao articleMetaFieldDao) {
     this.articleDao = articleDao;
     this.applicationContext = applicationContext;
     this.featureService = featureService;
     this.tagService = tagService;
-    this.bodyService = bodyService;
+    this.contentService = contentService;
     this.articleCategoryDao = articleCategoryDao;
     this.articleMetaFieldDao = articleMetaFieldDao;
   }
@@ -83,6 +96,10 @@ public class ArticleService {
     return articleDao.findPage(pageable, filter);
   }
 
+  public List<Article> findAll(PropertyFilter filter, int offset, int limit, Sort sort) {
+    return articleDao.findAll(filter, offset, limit, sort);
+  }
+
   public List<Article> findAll(Article article) {
     return articleDao.findAll(Example.of(article));
   }
@@ -94,7 +111,7 @@ public class ArticleService {
    * @return Article
    */
   @Transactional(rollbackFor = RuntimeException.class)
-  public Article save(Article article, List<PermissionInput> permissions) {
+  public Article save(Article article, ArticleContent content, List<PermissionInput> permissions) {
     if (StringUtil.isBlank(article.getSlug())) {
       article.setSlug(null);
     }
@@ -104,7 +121,7 @@ public class ArticleService {
     article.setCategory(category);
 
     // 保存正文
-    saveContentAndSummary(article);
+    saveContentAndSummary(article, content);
 
     if (article.getStatus() == null) {
       article.setStatus(ArticleStatus.DRAFT);
@@ -137,13 +154,13 @@ public class ArticleService {
    * @return 文章内容
    */
   @Transactional(rollbackFor = RuntimeException.class)
-  public Article update(Long id, Article article, boolean merge) {
+  public Article update(Long id, Article article, ArticleContent content, boolean merge) {
     article.setId(id);
     if (StringUtil.isBlank(article.getSlug())) {
       article.setSlug(null);
     }
 
-    saveContentAndSummary(article);
+    saveContentAndSummary(article, content);
 
     Article oldArticle = this.articleDao.getReferenceById(article.getId());
 
@@ -153,25 +170,18 @@ public class ArticleService {
       article.setPublishedAt(DateUtil.now());
     }
 
-    boolean needCleanUp = article.getCategory() == null;
     boolean unPublishForScheduled =
         oldArticle.getStatus() == ArticleStatus.SCHEDULED
             && article.getStatus() == ArticleStatus.DRAFT;
 
-    this.articleDao.update(article, merge);
+    article = this.articleDao.update(article, merge);
 
     if (unPublishForScheduled) {
       article.setPublishedAt(null);
     }
 
-    if (needCleanUp) {
-      article.setCategory(null);
-    }
-
-    this.articleDao.update(article);
-
     applicationContext.publishEvent(ArticleUpdateEvent.newInstance(article));
-    return article;
+    return this.articleDao.getReferenceById(article.getId());
   }
 
   /**
@@ -179,10 +189,9 @@ public class ArticleService {
    *
    * @param article 文章
    */
-  private void saveContentAndSummary(Article article) {
-    ArticleBody body = article.getBody();
-    if (StringUtil.isBlank(article.getSummary()) && ObjectUtil.isNotNull(body)) {
-      String summary = body.generateSummary();
+  private void saveContentAndSummary(Article article, ArticleContent content) {
+    if (StringUtil.isBlank(article.getSummary()) && ObjectUtil.isNotNull(content)) {
+      String summary = content.generateSummary();
       article.setSummary(summary);
     }
     ArticleCategory category =
@@ -190,19 +199,19 @@ public class ArticleService {
     if (null != article.getId()) {
       // 编辑
       Article oldArticle = this.articleDao.getReferenceById(article.getId());
-      if (StringUtil.isBlank(oldArticle.getBodyId())) {
-        this.bodyService.save(body);
-      } else if (category.getStoreTemplate().getId().equals(oldArticle.getBodyType().name())) {
-        this.bodyService.update(oldArticle.getBody().getId(), body);
+      if (StringUtil.isBlank(oldArticle.getContentId())) {
+        this.contentService.save(content);
+      } else if (category.getStoreTemplate().getContentType() == oldArticle.getContentType()) {
+        this.contentService.update(oldArticle.getContentId(), content);
       } else {
-        this.bodyService.deleteById(oldArticle.getBodyId(), oldArticle.getBodyType());
-        this.bodyService.save(body);
+        this.contentService.deleteById(oldArticle.getContentId(), oldArticle.getContentType());
+        this.contentService.save(content);
       }
     } else {
-      this.bodyService.save(body);
+      this.contentService.save(content);
     }
-    article.setBodyId(body.getId());
-    article.setBodyType(ArticleBodyType.valueOf(body.bodyType()));
+    article.setContentId(content.getId());
+    article.setContentType(content.getContentType());
   }
 
   /**
@@ -213,12 +222,7 @@ public class ArticleService {
    */
   public Article get(Long id) {
     Optional<Article> optional = this.articleDao.findById(id);
-    if (!optional.isPresent()) {
-      return null;
-    }
-    Article article = optional.get();
-    Hibernate.initialize(article.getBody());
-    return article;
+    return optional.orElse(null);
   }
 
   /**
@@ -240,7 +244,7 @@ public class ArticleService {
    *
    * @param id 文章 ids
    */
-  public void unpublish(Long id) {
+  public void unPublish(Long id) {
     Article article = this.get(id);
     article.setStatus(ArticleStatus.DRAFT);
     this.articleDao.update(article, true);
@@ -259,8 +263,8 @@ public class ArticleService {
         continue;
       }
       Article article = optional.get();
-      if (article.getBodyId() != null) {
-        this.bodyService.deleteById(article.getBodyId(), article.getBodyType());
+      if (article.getContentId() != null) {
+        this.contentService.deleteById(article.getContentId(), article.getContentType());
       }
       articles.add(optional.get());
     }

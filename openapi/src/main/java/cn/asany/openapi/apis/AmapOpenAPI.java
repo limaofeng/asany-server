@@ -1,20 +1,35 @@
+/*
+ * Copyright (c) 2024 Asany
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.asany.net/licenses/MIT
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package cn.asany.openapi.apis;
 
 import cn.asany.openapi.configs.AmapApiConfig;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.http.exceptions.UnirestException;
-import com.mashape.unirest.request.HttpRequest;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+import kong.unirest.*;
 import lombok.Data;
 import lombok.SneakyThrows;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
-import org.jfantasy.framework.error.ValidationException;
-import org.jfantasy.framework.jackson.JSON;
-import org.jfantasy.framework.util.common.StringUtil;
+import net.asany.jfantasy.framework.error.ValidationException;
+import net.asany.jfantasy.framework.jackson.JSON;
+import net.asany.jfantasy.framework.util.common.StringUtil;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 
 /**
  * amap OpenAPI
@@ -24,18 +39,30 @@ import org.jfantasy.framework.util.common.StringUtil;
 @Slf4j
 public class AmapOpenAPI {
   private static final String BASE_URL = "https://restapi.amap.com/v3";
+  public static final String CACHE_KEY = "OPENAPI_AMAP";
+
+  private final StringRedisTemplate redisTemplate;
+  private final ValueOperations<String, String> valueOperations;
 
   private final AmapApiConfig amap;
 
-  public AmapOpenAPI(AmapApiConfig amap) {
+  public AmapOpenAPI(StringRedisTemplate redisTemplate, AmapApiConfig amap) {
+    this.redisTemplate = redisTemplate;
+    this.valueOperations = redisTemplate.opsForValue();
     this.amap = amap;
   }
 
   @SneakyThrows(UnirestException.class)
   public IpResult ip(String ip) {
+
+    String cacheKey = CACHE_KEY + ":ip:" + ip;
+    if (Boolean.TRUE.equals(redisTemplate.hasKey(cacheKey))) {
+      return JSON.deserialize(redisTemplate.boundValueOps(cacheKey).get(), IpResult.class);
+    }
+
     String url = BASE_URL + "/ip";
 
-    HttpRequest request =
+    HttpRequest<GetRequest> request =
         Unirest.get(url).queryString("output", "JSON").queryString("key", amap.getKey());
 
     if (StringUtil.isNotBlank(ip)) {
@@ -43,15 +70,16 @@ public class AmapOpenAPI {
     }
 
     HttpResponse<String> response = request.asString();
-    String body = response.getBody();
-
-    IpResult result = JSON.deserialize(body.replace("[]", "null"), IpResult.class);
+    String body = response.getBody().replace("[]", "null");
+    IpResult result = JSON.deserialize(body, IpResult.class);
 
     if ("0".equals(result.getStatus())) {
-      log.error("调用高德 OpenAPI /geocode/geo 失败,  响应结果为:" + body);
+      log.error("调用高德 OpenAPI /ip 失败,  响应结果为:{}", body);
       throw new ValidationException("调用高德 OpenAPI /geocode/geo 失败");
     }
 
+    valueOperations.set(cacheKey, body);
+    redisTemplate.expire(cacheKey, 7, TimeUnit.DAYS);
     return result;
   }
 
@@ -63,7 +91,7 @@ public class AmapOpenAPI {
   public List<Geocode> geocode_geo(String addr, String city) {
     String url = BASE_URL + "/geocode/geo";
 
-    HttpRequest request =
+    HttpRequest<GetRequest> request =
         Unirest.get(url)
             .queryString("address", addr)
             .queryString("output", "JSON")
@@ -79,12 +107,11 @@ public class AmapOpenAPI {
     JsonNode jsonNode = JSON.deserialize(body.replace("[]", "null"));
 
     if ("0".equals(jsonNode.get("status").asText())) {
-      log.error("调用高德 OpenAPI /geocode/geo 失败,  响应结果为:" + body);
+      log.error("调用高德 OpenAPI /geocode/geo 失败,  响应结果为:{}", body);
       throw new ValidationException("调用高德 OpenAPI /geocode/geo 失败");
     }
 
-    return JSON.getObjectMapper()
-        .convertValue(jsonNode.get("geocodes"), new TypeReference<List<Geocode>>() {});
+    return JSON.getObjectMapper().convertValue(jsonNode.get("geocodes"), new TypeReference<>() {});
   }
 
   @Data
