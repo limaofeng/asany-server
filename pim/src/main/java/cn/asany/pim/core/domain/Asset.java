@@ -43,7 +43,7 @@ public abstract class Asset extends BaseBusEntity {
   private Long id;
 
   /** 资产编号 */
-  @Column(name = "NO", length = 50)
+  @Column(name = "NO", length = 150)
   private String no;
 
   /** 资产名称 */

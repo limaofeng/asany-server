@@ -52,7 +52,7 @@ public class CurrentUserGraphQLResolver implements GraphQLResolver<CurrentUser> 
     try {
       return this.authService.token(platform, String.valueOf(user.getId()));
     } catch (Exception e) {
-      log.error(e.getMessage(), e);
+      log.error(e.getMessage());
       if (e instanceof OpenIMServerAPIException error) {
         if (error.getCode() == ErrorCode.RECORD_NOT_FOUND.getCode()) {
           this.userService.userRegister(
@@ -73,7 +73,7 @@ public class CurrentUserGraphQLResolver implements GraphQLResolver<CurrentUser> 
     try {
       return OpenIMUtils.onlineStatus(authService, userService, user.getId());
     } catch (Exception e) {
-      log.error(e.getMessage(), e);
+      log.error(e.getMessage());
       return OnlineStatusDetails.builder().status(OnlineStatus.offline).build();
     }
   }

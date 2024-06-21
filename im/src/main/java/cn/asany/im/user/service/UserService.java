@@ -33,6 +33,8 @@ import lombok.extern.slf4j.Slf4j;
 import net.asany.jfantasy.framework.jackson.JSON;
 import net.asany.jfantasy.framework.util.common.ObjectUtil;
 import net.asany.jfantasy.framework.util.common.StringUtil;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 
 /**
@@ -49,7 +51,15 @@ public class UserService {
   private final String secret;
   private final AdminUser admin;
 
-  public UserService(String url, String secret, AdminUser admin) {
+  public static final String CACHE_KEY = "OPEN_IM";
+
+  private final StringRedisTemplate redisTemplate;
+  private final ValueOperations<String, String> valueOperations;
+
+  public UserService(
+      StringRedisTemplate redisTemplate, String url, String secret, AdminUser admin) {
+    this.redisTemplate = redisTemplate;
+    this.valueOperations = redisTemplate.opsForValue();
     this.url = url;
     this.secret = secret;
     this.admin = admin;

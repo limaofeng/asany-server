@@ -425,6 +425,10 @@ type Application {
   应用模块配置
   """
   modules: [ApplicationModuleConfiguration!]!
+  """
+  Token 过期时间(分钟)
+  """
+  tokenExpires: Int
 }
 
 type ApplicationModuleConfiguration {

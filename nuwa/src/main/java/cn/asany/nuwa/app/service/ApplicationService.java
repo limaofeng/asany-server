@@ -138,17 +138,16 @@ public class ApplicationService implements ClientDetailsService {
       condition = "#p1 && #p2")
   public Optional<Application> findDetailsByClientId(
       String id, boolean hasFetchRoutes, boolean hasFetchMenus) {
-    Optional<Application> optional;
     if (hasFetchRoutes && hasFetchMenus) {
-      optional = this.applicationDao.findDetailsByClientId(id);
-    } else if (hasFetchRoutes) {
-      optional = this.applicationDao.findOneWithRoutesByClientId(id);
-    } else if (hasFetchMenus) {
-      optional = this.applicationDao.findOneWithMenusByClientId(id);
-    } else {
-      optional = this.applicationDao.findOneBy("clientId", id);
+      return this.applicationDao.findDetailsByClientId(id).map(HibernateUtils::cloneEntity);
     }
-    return optional.map(HibernateUtils::cloneEntity);
+    if (hasFetchRoutes) {
+      return this.applicationDao.findOneWithRoutesByClientId(id).map(HibernateUtils::cloneEntity);
+    }
+    if (hasFetchMenus) {
+      return this.applicationDao.findOneWithMenusByClientId(id).map(HibernateUtils::cloneEntity);
+    }
+    return this.applicationDao.findOneBy("clientId", id);
   }
 
   @Transactional(readOnly = true)
@@ -167,17 +166,16 @@ public class ApplicationService implements ClientDetailsService {
       condition = "#p1 && #p2")
   public Optional<Application> findDetailsById(
       Long id, boolean hasFetchRoutes, boolean hasFetchMenus) {
-    Optional<Application> optional;
     if (hasFetchRoutes && hasFetchMenus) {
-      optional = this.applicationDao.findDetailsById(id);
-    } else if (hasFetchRoutes) {
-      optional = this.applicationDao.findOneWithRoutesById(id);
-    } else if (hasFetchMenus) {
-      optional = this.applicationDao.findOneWithMenusById(id);
-    } else {
-      optional = this.applicationDao.findById(id);
+      return this.applicationDao.findDetailsById(id).map(HibernateUtils::cloneEntity);
     }
-    return optional.map(HibernateUtils::cloneEntity);
+    if (hasFetchRoutes) {
+      return this.applicationDao.findOneWithRoutesById(id).map(HibernateUtils::cloneEntity);
+    }
+    if (hasFetchMenus) {
+      return this.applicationDao.findOneWithMenusById(id).map(HibernateUtils::cloneEntity);
+    }
+    return this.applicationDao.findById(id);
   }
 
   @Transactional
@@ -200,6 +198,11 @@ public class ApplicationService implements ClientDetailsService {
   @Transactional
   public Application createApplication(NativeApplication nativeApplication) {
     return createApplication(nativeApplication, Optional.empty());
+  }
+
+  public Application updateApplication(
+      Long id, NativeApplication nativeApplication, Boolean merge) {
+    return null;
   }
 
   @Transactional

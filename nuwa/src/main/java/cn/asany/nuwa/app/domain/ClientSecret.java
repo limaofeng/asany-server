@@ -60,6 +60,7 @@ public class ClientSecret extends BaseBusEntity {
   private String client;
 
   /** 访问令牌 */
+  @SuppressWarnings("JpaQlInspection")
   @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
   @OrderBy("createdAt desc")
   @JoinColumn(name = "CLIENT_SECRET", referencedColumnName = "SECRET", updatable = false)

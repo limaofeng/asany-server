@@ -107,6 +107,9 @@ spring:
     user: ${DATABASE_USERNAME}
     password: ${DATABASE_PASSWORD}
     schemas: ${DATABASE_INSTANCE_NAME}
+  security:
+    access-token:
+      refresh: false
 
 mybatis:
   configuration:

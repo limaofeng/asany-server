@@ -71,7 +71,8 @@ public class ApplicationGraphQLRootResolver
   }
 
   public Application updateApplication(Long id, ApplicationCreateInput input, Boolean merge) {
-    return new Application();
+    return applicationService.updateApplication(
+        id, applicationConverter.toNativeApplication(input), merge);
   }
 
   public Boolean deleteApplication(Long id) {
